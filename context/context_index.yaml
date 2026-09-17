@@ -1,0 +1,92 @@
+version: "0.1"
+name: "Aura Kunstmuseum Kontekstindeks"
+updated_at: "2026-09-14"
+
+institution:
+  name: "Aura Kunstmuseum"
+  scale: "SMB"
+  status: "operativ"
+  purpose: "Kunstformidling og operativ testarena for AI-gründere (plugins, MCP, automatisering)"
+
+loading_policy:
+  stable_core:
+    - "context/core/company.md"
+    - "context/core/owner_intent.md"
+    - "context/core/values.md"
+    - "context/core/decision_rules.md"
+    - "context/core/quality_rules.md"
+    - "context/core/approval_boundaries.md"
+  on_demand:
+    roles:
+      - "context/roles/museumsdirektor.md"
+      - "context/roles/samlingsforvalter.md"
+      - "context/roles/kurator.md"
+      - "context/roles/formidler.md"
+      - "context/roles/museumsvert.md"
+      - "context/roles/driftsansvarlig.md"
+    operations:
+      - "context/operations/workflows.md"
+      - "context/operations/systems.md"
+      - "context/operations/tool_access.md"
+    projects:
+      - "context/projects/samling_til_publikum/brief.md"
+      - "context/projects/samling_til_publikum/context.md"
+      - "context/projects/samling_til_publikum/decisions.md"
+      - "context/projects/samling_til_publikum/sources.md"
+      - "context/projects/samling_til_publikum/open_questions.md"
+    governance:
+      - "docs/adr/0001-lean-independent-museum-model.md"
+      - "context/decisions/decision_log.md"
+      - "context/risks/risks.md"
+      - "context/history/timeline.md"
+      - "context/history/superseded.md"
+      - "context/interviews/raw/2026-09-14_oppstart_kunstmuseum.md"
+
+context_cards:
+  - id: "CTX-0001"
+    frame: "identity"
+    type: "fact"
+    statement: "Aura Kunstmuseum er en uavhengig, ideell kunstinstitusjon i SMB-størrelse med formål om å forvalte kunst og fungere som testarena for AI-gründere."
+    raw_basis: "Utsagn fra eier i oppstartsintervju 2026-09-14."
+    status: "bekreftet"
+    source:
+      kind: "interview"
+      ref: "context/interviews/raw/2026-09-14_oppstart_kunstmuseum.md"
+      date: "2026-09-14"
+    owner: "Eier"
+
+  - id: "CTX-0002"
+    frame: "structure"
+    type: "decision"
+    statement: "Museet drives etter en forenklet, uavhengig SMB-modell uten offentlig forvaltningsbyråkrati for å maksimere agentisk lærings- og byggehastighet."
+    raw_basis: "Eiers instruks om modell som gjør det minst komplisert å øve på plugins og undervisning."
+    status: "bekreftet"
+    source:
+      kind: "file"
+      ref: "docs/adr/0001-lean-independent-museum-model.md"
+      date: "2026-09-14"
+    owner: "Eier"
+
+  - id: "CTX-0003"
+    frame: "work"
+    type: "workflow"
+    statement: "Første operative prosjekt er 'Fra samling til publikum' som etablerer lokal samlings-MCP, automatisert tekstproduksjon og interaktiv museumsvert."
+    raw_basis: "Prosjektbeskrivelse og systemarkitektur."
+    status: "bekreftet"
+    source:
+      kind: "file"
+      ref: "context/projects/samling_til_publikum/brief.md"
+      date: "2026-09-14"
+    owner: "Museumsdirektør"
+
+  - id: "CTX-0004"
+    frame: "structure"
+    type: "constraint"
+    statement: "Nivå 3-handlinger (ekstern publisering, kontraktinngåelse, priser, sletting) krever alltid eksplisitt godkjenning fra menneskelig eier."
+    raw_basis: "Kvalitets- og godkjenningsmatrise."
+    status: "bekreftet"
+    source:
+      kind: "file"
+      ref: "context/core/approval_boundaries.md"
+      date: "2026-09-14"
+    owner: "Eier"

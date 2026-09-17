@@ -1,0 +1,21 @@
+[project]
+name = "kunstpixel"
+version = "0.1.0"
+description = "Kunstpixel (kunstpixel.com) MCP Server and Demo-Prototype"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "mcp>=1.29.1",
+    "fastmcp>=3.4.2",
+    "pydantic>=2.12.5",
+    "rich>=15.0.0",
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra -q"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]

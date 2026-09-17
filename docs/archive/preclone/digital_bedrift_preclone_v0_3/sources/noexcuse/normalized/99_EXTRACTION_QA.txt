@@ -1,0 +1,4 @@
+items=60
+frames={"Identitet": 16, "Menneske": 15, "Påvirkning": 14, "Struktur": 15}
+opportunity_rows=189
+items_without_opportunities=[]

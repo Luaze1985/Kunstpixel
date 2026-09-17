@@ -1,0 +1,23 @@
+# Tidslinje (Timeline)
+
+- **2026-09-13:** Pre-clone forprosjekt opprettet for digital syntetisk KI-bedrift (`digital_bedrift_preclone_v0_3`).
+- **2026-09-14 13:30:** Konseptspesifisering startet via `/grill-with-docs`.
+- **2026-09-14 13:31:** Beslutning: Konseptet defineres som **Aura Kunstmuseum** (mellomstort, stedsuavhengig SMB-museum).
+- **2026-09-14 13:32:** Beslutning (ADR-0001): Lean, uavhengig forretningsmodell valgt for å prioritere agenttrening, plugins og undervisning for AI-gründere.
+- **2026-09-14 13:35:** Komplett modulær kontekstarkitektur etablert (`context/core/`, `context/roles/`, `context/operations/`, `context/projects/`).
+- **2026-09-14 13:36:** Første samlingsdatasett opprettet (`data/samling.json`, 12 verk).
+- **2026-09-14 13:39–16:52:** SQLite-database bygget via MCP med 7 tabeller og 72 rader:
+  - 12 kunstnere med realistiske biografier og kildehenvisninger.
+  - 16 kunstverk med komplett metadata, veggtekster og proveniens.
+  - 6 saler med klimabeskrivelser og kapasitet.
+  - 3 utstillinger (2 aktive + 1 planlagt) med verkkobling.
+  - 8 arrangementer (omvisninger, verksteder, barnearrangementer, foredrag).
+  - 12 realistiske FAQ-oppslag med priser, åpningstider, praktisk info.
+- **2026-09-14 16:52–16:56:** 6 komplette masterprompter skrevet for alle agentroller:
+  - `prompts/museumsdirektor.md`
+  - `prompts/samlingsforvalter.md`
+  - `prompts/kurator.md`
+  - `prompts/formidler.md`
+  - `prompts/museumsvert.md`
+  - `prompts/driftsansvarlig.md`
+- **2026-09-14 16:56:** Kunnskapsgrafen lagret i Memory MCP (7 entiteter, 13 relasjoner).

@@ -1,0 +1,23 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Testing & Cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments & Secrets
+.env
+.venv
+env/
+venv/
+ENV/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Agent traces & temporary scratch
+.agents/

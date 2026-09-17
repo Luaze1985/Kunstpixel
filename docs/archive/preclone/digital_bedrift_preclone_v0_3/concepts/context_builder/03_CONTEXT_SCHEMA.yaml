@@ -1,0 +1,74 @@
+version: "0.1"
+name: "Kontekstbygger"
+
+frames:
+  - id: identity
+    name: "Identitet og retning"
+  - id: structure
+    name: "Struktur og beslutninger"
+  - id: people
+    name: "Mennesker og roller"
+  - id: environment
+    name: "Omgivelser og påvirkning"
+  - id: work
+    name: "Arbeid og kunnskap"
+  - id: history
+    name: "Historikk og endring"
+
+context_item:
+  required:
+    - id
+    - frame
+    - type
+    - statement
+    - status
+  fields:
+    id: "CTX-0001"
+    frame: "identity|structure|people|environment|work|history"
+    type: "fact|decision|value|preference|goal|constraint|role|workflow|quality_rule|risk|hypothesis|open_question|source_claim"
+    statement: "normalisert kontekst"
+    raw_basis: "rått utsagn eller kildegrunnlag"
+    status: "bekreftet|foreløpig|tolket|motstridende|ukjent|utdatert"
+    source:
+      kind: "interview|file|email|notion|report|other"
+      ref: ""
+      date: null
+    owner: null
+    impacts: []
+    depends_on: []
+    contradicts: []
+    review_when: null
+    notes: ""
+
+loading_policy:
+  stable_core:
+    - "company"
+    - "owner_intent"
+    - "values"
+    - "decision_rules"
+    - "quality_rules"
+    - "approval_boundaries"
+  on_demand:
+    - "roles"
+    - "projects"
+    - "operations"
+    - "decisions"
+    - "risks"
+    - "history"
+    - "raw_interviews"
+  rule: "Last bare moduler som er relevante for oppgaven."
+
+human_sovereignty:
+  ai_may_support:
+    - "strukturering"
+    - "analyse"
+    - "alternativer"
+    - "utkast"
+    - "mønsterfunn"
+    - "review"
+  human_owns:
+    - "visjon"
+    - "verdier"
+    - "endelig prioritering"
+    - "irreversible beslutninger"
+    - "eksterne forpliktelser"

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIBS × NoExcuse — Ledelse 60:2, mars 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --yellow: #FFD600;
+      --black: #000000;
+      --white: #F0F0F0;
+      --dim: rgba(240,240,240,0.5);
+      --faint: rgba(240,240,240,0.22);
+      --line: rgba(255,255,255,0.08);
+      --line-y: rgba(255,214,0,0.15);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.75; }
+    .mono { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+    .label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); margin-bottom: 20px; display: block; }
+    nav { padding: 0 40px; height: 52px; display: flex; align-items: center; gap: 28px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--black); z-index: 99; }
+    nav .brand { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.06em; color: var(--yellow); margin-right: auto; }
+    nav a { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); text-decoration: none; white-space: nowrap; }
+    nav a:hover { color: var(--yellow); }
+    .hero { padding: 72px 40px 60px; border-bottom: 1px solid var(--line); }
+    .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: 80px; line-height: 0.9; letter-spacing: 0.02em; color: var(--yellow); margin-bottom: 36px; }
+    .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+    .hero-lead { font-size: 14px; color: var(--white); line-height: 1.7; opacity: 0.8; }
+    .hero-lead p + p { margin-top: 12px; }
+    .hero-summary { border-left: 2px solid var(--yellow); padding: 18px 24px; }
+    .hero-summary p { font-size: 14px; color: var(--white); opacity: 0.8; line-height: 1.65; margin-bottom: 10px; }
+    section, .detail { padding: 60px 40px; border-bottom: 1px solid var(--line); }
+    .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 48px; letter-spacing: 0.03em; color: var(--yellow); margin-bottom: 32px; }
+    .lag-intro { background: #080808; border-left: 3px solid var(--yellow); padding: 14px 20px; margin-bottom: 28px; }
+    .lag-intro p { font-size: 13px; color: var(--dim); }
+    .lag-intro strong { color: var(--yellow); font-weight: 500; }
+    table { width: 100%; border-collapse: collapse; }
+    th { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--line); }
+    td { padding: 16px 16px; border-bottom: 1px solid var(--line); vertical-align: top; font-size: 14px; color: var(--white); }
+    .row-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--yellow); opacity: 0.3; width: 44px; }
+    .item-title { font-weight: 500; margin-bottom: 4px; }
+    .item-desc { font-size: 13px; color: var(--dim); line-height: 1.5; }
+    .owner-cell { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--dim); white-space: nowrap; }
+    .badge { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.06em; color: var(--yellow); white-space: nowrap; }
+    .badge.dim { opacity: 0.4; }
+    .tema-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); margin-top: 32px; }
+    .tema-card { background: var(--black); padding: 28px 32px; }
+    .tema-num { font-family: 'Bebas Neue', sans-serif; font-size: 48px; color: var(--yellow); opacity: 0.1; line-height: 1; margin-bottom: 4px; }
+    .tema-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 0.04em; color: var(--yellow); margin-bottom: 8px; }
+    .tema-text { font-size: 13px; color: var(--dim); line-height: 1.6; margin-bottom: 14px; }
+    .tema-link { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); text-decoration: none; }
+    .tema-link:hover { color: var(--yellow); }
+    .detail-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 32px; }
+    .detail-bignum { font-family: 'Bebas Neue', sans-serif; font-size: 64px; color: var(--yellow); opacity: 0.08; line-height: 1; }
+    .detail-title { font-family: 'Bebas Neue', sans-serif; font-size: 44px; letter-spacing: 0.03em; color: var(--yellow); }
+    .lag-tag { display: inline-block; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid var(--line-y); color: var(--yellow); padding: 3px 8px; margin-bottom: 10px; opacity: 0.6; }
+    .quote-block { border-left: 2px solid var(--yellow); padding: 14px 22px; margin: 14px 0; }
+    .quote-block blockquote { font-size: 14px; font-style: italic; color: var(--white); opacity: 0.8; line-height: 1.65; }
+    .quote-block .q-src { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); margin-top: 8px; opacity: 0.6; }
+    .refl-card { background: #0a0a0a; border: 1px solid var(--line); padding: 24px 28px; margin: 16px 0; }
+    .refl-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--yellow); margin-bottom: 10px; letter-spacing: 0.03em; }
+    .refl-card p { font-size: 14px; color: var(--white); opacity: 0.8; line-height: 1.65; }
+    .refl-card p + p { margin-top: 10px; }
+    .refl-note { opacity: 0.45; font-size: 13px; margin-top: 12px; }
+    .mul-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    .mul-table th { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--line); opacity: 0.6; }
+    .mul-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--dim); }
+    .mul-table td.hl { color: var(--yellow); font-weight: 500; opacity: 1; }
+    .mul-table .mv { font-family: 'DM Mono', monospace; font-size: 11px; }
+    .placeholder { border: 1px dashed rgba(255,255,255,0.1); padding: 18px 22px; margin: 16px 0; }
+    .placeholder .ph-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); margin-bottom: 6px; }
+    .placeholder .ph-text { font-size: 13px; color: var(--faint); font-style: italic; }
+    .divider { border: none; border-top: 1px solid var(--line); margin: 28px 0; }
+    footer { padding: 36px 40px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); }
+    .footer-brand { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.05em; color: var(--yellow); opacity: 0.35; }
+    .footer-meta { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--faint); letter-spacing: 0.06em; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">VIBS × NOEXCUSE</span>
+  <a href="#handlingsplan">Handlingsplan</a>
+  <a href="#sammendrag">Vurdering</a>
+  <a href="#identitet">Identitet</a>
+  <a href="#struktur">Struktur</a>
+  <a href="#menneske">Menneske</a>
+  <a href="#paavirkning">Påvirkning</a>
+  <a href="#refleksjoner">Refleksjoner</a>
+</nav>
+
+<div class="hero">
+  <span class="label">VIBS – Vi Bygger Sammen AS · Ledelse 60:2 · 14. mars 2026</span>
+  <h1>VI GJØR<br>BÆREKRAFT<br>LØNNSOMT</h1>
+  <div class="hero-grid">
+    <div class="hero-lead">
+      <p>No Excuse gjennomførte strukturert ledelseintervju (Ledelse 60:2) med Bjørn Skeime, Lars Erik Brekne Johnsen og Lars Gunnar Stokke via Teams 14. mars. 60 diagnostiske spørsmål, fire rammer: Identitet, Struktur, Menneske og Påvirkning.</p>
+      <p>Dette dokumentet er intern oppsummering — handlingsplan øverst, svar fra intervjuet og refleksjoner etter rapportgjennomgangen bak.</p>
+    </div>
+    <div class="hero-summary">
+      <span class="lag-tag">NoExcuse — overordnet vurdering</span>
+      <p>«Det er ingen tvil om at virksomheten er helt i oppstartsfasen i form av mål og mening, definering av produktet og profilering. Samtidig fremstår det som mulig for virksomheten å bli tydeligere på hvordan de skal oppfattes og hvordan jobbe når de er klare.»</p>
+      <p class="mono" style="font-size:10px; opacity:0.35; margin-top:8px;">— Dagfinn Bang-Johansen, No Excuse AS</p>
+    </div>
+  </div>
+</div>
+
+<!-- 01 HANDLINGSPLAN -->
+<section id="handlingsplan">
+  <span class="label">01 — Handlingsplan</span>
+  <div class="section-title">Det som skal gjøres nå</div>
+  <div class="lag-intro">
+    <p><strong>Alle syv er vurdert til Lav omfang og Høy effekt</strong> av No Excuse — kort vei, stor gevinst. Dette er ikke læringsmål. Det er oppgaver med eier.</p>
+  </div>
+  <table>
+    <thead>
+      <tr><th></th><th>Tiltak</th><th>Vurdering</th><th>Ansvarlig</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="row-num">1</td>
+        <td><div class="item-title">Intern identitetsworkshop med marked og drift</div><div class="item-desc">Teamet er ikke fullt samstemte om hvem VIBS er for hvem. Workshop er første steg — ekstern sparring (Anders) kan hjelpe.</div></td>
+        <td><span class="badge">Lav / Høy</span></td>
+        <td class="owner-cell">Hele teamet</td>
+        <td class="owner-cell">Ikke gjort</td>
+      </tr>
+      <tr>
+        <td class="row-num">2</td>
+        <td><div class="item-title">Sørg for at ledere er rollemodeller (Walk the talk)</div><div class="item-desc">VIBS er «laget av håndverkere for håndverkere» — det må vises, ikke bare sies. Autentisiteten er allerede der.</div></td>
+        <td><span class="badge">Lav / Høy</span></td>
+        <td class="owner-cell">Bjørn Skeime</td>
+        <td class="owner-cell">Ikke formalisert</td>
+      </tr>
+      <tr>
+        <td class="row-num">3</td>
+        <td><div class="item-title">Sikre god opplæring og onboarding</div><div class="item-desc">Relevant ved første ansettelse. Flat struktur krever spesielt tydelige forventninger — hvem er VIBS og hva bidrar man med.</div></td>
+        <td><span class="badge dim">Lav / Høy</span></td>
+        <td class="owner-cell">Lars Gunnar / LEB</td>
+        <td class="owner-cell">Fremtidig</td>
+      </tr>
+      <tr>
+        <td class="row-num">4</td>
+        <td><div class="item-title">Definer de viktigste måleparameterne</div><div class="item-desc">Diskutert i møtet — ble ikke landet. Kandidater: antall kunder, prosjekter, omsetning, oppetid, CO₂-reduksjon. En beslutning mangler.</div></td>
+        <td><span class="badge">Lav / Høy</span></td>
+        <td class="owner-cell">Bjørn + LG</td>
+        <td class="owner-cell">Ikke vedtatt</td>
+      </tr>
+      <tr>
+        <td class="row-num">5</td>
+        <td><div class="item-title">Kartlegg all myndighetskontakt i virksomheten</div><div class="item-desc">Per nå: skatt, lokal kommune, miljødirektorat. Liten jobb nå — men strukturen bør settes før det vokser.</div></td>
+        <td><span class="badge">Lav / Høy</span></td>
+        <td class="owner-cell">Christine R.</td>
+        <td class="owner-cell">Ikke gjort</td>
+      </tr>
+      <tr>
+        <td class="row-num">6</td>
+        <td><div class="item-title">Lag en kultur for åpen og konstruktiv kommunikasjon</div><div class="item-desc">Gründergruppen er bevisst ulike — det er en styrke. Men kultur bygges ikke av forbud alene. Sett ord på hva dere faktisk vil ha.</div></td>
+        <td><span class="badge">Lav / Høy</span></td>
+        <td class="owner-cell">Hele teamet</td>
+        <td class="owner-cell">Pågående</td>
+      </tr>
+      <tr>
+        <td class="row-num">7</td>
+        <td><div class="item-title">Etabler en policy for hvordan håndtere media</div><div class="item-desc">Demo Day 8. april og konsortiet er på plass — ingen mediepolicy finnes. Lag én setning: hvem snakker og hva sier vi.</div></td>
+        <td><span class="badge">Lav / Høy</span></td>
+        <td class="owner-cell">Bjørn Skeime</td>
+        <td class="owner-cell">Mangler</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 02 SAMMENDRAG -->
+<section id="sammendrag">
+  <span class="label">02 — No Excuse vurdering</span>
+  <div class="section-title">Hva rapporten sier</div>
+  <div class="lag-intro">
+    <p><strong>Dette er No Excuse sin vurdering av VIBS</strong> — basert på svarene fra intervjuet, satt i sammenheng med hva de ser i andre virksomheter. Ingen fasit, men et eksternt blikk.</p>
+  </div>
+  <div class="quote-block" style="margin-bottom:20px;">
+    <blockquote>«Det er ingen tvil om at virksomheten er helt i oppstartsfasen i form av mål og mening, definering av produktet og profilering. Samtidig fremstår det som mulig for virksomheten å bli tydeligere på hvordan de skal oppfattes og hvordan jobbe når de er klare.»</blockquote>
+    <p class="q-src">— Executive Summary, s. 2</p>
+  </div>
+  <div class="quote-block" style="margin-bottom:20px;">
+    <blockquote>«CEO er snekker av utdanning og måtte av og til justeres, da det fort ble prat om hvordan det var på byggeplasser fremfor når vi nå primært utvikler en mobil-app. Dette gikk veldig greit og forringer på ingen måte intervjuresultatet.»</blockquote>
+    <p class="q-src">— Gjennomføring, s. 2</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Spørsmålene har gitt mye å tenke på.»</blockquote>
+    <p class="q-src">— Avsluttende kommentar fra VIBS etter intervjuet</p>
+  </div>
+  <div class="tema-grid">
+    <div class="tema-card">
+      <div class="tema-num">01</div>
+      <div class="tema-title">Identitet</div>
+      <p class="tema-text">Kjernebudskapet er klart, men markedsidentiteten er prematurt definert. SINTEF var overrasket over at løsningen ikke finnes allerede.</p>
+      <a href="#identitet" class="tema-link">Gå til seksjonen →</a>
+    </div>
+    <div class="tema-card">
+      <div class="tema-num">02</div>
+      <div class="tema-title">Struktur</div>
+      <p class="tema-text">Flat, fleksibel, gründerdrevet. Milepæler satt for 2026, men rolleavklaring og KPI-er ikke vedtatt. Kapital begynner å knipe.</p>
+      <a href="#struktur" class="tema-link">Gå til seksjonen →</a>
+    </div>
+    <div class="tema-card">
+      <div class="tema-num">03</div>
+      <div class="tema-title">Menneske</div>
+      <p class="tema-text">Sterk indre motivasjon og gründereierskap. Stress er penger, ikke folk — enda. Klar bevissthet om at det endres ved ansettelser.</p>
+      <a href="#menneske" class="tema-link">Gå til seksjonen →</a>
+    </div>
+    <div class="tema-card">
+      <div class="tema-num">04</div>
+      <div class="tema-title">Påvirkning</div>
+      <p class="tema-text">Myndighetskontakt er minimal men må struktureres. Mediepolicy mangler. Nettverk er varmt, konsortium på plass.</p>
+      <a href="#paavirkning" class="tema-link">Gå til seksjonen →</a>
+    </div>
+  </div>
+</section>
+
+<!-- 03 IDENTITET -->
+<div class="detail" id="identitet">
+  <div class="detail-header">
+    <span class="detail-bignum">01</span>
+    <span class="detail-title">Identitet</span>
+  </div>
+  <span class="label">Hva VIBS sa i intervjuet</span>
+  <div class="lag-intro">
+    <p><strong>Dette er de umiddelbare svarene fra 14. mars</strong> — ikke bearbeidet versjon. Det er verdien i dem.</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Fremmedord. Prematurt. Ingen vet om oss. Tenkt på identitet gjennom å skape verdi for kunden. Ønsker å treffe SMB, og de ønsker å se verdi med en gang. Vi skal løse utfordringen enkelt og treffe midt i kjernen. Vi gjør bærekraft lønnsomt.»</blockquote>
+    <p class="q-src">— Opplevd markedsidentitet</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Dette hevdes å være en ny standard, der det ikke finnes konkurrenter (utenom kanskje én). De skal samle alle leverandører og gjøre noe nytt med det. Skal skille seg ut på forenkling, vekting, ordrekontroll og inkludere NOBB.»</blockquote>
+    <p class="q-src">— Markedsdifferanse</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Alle skriver om problemet, men ingen har vist at de kan løse det. I dag kan ingen gjøre ESG-rapportering, utover å sette inn noen tall. Vi ønsker å gjøre bransjen bedre, unngå grønnvasking, øke lønnsomheten og legge inn reelle kroner bak CO₂.»</blockquote>
+    <p class="q-src">— Verdibevissthet</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Virksomheten har blitt møtt av SINTEF som var overrasket over at deres forretningsidé ikke finnes i markedet allerede. Dette er åpenbart troverdig og innovativt.»</blockquote>
+    <p class="q-src">— Kongruens i ord og handling</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Virksomheten vil bli assosiert med begreper som 'ærlige' og 'no fluff', og det ønsker de å holde på.»</blockquote>
+    <p class="q-src">— Kjerneidentitet</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Privatkunder vil få servert tilbudene superenkelt. Vi skal legge opp til en lett dialog, kartlegge behov underveis, og sikre mer valuta for pengene.»</blockquote>
+    <p class="q-src">— Kundes identitetsoppfatning</p>
+  </div>
+  <hr class="divider">
+  <span class="label">No Excuse — muligheter for identitet (utvalg)</span>
+  <table class="mul-table">
+    <thead><tr><th>Mulighet</th><th>Omfang</th><th>Effekt</th></tr></thead>
+    <tbody>
+      <tr><td class="hl">Intern identitetsworkshop med marked og drift</td><td class="mv" style="color:var(--yellow);">Lav</td><td class="mv" style="color:var(--yellow);">Høy</td></tr>
+      <tr><td class="hl">Sørg for at ledere er rollemodeller (Walk the talk)</td><td class="mv" style="color:var(--yellow);">Lav</td><td class="mv" style="color:var(--yellow);">Høy</td></tr>
+      <tr><td>Gjennomgå kjernebudskapet til selskapet</td><td class="mv">Høy</td><td class="mv">Middels</td></tr>
+      <tr><td>Integrer merkevarestrategi med virksomhetsstrategi</td><td class="mv">Middels</td><td class="mv">Høy</td></tr>
+    </tbody>
+  </table>
+  <hr class="divider">
+  <div class="placeholder">
+    <div class="ph-label">📝 Egne refleksjoner — legg til her</div>
+    <div class="ph-text">Hva sitter igjen etter identitetsdiskusjonen? Er dere enige om hvem VIBS er for hvem?</div>
+  </div>
+</div>
+
+<!-- 04 STRUKTUR -->
+<div class="detail" id="struktur">
+  <div class="detail-header">
+    <span class="detail-bignum">02</span>
+    <span class="detail-title">Struktur</span>
+  </div>
+  <span class="label">Hva VIBS sa i intervjuet</span>
+  <div class="quote-block">
+    <blockquote>«Det er et tydelig økonomisk mandat. Daglig leder tar i all hovedsak de beslutninger som trengs å tas. Selv med en investorstrategi er det en noe utydelig rolleavklaring.»</blockquote>
+    <p class="q-src">— Organisering av myndighet</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«CEO har hatt fri fra jobb i 1,5 år nå og siden det begynner å knipe på kapital oppleves det som noe hastverk. Slik er det å være en oppstartsbedrift og sårbar mot 'Nei!'»</blockquote>
+    <p class="q-src">— Etterlevelse strategi</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«I dag driftes virksomheten fleksibelt. Mye av innsatsen gjøres ved siden av ordinært arbeid på kvelder og i helger. Det er behov for å strukturere dette noe mer opp med flere ansatte.»</blockquote>
+    <p class="q-src">— Utenfor normal drift</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Det er viktig for gründerne at kommunikasjon skjer uten flaskehalser i en flat struktur. Problemstillinger som oppstår i denne første fasen, vil handle om å kunne snu seg raskt — og da må autonomi råde gjennom kompetente og motiverte medarbeidere.»</blockquote>
+    <p class="q-src">— Ansattes autonomi</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Milepæler for 2026: hente inn penger, få sendt søknader, bli motivert av å få en første versjon i drift. Den første demo motiverer. Ellers er det oppmerksomhet på økonomi og lønnsomhet.»</blockquote>
+    <p class="q-src">— Bruk av målstyring</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Emnet er ikke avklart i ledergruppen — det utløste en diskusjon. Det ble enighet om å utvikle en løsning som en standard i markedet. Kandidater: antall kunder, prosjekter, omsetning, oppetid, CO₂-reduksjon.»</blockquote>
+    <p class="q-src">— Målbarhet</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Det skal jobbes med å kvalitetssikre relasjonene slik at styrken skal gå begge veier med tydelig dekningsbidrag og motivasjon. Ryddig forhold til kontrakter og fakturering.»</blockquote>
+    <p class="q-src">— Leverandører</p>
+  </div>
+  <hr class="divider">
+  <span class="label">No Excuse — muligheter for struktur (utvalg)</span>
+  <table class="mul-table">
+    <thead><tr><th>Mulighet</th><th>Omfang</th><th>Effekt</th></tr></thead>
+    <tbody>
+      <tr><td class="hl">Definer de viktigste måleparameterne</td><td class="mv" style="color:var(--yellow);">Lav</td><td class="mv" style="color:var(--yellow);">Høy</td></tr>
+      <tr><td class="hl">Sikre god opplæring og onboarding</td><td class="mv" style="color:var(--yellow);">Lav</td><td class="mv" style="color:var(--yellow);">Høy</td></tr>
+      <tr><td>Lag tydelige organisasjonskart og ansvarslinjer</td><td class="mv">Lav</td><td class="mv">Middels</td></tr>
+      <tr><td>Skap 2-veiskommunikasjon</td><td class="mv">Middels</td><td class="mv">Høy</td></tr>
+    </tbody>
+  </table>
+  <hr class="divider">
+  <div class="placeholder">
+    <div class="ph-label">📝 Egne refleksjoner</div>
+    <div class="ph-text">Hva er status på rolleavklaring og milepæler? Er KPI-diskusjonen landet?</div>
+  </div>
+</div>
+
+<!-- 05 MENNESKE -->
+<div class="detail" id="menneske">
+  <div class="detail-header">
+    <span class="detail-bignum">03</span>
+    <span class="detail-title">Menneske</span>
+  </div>
+  <span class="label">Hva VIBS sa i intervjuet</span>
+  <div class="quote-block">
+    <blockquote>«Det er viktig for virksomheten å ha fart, for dette skaper en følelse av formål. Det er fornuftig, konkret og inspirerende å ha et tydelig formål.»</blockquote>
+    <p class="q-src">— Rasjonalitet</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Det vil være viktig å gjøre de ansattes innsats synlig for å bygge yrkesstolthet. Internt skal vi jobbe for å unngå fordommer og heller se hverandres innsats. Innsats vil være viktigere enn resultatet.»</blockquote>
+    <p class="q-src">— Omsorg</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Ledelsen skal styrke de ansattes selvtillit gjennom å legge tydelige føringer for hvordan man vil ha det i selskapet. Vil jobbe med verdier, eksponere seg som leder, by på seg selv, innrømme feil og ære den som bør æres. Det er en styrke at gründergruppen er ulike også i personlige verdier.»</blockquote>
+    <p class="q-src">— Menneskeverdt</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Dette med kreativitet oppleves som vesentlig. Det snakkes om å unngå rigide systemer og heller stole på hverandre gjennom å tildele ansvar. På den måten også bygge selvfølelse.»</blockquote>
+    <p class="q-src">— Kreativitet</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>CEO: «Det er ikke så vanskelig. De er født med hjerne.» En må tåle å bli misforstått og innse at en ikke eier sannheten.</blockquote>
+    <p class="q-src">— Nysgjerrighet</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Uten ansatte så blir det prematurt å tenke på stress som noe å ha oppmerksomhet på. 'For oss som er her i dag, er det penger som er stress' — men det har man kontroll på.»</blockquote>
+    <p class="q-src">— Oppmerksomhet på stress</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Under dette emnet havnet vi i fella og snakket om byggepraksis i tømreryrket. Det pekes på en visjon om yrkesstolthet og materialkvalitet i kjernen. De som tar bærekraftsansvar, sees på som seriøse.»</blockquote>
+    <p class="q-src">— Visjon i virket</p>
+  </div>
+  <hr class="divider">
+  <span class="label">No Excuse — muligheter for menneske (utvalg)</span>
+  <table class="mul-table">
+    <thead><tr><th>Mulighet</th><th>Omfang</th><th>Effekt</th></tr></thead>
+    <tbody>
+      <tr><td class="hl">Sørg for at ledere er rollemodeller (Walk the talk)</td><td class="mv" style="color:var(--yellow);">Lav</td><td class="mv" style="color:var(--yellow);">Høy</td></tr>
+      <tr><td class="hl">Lag en kultur for åpen og konstruktiv kommunikasjon</td><td class="mv" style="color:var(--yellow);">Lav</td><td class="mv" style="color:var(--yellow);">Høy</td></tr>
+      <tr><td>Etabler lett forståelig og attraktiv visjonsbeskrivelse</td><td class="mv">Middels</td><td class="mv">Høy</td></tr>
+      <tr><td>Utvikle ledere til å delegere ansvar, ikke bare oppgaver</td><td class="mv">Middels</td><td class="mv">Høy</td></tr>
+    </tbody>
+  </table>
+  <hr class="divider">
+  <div class="placeholder">
+    <div class="ph-label">📝 Egne refleksjoner</div>
+    <div class="ph-text">Menneskeseksjonen var fremtidsrettet. Hva sitter igjen om kultur og ansettelse?</div>
+  </div>
+</div>
+
+<!-- 06 PÅVIRKNING -->
+<div class="detail" id="paavirkning">
+  <div class="detail-header">
+    <span class="detail-bignum">04</span>
+    <span class="detail-title">Påvirkning</span>
+  </div>
+  <span class="label">Hva VIBS sa i intervjuet</span>
+  <div class="quote-block">
+    <blockquote>«Pr. i dag er det få krav fra myndighetene. Skattemyndighetene er relevante. Dette blir nok mer relevant på sikt med ansatte, i forhold til informasjonssikkerhet osv.»</blockquote>
+    <p class="q-src">— Myndighetskrav</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Til nå har virksomheten kun vært i kontakt med arbeidstilsynet, den lokale kommunen og miljødirektorater. Det kan nok bli mer kontakt på sikt.»</blockquote>
+    <p class="q-src">— Myndighetskontakt</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>Daglig leder: «Ikke aktuelt med fagforeninger knyttet med utvikling av app!»</blockquote>
+    <p class="q-src">— Organisert arbeidsliv</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Ledergruppen mener at å beskrive internkulturen ikke 'skal være så vanskelig' og at om det er en ting som er helt uakseptabelt, så er det mobbing.»</blockquote>
+    <p class="q-src">— Holdninger</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Virksomheten er i et marked hvor det finnes aktører som driver med svindel. De må arbeide løpende for å ikke bli oppfattet som å selv være en av dem. Grønnvasking er noe som kan tas med i denne sammenheng.»</blockquote>
+    <p class="q-src">— Forebygging av svindel</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«Ledergruppen vil, når tiden er inne, se på risikovurderinger. Det er ønske om forebyggende tiltak. 'Vi skal jobbe forebyggende, ikke spare dette til slutten.'»</blockquote>
+    <p class="q-src">— Gjenoppretting / omdømme</p>
+  </div>
+  <div class="quote-block">
+    <blockquote>«I fremtiden vil alt måtte måles i kroner og ører. Ledergruppen har ikke tenkt på hvilken effekt deres inntog har på bransjen, men opplever allerede at snekkerne kan fremstå som noe skeptiske.»</blockquote>
+    <p class="q-src">— Markedsaktører</p>
+  </div>
+  <hr class="divider">
+  <span class="label">No Excuse — muligheter for påvirkning (utvalg)</span>
+  <table class="mul-table">
+    <thead><tr><th>Mulighet</th><th>Omfang</th><th>Effekt</th></tr></thead>
+    <tbody>
+      <tr><td class="hl">Kartlegg all myndighetskontakt i virksomheten</td><td class="mv" style="color:var(--yellow);">Lav</td><td class="mv" style="color:var(--yellow);">Høy</td></tr>
+      <tr><td class="hl">Etabler en policy for hvordan håndtere media</td><td class="mv" style="color:var(--yellow);">Lav</td><td class="mv" style="color:var(--yellow);">Høy</td></tr>
+      <tr><td>Bruk klarspråk og vær konsis overfor myndighetene</td><td class="mv">Middels</td><td class="mv">Høy</td></tr>
+      <tr><td>Bygg tillit gjennom åpen og aktiv kommunikasjon</td><td class="mv">Lav</td><td class="mv">Høy</td></tr>
+    </tbody>
+  </table>
+  <hr class="divider">
+  <div class="placeholder">
+    <div class="ph-label">📝 Egne refleksjoner</div>
+    <div class="ph-text">Hva er status på mediepolicy og myndighetskart?</div>
+  </div>
+</div>
+
+<!-- 07 REFLEKSJONER ETTER RAPPORTEN -->
+<section id="refleksjoner">
+  <span class="label">05 — Teamets refleksjoner</span>
+  <div class="section-title">Etter å ha hørt rapporten</div>
+  <div class="lag-intro">
+    <p><strong>Dette er refleksjonene som kom frem i samtalen etter rapportgjennomgangen.</strong> Ikke svar på spørsmål — men det dere snakket dere frem til. Dette laget er vanskeligst å rekonstruere.</p>
+  </div>
+
+  <div class="refl-card">
+    <div class="refl-title">«Vi selger kvalitet på mekken»</div>
+    <p>Dagfinn stilte spørsmålet om hvem VIBS skal være — McDonald's, Peppes eller Bagatelle? Konklusjonen landet på Peppes-i-McDonald's-drakt: tilgjengelig, rask, ingen jåleri — men høy faglig kvalitet under panseret.</p>
+    <p>Lars Gunnar formulerte det: «Vi ønsker at terskelen er så lav at folk kan slippe garden helt. Da går Peppes litt for langt.» Bjørn bekreftet: «Vi selger kvalitet på mekken.»</p>
+    <p class="refl-note">Konsekvens: Selg ikke opplevelsen — selg effektivitet. «Smokk, smokk, smokk — slippe å tenke, få det ferdig.»</p>
+  </div>
+
+  <div class="refl-card">
+    <div class="refl-title">Laget av håndverkere for håndverkere</div>
+    <p>Dagfinn pekte på noe konkret: «Dere er laget av håndverkere for håndverkere. Det ville jeg brukt. Hvis dere en gang skal stå på stand, bør dere ha snekkerbuksa på.»</p>
+    <p>Lars Gunnar bekreftet at det allerede hadde fungert — da Bjørn kom inn med utstyret på, så folk at dette var ekte. Det er ikke et image-grep. Det er hvem VIBS faktisk er.</p>
+    <p class="refl-note">Konsekvens: Autentisiteten er allerede der. Den må ikke lages — den må ikke skjules.</p>
+  </div>
+
+  <div class="refl-card">
+    <div class="refl-title">Vær spilleren, ikke brikken</div>
+    <p>Dagfinn delte en metafor: «Hvilke spillere vil du være på sjakkbrettet?» Svaret for VIBS bør ikke være kongen eller dronningen — men spilleren. Den som setter reglene alle andre spiller etter.</p>
+    <p>«Vi lager en løsning som fungerer for samfunnet. I stedet for kun én aktør som skal dra nytte. I bygg i dag er det kunden som drar nytte av alle og styrer hele greia. Men dette her er en kjempestart.»</p>
+    <p class="refl-note">Konsekvens: VIBS er ikke en aktør i markedet. De definerer spillereglene markedet bruker.</p>
+  </div>
+
+  <div class="refl-card">
+    <div class="refl-title">Identitetsworkshop og neste runde</div>
+    <p>No Excuse ønsker oppfølging om 6–12 måneder for å se progresjon. Dagfinn sa dette er et av de mest ambisiøse prosjektene han har sett.</p>
+    <p>Internt ble det diskutert identitetsworkshop — ekstern fasilitator (Anders) nevnt. Teamet var enige om å tenke selv først, så eventuelt bringe inn ekstern sparring.</p>
+    <table class="mul-table" style="margin-top:16px;">
+      <thead><tr><th>Konkret oppfølging</th><th>Hvem</th><th>Når</th></tr></thead>
+      <tbody>
+        <tr><td>Identitetsworkshop internt</td><td class="mv">Hele teamet</td><td class="mv">Snarest</td></tr>
+        <tr><td>Vurdere ekstern sparring (Anders)</td><td class="mv">Lars Gunnar / Bjørn</td><td class="mv">Etter workshop</td></tr>
+        <tr><td>Ny runde med No Excuse</td><td class="mv">Hele teamet</td><td class="mv">Om 6–12 mnd</td></tr>
+        <tr><td>Referanse / sitater til No Excuse</td><td class="mv">Bjørn</td><td class="mv">Til høsten</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+  <div class="placeholder">
+    <div class="ph-label">📝 Andre refleksjoner</div>
+    <div class="ph-text">Noe fra møtet som ikke er fanget opp? Uenigheter, spørsmål, ting som fortsatt ikke er avklart?</div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-brand">VIBS × NOEXCUSE</span>
+  <span class="footer-meta">Ledelse 60:2 · 14.03.2026 · Rapport: Dagfinn Bang-Johansen · Oppsummering: Lars Erik Brekne Johnsen</span>
+</footer>
+
+</body>
+</html>

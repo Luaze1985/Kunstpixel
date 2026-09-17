@@ -1,0 +1,1 @@
+"""Aura Kunstmuseum core package."""

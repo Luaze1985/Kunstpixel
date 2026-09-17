@@ -1,0 +1,859 @@
+# Ledelse 60:2 - 60 temaer med ca. spørsmål, svar og forventet tolkning
+> Kildegrense: Eksakt spørsmålsordlyd finnes ikke i PDF-en. «Ca. spørsmål» er rekonstruert fra temaoverskriften. Svar og tolkning følger rapportens REFLEKSJON og SAMMENHENG, med kun teknisk tekstnormalisering.
+
+# Identitet
+
+## NE-01 - Opplevd markedsidentitet (side 6)
+**Underområde:** Tydelighet
+
+**Ca. spørsmål:** Hva er status for opplevd markedsidentitet i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Fremmedord. Prematurt. Ingen vet om oss. Tenkt på identitet gjennom å skape verdi for kunden. Ønsker å treffe SMB, og de ønsker å se verdi med en gang. Vi skal løse utfordringen enkelt og treffe midt i kjernen. Vi skal være en seriøs aktør. "Vi skal forenkle tilbudsprosessen og synliggjøring av kvalitet for totalentreprenør. Vi gjør bærekraft lønnsomt.”
+
+**Forventet tolkning / SAMMENHENG:** Merkevaren er kjennetegnene som mulige kunder bruker for å gjenkjenne hvem en leverandør er, og en påminnelse om hvorfor de er det riktige valget. For at merke-varen skal være tydelig og troverdig, må den representere virksomhetens identitet slik som den oppleves i markedet blant kunder, konkurrenter og partnere.
+
+**Muligheter:**
+- Intern identitetsworkshop med marked og drift - omfang: Lav, effekt: Høy
+- Markedsfremstøt mot kundene - omfang: Middels, effekt: Lav
+- Gjennomgå den visuelle profilen - omfang: Lav, effekt: Middels
+- Tydeliggjøre merkevarehistorien - omfang: Middels, effekt: Lav
+
+## NE-02 - Identitet i ledelse (side 7)
+**Underområde:** Tydelighet
+
+**Ca. spørsmål:** Hva er status for identitet i ledelse i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Vi forenkler hverdagen og bringer inn en unik beregningsmodell.
+
+**Forventet tolkning / SAMMENHENG:** Virksomhetens identitet representeres av dens ledere, og deres framtreden er et forbilde for ansatte og partnere. Det opprinnelige opphavet ligger gjerne hos gründerne, som når virksomheten vokser må formidle den videre til nye ansatte og ledere som de kanskje ikke møter daglig på arbeidsplassen. For at en identitet ikke skal bestå av intensjoner og formaninger, så må den gjøres levende av ledelsen.
+
+**Muligheter:**
+- Sette identitet på dagsorden for ledergruppen - omfang: Lav, effekt: Middels
+- Sørge for å avklare roller og ansvar i ledergruppen - omfang: Middels, effekt: Middels
+
+## NE-03 - Identitet i formidling (side 8)
+**Underområde:** Tydelighet
+
+**Ca. spørsmål:** Hva er status for identitet i formidling i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Formidling avhenger av hvem som er kunden. Det kan være totalentreprenører, privatkunder, aktører i bank & forsikring og andre. Vi skal utføre beregninger og på den måten forenkle. Vi skal skille oss ut på kvalitet og pris og bærekraft. Banker skal anbefale vår løsning. (TCO).
+
+**Forventet tolkning / SAMMENHENG:** Kontakt med kunder og partnere i salg og samarbeid er en viktig kanal hvor identiteten formidles og styrkes. Historiene om hva virksomheten holder på med, hvordan den gjør det, og hvem den egentlig er, avhenger av hvordan identiteten formidles i den løpende dialogen med andre parter.
+
+**Muligheter:**
+- Dedikert opplæring og oppfølging av selgerne - omfang: Middels, effekt: Lav
+- Gjennomgå kjernebudskapet til selskapet - omfang: Høy, effekt: Middels
+
+## NE-04 - Identitet i produksjon (side 9)
+**Underområde:** Tydelighet
+
+**Ca. spørsmål:** Hva er status for identitet i produksjon i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Prematurt, men foreløpig må det handle om forenkling og kontroll.
+
+**Forventet tolkning / SAMMENHENG:** Ansatte og ledere skaper sammen internkulturen i virksomheten, det som kjennetegner og skaper samhold og fellesskap. Denne felles indre identiteten er en viktig forutsetning for samarbeid og effektiv produksjon. Når den indre identiteten ikke samsvarer med den ytre identiteten, er utydelig eller delt, svekkes det sosiale.
+
+**Muligheter:**
+- Dedikert opplæring og oppfølging av ansatte - omfang: Høy, effekt: Lav
+
+## NE-05 - Kundes identitetsoppfatning (side 10)
+**Underområde:** Tydelighet
+
+**Ca. spørsmål:** Hva er status for kundes identitetsoppfatning i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Privatkunder vil få servert tilbudene superenkelt. “Vi skal legge opp til en lett dialog, kartlegge behov underveis, og sikre mer valuta for pengene.”
+
+**Forventet tolkning / SAMMENHENG:** Det er kundes opplevelse av virksomhetens identitet som er den virkelige testen i markedet, og det er også derfor en av de vanligste områdene å gjøre systematiske målinger. Her er det viktig å igjen skille mellom merkevare og identitet, og å forstå hvilke faktorer det er som påvirker kundes oppfatninger og fortolkninger.
+
+**Muligheter:**
+- Markedsundersøkelse - omfang: Middels, effekt: Lav
+- Sikre tydelig differensiering i budskapet - omfang: Middels, effekt: Lav
+- Implementer analyseverktøy for å forstå hvordan kundene oppfatter vår identitet - omfang: Høy, effekt: Lav
+
+## NE-06 - Markedsdifferanse (side 11)
+**Underområde:** Det unike
+
+**Ca. spørsmål:** Hva er status for markedsdifferanse i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Dette hevdes å være en ny standard, der det ikke finnes konkurrenter (utenom kanskje en). De skal samle alle leverandører og gjør det noe nytt med. Dette for å gjøre det enkelt selv for privatkunden. Målet er å lage en fordel for entreprenører der de kan hinder konkurrenter. Skal skille seg ut på forenkling og vekting. Skal skape ordrekontroll forenkle revisjoner og inkludere NOBB.
+
+**Forventet tolkning / SAMMENHENG:** Identitet er i stor grad kjennetegnet av forskjeller, kontraster – hva man ikke er. Det er også en av de viktigste faktorene for å lykkes å markedet: Tydelighet om hvordan man er annerledes enn konkurrentene. For at disse forskjellene skal oppleves som relevante, troverdige og tydelige må de forankres sterkt i virksomhetens identitet.
+
+**Muligheter:**
+- Gjennomføre kvalitativ konkurrentanalyse - omfang: Middels, effekt: Lav
+- Logge de som bidrar til avvik fra profilen - omfang: Høy, effekt: Lav
+
+## NE-07 - Attraksjonsdifferanse (side 12)
+**Underområde:** Det unike
+
+**Ca. spørsmål:** Hva er status for attraksjonsdifferanse i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Leder tenker at det er fordi virksomheten fokuserer på å løse problem for kunder, og at potensielle ansatte vil være med på å løse dette, som gjør dem attraktive. Daglig leder er en interessant person som kjører rally osv. Videre skal de som blir med på laget være med på å skape et produkt og løse et stort problem gjennom forenkling.
+
+**Forventet tolkning / SAMMENHENG:** Forskjeller fra konkurrentene er avgjørende for å etablere en tydelig identitet i markedet, og det gjelder også virksomhetens identitet som arbeidsplass. Potensielle nye arbeidstakere vil ha forventninger til virksomheten ut fra oppfattet identitet, og dette legger forutsetningene hva hvem som søker på stillinger.
+
+**Muligheter:**
+- Definere målsetting, måle løpende og iverksette tiltak - omfang: Lav, effekt: Middels
+- Sikre gode utviklingsmuligheter - omfang: Middels, effekt: Middels
+- Sørg for konkurransedyktige betingelser - omfang: Høy, effekt: Middels
+
+## NE-08 - Ambisjonsbevissthet (side 13)
+**Underområde:** Relevans
+
+**Ca. spørsmål:** Hva er status for ambisjonsbevissthet i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Dette er en klassisk startup. Hvis man klarer å validere sin beregningsmodell med en MVP vil det styrke deres posisjon. Tenker å bygge på også partnerskap. “Vi ønsker å sette en ny bransjestandard!”
+
+**Forventet tolkning / SAMMENHENG:** Ambisjoner og forventninger til fremtiden er en viktig forutsetning for å oppfattes som relevant. Fortellingene om hvilke reiser virksomheten skal legge ut på vil alltid defineres av hvem man er i dag, hvor man kommer fra, og hvem man vil bli. Dersom virksomheten ikke er bevisst på dette, så kan man heller ikke lede sin egen utvikling.
+
+**Muligheter:**
+- Gjennomføre gap-undersøkelse: mål vs. belastning - omfang: Middels, effekt: Middels
+- Inkorporer innovasjon og læring i fx en eLæring - omfang: Lav, effekt: Middels
+- Skap en åpen og involverende dialog internt - omfang: Lav, effekt: Høy
+
+## NE-09 - Verdibevissthet (side 14)
+**Underområde:** Relevans
+
+**Ca. spørsmål:** Hva er status for verdibevissthet i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Alle skriver om problemet, men ingen har vist at de kan løse det. I dag kan ingen gjøre ESG-rapportering, utover å sette inn noen tall. “Vi ønsker å gjøre bransjen bedre, unngå grønnvasking, øke lønnsomheten og legge inn reelle kroner bak Co2.”
+
+**Forventet tolkning / SAMMENHENG:** Oppfatninger om hva det er virksomheten legger vekt på som viktig og har verdi er avhengig av at virksomheten selv er bevisst på spørsmålet og tar tydelige valg om hvordan dette henger sammen med identiteten. Dette former hva det er i virksomhetens identitet som andre, for eksempel kunder, opplever som verdifullt.
+
+**Muligheter:**
+- Integrer verdiene i det daglige arbeidet - omfang: Lav, effekt: Middels
+- Sørge for at ledere er rollemodeller som etterlever virksomhetens verdier - omfang: Middels, effekt: Middels
+
+## NE-10 - Endringsbevissthet (side 15)
+**Underområde:** Relevans
+
+**Ca. spørsmål:** Hva er status for endringsbevissthet i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Ikke så mange rutiner foreløpig. Jobber med et dokumentsenter. Ikke så relevante i markedet ennå. Leter etter alle feil i bransjen. Daglig leder er aktiv tømrer i sitt daglige virke. CEO sier: "Rutinen min er å finne alle feil som oppstår i bransjen og finne måter å gjøre det bedre."
+
+**Forventet tolkning / SAMMENHENG:** Markedet er i konstant endring, det gjør at forutsetningene for virksomhetens identitet alltid er ustabile og krever justeringer. I likhet med behovet for bevissthet om fremtiden og det som er verdifullt, så kreves det bevissthet om evnen til å endre seg for å selv kunne lede istedenfor å bli ledet av skiftende omstendigheter.
+
+**Muligheter:**
+- Etablere faste rutiner for omverdensanalyse - omfang: Lav, effekt: Middels
+- Målbevisst innhenting av informasjon fra kunder - omfang: Middels, effekt: Middels
+- Delta aktivt i bransjenettverk og fagmiljøer - omfang: Middels, effekt: Middels
+
+## NE-11 - Preferansefaktorer (side 16)
+**Underområde:** Attraksjon
+
+**Ca. spørsmål:** Hva er status for preferansefaktorer i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Daglig leder sier at “Alle er allergiske mot abonnement - slik at alle vil betale kun en forholdsvis lav kostnad”. Det kan se ut som det går mot fastpris.
+
+**Forventet tolkning / SAMMENHENG:** Oppfatninger av virksomhetens identitet, og hva det er som gjør at virksomheten fremstår som forskjellig fra konkurrenter i markedet, er avgjørende faktorer for å bli det foretrukne valget. Identiteten peker ut sannsynlige muligheter og handlinger.
+
+**Muligheter:**
+- Sørg for unike kundeopplevelser - omfang: Middels, effekt: Middels
+- Sørg for å ha en tydelig profil - omfang: Høy, effekt: Middels
+- Tilby innovative tjenester og tilleggstilbud - omfang: Høy, effekt: Middels
+
+## NE-12 - Preferanseattributter (side 17)
+**Underområde:** Attraksjon
+
+**Ca. spørsmål:** Hva er status for preferanseattributter i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Daglig leder mener at trygghet er avgjørende faktor, så en gratis inngang blir viktig. Her må virksomheten ut for å spørre innser de selv.
+
+**Forventet tolkning / SAMMENHENG:** Følelser og assosiasjoner forbundet med identiteten virker på samme måte som preferansefaktorer til fordel for å gjøre identiteten tiltrekkende og attraktiv.
+
+**Muligheter:**
+- Gjennomfør brukerundersøkelser regelmessig - omfang: Høy, effekt: Høy
+- Vurder internt i ledergruppen regelmessig virksomhetens preferanseattributter - omfang: Middels, effekt: Middels
+
+## NE-13 - Kongruens i ord og handling (side 18)
+**Underområde:** Troverdighet
+
+**Ca. spørsmål:** Hva er status for kongruens i ord og handling i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Virksomheten har blitt møtt av Sintef som var overrasket over at deres forretningsidé ikke finnes i markedet allerede. Dette er åpenbart troverdig og innovativt.
+
+**Forventet tolkning / SAMMENHENG:** Beskrivelse av i hvilken grad kommunikasjon om produktet og selve produktet som leveres svarer til hverandre. Innebefattet også hvordan vi omtaler produktet sett i lys av kommunikasjon for øvrig.
+
+**Muligheter:**
+- Gjennomfør markedsanalyse - omfang: Middels, effekt: Middels
+- Definer «adferd i praksis» gjennom fx verdiplakater og i møter. Forklar på hvilken måte tillit kan skapes - omfang: Middels, effekt: Middels
+- Sørg for at ledere er rollemodeller (Walk the talk) - omfang: Lav, effekt: Høy
+
+## NE-14 - Selvsagt soliditet (side 19)
+**Underområde:** Troverdighet
+
+**Ca. spørsmål:** Hva er status for selvsagt soliditet i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Det å få på plass en MVP (en minste levedyktige løsning) som de kan gå ut i markedet med vil være avgjørende. For håpentligvis vil det vise at de er en seriøs aktør og at det gir troverdighet. En idé er å få en bank el. til å teste løsningen.
+
+**Forventet tolkning / SAMMENHENG:** En beskrivelse av hvordan det jobbes overfor kundene på en tydelig måte i hvilken grad de kan ha tillit til lovnaden om produktet og det som faktisk leveres.
+
+**Muligheter:**
+- Definer en prosedyre for å måle soliditet regelmessig - omfang: Middels, effekt: Middels
+- Anerkjenn de som leverer kvalitet konsekvent og som løser problemer - omfang: Middels, effekt: Høy
+- Legg opp til samarbeid og støtt under teamfølelse - omfang: Lav, effekt: Middels
+
+## NE-15 - Kjerneidentitet i utstrekning (side 20)
+**Underområde:** Langsiktighet
+
+**Ca. spørsmål:** Hva er status for kjerneidentitet i utstrekning i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Virksomheten vil bli assosiert med begreper som “ærlige” og “no fluff” og det ønsker de å holde på.
+
+**Forventet tolkning / SAMMENHENG:** Sikre at virksomheten har definert de delene av identiteten som skal være stabile over tid, til tross for endringer i markedet, virksomhetens premisser og produktets utforming. Målet er å sikre at tydelighet i seg selv og stabilitet over tid.
+
+**Muligheter:**
+- Gjennomfør internt arbeidsmøte for å tydeliggjøre vår kjerneidentitet og hvordan bruke dette aktivt - omfang: Middels, effekt: Middels
+- Forankre identiteten i bedriftskulturen - omfang: Lav, effekt: Middels
+- Integrer merkevarestrategi med virksomhetsstrategi - omfang: Middels, effekt: Høy
+- Evaluer og juster identiteten uten å miste kjernen - omfang: Middels, effekt: Lav
+
+## NE-16 - Kjerneidentitet i form (side 21)
+**Underområde:** Langsiktighet
+
+**Ca. spørsmål:** Hva er status for kjerneidentitet i form i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Da intervjuet fant sted var selskapet kun et par måneder gammelt. Har ikke rukket å gjøre så mange tabber ennå.
+
+**Forventet tolkning / SAMMENHENG:** Noen ganger kan det være fristende å starte opp virksomheten på nytt med “blanke ark”. En sammenheng der vi kan se bort fra dårlige historiske valg, tabber og elementer som forkludrer vår identitet i dag.
+
+**Muligheter:**
+- Gjennomfør et arbeidsmøte med mål om å tydeliggjøre vår kjerneidentitet - omfang: Lav, effekt: Middels
+- Definer og lev verdiene (employer branding) - omfang: Middels, effekt: Middels
+- Etabler en åpen og tydelig kommunikasjonskultur - omfang: Middels, effekt: Middels
+- Sørg for kompetanseutvikling og livslang læring - omfang: Middels, effekt: Høy
+
+# Struktur
+
+## NE-17 - Organisering av myndighet (side 22)
+**Underområde:** Beslutninger
+
+**Ca. spørsmål:** Hvordan er beslutningsmyndighet og mandat organisert i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Det et tydelig økonomisk mandat. Daglig leder tar i all hovedsak de beslutninger som trengs å tas. Selv med en investorstrategi er det en noe utydelig rolleavklaring.
+
+**Forventet tolkning / SAMMENHENG:** Sikre at alle ansatte vet hva de har av myndighet til å gjøre uten å måtte spørre nærmeste leder. Dette er med på å skape en trygghet. Legg en plan for å håndtere avvik fra forventninger og myndighet – dette kan gå begge veier.
+
+**Muligheter:**
+- Undersøk med lederne i hvilken grad de føler myndighet - omfang: Lav, effekt: Middels
+
+## NE-18 - Eierskapets betydning (side 23)
+**Underområde:** Beslutninger
+
+**Ca. spørsmål:** Hva er status for eierskapets betydning i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Intervjugruppen er gründere og oppstartsgruppen, som dermed har et selvsagt eierskap og forhold til innsatsen. Det er en sterk indre motivasjon for å løse et problem.
+
+**Forventet tolkning / SAMMENHENG:** Ulike eierskap av virksomheter kan påvirke virksomheten og de som jobber der, ofte mer eller mindre ubevisst. Sjekk gjerne særtegn med eierskapsformen og særtegn med denne opp mot opplevd eierskap.
+
+**Muligheter:**
+- Jobb med målstyrt ledelse - omfang: Middels, effekt: Høy
+- Sikre at virksomhetens strategi er kjent i ledergruppen - omfang: Middels, effekt: Middels
+
+## NE-19 - Tjenestevei (side 24)
+**Underområde:** Beslutninger
+
+**Ca. spørsmål:** Hvordan fungerer tjenestevei, rapportering og ansvarslinjer i praksis?
+
+**Ca. svar / REFLEKSJON:** Per tid er virksomheten for liten (3 personer). Derimot er refleksjonene rundt emnet om 2-3 år med flere ansatte interessant. Her ser man for seg at alle vil jobbe utenom tjenesteveier og at det vil være positivt med tanke på at det er flat struktur. Viktig å huske på visjon og verdier når det skal rekrutteres i fremtiden.
+
+**Forventet tolkning / SAMMENHENG:** Det er generelt en fordel at rapportering som regel følger tjenestevei. Det kan oppleves som forutsigbart og være en stor fordel spesielt i tilfeller der ansvar, oppgaver og rapportering settes på prøve
+
+**Muligheter:**
+- Undersøk i hvilken grad det rapporteres etter tjenestevei - omfang: Middels, effekt: Lav
+- Etabler tydelige og skriftlige rutiner - omfang: Middels, effekt: Middels
+- Lag tydelige organisasjonskart og ansvarslinjer - omfang: Lav, effekt: Middels
+- Sikre god opplæring og onboarding - omfang: Lav, effekt: Høy
+- Tren på avvikshåndtering - omfang: Middels, effekt: Middels
+
+## NE-20 - Ansattes autonomi (side 25)
+**Underområde:** Beslutninger
+
+**Ca. spørsmål:** Hvor stor autonomi skal ansatte ha, og hvordan avgrenses den?
+
+**Ca. svar / REFLEKSJON:** Det er viktig for gründerne at kommunikasjon skjer uten flaskehalser i en flat struktur. Problemstillinger som oppstår i denne første fasen, vil handle om å kunne snu seg raskt og da må autonomi råde gjennom kompetente og motiverte medarbeidere.
+
+**Forventet tolkning / SAMMENHENG:** Noen ganger er det en fordel at de faste tjenesteveiene omgås, dette kan det være lurt å avklare, slik at det avviksregistreres og håndteres i eventuelle nye beskrivelser
+
+**Muligheter:**
+- Undersøk i hvilken grad det rapporteres utover tjenestevei - omfang: Middels, effekt: Lav
+- Utvikle ledere til å delegere ansvar, ikke bare oppgaver - omfang: Middels, effekt: Høy
+- Tilrettelegg for fleksible arbeidshverdager - omfang: Middels, effekt: Middels
+- Etabler en åpen og støttende kommunikasjon - omfang: Middels, effekt: Høy
+
+## NE-21 - Utenfor normal drift (side 26)
+**Underområde:** Beslutninger
+
+**Ca. spørsmål:** Hva er status for utenfor normal drift i virksomheten?
+
+**Ca. svar / REFLEKSJON:** I dag driftes virksomheten fleksibelt. Mye av innsatsen gjøres ved siden av ordinært arbeid på kvelder og i helger. Det er behov for å strukturere dette noe mer opp med flere ansatte i virksomheten.
+
+**Forventet tolkning / SAMMENHENG:** Normalt defineres det en driftstid. Dette kan innebære både tidspunkt der produksjonen skjer kontrollert og utenfor løpende kontroll. Utover produksjonstid kan en se på tidsrom der vi er tilgjengelige for kunder og andre. I ytterste konsekvens kan vi være nødt til å stille opp helt ekstraordinært ved for eksempel uønskede hendelser. Utfordringen som det sees på her er i hvilken grad de som er i drift er i stand til å ta raske beslutninger
+
+**Muligheter:**
+- Kartlegg graden av drift utover normal tid - omfang: Lav, effekt: Lav
+- Kartlegg typen beslutninger som må tas utover normal tid - omfang: Lav, effekt: Middels
+
+## NE-22 - Leverandører (side 27)
+**Underområde:** Beslutninger
+
+**Ca. spørsmål:** Hva er status for leverandører i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Det skal jobbes med å kvalitetssikre relasjonene slik at styrken i relasjonene skal gå begge veier med tydelig dekningsbidrag (“cut”) og motivasjon (“what’s in it for me”). Det skal bygges sterke mellommenneskelige relasjoner og gå begge veier. Ryddig forhold til kontrakter og fakturering.
+
+**Forventet tolkning / SAMMENHENG:** I en verdikjede er vi avhengige av leverandører enten direkte eller indirekte. I de tilfellene der uforutsette hendelse oppstår settes gjerne slike relasjoner på prøve. I hvilken grad disse stiller opp vil ofte avhenge av avtalemessige eller kommersielle forhold. Vi er uansett avhengige av et positivt bidrag
+
+**Muligheter:**
+- Gjennomgå leverandøravtaler - omfang: Lav, effekt: Lav
+- Evaluer uforutsette hendelser der vi har vært avhengige av at leverandører bidrar positive og deres bidrag - omfang: Lav, effekt: Lav
+
+## NE-23 - Målbarhet (side 28)
+**Underområde:** Måling
+
+**Ca. spørsmål:** Hva er status for målbarhet i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Emnet er ikke avklart i ledergruppen, så det utløste en diskusjon. Det ble enighet om å utvikle en løsning som en standard i markedet. Det er et ønske om å vektlegge styrken i konkrete og praktisk bruk av måling. Ulike parameter som kan måles; antall kunder, antall prosjekter, omsetning, kvalitetstall (eks. oppetid), Co2-reduksjon osv.
+
+**Forventet tolkning / SAMMENHENG:** Å jobbe målstyrt har for mange virksomheter vist seg å bidra positivt til styring og ledelse, motivasjon og feiring. Mange anbefaler at det jobbes etter prinsipper som fx. SMARTE mål.
+
+**Muligheter:**
+- Innfør balance scorecard - omfang: Middels, effekt: Middels
+- Definer de viktigste måleparameterne - omfang: Lav, effekt: Høy
+- Innfør KI-verktøy for å kunne trekke enkle slutninger basert på store mengder data - omfang: Middels, effekt: Høy
+
+## NE-24 - Bruk av målstyring (side 29)
+**Underområde:** Måling
+
+**Ca. spørsmål:** Hva er status for bruk av målstyring i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Dette emnet er også noe prematurt for virksomheten. Det er noen milepæler lagt for dette året som må oppnås. Disse handler om å hente inn penger, få sendt søknader og bli motivert av å få en første versjon i drift. Dagen første demo skal vises motiverer. Ellers er det oppmerksomhet på økonomi og lønnsomhet.
+
+**Forventet tolkning / SAMMENHENG:** Å ha en bevisst policy ift håndtering av måling og formidling av resultater er avgjørende for uniform bruk av disse. En konsekvens ved å bruke målstyringen på en lite gjennomtenkt måte, kan være at det har motsatt effekt
+
+**Muligheter:**
+- Definér i lederhåndboka hvordan mål skal benyttes. Bruke SMARTE mål og utvikle KPI’er - omfang: Lav, effekt: Middels
+- Involver medarbeiderne for å skape forankring - omfang: Middels, effekt: Høy
+
+## NE-25 - Kommunikasjon om strategi (side 30)
+**Underområde:** Strategi
+
+**Ca. spørsmål:** Hva er status for kommunikasjon om strategi i virksomheten?
+
+**Ca. svar / REFLEKSJON:** På sikt skal det forankres en verdibasert strategi der de ansatte kjenner denne og er forankret i ledergruppen. Skal utvikles når tiden er moden for det, da flere i ledergruppen har kompetanse fra større virksomheter.
+
+**Forventet tolkning / SAMMENHENG:** Å benytte strategi bevisst og gjennomtenkt, kan for mange, i møte med virksomhetens kultur være en styrke. Å sørge for at hver og en forstår sin betydning ift etterlevelse av en strategi bidrar gjerne til at man føler seg involvert. Dette er viktig både ved lansering og ved vedlikehold av strategien.
+
+**Muligheter:**
+- Gjennomfør strategiprosesser utover i virksomheten - omfang: Middels, effekt: Middels
+- Definer en tydelig og kortfattet visjon - omfang: Lav, effekt: Middels
+- Knytt daglige oppgaver til strategien - omfang: Middels, effekt: Middels
+- Skap 2-veiskommunikasjon - omfang: Middels, effekt: Høy
+
+## NE-26 - Etterlevelse strategi (side 31)
+**Underområde:** Strategi
+
+**Ca. spørsmål:** Hva er status for etterlevelse strategi i virksomheten?
+
+**Ca. svar / REFLEKSJON:** CEO har hatt fri fra jobb i 1,5 år nå og siden det begynner å knipe på kapital oppleves det som noe hastverk. Slik er det å være en oppstartsbedrift og sårbar mot “Nei!”.
+
+**Forventet tolkning / SAMMENHENG:** Når året er over må fjorårets etterlevelse av strategien evalueres. Se gjerne etter om bruk av penger og beslutninger understøtter strategien og om det er avvik, hva disse kommer av og om det er læringspunkter eller behov for å gjøre endringer på strategien.
+
+**Muligheter:**
+- Gjennomfør evaluering av fjorårets strategi - omfang: Lav, effekt: Middels
+- Jevnlig avviksanalyse (budsjett vs. regnskap) - omfang: Middels, effekt: Middels
+- Rullerende prognoser (oppdateringer) - omfang: Middels, effekt: Middels
+- Involver organisasjonen - omfang: Høy, effekt: Middels
+- Gjennomfør risikovurderinger - omfang: Lav, effekt: Middels
+
+## NE-27 - Budsjettets fleksibilitet (side 32)
+**Underområde:** Budsjett
+
+**Ca. spørsmål:** Hva er status for budsjettets fleksibilitet i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Virksomheten har et budsjett og et bevisst forhold til å justere dette basert etter eventuelle midler som dukker opp som de ikke visste om da budsjettet ble laget.
+
+**Forventet tolkning / SAMMENHENG:** Et budsjett kan legges opp mot 2år før neste periode er fullført. Dermed kan ulike endringer i markedet ha ført til at budsjettet blir meningsløst å bruke som styrings- verktøy. I praksis kan dette gjelde valutaendringer, dieselpriser som endrer seg, politiske endringer, nye lover og regler, plutselig arbeidsledighet eller store endringer i tilbud og etterspørsel.
+
+**Muligheter:**
+- Gjennomfør risikovurdering for mer fleksibelt budsjetter - omfang: Middels, effekt: Middels
+- Evaluer endringer på budsjett som gjøres - omfang: Lav, effekt: Middels
+
+## NE-28 - Budsjett for forbedring (side 33)
+**Underområde:** Budsjett
+
+**Ca. spørsmål:** Hva er status for budsjett for forbedring i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Etter en god prat om hvordan budsjett kan benyttes for å styre innsats og resultat, kom man frem til at virksomheten er i en for tidlig fase med tanke på (manglende) omsetning. Det er ikke ønske om å forandre produktet, men forbedringer på budsjettet kan gjøre dem kjappere og gi en tydeligere identitet.
+
+**Forventet tolkning / SAMMENHENG:** Budsjett er et av flere styringsverktøy for å sikre sunn drift for neste periode. Virksomheter som jobber grundig med budsjettprosesser og med dem har resultat- ansvar, opplever at eierskapet til budsjettet vokser. Dette inkluderer at aktørene også har mulighet til å legge inn forslag til forbedring.
+
+**Muligheter:**
+- Legg en plan for å inkludere ledere med resultatansvar, for å avklare behov for forbedringer på budsjettet - omfang: Middels, effekt: Høy
+- Gjennomfør undersøkelse mot ledere med resultatansvar om deres påvirkning av forbedringer - omfang: Middels, effekt: Middels
+- Introduser løsninger basert på KI for å se på hvordan budsjettet aktivt kan brukes til forbedringer - omfang: Lav, effekt: Middels
+
+## NE-29 - Effektive bedriftssystemer (side 34)
+**Underområde:** Skjema
+
+**Ca. spørsmål:** Hva er status for effektive bedriftssystemer i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Det er pt. “ikke så mye å holde styr på”, men på sikt vurdere noe annet enn Tripletex. Dette vil ha med økt antall transaksjoner. Foreløpig ikke behov for CRM. Det er heller ikke lønnsutbetalinger pt. Microsoft er implementert i tillegg til kontoer på LinkedIn og Facebook.
+
+**Forventet tolkning / SAMMENHENG:** Å ha effektive systemer for å håndtere kunder, ordre, drift, økonomi, ansatte, administrasjon, dokumenter, sikkerhet, avvik osv. kan være avgjørende i kampen mot konkurrentene. Her inkluderes også utviklingsplan av disse for å følge med i tiden.
+
+**Muligheter:**
+- Kartlegging av virksomhetens bedriftssystemer - omfang: Lav, effekt: Middels
+- Risikovurdering av bedriftssystemene - omfang: Middels, effekt: Middels
+- Kompetansekartlegging av brukere av bedriftssystem - omfang: Middels, effekt: Middels
+- Investerings- og utviklingsplan av bedriftssystemene - omfang: Middels, effekt: Middels
+
+## NE-30 - Sjekkliste for oppgave (side 35)
+**Underområde:** Skjema
+
+**Ca. spørsmål:** Hva er status for sjekkliste for oppgave i virksomheten?
+
+**Ca. svar / REFLEKSJON:** I hvilken grad det skal være sjekklister for oppgaver avhenger av oppgaven. Et eksempel på dette kan være søknadsprosesser.
+
+**Forventet tolkning / SAMMENHENG:** Det er en balansegang for de fleste virksomheter mellom å overstyre ansatte med evig mange sjekklister, instrukser og rutiner og det å la oppgaveløsing være en viktig del av mestringsfølelse. Vurdér faktorer som dokumentasjonsplikt, frekvens, kompleksitet, variasjon, om oppgaven går på rundgang ol. før det lages en sjekkliste av oppgaven.
+
+**Muligheter:**
+- Kartlegg hva som finnes av sjekklister i virksomheten, sett i lys av personal- eller instruksjonshåndbøker - omfang: Lav, effekt: Middels
+- Avklar hva som skal til for å lage en sjekkliste - omfang: Lav, effekt: Middels
+
+## NE-31 - Relevant rapportering (side 36)
+**Underområde:** Skjema
+
+**Ca. spørsmål:** Hva er status for relevant rapportering i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Rapportering er viktig for virksomheten for blant annet å sikre troverdighet, sørge for pliktig dokumentasjon og sikre bevis. Dette vil brukes i månedlige rapporter mot interessenter og partnere/investorer. Det er mål å bevise progresjon overfor de man er på radaren hos. Her er også egen forpliktelse avgjørende.
+
+**Forventet tolkning / SAMMENHENG:** Hva som skal rapporteres og ikke, hvem som skal rapportere til hvem, når og ikke kan være krevende å lage en struktur på. For mye rapportering vil stjele produksjons-tid, oppleves som meningsløst, kan være provoserende og ende opp som provoserende. For lite rapportering kan på en annen side føre til at beslutninger tas på feil grunnlag og blir dårlige.
+
+**Muligheter:**
+- Kartlegg rapporteringsoppgavene, hvem som rapporterer hva til hvem, med begrunnelse om hvorfor rapporteringen skjer og når den skal vurderes på nytt - omfang: Middels, effekt: Middels
+- Innfør interne KI-verktøy som samler data og effektivt presenterer dette for ledergruppen og andre - omfang: Lav, effekt: Middels
+
+# Menneske
+
+## NE-32 - Rasjonalitet (side 37)
+**Underområde:** Trygghet
+
+**Ca. spørsmål:** Hva er status for rasjonalitet i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Det er viktig for virksomheten å ha fart for dette skaper en følelse av formål. Videre er det fornuftig, konkret og inspirerende å ha et tydelig formål.
+
+**Forventet tolkning / SAMMENHENG:** Noen oppgaver er ufornuftige, mens andre er knyttet til fornuft. Målet med å jobbe rasjonelt vil være å sikre at ledelsen sørge for klare følelser av fornuft og kloke avgjørelser. Å ha en løpende oversikt kan være bra for både virksomheten og de som er tilknyttet.
+
+**Muligheter:**
+- Kartlegg hva de enkelte faktisk gjør og avdekk om det er ufornuftige oppgaver - omfang: Lav, effekt: Middels
+- Forankre sikkerhet i ledelsen og virksomhetsstyringen - omfang: Lav, effekt: Middels
+- Gjennomfør risikovurderinger - omfang: Lav, effekt: Middels
+- Bygge en sterk sikkerhetskultur - omfang: Middels, effekt: Middels
+- Etabler beredskap og delta på øvelser - omfang: Høy, effekt: Middels
+
+## NE-33 - Omsorg (side 38)
+**Underområde:** Trygghet
+
+**Ca. spørsmål:** Hva er status for omsorg i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Det vil være viktig å gjøre de ansattes innsats synlig for å bygge yrkesstolthet. Dette gjelder spesielt yngre arbeidstakere. Internt skal vi jobbe for å unngå fordommer og heller se hverandres innsats. Innsats vil være viktigere enn resultatet.
+
+**Forventet tolkning / SAMMENHENG:** Å være bevist på omsorg som en faktor for å sikre at alle medarbeiderne har det bra kan være krevende. Det viser seg at ulike medarbeidere opplever omsorg på ulike måter. Konsekvensene av å feile her kan over tid føre til at arbeidsklimaet og -miljøet utvikler seg i en retning som man egentlig ønsker.
+
+**Muligheter:**
+- Definer verdibegrep for virksomheten - omfang: Lav, effekt: Middels
+- Gjennomfør spørreundersøkelse der dere får avdekket hvordan det står til med omsorg i virksomheten - omfang: Middels, effekt: Lav
+
+## NE-34 - Menneskeverdt (side 39)
+**Underområde:** Trygghet
+
+**Ca. spørsmål:** Hva er status for menneskeverdt i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Ledelsen skal styrke de ansattes selvtillit og akseptere andres personlige verdi gjennom å legge tydelige føringer for hvordan man vil ha det i selskapet. Vil jobbe med verdier, eksponere seg som leder, by på seg selv, innrømme feil og ære den som bør æres. Det er en styrke at gründergruppen er ulike også i personlige verdier.
+
+**Forventet tolkning / SAMMENHENG:** Å ha et bevisst forhold til menneskeverd vil kunne bidra til et solid grunnlag for beslutninger og prioriteringer. Dette vil kunne peke direkte tilbake på hvordan virksomheten blir omtalt blant sine kontakter. Å føre et lavt, men allikevel lovlig menneskeverd, kan gjøre virksomheten mindre attraktiv for både nye og eksisterende ansatte.
+
+**Muligheter:**
+- Utvikle en solid personalstrategi - omfang: Middels, effekt: Middels
+- Undersøk blant ansatte i hvilken grad de opplever menneskeverdt ivaretatt - omfang: Lav, effekt: Lav
+
+## NE-35 - Kreativitet (side 40)
+**Underområde:** Trygghet
+
+**Ca. spørsmål:** Hva er status for kreativitet i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Dette med kreativitet oppleves som vesentlig. Det snakkes om å unngå rigide systemer og heller stole på hverandre gjennom å tildele ansvar. På den måten også bygge selvfølelse.
+
+**Forventet tolkning / SAMMENHENG:** Utvikling er gjerne tuftet på innovasjon som baseres på kreative initiativ. Virksomheter er gjerne avhengig av en grad kreativitet, samtidig som at ukontrollert kreativitet fort kan skape mange former for stress. Gjelder både de som eksponeres for kreative krefter i tid og utid, samt de som brenner inne med gode ideer uten noen gang å bli hørt.
+
+**Muligheter:**
+- Etabler kreative arenaer - omfang: Lav, effekt: Middels
+- Gjennomfør opplæring i kreative prosesser - omfang: Middels, effekt: Middels
+- Kartlegg kreative initiativ som har gitt solide resultater - omfang: Lav, effekt: Lav
+
+## NE-36 - Nysgjerrighet (side 41)
+**Underområde:** Trygghet
+
+**Ca. spørsmål:** Hva er status for nysgjerrighet i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Her ble det pekt på eksempler fra tømrerbransjen der en motiverer gjennom å lage gode løsninger for lønn, stiller spørsmål og utfordrer. CEO: «Det er ikke så vanskelig. De er født med hjerne.» En må tåle å bli misforstått og innse at en ikke eier sannheten.
+
+**Forventet tolkning / SAMMENHENG:** Både sett i lys av kvalitetsarbeid og motivasjonsteorier er det verdifullt å ha innsikt i eget arbeid, leddene før og gjerne også leddene etter. Dette gir en følelse av å forstå helheten og kan stimulere på mange ulike måter.
+
+**Muligheter:**
+- Verdikjedeanalyse - omfang: Lav, effekt: Middels
+- Undersøke hvilke ansatte som har hvilken innsikt i eget virke, kunnskapsgap og -hunger - omfang: Lav, effekt: Middels
+- Kjør opplæring i bruk av KI-verktøy for å få inspirasjon til hvordan stimulere nysgjerrigheten - omfang: Lav, effekt: Middels
+
+## NE-37 - Oppmerksomhet (side 42)
+**Underområde:** Trygghet
+
+**Ca. spørsmål:** Hva er status for oppmerksomhet i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Virksomheten ser for seg å stille seg ydmyk ift ny kompetanse og ønsker å være åpen for innspill og diskusjon. Sett i lys av at visjonen og kongstanken er krystallklar, skal det legges til rette for pragmatiske rammer for hvordan man kommer seg til det langsiktige målet.
+
+**Forventet tolkning / SAMMENHENG:** Det er en normal misforståelse at daglig leder og sikkerhetsansvarlig ivaretar sikkerheten. Dette stemmer ikke mer enn at disse rollene inkluderer et ansvar for å koordinere ulike sikkerhetstiltak utover risikovurdering og etterlevelse av krav og sertifiseringer. Det at hver og en ansatt følger med på omgivelsene for å se etter unaturligheter, farer og trusler gir derfor enorm effekt og bør settes i et system.
+
+**Muligheter:**
+- Utvikle enkle kanaler for å varsle om uregelmessigheter - omfang: Lav, effekt: Middels
+- Gjennomfør sikkerhetsbriefinger og mikrotrening - omfang: Middels, effekt: Middels
+- Involver ansatte i risikovurderinger - omfang: Lav, effekt: Lav
+- Sikre tydelig kommunikasjon av rutiner og nulltoleranse - omfang: Lav, effekt: Middels
+
+## NE-38 - Åpenhet (side 43)
+**Underområde:** Trygghet
+
+**Ca. spørsmål:** Hva er status for åpenhet i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Virksomheten skal jobbe med å ha en åpenhet for ideer, til tross for at de som individer er ulike. Emnet kan virke noe vrient å sette ord på.
+
+**Forventet tolkning / SAMMENHENG:** Oppgaver kan ofte løses på ulike måter. Det er også på denne måten utvikling skjer i mange ulike virksomheter. I praksis kan det være snakk om nye kilder til input og hvordan ledelsen stimulerer de ansatte til å fremme åpenhet til nye måter å gjøre ting på.
+
+**Muligheter:**
+- Kartlegging av forslag på nye tiltak og gjennomføring av disse - omfang: Middels, effekt: Høy
+- Utvikle en prosess for å se i hvilken grad KI kan bidra i utvikling av prosessene konkret - omfang: Lav, effekt: Middels
+
+## NE-39 - Besluttsomhet (side 44)
+**Underområde:** Trygghet
+
+**Ca. spørsmål:** Hva er status for besluttsomhet i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Det pekes på at eierskap blant alle ansatte er en nøkkel for å lykkes. For å få det til skal det jobbes aktivt med lytting, men usikker på hvordan får de gode meningene helt frem. Man tenker at støtte er vesentlig.
+
+**Forventet tolkning / SAMMENHENG:** Det å ha selvsikre ansatte som har selvsikkerhet til å ta beslutninger i virksomheter, kan utgjøre forskjellen på de som følger med i tiden og ikke. Videre kan dette med å ta for omfattende beslutninger i virksomheter på tvers av langsiktige strategier også være problematisk.
+
+**Muligheter:**
+- Utforme tydelige stillingsstrategier - omfang: Lav, effekt: Middels
+- Utvikle ledere som kan tydeliggjøre de ansattes mandat - omfang: Høy, effekt: Høy
+- Skrive tydelige stillingsbeskrivelser med definert mandat - omfang: Middels, effekt: Middels
+
+## NE-40 - Trivsel (side 45)
+**Underområde:** Trygghet
+
+**Ca. spørsmål:** Hva er status for trivsel i virksomheten?
+
+**Ca. svar / REFLEKSJON:** I virksomheten skal de ansatte trives. Det kan av og til føles unaturlig å skryte av ansattes innsats, men man ser at det motiverer. For øvrig legges det opp til teamarbeid og en ærlig tilbakemeldingskultur der det gis tilbakemelding om innsats som ikke er god nok. Utfordringen ligger litt i at ulike generasjoner trives på ulike vilkår.
+
+**Forventet tolkning / SAMMENHENG:** Å trives på jobben er grunnleggende for å kunne etablere trygghet hos enhver medarbeider. Trivselsarbeidet må gjerne tilpasses bransjer, virksomheter og de ansatte. Det er ikke alltid helt slik at «one size fits all».
+
+**Muligheter:**
+- Gjennomfør medarbeiderundersøkelser med spørsmål om trivsel spesifikt - omfang: Lav, effekt: Lav
+- Tren ledere opp i empati, betydningen av trivsel og hvordan påvirke dette - omfang: Høy, effekt: Middels
+
+## NE-41 - Visjon i virket (side 46)
+**Underområde:** Visjon
+
+**Ca. spørsmål:** Hva er status for visjon i virket i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Under dette emnet havnet vi i fella og snakket om byggepraksis i tømreryrket. Det pekers på en visjon om yrkesstolthet og materialkvalitet er i kjernen for virksomheten, og representeres med yrkesbakgrunnen til daglig leder. Håndtverkerne er idag avhengige av byggevareleverandører osv. Ny markedssituasjon fordi færre billig- produkter. De som tar bærekraftsansvar, sees på som seriøse.
+
+**Forventet tolkning / SAMMENHENG:** En tydelig visjon er ofte grunnleggende og førende for hvordan de ulike ansatte skal oppfatte bakgrunnen for virksomhetens eksistens. Årsaken til at dette er viktig kommer til syne gjennom en grunnleggende måte å tenke både leveranser og utvikling på.
+
+**Muligheter:**
+- Etabler en lett forståelig og attraktiv beskrivelse av virksomhetens visjon - omfang: Middels, effekt: Høy
+- Gjennomfør undersøkelse blant ansatte om visjonen - omfang: Lav, effekt: Lav
+- Gjennomfør undersøkelse blant forretningsforbindelser om visjonen - omfang: Høy, effekt: Middels
+
+## NE-42 - Verdier i hverdagen (side 47)
+**Underområde:** Verdier
+
+**Ca. spørsmål:** Hva er status for verdier i hverdagen i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Verdiene i virksomheten peker tilbake på å kvalitetsbegrep som tekniske spesialister og bransjefolk innehar. Bransje- og domenekunnskap skal inn i arbeidshverdagen. Det er her vi finner verdiene som er bærebjelken i faget.
+
+**Forventet tolkning / SAMMENHENG:** Virksomhetens entydige og sunne verdier er grunnleggende for at enhver ansatt skal kunne gjennomføre sitt virke til enhver tid – spesielt i tilfeller der man kommer opp i en situasjon som ikke er regulert av krav eller rutiner.
+
+**Muligheter:**
+- Utvikle entydige og sunne verdier - omfang: Middels, effekt: Middels
+- Sørg for at ledere er rollemodeller (Walk the talk) - omfang: Lav, effekt: Høy
+- Integrer verdier i rekruttering og prestasjonsytring - omfang: Middels, effekt: Middels
+- Etabler åpen og trygg kommunikasjon - omfang: Lav, effekt: Middels
+- Prioriter balanse og helse (velvære) - omfang: Middels, effekt: Middels
+
+## NE-43 - Opplæring i mål (side 48)
+**Underområde:** Mål
+
+**Ca. spørsmål:** Hva er status for opplæring i mål i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Ledelsen virker usikker på emnet. Etter en lengre tenkepause konkluderes det med at emnet vil være fruktbart i sammenheng inn mot første ansettelse. Bevisstgjøringen handler om at ansatte må forstå hvor vi vil.
+
+**Forventet tolkning / SAMMENHENG:** Dette med å jobbe målrettet kan være et godt styringsverktøy for ledere i virksomheten. Måling kan gjøres mot ulike faktorer som omsetning, økonomi, trivsel, fravær eller annet. I noen tilfeller er måling av leveranse også et kvalitetstall overfor leveranser.
+
+**Muligheter:**
+- Gjennomfør trening i hvordan måling skal gjøres - omfang: Middels, effekt: Høy
+- Evaluer virksomhetens mål, ift relevans og kvalitet - omfang: Middels, effekt: Middels
+- Undersøk med virksomhetens ansatte i hvilken grad de er bevisste ift målarbeidet - omfang: Middels, effekt: Middels
+
+## NE-44 - Ansattes ferdigheter (side 49)
+**Underområde:** Ressurser
+
+**Ca. spørsmål:** Hva er status for ansattes ferdigheter i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Etter hvert enes gruppen om at det vil være vesentlig å «gjøre ting enkelt» uavhengig av deres bakgrunn. Det pekes på at ansatte må ha en helhetlig forståelse, at jobben skal gjøres på et kontor, men at det er et program/plattform som skal snakke mot regnskapsfolk. Det er vesentlig å huske på hvem som er i målgruppen.
+
+**Forventet tolkning / SAMMENHENG:** Kompetanse må stadig repeteres, fornyes og utvikles. Nye ansatte kommer til og verden utvikler seg. Sørg for at ansatte evner til å levere som forventet overfor eksterne og interne kunder
+
+**Muligheter:**
+- Gjennomfør kompetansekartlegging - omfang: Lav, effekt: Middels
+- Strukturer behov for kompetanse knyttet til ulike oppgaver - omfang: Middels, effekt: Middels
+
+## NE-45 - Oppmerksomhet på stress (side 50)
+**Underområde:** Stress
+
+**Ca. spørsmål:** Hvordan følger dere med på og håndterer stress?
+
+**Ca. svar / REFLEKSJON:** Uten ansatte så blir det prematurt å tenke på stress som noe å ha oppmerksomhet på. «For oss som er her i dag, er det penger som er stress», men det har man kontroll på.
+
+**Forventet tolkning / SAMMENHENG:** Mange syns det kan være artig med hektiske perioder, men i de tilfellene periodene blir for langvarige og intense, kan det fort bli mer betraktet som stress. Dette kan være skadelig. Sørg for at det er oppmerksomhet knyttet til temaet.
+
+**Muligheter:**
+- Tren lederne på å gjenkjenne tegn på stress og skadevirkningen med dette - omfang: Middels, effekt: Høy
+- Etabler «stressfrie soner» eller «stille timer» - omfang: Middels, effekt: Lav
+- Del kunnskap om arbeidsmiljø og stressmestring - omfang: Middels, effekt: Middels
+- Innfør rutiner for anerkjennelse og debrief - omfang: Middels, effekt: Middels
+
+## NE-46 - Oppmerksomhet på konflikt (side 51)
+**Underområde:** Konflikt
+
+**Ca. spørsmål:** Hvordan følger dere med på og håndterer konflikt?
+
+**Ca. svar / REFLEKSJON:** Nok en prematur bevisstgjøring uten ansatte. Tenker fortsatt at det er vesentlig å snakke med hverandre, se ann landskapet og ta utfordringer fortløpende.
+
+**Forventet tolkning / SAMMENHENG:** Konflikter tærer ofte på mer enn bare de delaktige partene i selve konflikten. Dersom en ikke får tatt tak i slike utfordringer tidlig kan det utvikle seg og på sikt svekke tilliten til ledelsen. Husk at konflikter gjerne har en fase før det blir synlig.
+
+**Muligheter:**
+- Gjør risikovurdering ift fare for konflikter - omfang: Lav, effekt: Middels
+- Tren ledere opp i å både oppdage og håndtere konflikter - omfang: Middels, effekt: Høy
+- Gjennomfør medarbeider undersøkelser for å kartlegge konflikter - omfang: Middels, effekt: Middels
+
+# Påvirkning
+
+## NE-47 - Myndighetskrav (side 52)
+**Underområde:** Formell
+
+**Ca. spørsmål:** Hvordan identifiserer og etterlever dere relevante myndighetskrav?
+
+**Ca. svar / REFLEKSJON:** Pr. i dag er det få krav fra myndighetene. Skattemyndighetene er relevante. Dette blir nok mer relevant på sikt med ansatte, i forhold til informasjonssikkerhet osv.
+
+**Forventet tolkning / SAMMENHENG:** Å etterleve myndighetskrav regnes som en selvfølge, men det er ulike måter å gjøre dette så effektivt som mulig. Merk at ulike bransjer gjerne har ulike myndighetskrav, samtidig som at ulike funksjoner også er underlagt ulike krav.
+
+**Muligheter:**
+- Etabler en relasjon med advokat for å avklare hvilke krav som gjelder og rettspraksis rundt disse - omfang: Middels, effekt: Høy
+- Knytt virksomheten opp til interesseorganisasjoner som kjører juridisk faglige oppdateringer - omfang: Middels, effekt: Middels
+- Følg med i bransjens tidskrifter og artikler knyttet til temaet - omfang: Lav, effekt: Middels
+
+## NE-48 - Myndighetskontakt (side 53)
+**Underområde:** Formell
+
+**Ca. spørsmål:** Hvordan er kontakten med myndigheter organisert og fulgt opp?
+
+**Ca. svar / REFLEKSJON:** Til nå har virksomheten kun vært i kontakt med arbeidstilsynet, den lokale kommunen og miljødirektorater. Det kan nok bli mer kontakt på sikt.
+
+**Forventet tolkning / SAMMENHENG:** Å ha kontakt med myndighetene er noe virksomheter både må, kan og bør ha. Som virksomhetsleder plikter man å etterkomme myndighetenes anmodninger, samtidig kan det være stor grad av verdi å hente i å ha en positiv relasjon. Nøkkelord her er åpenhet, proaktivitet og forutsigbarhet.
+
+**Muligheter:**
+- Kartlegg all myndighetskontakt i virksomheten - omfang: Lav, effekt: Høy
+- Etabler en proaktiv og åpen dialog med myndighetene - omfang: Middels, effekt: Middels
+- Bruk klarspråk og vær konsis overfor myndighetene - omfang: Middels, effekt: Høy
+- Dokumenter og del data som avtalt med myndighetene - omfang: Middels, effekt: Middels
+- Lever som avtalt og vær forutsigbar overfor myndighetene - omfang: Middels, effekt: Middels
+
+## NE-49 - Organisert arbeidsliv (side 54)
+**Underområde:** Formell
+
+**Ca. spørsmål:** Hvordan forholder virksomheten seg til organisert arbeidsliv og partssamarbeid?
+
+**Ca. svar / REFLEKSJON:** Daglig leder uttrykker: «Ikke aktuelt med fagforeninger knyttet med utvikling av app!»
+
+**Forventet tolkning / SAMMENHENG:** Fagforeninger spiller en viktig rolle for å samle de ansattes ønsker og krav og kan på mange måter forenkle dialogen mellom arbeidsgiver og arbeidstaker. Det å ha en sunn relasjon med fagforeningene kan være lurt.
+
+**Muligheter:**
+- Etabler et sunt samarbeid med fagforeningen - omfang: Lav, effekt: Lav
+- Meld virksomheten inn i en arbeidsgiver organisasjon - omfang: Lav, effekt: Lav
+- Planlegg samarbeidet med fagforeningen - omfang: Lav, effekt: Lav
+
+## NE-50 - Holdninger (side 55)
+**Underområde:** Uformell
+
+**Ca. spørsmål:** Hva er status for holdninger i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Ledergruppen mener at å beskrive internkulturen ikke «skal være så vanskelig» og at om det er en ting som er helt uakseptabelt, så er det mobbing.
+
+**Forventet tolkning / SAMMENHENG:** Internkultur i en virksomhet er krevende å forstå og enda mer vrien å forme. Det å ha en strategi og mål med hvor vi vil med denne og hvordan få det til kan påvirke grenseløst
+
+**Muligheter:**
+- Gjennomfør medarbeiderundersøkelse for å kartlegge holdningene i virksomheten - omfang: Middels, effekt: Middels
+- Gjennomfør sluttintervjuer for å avklare interne holdninger - omfang: Lav, effekt: Middels
+- Definér og levér på felles verdier - omfang: Middels, effekt: Høy
+- Lag en kultur for åpen og konstruktiv kommunikasjon - omfang: Lav, effekt: Høy
+
+## NE-51 - Uformelle ledere (side 56)
+**Underområde:** Uformell
+
+**Ca. spørsmål:** Hvilke uformelle ledere eller maktposisjoner finnes, eller kan oppstå, i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Selv om daglig leder selv hevder at han ikke «er så flink sosialt», så anses emnet for å være noe prematurt og kan tas opp ved en senere anledning.
+
+**Forventet tolkning / SAMMENHENG:** Utover virksomhetens organisasjonskart, er det ikke unormalt at det finnes enkeltpersoner som gjennom personlighet, kompetanse, ansiennitet, relasjoner eller annet utgjør en maktposisjon. Det vil være av høy viktighet å kartlegge disse og deres tilnærming.
+
+**Muligheter:**
+- Identifiser og anerkjenn de uformelle lederne - omfang: Lav, effekt: Lav
+- Gjennomfør medarbeiderundersøkelser - omfang: Lav, effekt: Lav
+- Gjennomfør sluttintervjuer for å kartlegge uformelle ledere - omfang: Lav, effekt: Middels
+- Sørg for å utvikle lederne slik at de kan oppdage og håndtere uformelle ledere - omfang: Middels, effekt: Lav
+- Etabler generelt faste møteplasser med lav terskel - omfang: Middels, effekt: Lav
+
+## NE-52 - Bransjeorganisasjoner (side 57)
+**Underområde:** Støttende
+
+**Ca. spørsmål:** Hva er status for bransjeorganisasjoner i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Virksomheten er ikke medlem av noen bransjeorganisasjon, men vil vurdere dette så snart det blir mer aktuelt.
+
+**Forventet tolkning / SAMMENHENG:** Bransjeorganisasjoner har det med å sette et lys på felles utfordringer, muligheter, nyvinninger, lovreguleringer, arbeidsmarkedet og langsiktige perspektiv. Det å bidra aktivt inn mot bransjeorganisasjoner kan derfor gi gode resultater på både kort og lang sikt.
+
+**Muligheter:**
+- Sørg for å ha en strategisk tilnærming til relevant bransjeorganisasjon, ved å etablere felles mål/nytte - omfang: Middels, effekt: Høy
+- Bygg tillit gjennom åpen og aktiv kommunikasjon - omfang: Lav, effekt: Høy
+- Vær en aktiv bidragsyter, ikke bare mottaker - omfang: Middels, effekt: Middels
+- Etabler faste møteplasser og struktur for samhandling - omfang: Lav, effekt: Middels
+
+## NE-53 - Samarbeidspartnere (side 58)
+**Underområde:** Støttende
+
+**Ca. spørsmål:** Hvilke samarbeidspartnere er kritiske for at virksomheten skal lykkes, og hvordan ivaretas relasjonene?
+
+**Ca. svar / REFLEKSJON:** Det jobbes ikke spesielt tett med noen samarbeidspartnere, men når dette kommer på plass, skal også de kjenne til våre verdier og dele disse.
+
+**Forventet tolkning / SAMMENHENG:** Normalt omgir man seg med mange ulike samarbeidspartnere som kan støtte oss både planlagt og ved tilfeller der man kanskje skulle tro man stod alene. Av og til er det kamper mot en felles utfordring, andre ganger har man interesse av at begge parter lykkes
+
+**Muligheter:**
+- Kartlegg hvilke kunder og leverandører som er positive til oss gjennom regnskap og leverandørlister - omfang: Lav, effekt: Middels
+- Lag en plan for hvordan håndtere om noen av disse aktørene skulle endre sitt syn på oss eller relasjonen - omfang: Middels, effekt: Lav
+- Risikovudering basert på bransje og land - omfang: Lav, effekt: Lav
+- Etabler faste rutiner for internkontroll - omfang: Lav, effekt: Middels
+
+## NE-54 - Markedsaktører (side 59)
+**Underområde:** Utfordrende
+
+**Ca. spørsmål:** Hvilke markedsaktører kan støtte, utfordre eller motarbeide virksomheten?
+
+**Ca. svar / REFLEKSJON:** I fremtiden vil alt måtte måles i kroner og ører. Ledergruppen har ikke tenkt på hvilken effekt deres inntog har på bransjen, men opplever allerede at snekkerne kan fremstå som noe skeptiske. De anser at det vil komme strengere krav fremover.
+
+**Forventet tolkning / SAMMENHENG:** Det å møte aktører i et marked som er kritiske eller negative til vår eksistens, er ganske naturlig. Verdien av å vite hvem disse er, hva de mener og i hvilken grad de kan påvirke oss og våre beslutninger kan være avgjørende.
+
+**Muligheter:**
+- Kartlegg markedsaktører som er negative til oss - omfang: Middels, effekt: Middels
+- Overvåk Sosiale Medier etter negativ omtale - omfang: Lav, effekt: Middels
+- Utfør kvalitative dybdeintervjuer med nøytrale parter - omfang: Høy, effekt: Middels
+
+## NE-55 - Motarbeidere (side 60)
+**Underområde:** Utfordrende
+
+**Ca. spørsmål:** Hva er status for motarbeidere i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Medarbeidere som bruker sin energi på å jobbe mot prosjektet «vil få sparken». Dette er åpenbart en adferd som ikke aksepteres og vil bli slått beinhardt ned på.
+
+**Forventet tolkning / SAMMENHENG:** Noen ganger opplever vi å ha ansatte som fremstår som negative til virksomheten, våre prosesser, våre produkter eller på annen måte ikke er lojale. Disse er det viktig å ha kontroll på og en plan på hvordan skal håndteres dersom de skulle gå for langt.
+
+**Muligheter:**
+- Gjennomfør medarbeiderundersøkelse for å kartlegge hvem som er illojale og hva bakgrunnen for dette er - omfang: Middels, effekt: Høy
+- Ledelsen etablerer en kultur for trygg kommunikasjon - omfang: Lav, effekt: Høy
+- Sikre tydelige forventninger og mål på ansattnivå - omfang: Middels, effekt: Høy
+- Anerkjenn og belønn innsats regelmessig for å stagge motarbeidere - omfang: Middels, effekt: Middels
+- Innfør systematisk HMS-arbeid mot mobbing og utfrysing - omfang: Middels, effekt: Middels
+
+## NE-56 - Forebygging av utpressing (side 61)
+**Underområde:** Fiendtlig
+
+**Ca. spørsmål:** Hvordan arbeider dere med forebygging av utpressing?
+
+**Ca. svar / REFLEKSJON:** Virksomheten anser faren for utpressing så lav at dette anses som noe som ikke kan skje dem og de vil handle der etter.
+
+**Forventet tolkning / SAMMENHENG:** Kriminelle aktører kan være truende til å ty til ulike grep for å oppnå vinning. Robuste organisasjoner der kommunikasjonen er tett og god mellom ledelsen og de ansatte, vil ha bedre forutsetninger for å håndtere denne form for fiendtlig aktivitet.
+
+**Muligheter:**
+- Utforme en policy for hvordan utpressing skal forebygges, oppdages, håndteres - omfang: Lav, effekt: Middels
+- Sikre gode og oppdaterte sikkerhetskopier (backup) for å dekke eventuelle sikkerhetshull - omfang: Middels, effekt: Høy
+- Oppdater programvare og systemer fortløpende for å forebygge utpressing - omfang: Middels, effekt: Høy
+- Opplæring og bevisstgjøring av ansatte - omfang: Middels, effekt: Høy
+- Begrens tilgangsrettigheter (prinsippet om minste tilgang) - omfang: Lav, effekt: Middels
+
+## NE-57 - Forebygging av svindel (side 62)
+**Underområde:** Fiendtlig
+
+**Ca. spørsmål:** Hvordan arbeider dere med forebygging av svindel?
+
+**Ca. svar / REFLEKSJON:** Virksomheten er i et marked hvor det finnes aktører som driver med svindel. De må arbeide løpende for å ikke bli oppfattet som å selv være en av dem. De har ikke tenkt igjennom tiltak ennå for å forebygge å selv bli oder for svindel. Grønnvasking er også noe som kan tas med i denne sammenheng.
+
+**Forventet tolkning / SAMMENHENG:** I en hverdag med rask teknologisk utvikling der det kan være vanskelig å henge med i svingene, er det fort gjort å bli utsatt for svindel. Triksene som de kriminelle benytter er ofte så sofistikerte at man skjønner ikke hva som er skjedd før det er for sent.
+
+**Muligheter:**
+- Ha tydelige beløpsgrenser for de ulike ansatte for å redusere konsekvensene av svindel - omfang: Lav, effekt: Middels
+- Etablere rutiner for utbetalinger (2-par øyne) - omfang: Lav, effekt: Høy
+- Gjennomfør kredittvurdering av nye kunder - omfang: Middels, effekt: Middels
+- Opplæring av ansatte i sikkerhetskultur - omfang: Middels, effekt: Middels
+- Oppdatere programvare og IT-systemer - omfang: Middels, effekt: Høy
+
+## NE-58 - Forebygging av korrupsjon (side 63)
+**Underområde:** Fiendtlig
+
+**Ca. spørsmål:** Hvordan arbeider dere med forebygging av korrupsjon?
+
+**Ca. svar / REFLEKSJON:** Helt generelt råder det en viss grad av «hva korrupsjon egentlig er». Utover det presenteres bransjen som en med mye kameraderi som det er krevende å forholde seg til. Plattformen i seg selv skal bidra til å hindre korrupsjon.
+
+**Forventet tolkning / SAMMENHENG:** I noen tilfeller der det er snakk om store summer og lav risiko for å bli oppdaget, kan ansatte i ulike situasjoner la seg involvere i korrupsjon. Dette er naturligvis svært skadelig for alle parter.
+
+**Muligheter:**
+- Etabler rutiner for å oppdage korrupsjon og forsøk (Code of Conduct og varslingskanaler) - omfang: Middels, effekt: Middels
+- Skap holdningsskapende arbeid knyttet korrupsjon - omfang: Høy, effekt: Høy
+- Gjennomgå en plan for å håndtere korrupsjon dersom det oppstår og oppdages - omfang: Lav, effekt: Middels
+- Gjennomfør opplæring og skap bevisstgjøring (Aktsomhetsvurderinger) - omfang: Middels, effekt: Høy
+- Etterlev ISO 37001 (Ledelsessystem mot korrupsjon) - omfang: Høy, effekt: Høy
+
+## NE-59 - Håndtering av sårbarheter (side 64)
+**Underområde:** Fiendtlig
+
+**Ca. spørsmål:** Hvordan håndterer dere sårbarheter?
+
+**Ca. svar / REFLEKSJON:** Emnet ble behandlet etter en kort tenkepause. Virksomheten opplever at de er for umodne for å bruke energi på dette. Ikke relevant.
+
+**Forventet tolkning / SAMMENHENG:** Sårbarhetssamtaler er noe vi gjør med ansatte som har bakgrunn fra ulike nasjoner, miljøer eller kulturer. Hensikten med sårbarhetssamtaler er å tydeliggjøre for ansatte at dersom de skulle ha behov for det, så må de ta kontakt med ledelsen for å få hjelp til å komme seg ut av eventuelle kniper
+
+**Muligheter:**
+- Etabler en policy for håndtering av sårbarhetssamtaler - omfang: Lav, effekt: Middels
+- Lag e-læring om når og hvordan gjennomføre sårbarhetsamtaler - omfang: Middels, effekt: Middels
+
+## NE-60 - Gjenoppretting (side 65)
+**Underområde:** Omdømme
+
+**Ca. spørsmål:** Hva er status for gjenoppretting i virksomheten?
+
+**Ca. svar / REFLEKSJON:** Ledergruppen vil, når tiden er inne, se på risikovurderinger utover de enkle nå underveis i jobben med produktet. Det er ønske å se på forebyggende tiltak. «Vi skal jobbe forebyggende, ikke spare dette til slutten.»
+
+**Forventet tolkning / SAMMENHENG:** En virksomhet med langsiktige mål og visjoner, vil være svært opptatt av sitt omdømme. Svekket omdømme vil i mange tilfeller bidra til også svekket tillit som fører til svekket salgsresultater. Med andre ord er det svært viktig å vinne tillit og bygge omdømmet når noe har gått galt
+
+**Muligheter:**
+- Etabler en policy for hvordan håndtere ting som går galt - omfang: Lav, effekt: Middels
+- Etabler en policy for hvordan håndtere media - omfang: Lav, effekt: Høy
+- Gjør regelmessige kundeundersøkelser for å avdekke eventuelle brudd på tillit og omdømme - omfang: Middels, effekt: Middels
