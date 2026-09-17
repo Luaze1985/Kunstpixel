@@ -197,7 +197,11 @@ class MuseumsvertAgent:
     def _load_prompt(self) -> str:
         """Load masterprompt from prompts/museumsvert.md."""
         candidates = [
-            Path(__file__).resolve().parent.parent.parent.parent / "prompts" / "museumsvert.md",
+            (
+                (Path(__file__).resolve().parent.parent.parent.parent / "04_knowledge" / "03_prompts" / "museumsvert.md")
+                if (Path(__file__).resolve().parent.parent.parent.parent / "04_knowledge" / "03_prompts" / "museumsvert.md").is_file()
+                else (Path(__file__).resolve().parent.parent.parent.parent / "prompts" / "museumsvert.md")
+            ),
             Path("prompts/museumsvert.md"),
         ]
         for candidate in candidates:

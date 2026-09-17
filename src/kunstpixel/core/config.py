@@ -6,7 +6,11 @@ from pathlib import Path
 
 # Base paths
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
-LOCAL_DB_PATH = PROJECT_ROOT / "data" / "museum.db"
+LOCAL_DB_PATH = (
+    (PROJECT_ROOT / "05_data" / "museum.db")
+    if (PROJECT_ROOT / "05_data" / "museum.db").is_file()
+    else (PROJECT_ROOT / "data" / "museum.db")
+)
 EXTERNAL_FALLBACK_DB_PATH = Path(r"C:\Users\larse\Documents\.headroom\memory.db")
 
 

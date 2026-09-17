@@ -33,7 +33,11 @@ def db_path() -> Path:
     if env_path and Path(env_path).exists():
         return Path(env_path)
 
-    local_path = PROJECT_ROOT / "data" / "museum.db"
+    local_path = (
+        (PROJECT_ROOT / "05_data" / "museum.db")
+        if (PROJECT_ROOT / "05_data" / "museum.db").is_file()
+        else (PROJECT_ROOT / "data" / "museum.db")
+    )
     if local_path.exists():
         return local_path
 
