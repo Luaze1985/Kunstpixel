@@ -1,0 +1,10 @@
+# OpenAI Codex / ChatGPT Desktop Codex Project Configuration
+# Reference: https://learn.chatgpt.com / OpenAI Codex documentation
+
+[project]
+name = "aura-kunstmuseum"
+description = "Syntetisk SMB-kulturinstitusjon og treningsarena for AI-gründere (plugins, automasjoner, agenter)"
+
+[mcp.servers.aura-museum]
+command = "py"
+args = ["-3.13", "-m", "src.kunstpixel.core.mcp_server"]

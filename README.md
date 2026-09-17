@@ -132,6 +132,12 @@ py -3.13 -m pytest tests/test_agent.py -v
 py -3.13 -m pytest tests/test_integration.py -v
 ```
 
+### 4.4 Kjøre med ChatGPT Codex (CLI & Desktop)
+
+Prosjektet er ferdig konfigurert for **ChatGPT Codex**:
+- **Instrukser:** Automatisk styrt via [`AGENTS.md`](AGENTS.md) i roten.
+- **MCP-verktøy:** Ferdig registrert i [`.codex/config.toml`](.codex/config.toml) slik at Codex har direkte tilgang til museets 5 samlingsverktøy over stdio.
+
 ---
 
 ## 5. Samlingsverktøyene (De 5 MCP-verktøyene)
