@@ -1,0 +1,163 @@
+system: No Excuse Ledelse 60:2 - Prioriterte tiltak for Kunstpixel
+kriterium: Lavt omfang / Høy effekt (Quick Wins)
+antall_tiltak: 29
+tiltak:
+- id: NE-01
+  omrade: Identitet
+  tema: Opplevd markedsidentitet
+  handling: Kunstpixel oppfattes som en tilgjengelig og ubyrakratisk kulturarena i
+    SMB-skala som formidler norsk kunsthistorie og samtidskunst uten akademisk fremmedgjoring.
+  status: Aktiv / Etterleves
+- id: NE-02
+  omrade: Identitet
+  tema: Identitet i ledelse
+  handling: Direktoren og lederne opptrer som synlige veivisere som balanserer kunstnerisk
+    autonomi med streng etisk forvaltning.
+  status: Aktiv / Etterleves
+- id: NE-03
+  omrade: Identitet
+  tema: Identitet i formidling
+  handling: Formidling i oyehoyde; veggtekster pa 50-90 ord som fokuserer pa det synlige
+    foran teoretisk sjargong.
+  status: Aktiv / Etterleves
+- id: NE-08
+  omrade: Identitet
+  tema: Ambisjonsbevissthet
+  handling: Ambisjon om a vaere Norges ledende SMB-museum pa digital formidling og
+    autonom drift.
+  status: Aktiv / Etterleves
+- id: NE-09
+  omrade: Identitet
+  tema: Verdibevissthet
+  handling: Verdiene integritet, apent vertskap og baerekraft etterleves i alle ledd
+    fra kafe til kuratering.
+  status: Aktiv / Etterleves
+- id: NE-13
+  omrade: Identitet
+  tema: Kongruens i ord og handling
+  handling: Vi lover mangfold og etterlever det ved a betale kunstnerhonorar og tosprakling
+    skilting.
+  status: Aktiv / Etterleves
+- id: NE-14
+  omrade: Identitet
+  tema: Selvsagt soliditet
+  handling: Samlingens juridiske status som allmenn stiftelse sikrer evigvarende forvaltning.
+  status: Aktiv / Etterleves
+- id: NE-17
+  omrade: Struktur
+  tema: Organisering av myndighet
+  handling: Tydelig delegert fullmakt for innkjop, utlan og sikkerhetsbeslutninger.
+  status: Aktiv / Etterleves
+- id: NE-18
+  omrade: Struktur
+  tema: Eierskapets betydning
+  handling: Ideell stiftelse frikoblet fra kortsiktig kommersielt profittpress.
+  status: Aktiv / Etterleves
+- id: NE-20
+  omrade: Struktur
+  tema: Ansattes autonomi
+  handling: Hoy autonomi for fagspesialister innenfor vedtatte rammer og SOP-er.
+  status: Aktiv / Etterleves
+- id: NE-23
+  omrade: Struktur
+  tema: Malbarhet
+  handling: Maler besokstall, billettinntekter, temperatur/RH i saler og publikumstilfredshet.
+  status: Aktiv / Etterleves
+- id: NE-26
+  omrade: Struktur
+  tema: Etterlevelse strategi
+  handling: Prioriterer strengt etter de fire No Excuse-markorene og ICOR-metodikken.
+  status: Aktiv / Etterleves
+- id: NE-29
+  omrade: Struktur
+  tema: Effektive bedriftssystemer
+  handling: FastMCP og SQLite sorger for 0-token oppslag og umiddelbar informasjonsflyt.
+  status: Aktiv / Etterleves
+- id: NE-30
+  omrade: Struktur
+  tema: Sjekkliste for oppgave
+  handling: Standardiserte ICOR SOP-er for montering, kafehygiene og verkstilsyn.
+  status: Aktiv / Etterleves
+- id: NE-32
+  omrade: Menneske
+  tema: Rasjonalitet
+  handling: Beslutninger tas basert pa verifiserte data og kilder (fakta foran antakelser).
+  status: Aktiv / Etterleves
+- id: NE-33
+  omrade: Menneske
+  tema: Omsorg
+  handling: Tett oppfolging av ansattes helse; ergonomiske sko og avlastning pa harde
+    museumsgulv.
+  status: Aktiv / Etterleves
+- id: NE-34
+  omrade: Menneske
+  tema: Menneskeverd
+  handling: Gjensidig respekt mellom faggrupper; likeverdig samarbeid mellom menneskelig
+    stab og AI.
+  status: Aktiv / Etterleves
+- id: NE-35
+  omrade: Menneske
+  tema: Kreativitet
+  handling: Kurator og formidler oppmuntres til dristige koblinger og sanselige formidlingsgrep.
+  status: Aktiv / Etterleves
+- id: NE-37
+  omrade: Menneske
+  tema: Oppmerksomhet
+  handling: Aktivt vertskap som ser publikum nar de kommer inn doren og tilbyr hjelp.
+  status: Aktiv / Etterleves
+- id: NE-38
+  omrade: Menneske
+  tema: Apenhet
+  handling: Full transparens om okonomi, innkjop, samlingsproveniens og feilhatering.
+  status: Aktiv / Etterleves
+- id: NE-40
+  omrade: Menneske
+  tema: Trivsel
+  handling: God kantine, felles lunsjer og hyggelig kaffekultur skaper stabilt arbeidsmiljo.
+  status: Aktiv / Etterleves
+- id: NE-45
+  omrade: Menneske
+  tema: Oppmerksomhet pa stress
+  handling: Vaktplaner sikrer tilstrekkelig hviletid og motvirker overarbeid under
+    monteringsuker.
+  status: Aktiv / Etterleves
+- id: NE-47
+  omrade: Pavirkningskraft
+  tema: Myndighetskrav
+  handling: 100 % etterlevelse av forskrifter fra Mattilsynet (IK-Mat), Arbeidstilsynet
+    (HMS) og DSB (Brann).
+  status: Aktiv / Etterleves
+- id: NE-48
+  omrade: Pavirkningskraft
+  tema: Myndighetskontakt
+  handling: Proaktiv og ryddig dialog med kommunen, fylkeskommunen og Kulturdirektoratet.
+  status: Aktiv / Etterleves
+- id: NE-49
+  omrade: Pavirkningskraft
+  tema: Organisert arbeidsliv
+  handling: Forholder seg til tariffavtaler (Virke/Spekter) og har fungerende verneombud.
+  status: Aktiv / Etterleves
+- id: NE-50
+  omrade: Pavirkningskraft
+  tema: Holdninger
+  handling: Inkluderende og antirasistisk holdning som reflekteres i representasjon
+    og kuratering.
+  status: Aktiv / Etterleves
+- id: NE-56
+  omrade: Pavirkningskraft
+  tema: Forebygging av utpressing
+  handling: IT-sikkerhet med tofaktorautentisering og sikre offline backuper for a
+    hindre lansomware.
+  status: Aktiv / Etterleves
+- id: NE-57
+  omrade: Pavirkningskraft
+  tema: Forebygging av svindel
+  handling: Strenge proveniensundersokelser og to-personers godkjenning ved kunstinnkjop
+    og utbetalinger.
+  status: Aktiv / Etterleves
+- id: NE-58
+  omrade: Pavirkningskraft
+  tema: Forebygging av korrupsjon
+  handling: Forbud mot a motta private gaver fra kunstnere eller leverandorer over
+    ubetydelig verdi (ICOM).
+  status: Aktiv / Etterleves

@@ -1,0 +1,482 @@
+[
+  {
+    "id": "NE-01",
+    "tema": "Opplevd markedsidentitet",
+    "omrade": "Identitet",
+    "svar": "Kunstpixel oppfattes som en tilgjengelig og ubyrakratisk kulturarena i SMB-skala som formidler norsk kunsthistorie og samtidskunst uten akademisk fremmedgjoring.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-02",
+    "tema": "Identitet i ledelse",
+    "omrade": "Identitet",
+    "svar": "Direktoren og lederne opptrer som synlige veivisere som balanserer kunstnerisk autonomi med streng etisk forvaltning.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-03",
+    "tema": "Identitet i formidling",
+    "omrade": "Identitet",
+    "svar": "Formidling i oyehoyde; veggtekster pa 50-90 ord som fokuserer pa det synlige foran teoretisk sjargong.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-04",
+    "tema": "Identitet i produksjon",
+    "omrade": "Identitet",
+    "svar": "Utstillingsproduksjon preges av presisjon, ryddighet og hoy respekt for kunstverkenes integritet.",
+    "omfang": "Middels",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-05",
+    "tema": "Kundes identitetsoppfatning",
+    "omrade": "Identitet",
+    "svar": "Publikum opplever museet som lunt, laererikt og innbydende for bade familier, studenter og kjennere.",
+    "omfang": "Middels",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-06",
+    "tema": "Markedsdifferanse",
+    "omrade": "Identitet",
+    "svar": "Skiller seg fra store mastodonter ved a vaere mer intimt, dynamisk og teknologisk innovativt med AI-vert.",
+    "omfang": "Middels",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-07",
+    "tema": "Attraksjonsdifferanse",
+    "omrade": "Identitet",
+    "svar": "Tett dialog mellom historiske mesterverk (Munch, Kittelsen) og brennaktuelle samiske samtidsprosjekter.",
+    "omfang": "Lav",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-08",
+    "tema": "Ambisjonsbevissthet",
+    "omrade": "Identitet",
+    "svar": "Ambisjon om a vaere Norges ledende SMB-museum pa digital formidling og autonom drift.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-09",
+    "tema": "Verdibevissthet",
+    "omrade": "Identitet",
+    "svar": "Verdiene integritet, apent vertskap og baerekraft etterleves i alle ledd fra kafe til kuratering.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-10",
+    "tema": "Endringsbevissthet",
+    "omrade": "Identitet",
+    "svar": "Hoy omstillingsevne; tilpasser utstillingsprogram og publikumstilbud raskt etter samfunnsdebatten.",
+    "omfang": "Middels",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-11",
+    "tema": "Preferansefaktorer",
+    "omrade": "Identitet",
+    "svar": "Besokende velger oss for personlig service, fravil av koer og god lokal kafemat.",
+    "omfang": "Lav",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-12",
+    "tema": "Preferanseattributter",
+    "omrade": "Identitet",
+    "svar": "Tydelig skilting, universell tilgjengelighet og interaktiv museumsvert i lomma.",
+    "omfang": "Middels",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-13",
+    "tema": "Kongruens i ord og handling",
+    "omrade": "Identitet",
+    "svar": "Vi lover mangfold og etterlever det ved a betale kunstnerhonorar og tosprakling skilting.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-14",
+    "tema": "Selvsagt soliditet",
+    "omrade": "Identitet",
+    "svar": "Samlingens juridiske status som allmenn stiftelse sikrer evigvarende forvaltning.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-15",
+    "tema": "Kjerneidentitet i utstrekning",
+    "omrade": "Identitet",
+    "svar": "Identiteten baeres videre digitalt via nettsiden og chathubben ogsa utenfor museets apningstid.",
+    "omfang": "Middels",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-16",
+    "tema": "Kjerneidentitet i form",
+    "omrade": "Struktur",
+    "svar": "Flat organisasjonsstruktur der kurator, samlingsforvalter og drift har direkte linje til direktor.",
+    "omfang": "Lav",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-17",
+    "tema": "Organisering av myndighet",
+    "omrade": "Struktur",
+    "svar": "Tydelig delegert fullmakt for innkjop, utlan og sikkerhetsbeslutninger.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-18",
+    "tema": "Eierskapets betydning",
+    "omrade": "Struktur",
+    "svar": "Ideell stiftelse frikoblet fra kortsiktig kommersielt profittpress.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-19",
+    "tema": "Tjenestevei",
+    "omrade": "Struktur",
+    "svar": "Ubyrakratisk, men formell eskalering til eier/styre ved strategiske avtaler og budsjettavvik.",
+    "omfang": "Lav",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-20",
+    "tema": "Ansattes autonomi",
+    "omrade": "Struktur",
+    "svar": "Hoy autonomi for fagspesialister innenfor vedtatte rammer og SOP-er.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-21",
+    "tema": "Utenfor normal drift",
+    "omrade": "Struktur",
+    "svar": "Etablert beredskapsgruppe for krisehaandtering, vannskade og brann (RVR).",
+    "omfang": "Middels",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-22",
+    "tema": "Leverandorer",
+    "omrade": "Struktur",
+    "svar": "Kvalifiserte leverandorer pa kunsttransport, kjol/frys-service og skadedyrkontroll.",
+    "omfang": "Middels",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-23",
+    "tema": "Malbarhet",
+    "omrade": "Struktur",
+    "svar": "Maler besokstall, billettinntekter, temperatur/RH i saler og publikumstilfredshet.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-24",
+    "tema": "Bruk av malstyring",
+    "omrade": "Struktur",
+    "svar": "Maltall brukes til laering og ressursjustering, ikke for intern straff.",
+    "omfang": "Lav",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-25",
+    "tema": "Kommunikasjon om strategi",
+    "omrade": "Struktur",
+    "svar": "Kvartalsvise allmoter og apent tilgjengelig prosjektplan for alle ansatte.",
+    "omfang": "Lav",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-26",
+    "tema": "Etterlevelse strategi",
+    "omrade": "Struktur",
+    "svar": "Prioriterer strengt etter de fire No Excuse-markorene og ICOR-metodikken.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-27",
+    "tema": "Budsjettets fleksibilitet",
+    "omrade": "Struktur",
+    "svar": "Driftsbudsjettet har en 10 % uforutsett-buffer for uventede konserveringsbehov.",
+    "omfang": "Middels",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-28",
+    "tema": "Budsjett for forbedring",
+    "omrade": "Struktur",
+    "svar": "Faste avsetninger til IT-oppgradering, energieffektivisering og universell utforming.",
+    "omfang": "Middels",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-29",
+    "tema": "Effektive bedriftssystemer",
+    "omrade": "Struktur",
+    "svar": "FastMCP og SQLite sorger for 0-token oppslag og umiddelbar informasjonsflyt.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-30",
+    "tema": "Sjekkliste for oppgave",
+    "omrade": "Struktur",
+    "svar": "Standardiserte ICOR SOP-er for montering, kafehygiene og verkstilsyn.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-31",
+    "tema": "Relevant rapportering",
+    "omrade": "Menneske",
+    "svar": "Korte, konsise statusrapporter til direktor; unnga unodig rapport-spinn.",
+    "omfang": "Lav",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-32",
+    "tema": "Rasjonalitet",
+    "omrade": "Menneske",
+    "svar": "Beslutninger tas basert pa verifiserte data og kilder (fakta foran antakelser).",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-33",
+    "tema": "Omsorg",
+    "omrade": "Menneske",
+    "svar": "Tett oppfolging av ansattes helse; ergonomiske sko og avlastning pa harde museumsgulv.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-34",
+    "tema": "Menneskeverd",
+    "omrade": "Menneske",
+    "svar": "Gjensidig respekt mellom faggrupper; likeverdig samarbeid mellom menneskelig stab og AI.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-35",
+    "tema": "Kreativitet",
+    "omrade": "Menneske",
+    "svar": "Kurator og formidler oppmuntres til dristige koblinger og sanselige formidlingsgrep.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-36",
+    "tema": "Nysgjerrighet",
+    "omrade": "Menneske",
+    "svar": "Lopende testing av nye teknologier, AI-verktoy og publikumsmetodikk.",
+    "omfang": "Lav",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-37",
+    "tema": "Oppmerksomhet",
+    "omrade": "Menneske",
+    "svar": "Aktivt vertskap som ser publikum nar de kommer inn doren og tilbyr hjelp.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-38",
+    "tema": "Apenhet",
+    "omrade": "Menneske",
+    "svar": "Full transparens om okonomi, innkjop, samlingsproveniens og feilhatering.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-39",
+    "tema": "Besluttsomhet",
+    "omrade": "Menneske",
+    "svar": "Tydelig handlekraft; saker dveles ikke ved hvis underlaget er tilstrekkelig.",
+    "omfang": "Lav",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-40",
+    "tema": "Trivsel",
+    "omrade": "Menneske",
+    "svar": "God kantine, felles lunsjer og hyggelig kaffekultur skaper stabilt arbeidsmiljo.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-41",
+    "tema": "Visjon i virket",
+    "omrade": "Menneske",
+    "svar": "Alle ansatte forstar hvordan deres oppgave bidrar til publikums kunstopplevelse.",
+    "omfang": "Lav",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-42",
+    "tema": "Verdier i hverdagen",
+    "omrade": "Menneske",
+    "svar": "Baerekraft vises i praksis gjennom gjenbruk av utstillingsvegger og lokale ravarer i kafeen.",
+    "omfang": "Lav",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-43",
+    "tema": "Opplaering i mal",
+    "omrade": "Menneske",
+    "svar": "Strukturert onboarding for nye museumsverter i forstehjelp, brann og kunstkunnskap.",
+    "omfang": "Middels",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-44",
+    "tema": "Ansattes ferdigheter",
+    "omrade": "Menneske",
+    "svar": "Kontinuerlig kursing i konserveringsetikk, digitale systemer og vertskapspsykologi.",
+    "omfang": "Middels",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-45",
+    "tema": "Oppmerksomhet pa stress",
+    "omrade": "Menneske",
+    "svar": "Vaktplaner sikrer tilstrekkelig hviletid og motvirker overarbeid under monteringsuker.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-46",
+    "tema": "Oppmerksomhet pa konflikt",
+    "omrade": "Menneske",
+    "svar": "Tidlig megling og klare eskaleringslinjer ved uenighet mellom fagfelt.",
+    "omfang": "Lav",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-47",
+    "tema": "Myndighetskrav",
+    "omrade": "Pavirkningskraft",
+    "svar": "100 % etterlevelse av forskrifter fra Mattilsynet (IK-Mat), Arbeidstilsynet (HMS) og DSB (Brann).",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-48",
+    "tema": "Myndighetskontakt",
+    "omrade": "Pavirkningskraft",
+    "svar": "Proaktiv og ryddig dialog med kommunen, fylkeskommunen og Kulturdirektoratet.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-49",
+    "tema": "Organisert arbeidsliv",
+    "omrade": "Pavirkningskraft",
+    "svar": "Forholder seg til tariffavtaler (Virke/Spekter) og har fungerende verneombud.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-50",
+    "tema": "Holdninger",
+    "omrade": "Pavirkningskraft",
+    "svar": "Inkluderende og antirasistisk holdning som reflekteres i representasjon og kuratering.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-51",
+    "tema": "Uformelle ledere",
+    "omrade": "Pavirkningskraft",
+    "svar": "Involverer erfarne seniorverter og tillitsvalgte tidlig i endringsprosesser.",
+    "omfang": "Lav",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-52",
+    "tema": "Bransjeorganisasjoner",
+    "omrade": "Pavirkningskraft",
+    "svar": "Aktivt medlem i Norges Museumsforbund og Norsk Publikumsutvikling (NPU).",
+    "omfang": "Lav",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-53",
+    "tema": "Samarbeidspartnere",
+    "omrade": "Pavirkningskraft",
+    "svar": "Strategiske allianser med skoler (Dks), nabomuseer, gallerier og lokale naeringsdrivende.",
+    "omfang": "Middels",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-54",
+    "tema": "Markedsaktorer",
+    "omrade": "Pavirkningskraft",
+    "svar": "Samarbeider med auksjonshus og gallerister uten a kompromittere habilitet og ICOM-etikk.",
+    "omfang": "Middels",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-55",
+    "tema": "Motarbeidere",
+    "omrade": "Pavirkningskraft",
+    "svar": "Lytter saklig til kritikere og skeptikere i lokalpressen; moter debatt med fakta.",
+    "omfang": "Lav",
+    "effekt": "Middels"
+  },
+  {
+    "id": "NE-56",
+    "tema": "Forebygging av utpressing",
+    "omrade": "Pavirkningskraft",
+    "svar": "IT-sikkerhet med tofaktorautentisering og sikre offline backuper for a hindre lansomware.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-57",
+    "tema": "Forebygging av svindel",
+    "omrade": "Pavirkningskraft",
+    "svar": "Strenge proveniensundersokelser og to-personers godkjenning ved kunstinnkjop og utbetalinger.",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-58",
+    "tema": "Forebygging av korrupsjon",
+    "omrade": "Pavirkningskraft",
+    "svar": "Forbud mot a motta private gaver fra kunstnere eller leverandorer over ubetydelig verdi (ICOM).",
+    "omfang": "Lav",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-59",
+    "tema": "Handtering av sarbarheter",
+    "omrade": "Pavirkningskraft",
+    "svar": "Arlig risiko- og sarbarhetsanalyse (ROS) for fysisk tyveri, vannskade og klimasvikt.",
+    "omfang": "Middels",
+    "effekt": "Hoy"
+  },
+  {
+    "id": "NE-60",
+    "tema": "Gjenoppretting",
+    "omrade": "Pavirkningskraft",
+    "svar": "Operativ RVR-plan for berging av nodverk og kontinuitetsplan for IT og drift.",
+    "omfang": "Middels",
+    "effekt": "Hoy"
+  }
+]
