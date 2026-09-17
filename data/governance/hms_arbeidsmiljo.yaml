@@ -1,0 +1,37 @@
+organisasjon:
+  arbeidsgiver: "Kunstpixel (kunstpixel.com)"
+  tilsynsmyndighet: "Arbeidstilsynet"
+  hjemmel: "Arbeidsmiljøloven (AML) og Internkontrollforskriften"
+
+fysisk_arbeidsmiljo:
+  ergonomi_museumsverter:
+    maks_sammenhengende_staing: "90 minutter"
+    rotasjonsintervall: "Hver 2. time rullering mellom salsoppsyn, sittende skranke og kafévakt"
+    palagt_skotoy: "Dempede arbeidssko godkjent for harde steingulv"
+  manuell_handtering_og_loft:
+    grense_en_person: "Maks 15 kg"
+    grense_to_personer: "15 til 40 kg"
+    over_40_kg: "Kun med mekanisk løftehjelpemiddel (jekketralle, traverskran, sugekopper)"
+  kunsthåndtering_og_verneutstyr:
+    hansker:
+      tekstiler_og_malerier: "Ublekede hvite bomullshansker"
+      skulptur_og_glass: "Nitrilhansker med godt grep"
+    monteringsarbeid:
+      palagt: "Vernesko S3, klatresele ved stige over 2 meter"
+
+psykososialt_arbeidsmiljo_og_sikkerhet:
+  alenearbeid:
+    forbudt: "Ved åpningskvelder, store arrangementer (> 80 gjester) og etter kl. 20:00"
+  publikumskonflikter_og_utagering:
+    rutine: "Rolig henvendelse, tilkall vaktkollega via radio/alarmknapp, politi 112 ved trusler"
+  varsling:
+    kanal: "Konfidensiell varslingskanal til verneombud og styreleder"
+
+vernerunder_og_avvik:
+  frekvens: "Kvartalsvis (mars, juni, september, desember)"
+  deltakere:
+    - "Verneombud"
+    - "Museumsdirektør / Driftssjef"
+    - "Tillitsvalgt"
+  avviksskjema_ruh:
+    krav_til_lukking: "Innen 14 dager for gule avvik, umiddelbart (< 24t) for røde fareavvik"

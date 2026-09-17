@@ -1,0 +1,128 @@
+{
+  "kafe_navn": "Museumskaféen Kunstpixel",
+  "oppdatert": "2026-09-17",
+  "valuta": "NOK",
+  "lovhjemmel": "Matinformasjonsforskriften vedlegg II (14 lovpaalagte allergener)",
+  "produkter": [
+    {
+      "id": "KAFE-001",
+      "navn": "Kanelbolle (hjemmebakt)",
+      "kategori": "Bakverk",
+      "pris": 48,
+      "beskrivelse": "Tradisjonell norsk kanelbolle bakt med ekte smor og kardemomme.",
+      "allergener": {
+        "gluten": true,
+        "melk": true,
+        "egg": true,
+        "notter": false,
+        "peanotter": false,
+        "soya": false,
+        "fisk": false,
+        "skalldyr": false,
+        "blotdyr": false,
+        "selleri": false,
+        "sennep": false,
+        "sesam": false,
+        "lupin": false,
+        "sulfitt": false
+      },
+      "glutenfritt_alternativ_tilgjengelig": true
+    },
+    {
+      "id": "KAFE-002",
+      "navn": "Skagen-sandwich pa surdeig",
+      "kategori": "Lunsj",
+      "pris": 145,
+      "beskrivelse": "Handpillede reker, majones, dill, sitron og rogn pa grovt surdeigsbrod.",
+      "allergener": {
+        "gluten": true,
+        "melk": false,
+        "egg": true,
+        "notter": false,
+        "peanotter": false,
+        "soya": false,
+        "fisk": true,
+        "skalldyr": true,
+        "blotdyr": false,
+        "selleri": false,
+        "sennep": true,
+        "sesam": false,
+        "lupin": false,
+        "sulfitt": false
+      },
+      "glutenfritt_alternativ_tilgjengelig": true
+    },
+    {
+      "id": "KAFE-003",
+      "navn": "Vegansk rotgronnsakssuppe med urter",
+      "kategori": "Varmmat",
+      "pris": 125,
+      "beskrivelse": "Kremet suppe pa rotfrukter med hvitlok, timian og ristede gresskarkjerner.",
+      "allergener": {
+        "gluten": false,
+        "melk": false,
+        "egg": false,
+        "notter": false,
+        "peanotter": false,
+        "soya": false,
+        "fisk": false,
+        "skalldyr": false,
+        "blotdyr": false,
+        "selleri": true,
+        "sennep": false,
+        "sesam": false,
+        "lupin": false,
+        "sulfitt": false
+      },
+      "glutenfritt_alternativ_tilgjengelig": true
+    },
+    {
+      "id": "KAFE-004",
+      "navn": "Mork sjokoladekake med bringebaer",
+      "kategori": "Kake",
+      "pris": 68,
+      "beskrivelse": "Fransk konfektkake av 70 % Valrhona-sjokolade med friske bringebaer.",
+      "allergener": {
+        "gluten": true,
+        "melk": true,
+        "egg": true,
+        "notter": true,
+        "peanotter": false,
+        "soya": true,
+        "fisk": false,
+        "skalldyr": false,
+        "blotdyr": false,
+        "selleri": false,
+        "sennep": false,
+        "sesam": false,
+        "lupin": false,
+        "sulfitt": false
+      },
+      "notter_detalj": "Mandelmel"
+    },
+    {
+      "id": "KAFE-005",
+      "navn": "Caffe Latte / Cappuccino",
+      "kategori": "Drikke",
+      "pris": 48,
+      "beskrivelse": "Dobbelt espresso med steamet melk. Valgfri havre- eller soyamelk.",
+      "allergener": {
+        "gluten": false,
+        "melk": true,
+        "egg": false,
+        "notter": false,
+        "peanotter": false,
+        "soya": false,
+        "fisk": false,
+        "skalldyr": false,
+        "blotdyr": false,
+        "selleri": false,
+        "sennep": false,
+        "sesam": false,
+        "lupin": false,
+        "sulfitt": false
+      },
+      "melkefritt_alternativ": "Havremelk (gluteninnhold < 20 ppm) eller soyamelk (inneholder soya)"
+    }
+  ]
+}

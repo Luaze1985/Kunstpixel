@@ -1,0 +1,48 @@
+virksomhet:
+  navn: "Museumskaféen Kunstpixel"
+  org_enhet: "Kunstpixel (kunstpixel.com)"
+  tilsynsmyndighet: "Mattilsynet"
+  forskrifter:
+    - "Næringsmiddelhygieneforskriften"
+    - "Matinformasjonsforskriften"
+    - "Forskrift om internkontroll for å oppfylle næringsmiddellovgivningen"
+
+haccp_kritiske_styringspunkter:
+  kjol_og_frys:
+    kjoleskap:
+      krav: "maks +4 °C"
+      varslingsgrense: "+6 °C"
+      loggfrekvens: "2 ganger daglig (morgen og kveld)"
+      tiltak_ved_avvik: "Varer over +8 °C i mer enn 2 timer kastes. Teknisk service tilkalles."
+    fryser:
+      krav: "maks -18 °C"
+      varslingsgrense: "-15 °C"
+      loggfrekvens: "1 gang daglig"
+  varmebehandling:
+    oppvarming_kjernetemp:
+      krav: "minimum +72 °C"
+      kontroll: "Stikkprøve med innstikkstermometer"
+    varmholding:
+      krav: "minimum +60 °C"
+      maks_tid: "4 timer i buffet"
+      tiltak_ved_avvik: "Mat under +60 °C kastes umiddelbart"
+
+personlig_hygiene_og_helse:
+  handvask:
+    krav: "Ved vaktstart, etter toalettbesøk, etter håndtering av penger/avfall, før matlaging"
+  sykdom:
+    karantene: "48 timer etter opphør av oppkast eller diaré (norovirus-regel)"
+    meldeplikt: "Ansatte plikter å varsle kaféansvarlig ved magesyke"
+
+renhold_og_oppvask:
+  oppvaskmaskin:
+    vasketemperatur: "minimum +60 °C"
+    skylletemperatur: "minimum +85 °C"
+    logg: "Ukentlig temperaturkontroll med kjemisk stripe"
+  daglig_renhold:
+    - "Kaffemaskin og melkeskummer backflushes"
+    - "Desinfisering av serveringsflater og skjærebrett"
+    - "Tømming og desinfisering av avfallsbeholdere"
+  skadedyrkontroll:
+    avtale: "Autorisert skadedyrfirma (Pest Control AS)"
+    inspeksjoner_per_ar: 4

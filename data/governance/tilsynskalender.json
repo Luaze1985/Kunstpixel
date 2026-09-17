@@ -1,0 +1,55 @@
+{
+  "organisasjon": "Kunstpixel (kunstpixel.com)",
+  "ar": 2026,
+  "system": "Kvalitets- og internkontrollsyklus",
+  "revisjonskalender": [
+    {
+      "kvartal": "Q1",
+      "maned": "Januar",
+      "tilsynsomrade": "HMS & Ledelse",
+      "myndighet": "Arbeidstilsynet",
+      "oppgave": "Arlig gjennomgang av HMS-mal, oppdatering av risikoanalyser og handlingsplan",
+      "ansvarlig_rolle": "Museumsdirektor"
+    },
+    {
+      "kvartal": "Q1",
+      "maned": "Mars",
+      "tilsynsomrade": "Brannsikkerhet & Beredskap",
+      "myndighet": "Brann- og redningsetaten",
+      "oppgave": "Arlig brannovelse med praktisk slukking og evakueringstest for alle ansatte",
+      "ansvarlig_rolle": "Driftsansvarlig / Brannvernleder"
+    },
+    {
+      "kvartal": "Q2",
+      "maned": "April",
+      "tilsynsomrade": "Servering & Skjenking",
+      "myndighet": "Kommunal naeringsetat",
+      "oppgave": "Arlig rapportering og fornyelse av internkontroll for skjenkebevilling",
+      "ansvarlig_rolle": "Kafeansvarlig"
+    },
+    {
+      "kvartal": "Q2",
+      "maned": "Juni",
+      "tilsynsomrade": "IK-Mat & Hygiene",
+      "myndighet": "Mattilsynet",
+      "oppgave": "Hovedrengjoring, mikrobiologisk vanntest og kalibrering av termometre for sommersesong",
+      "ansvarlig_rolle": "IK-Mat ansvarlig / Kafeleder"
+    },
+    {
+      "kvartal": "Q3",
+      "maned": "September",
+      "tilsynsomrade": "Arbeidsmiljo & Ergonomi",
+      "myndighet": "Arbeidstilsynet",
+      "oppgave": "Hostens vernerunde med verneombud, sjekk av lys, luftkvalitet og vertskapsrutiner",
+      "ansvarlig_rolle": "Verneombud"
+    },
+    {
+      "kvartal": "Q4",
+      "maned": "November",
+      "tilsynsomrade": "Samlingssikring & Klima",
+      "myndighet": "Kulturdirektoratet / Forsikring",
+      "oppgave": "Arlig kalibrering av hygrografer, klimakontroll i saler (20 grader, 50 % RF) og tyverialarmer",
+      "ansvarlig_rolle": "Samlingsforvalter / Konservator"
+    }
+  ]
+}

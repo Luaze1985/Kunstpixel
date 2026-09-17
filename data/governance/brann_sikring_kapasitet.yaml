@@ -1,0 +1,76 @@
+virksomhet:
+  bygg: "Kunstpixel Kunstmuseum"
+  adresse: "Hovedgaten 1, Kulturkvartalet"
+  tilsynsmyndighet: "Brann- og redningsetaten / DSB"
+  total_maks_personer_samtidig: 250
+
+rom_kapasiteter:
+  sal_a:
+    navn: "Sal A – Mytologi og natur"
+    etasje: 1
+    areal_m2: 95
+    maks_personer: 50
+    romningsveier: 2
+  sal_b:
+    navn: "Sal B – Realisme og samfunn"
+    etasje: 1
+    areal_m2: 80
+    maks_personer: 40
+    romningsveier: 2
+  sal_c:
+    navn: "Sal C – Lys, farge og interiør"
+    etasje: 2
+    areal_m2: 70
+    maks_personer: 35
+    romningsveier: 2
+  sal_d:
+    navn: "Sal D – Eksistens og modernisme"
+    etasje: 2
+    areal_m2: 75
+    maks_personer: 35
+    romningsveier: 2
+  sal_e_temporaer:
+    navn: "Sal E – Temporær utstilling"
+    etasje: 1
+    areal_m2: 110
+    maks_personer: 60
+    romningsveier: 2
+  museumskafe:
+    navn: "Museumskaféen Kunstpixel"
+    etasje: 1
+    areal_m2: 65
+    maks_personer: 45
+    sitteplasser: 40
+    romningsveier: 2
+  foaje_og_butikk:
+    navn: "Foajé, resepsjon og butikk"
+    etasje: 1
+    areal_m2: 85
+    maks_personer: 50
+    romningsveier: 3
+
+rvr_kunstevakuering_prioritering:
+  niva_1_kritisk:
+    fargekode: "Rødt klistremerke bak ramme"
+    handling: "Evakueres umiddelbart ved fare dersom mannskapets sikkerhet tillater det"
+    verk:
+      - id: "AURA-2026-009"
+        tittel: "Skrik"
+        kunstner: "Edvard Munch"
+        plassering: "Sal D, vestvegg"
+      - id: "AURA-2026-007"
+        tittel: "Vinternatt i Rondane"
+        kunstner: "Harald Sohlberg"
+        plassering: "Sal A, nordvegg"
+  niva_2_hoy:
+    fargekode: "Gult klistremerke"
+    handling: "Evakueres etter nivå 1, eller dekkes med brann- og vanntett duk"
+    verk:
+      - id: "AURA-2026-001"
+        tittel: "Nøkken"
+        kunstner: "Theodor Kittelsen"
+        plassering: "Sal A, østvegg"
+      - id: "AURA-2026-005"
+        tittel: "Kampen for tilværelsen"
+        kunstner: "Christian Krohg"
+        plassering: "Sal B, midtvegg"
