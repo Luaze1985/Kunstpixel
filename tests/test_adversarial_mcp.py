@@ -13,15 +13,15 @@ Empirically challenges:
 import time
 import pytest
 import sqlite3
-from src.aura_museum.core.mcp_server import (
+from src.kunstpixel.core.mcp_server import (
     search_collection,
     get_artwork_details,
     get_room_artworks,
     search_events,
     search_faq,
 )
-from src.aura_museum.core import db
-from src.aura_museum.core.config import get_db_path
+from src.kunstpixel.core import db
+from src.kunstpixel.core.config import get_db_path
 
 
 class TestEmptyAndWhitespaceBoundaries:

@@ -1,0 +1,55 @@
+# ==============================================================================
+# ORDLISTE FOR KUNSTPIXEL (Felles begrepsapparat)
+# Formål: Gi begge gründere et felles språk uten unødvendig teknisk sjargong.
+# ==============================================================================
+
+prosjekt:
+  navn: "Kunstpixel"
+  beskrivelse: >
+    Vår felles treningsarena og teknologiske verktøykasse. Her eksperimenterer vi
+    med digitale assistenter, nettsider, databruk og automatisering for kultur og næring.
+
+begreper:
+  digital_assistent:
+    forklaring: >
+      En automatisert hjelper (agent) som kan svare på spørsmål, finne frem bilder,
+      skrive utkast eller utføre oppgaver for oss basert på instruksene vi gir den.
+    synonymer: ["agent", "digital hjelper", "museumsvert"]
+    i_praksis: "Som en ekstra kollega som alltid har lest hele samlingen og svarer på sekunder."
+
+  raadata_og_samling:
+    forklaring: >
+      Grunnlagstallene, bildene og tekstene vi eier og legger inn i systemet.
+    i_praksis: "Informasjonen om kunstverk, åpningstider, priser og arrangementer som vi bygger på."
+
+  kampanje:
+    forklaring: >
+      Et målrettet tiltak for å nå ut til publikum på nett, sosiale medier eller nyhetsbrev.
+    i_praksis: "En serie innlegg, en landingsside eller en omvisningsinvitasjon vi lager sammen."
+
+  leveranse:
+    forklaring: >
+      Ferdige produkter vi produserer i fellesskap og kan vise frem eller sende fra oss.
+    i_praksis: "Søknader om støtte, rapporter, ferdige nettsider eller demonstrasjoner for kunder."
+
+  prototype:
+    forklaring: >
+      En rask førsteversjon av en idé, laget for å teste om konseptet fungerer i virkeligheten.
+    i_praksis: "En enkel modell vi kan klikke på og diskutere, fremfor å skrive 20 sider med kravspesifikasjon."
+
+  lav_risiko_og_skrivebeskyttelse:
+    forklaring: >
+      En innebygd sikkerhetslås som gjør at ingen (hverken mennesker eller AI-assistenter)
+      kan slette eller ødelegge rådataene våre ved en feiltakelse.
+    i_praksis: "Alt leses trygt. Du kan trykke, teste og spørre så mye du vil uten å være redd for at noe ryker."
+
+  samhandling:
+    forklaring: >
+      Måten vi to jobber sammen på: Én jobber med innhold, konsept og ideer – den andre
+      sikrer at systemet henger sammen teknisk.
+    i_praksis: "Ingen trenger å kunne alt; vi utfyller hverandre i samme prosjekt."
+
+  automatisering:
+    forklaring: >
+      Prosesser som går av seg selv når de først er satt opp, slik at vi slipper kjedelige repetisjoner.
+    i_praksis: "At en rapport settes sammen automatisk fra databasen fremfor at vi klipper og limer manuelt."

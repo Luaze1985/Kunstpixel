@@ -97,9 +97,9 @@ def db_baseline() -> dict:
 
 @pytest.fixture
 def agent_instance(db_path: Path):
-    """Provide an instance of MuseumsvertAgent if src.aura_museum.core.agent is implemented."""
+    """Provide an instance of MuseumsvertAgent if src.kunstpixel.core.agent is implemented."""
     try:
-        from src.aura_museum.core.agent import MuseumsvertAgent
+        from src.kunstpixel.core.agent import MuseumsvertAgent
         return MuseumsvertAgent(db_path=db_path)
     except ImportError as e:
-        pytest.skip(f"src.aura_museum.core.agent not available yet: {e}")
+        pytest.skip(f"src.kunstpixel.core.agent not available yet: {e}")

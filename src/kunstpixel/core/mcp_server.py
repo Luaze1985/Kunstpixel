@@ -9,7 +9,7 @@ from typing import Any
 
 from mcp.server.fastmcp import FastMCP
 
-from src.aura_museum.core.db import (
+from src.kunstpixel.core.db import (
     VALID_ROOM_IDS,
     normalize_room_identifier,
     query_artwork_details,

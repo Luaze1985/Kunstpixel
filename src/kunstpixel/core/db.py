@@ -11,7 +11,7 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
-from src.aura_museum.core.config import get_db_path
+from src.kunstpixel.core.config import get_db_path
 
 # Prohibited keywords to strictly enforce read-only access at the application boundary
 FORBIDDEN_SQL_KEYWORDS = {

@@ -14,8 +14,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from src.aura_museum.core.config import get_db_path
-from src.aura_museum.core.db import (
+from src.kunstpixel.core.config import get_db_path
+from src.kunstpixel.core.db import (
     VALID_ROOM_IDS,
     execute_read_query,
     get_db_connection,
@@ -23,7 +23,7 @@ from src.aura_museum.core.db import (
     normalize_room_identifier,
     validate_read_only_query,
 )
-from src.aura_museum.core.mcp_server import (
+from src.kunstpixel.core.mcp_server import (
     get_artwork_details,
     get_room_artworks,
     search_collection,
@@ -117,7 +117,7 @@ class AgentResponse:
 
 
 class InProcessMCPClient:
-    """In-process FastMCP client executing collection tools directly from src.aura_museum.core.mcp_server."""
+    """In-process FastMCP client executing collection tools directly from src.kunstpixel.core.mcp_server."""
 
     def __init__(self) -> None:
         self._tools = {

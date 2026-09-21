@@ -27,7 +27,7 @@ Verifies:
 import pytest
 
 try:
-    from src.aura_museum.core.mcp_server import (
+    from src.kunstpixel.core.mcp_server import (
         search_collection,
         get_artwork_details,
         get_room_artworks,
@@ -35,7 +35,7 @@ try:
         search_faq,
     )
 except ImportError as err:
-    pytest.fail(f"Could not import MCP tools from src.aura_museum.core.mcp_server: {err}", pytrace=False)
+    pytest.fail(f"Could not import MCP tools from src.kunstpixel.core.mcp_server: {err}", pytrace=False)
 
 
 class TestSearchCollectionTool:

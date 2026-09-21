@@ -21,7 +21,7 @@ from rich.prompt import Prompt
 from rich.table import Table
 from rich.text import Text
 
-from src.aura_museum.core.agent import MuseumsvertAgent
+from src.kunstpixel.core.agent import MuseumsvertAgent
 
 
 def display_welcome_banner(console: Console) -> None:

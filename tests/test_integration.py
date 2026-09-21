@@ -22,8 +22,8 @@ import sqlite3
 import pytest
 
 agent_module = pytest.importorskip(
-    "src.aura_museum.core.agent",
-    reason="Milestone 2 (src.aura_museum.core.agent) not yet implemented. Progressive testability enabled.",
+    "src.kunstpixel.core.agent",
+    reason="Milestone 2 (src.kunstpixel.core.agent) not yet implemented. Progressive testability enabled.",
 )
 MuseumsvertAgent = agent_module.MuseumsvertAgent
 AgentResponse = agent_module.AgentResponse
@@ -172,7 +172,7 @@ class TestReadOnlySecurityBoundary:
         conn = getattr(agent, "db_conn", None) or getattr(agent, "conn", None)
         if conn is None:
             # Connect using standard get_db_connection
-            from src.aura_museum.core.db import get_db_connection
+            from src.kunstpixel.core.db import get_db_connection
             conn = get_db_connection()
 
         cursor = conn.cursor()

@@ -14,7 +14,7 @@ import re
 import subprocess
 import sys
 import pytest
-from src.aura_museum.core.agent import FORBIDDEN_WORDS, AgentResponse, MuseumsvertAgent
+from src.kunstpixel.core.agent import FORBIDDEN_WORDS, AgentResponse, MuseumsvertAgent
 
 
 @pytest.fixture

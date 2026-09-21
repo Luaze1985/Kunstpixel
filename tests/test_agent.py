@@ -13,8 +13,8 @@ import re
 import pytest
 
 agent_module = pytest.importorskip(
-    "src.aura_museum.core.agent",
-    reason="Milestone 2 (src.aura_museum.core.agent) not yet implemented. Progressive testability enabled.",
+    "src.kunstpixel.core.agent",
+    reason="Milestone 2 (src.kunstpixel.core.agent) not yet implemented. Progressive testability enabled.",
 )
 MuseumsvertAgent = agent_module.MuseumsvertAgent
 AgentResponse = agent_module.AgentResponse
