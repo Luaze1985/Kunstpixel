@@ -3,7 +3,7 @@
 ## Formål
 Øve på arbeidsfordeling, oppgaveprioritering, HR-konflikter, intern ekstravaktpool og innleie i en fiktiv norsk småbedrift. Ingen reelle personopplysninger, ikke et produksjonsklart HR-system.
 
-**Status:** Datamodell og regelbasert førsteversjon. Det er foreløpig ingen KI-modell som genererer forslag, ingen rolleautentisering og ingen ferdig bemanningstavle. Alle beslutninger i demo krever en eksplisitt godkjenningsfunksjon.
+**Status:** Datamodell og regelbasert førsteversjon. En deterministisk forslagsmotor lager utkast. Det er foreløpig ingen tilkoblet KI-modell, ingen rolleautentisering og ingen ferdig bemanningstavle. Alle beslutninger i demo krever en eksplisitt godkjenningsfunksjon.
 
 ## Scenarioer
 - `HR-001.json`: Åtte faste ansatte, tre pool-kandidater, skolebesøk, montering, kafé og kveldsarrangement. Avdekk én dobbeltbooking og én bemanningsmangel. Utred mulighet for intern ekstravakt eller innleie.
