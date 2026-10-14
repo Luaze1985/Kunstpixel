@@ -167,3 +167,42 @@ def test_hr_scenario_suggests_factfinding_only():
         assert suggestions[0]["confidential"] is True
     finally:
         conn.close()
+
+
+def test_hr003_staff_shortage_pool_and_confidential_case():
+    conn = load_scenario(ROOT / "HR-003.json")
+    try:
+        conflicts = detect_conflicts(conn)
+        assert len(conflicts) == 1
+        assert conflicts[0]["kind"] == "staff_shortage"
+        assert conflicts[0]["activity_id"] == "A-SCHOOL"
+        assert conflicts[0]["skill"] == "formidling"
+        pool = {p["person_id"]: p for p in pool_candidates(conn, "A-SCHOOL", "formidling")}
+        assert pool["POOL-04"]["status"] == "eligible"
+        assert pool["POOL-05"]["status"] == "review_required"
+        assert list_hr_cases(conn, "director") == [{"id": "CASE-002", "state": "restricted"}]
+        assert len(list_hr_cases(conn, "hr")) == 1
+        proposals = suggest_actions(conn)
+        assert len(proposals) == 2
+        assert proposals[0]["kind"] == "assign_pool"
+        assert proposals[0]["payload"]["person_id"] == "POOL-04"
+        assert proposals[1]["kind"] == "hr_followup"
+    finally:
+        conn.close()
+
+
+def test_hr003_internal_pool_assignment_needs_hr_approval():
+    conn = load_scenario(ROOT / "HR-003.json")
+    try:
+        create_proposal(
+            conn, "P-INTERNAL", "assign_pool",
+            {"activity_id": "A-SCHOOL", "person_id": "POOL-04", "skill": "formidling"},
+            "Bruk intern ekstravakt med riktig kompetanse",
+        )
+        with pytest.raises(PermissionError):
+            decide_proposal(conn, "P-INTERNAL", "approved", "LEDER-01", "director", "Ikke HR")
+        assert len(detect_conflicts(conn)) == 1
+        decide_proposal(conn, "P-INTERNAL", "approved", "HR-01", "hr", "Gjennomgått fiktive kontraktsvilkår")
+        assert detect_conflicts(conn) == []
+    finally:
+        conn.close()
