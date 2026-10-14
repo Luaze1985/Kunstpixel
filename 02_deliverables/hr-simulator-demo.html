@@ -114,7 +114,7 @@ const commonPeople=[
 const DATA={
  "HR-003":{
    label:"Fravær, merarbeid og innleie",date:"16. okt. 2026",
-   people:commonPeople.concat([["POOL-04","Kari Demo","Formidling · intern pool","09:30–13:00"],["POOL-05","Tove Eksempel","Formidling · ekstern pool","09:00–16:00"]]),
+   people:commonPeople.map(p=>p[0]==="EMP-01"?["EMP-01","Maja Eksempel","Formidling · meldt utilgjengelig","Ikke tilgjengelig"]:p).concat([["POOL-04","Kari Demo","Formidling · intern pool","09:30–13:00"],["POOL-05","Tove Eksempel","Formidling · ekstern pool","09:00–16:00"]]),
    activity:[
      {id:"A-SCHOOL",title:"Skolebesøk – 45 elever",time:"10:00–12:00",assigned:["EMP-02"],requirements:{formidling:1,vertskap:1}},
      {id:"A-CAFE",title:"Kafédrift",time:"10:00–16:00",assigned:["EMP-04","EMP-05"],requirements:{kafe:2}},
