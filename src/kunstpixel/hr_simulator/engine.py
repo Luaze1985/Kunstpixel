@@ -199,6 +199,68 @@ def pool_candidates(conn: sqlite3.Connection, activity_id: str, skill: str) -> l
     return candidates
 
 
+def suggest_actions(conn: sqlite3.Connection) -> list[dict[str, Any]]:
+    """Lag forklarbare, regelbaserte utkast; ingen endringer gjøres.
+
+    Dette er foreløpig ikke en LLM. Resultater må opprettes som forslag og
+    godkjennes separat før noen aktivitet eller bemanning kan endres.
+    """
+    from datetime import datetime, timedelta
+
+    suggestions: list[dict[str, Any]] = []
+    for issue in detect_conflicts(conn):
+        if issue["kind"] == "overlap":
+            activities = [
+                conn.execute("SELECT * FROM activities WHERE id=?", (aid,)).fetchone()
+                for aid in issue["activities"]
+            ]
+            earlier, later = sorted(activities, key=lambda a: (a["starts_at"], a["id"]))
+            end_earlier = datetime.fromisoformat(earlier["ends_at"])
+            start_later = datetime.fromisoformat(later["starts_at"])
+            end_later = datetime.fromisoformat(later["ends_at"])
+            if end_earlier <= start_later:
+                continue
+            shifted_end = end_earlier + (end_later - start_later)
+            new_start = end_earlier.isoformat(timespec="minutes")
+            new_end = shifted_end.isoformat(timespec="minutes")
+            people = conn.execute(
+                "SELECT person_id FROM assignments WHERE activity_id=?", (later["id"],)
+            ).fetchall()
+            if all(_fully_available(conn, p["person_id"], new_start, new_end) for p in people):
+                suggestions.append({
+                    "kind": "move_activity",
+                    "payload": {"activity_id": later["id"], "new_start": new_start, "new_end": new_end},
+                    "explanation": f"Flytt {later['title']} etter {earlier['title']} for å redusere dobbeltbooking",
+                    "requires_approval": "director",
+                })
+        if issue["kind"] == "staff_shortage":
+            candidates = pool_candidates(conn, issue["activity_id"], issue["skill"])
+            permitted = [p for p in candidates if p["status"] in ("eligible", "review_required")]
+            permitted.sort(key=lambda p: (p["status"] != "eligible", p["type"] != "internal_pool", p["person_id"]))
+            if permitted:
+                pick = permitted[0]
+                suggestions.append({
+                    "kind": "assign_pool",
+                    "payload": {
+                        "activity_id": issue["activity_id"],
+                        "person_id": pick["person_id"],
+                        "skill": issue["skill"],
+                    },
+                    "explanation": f"Vurder {pick['name']} for {issue['activity_id']}. {pick['reason']}",
+                    "candidate_status": pick["status"],
+                    "requires_approval": "hr",
+                })
+    for case in conn.execute("SELECT id,title FROM hr_cases WHERE state='new' ORDER BY id"):
+        suggestions.append({
+            "kind": "hr_followup",
+            "payload": {"case_id": case["id"]},
+            "explanation": f"Start nøytral faktaundersøkelse for {case['id']}; hør alle involverte",
+            "requires_approval": "hr",
+            "confidential": True,
+        })
+    return suggestions
+
+
 def list_hr_cases(conn: sqlite3.Connection, viewer_role: str) -> list[dict[str, str]]:
     """HR-only-felter utleveres aldri i generell bemanningsoversikt."""
     if viewer_role not in ("hr", "director", "manager"):
