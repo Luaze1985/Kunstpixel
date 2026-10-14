@@ -58,10 +58,29 @@ python -m pytest tests/test_hr_simulator.py -q
 
 Python-komponentene bruker kun standardbiblioteket. Den generelle museumsdatabasen `05_data/museum.db` endres ikke. Simuleringen bruker sin egen SQLite `:memory:`-database.
 
+## Skjermvisning
+
+**Interaktiv HTML-demo:** `02_deliverables/hr-simulator-demo.html`
+
+Åpne filen lokalt i nettleseren (via nedlasting fra GitHub eller lokalt klonet repo). Dette er én selvstendig fil med HTML, CSS og JavaScript uten eksterne biblioteker, nettverkskall eller lagring.
+
+Den inneholder:
+- Bemanningstavle og beregnede konflikter.
+- Scenario HR-001, HR-002 og HR-003.
+- Interne ekstravakter og ekstern innleiepool med tydelige sperringer.
+- Konfidensielle HR-saker (demonstrert tilgangsbegrensning).
+- Godkjenn/avslå-funksjon og beslutningslogg bare i nettleserens minne.
+
+**Viktig:** «Leder»/«HR» i skjermbildet er en demovelger, ikke reell autentisering. Grensesnittet er en separat pedagogisk prototype; de endringene som utføres der, blir ikke skrevet tilbake til SQLite-databasen.
+
+## Scenario HR-003
+
+En fiktiv formidler er utilgjengelig. Skolebesøket mangler dermed én kvalifisert formidler. Et annet oppfølgingspunkt gjelder påstand om press om merarbeid. `POOL-04` kan dekke skolebesøket som intern ekstravakt etter manuell vurdering; `POOL-05` er ekstern, men trenger særskilt vurdering av innleiegrunnlag og likebehandling. HR-konflikten får eget konfidensielt saksforløp uten automatisk skyldkonklusjon.
+
 ## Neste trinn
 1. Få testpakken grønn, inkludert den eksisterende testpakken.
 2. Legge til en intern bemanningstavle med visning av konflikter, pool-kandidater, avvik og godkjenningsdialog.
-3. Bygge scenario HR-003: sykefravær, legitimt vikariat og valg mellom intern pool/ekstern bemanning.
+3. Videreutvikle scenario HR-003 med flere alternative tiltak og dokumentert regelgrunnlag.
 4. Innføre prioriterings- og rettferdighetsmål, uten å automatisere personavgjørelser.
 5. Integrere valgfri KI-forslagsgenerator bak deterministiske kontroller og menneskelig godkjenning.
 
