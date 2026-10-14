@@ -188,7 +188,7 @@ def pool_candidates(conn: sqlite3.Connection, activity_id: str, skill: str) -> l
             status, reason = "eligible", "Intern ekstravakt: vurder avtale og arbeidstidsregler"
         elif p["simulated_approval"] != "approved":
             status, reason = "blocked", "Bemanningsforetak ikke godkjent i scenarioet"
-        elif req is None or not req["legal_basis_confirmed"] or not req["equal_treatment_reviewed"]:
+        elif (req is None or req["legal_basis"] == "unassessed" or not req["legal_basis_confirmed"] or not req["equal_treatment_reviewed"]):
             status, reason = "review_required", "Innleiehjemmel og likebehandling må vurderes av HR"
         else:
             status, reason = "eligible", "Kun godkjent i øvelsesdata; virkelig dokumentasjon kreves"
@@ -301,8 +301,8 @@ def decide_proposal(
     row = conn.execute("SELECT * FROM proposals WHERE id=?", (proposal_id,)).fetchone()
     if row is None or row["status"] != "pending":
         raise ValueError("Forslaget finnes ikke eller er allerede behandlet")
-    if row["proposal_type"] == "hr_followup" and approver_role != "hr":
-        raise PermissionError("Konfidensiell HR-oppfølging krever HR-rolle")
+    if row["proposal_type"] in ("hr_followup", "assign_pool") and approver_role != "hr":
+        raise PermissionError("HR-oppfølging og innleie krever HR-rolle i simuleringen")
     with conn:
         if decision == "approved":
             _apply_approved(conn, row["proposal_type"], json.loads(row["payload_json"]))
