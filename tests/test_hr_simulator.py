@@ -11,6 +11,7 @@ from src.kunstpixel.hr_simulator.engine import (
     list_hr_cases,
     load_scenario,
     pool_candidates,
+    suggest_actions,
 )
 
 ROOT = Path(__file__).resolve().parents[1] / "05_data/hr_simulator/scenarios"
@@ -141,3 +142,28 @@ def test_realistic_contact_data_rejected(tmp_path):
     path.write_text(json.dumps(scenario), encoding="utf-8")
     with pytest.raises(ValueError, match="fiktive"):
         load_scenario(path)
+
+
+def test_suggestions_are_generated_but_not_applied(busy_day):
+    suggestions = suggest_actions(busy_day)
+    assert [s["kind"] for s in suggestions] == ["move_activity", "assign_pool"]
+    assert suggestions[0]["payload"] == {
+        "activity_id": "A-MOUNT",
+        "new_start": "2026-10-15T12:00",
+        "new_end": "2026-10-15T15:00",
+    }
+    assert suggestions[1]["candidate_status"] == "review_required"
+    assert len(detect_conflicts(busy_day)) == 2
+    assert busy_day.execute("SELECT count(*) FROM proposals").fetchone()[0] == 0
+
+
+def test_hr_scenario_suggests_factfinding_only():
+    conn = load_scenario(ROOT / "HR-002.json")
+    try:
+        suggestions = suggest_actions(conn)
+        assert len(suggestions) == 1
+        assert suggestions[0]["kind"] == "hr_followup"
+        assert suggestions[0]["requires_approval"] == "hr"
+        assert suggestions[0]["confidential"] is True
+    finally:
+        conn.close()
