@@ -8,8 +8,13 @@ from .engine import detect_conflicts, list_hr_cases, load_scenario, pool_candida
 
 def main():
     scenario_id = sys.argv[1] if len(sys.argv) > 1 else "HR-001"
+    if scenario_id == "web":
+        import uvicorn
+        uvicorn.run("src.kunstpixel.hr_simulator.api:create_app", factory=True,
+                    host="127.0.0.1", port=8001, reload=False)
+        return
     if scenario_id not in {"HR-001", "HR-002", "HR-003"}:
-        raise SystemExit("Velg HR-001, HR-002 eller HR-003")
+        raise SystemExit("Velg web, HR-001, HR-002 eller HR-003")
     root = Path(__file__).resolve().parents[3]
     path = root / "05_data/hr_simulator/scenarios" / f"{scenario_id}.json"
     conn = load_scenario(path)

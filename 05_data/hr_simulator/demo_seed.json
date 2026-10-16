@@ -1,0 +1,20 @@
+{
+  "HR-001": {
+    "mapping": "Dobbeltbooking og innleiebehov vises som avmelding fra avtalt vertsvakt, nytt udekket behov og kandidater med dokumentert kapasitet. Fullmaktsdelen er utenfor ukeøvelsen.",
+    "contacts": [
+      {"activity_id": "W1-0-fixed", "person_id": "EMP-02", "status": "trukket", "recorded_at": "2026-10-12T08:00:00", "fact_id": "DEMO-HR001-1"}
+    ]
+  },
+  "HR-002": {
+    "mapping": "Senvaktspørsmålet vises som avslag på en forespurt kveldsvakt; personvurdering og personalsak er utenfor ukeøvelsen.",
+    "contacts": [
+      {"activity_id": "W1-4-event", "person_id": "EMP-08", "status": "nei", "recorded_at": "2026-10-12T11:00:00", "fact_id": "DEMO-HR002-1"}
+    ]
+  },
+  "HR-003": {
+    "mapping": "Fravær vises som avmelding fra avtalt formidlingsvakt på skolebesøk. Helseopplysninger inngår ikke.",
+    "contacts": [
+      {"activity_id": "W1-1-event", "person_id": "EMP-01", "status": "trukket", "recorded_at": "2026-10-12T08:30:00", "fact_id": "DEMO-HR003-1"}
+    ]
+  }
+}
