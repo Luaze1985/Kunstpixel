@@ -24,3 +24,6 @@ desktop.ini
 # Agent traces & temporary scratch
 .agents/
 
+
+# Generated combined HR demo snapshot (not source data)
+.runtime/
