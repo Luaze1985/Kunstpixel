@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Kunstpixel · HR-lab</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#1d252b;background:#f4f5f6;line-height:1.47}
+*{box-sizing:border-box}body{margin:0}button,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}
+button:focus-visible,select:focus-visible{outline:3px solid #335d72;outline-offset:2px}
+.shell{max-width:1440px;margin:auto;display:grid;grid-template-columns:244px minmax(0,1fr);min-height:100vh}
+aside{background:#192329;color:#ebeff0;padding:28px 18px;display:flex;flex-direction:column;gap:25px}
+.logo{letter-spacing:.16em;text-transform:uppercase;font-size:11px;color:#adb9be;font-weight:700}
+.logo strong{display:block;color:#fff;letter-spacing:-.04em;text-transform:none;font-size:26px;margin-top:6px;font-weight:730}
+.aside-label{font-size:10px;text-transform:uppercase;letter-spacing:.11em;color:#91a4ac;font-weight:750;margin:7px 12px}
+.nav{display:flex;flex-direction:column;gap:4px}.nav button{border:0;width:100%;text-align:left;border-radius:9px;padding:12px 13px;background:transparent;color:#c8d1d5}
+.nav button:hover{background:#2f3d44}.nav button.active{color:#fff;background:#354951;font-weight:700}.nav span{display:inline-block;width:24px;color:#d1dde1}
+.sidefoot{margin-top:auto;padding:12px;border:1px solid #3d4b51;border-radius:11px;font-size:12px;color:#b6c2c7}.sidefoot strong{display:block;color:#fff;margin-bottom:5px}
+main{min-width:0;padding:31px clamp(16px,3vw,45px) 45px}
+.topline,.sectionhead,.cardhead,.activity,.proposal-top{display:flex;justify-content:space-between;align-items:center;gap:14px}
+.h1{font-size:clamp(25px,3vw,34px);line-height:1.13;letter-spacing:-.045em;margin:7px 0 6px}
+.muted{color:#69767d}.small{font-size:13px}.xs{font-size:11px}
+.eyebrow{color:#5d6d76;text-transform:uppercase;font-weight:750;letter-spacing:.11em;font-size:11px}
+.badge{font-size:11px;font-weight:700;border:1px solid #d7dde0;border-radius:99px;padding:5px 9px;white-space:nowrap;background:#fff;color:#495860}
+.badge.warn{color:#935c13;background:#fff8e9;border-color:#ebd6ae}.badge.ok{color:#1d7153;background:#e7f6ed;border-color:#c3e3d2}
+.badge.danger{color:#a33b32;background:#fff0ee;border-color:#efc9c5}
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.controls label{font-size:12px;color:#637078}
+select{border:1px solid #cad1d5;background:white;padding:10px 32px 10px 12px;border-radius:9px;max-width:100%;color:#243238}
+section{margin-top:23px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{background:#fff;border:1px solid #e1e5e7;border-radius:13px;padding:17px 18px;min-width:0}
+.stat strong{display:block;font-size:27px;letter-spacing:-.045em;line-height:1.25}.stat .statlabel{font-size:12px;color:#67757b;margin-top:5px}
+.layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(275px,1fr);gap:17px;align-items:start}
+.panel{background:#fff;border:1px solid #e1e5e7;border-radius:13px;overflow:hidden}.panelhead{padding:18px 19px 13px;border-bottom:1px solid #eef1f2}
+.panelhead h2,.sectionhead h2{font-size:16px;letter-spacing:-.025em;margin:0}.panelhead p{margin:4px 0 0}
+.panelbody{padding:4px 19px 15px}.activity{padding:16px 0;border-bottom:1px solid #eef0f1;align-items:flex-start}.activity:last-child{border:0}
+.title-sm{font-size:14px;font-weight:700}.time{font-size:12px;color:#69767d;margin-top:3px}.people{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}
+.pill{border-radius:7px;background:#f1f3f4;color:#38464d;padding:4px 7px;font-size:11px}
+.activity .badge{margin-top:2px}
+.problem{border-left:3px solid #bd654f;padding:12px 0 12px 12px;margin:0 0 0 -15px;border-bottom:1px solid #eef0f1}
+.issue{padding:13px 15px;border:1px solid #f0ddd4;background:#fffaf6;border-radius:10px;margin:12px 0}
+.issue strong{font-size:13px}.issue p{font-size:12px;color:#665f5c;margin:3px 0 0}
+.issue .badge{float:right}
+.empty{color:#5f7570;background:#edf8f1;border:1px solid #cce8d7;border-radius:10px;padding:16px;font-size:13px;margin:12px 0}
+.proposal{padding:18px;border-bottom:1px solid #e9edef}.proposal:last-child{border-bottom:0}
+.proposal h3{font-size:14px;margin:0}.proposal p{font-size:13px;color:#647077;margin:8px 0 14px}
+.rowbtn{display:flex;flex-wrap:wrap;gap:8px}
+.btn{border:1px solid #ccd4d7;background:#fff;border-radius:8px;padding:9px 13px;font-size:12px;font-weight:700;color:#34434a}
+.btn:hover:not(:disabled){background:#f1f4f5}
+.btn.primary{background:#1f323c;border-color:#1f323c;color:#fff}
+.btn.primary:hover:not(:disabled){background:#39515d}
+.btn.text{border-color:transparent}
+.warning{font-size:12px;color:#855e2c;margin:10px 0 0}
+.notice{margin:14px 0 0;background:#f3f5f6;border:1px solid #e1e6e8;border-radius:10px;padding:11px 13px;color:#51616a;font-size:12px}
+.details{padding:17px 19px}
+table{width:100%;border-collapse:collapse;text-align:left;font-size:13px}
+th{font-size:11px;color:#63727b;text-transform:uppercase;letter-spacing:.04em;font-weight:750;background:#f8f9fa}
+td,th{padding:12px 13px;border-bottom:1px solid #edf0f2;vertical-align:top}
+tr:last-child td{border-bottom:0}
+.grid-two{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+.detailcard{border:1px solid #e1e5e7;background:white;padding:17px;border-radius:13px}
+.detailcard p{font-size:13px;color:#637077;margin:7px 0 0}
+.log{padding:13px 0;border-bottom:1px solid #ecf0f1;font-size:13px}.log:last-child{border:0}
+.log b{display:block;margin-bottom:3px}
+footer{font-size:11px;color:#7a858b;border-top:1px solid #dee3e5;margin-top:26px;padding-top:14px}
+[hidden]{display:none!important}
+@media(max-width:1040px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:750px){.shell{display:block}aside{padding:14px 15px;gap:12px}.logo strong{font-size:20px}.aside-label,.sidefoot{display:none}.nav{flex-direction:row;overflow:auto}.nav button{white-space:nowrap;width:auto;font-size:12px;padding:9px 11px}main{padding:22px 14px}.topline{align-items:flex-start;flex-direction:column}.grid-two{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside aria-label="Navigasjon">
+  <div class="logo">Kunstpixel<strong>HR-lab</strong></div>
+  <div class="nav">
+    <div class="aside-label">Arbeidsflate</div>
+    <button data-page="overview" class="active"><span>01</span> Bemanning</button>
+    <button data-page="pool"><span>02</span> Innleiepool</button>
+    <button data-page="cases"><span>03</span> HR-saker</button>
+    <button data-page="log"><span>04</span> Beslutninger</button>
+  </div>
+  <div class="sidefoot"><strong>Kun simulering</strong>Alle personer, telefonnumre, leverandører og hendelser er oppdiktet. Ingen nettverkskall, sporing eller varig lagring.</div>
+</aside>
+<main>
+  <div class="topline">
+    <div><div class="eyebrow">Drift / HR / øvingsmiljø</div><h1 class="h1" id="page-title">Bemanning og kapasitet</h1>
+    <div class="muted small" id="subtitle">Simulerte medarbeidere og arbeidsoppgaver</div></div>
+    <div class="controls">
+      <label for="role">Vis som</label>
+      <select id="role"><option value="director">Leder (demo)</option><option value="hr">HR (demo)</option></select>
+      <label for="scenario">Scenario</label>
+      <select id="scenario"><option value="HR-003">HR-003 · Fravær og innleie</option><option value="HR-001">HR-001 · Travel torsdag</option><option value="HR-002">HR-002 · HR-konflikt</option></select>
+      <button type="button" class="btn" id="reset">Nullstill</button>
+    </div>
+  </div>
+  <section class="stats" id="stats" aria-label="Nøkkeltall"></section>
+  <div id="content" role="region" aria-live="polite"></div>
+  <footer>Syntetisk, lokalt demonstrasjonsgrensesnitt · Ikke et faktisk HR-system · Godkjenning her endrer bare denne skjermvisningen.</footer>
+</main>
+</div>
+<script>
+"use strict";
+(function(){
+const d="2026-10-16";
+const commonPeople=[
+ ["EMP-01","Maja Eksempel","Formidling","09:00–16:00"],
+ ["EMP-02","Ola Prøve","Vertskap, montering","09:00–16:00"],
+ ["EMP-03","Jonas Demo","Montering","09:00–16:00"],
+ ["EMP-04","Sara Fiktiv","Kafé","10:00–18:00"],
+ ["EMP-05","Amir Test","Kafé, vertskap","10:00–18:00"],
+ ["EMP-06","Ingrid Øvelse","HMS og drift","08:00–16:00"],
+ ["EMP-07","Nora Modell","Arrangementsledelse","12:00–21:00"],
+ ["EMP-08","Liv Scenario","Vertskap","13:00–21:00"]
+];
+const DATA={
+ "HR-003":{
+   label:"Fravær, merarbeid og innleie",date:"16. okt. 2026",
+   people:commonPeople.map(p=>p[0]==="EMP-01"?["EMP-01","Maja Eksempel","Formidling · meldt utilgjengelig","Ikke tilgjengelig"]:p).concat([["POOL-04","Kari Demo","Formidling · intern pool","09:30–13:00"],["POOL-05","Tove Eksempel","Formidling · ekstern pool","09:00–16:00"]]),
+   activity:[
+     {id:"A-SCHOOL",title:"Skolebesøk – 45 elever",time:"10:00–12:00",assigned:["EMP-02"],requirements:{formidling:1,vertskap:1}},
+     {id:"A-CAFE",title:"Kafédrift",time:"10:00–16:00",assigned:["EMP-04","EMP-05"],requirements:{kafe:2}},
+     {id:"A-EVENING",title:"Kveldsarrangement",time:"17:00–20:00",assigned:["EMP-07","EMP-08"],requirements:{arrangementsledelse:1,vertskap:1}}
+   ],
+   skills:{"EMP-01":["formidling"],"EMP-02":["vertskap","montering"],"EMP-03":["montering"],"EMP-04":["kafe"],"EMP-05":["kafe","vertskap"],"EMP-06":["hms","drift"],"EMP-07":["arrangementsledelse"],"EMP-08":["vertskap"],"POOL-04":["formidling"],"POOL-05":["formidling"]},
+   pool:[{id:"POOL-04",type:"Intern ekstravakt",provider:"Intern pool",status:"eligible",note:"Tilgjengelig og kvalifisert. Arbeidsvilkår må verifiseres i virkelig drift."},{id:"POOL-05",type:"Innleie",provider:"Fiktivt Bemanningsbyrå Alfa",status:"review",note:"Krever HR-vurdering av innleiegrunnlag og likebehandling."}],
+   cases:[{id:"CASE-002",title:"Uenighet om merarbeid",summary:"Amir mener at han er blitt presset til ekstra arbeidstid. Lederen mener dette var nødvendig. Ingen av opplysningene er undersøkt.",state:"Ny"}],
+   proposals:[
+     {id:"P-301",type:"assign",activity:"A-SCHOOL",person:"POOL-04",title:"Bruk intern ekstravakt Kari",detail:"Kari dekker formidlingskompetansen kl. 10–12. Intern løsning foreslås før innleie.",role:"hr"},
+     {id:"P-302",type:"external",activity:"A-SCHOOL",person:"POOL-05",title:"Vurder ekstern innleie av Tove",detail:"Tove er kvalifisert og tilgjengelig, men juridisk innleiegrunnlag er ikke dokumentert.",role:"hr",blocked:"Innleie krever egen dokumentert HR-kontroll. Kan ikke godkjennes her."},
+     {id:"P-303",type:"case",title:"Åpne nøytral HR-undersøkelse",detail:"Hør begge parter, kontroller vaktplan og dokumenter vurderinger. Ingen automatisk skyldplassering.",role:"hr"}
+   ]
+ },
+ "HR-001":{
+   label:"Travel torsdag",date:"15. okt. 2026",
+   people:commonPeople,
+   activity:[
+     {id:"A-SCHOOL",title:"Skolebesøk – 45 elever",time:"10:00–12:00",assigned:["EMP-01","EMP-02"],requirements:{formidling:1,vertskap:1}},
+     {id:"A-MOUNT",title:"Utstillingsmontering",time:"11:00–14:00",assigned:["EMP-02","EMP-03"],requirements:{montering:2}},
+     {id:"A-CAFE",title:"Kafédrift",time:"10:00–16:00",assigned:["EMP-04","EMP-05"],requirements:{kafe:2}},
+     {id:"A-EVENING",title:"Kveldsarrangement",time:"17:00–20:00",assigned:["EMP-07","EMP-08"],requirements:{arrangementsledelse:1,vertskap:2}}
+   ],
+   skills:{"EMP-01":["formidling"],"EMP-02":["vertskap","montering"],"EMP-03":["montering"],"EMP-04":["kafe"],"EMP-05":["kafe","vertskap"],"EMP-06":["hms","drift"],"EMP-07":["arrangementsledelse"],"EMP-08":["vertskap"],"POOL-01":["vertskap"],"POOL-02":["vertskap"]},
+   pool:[{id:"POOL-01",name:"Eva Eksempel",type:"Innleie",provider:"Fiktivt Bemanningsbyrå Alfa",status:"review",note:"Innleiegrunnlag ikke vurdert."},{id:"POOL-02",name:"Martin Modell",type:"Innleie",provider:"Fiktivt Bemanningsbyrå Beta",status:"blocked",note:"Foretaksstatus er ikke kontrollert i øvelsen."}],
+   cases:[],
+   proposals:[
+     {id:"P-101",type:"move",activity:"A-MOUNT",time:"12:00–15:00",title:"Flytt monteringen én time",detail:"Ola kan fullføre skolebesøket før monteringen starter. Kvalifikasjonene er uendret.",role:"director"},
+     {id:"P-102",type:"external",activity:"A-EVENING",person:"POOL-01",title:"Vurder Eva fra innleiepoolen",detail:"Kan dekke behovet for museumsvert, men innleiegrunnlaget er ikke dokumentert.",role:"hr",blocked:"Krever dokumentert innleiegrunnlag, likebehandling og HR-kontroll."}
+   ]
+ },
+ "HR-002":{
+   label:"Uenighet om senvakter",date:"16. okt. 2026",
+   people:[commonPeople[3],commonPeople[4],commonPeople[5]],activity:[],
+   skills:{"EMP-04":["kafe"],"EMP-05":["kafe","vertskap"],"EMP-06":["hms","drift"]},
+   pool:[],
+   cases:[{id:"CASE-001",title:"Opplevd skjevfordeling av senvakter",summary:"Sara opplever at senvakter fordeles urettferdig. Amir mener fordelingen følger tilgjengelighet. Turnushistorikken er ikke vedlagt.",state:"Ny"}],
+   proposals:[{id:"P-201",type:"case",title:"Start faktaundersøkelse",detail:"Hent vaktplan og før dialog med partene uten å trekke forhåndskonklusjoner.",role:"hr"}]
+ }
+};
+let scenarioId="HR-003",role="director",page="overview",state,decisions=[];
+const byId=(id)=>document.getElementById(id);
+const safe=(x)=>String(x==null?"":x).replace(/[&<>"']/g,(ch)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+const clone=(obj)=>JSON.parse(JSON.stringify(obj));
+function personName(id){let p=state.people.find(x=>x[0]===id);if(p)return p[1];let pool=state.pool.find(x=>x.id===id);return pool?pool.name||({"POOL-01":"Eva Eksempel","POOL-02":"Martin Modell"}[id]):id;}
+function hours(time){return time.split("–").map(x=>parseInt(x.slice(0,2),10)*60+parseInt(x.slice(3,5),10));}
+function conflictList(){
+ let conflicts=[],assign=[];
+ state.activity.forEach(a=>{
+   a.assigned.forEach(id=>assign.push({id,activity:a}));
+   Object.keys(a.requirements).forEach(skill=>{
+     let assigned=a.assigned.filter(id=>(state.skills[id]||[]).includes(skill)).length;
+     if(assigned<a.requirements[skill])conflicts.push({type:"shortage",activity:a.id,text:a.title+": mangler "+(a.requirements[skill]-assigned)+" med kompetanse "+skill+"."});
+   });
+ });
+ for(let i=0;i<assign.length;i++)for(let j=i+1;j<assign.length;j++){
+   let a=assign[i],b=assign[j];if(a.id!==b.id)continue;
+   let x=hours(a.activity.time),y=hours(b.activity.time);
+   if(x[0]<y[1]&&y[0]<x[1])conflicts.push({type:"overlap",activity:b.activity.id,text:personName(a.id)+" er dobbeltbooket: "+a.activity.title+" / "+b.activity.title+"."});
+ }
+ return conflicts;
+}
+function pending(){return state.proposals.filter(p=>!decisions.some(x=>x.id===p.id));}
+function reset(){state=clone(DATA[scenarioId]);decisions=[];render();}
+function badge(text,type){return '<span class="badge '+(type||"")+'">'+safe(text)+'</span>';}
+function stat(v,t){return '<div class="stat"><strong>'+safe(v)+'</strong><div class="statlabel">'+safe(t)+'</div></div>';}
+function personTable(){return '<table><thead><tr><th>Navn</th><th>Kompetanse / rolle</th><th>Tilgjengelig</th></tr></thead><tbody>'+state.people.filter(p=>p[0].startsWith("EMP-")).map(p=>'<tr><td><b>'+safe(p[1])+'</b></td><td>'+safe(p[2])+'</td><td>'+safe(p[3])+'</td></tr>').join("")+'</tbody></table>';}
+function activitiesPanel(){
+ let conflicts=conflictList();
+ let body=state.activity.map(a=>{
+   let issues=conflicts.filter(x=>x.activity===a.id);
+   return '<div class="activity '+(issues.length?"problem":"")+'"><div><div class="title-sm">'+safe(a.title)+'</div><div class="time">'+safe(a.time)+'</div><div class="people">'+a.assigned.map(id=>'<span class="pill">'+safe(personName(id))+'</span>').join("")+'</div></div>'+badge(issues.length?"Konflikt":"Dekket",issues.length?"danger":"ok")+'</div>';
+ }).join("");
+ if(!state.activity.length)body='<p class="muted small">Ingen operative aktiviteter i dette scenariet.</p>';
+ return '<div class="panel"><div class="panelhead"><h2>Aktiviteter og bemanning</h2><p class="muted small">Registrerte oppdrag og kompetansekrav</p></div><div class="panelbody">'+body+'</div></div>';
+}
+function conflictPanel(){
+ let c=conflictList();
+ return '<div class="panel"><div class="panelhead"><h2>Hva krever handling?</h2><p class="muted small">Automatisk kontroll av plan og krav</p></div><div class="panelbody">'+(c.length?c.map(x=>'<div class="issue"><strong>'+safe(x.type==="overlap"?"Dobbeltbooking":"Bemanningsmangel")+'</strong><p>'+safe(x.text)+'</p></div>').join(""):'<div class="empty">Ingen bemanningskonflikter. Sjekk fortsatt HMS, arbeidstid og saksbehandling.</div>')+'<button class="btn" type="button" data-jump="proposals">Se forslag og beslutninger</button></div></div>';
+}
+function proposalApplicable(p){
+ if(p.type==="assign"||p.type==="external"){
+  let activity=state.activity.find(x=>x.id===p.activity);if(!activity)return false;
+  let skills=state.skills[p.person]||[];
+  return Object.keys(activity.requirements).some(k=>skills.includes(k)&&activity.assigned.filter(id=>(state.skills[id]||[]).includes(k)).length<activity.requirements[k]);
+ }
+ if(p.type==="move"){let a=state.activity.find(x=>x.id===p.activity);return a&&a.time!==p.time;}
+ if(p.type==="case")return state.cases.some(c=>c.state==="Ny");
+ return false;
+}
+function proposalPanel(){
+ let list=pending();
+ return '<div class="panel"><div class="panelhead"><h2>Forslag fra regelmotor</h2><p class="muted small">KI-lignende forslag. Dette er foreløpig ikke en tilkoblet KI-modell.</p></div>'+(
+ list.length?list.map(p=>{
+  let blocked=!!p.blocked,obsolete=!proposalApplicable(p),roleOK=p.role===role||(role==="hr"&&p.role==="director");
+  return '<div class="proposal"><div class="proposal-top"><h3>'+safe(p.title)+'</h3>'+badge(blocked?"Krever utredning":obsolete?"Ikke nødvendig":"Til godkjenning",blocked?"warn":obsolete?"":"ok")+'</div><p>'+safe(p.detail)+'</p>'+
+   (blocked?'<div class="warning">'+safe(p.blocked)+'</div>':'')+
+   (!roleOK?'<div class="warning">Velg HR-visning for denne beslutningen.</div>':'')+
+   '<div class="rowbtn"><button class="btn primary" data-approve="'+safe(p.id)+'" '+(blocked||obsolete||!roleOK?"disabled":"")+' type="button">Godkjenn</button><button class="btn" data-reject="'+safe(p.id)+'" type="button">Avslå</button></div></div>';
+ }).join(""):'<div class="details muted small">Ingen ubehandlede forslag.</div>'
+ )+'</div>';
+}
+function overview(){
+ return '<section class="layout"><div>'+activitiesPanel()+'</div><div>'+conflictPanel()+'</div></section>'+
+ '<section class="layout" id="proposals"><div>'+proposalPanel()+'</div><div class="panel"><div class="panelhead"><h2>Bemanningsoversikt</h2><p class="muted small">Fiktive persondata</p></div><div style="overflow:auto">'+personTable()+'</div></div></section>';
+}
+function poolPage(){
+ let cards=state.pool.map(p=>{
+  let name=p.name||personName(p.id),color=p.status==="eligible"?"ok":p.status==="blocked"?"danger":"warn";
+  return '<div class="detailcard"><div class="proposal-top"><div><div class="title-sm">'+safe(name)+'</div><div class="muted small">'+safe(p.type)+'</div></div>'+badge(p.status==="eligible"?"Tilgjengelig":p.status==="review"?"HR-kontroll":"Ikke klar",color)+'</div><p>'+safe(p.provider)+'</p><p>'+safe(p.note)+'</p></div>';
+ }).join("");
+ return '<section><div class="sectionhead"><h2>Innleie og interne ekstravakter</h2></div><p class="muted small">Viser bare syntetiske kandidater. At noen er tilgjengelige betyr ikke at innleie er lovlig.</p><div class="grid-two">'+(cards||'<div class="detailcard">Ingen pool-kandidater for dette scenariet.</div>')+'</div></section>';
+}
+function casesPage(){
+ if(role!=="hr"){
+  return '<section><div class="panel"><div class="details"><h2>HR-saker er skjermet</h2><p class="muted small">Velg HR-visning øverst for å demonstrere innsyn. Dette er kun en visningskontroll i demoen – ikke virkelig autentisering.</p></div></div></section>';
+ }
+ return '<section><div class="sectionhead"><h2>Konfidensielle HR-saker</h2></div><p class="muted small">Viser fiktive saker. Alle påstander må undersøkes. Ikke konkluder skyld automatisk.</p><div class="grid-two">'+(state.cases.map(c=>'<div class="detailcard"><div class="proposal-top"><div class="title-sm">'+safe(c.title)+'</div>'+badge(c.state,c.state==="Ny"?"warn":"ok")+'</div><p>'+safe(c.summary)+'</p><p class="xs muted">Saksnummer: '+safe(c.id)+' · Kun HR</p></div>').join("")||'<div class="detailcard">Ingen åpne personalsaker.</div>')+'</div></section>';
+}
+function logPage(){
+ return '<section><div class="panel"><div class="panelhead"><h2>Beslutningslogg</h2><p class="muted small">Lokal økt; nullstilles når siden lastes på nytt.</p></div><div class="details">'+(decisions.length?decisions.map(x=>'<div class="log"><b>'+safe(x.label)+' · '+safe(x.decision==="approved"?"Godkjent":"Avslått")+'</b><span class="muted">'+safe(x.role==='hr'?"HR":"Leder")+' · '+safe(x.reason)+'</span></div>').join(""):'<p class="muted small">Ingen beslutninger registrert ennå.</p>')+'</div></div></section>';
+}
+function render(){
+ const headings={overview:["Bemanning og kapasitet","Fordel arbeid, avdekk konflikter og godkjenn forslag"],pool:["Innleiepool","Interne ekstravakter og eksterne kandidater"],cases:["HR-saker","Konfidensielle personalspørsmål"],log:["Beslutninger","Sporbar godkjenning og avslag"]};
+ byId("page-title").textContent=headings[page][0];
+ byId("subtitle").textContent=state.date+" · "+state.label+" · "+headings[page][1];
+ document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+ const conflicts=conflictList();
+ byId("stats").innerHTML=stat(state.people.filter(p=>p[0].startsWith("EMP-")).length,"Ansatte")+
+ stat(state.activity.length,"Aktiviteter")+stat(conflicts.length,"Bemanningskonflikter")+stat(pending().length,"Forslag / avklaringer");
+ byId("content").innerHTML=page==="overview"?overview():page==="pool"?poolPage():page==="cases"?casesPage():logPage();
+ document.querySelectorAll("[data-jump]").forEach(b=>b.addEventListener("click",()=>byId(b.dataset.jump).scrollIntoView({behavior:"smooth"})));
+ document.querySelectorAll("[data-approve]").forEach(b=>b.addEventListener("click",()=>decide(b.dataset.approve,true)));
+ document.querySelectorAll("[data-reject]").forEach(b=>b.addEventListener("click",()=>decide(b.dataset.reject,false)));
+}
+function decide(id,approved){
+ const p=state.proposals.find(x=>x.id===id);
+ if(!p||decisions.some(x=>x.id===id))return;
+ let reason=approved?"Godkjent etter demoens regelkontroll":"Forslag avslått; planen beholdes";
+ if(approved){
+  if(p.blocked||!proposalApplicable(p)||(p.role!==role&&role!=="hr"))return;
+  if(p.type==="move"){state.activity.find(x=>x.id===p.activity).time=p.time;}
+  if(p.type==="assign"){state.activity.find(x=>x.id===p.activity).assigned.push(p.person);}
+  if(p.type==="case"){state.cases.forEach(c=>{if(c.state==="Ny")c.state="Under faktaundersøkelse";});}
+ }
+ decisions.unshift({id,decision:approved?"approved":"rejected",label:p.title,role:role,reason});
+ render();
+}
+document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>{page=b.dataset.page;render();}));
+byId("role").addEventListener("change",e=>{role=e.target.value;render();});
+byId("scenario").addEventListener("change",e=>{scenarioId=e.target.value;page="overview";reset();});
+byId("reset").addEventListener("click",reset);
+reset();
+})();
+</script>
+</body>
+</html>

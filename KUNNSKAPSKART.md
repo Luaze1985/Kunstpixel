@@ -18,6 +18,8 @@ Dette er inngangspunktet for enhver AI som jobber i dette prosjektet — Codex, 
 | Domenebegreper (hva er en «samling», en «veggtekst») | `04_knowledge/04_domain/` og `00_felles/ordliste.yaml` |
 | Detaljerte rolle-systemprompter | `04_knowledge/03_prompts/*.md` |
 | Selve motoren og verktøyene | `src/kunstpixel/` |
+| Kildegrunnlag for syntetisk museumsuke | `04_knowledge/04_domain/projects/hr_simulator/research_museumsdrift.md`, `kilder.json`, `museumsrutiner.md` og `datamangler.md` |
+| Ukeplanens behov og implementeringsrekkefølge | `04_knowledge/04_domain/projects/hr_simulator/BEHOV_UKEPLAN_2026-10-16.md` og `docs/superpowers/plans/2026-10-16-museumsuke-research-og-ki.md` |
 
 ## 3. Roller og struktur
 

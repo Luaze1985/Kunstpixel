@@ -20,6 +20,10 @@ ENV/
 Thumbs.db
 [Dd]esktop.ini
 desktop.ini
+05_data/hr_simulator/*.sqlite3
+05_data/hr_simulator/*.sqlite3-*
+05_data/hr_simulator/active_dataset.json
+05_data/hr_simulator/dataset_versions/
 
 # Agent traces & temporary scratch
 .agents/

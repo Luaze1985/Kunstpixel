@@ -9,6 +9,9 @@ dependencies = [
     "fastmcp>=3.4.2",
     "pydantic>=2.12.5",
     "rich>=15.0.0",
+    "fastapi>=0.143,<1",
+    "uvicorn>=0.30",
+    "openai>=2.0,<3",
 ]
 
 [tool.pytest.ini_options]

@@ -198,7 +198,9 @@ class TestSearchEventsTool:
 
     def test_search_events_filter_by_type_omvisning(self):
         """Filter events by type 'omvisning' returns only guided tours."""
-        tours = search_events(event_type="omvisning")
+        # Fast kontrollvindu fra den versjonerte museumsdatabasen. Uten dato
+        # blir testen avhengig av om dagens dato er etter siste demoarrangement.
+        tours = search_events(event_type="omvisning", date_from="2026-09-01", date_to="2026-10-12")
         assert isinstance(tours, list)
         assert len(tours) >= 1
         for tour in tours:

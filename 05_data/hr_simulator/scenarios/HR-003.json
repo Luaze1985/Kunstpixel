@@ -1,0 +1,274 @@
+{
+  "scenario_id": "HR-003",
+  "title": "Fravær, merarbeid og innleie",
+  "date": "2026-10-16",
+  "synthetic": true,
+  "description": "Øvelse: Formidler er utilgjengelig (uten helseopplysninger). Skolebesøk mangler kvalifisert formidler. En kollega protesterer på ekstra timer. Leder vurderer intern ekstravakt, innleie og redusert tjeneste.",
+  "providers": [
+    {
+      "id": "BYRA-A",
+      "name": "Fiktivt Bemanningsbyrå Alfa (øvelse)",
+      "simulated_approval": "approved",
+      "synthetic": true
+    }
+  ],
+  "persons": [
+    {
+      "id": "EMP-01",
+      "name": "Maja Eksempel",
+      "person_type": "employee",
+      "birth_year": 1988,
+      "email": "emp-01@example.invalid",
+      "phone": "00000001",
+      "position_percent": 100,
+      "skills": [
+        "formidling"
+      ],
+      "availability": [],
+      "synthetic": true
+    },
+    {
+      "id": "EMP-02",
+      "name": "Ola Prøve",
+      "person_type": "employee",
+      "birth_year": 1992,
+      "email": "emp-02@example.invalid",
+      "phone": "00000002",
+      "position_percent": 100,
+      "skills": [
+        "vertskap",
+        "montering"
+      ],
+      "availability": [
+        [
+          "2026-10-16T09:00",
+          "2026-10-16T16:00"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "id": "EMP-03",
+      "name": "Jonas Demo",
+      "person_type": "employee",
+      "birth_year": 1984,
+      "email": "emp-03@example.invalid",
+      "phone": "00000003",
+      "position_percent": 100,
+      "skills": [
+        "montering"
+      ],
+      "availability": [
+        [
+          "2026-10-16T09:00",
+          "2026-10-16T16:00"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "id": "EMP-04",
+      "name": "Sara Fiktiv",
+      "person_type": "employee",
+      "birth_year": 1993,
+      "email": "emp-04@example.invalid",
+      "phone": "00000004",
+      "position_percent": 100,
+      "skills": [
+        "kafe"
+      ],
+      "availability": [
+        [
+          "2026-10-16T10:00",
+          "2026-10-16T18:00"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "id": "EMP-05",
+      "name": "Amir Test",
+      "person_type": "employee",
+      "birth_year": 1994,
+      "email": "emp-05@example.invalid",
+      "phone": "00000005",
+      "position_percent": 100,
+      "skills": [
+        "kafe",
+        "vertskap"
+      ],
+      "availability": [
+        [
+          "2026-10-16T10:00",
+          "2026-10-16T18:00"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "id": "EMP-06",
+      "name": "Ingrid Øvelse",
+      "person_type": "employee",
+      "birth_year": 1981,
+      "email": "emp-06@example.invalid",
+      "phone": "00000006",
+      "position_percent": 100,
+      "skills": [
+        "hms",
+        "drift"
+      ],
+      "availability": [
+        [
+          "2026-10-16T08:00",
+          "2026-10-16T16:00"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "id": "EMP-07",
+      "name": "Nora Modell",
+      "person_type": "employee",
+      "birth_year": 1986,
+      "email": "emp-07@example.invalid",
+      "phone": "00000007",
+      "position_percent": 100,
+      "skills": [
+        "arrangementsledelse",
+        "kuratering"
+      ],
+      "availability": [
+        [
+          "2026-10-16T12:00",
+          "2026-10-16T21:00"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "id": "EMP-08",
+      "name": "Liv Scenario",
+      "person_type": "employee",
+      "birth_year": 2000,
+      "email": "emp-08@example.invalid",
+      "phone": "00000008",
+      "position_percent": 100,
+      "skills": [
+        "vertskap"
+      ],
+      "availability": [
+        [
+          "2026-10-16T13:00",
+          "2026-10-16T21:00"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "id": "POOL-04",
+      "name": "Kari Demo",
+      "person_type": "internal_pool",
+      "birth_year": 1989,
+      "email": "pool-04@example.invalid",
+      "phone": "00000004",
+      "position_percent": 0,
+      "skills": [
+        "formidling"
+      ],
+      "availability": [
+        [
+          "2026-10-16T09:30",
+          "2026-10-16T13:00"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "id": "POOL-05",
+      "name": "Tove Eksempel",
+      "person_type": "agency_pool",
+      "birth_year": 1991,
+      "email": "pool-05@example.invalid",
+      "phone": "00000005",
+      "position_percent": 0,
+      "provider_id": "BYRA-A",
+      "skills": [
+        "formidling"
+      ],
+      "availability": [
+        [
+          "2026-10-16T09:00",
+          "2026-10-16T16:00"
+        ]
+      ],
+      "synthetic": true
+    }
+  ],
+  "activities": [
+    {
+      "id": "A-SCHOOL",
+      "title": "Skolebesøk med 45 elever",
+      "starts_at": "2026-10-16T10:00",
+      "ends_at": "2026-10-16T12:00",
+      "requirements": {
+        "formidling": 1,
+        "vertskap": 1
+      },
+      "assigned": [
+        "EMP-02"
+      ]
+    },
+    {
+      "id": "A-CAFE",
+      "title": "Kafedrift",
+      "starts_at": "2026-10-16T10:00",
+      "ends_at": "2026-10-16T16:00",
+      "requirements": {
+        "kafe": 2
+      },
+      "assigned": [
+        "EMP-04",
+        "EMP-05"
+      ]
+    },
+    {
+      "id": "A-EVENING",
+      "title": "Kveldsarrangement",
+      "starts_at": "2026-10-16T17:00",
+      "ends_at": "2026-10-16T20:00",
+      "requirements": {
+        "arrangementsledelse": 1,
+        "vertskap": 1
+      },
+      "assigned": [
+        "EMP-07",
+        "EMP-08"
+      ]
+    }
+  ],
+  "rental_requests": [
+    {
+      "id": "R-003",
+      "activity_id": "A-SCHOOL",
+      "reason": "Kortvarig bemanningsbehov, men rettslig grunnlag er ikke avklart",
+      "legal_basis": "unassessed",
+      "legal_basis_confirmed": false,
+      "equal_treatment_reviewed": false,
+      "status": "review_required"
+    }
+  ],
+  "hr_cases": [
+    {
+      "id": "CASE-002",
+      "category": "workload_conflict",
+      "title": "Uenighet om ekstravakt og merarbeid",
+      "summary": "Amir opplever press om å arbeide utover planlagt tid. Leder mener arbeidet er nødvendig. Opplysningene er ikke undersøkt; ingen helse- eller diagnoseinformasjon er registrert.",
+      "confidentiality": "hr_only",
+      "state": "new",
+      "owner_role": "hr",
+      "parties": [
+        "EMP-05"
+      ]
+    }
+  ]
+}
