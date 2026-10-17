@@ -47,7 +47,8 @@ def test_source_registry_is_authoritative(tmp_path):
         load_planning_context(path)
 
 
-def test_contract_capacity_is_preserved_from_original_synthetic_persons():
+def test_contract_capacity_comes_from_synthetic_archive():
     context = load_planning_context(DATA)
-    sara = next(p for p in context.persons if p.id == "EMP-04")
-    assert sara.position_percent == 80
+    host = next(p for p in context.persons if p.id == "KP-ANS-006")
+    assert host.position_percent == 80
+    assert host.field_sources["employment"] == "syntetisk arkiv:KP-ANS-006"

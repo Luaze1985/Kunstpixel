@@ -62,9 +62,17 @@ def _contact_status(week: WeekContext, activity_id: str, person_id: str) -> str:
     return contacts[-1].status if contacts else "ikke_kontaktet"
 
 
+def _active(person, activity: Activity) -> bool:
+    day = activity.starts_at.date()
+    return ((person.employment_start is None or person.employment_start <= day)
+            and (person.employment_end is None or day <= person.employment_end))
+
+
 def _counts_for_coverage(week: WeekContext, assignment: Assignment) -> bool:
     person = next((p for p in week.persons if p.id == assignment.person_id), None)
-    return bool(person and assignment.skill in person.skills and person.training.get(assignment.skill) is True
+    activity = next((a for a in week.activities if a.id == assignment.activity_id), None)
+    return bool(person and activity and _active(person, activity)
+                and assignment.skill in person.skills and person.training.get(assignment.skill) is True
                 and _contact_status(week, assignment.activity_id, assignment.person_id) not in {"nei", "trukket"})
 
 
@@ -76,6 +84,8 @@ def candidate_status(week: WeekContext, assignments: list[Assignment], activity_
         raise ValueError("Ukjent kandidat eller rolle")
     contact = _contact_status(week, activity_id, person_id)
     reasons = []
+    if not _active(person, activity):
+        reasons.append("ikke ansatt på oppgavedato")
     if skill not in person.skills:
         reasons.append("mangler kompetanse")
     elif person.training.get(skill) is not True:
@@ -100,7 +110,10 @@ def candidate_status(week: WeekContext, assignments: list[Assignment], activity_
             "training": person.training.get(skill), "available_hours": max(0, _limit(person) - _hours(week, assignments, person_id)),
             "contact_status": contact, "person_type": person.person_type,
             "eligible": not reasons, "reason": ", ".join(reasons) if reasons else "Kompetanse, opplæring og tid er dokumentert i øvingsdata",
-            "source_ids": person.source_ids + activity.source_ids}
+            "source_ids": person.source_ids + activity.source_ids,
+            "employment_start": person.employment_start, "employment_end": person.employment_end,
+            "department": person.department, "title": person.title, "field_sources": person.field_sources,
+            "active": _active(person, activity)}
 
 
 def check_week(week: WeekContext, assignments: list[Assignment]) -> CheckResult:
@@ -113,6 +126,8 @@ def check_week(week: WeekContext, assignments: list[Assignment]) -> CheckResult:
             continue
         activity = acts[assignment.activity_id]
         person = people[assignment.person_id]
+        if not _active(person, activity):
+            result.violations.append({"kind": "employment", "activity_id": activity.id, "person_id": person.id})
         if assignment.skill not in activity.requirements or assignment.skill not in person.skills:
             result.violations.append({"kind": "skill", "activity_id": activity.id, "person_id": person.id})
         if assignment.skill in person.skills and person.training.get(assignment.skill) is not True:

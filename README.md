@@ -45,15 +45,17 @@ py -3.13 src/cli.py "Hvor finner jeg Skrik?"
 
 ### Lokal museumsuke (fiktiv bemanning)
 
-Arbeidsflaten kjøres separat fra museumsverten. Den bruker kun syntetiske personer og en egen lokal SQLite-fil. Samlingsdatabasen `05_data/museum.db` åpnes ikke for skriving.
+Arbeidsflaten kjøres separat fra museumsverten. Den bruker 168 syntetiske arkivansatte, to merkede eksterne øvingskandidater og en egen lokal SQLite-fil. Samlingsdatabasen `05_data/museum.db` åpnes ikke for skriving.
 
 ```powershell
 py -3.13 -m pip install -e .
 py -3.13 -m src.kunstpixel.hr_simulator web
 ```
 
-Åpne `http://127.0.0.1:8001/`. Velg uke, vurder arrangementer og faste oppgaver, registrer kontaktsvar og lag et simulert forslag. Hver endring kan godkjennes eller avvises. Ved avmelding blir behovet synlig igjen, mens fjerning av en avtalt vakt krever egen godkjenning. Plan og beslutninger bevares i `05_data/hr_simulator/local_state.sqlite3`, som ikke legges i Git. Demomodus har tre isolerte syntetiske starttilstander knyttet til temaene i HR-001–003; variantene ligger i `05_data/hr_simulator/demo_seed.json`. `02_deliverables/referanse/hr-simulator-demo-feature-cc83db2.html` er en byte-lik kopi av HTML-prototypen fra feature-branchen.
+Åpne `http://127.0.0.1:8001/`. Søk i personregisteret, velg uke, vurder arrangementer og faste oppgaver, registrer kontaktsvar og lag et lokalt forslag. Hver endring kan godkjennes eller avvises. Ved avmelding blir behovet synlig igjen, mens fjerning av en avtalt vakt krever egen godkjenning. Plan og beslutninger bevares i versjonerte lokale SQLite-filer under `05_data/hr_simulator/`, som ikke legges i Git. Demomodus har tre isolerte syntetiske starttilstander på samme personregister, knyttet til HR-001–003. `02_deliverables/referanse/hr-simulator-demo-feature-cc83db2.html` er en byte-lik kopi av den opprinnelige HTML-prototypen.
+
+Den flate personalfilen `05_data/hr_simulator/redigeringsbord/UTKAST-ansatte-kandidater.csv` kan åpnes i datasett-redigerer. Etter lagring trykker du «Valider arbeidskopi» og «Bruk datagrunnlag» i Museumsuke. Bare kompetanse, fiktiv opplæring og tilgjengelighetsprofil kan endres. Ved aktivering får du en ny dataversjon med egen planstatus; gamle beslutninger ligger i forrige versjon. `05_data/hr_simulator/DATAKILDER.md` forklarer kilde, syntetiske regler og grenser. Historiske vakter vises som datakvalitet og brukes ikke til kapasitet eller forslag.
 
 Kildegrunnlag og egne øvingsregler finnes i `04_knowledge/04_domain/projects/hr_simulator/`. Fireukersdatasettet er `05_data/hr_simulator/planning_week.json`. Kjør `py -3.13 -m pytest` for automatiserte kontroller.
 
-For KI-forslag må `OPENAI_API_KEY` være tilgjengelig som serverens miljøvariabel og `KUNSTPIXEL_OPENAI_MODEL` settes til et eksplisitt valgt OpenAI-modellnavn før serveren startes. Ikke legg nøkkelen i repoet eller nettleseren. Knappen «Lag KI-forslag» er deaktivert uten begge verdier. Modellsvaret kontrolleres mot samme lokale regler og endrer aldri gjeldende plan direkte. [OpenAIs dokumentasjon for strukturert output](https://developers.openai.com/api/docs/guides/structured-outputs?api-mode=responses) beskriver metoden som brukes.
+For KI-forslag må `OPENAI_API_KEY` være tilgjengelig som serverens miljøvariabel og `KUNSTPIXEL_OPENAI_MODEL` settes til et eksplisitt valgt OpenAI-modellnavn før serveren startes. Ikke legg nøkkelen i repoet eller nettleseren. Knappen «Lag KI-forslag» er deaktivert uten begge verdier. Modellen får bare åpne behov og inntil fem lokalt godkjente kandidater per rolle, aldri hele arkivet. Modellsvaret kontrolleres mot samme lokale regler og endrer aldri gjeldende plan direkte. [OpenAIs dokumentasjon for strukturert output](https://developers.openai.com/api/docs/guides/structured-outputs?api-mode=responses) beskriver metoden som brukes.

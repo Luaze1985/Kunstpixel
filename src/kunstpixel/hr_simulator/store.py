@@ -120,8 +120,13 @@ class PlanningStore:
         valid_workspace(workspace)
         if status not in {"ikke_kontaktet", "forespurt", "ja", "nei", "trukket"}:
             raise StateError("invalid_status", "Ukjent kontaktstatus", 422)
-        if not any(a.id == activity_id for a in self.context.activities) or not any(p.id == person_id for p in self.context.persons):
+        activity = next((a for a in self.context.activities if a.id == activity_id), None)
+        person = next((p for p in self.context.persons if p.id == person_id), None)
+        if activity is None or person is None:
             raise StateError("unknown_reference", "Ukjent aktivitet eller person", 404)
+        if (person.employment_start and activity.starts_at.date() < person.employment_start or
+                person.employment_end and activity.starts_at.date() > person.employment_end):
+            raise StateError("historical_person", "Tidligere ansatt kan ikke kontaktes for en demovakt", 422)
         from datetime import datetime
         with self._connect() as db:
             db.execute("BEGIN IMMEDIATE")

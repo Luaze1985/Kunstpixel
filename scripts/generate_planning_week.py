@@ -1,14 +1,26 @@
 """Lag deterministiske, utelukkende fiktive øvingsdata for fire uker."""
 import json
+import sys
 from datetime import date, datetime, time, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from src.kunstpixel.hr_simulator.staff_data import compile_people, default_draft, read_rows, write_rows
+from src.kunstpixel.hr_simulator.context import PlanningContext
+
 scenario = json.loads((ROOT / "05_data/hr_simulator/scenarios/HR-001.json").read_text(encoding="utf-8"))
 start = date(2026, 10, 12)
 weeks = [(start + timedelta(weeks=i)).isoformat() for i in range(4)]
-persons = []
+source_path = ROOT / "05_data/hr_simulator/staff_source.csv"
+draft_path = ROOT / "05_data/hr_simulator/redigeringsbord/UTKAST-ansatte-kandidater.csv"
+baseline_rows = default_draft(read_rows(source_path))
+if not draft_path.exists():
+    write_rows(draft_path, baseline_rows)
+persons = compile_people(baseline_rows, [date.fromisoformat(w) for w in weeks])
 for old in scenario["persons"]:
+    if old["person_type"] != "agency_pool":
+        continue
     days = []
     for offset in range(28):
         day = start + timedelta(days=offset)
@@ -25,6 +37,8 @@ for old in scenario["persons"]:
         "email": old["email"], "phone": old["phone"], "skills": old["skills"],
         "training": {skill: True for skill in old["skills"]} if old["id"] != "POOL-01" else {},
         "availability": days, "source_ids": ["R-03"], "synthetic": True,
+        "field_sources": {"skills": "fiktivt byråscenario", "training": "fiktivt byråscenario",
+                          "availability": "fiktivt byråscenario"},
     })
 
 templates = [
@@ -36,7 +50,8 @@ templates = [
 ]
 activities = []
 assignments = []
-agreed = {0: {"vertskap": "EMP-02"}, 1: {"formidling": "EMP-01"}, 3: {"montering": "EMP-03"}, 4: {"arrangementsledelse": "EMP-07"}}
+agreed = {0: {"vertskap": "KP-ANS-006"}, 1: {"formidling": "KP-ANS-018"},
+          3: {"montering": "KP-ANS-112"}, 4: {"arrangementsledelse": "KP-ANS-005"}}
 for week_no in range(4):
     for weekday, title, kind, lo, hi, requirements, sources in templates:
         day = start + timedelta(weeks=week_no, days=weekday)
@@ -53,12 +68,13 @@ for week_no in range(4):
             assignments.append({"activity_id": aid, "person_id": person_id, "skill": skill,
                                 "agreed": True, "fact_id": f"AG-{aid}-{person_id}"})
 
-data = {"version": "2026-10-16.1", "synthetic": True, "weeks": weeks, "persons": persons,
+data = {"version": "2026-10-17.168.1", "synthetic": True, "weeks": weeks, "persons": persons,
         "activities": activities, "assignments": assignments,
-        "contacts": [{"activity_id": "W1-4-event", "person_id": "EMP-08", "status": "forespurt",
-                      "recorded_at": "2026-10-12T10:00", "fact_id": "C-W1-EMP08"}],
+        "contacts": [{"activity_id": "W1-4-event", "person_id": "KP-ANS-134", "status": "forespurt",
+                      "recorded_at": "2026-10-12T10:00", "fact_id": "C-W1-ANS134"}],
         "source_ids": ["K-OLJE", "K-NOBEL", "K-TEKNISK-DRIFT", "K-TEKNISK-PROGRAM", "K-PLAN", "K-TID", "K-INNLEIE", "K-TARIFF"],
         "note": "Alle personer, tider, ferdigheter, opplæring og kontaktforløp er konstruerte øvingsdata."}
 target = ROOT / "05_data/hr_simulator/planning_week.json"
+PlanningContext.model_validate(data)
 target.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 print(target)

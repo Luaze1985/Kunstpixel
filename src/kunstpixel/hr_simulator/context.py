@@ -25,6 +25,11 @@ class Person(StrictModel):
     availability: list[tuple[datetime, datetime]]
     source_ids: list[str]
     synthetic: Literal[True]
+    employment_start: date | None = None
+    employment_end: date | None = None
+    department: str | None = None
+    title: str | None = None
+    field_sources: dict[str, str] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def check_person(self):
@@ -34,6 +39,8 @@ class Person(StrictModel):
             raise ValueError("Ugyldig tilgjengelighetsrom")
         if not set(self.training).issubset(self.skills):
             raise ValueError("Opplæring uten dokumentert ferdighet")
+        if self.employment_start and self.employment_end and self.employment_end < self.employment_start:
+            raise ValueError("Ansettelsesperiode er ugyldig")
         return self
 
 

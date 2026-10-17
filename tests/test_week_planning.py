@@ -26,8 +26,8 @@ def test_missing_roles_are_visible_and_simulated_proposal_keeps_agreed_shifts(we
 
 def test_one_person_cannot_fill_simultaneous_separate_roles(week):
     activity = next(a for a in week.activities if a.id == "W1-1-event")
-    same = [Assignment(activity_id=activity.id, person_id="EMP-05", skill="vertskap", agreed=False, fact_id="X1"),
-            Assignment(activity_id=activity.id, person_id="EMP-05", skill="formidling", agreed=False, fact_id="X2")]
+    same = [Assignment(activity_id=activity.id, person_id="KP-ANS-134", skill="vertskap", agreed=False, fact_id="X1"),
+            Assignment(activity_id=activity.id, person_id="KP-ANS-134", skill="formidling", agreed=False, fact_id="X2")]
     review = check_week(week, [*week.assignments, *same])
     assert any(i["kind"] == "overlap" for i in review.violations)
 
@@ -40,11 +40,11 @@ def test_unknown_training_is_unresolved_not_qualified(week):
 
 def test_confirmed_contact_is_preferred_for_new_shift(week):
     from datetime import datetime
-    week.contacts.append(Contact(activity_id="W1-1-event", person_id="EMP-02", status="ja",
+    week.contacts.append(Contact(activity_id="W1-1-event", person_id="KP-ANS-006", status="ja",
                                  recorded_at=datetime(2026, 10, 12, 9), fact_id="TEST-JA"))
     proposal = propose_week(week, week.assignments)
     school_host = next(c for c in proposal.changes if c["activity_id"] == "W1-1-event" and c["skill"] == "vertskap")
-    assert school_host["person_id"] == "EMP-02"
+    assert school_host["person_id"] == "KP-ANS-006"
 
 
 def test_proposal_cannot_move_fixed_event_time(week):
@@ -66,15 +66,15 @@ def test_rest_is_checked_across_week_boundary(week):
                       source_ids=["K-OLJE"], synthetic=True)
     week.activities.append(sunday)
     week.adjacent_activities.append(monday)
-    week.adjacent_assignments.append(Assignment(activity_id="MONDAY", person_id="EMP-02", skill="vertskap", agreed=True, fact_id="MON"))
-    result = check_week(week, [*week.assignments, Assignment(activity_id="SUNDAY", person_id="EMP-02", skill="vertskap", agreed=False, fact_id="SUN")])
+    week.adjacent_assignments.append(Assignment(activity_id="MONDAY", person_id="KP-ANS-006", skill="vertskap", agreed=True, fact_id="MON"))
+    result = check_week(week, [*week.assignments, Assignment(activity_id="SUNDAY", person_id="KP-ANS-006", skill="vertskap", agreed=False, fact_id="SUN")])
     assert any(x["kind"] == "rest" and "MONDAY" in x["activities"] for x in result.unresolved)
 
 
 def test_untrained_existing_shift_does_not_hide_need(week):
     from datetime import datetime
     activity = next(a for a in week.activities if a.id == "W1-1-event")
-    person = next(p for p in week.persons if p.id == "EMP-02")
+    person = next(p for p in week.persons if p.id == "KP-ANS-006")
     person.training["vertskap"] = False
     existing = Assignment(activity_id=activity.id, person_id=person.id, skill="vertskap", agreed=True, fact_id="BAD-TRAINING")
     proposal = propose_week(week, [*week.assignments, existing])

@@ -1,4 +1,5 @@
 from datetime import date
+import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -26,18 +27,22 @@ def week():
 
 def test_model_proposal_is_validated_and_does_not_assign_directly():
     w = week()
-    output = ModelOutput(choices=[ModelChoice(activity_id="W1-1-event", person_id="EMP-02",
+    output = ModelOutput(choices=[ModelChoice(activity_id="W1-1-event", person_id="KP-ANS-006",
                          skill="vertskap", reason="Dokumentert kapasitet", source_ids=["K-TEKNISK-PROGRAM"])],
                          rationale="Beholder avtalte vakter", missing_information=[])
     responses = FakeResponses(output)
     proposal = generate_week_proposal(w, w.assignments, model="test-model", client=SimpleNamespace(responses=responses))
-    assert proposal.changes[0]["person_id"] == "EMP-02"
+    assert proposal.changes[0]["person_id"] == "KP-ANS-006"
     assert proposal.source == "openai"
     assert len(w.assignments) == 4  # gjeldende kontekst ble ikke mutert
     assert responses.calls[0]["text_format"] is ModelOutput
+    sent = json.loads(responses.calls[0]["input"][1]["content"])
+    assert "persons" not in sent and "shifts" not in sent
+    assert len(sent["shortlist"]["W1-1-event:vertskap"]) <= 5
+    assert "KP-ANS-006" in {c["person_id"] for c in sent["shortlist"]["W1-1-event:vertskap"]}
 
 
-@pytest.mark.parametrize("person_id,source_ids", [("UKJENT", ["K-OLJE"]), ("EMP-02", ["OPPDIKTET"])])
+@pytest.mark.parametrize("person_id,source_ids", [("UKJENT", ["K-OLJE"]), ("KP-ANS-006", ["OPPDIKTET"])])
 def test_unknown_person_or_source_is_rejected(person_id, source_ids):
     w = week()
     output = ModelOutput(choices=[ModelChoice(activity_id="W1-1-event", person_id=person_id,
@@ -58,7 +63,7 @@ def test_refusal_keeps_current_plan_unchanged():
 def test_model_free_text_is_not_presented_as_verified_fact():
     w = week()
     claim = "Personen har skriftlig akseptert en ekstravakt"
-    output = ModelOutput(choices=[ModelChoice(activity_id="W1-1-event", person_id="EMP-02",
+    output = ModelOutput(choices=[ModelChoice(activity_id="W1-1-event", person_id="KP-ANS-006",
                          skill="vertskap", reason=claim, source_ids=["K-TEKNISK-PROGRAM"])],
                          rationale=claim, missing_information=[claim])
     proposal = generate_week_proposal(w, w.assignments, model="test-model", client=SimpleNamespace(responses=FakeResponses(output)))

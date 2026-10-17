@@ -15,7 +15,7 @@ def test_contact_yes_is_not_assignment_and_survives_restart(tmp_path):
     url = "/api/planning/weeks/2026-10-12?workspace=work"
     before = app.get(url).json()
     aid = "W1-4-event"
-    pid = "EMP-08"
+    pid = "KP-ANS-134"
     response = app.post("/api/planning/contacts", json={"workspace": "work", "activity_id": aid,
                         "person_id": pid, "status": "ja", "expected_version": before["version"]})
     assert response.status_code == 200
@@ -27,7 +27,7 @@ def test_contact_yes_is_not_assignment_and_survives_restart(tmp_path):
 def test_stale_version_is_conflict_and_demo_reset_is_isolated(tmp_path):
     app = client(tmp_path)
     initial = app.get("/api/planning/weeks/2026-10-12?workspace=work").json()
-    body = {"workspace": "work", "activity_id": "W1-4-event", "person_id": "EMP-08",
+    body = {"workspace": "work", "activity_id": "W1-4-event", "person_id": "KP-ANS-134",
             "status": "forespurt", "expected_version": initial["version"]}
     assert app.post("/api/planning/contacts", json=body).status_code == 200
     assert app.post("/api/planning/contacts", json=body).status_code == 409
@@ -37,8 +37,8 @@ def test_stale_version_is_conflict_and_demo_reset_is_isolated(tmp_path):
     assert app.post("/api/planning/demo/scenarios/HR-001/reset", headers={"X-Kunstpixel-Action": "demo-reset"}).status_code == 200
     reset = app.get("/api/planning/weeks/2026-10-12?workspace=demo:HR-001").json()
     work = app.get("/api/planning/weeks/2026-10-12?workspace=work").json()
-    assert reset["contacts"][f"W1-4-event:EMP-08"]["status"] == "forespurt"
-    assert work["contacts"][f"W1-4-event:EMP-08"]["status"] == "forespurt"
+    assert reset["contacts"][f"W1-4-event:KP-ANS-134"]["status"] == "forespurt"
+    assert work["contacts"][f"W1-4-event:KP-ANS-134"]["status"] == "forespurt"
 
 
 def test_proposal_decision_is_persisted(tmp_path):
