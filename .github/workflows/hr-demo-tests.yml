@@ -22,3 +22,7 @@ jobs:
           python-version: '3.13'
       - run: python -m pip install pytest
       - run: python -m pytest tests/test_hrdemo.py -q
+
+      - run: python -m src.kunstpixel.core.hrdemo --init
+      - run: python -m src.kunstpixel.core.hrdemo --report kiosk > /tmp/kiosk_result.json
+      - run: python -m src.kunstpixel.core.hrdemo --report rules > /tmp/rules_result.json
