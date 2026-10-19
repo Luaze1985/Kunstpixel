@@ -983,9 +983,49 @@ def generate_working_time_limits(ut_csv: Path = GRENSER_CSV) -> int:
     return len(ARBEIDSTID_GRENSER)
 
 
+def generate_virke_tariff_tillegg(ut_csv: Path = DATA_DIR / "virke_tariff_tillegg.csv") -> int:
+    """Generer tariff-trinn 66-86 med jevn stigning fra trinn 65."""
+    import csv
+
+    # Trinn 65: aarslonn = 815 000, trinn 64: 798 400 (stigning 16 600 per trinn)
+    # kveldstillegg = +56 kr/t, helgetillegg = +75 kr/t, helligdag = ordinaer * (973.82 / 417.95)
+    rader = []
+    base_lonn = 815000
+    stigning = 16600
+    for trinn in range(66, 87):
+        aarslonn = base_lonn + (trinn - 65) * stigning
+        timesats_ordinar = round(aarslonn / 1950, 2)
+        timesats_kveld = round(timesats_ordinar + 56.0, 2)
+        timesats_helg = round(timesats_ordinar + 75.0, 2)
+        timesats_helligdag = round(timesats_ordinar * 2.3299916, 2)
+        if trinn == 86:
+            tittel = "Museumsdirektør"
+        elif trinn >= 78:
+            tittel = f"Virke trinn {trinn} (Toppledelse / Direktør)"
+        elif trinn >= 72:
+            tittel = f"Virke trinn {trinn} (Assisterende direktør / Sjefkurator / Avdelingssjef)"
+        else:
+            tittel = f"Virke trinn {trinn} (Leder / Fagspesialist)"
+        rader.append([
+            trinn, tittel, aarslonn, timesats_ordinar, timesats_kveld, timesats_helg,
+            timesats_helligdag, "2024-05-01", SYNTETISK
+        ])
+
+    with open(ut_csv, "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow([
+            "lonnstrinn", "tittel_eksempel", "aarslonn_nok", "timesats_ordinar",
+            "timesats_kveld", "timesats_helg", "timesats_helligdag", "gjeldende_fra", "datakilde"
+        ])
+        w.writerows(rader)
+    return len(rader)
+
+
 if __name__ == "__main__" and "--bare-klokkeslett" in __import__("sys").argv:
     print(f"Klokkeslett: {generate_shift_times()} vakter -> {KLOKKESLETT_CSV.name}")
     print(f"Grenser: {generate_working_time_limits()} rader -> {GRENSER_CSV.name}")
+elif __name__ == "__main__" and "--bare-tariff" in __import__("sys").argv:
+    print(f"Tariff tillegg: {generate_virke_tariff_tillegg()} trinn -> virke_tariff_tillegg.csv")
 elif __name__ == "__main__":
     print("Generating Kunstpixel HR, Innleie & Exhibition History (Kunstsilo Scale 2010-2026)...")
     emps, pers = generate_employees()
@@ -995,3 +1035,4 @@ elif __name__ == "__main__":
     export_all(emps, pers, exhs, contracts, shfts)
     generate_shift_times()
     generate_working_time_limits()
+    generate_virke_tariff_tillegg()
