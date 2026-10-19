@@ -1,0 +1,4816 @@
+{
+  "sqlite_tables": {
+    "arbeidstid_grenser": {
+      "total_rows": 6,
+      "columns": [
+        {
+          "name": "navn",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "daglig_hvile_timer",
+            "dognmaks_timer"
+          ]
+        },
+        {
+          "name": "verdi",
+          "sql_type": "REAL",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            37.5,
+            9.0
+          ]
+        },
+        {
+          "name": "enhet",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 4,
+          "samples": [
+            "timer per uke",
+            "timer per døgn"
+          ]
+        },
+        {
+          "name": "beskrivelse",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "Ordinær ukentlig arbeidstid for heltid",
+            "Alminnelig arbeidstid per døgn"
+          ]
+        },
+        {
+          "name": "kilde",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 5,
+          "samples": [
+            "Personalhåndbok (handbok_oppslag) og Virke",
+            "AML § 10-4 (ADR 009)"
+          ]
+        },
+        {
+          "name": "datakilde",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "syntetisk (archive_generator)",
+            "syntetisk (archive_generator)"
+          ]
+        }
+      ]
+    },
+    "arbeidstilsynet_renhold": {
+      "total_rows": 7,
+      "columns": [
+        {
+          "name": "organisasjonsnummer",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 7,
+          "samples": [
+            "911765431",
+            "912876543"
+          ]
+        },
+        {
+          "name": "navn",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 7,
+          "samples": [
+            "ISS Facility Services AS",
+            "Caverion Norge AS"
+          ]
+        },
+        {
+          "name": "status",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "Godkjent med ansatte",
+            "Godkjent med ansatte"
+          ]
+        },
+        {
+          "name": "godkjent_til_dato",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "2027-12-31",
+            "2027-12-31"
+          ]
+        },
+        {
+          "name": "har_hms_kort_krav",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "sist_kontrollert",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "2026-10-18",
+            "2026-10-18"
+          ]
+        }
+      ]
+    },
+    "avvik_hms_drift": {
+      "total_rows": 34,
+      "columns": [
+        {
+          "name": "avvik_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 34,
+          "samples": [
+            "AVV-2010-001",
+            "AVV-2010-018"
+          ]
+        },
+        {
+          "name": "aar",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 17,
+          "samples": [
+            2010,
+            2011
+          ]
+        },
+        {
+          "name": "dato",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 34,
+          "samples": [
+            "2010-03-14",
+            "2011-06-22"
+          ]
+        },
+        {
+          "name": "kategori",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 5,
+          "samples": [
+            "KLIMA",
+            "SIKKERHET"
+          ]
+        },
+        {
+          "name": "alvorlighetsgrad",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "GUL",
+            "GUL"
+          ]
+        },
+        {
+          "name": "berort_sal_id",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "MAG-1",
+            "SAL-D"
+          ]
+        },
+        {
+          "name": "berort_verk_id",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 28,
+          "distinct_count": 4,
+          "samples": [
+            "AURA-2026-011",
+            "AURA-2026-009"
+          ]
+        },
+        {
+          "name": "beskrivelse",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 22,
+          "samples": [
+            "Klimaanlegg i Magasin 1 varslet relativ fuktighet på 62% RH (terskel 55%). Skyldes svikt i avfukterfilter.",
+            "Publikummer trådte over avsperringstau foran Skrik for å ta nærbilde med blits."
+          ]
+        },
+        {
+          "name": "strakstiltak",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 22,
+          "samples": [
+            "Filter skiftet manuelt, mobil kondensavfukter satt inn innen 2 timer. Ingen fuktskade på Brudeferd i Hardanger.",
+            "Vakt grep inn umiddelbart. Gjest vist bort fra salen. Verksinspeksjon utført av kurator uten anmerkning."
+          ]
+        },
+        {
+          "name": "oppfolging_ansvarlig_id",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 4,
+          "samples": [
+            "KP-ANS-005",
+            "KP-ANS-005"
+          ]
+        },
+        {
+          "name": "status",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "LUKKET",
+            "LUKKET"
+          ]
+        }
+      ]
+    },
+    "dagsbesok": {
+      "total_rows": 6209,
+      "columns": [
+        {
+          "name": "dato",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 6209,
+          "samples": [
+            "2010-01-01",
+            "2010-01-02"
+          ]
+        },
+        {
+          "name": "aar",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 17,
+          "samples": [
+            2010,
+            2010
+          ]
+        },
+        {
+          "name": "maaned",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "uke_nr",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 54,
+          "samples": [
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ukedag_navn",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 7,
+          "samples": [
+            "Fredag",
+            "Lørdag"
+          ]
+        },
+        {
+          "name": "er_aapent",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "antall_voksne",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 522,
+          "samples": [
+            136,
+            223
+          ]
+        },
+        {
+          "name": "antall_student",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 280,
+          "samples": [
+            75,
+            106
+          ]
+        },
+        {
+          "name": "antall_barn",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 223,
+          "samples": [
+            59,
+            83
+          ]
+        },
+        {
+          "name": "besok_totalt",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 865,
+          "samples": [
+            270,
+            412
+          ]
+        },
+        {
+          "name": "gratis_dag",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            0,
+            0
+          ]
+        },
+        {
+          "name": "pris_voksen",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 4,
+          "samples": [
+            70,
+            70
+          ]
+        },
+        {
+          "name": "pris_student",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 4,
+          "samples": [
+            45,
+            45
+          ]
+        },
+        {
+          "name": "inntekt_nok",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 3014,
+          "samples": [
+            12895,
+            20380
+          ]
+        }
+      ]
+    },
+    "handbok_oppslag": {
+      "total_rows": 99,
+      "columns": [
+        {
+          "name": "punkt_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 99,
+          "samples": [
+            "DRIFT_KVALITET-1.1",
+            "DRIFT_KVALITET-1.2"
+          ]
+        },
+        {
+          "name": "handbok_kode",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 5,
+          "samples": [
+            "DRIFT_KVALITET",
+            "DRIFT_KVALITET"
+          ]
+        },
+        {
+          "name": "handbok_navn",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 5,
+          "samples": [
+            "Personalhåndbok",
+            "Personalhåndbok"
+          ]
+        },
+        {
+          "name": "kapittel_nr",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 10,
+          "samples": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "kapittel_tittel",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 44,
+          "samples": [
+            "Velkommen og overordnede verdier",
+            "Velkommen og overordnede verdier"
+          ]
+        },
+        {
+          "name": "avsnitt_tittel",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 98,
+          "samples": [
+            "Vårt oppdrag",
+            "Arbeidsmiljø og inkludering"
+          ]
+        },
+        {
+          "name": "malgruppe",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 5,
+          "samples": [
+            "Alle ansatte, vikarer og ledere",
+            "Alle ansatte, vikarer og ledere"
+          ]
+        },
+        {
+          "name": "lovhjemmel",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 25,
+          "samples": [
+            "Arbeidsmiljøloven (AML) / Virke Landsoverenskomst",
+            "Arbeidsmiljøloven (AML) / Virke Landsoverenskomst"
+          ]
+        },
+        {
+          "name": "innhold",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 99,
+          "samples": [
+            "Aura Kunstmuseum er en levende møteplass for kunst, kulturarv og samfunnsdialog. Museet forvalter en betydelig samling av norsk og internasjonal kunst, formidler kunnskap til allmennheten og drifter faste og temporære utstillinger, kafé og arrangementsvirksomhet.",
+            "Vi forplikter oss til et åpent, inkluderende og likeverdig arbeidsfellesskap preget av respekt, faglig integritet og samarbeid på tvers av fagområder. Trakassering, diskriminering og mobbing aksepteres under ingen omstendigheter (jf. AML § 4-3).\n\n---"
+          ]
+        },
+        {
+          "name": "stikkord",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 99,
+          "samples": [
+            "velkommen og overordnede verdier, vårt oppdrag",
+            "velkommen og overordnede verdier, arbeidsmiljø og inkludering"
+          ]
+        },
+        {
+          "name": "siste_revidert",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "2026-10-19",
+            "2026-10-19"
+          ]
+        }
+      ]
+    },
+    "hendelser": {
+      "total_rows": 45,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "INTEGER",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 45,
+          "samples": [
+            1,
+            2
+          ]
+        },
+        {
+          "name": "type",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 5,
+          "samples": [
+            "omvisning",
+            "omvisning"
+          ]
+        },
+        {
+          "name": "tittel",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 14,
+          "samples": [
+            "Guidet omvisning: Stille kraft",
+            "Guidet omvisning: Stille kraft"
+          ]
+        },
+        {
+          "name": "dato",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 45,
+          "samples": [
+            "2026-09-21",
+            "2026-09-28"
+          ]
+        },
+        {
+          "name": "klokkeslett_start",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 8,
+          "samples": [
+            "12:00",
+            "12:00"
+          ]
+        },
+        {
+          "name": "klokkeslett_slutt",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 9,
+          "samples": [
+            "13:00",
+            "13:00"
+          ]
+        },
+        {
+          "name": "sal_id",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 5,
+          "samples": [
+            "SAL-A",
+            "SAL-A"
+          ]
+        },
+        {
+          "name": "maks_deltakere",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            20,
+            20
+          ]
+        },
+        {
+          "name": "pris_voksen",
+          "sql_type": "REAL",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 7,
+          "samples": [
+            50.0,
+            50.0
+          ]
+        },
+        {
+          "name": "pris_barn",
+          "sql_type": "REAL",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "beskrivelse",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 15,
+          "samples": [
+            "En times guidet omvisning gjennom hoestutstillingen Stille kraft. Formidler tar dere med inn i Kittelsens skoger, Sohlbergs fjellnetter og Astrups flammende midtsommerfeirer.",
+            "Ukentlig omvisning i hoestutstillingen."
+          ]
+        },
+        {
+          "name": "ansvarlig_rolle",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "formidler",
+            "formidler"
+          ]
+        },
+        {
+          "name": "status",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "bekreftet",
+            "planlagt"
+          ]
+        }
+      ]
+    },
+    "hms_ergonomi_rotasjon": {
+      "total_rows": 9,
+      "columns": [
+        {
+          "name": "stasjon_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 9,
+          "samples": [
+            "STASJON-KIOSK",
+            "STASJON-MAGASIN"
+          ]
+        },
+        {
+          "name": "navn",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 9,
+          "samples": [
+            "Sal A (Mytologi og natur)",
+            "Sal B (Realisme og samfunn)"
+          ]
+        },
+        {
+          "name": "underlag_type",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 7,
+          "samples": [
+            "Tregulv / parkett",
+            "Tregulv / parkett"
+          ]
+        },
+        {
+          "name": "maks_sammenhengende_timer",
+          "sql_type": "REAL",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            2.0,
+            2.0
+          ]
+        },
+        {
+          "name": "krav_om_sittepause_minutter",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 4,
+          "samples": [
+            15,
+            15
+          ]
+        },
+        {
+          "name": "anbefalt_rotasjon_stasjon_id",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "STASJON-SKRANKE",
+            "STASJON-KIOSK"
+          ]
+        }
+      ]
+    },
+    "hr_ansatte": {
+      "total_rows": 168,
+      "columns": [
+        {
+          "name": "ansatt_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 168,
+          "samples": [
+            "KP-ANS-001",
+            "KP-ANS-002"
+          ]
+        },
+        {
+          "name": "navn",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 162,
+          "samples": [
+            "Henrik Faye-Lund",
+            "Silje Lindqvist"
+          ]
+        },
+        {
+          "name": "kjonn",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            "M",
+            "K"
+          ]
+        },
+        {
+          "name": "fodselsaar",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 37,
+          "samples": [
+            1968,
+            1977
+          ]
+        },
+        {
+          "name": "avdeling",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "Ledelse",
+            "Kuratering"
+          ]
+        },
+        {
+          "name": "stilling",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 35,
+          "samples": [
+            "Museumsdirektør",
+            "Sjefkurator"
+          ]
+        },
+        {
+          "name": "ansatt_fra",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 100,
+          "samples": [
+            "2010-01-01",
+            "2012-03-01"
+          ]
+        },
+        {
+          "name": "ansatt_til",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 74,
+          "distinct_count": 64,
+          "samples": [
+            "2016-05-28",
+            "2020-10-28"
+          ]
+        },
+        {
+          "name": "status",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "Fast",
+            "Fast"
+          ]
+        },
+        {
+          "name": "stillingsprosent",
+          "sql_type": "REAL",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "lonnstrinn_virke",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 45,
+          "samples": [
+            86,
+            76
+          ]
+        },
+        {
+          "name": "epost",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 162,
+          "samples": [
+            "henrik.fayelund@kunstpixel.no",
+            "silje.lindqvist@kunstpixel.no"
+          ]
+        },
+        {
+          "name": "telefon",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 168,
+          "samples": [
+            "+47 981 24 13",
+            "+47 994 45 41"
+          ]
+        },
+        {
+          "name": "kontor_sal",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 16,
+          "samples": [
+            "Administrasjonsfløyen 3. etg",
+            "Kuratorfløyen 2. etg"
+          ]
+        },
+        {
+          "name": "styrk08_kode",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 10,
+          "samples": [
+            "1349.02",
+            "2651.01"
+          ]
+        }
+      ]
+    },
+    "hr_availability": {
+      "total_rows": 11,
+      "columns": [
+        {
+          "name": "person_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 11,
+          "samples": [
+            "E101",
+            "E102"
+          ]
+        },
+        {
+          "name": "work_date",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "2026-11-07",
+            "2026-11-07"
+          ]
+        },
+        {
+          "name": "start_time",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "10:00",
+            "10:00"
+          ]
+        },
+        {
+          "name": "end_time",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            "16:00",
+            "16:00"
+          ]
+        },
+        {
+          "name": "state",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            "available",
+            "available"
+          ]
+        }
+      ]
+    },
+    "hr_fravaer": {
+      "total_rows": 3456,
+      "columns": [
+        {
+          "name": "fravaer_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 3456,
+          "samples": [
+            "FRAV-000001",
+            "FRAV-000002"
+          ]
+        },
+        {
+          "name": "ansatt_id",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 161,
+          "samples": [
+            "KP-ANS-001",
+            "KP-ANS-001"
+          ]
+        },
+        {
+          "name": "fra",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 2376,
+          "samples": [
+            "2010-01-06",
+            "2010-01-15"
+          ]
+        },
+        {
+          "name": "til",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 2624,
+          "samples": [
+            "2010-01-10",
+            "2010-01-19"
+          ]
+        },
+        {
+          "name": "type",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "sykemelding",
+            "egenmelding"
+          ]
+        },
+        {
+          "name": "datakilde",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "syntetisk (archive_generator)",
+            "syntetisk (archive_generator)"
+          ]
+        }
+      ]
+    },
+    "hr_innleie": {
+      "total_rows": 318,
+      "columns": [
+        {
+          "name": "innleie_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 318,
+          "samples": [
+            "KP-INN-2010-0001",
+            "KP-INN-2010-0002"
+          ]
+        },
+        {
+          "name": "aar",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 17,
+          "samples": [
+            2010,
+            2010
+          ]
+        },
+        {
+          "name": "leverandor",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 7,
+          "samples": [
+            "Atelier Konservering DA",
+            "Securitas AS"
+          ]
+        },
+        {
+          "name": "orgnr",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 7,
+          "samples": [
+            "993 118 452",
+            "912 876 543"
+          ]
+        },
+        {
+          "name": "kategori",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "Tilstandsvurdering & Konservering",
+            "Eksternt vakthold / Vernissasje"
+          ]
+        },
+        {
+          "name": "oppdragsbeskrivelse",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 26,
+          "samples": [
+            "Kurerovertakelse og tilstandsrapport for innlån fra Tate Gallery",
+            "Områdeovervåking og brannvakt under tekniske monteringsuker"
+          ]
+        },
+        {
+          "name": "knyttet_utstilling_id",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 98,
+          "samples": [
+            "KP-EXH-2010-FOKUS-1",
+            "KP-EXH-2010-004"
+          ]
+        },
+        {
+          "name": "periode_fra",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 162,
+          "samples": [
+            "2010-06-05",
+            "2010-12-05"
+          ]
+        },
+        {
+          "name": "periode_til",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 162,
+          "samples": [
+            "2010-06-24",
+            "2010-12-24"
+          ]
+        },
+        {
+          "name": "fakturerte_timer",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 109,
+          "samples": [
+            43,
+            69
+          ]
+        },
+        {
+          "name": "timepris_nok",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 274,
+          "samples": [
+            1400,
+            734
+          ]
+        },
+        {
+          "name": "totalbelop_nok",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 317,
+          "samples": [
+            60200,
+            50646
+          ]
+        },
+        {
+          "name": "kontaktperson_ekstern",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 7,
+          "samples": [
+            "Kirsti Holte (Malerikonservator NKF)",
+            "Stian Haugen"
+          ]
+        },
+        {
+          "name": "godkjent_av_ansatt_id",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 4,
+          "samples": [
+            "KP-ANS-003",
+            "KP-ANS-005"
+          ]
+        },
+        {
+          "name": "godkjent_av_navn",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 4,
+          "samples": [
+            "Gunnar Viken (Samlingsforvalter)",
+            "Terje Bratt (Drifts- og eiendomssjef)"
+          ]
+        },
+        {
+          "name": "status",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            "Utført og fakturert",
+            "Utført og fakturert"
+          ]
+        },
+        {
+          "name": "doffin_referanse",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 272,
+          "distinct_count": 46,
+          "samples": [
+            "DOFFIN-2010-2010-0003",
+            "DOFFIN-2010-2010-0010"
+          ]
+        },
+        {
+          "name": "anskaffelsesprosedyre",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            "Direkteanskaffelse (<100k)",
+            "Direkteanskaffelse (<100k)"
+          ]
+        },
+        {
+          "name": "mva_kode_saft",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            25,
+            25
+          ]
+        }
+      ]
+    },
+    "hr_people": {
+      "total_rows": 12,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "E101",
+            "E102"
+          ]
+        },
+        {
+          "name": "name",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "Ada Nord",
+            "Birk Lund"
+          ]
+        },
+        {
+          "name": "role",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 4,
+          "samples": [
+            "museumsvert",
+            "kafevert"
+          ]
+        },
+        {
+          "name": "active",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "employment",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "fast",
+            "fast"
+          ]
+        },
+        {
+          "name": "ansatt_id",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "KP-ANS-006",
+            "KP-ANS-139"
+          ]
+        }
+      ]
+    },
+    "hr_person_skill": {
+      "total_rows": 30,
+      "columns": [
+        {
+          "name": "person_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "E101",
+            "E101"
+          ]
+        },
+        {
+          "name": "skill_code",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "allergen",
+            "allergen"
+          ]
+        },
+        {
+          "name": "verified",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            0,
+            1
+          ]
+        },
+        {
+          "name": "evidence",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 1,
+          "distinct_count": 29,
+          "samples": [
+            "DEMO-101-KASSE",
+            "DEMO-101-KUNDESERVICE"
+          ]
+        },
+        {
+          "name": "acquired",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "2026-01-15",
+            "2026-01-15"
+          ]
+        },
+        {
+          "name": "valid_to",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 18,
+          "distinct_count": 2,
+          "samples": [
+            "2027-12-31",
+            "2026-10-01"
+          ]
+        }
+      ]
+    },
+    "hr_rules": {
+      "total_rows": 8,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 8,
+          "samples": [
+            "HMS-001",
+            "HMS-002"
+          ]
+        },
+        {
+          "name": "version",
+          "sql_type": "INTEGER",
+          "is_pk": true,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "domain",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "HMS",
+            "HMS"
+          ]
+        },
+        {
+          "name": "topic",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 8,
+          "samples": [
+            "avvik og nestenulykke",
+            "løft av kunstverk"
+          ]
+        },
+        {
+          "name": "condition_json",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 8,
+          "samples": [
+            "{\"event\": \"kiosk_vakt\", \"need_availability\": true, \"required_skill\": \"allergen\"}",
+            "{\"event\": \"onboarding\", \"employee_state\": \"new\"}"
+          ]
+        },
+        {
+          "name": "action_json",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 8,
+          "samples": [
+            "[\"Kontroller skiftdekning\", \"Sammenstill dokumenterte kvalifikasjoner\", \"Gi bemanningsforslag til leder\"]",
+            "[\"Kontroller arbeidsavtale\", \"Planlegg opplæring\", \"Dokumenter rolletilgang\"]"
+          ]
+        },
+        {
+          "name": "owner_role",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 5,
+          "samples": [
+            "kafeansvarlig",
+            "HR"
+          ]
+        },
+        {
+          "name": "deadline",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 1,
+          "distinct_count": 7,
+          "samples": [
+            "Før første arbeidsdag",
+            "Før oppstart"
+          ]
+        },
+        {
+          "name": "exception_json",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "[]",
+            "[]"
+          ]
+        },
+        {
+          "name": "source",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "Kunstpixel syntetisk internregel",
+            "Kunstpixel syntetisk internregel"
+          ]
+        },
+        {
+          "name": "priority",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 5,
+          "samples": [
+            15,
+            10
+          ]
+        },
+        {
+          "name": "valid_from",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "2026-01-01",
+            "2026-01-01"
+          ]
+        },
+        {
+          "name": "valid_to",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 8,
+          "distinct_count": 0,
+          "samples": []
+        },
+        {
+          "name": "status",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "active",
+            "active"
+          ]
+        }
+      ]
+    },
+    "hr_skills": {
+      "total_rows": 7,
+      "columns": [
+        {
+          "name": "code",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 7,
+          "samples": [
+            "allergen",
+            "formidling"
+          ]
+        },
+        {
+          "name": "name",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 7,
+          "samples": [
+            "Kassasystem",
+            "Kundebehandling"
+          ]
+        },
+        {
+          "name": "expires",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "hr_vakter": {
+      "total_rows": 54994,
+      "columns": [
+        {
+          "name": "vakt_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 54994,
+          "samples": [
+            "VAKT-0000001",
+            "VAKT-0000002"
+          ]
+        },
+        {
+          "name": "ansatt_id",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 122,
+          "samples": [
+            "KP-ANS-003",
+            "KP-ANS-003"
+          ]
+        },
+        {
+          "name": "aar",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 17,
+          "samples": [
+            "2010",
+            "2010"
+          ]
+        },
+        {
+          "name": "maaned",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "1",
+            "1"
+          ]
+        },
+        {
+          "name": "dato",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 6209,
+          "samples": [
+            "2010-01-01",
+            "2010-01-07"
+          ]
+        },
+        {
+          "name": "start",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 8,
+          "samples": [
+            "07:00",
+            "08:00"
+          ]
+        },
+        {
+          "name": "slutt",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 16,
+          "samples": [
+            "15:00",
+            "16:00"
+          ]
+        },
+        {
+          "name": "stasjon",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 10,
+          "samples": [
+            "Resepsjon og billett",
+            "Museumsbutikk"
+          ]
+        },
+        {
+          "name": "avdeling",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 4,
+          "samples": [
+            "Formidling",
+            "Formidling"
+          ]
+        },
+        {
+          "name": "rolle",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 23,
+          "samples": [
+            "Museumspedagog",
+            "Museumsvert og omviser (Deltid)"
+          ]
+        },
+        {
+          "name": "timer",
+          "sql_type": "REAL",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            7.5,
+            9.0
+          ]
+        },
+        {
+          "name": "utstilling_id",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 68,
+          "samples": [
+            "KP-EXH-2010-001",
+            "KP-EXH-2010-001"
+          ]
+        },
+        {
+          "name": "klokkeslett_datakilde",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "syntetisk (archive_generator)",
+            "syntetisk (archive_generator)"
+          ]
+        }
+      ]
+    },
+    "kunstnere": {
+      "total_rows": 12,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "INTEGER",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            1,
+            2
+          ]
+        },
+        {
+          "name": "navn",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "Theodor Kittelsen",
+            "Christian Krohg"
+          ]
+        },
+        {
+          "name": "fodt",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            1857,
+            1852
+          ]
+        },
+        {
+          "name": "dod",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 11,
+          "samples": [
+            1914,
+            1925
+          ]
+        },
+        {
+          "name": "nasjonalitet",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "norsk",
+            "norsk"
+          ]
+        },
+        {
+          "name": "biografi",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "var en norsk billedkunstner, karikaturtegner, illustratør og forfatter. Han er spesielt kjent for sine fantasifulle illustrasjoner til Asbjørnsen og Moes folkeeventyr og sine stemningsfulle motiver av mytiske vesener og landskap. Han ga ut flere illustrerte bøker med egne tekster, både humoristiske og poetiske.",
+            "var en norsk maler og forfatter. Gjennom et halvt århundre var han en av de sentrale skikkelsene i norsk kunstliv . Han var gift med maleren Oda Krohg ."
+          ]
+        },
+        {
+          "name": "kunstretning",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "nyromantikk, naturmystikk",
+            "naturalisme, sosialrealisme"
+          ]
+        },
+        {
+          "name": "notable_teknikker",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "pastell, blyant, akvarell, olje",
+            "olje på lerret"
+          ]
+        },
+        {
+          "name": "kilde",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "Store norske leksikon / Nasjonalmuseet",
+            "Store norske leksikon / Nasjonalmuseet"
+          ]
+        },
+        {
+          "name": "full_biografi",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "var en norsk billedkunstner, karikaturtegner, illustratør og forfatter. Han er spesielt kjent for sine fantasifulle illustrasjoner til Asbjørnsen og Moes folkeeventyr og sine stemningsfulle motiver av mytiske vesener og landskap. Han ga ut flere illustrerte bøker med egne tekster, både humoristiske og poetiske. Kittelsen ble inspirert av norsk natur og folkekultur og skapte en unik bildeverden som har blitt en del av den norske identiteten. Noen av Kittelsens mest berømte verk er bøkene Svartedauen og Har Dyrene Sjæl? samt motivene Nøkken , Skogtroll og Pesta i trappen . Han arbeidet i ulike teknikker, som blyant, penn, akvarell, olje, kullstift og blandingsteknikker. Mange av motivene balanserer i skjæringspunktet mellom fantasi og virkelighet. Han fikk fram noe magisk ved å plassere overnaturlige skapninger som nøkk , troll , nisse og hulder i et norsk naturlandskap. Samtidig fremstår fantasivesenene som realistiske. Kittelsen var eventyrtegner for Asbjørnsen og Moe i 29 år, og mange av hans karakterer, som Smørbukk , Askeladden og Kvitebjørn kong Valemon, og ikke minst trollene, er nært knyttet til våre forestillinger om den norske eventyrverdenen. Han utførte også en lang rekke illustrasjoner og karikaturtegninger for bøker, julehefter og vittighetsblader som Folkebladet , Korsaren og Tyrihans. Oppvekst Theodor Kittelsen vokste opp i Kragerø , i en søskenflokk på åtte. Han var sønn av Guriane og Johannes Kittelsen. Faren var kjøpmann og drev et brennevinsutsalg som det i mange år gikk godt med. Allerede som barn tegnet han karikaturer av folk og livet rundt seg. De fleste av hans jevnaldrende venner ville bli sjømenn, mens han var fast bestemt på å bli billedkunstner. Da han var elleve år, døde faren. På det tidspunktet hadde det allerede begynt å gå dårlig med handelsvirksomheten. Guriane fortsatte å drive utsalget, men familien fikk det svært vanskelig økonomisk. Kittelsen hadde et godt forhold til sin mor, men hun hadde ikke råd til å støtte noen kunstutdannelse. Etter konfirmasjonen måtte han i stedet begynne i håndverkerlære: Først hos en urmaker i hjembyen, deretter en kort periode hos en maler i Kristiania . Til sist endte han opp hos den tyske urmakeren Johan Stein i Arendal . Stein mente at Kittelsen ikke var egnet for urmaker-yrket, men ble så begeistret over Kittelsens tegninger at han viste dem til noen medlemmer av Arendals Kunstforening. Formannen der, den velstående Diderik Maria Aall ble særlig imponert over Kittelsens tegnetalent. Sammen med resten av styret fikk han ordnet med økonomisk støtte til kunststudier. Studietid I 1874 reiste dermed den syttenårige Kittelsen til Kristiania. Han fikk en friplass ved Wilhelm von Hannos tegneskole. Samtidig fikk han undervisning av Julius Middelthun ved den Kongelige Tegneskole. I 1876, etter to år med studier i hovedstaden, mente Aall og de gode hjelperne i Arendal at han burde komme seg til München , byen der de fleste norske kunstmalere ble utdannet i 1870-årene. Dermed fortsatte de å sende ham månedlige bidrag. Kunstakademiet i München Fra 1876 til 1879 studerte Kittelsen sjangermaleri ved kunstakademiet i München, under professorene Wilhelm Lindenschmit den yngre og Ludwig von Löfftz. Her ble han en del av det nordiske kunstmiljøet, og møtte kolleger og venner som Erik Werenskiold , Christian Skredsvig , Eilif Peterssen , Gerhard Munthe og Andreas Aubert . Han ble ikke helt fortrolig med den realistiske samfunnsskildrende stilen som på den tiden var idealet ved kunstakademiet. Allikevel utførte han i 1879 oljemaleriet Streik , med tema fra arbeiderbevegelsen , og som er regnet som det første norske forsøk på sosialt tendensmaleri. I München fikk han også studere verkene til den sveitsisk-tyske kunstneren Arnold Böcklin , som ble en stor inspirasjonskilde for ham med sine mytiske, fabulerende motiver. Kittelsen malte det lille oljemaleriet Glede av barnene , (antagelig 1878), et motiv som tydelig er inspirert av Böcklin. I 1877, mens han var i Tyskland, døde moren hans hjemme i Norge. I 1879 så ikke Aall og kunstforeningen seg i stand til å støtte Kittelsen økonomisk lenger. Etter tre år i München måtte Kittelsen nå finne andre inntektskilder: Han begynte å levere satire tegninger til tyske vittighetsblader og prøvde å selge malerier. Høsten 1879 ble maleriet Streik utstilt og innkjøpt av Kristiania Kunstforening. Salget og utstillingen førte til at han mottok kunststipend og bestillinger. Og med stipend kunne han i 1880 reise hjem til Norge. Kittelsen blir eventyrillustratør I 1881 leide han seg et atelier ved Grensen i Kristiania , kalt «Pultosten». Her malte han blant annet det lille oljemaleriet Vasstrollet (1881), regnet som hans første eventyrillustrasjon. Motivet var en av grunnene til at han samme år, på anbefaling av vennen og tegneren Erik Werenskiold , ble engasjert av Peter Christen Asbjørnsen til å illustrere hans eventyrsamling. Oppdraget ble starten på noe som skulle bli en 29 år lang karriere som eventyrillustratør. Sammen med Werenskiold illustrerte Kittelsen i første omgang bind 1–3 av Eventyrbog for Børn (1883–1887). De to kunstnerne samarbeidet godt selv om de hadde ulik stil; mens Werenskiolds tegninger var mer tradisjonelle, dyrket Kittelsen overdrivelsene og det fantasifulle. Paris Høsten 1882 fikk Kittelsen statlig kunststipend. Han ønsket å utvikle seg som kunstmaler og dro på studiereise til Paris . Her gikk han på utstillinger, møtte kolleger og studerte verkene til berømte kunstnere, som Jean-François Millet og James Tissot . Men de åtte måneder han tilbrakte i Paris, ble ikke så givende som forventet, mye på grunn av språkproblemer og pengemangel. Andre gang i München Etter en kort tur tilbake til Norge, dro han senhøstes 1883 på nytt til München. Her arbeidet han med illustrasjoner. I 1885 fullførte han blant annet en serie pennetegninger til en norsk oversettelse av Homer -parodien Batrachomyomachia – Krigen mellom froskene og musene . Dessverre fant han ingen forlegger som ville gi ut boka (den kom ut først etter hans død, i 1928), men deler av den ble trykt opp i Allgemeine Zeitung . Han illustrerte ellers for Neue Deutsche Illustrierte Zeitung (1885–1886) og det norske tidsskriftet Juleroser (1884). Samtidig arbeidet han videre med eventyrtegningene, og fikk også oppdrag med å illustrere den norske oversettelsen av Nils Gabriel Djurklous svenske folkeeventyr, som utkom i Norge 1887. Hans karikaturtegninger ble publisert i antologien Alverdens gemytlige Lande , utgitt av den danske forleggeren Ernst Bojesen 1887. I denne perioden fikk han også antatt malerier på Høstutstillingen i Norge (1886 og 1887). Han ble i München i fire år, men mistrivdes: Selv om han nå hadde begynt å skape seg et navn som illustratør, levde han i fattigdom og sult og lengtet til Norge. Til sist opprettet hans venner, med kunsthistorikeren Andreas Aubert i spissen, en innsamlingsaksjon, slik at han vinteren 1887 fikk råd til å reise hjem igjen til Norge – for godt. Inspirert av norsk natur og folkekultur I 1887 ble han med sin søster og svoger da de flyttet til Skomvær fyr i Lofoten. Møtet med den storslagne naturen der inspirerte ham veldig, og han malte blant annet oljemaleriet Ekko (1888). Det viser et realistisk landskap med fjell og hav, men i fjellet skjuler det seg et ansikt: en personifikasjon av et ekko . På Skomvær lagde han også flere serier med tegninger og tekster, som senere ble trykket og utgitt i bokform: Fra Livet i de smaa Forholde (utgitt 1889–1890), Fra Lofoten I og II (utgitt 1890–1991) og Troldskab (utgitt 1892). Ekteskap Sommeren 1889, under et opphold på Gopledal ved Larvik traff Kittelsen den elleve år yngre Inga Kristine Dahl fra Drøbak. Det var kjærlighet ved første blikk. De giftet seg raskt og flyttet samme år til et lite hus på Skåtøy ved Kragerø. I 1890 fikk de sitt første barn. I 1891 kjøpte de seg et vakkert hus i Hvitsten , for å komme nærmere hovedstaden og familien i Drøbak . Ekteparet la ned masse arbeid i huset og hagen. Men Kittelsen trivdes ikke i Hvitsten. Han fant ingen likesinnede, lengtet etter fjelluft og vill natur, og mente at stedet var et «konservativt hull». Han var allikevel produktiv og lagde blant annet de satiriske bøkene Glemmebogen (1892) og Har Dyrene Sjæl? (1893) – en tegnet kommentar til tidens kulturliv, vitenskap og borgerskap . Sistnevnte tittel besto av penne- og akvarelltegninger der dyr hadde fått menneskelige egenskaper. Første separatutstilling Kittelsen holdt i 1893 sin første separatutstilling i Florasalongen i Kristiania, en stor og vellykket utstilling som senere samme år også ble vist i Bergen Kunstforening. Han stilte blant annet ut Jomfruland-serien (1893), en naturpoetisk bildeserie med 14 bilder fra øya Jomfruland , som ligger i Kragerøs skjærgård. Motivene var stort sett av idylliske landskap, utført med kull, fargeblyant og i akvarell på papir. Stilen var preget av en lyrisk realisme med symbolistiske innslag. I 1894 holdt han separatutstilling i København , og i flere påfølgende år holdt han separatutstillinger i Blomqvist, Kristiania. I Hvitsten-perioden illustrerte han også blant annet for Mathias Skeibroks to humoristiske utgivelser Sandfærdige skrøner (1891 og 1894) samt Johan Herman Wessels Digte som utkom i 1896. Eggedal Vinteren 1896 flyttet familien til Sole i Eggedal . Kittelsens gode venn, Christian Skredsvig , bodde der og hadde anbefalt dem å komme. Theodor og Inga hadde nå tre barn, og det fjerde var på vei. De fikk leie en nedlagt lensmannsgård ved Solevannet. I Eggedal var det eventyrlig natur: granskoger og måneskinnsnetter, myrer og tjern. Landskapet, samt menneskene der, virket positivt på Kittelsens sinn – han følte seg hjemme. Her malte han blant annet maleriet Farvel da Mor (1898) og fullførte arbeidet med Svartedauen (første gang utgitt 1900). Denne illustrerte boka er et av hans mest berømte verk og inneholder 45 små og store svart-hvitt-tegninger samt 15 dikt. Her skildret Kittelsen svartedauden , i all sin uhygge, slik den i norske folkesagn har blitt gjengitt. Pest-sykdommen ble fremstilt som en grå, gammel kjerring, Pesta, som gikk fra gård til gård. Lauvlia – eventyrhus og familiehjem Theodor Kittelsen likte seg så godt i Eggedal at han begynte å drømme om å eie et eget sted. En dag han og Inga var på tur til nabobygda Sigdal , fikk han øye på en bjørkeli ved innsjøen Soneren som han syntes var så vakker. Inga fikk ordnet med kjøp av tomt. Våren 1899 flyttet familien, som nå talte fem barn, til Sigdal og bodde midlertidig hos bonden på nabogården mens huset ble bygd. Høsten samme år kunne de flytte inn i det nye hjemmet sitt, som de kalte Lauvlia. Kittelsen fikk et egendesignet atelier og dekorerte «eventyrhuset» med treskjæringer og malerier. Kittelsens kunst inneholder mange bearbeidelser av egne motiver, slik som Nøkken . I sin mest kjente variant ser vi et skummelt, overnaturlig vesen med lysende øyne som stikker hodet opp over en stille vannflate. Dette ble først laget i 1887 og publisert i Troldskab i 1892, men senere gjentatt flere ganger både i olje og i blandingsteknikker. For øvrig finnes versjoner der Nøkken stikker hodet opp og skriker, som omgjort til en hvit hest, som en fiskende skikkelse eller som harpespiller. Fra atelieret på Lauvlia hadde han utsikt til fjellet Andersnatten , som ble et motiv Kittelsen malte og tegnet flere versjoner av. Det stemningsfulle landskapsbildet malt i olje, med tittel Andersnatten, fra 1903, er det mest berømte. Mens han bodde på Lauvlia laget han bildeserien Tirilil Tove (1900), som kan sees som en skoglandskapets oppfølger av Jomfruland -serien. Her utførte han også det kjente maleriet Langt, langt borte saa han noget lyse og glitre (1900). Motivet hører til serien Soria Moria slott , som består av 12 malerier fra 1900. Maleriene ble utstilt hos Blomqvist i Kristiania samme året og ble da innkjøpt av Nasjonalgalleriet . En eventyrbok med motivene ble utgitt 1911. Kjærlighet, sykdom og økonomi I 1908 ble Theodor Kittelsen utnevnt til ridder av St. Olavs Orden , og det sier noe om hvor anerkjent han var i sin samtid. Allikevel vitnet hans brev og trykte tekster om stadig tilbakevendende økonomiske bekymringer og beskrivelser av et hardt kunstnerliv. Kjærligheten til naturen og familien holdt ham oppe. Ekteparet fikk til sammen ni barn, og de var en sammensveiset familie som var svært glade i hverandre. Inga passet på at han fikk malt og tegnet i fred; hun tok ansvar for både barn, hus og forretninger. Han led de siste årene av en nevrologisk sykdom. Han fikk stadig mer smerter, stive fingre og vanskeligheter med å bevege seg, noe som naturlig nok gikk hardt ut over tegnearbeidet. Måtte selge Lauvlia I årsskiftet 1908–1909 måtte familien selge eiendommen på Lauvlia. Årsaken var en blanding av økonomi og sykdom. Det var en stor sorg for dem å gi slipp på Lauvlia etter knappe ti år når de hadde planlagt å bo der livet ut. Fra 1909 leide familien en villa på Huseby på Skøyen . Kittelsen jobbet fortsatt mye, men var preget av sykdom. Kunstnerlønn fra Staten I 1911 ble Theodor Kittelsen bevilget 1600 kroner i årlig kunstnerlønn fra Staten. I 1911 utkom også hans selvbiografiske verk Folk og Trold , med tekster og tegninger fra blant annet barndomslivet i Kragerø og studietiden i München. I 1912 kjøpte Dronning Maud akvarellen Lengsel mot våren , som han hadde utstilt på Høstutstillingen. De siste årene Med kunstnerlønnen fikk familien i 1912 finansiert kjøpet av et romslig hus i vakre, rolige omgivelser på Jeløya i Moss . Theodor Kittelsen var da syk og nedbrutt. Han tilbrakte mesteparten av tiden innendørs, og døde her 21. januar 1914, bare noen få måneder før han skulle bli 57 år gammel, med kone og barn rundt seg. Rett før sin død skrev han et brev til «kongen og det norske folk» og ba om at Inga skulle beholde kunstnerlønnen etter hans død. Han poengterte at hun hadde betydd alt for hans kunst. Dessuten ville hun stå igjen med forsørgeransvaret for den store barneflokken deres. Søknaden ble behandlet i Stortinget etter hans død. Flere kjente kulturpersonligheter, blant annet Eilif Peterssen og Fritjof Nansen , sendte sine støtteerklæringer til søknaden. Det ble enstemmig vedtatt at Inga Kittelsen skulle få beholde kunstnerlønnen som årlig pensjon. Kittelsens kunst og besøkssteder Den største og viktigste samlingen av Kittelsens kunst befinner seg nå i Nasjonalmuseet . Andre viktige samlinger av originalkunst er Blaafarveværkets samling på Th. Kittelsen-museet på Koboltgruvene, KODE i Bergen og Telemark Kunstmuseum med flere. Både Kittelsens barndomshjem i Kragerø , Kittelsenhuset, og Lauvlia i Sigdal , som er dekorert med hans utskjæringer og malerier, er åpne for publikum. Utvalgte verker Illustrerte bøker (utvalg): Fra Livet i de smaa Forholde , 2 bind (1889–1890) Fra Lofoten. Billeder og tekst , 2 bind (1890–1891) Troldskab (1892) Har Dyrene Sjæl? (1893) Svartedauen (1900) F olk og Trold. Minder og Drømme, selvbiografi (1911) Malerier (utvalg): Streik (1879) Ekko (1888) De 12 villender (1897) Farvel da mor (1898) Soria Moria slott , eventyrserie i 12 bilder (1900) Guldhornet (1903) Andersnatten (1903) Akvareller, tegninger og pasteller (utvalg): Jomfruland-serien (1893) Pesta i trappen (mellom 1894 og 1896) Tirilil Tove-serien (1900) Vinterkveld (1905) Skogtroll (antagelig 1906) Nøkken som hvit hest (1907) Serien Fossens eventyr (1908) Kvitebjørn kong Valemon (1912) Prinsessen plukker myrull (1913) Eventyrillustrasjoner: P. C. Asbjørnsen og J. Moe: Eventyrbog for Børn. Norske Folkeeventyr , 1–3, (1883–1887 og senere) P. C. Asbjørnsen: Illustrerede eventyr. Udvalgte folkeeventyr , utgitt av M. Moe, 2 bind (1907) P. C. Asbjørnsen og J. Moe: Nye Barne-Eventyr , utgitt av M. Moe (1910) Les mer i Store norske leksikon Theodor Kittelsen i Norsk biografisk leksikon Theodor Kittelsen i Norsk kunstnerleksikon norsk kunsthistorie Eksterne lenker Blaafarveverket og Lauvlia: nettside om Theodor Kittelsen Nasjonalmuseet: Theodor Kittelsen Litteratur Hølaas, Odd. (1941). Th. Kittelsen: den norske faun. Oslo: Gyldendal. Fulltekst hos Nasjonalbiblioteket Kittelsen, Th. (1995). Sommeren med Th. Kittelsen. (katalog over to utstillinger ved Blaafarveværket). Fulltekst hos Nasjonalbiblioteket Koefoed, Holger &amp; Einar Økland. (1999). Th. Kittelsen: kjente og ukjente sider ved kunstneren. Oslo:Stenersens forlag. Fulltekst hos Nasjonalbiblioteket Sandvik, Frode (red). (2011). Hvad er Livet? Satirekunstneren Theodor Kittelsen. Bergen/Oslo: Bergen Kunstmuseum/No Comprendo Press Skre, Arnhild. (2015). Th. Kittelsen – Askeladd og troll. Oslo: Aschehoug &amp; Co Sundseth, Arnt Bryde. (1941). Th. Kittelsen : en bibliografi. Oslo. Treider, Ingrid Kittelsen. (1959). Tirilil Tove: minner om Th. Kittelsen og hans hjem. Prestfoss. Fulltekst hos Nasjonalbiblioteket Østby, Leif. (1975). Theodor Kittelsen: tegninger og akvareller. Grøndahl Dreyer. Fulltekst hos Nasjonalbiblioteket",
+            "var en norsk maler og forfatter. Gjennom et halvt århundre var han en av de sentrale skikkelsene i norsk kunstliv . Han var gift med maleren Oda Krohg . Under naturalismens gjennombrudd i 1880-årene var Krohg en av forgrunnsfigurene. Hans sosiale engasjement kom tydelig fram i mange av de bildene han malte med motiv fra Kristiania ( Oslo ). Hovedverker fra denne perioden er blant annet Albertine i politilægens venteværelse (1886–1887) og Kampen for tilværelsen (1888–1889). Han malte mange bilder fra Skagen ( Babord litt , 1879; Håret flettes , 1882). Han malte også betydelige portretter, som Maleren Gerhard Munthe (1885) og Marie Krohg (rundt 1889). Som forfatter er Krohg særlig kjent for sin roman Albertine fra 1886, en realistisk skildring av prostitusjonen i Kristiania i 1880-årene. Boken ble beslaglagt og Krohg idømt bot. Krohg var en av de ledende innen bohembevegelsen . Læreår Krohg studerte jus, men gikk samtidig på Tegneskolen. Etter avlagt embetseksamen ved nyttår 1874 reiste han til Karlsruhe , der han ble elev av Hans Gude og Karl Gussow . Han reiste høsten 1875 til Berlin , og til videre studier under Gussow, som nå var ansatt ved Kunstakademiet i byen. Krohg ble videre påvirket av Adolph Menzel , Max Liebermann og andre, og i samvær med Max Klinger og Georg Brandes utviklet han seg til naturalist. Han vakte oppmerksomhet i 1876 med Et farvel og et par inntrengende studerte kvinneportretter ( Lucy Egeberg , Nasjonalmuseet / Nasjonalgalleriet ). Skagen Sommeren 1879 kom han på Frits Thaulows tilskyndelse til Skagen. Blant fiskerne her fant han en motivverden som virket forløsende for hans kunstneriske ambisjoner. I stimulerende samvær med Peter Severin Krøyer , Michael og Anna Ancher og andre ble noen av hans ypperste bilder til her: Garnbinderen (1879–1880), Kone som skjærer brød (1879) og Babord litt (1879). Alle tre er av familien Gaihede, som Krohg fikk et spesielt nært forhold til. Garnbinderen viser Niels Gaihede som binder garn, mens Ane Gaihede nøster opp garn fra en garnvinde i bakgrunnen. Bildet er som en etnologisk skildring i all sin detaljrealisme. Kone som skjærer brød har ikke samme detaljrealisme, men er preget av en formal enkelhet. Her er Ane Gaihede plassert helt framme i billedplanet, satt opp mot en hvit vegg, mens sollyset strømmer inn i rommet. Bildet ser ut til å være inspirert av Vermeer van Delfts bilder av kvinner foran vinduet, og koloristisk og formalt er det et av de beste bildene Krohg har malt. Babord litt innleder Krohgs los- og sjømannsbilder, der han med bred pensel, i en lys og kjølig koloritt og med overraskende avskjæringer og synsvinkler gir djervt realistiske skildringer av sjølivet. Senere kommer norske sjømannsbilder til, som Hardt le (1882), Nordenvind (1887), Grumset farvann (1890 og ofte senere) og Kobbegrunnen (1898). Hit hører også det svære bestillingsarbeidet Leiv Eiriksson oppdager Amerika (1893). Krohg vendte tilbake til Skagen flere ganger. Han var der somrene 1882–1884 og 1888. Fra disse besøkene stammer kjente bilder som Mor og barn (1883) og Håret flettes (1888). Sosial tendenskunst Etter tiden i Skagen vendte Krohg tilbake til Kristiania (Oslo) høsten 1879. Det var en tid preget av klassemotsetninger og politiske spenninger mellom Høyre og Venstre . Krohg var grepet av tidens samfunnsreformatoriske strømninger, og med sin sterke menneskelige medfølelse kom han til å bli opptatt av kunstens sosiale appell. Kunsten skulle ikke bare være et estetisk anliggende, men gripe og ryste ved sin ubarmhjertige avsløring av den barske virkeligheten. Alt i Syk pike (1880–1881) merkes denne tendensen, og den sosiale samvittigheten er tydelig til stede i Legen hentes (1880). Samtidig oppstår den første versjonen av sypike-motivet, Daggry (1880), et motiv som skulle få sin ypperste utforming i En formaning (1884) og Trett (1885). Våren 1886 holdt Krohg et foredrag om «Den bildende kunst som led i kulturbevægelsen» i Den frisinnede Studenterforening, der han slo fast at billedkunstens oppgave var å male sin egen samtid, så ubehagelig sant som det lot seg gjøre. Det var en slik ubehagelig sann framstilling han søkte å gi i det store bildet Albertine i politilægens venteværelse fra 1886–1887, som var en videreføring av prostitusjonstematikken fra sypike-bildene. Her har han med rik malerisk virkning gjengitt et opptrinn fra sin egen roman Albertine fra 1886. Bokens realistiske skildring av prostitusjonen vakte voldsom oppsikt. Den ble beslaglagt dagen etter at den kom ut, og Krohg ble idømt bot. I 1888–1889 malte han en ny, svær, samfunnskritisk komposisjon: Kampen for tilværelsen. Bildet understreker den sympatien som Krohg hadde for de svakeste i samfunnet; han søkte å belyse deres vanskelige situasjon gjennom sin kunst. Interessen for den sosiale forkynnelsen gjør at koloristen og artisten Krohg trer mer i bakgrunnen. Franske impulser Et opphold i Paris i 1881–1882 styrket Krohgs samtidsorientering og åpnet hans øyne for Édouard Manet og impresjonistene . Møtet med Gustave Courbets kunst styrket hans overbevisning om kunstens sosiale forpliktelse, mens Manets og impresjonistenes kunst øvde den sterkeste maleriske påvirkningen. Vi kan se innflytelsen fra impresjonismen i hans Portrett av Karl Nordström fra 1882. I 1883 malte han en liten impresjonistisk studie fra Karl Johan, mens Se forut, Bergensvåg fra 1884 er hans første større impresjonistiske komposisjon. Mange av de portrettene han malte i 1880-åra er inspirert av Manet. Det gjelder både portrettene av Johan Sverdrup (1882) og Gerhard Munthe (1885) samt portrettet av Jossa (1886), en studie til Albertine-syklusen. I senere år malte han en mengde impresjonistisk livfulle modellstudier som Toalett (1912), I pausen (1913) og andre, og om sommeren hentet han gjerne sine motiver fra sørlandskysten, fra Brekkestø og Bjelkevika ved Kragerø . Selv om hans svære produksjon, særlig fra sene år, er ujevn, og mye av den er preget av gjentagelse og rutine, kunne han helt til sin død male friske og opplagte ting. Hans beste arbeider står som høydepunkter i nyere norsk kunst . Skribenten og læreren Sammen med Hans Jæger var Krohg den ledende skikkelsen i bohembevegelsen , og han redigerte dens organ Impressionisten. Her utformet han den rappe, muntlige stilen som senere gjorde ham til en treffsikker intervjuer og kåsør i Verdens Gang (1890–1910). Han var i disse årene ofte på reiser. I 1901–1909 oppholdt han seg i Paris, fra 1902 som lærer ved Académie Colarossi. I 1909–1925 var han professor og direktør for det nyopprettede Statens Kunstakademi i Oslo. Også som personlighet ruvet han. Med sin juridiske trening og klare logikk ble han en drivende kraft i kunstnernes organisasjonsarbeid, spilte en viktig rolle i arbeidet for reisingen av Kunstnernes Hus og var fra 1907 til sin død formann i Bildende Kunstneres Styre . Han deltok ofte i debatten om kunstneriske spørsmål. Han er rikest representert i Nasjonalmuseet / Nasjonalgalleriet i Oslo . Også Bergen Kunstmuseum , galleriene i Trondheim og Kristiansand og museene i Stockholm , Göteborg , Malmö , København og Skagen har gode arbeider. Etter Albertine fortsatte Krohg sin litterære produksjon med fortellingen En Duel (1888), Lodser (1890) og Kunstnere (2 bind, 1891–1892), de to siste med egne tegninger. Sine inntrykk fra reiser og fremmed kunst samlet han i I smaa Dagsrejser til og fra Paris (1897) og Paa Bicykle og Jernbane (1899). En del av hans mesterlige intervjuer er utgitt i Tolv af vore Samtidige (1895), Egte Bergensere (1905) og Omkring Mjøsa (1909). I 1906 kom novellesamlingen Dissonantser. Et fyldig utvalg av hans litterære arbeider kom ut i 1920–1921 i fire bind under tittelen Kampen for Tilværelsen (3. utgave i 1989). Hans statue, utført av Per Hurum og Asbjørg Borgfelt , ble reist i Oslo i 1960. Krohg er gravlagt i Æreslunden på Vår Frelsers gravlund i Oslo. En del kjente verker Verk År Plassering Et farvel 1876 Göteborgs Konstmuseum Lucy Egeberg 1876 Nasjonalmuseet/Nasjonalgalleriet, Oslo Kone som skjærer brød 1879 Bergen Kunstmuseum Babord litt 1879 Nasjonalmuseet/Nasjonalgalleriet Garnbinderen 1880 Nasjonalmuseet/Nasjonalgalleriet Daggry 1880 Statens Museum for kunst , København Syk pike 1880–1881 Nasjonalmuseet/Nasjonalgalleriet Sypiken 1881 Göteborgs Konstmuseum Maleren Fritz Thaulow 1881 Nasjonalmuseet/Nasjonalgalleriet Hardt le 1882 Slottet , replikk i Nasjonalmuseet/Nasjonalgalleriet Portrett av Karl Nordström 1882 Nasjonalmuseet/Nasjonalgalleriet Johan Sverdrup 1882 Stortinget , replikk i Nasjonalmuseet/Nasjonalgalleriet Mor og barn 1883 Nasjonalmuseet/Nasjonalgalleriet Se forut, Bergens våg 1884 Nasjonalmuseet/Nasjonalgalleriet En formaning 1884 Christianssands Kunstforening , Kristiansand Trett 1885 Nasjonalmuseet/Nasjonalgalleriet Maleren Gerhard Munthe 1885 Nasjonalmuseet/Nasjonalgalleriet Jossa 1886 Nasjonalmuseet/Nasjonalgalleriet Albertine i politilægens venteværelse 1886–1887 Nasjonalmuseet/Nasjonalgalleriet Håret flettes 1888 Nasjonalmuseet/Nasjonalgalleriet og Skagens museum Kampen for tilværelsen 1888–1889 Nasjonalmuseet/Nasjonalgalleriet I baljen 1889 Bergen Kunstmuseum Marie Krohg rundt 1889 Nasjonalmuseet/Nasjonalgalleriet August Strindberg 1893 Norsk Folkemuseum Leiv Eiriksson oppdager Amerika 1893 Nasjonalmuseet/Nasjonalgalleriet, deponert i Norsk maritimt museum Øyenvitner 1895 Nasjonalmuseet/Nasjonalgalleriet Kobbegrunnen 1897 Bergen Kunstmuseum Gammel kone 1902 Bergen Kunstmuseum Toalett 1912 Nasjonalmuseet/Nasjonalgalleriet, variant i Rogaland Kunstmuseum Les mer i Store norske leksikon Christian Krohg i Norsk biografisk leksikon Christian Krohg i Norsk kunstnerleksikon norsk kunsthistorie bohembevegelsen Litteratur Christian Krohg : Nasjonalgalleriet 2. mars-24. mai 1987 , 1987 (utstillingskatalog) Christian Krohg 1852-1925 , 1993 (utstilling: Blaafarveværket, 1993) Thue, Oscar: Christian Krohg : en bibliografi , 1968 Thue, Oscar: Christian Krohgs portretter , 1971 Thue, Oscar: Christian Krohg , red. av K. Berg, 1997"
+          ]
+        },
+        {
+          "name": "kilde_url",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "https://snl.no/Theodor_Kittelsen",
+            "https://snl.no/Christian_Krohg"
+          ]
+        }
+      ]
+    },
+    "leverandor_enhetsregister": {
+      "total_rows": 12,
+      "columns": [
+        {
+          "name": "organisasjonsnummer",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "911765431",
+            "912876543"
+          ]
+        },
+        {
+          "name": "navn",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "Securitas AS",
+            "Avarn Security AS"
+          ]
+        },
+        {
+          "name": "organisasjonsform_kode",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "AS",
+            "AS"
+          ]
+        },
+        {
+          "name": "organisasjonsform_beskrivelse",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "Aksjeselskap",
+            "Aksjeselskap"
+          ]
+        },
+        {
+          "name": "naeringskode",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 11,
+          "samples": [
+            "80.100",
+            "80.100"
+          ]
+        },
+        {
+          "name": "naeringskode_beskrivelse",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "Vakttjenester",
+            "Vakttjenester og alarmsentral"
+          ]
+        },
+        {
+          "name": "forretningsadresse_kommune",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 4,
+          "samples": [
+            "Oslo",
+            "Oslo"
+          ]
+        },
+        {
+          "name": "forretningsadresse_postnummer",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "0581",
+            "0667"
+          ]
+        },
+        {
+          "name": "antall_ansatte",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            3850,
+            4200
+          ]
+        },
+        {
+          "name": "registrert_i_mva",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "under_konkurs",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            0,
+            0
+          ]
+        },
+        {
+          "name": "under_avvikling",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            0,
+            0
+          ]
+        },
+        {
+          "name": "aksjekapital_nok",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            50000000,
+            45000000
+          ]
+        },
+        {
+          "name": "stiftelsesdato",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "1980-04-12",
+            "1988-06-01"
+          ]
+        },
+        {
+          "name": "sist_oppdatert",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "2026-10-18",
+            "2026-10-18"
+          ]
+        }
+      ]
+    },
+    "norske_helligdager": {
+      "total_rows": 237,
+      "columns": [
+        {
+          "name": "dato",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 237,
+          "samples": [
+            "2010-01-01",
+            "2010-04-01"
+          ]
+        },
+        {
+          "name": "aar",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 17,
+          "samples": [
+            2010,
+            2010
+          ]
+        },
+        {
+          "name": "navn",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 14,
+          "samples": [
+            "1. nyttårsdag",
+            "Offentlig høytidsdag (1. mai)"
+          ]
+        },
+        {
+          "name": "er_offentlig_hoytid",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "tillegg_faktor",
+          "sql_type": "REAL",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            2.33,
+            2.33
+          ]
+        },
+        {
+          "name": "skoleferie_type",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 84,
+          "distinct_count": 2,
+          "samples": [
+            "Juleferie",
+            "Juleferie"
+          ]
+        }
+      ]
+    },
+    "personas": {
+      "total_rows": 28,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 28,
+          "samples": [
+            "KP-ANS-001",
+            "KP-ANS-002"
+          ]
+        },
+        {
+          "name": "navn",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 28,
+          "samples": [
+            "Henrik Faye-Lund",
+            "Silje Lindqvist"
+          ]
+        },
+        {
+          "name": "avdeling",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 5,
+          "samples": [
+            "Ledelse",
+            "Kuratering"
+          ]
+        },
+        {
+          "name": "stilling",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 15,
+          "samples": [
+            "Museumsdirektør",
+            "Sjefkurator"
+          ]
+        },
+        {
+          "name": "icor_rolle",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 8,
+          "samples": [
+            "Museumsdirektør (/direktor)",
+            "Kurator (/kurator)"
+          ]
+        },
+        {
+          "name": "cv_json",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 28,
+          "samples": [
+            "{\"id\": \"KP-ANS-001\", \"navn\": \"Henrik Faye-Lund\", \"kjonn\": \"M\", \"fodselsaar\": 1968, \"avdeling\": \"Ledelse\", \"stilling\": \"Museumsdirektør\", \"ansatt_fra\": \"2010-01-01\", \"ansatt_til\": null, \"status\": \"Fast\", \"stillingsprosent\": 1.0, \"lonnstrinn_virke\": 86, \"kontor_sal\": \"Administrasjonsfløyen 3. etg\", \"utdanning\": [{\"grad\": \"Dr.philos. Kunsthistorie\", \"institusjon\": \"Universitetet i Oslo (UiO)\", \"aar\": 1999}, {\"grad\": \"Cand.philol. Kunsthistorie og filosofi\", \"institusjon\": \"UiO\", \"aar\": 1994}], \"tidligere_arbeidsgivere\": [{\"institusjon\": \"Henie Onstad Kunstsenter\", \"rolle\": \"Sjefkurator\", \"periode\": \"2002-2009\"}, {\"institusjon\": \"Nasjonalgalleriet\", \"rolle\": \"Kurator\", \"periode\": \"1999-2002\"}], \"publikasjoner\": [\"Modernismens grenseland: Nordisk kunst etter 1945 (2005)\", \"Institusjonsbygging og samfunnsansvar i kunstmuseet (2018)\"], \"icor_rolle\": \"Museumsdirektør (/direktor)\"}",
+            "{\"id\": \"KP-ANS-002\", \"navn\": \"Silje Lindqvist\", \"kjonn\": \"K\", \"fodselsaar\": 1977, \"avdeling\": \"Kuratering\", \"stilling\": \"Sjefkurator\", \"ansatt_fra\": \"2012-03-01\", \"ansatt_til\": null, \"status\": \"Fast\", \"stillingsprosent\": 1.0, \"lonnstrinn_virke\": 76, \"kontor_sal\": \"Kuratorfløyen 2. etg\", \"utdanning\": [{\"grad\": \"MA Curating Contemporary Art\", \"institusjon\": \"Goldsmiths, University of London\", \"aar\": 2003}, {\"grad\": \"Bachelor i Estetiske studier\", \"institusjon\": \"Universitetet i Oslo (UiO)\", \"aar\": 2000}], \"tidligere_arbeidsgivere\": [{\"institusjon\": \"Astrup Fearnley Museet\", \"rolle\": \"Kurator\", \"periode\": \"2006-2012\"}, {\"institusjon\": \"Kunstnernes Hus\", \"rolle\": \"Formidlingskonsulent\", \"periode\": \"2003-2006\"}], \"publikasjoner\": [\"Det post-digitale blikk: Nye medier i norsk samtidskunst (2016)\", \"Stillhetens Rom: Kuratoriske refleksjoner under pandemien (2021)\"], \"icor_rolle\": \"Kurator (/kurator)\"}"
+          ]
+        }
+      ]
+    },
+    "publikum_faq": {
+      "total_rows": 12,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "INTEGER",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            1,
+            2
+          ]
+        },
+        {
+          "name": "spoersmaal",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "Hva koster det aa besoke museet?",
+            "Naar har museet aapent?"
+          ]
+        },
+        {
+          "name": "svar",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "Voksne: 120 kr. Barn under 16 aar: gratis. Studenter og pensjonister: 80 kr. Familiepass (2 voksne + barn): 250 kr. Foerste sondag i maaneden er det gratis inngang for alle.",
+            "Tirsdag–fredag: 10:00–17:00. Loerdag–soendag: 11:00–16:00. Mandag: stengt. Helligdager: se nettsiden for oppdaterte tider."
+          ]
+        },
+        {
+          "name": "kategori",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 8,
+          "samples": [
+            "billett",
+            "praktisk"
+          ]
+        },
+        {
+          "name": "hyppighet",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            45,
+            62
+          ]
+        },
+        {
+          "name": "sist_stilt",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "2026-09-14",
+            "2026-09-14"
+          ]
+        }
+      ]
+    },
+    "rapport_regler": {
+      "total_rows": 12,
+      "columns": [
+        {
+          "name": "regel_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "R-ARB-01",
+            "R-ARB-FALLBACK"
+          ]
+        },
+        {
+          "name": "sporsmal_id",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "arbeidstid",
+            "arbeidstid"
+          ]
+        },
+        {
+          "name": "felt",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "antall_med_vakt",
+            "antall_med_vakt"
+          ]
+        },
+        {
+          "name": "operator",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 5,
+          "samples": [
+            ">=",
+            "fallback"
+          ]
+        },
+        {
+          "name": "terskel",
+          "sql_type": "REAL",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 6,
+          "distinct_count": 4,
+          "samples": [
+            8.0,
+            6.0
+          ]
+        },
+        {
+          "name": "vurdering",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "Bemanningsnivået i dag dekker samtlige prioriterte stasjoner i museet.",
+            "Bemanningsnivået avviker fra ordinær norm for stasjonsbemanning."
+          ]
+        },
+        {
+          "name": "forslag",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "Oppretthold planlagt stasjonsfordeling og oppmøte.",
+            "Avklar manuelt med vaktsjef eller driftsleder om omdisponering er påkrevd."
+          ]
+        },
+        {
+          "name": "kilde",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 8,
+          "samples": [
+            "Bemanningsplan 2026",
+            "Bemanningsplan 2026"
+          ]
+        },
+        {
+          "name": "versjon",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "1.0",
+            "1.0"
+          ]
+        },
+        {
+          "name": "datakilde",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "autoritativ (rapport_regler)",
+            "autoritativ (rapport_regler)"
+          ]
+        }
+      ]
+    },
+    "rolle_sporsmal": {
+      "total_rows": 6,
+      "columns": [
+        {
+          "name": "rolle_kode",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            "K",
+            "K"
+          ]
+        },
+        {
+          "name": "sporsmal_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "arbeidstid",
+            "sykefravaer"
+          ]
+        },
+        {
+          "name": "rekkefolge",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 4,
+          "samples": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    "roller": {
+      "total_rows": 12,
+      "columns": [
+        {
+          "name": "kode",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "name": "navn",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "Museumsdirektør",
+            "Samlingsforvalter"
+          ]
+        },
+        {
+          "name": "trigger",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "/direktor",
+            "/samlingsforvalter"
+          ]
+        },
+        {
+          "name": "beskrivelse",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "Orkestrator og leder for Aura Kunstmuseum",
+            "Registrar og ansvarlig for samling og metadata"
+          ]
+        },
+        {
+          "name": "datakilde",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "autoritativ (team_roster)",
+            "autoritativ (team_roster)"
+          ]
+        }
+      ]
+    },
+    "saler": {
+      "total_rows": 6,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "MAG-1",
+            "SAL-A"
+          ]
+        },
+        {
+          "name": "navn",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "Sal A – Mytologi og natur",
+            "Sal B – Realisme og samfunn"
+          ]
+        },
+        {
+          "name": "etasje",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "tema",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "Folketro, naturmystikk og nasjonalromantikk",
+            "Sosialrealisme, hverdagsliv og samfunnskritikk"
+          ]
+        },
+        {
+          "name": "kapasitet_verk",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            20,
+            15
+          ]
+        },
+        {
+          "name": "klima_kontroll",
+          "sql_type": "BOOLEAN",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "beskrivelse",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "Museets største sal med 6 meter takhøyde og dempet belysning. Veggene er holdt i mørk antrasitt for å løfte Kittelsens og Sohlbergs stemningskunst. Naturlig dagslys filtreres gjennom takvinduer med UV-filter.",
+            "Kompakt og intim sal med lyse vegger og fokusert spotbelysning. Innrettet for Krohgs storformater med tilstrekkelig betrakteravstand. Veggstøtter for verk over 200 cm."
+          ]
+        }
+      ]
+    },
+    "ssb_sykefraver_kultur": {
+      "total_rows": 68,
+      "columns": [
+        {
+          "name": "periode",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 68,
+          "samples": [
+            "2010-Q1",
+            "2010-Q2"
+          ]
+        },
+        {
+          "name": "aar",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 17,
+          "samples": [
+            2010,
+            2010
+          ]
+        },
+        {
+          "name": "kvartal",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 4,
+          "samples": [
+            1,
+            2
+          ]
+        },
+        {
+          "name": "sykefraver_prosent",
+          "sql_type": "REAL",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            6.8,
+            5.4
+          ]
+        },
+        {
+          "name": "egenmeldt_prosent",
+          "sql_type": "REAL",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 4,
+          "samples": [
+            1.4,
+            1.0
+          ]
+        },
+        {
+          "name": "legemeldt_prosent",
+          "sql_type": "REAL",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            5.4,
+            4.4
+          ]
+        },
+        {
+          "name": "vikarbuffer_anbefaling_faktor",
+          "sql_type": "REAL",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 5,
+          "samples": [
+            1.25,
+            1.1
+          ]
+        }
+      ]
+    },
+    "styrk08_katalog": {
+      "total_rows": 10,
+      "columns": [
+        {
+          "name": "styrk_kode",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 10,
+          "samples": [
+            "1219.01",
+            "1349.02"
+          ]
+        },
+        {
+          "name": "tittel",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 10,
+          "samples": [
+            "Museumsdirektør / Daglig leder",
+            "Drifts- og eiendomssjef"
+          ]
+        },
+        {
+          "name": "avdeling",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "Ledelse",
+            "Drift & Sikkerhet"
+          ]
+        },
+        {
+          "name": "utdanningsnivaa",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 10,
+          "samples": [
+            "Mastergrad / Lederutdanning",
+            "Høyere teknisk / Ingeniørutdanning"
+          ]
+        },
+        {
+          "name": "virke_minste_lonnstrinn",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 8,
+          "samples": [
+            60,
+            55
+          ]
+        },
+        {
+          "name": "beskrivelse",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 10,
+          "samples": [
+            "Overordnet administrativt, økonomisk og kunstnerisk ansvar for museet.",
+            "Ledelse av museets fysiske infrastruktur, brannvern, RVR og adgangskontroll."
+          ]
+        }
+      ]
+    },
+    "tilstandsrapporter": {
+      "total_rows": 16,
+      "columns": [
+        {
+          "name": "rapport_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 16,
+          "samples": [
+            "TIL-2026-001",
+            "TIL-2026-002"
+          ]
+        },
+        {
+          "name": "verk_id",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 16,
+          "samples": [
+            "AURA-2026-001",
+            "AURA-2026-002"
+          ]
+        },
+        {
+          "name": "inspeksjonsdato",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 8,
+          "samples": [
+            "2026-01-15",
+            "2026-01-15"
+          ]
+        },
+        {
+          "name": "tilstandsgrad",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            1,
+            2
+          ]
+        },
+        {
+          "name": "lysomfintlighet_luks",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            50,
+            80
+          ]
+        },
+        {
+          "name": "klimakrav_rh_prosent",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            "50±5% RH, 20±2°C",
+            "50±5% RH, 20±2°C"
+          ]
+        },
+        {
+          "name": "konserveringshistorikk",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 16,
+          "samples": [
+            "Renovert ramme og festemekanisme i 2018. Overflate stabil, ingen krakeleringer.",
+            "Mindre overflatestøv fjernet i 2021. Blindramme etterspent."
+          ]
+        },
+        {
+          "name": "forsikringsverdi_nok",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 16,
+          "samples": [
+            35000000,
+            18000000
+          ]
+        },
+        {
+          "name": "vurdert_av_ansatt_id",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "KP-ANS-003",
+            "KP-ANS-003"
+          ]
+        }
+      ]
+    },
+    "utstilling_okonomi": {
+      "total_rows": 102,
+      "columns": [
+        {
+          "name": "utstilling_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 102,
+          "samples": [
+            "KP-EXH-2010-001",
+            "KP-EXH-2010-002"
+          ]
+        },
+        {
+          "name": "budsjett_nok",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 98,
+          "samples": [
+            1605000,
+            756000
+          ]
+        },
+        {
+          "name": "faktisk_innleie_nok",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 102,
+          "samples": [
+            222524,
+            173951
+          ]
+        },
+        {
+          "name": "faktisk_totalkostnad_nok",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 102,
+          "samples": [
+            356038,
+            278321
+          ]
+        },
+        {
+          "name": "billettinntekter_nok",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 102,
+          "samples": [
+            793050,
+            1942275
+          ]
+        },
+        {
+          "name": "katalogsalg_nok",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 102,
+          "samples": [
+            236857,
+            580092
+          ]
+        },
+        {
+          "name": "sponsorstotte_nok",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 67,
+          "samples": [
+            401250,
+            189000
+          ]
+        },
+        {
+          "name": "netto_resultat_nok",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 102,
+          "samples": [
+            1075119,
+            2433046
+          ]
+        },
+        {
+          "name": "avvik_forklaring",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 102,
+          "samples": [
+            "Solid overskudd drevet av høyt publikumsbesøk (10,574 besøkende) og sterkt katalogsalg.",
+            "Solid overskudd drevet av høyt publikumsbesøk (25,897 besøkende) og sterkt katalogsalg."
+          ]
+        }
+      ]
+    },
+    "utstilling_verk": {
+      "total_rows": 15,
+      "columns": [
+        {
+          "name": "utstilling_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "UTST-2026-H",
+            "UTST-2026-H"
+          ]
+        },
+        {
+          "name": "verk_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 15,
+          "samples": [
+            "AURA-2026-001",
+            "AURA-2026-002"
+          ]
+        },
+        {
+          "name": "sal_plassering",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 14,
+          "samples": [
+            "SAL-A venstre vegg",
+            "SAL-A venstre vegg"
+          ]
+        },
+        {
+          "name": "rekkefølge",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 8,
+          "samples": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    "utstillinger": {
+      "total_rows": 3,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "UTST-2026-H",
+            "UTST-2026-S"
+          ]
+        },
+        {
+          "name": "tittel",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "Stille kraft",
+            "Lys innenfra"
+          ]
+        },
+        {
+          "name": "undertittel",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "Natur, folketro og eksistens i norsk kunst",
+            "Harriet Backer, Kitty Kielland og interioerets hemmeligheter"
+          ]
+        },
+        {
+          "name": "kurator",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "Kurator-agent",
+            "Kurator-agent"
+          ]
+        },
+        {
+          "name": "startdato",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            "2026-09-01",
+            "2026-09-01"
+          ]
+        },
+        {
+          "name": "sluttdato",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "2027-01-15",
+            "2026-12-15"
+          ]
+        },
+        {
+          "name": "status",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            "aktiv",
+            "aktiv"
+          ]
+        },
+        {
+          "name": "beskrivelse",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "Hovedutstillingen høsten 2026 samler norsk kunsts mest ikoniske naturskildringer, fra Kittelsens overnaturlige tjern til Sohlbergs sakrale fjelltopper og Astrups flammende midtsommernetter. Vi spør: Hva er det i naturen som fortsatt griper oss, og hva må vi vokte oss for?",
+            "En fokusert utstilling som undersoeker hvordan to av 1800-tallets fremste norske kvinnelige kunstnere fanget dagslys i lukkede rom og åpne landskaper. Backers mesterlige interiorer settes i dialog med Kiellands sommernetter."
+          ]
+        },
+        {
+          "name": "saler",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "SAL-A, SAL-D",
+            "SAL-C"
+          ]
+        },
+        {
+          "name": "antall_verk",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            8,
+            4
+          ]
+        }
+      ]
+    },
+    "utstillinger_historikk": {
+      "total_rows": 102,
+      "columns": [
+        {
+          "name": "utstilling_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 102,
+          "samples": [
+            "KP-EXH-2010-001",
+            "KP-EXH-2010-002"
+          ]
+        },
+        {
+          "name": "aar",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 17,
+          "samples": [
+            2010,
+            2010
+          ]
+        },
+        {
+          "name": "sesong",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 5,
+          "samples": [
+            "Vinter",
+            "Vår"
+          ]
+        },
+        {
+          "name": "tittel",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 94,
+          "samples": [
+            "Algoritmisk skjønnhet: Generativ kunst og persepsjon (2010)",
+            "Munchs ekko: Ekspresjonisme i det 21. århundre (2010)"
+          ]
+        },
+        {
+          "name": "kurator",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            "Liv Eide",
+            "Liv Eide"
+          ]
+        },
+        {
+          "name": "saler",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 12,
+          "samples": [
+            "Sal C, Sal D",
+            "Sal D, Sal B"
+          ]
+        },
+        {
+          "name": "periode_start",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 85,
+          "samples": [
+            "2010-01-15",
+            "2010-03-20"
+          ]
+        },
+        {
+          "name": "periode_slutt",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 85,
+          "samples": [
+            "2010-03-01",
+            "2010-05-30"
+          ]
+        },
+        {
+          "name": "antall_verk",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 41,
+          "samples": [
+            25,
+            28
+          ]
+        },
+        {
+          "name": "besokstall_total",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 102,
+          "samples": [
+            10574,
+            25897
+          ]
+        },
+        {
+          "name": "budsjett_nok",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 98,
+          "samples": [
+            1605000,
+            756000
+          ]
+        },
+        {
+          "name": "katalog_isbn",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 95,
+          "samples": [
+            "978-82-99812-17-9",
+            "978-82-99812-51-9"
+          ]
+        },
+        {
+          "name": "status",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 5,
+          "samples": [
+            "Gjennomført",
+            "Gjennomført"
+          ]
+        }
+      ]
+    },
+    "utstillingsinnlan": {
+      "total_rows": 50,
+      "columns": [
+        {
+          "name": "innlan_id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 50,
+          "samples": [
+            "LAN-2010-017",
+            "LAN-2010-034"
+          ]
+        },
+        {
+          "name": "utstilling_id",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 17,
+          "samples": [
+            "KP-EXH-2011-005",
+            "KP-EXH-2012-009"
+          ]
+        },
+        {
+          "name": "eierinstitusjon",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "Nasjonalmuseet for kunst, arkitektur og design",
+            "KODE Kunstmuseer i Bergen"
+          ]
+        },
+        {
+          "name": "tittel",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 50,
+          "samples": [
+            "Madonna",
+            "Syk pike"
+          ]
+        },
+        {
+          "name": "kunstner",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 11,
+          "samples": [
+            "Edvard Munch",
+            "Edvard Munch"
+          ]
+        },
+        {
+          "name": "aar",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 21,
+          "samples": [
+            1894,
+            1886
+          ]
+        },
+        {
+          "name": "teknikk",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "Olje på lerret",
+            "Olje på lerret"
+          ]
+        },
+        {
+          "name": "dimensjoner",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 25,
+          "samples": [
+            "90 x 68 cm",
+            "120 x 118 cm"
+          ]
+        },
+        {
+          "name": "veggtekst",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 50,
+          "samples": [
+            "Edvard Munch (1894–1934), norsk.\n_Madonna_, 1894. Olje på lerret, 90 x 68 cm. Utlån fra Nasjonalmuseet for kunst, arkitektur og design.\n\nVerket fanger betrakteren med en intens tilstedeværelse der penselstrøk og lysspill åpner for dype stemninger. Kunstneren forener naturalistisk presisjon med symbolsk kraft. Lånt inn eksklusivt til Auras tematiske utstilling fra Nasjonalmuseet for kunst, arkitektur og design for å belyse norsk kunsthistorisk brytningstid.",
+            "Edvard Munch (1886–1926), norsk.\n_Syk pike_, 1886. Olje på lerret, 120 x 118 cm. Utlån fra KODE Kunstmuseer i Bergen.\n\nVerket fanger betrakteren med en intens tilstedeværelse der penselstrøk og lysspill åpner for dype stemninger. Kunstneren forener naturalistisk presisjon med symbolsk kraft. Lånt inn eksklusivt til Auras tematiske utstilling fra KODE Kunstmuseer i Bergen for å belyse norsk kunsthistorisk brytningstid."
+          ]
+        },
+        {
+          "name": "audioguide_manus",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 50,
+          "samples": [
+            "Stans et øyeblikk her foran Madonna, malt av Edvard Munch i 1894. Legg merke til hvordan fargene nærmest dirrer på overflaten. Se nøye på overgangen mellom lys og skygge. Dette verket er et høydepunkt i norsk kunsthistorie, innlånt fra Nasjonalmuseet for kunst, arkitektur og design. Kunstneren arbeidet intenst for å fange en stemning som ikke bare skildrer det ytre landskapet, men menneskets indre følelsesliv. Pust rolig inn, og la blikket vandre over detaljene i komposisjonen før du går videre.",
+            "Stans et øyeblikk her foran Syk pike, malt av Edvard Munch i 1886. Legg merke til hvordan fargene nærmest dirrer på overflaten. Se nøye på overgangen mellom lys og skygge. Dette verket er et høydepunkt i norsk kunsthistorie, innlånt fra KODE Kunstmuseer i Bergen. Kunstneren arbeidet intenst for å fange en stemning som ikke bare skildrer det ytre landskapet, men menneskets indre følelsesliv. Pust rolig inn, og la blikket vandre over detaljene i komposisjonen før du går videre."
+          ]
+        },
+        {
+          "name": "barneformidling",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 11,
+          "samples": [
+            "Se her! Hva er det første du legger merke til i bildet? Synes du stemningen virker hemmelighetsfull eller kanskje litt magisk? Edvard Munch har brukt fargene nesten som et trylleslag for å få lyset til å skinne. Hvis du kunne gått rett inn i bildet, hva tror du at du ville hørt eller luktet der inne?",
+            "Se her! Hva er det første du legger merke til i bildet? Synes du stemningen virker hemmelighetsfull eller kanskje litt magisk? Edvard Munch har brukt fargene nesten som et trylleslag for å få lyset til å skinne. Hvis du kunne gått rett inn i bildet, hva tror du at du ville hørt eller luktet der inne?"
+          ]
+        },
+        {
+          "name": "forsikringsverdi_nok",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 36,
+          "samples": [
+            350000000,
+            400000000
+          ]
+        },
+        {
+          "name": "kurertransport_krav",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "Klimakasse med temperatur- og sjokklogger, dedikert kurertransport og 24/7 vakt.",
+            "Klimakasse med temperatur- og sjokklogger, dedikert kurertransport og 24/7 vakt."
+          ]
+        },
+        {
+          "name": "tilstand_ved_mottak",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "Tilstandsgrad 1 (Utmerket), full konserveringsrapport vedlagt fra eier.",
+            "Tilstandsgrad 1 (Utmerket), full konserveringsrapport vedlagt fra eier."
+          ]
+        },
+        {
+          "name": "status",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            "Returnert",
+            "Returnert"
+          ]
+        }
+      ]
+    },
+    "verk": {
+      "total_rows": 16,
+      "columns": [
+        {
+          "name": "id",
+          "sql_type": "TEXT",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 16,
+          "samples": [
+            "AURA-2026-001",
+            "AURA-2026-002"
+          ]
+        },
+        {
+          "name": "tittel",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 16,
+          "samples": [
+            "Nøkken",
+            "Soria Moria slott"
+          ]
+        },
+        {
+          "name": "kunstner_id",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 11,
+          "samples": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "aar",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 15,
+          "samples": [
+            1904,
+            1900
+          ]
+        },
+        {
+          "name": "teknikk",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 4,
+          "samples": [
+            "Pastell og blyant på papir",
+            "Olje på lerret"
+          ]
+        },
+        {
+          "name": "dimensjoner",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 16,
+          "samples": [
+            "43 x 67 cm",
+            "45 x 68 cm"
+          ]
+        },
+        {
+          "name": "sal_id",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 5,
+          "samples": [
+            "SAL-A",
+            "SAL-A"
+          ]
+        },
+        {
+          "name": "status",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            "utstilt",
+            "utstilt"
+          ]
+        },
+        {
+          "name": "beskrivelse",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 16,
+          "samples": [
+            "Et mørkt, blikkstille skogstjern i skumringen hvor Nøkken titter opp over vannflaten forkledd som vannliljer og to stirrende øyne. Skaper en stemning av mystikk og urovekkende stillhet. Kittelsen gir det overnaturlige en overbevisende fysisk tilstedeværelse i naturen.",
+            "Askeladden står med ryggen til betrakteren på en fjellknaus og skuer mot det lysende, gylne slottet i det fjerne over et gyllent skylag. En visuell fortelling om lengsel, eventyr og det umulige målet."
+          ]
+        },
+        {
+          "name": "proveniens",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 16,
+          "samples": [
+            "Privat samling, Kragerø → Nasjonalgalleriet 1908 → Aura Kunstmuseum (langtidslaan)",
+            "Kunstnerens bo → Privat samler, Oslo → Aura Kunstmuseum 2020"
+          ]
+        },
+        {
+          "name": "tilstand",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 3,
+          "samples": [
+            "god",
+            "god"
+          ]
+        },
+        {
+          "name": "temaer",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 16,
+          "samples": [
+            "mytologi, folketro, natur, stemningskunst",
+            "eventyr, lengsel, reise, håp"
+          ]
+        },
+        {
+          "name": "veggtekst",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 2,
+          "distinct_count": 14,
+          "samples": [
+            "Theodor Kittelsen (1857–1914), norsk.\n_Nøkken_, 1904. Pastell og blyant på papir. AURA-2026-001.\n\nTo øyne stirrer opp fra et mørkt skogstjern i sommernatten. Det er Nøkken – den farlige vannvætten fra norsk folketro – som smelter sammen med vannliljer og mørkt vann. Kittelsen gjør det overnaturlige troverdig: her er det naturen selv som truer, stille og ubevegelig.",
+            "Theodor Kittelsen (1857–1914), norsk.\n_Soria Moria slott_, 1900. Olje på lerret. AURA-2026-002.\n\nEn liten skikkelse står på en fjellkant og ser mot et gyllent slott langt borte over skyene. Det er Askeladden – folkeeventyrets evige optimist – på vei mot det umulige. Bildet er blitt Norges mest gjenkjennelige symbol på lengsel og håp."
+          ]
+        },
+        {
+          "name": "veggtekst_status",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            "approved",
+            "approved"
+          ]
+        },
+        {
+          "name": "audioguide_manus",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 16,
+          "samples": [
+            "Du staar naa foran Theodor Kittelsens mesterverk Noekken fra 1904. Kittelsen har brukt en blandingsteknikk med blyant, akvarell og pastell for aa skape den mystiske sommernatten. La blikket gli utover det speilblanke skogstjernet. Ser du vannliljene? Rett bak dem stikker to gule, stirrende oeyne opp fra dypet. Noekken er ikke et monster som staar utenfor naturen; han er selve naturen – en vette som lokker mennesker ut paa hengemyren for aa trekke dem ned.",
+            "Velkommen til Soria Moria slott av Theodor Kittelsen fra 1900. Se den lille gutten Askeladden som står helt alene i det enorme, gylne fjellandskapet med vandringsstaven sin og skuer mot det glitrende slottet i det fjerne. Lyset bak fjellene er malt med varme toner av gull og oker som skaper en magisk, nesten overjordisk glød. Kittelsen formidler lengselen etter det uoppnåelige og troen på at den minste og mest uanselige kan nå frem til det største målet. Ta deg tid til å kjenne på stillheten og den store avstanden mellom gutten og drømmeslottet."
+          ]
+        },
+        {
+          "name": "audioguide_status",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            "draft",
+            "approved"
+          ]
+        },
+        {
+          "name": "barneformidling",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 16,
+          "samples": [
+            "Pass deg hvor du traakker! I gamle dager trodde folk paa Noekken. Han bodde i moerke tjern og kunne forvandle seg til en hvit hest eller vakre vannliljer for aa lure barn ut i det dype vannet. Paa bildet til Theodor Kittelsen ser du de to skumle oeynene hans som titter opp fra tjernet. Ser du ringene i vannet rundt ham?",
+            "Oi, se på slottet som lyser som ekte gull langt der borte på fjellet! Ser du den lille gutten med sekk på ryggen som står og kikker? Det er Askeladden! Tror du han klarer å gå helt bort til gullslottet før det blir mørkt? Hva ville du gjort hvis du fant et hemmelig slott midt oppe på fjellet?"
+          ]
+        },
+        {
+          "name": "registrert_dato",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "2026-09-14",
+            "2026-09-14"
+          ]
+        },
+        {
+          "name": "sist_oppdatert",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 2,
+          "samples": [
+            "2026-09-14",
+            "2026-10-18"
+          ]
+        },
+        {
+          "name": "kilde",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 6,
+          "samples": [
+            "Nasjonalmuseet / DigitaltMuseum",
+            "Nasjonalmuseet / DigitaltMuseum"
+          ]
+        }
+      ]
+    },
+    "virke_tariff": {
+      "total_rows": 67,
+      "columns": [
+        {
+          "name": "lonnstrinn",
+          "sql_type": "INTEGER",
+          "is_pk": true,
+          "not_null": false,
+          "null_count": 0,
+          "distinct_count": 67,
+          "samples": [
+            20,
+            21
+          ]
+        },
+        {
+          "name": "tittel_eksempel",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 67,
+          "samples": [
+            "Museumsvert (ufaglært/kiosk)",
+            "Virke trinn 21 (Museumsvert (ufaglært/kiosk))"
+          ]
+        },
+        {
+          "name": "aarslonn_nok",
+          "sql_type": "INTEGER",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 67,
+          "samples": [
+            428000,
+            433200
+          ]
+        },
+        {
+          "name": "timesats_ordinar",
+          "sql_type": "REAL",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 67,
+          "samples": [
+            219.49,
+            222.15
+          ]
+        },
+        {
+          "name": "timesats_kveld",
+          "sql_type": "REAL",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 67,
+          "samples": [
+            275.49,
+            278.15
+          ]
+        },
+        {
+          "name": "timesats_helg",
+          "sql_type": "REAL",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 67,
+          "samples": [
+            294.49,
+            297.15
+          ]
+        },
+        {
+          "name": "timesats_helligdag",
+          "sql_type": "REAL",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 67,
+          "samples": [
+            511.41,
+            517.61
+          ]
+        },
+        {
+          "name": "gjeldende_fra",
+          "sql_type": "TEXT",
+          "is_pk": false,
+          "not_null": true,
+          "null_count": 0,
+          "distinct_count": 1,
+          "samples": [
+            "2024-05-01",
+            "2024-05-01"
+          ]
+        }
+      ]
+    }
+  },
+  "csv_datasets": {
+    "arkiv_utstillinger_2010_2026.csv": {
+      "total_rows": 102,
+      "fields": [
+        {
+          "field": "utstilling_id",
+          "inferred_type": "string",
+          "total_non_empty": 102,
+          "distinct_values": 102,
+          "samples": [
+            "KP-EXH-2010-001",
+            "KP-EXH-2010-002"
+          ]
+        },
+        {
+          "field": "aar",
+          "inferred_type": "integer",
+          "total_non_empty": 102,
+          "distinct_values": 17,
+          "samples": [
+            "2010",
+            "2010"
+          ]
+        },
+        {
+          "field": "sesong",
+          "inferred_type": "string",
+          "total_non_empty": 102,
+          "distinct_values": 5,
+          "samples": [
+            "Vinter",
+            "Vår"
+          ]
+        },
+        {
+          "field": "tittel",
+          "inferred_type": "string",
+          "total_non_empty": 102,
+          "distinct_values": 94,
+          "samples": [
+            "Algoritmisk skjønnhet: Generativ kunst og persepsjon (2010)",
+            "Munchs ekko: Ekspresjonisme i det 21. århundre (2010)"
+          ]
+        },
+        {
+          "field": "kurator",
+          "inferred_type": "string",
+          "total_non_empty": 102,
+          "distinct_values": 2,
+          "samples": [
+            "Liv Eide",
+            "Liv Eide"
+          ]
+        },
+        {
+          "field": "saler",
+          "inferred_type": "string",
+          "total_non_empty": 102,
+          "distinct_values": 12,
+          "samples": [
+            "Sal C, Sal D",
+            "Sal D, Sal B"
+          ]
+        },
+        {
+          "field": "periode_start",
+          "inferred_type": "date (YYYY-MM-DD)",
+          "total_non_empty": 102,
+          "distinct_values": 85,
+          "samples": [
+            "2010-01-15",
+            "2010-03-20"
+          ]
+        },
+        {
+          "field": "periode_slutt",
+          "inferred_type": "date (YYYY-MM-DD)",
+          "total_non_empty": 102,
+          "distinct_values": 85,
+          "samples": [
+            "2010-03-01",
+            "2010-05-30"
+          ]
+        },
+        {
+          "field": "antall_verk",
+          "inferred_type": "integer",
+          "total_non_empty": 102,
+          "distinct_values": 41,
+          "samples": [
+            "25",
+            "28"
+          ]
+        },
+        {
+          "field": "besokstall_total",
+          "inferred_type": "integer",
+          "total_non_empty": 102,
+          "distinct_values": 102,
+          "samples": [
+            "10574",
+            "25897"
+          ]
+        },
+        {
+          "field": "budsjett_nok",
+          "inferred_type": "integer",
+          "total_non_empty": 102,
+          "distinct_values": 98,
+          "samples": [
+            "1605000",
+            "756000"
+          ]
+        },
+        {
+          "field": "katalog_isbn",
+          "inferred_type": "string",
+          "total_non_empty": 102,
+          "distinct_values": 95,
+          "samples": [
+            "978-82-99812-17-9",
+            "978-82-99812-51-9"
+          ]
+        },
+        {
+          "field": "status",
+          "inferred_type": "string",
+          "total_non_empty": 102,
+          "distinct_values": 5,
+          "samples": [
+            "Gjennomført",
+            "Gjennomført"
+          ]
+        }
+      ]
+    },
+    "dagsbesok_2010_2026.csv": {
+      "total_rows": 6209,
+      "fields": [
+        {
+          "field": "dato",
+          "inferred_type": "date (YYYY-MM-DD)",
+          "total_non_empty": 6209,
+          "distinct_values": 6209,
+          "samples": [
+            "2010-01-01",
+            "2010-01-02"
+          ]
+        },
+        {
+          "field": "aar",
+          "inferred_type": "integer",
+          "total_non_empty": 6209,
+          "distinct_values": 17,
+          "samples": [
+            "2010",
+            "2010"
+          ]
+        },
+        {
+          "field": "maaned",
+          "inferred_type": "integer",
+          "total_non_empty": 6209,
+          "distinct_values": 12,
+          "samples": [
+            "1",
+            "1"
+          ]
+        },
+        {
+          "field": "uke_nr",
+          "inferred_type": "integer",
+          "total_non_empty": 6209,
+          "distinct_values": 54,
+          "samples": [
+            "0",
+            "0"
+          ]
+        },
+        {
+          "field": "ukedag_navn",
+          "inferred_type": "string",
+          "total_non_empty": 6209,
+          "distinct_values": 7,
+          "samples": [
+            "Fredag",
+            "Lørdag"
+          ]
+        },
+        {
+          "field": "er_aapent",
+          "inferred_type": "integer",
+          "total_non_empty": 6209,
+          "distinct_values": 2,
+          "samples": [
+            "1",
+            "1"
+          ]
+        },
+        {
+          "field": "antall_voksne",
+          "inferred_type": "integer",
+          "total_non_empty": 6209,
+          "distinct_values": 522,
+          "samples": [
+            "136",
+            "223"
+          ]
+        },
+        {
+          "field": "antall_student",
+          "inferred_type": "integer",
+          "total_non_empty": 6209,
+          "distinct_values": 280,
+          "samples": [
+            "75",
+            "106"
+          ]
+        },
+        {
+          "field": "antall_barn",
+          "inferred_type": "integer",
+          "total_non_empty": 6209,
+          "distinct_values": 223,
+          "samples": [
+            "59",
+            "83"
+          ]
+        },
+        {
+          "field": "besok_totalt",
+          "inferred_type": "integer",
+          "total_non_empty": 6209,
+          "distinct_values": 865,
+          "samples": [
+            "270",
+            "412"
+          ]
+        },
+        {
+          "field": "gratis_dag",
+          "inferred_type": "integer",
+          "total_non_empty": 6209,
+          "distinct_values": 2,
+          "samples": [
+            "0",
+            "0"
+          ]
+        },
+        {
+          "field": "pris_voksen",
+          "inferred_type": "integer",
+          "total_non_empty": 6209,
+          "distinct_values": 4,
+          "samples": [
+            "70",
+            "70"
+          ]
+        },
+        {
+          "field": "pris_student",
+          "inferred_type": "integer",
+          "total_non_empty": 6209,
+          "distinct_values": 4,
+          "samples": [
+            "45",
+            "45"
+          ]
+        },
+        {
+          "field": "inntekt_nok",
+          "inferred_type": "integer",
+          "total_non_empty": 6209,
+          "distinct_values": 3014,
+          "samples": [
+            "12895",
+            "20380"
+          ]
+        }
+      ]
+    },
+    "arkiv_hr_ansatte.csv": {
+      "total_rows": 168,
+      "fields": [
+        {
+          "field": "ansatt_id",
+          "inferred_type": "string",
+          "total_non_empty": 168,
+          "distinct_values": 168,
+          "samples": [
+            "KP-ANS-001",
+            "KP-ANS-002"
+          ]
+        },
+        {
+          "field": "navn",
+          "inferred_type": "string",
+          "total_non_empty": 168,
+          "distinct_values": 162,
+          "samples": [
+            "Henrik Faye-Lund",
+            "Silje Lindqvist"
+          ]
+        },
+        {
+          "field": "kjonn",
+          "inferred_type": "string",
+          "total_non_empty": 168,
+          "distinct_values": 2,
+          "samples": [
+            "M",
+            "K"
+          ]
+        },
+        {
+          "field": "fodselsaar",
+          "inferred_type": "integer",
+          "total_non_empty": 168,
+          "distinct_values": 37,
+          "samples": [
+            "1968",
+            "1977"
+          ]
+        },
+        {
+          "field": "avdeling",
+          "inferred_type": "string",
+          "total_non_empty": 168,
+          "distinct_values": 6,
+          "samples": [
+            "Ledelse",
+            "Kuratering"
+          ]
+        },
+        {
+          "field": "stilling",
+          "inferred_type": "string",
+          "total_non_empty": 168,
+          "distinct_values": 35,
+          "samples": [
+            "Museumsdirektør",
+            "Sjefkurator"
+          ]
+        },
+        {
+          "field": "ansatt_fra",
+          "inferred_type": "date (YYYY-MM-DD)",
+          "total_non_empty": 168,
+          "distinct_values": 100,
+          "samples": [
+            "2010-01-01",
+            "2012-03-01"
+          ]
+        },
+        {
+          "field": "ansatt_til",
+          "inferred_type": "date (YYYY-MM-DD)",
+          "total_non_empty": 94,
+          "distinct_values": 65,
+          "samples": [
+            "2016-05-28",
+            "2020-10-28"
+          ]
+        },
+        {
+          "field": "status",
+          "inferred_type": "string",
+          "total_non_empty": 168,
+          "distinct_values": 3,
+          "samples": [
+            "Fast",
+            "Fast"
+          ]
+        },
+        {
+          "field": "stillingsprosent",
+          "inferred_type": "float",
+          "total_non_empty": 168,
+          "distinct_values": 6,
+          "samples": [
+            "1.0",
+            "1.0"
+          ]
+        },
+        {
+          "field": "lonnstrinn_virke",
+          "inferred_type": "integer",
+          "total_non_empty": 168,
+          "distinct_values": 45,
+          "samples": [
+            "86",
+            "76"
+          ]
+        },
+        {
+          "field": "epost",
+          "inferred_type": "string",
+          "total_non_empty": 168,
+          "distinct_values": 162,
+          "samples": [
+            "henrik.fayelund@kunstpixel.no",
+            "silje.lindqvist@kunstpixel.no"
+          ]
+        },
+        {
+          "field": "telefon",
+          "inferred_type": "string",
+          "total_non_empty": 168,
+          "distinct_values": 168,
+          "samples": [
+            "+47 981 24 13",
+            "+47 994 45 41"
+          ]
+        },
+        {
+          "field": "kontor_sal",
+          "inferred_type": "string",
+          "total_non_empty": 168,
+          "distinct_values": 16,
+          "samples": [
+            "Administrasjonsfløyen 3. etg",
+            "Kuratorfløyen 2. etg"
+          ]
+        }
+      ]
+    },
+    "arkiv_hr_innleie.csv": {
+      "total_rows": 318,
+      "fields": [
+        {
+          "field": "innleie_id",
+          "inferred_type": "string",
+          "total_non_empty": 318,
+          "distinct_values": 318,
+          "samples": [
+            "KP-INN-2010-0001",
+            "KP-INN-2010-0002"
+          ]
+        },
+        {
+          "field": "aar",
+          "inferred_type": "integer",
+          "total_non_empty": 318,
+          "distinct_values": 17,
+          "samples": [
+            "2010",
+            "2010"
+          ]
+        },
+        {
+          "field": "leverandor",
+          "inferred_type": "string",
+          "total_non_empty": 318,
+          "distinct_values": 7,
+          "samples": [
+            "Atelier Konservering DA",
+            "Securitas AS"
+          ]
+        },
+        {
+          "field": "orgnr",
+          "inferred_type": "string",
+          "total_non_empty": 318,
+          "distinct_values": 7,
+          "samples": [
+            "993 118 452",
+            "912 876 543"
+          ]
+        },
+        {
+          "field": "kategori",
+          "inferred_type": "string",
+          "total_non_empty": 318,
+          "distinct_values": 6,
+          "samples": [
+            "Tilstandsvurdering & Konservering",
+            "Eksternt vakthold / Vernissasje"
+          ]
+        },
+        {
+          "field": "oppdragsbeskrivelse",
+          "inferred_type": "string",
+          "total_non_empty": 318,
+          "distinct_values": 26,
+          "samples": [
+            "Kurerovertakelse og tilstandsrapport for innlån fra Tate Gallery",
+            "Områdeovervåking og brannvakt under tekniske monteringsuker"
+          ]
+        },
+        {
+          "field": "knyttet_utstilling_id",
+          "inferred_type": "string",
+          "total_non_empty": 318,
+          "distinct_values": 98,
+          "samples": [
+            "KP-EXH-2010-FOKUS-1",
+            "KP-EXH-2010-004"
+          ]
+        },
+        {
+          "field": "periode_fra",
+          "inferred_type": "date (YYYY-MM-DD)",
+          "total_non_empty": 318,
+          "distinct_values": 162,
+          "samples": [
+            "2010-06-05",
+            "2010-12-05"
+          ]
+        },
+        {
+          "field": "periode_til",
+          "inferred_type": "date (YYYY-MM-DD)",
+          "total_non_empty": 318,
+          "distinct_values": 162,
+          "samples": [
+            "2010-06-24",
+            "2010-12-24"
+          ]
+        },
+        {
+          "field": "fakturerte_timer",
+          "inferred_type": "integer",
+          "total_non_empty": 318,
+          "distinct_values": 109,
+          "samples": [
+            "43",
+            "69"
+          ]
+        },
+        {
+          "field": "timepris_nok",
+          "inferred_type": "integer",
+          "total_non_empty": 318,
+          "distinct_values": 274,
+          "samples": [
+            "1400",
+            "734"
+          ]
+        },
+        {
+          "field": "totalbelop_nok",
+          "inferred_type": "integer",
+          "total_non_empty": 318,
+          "distinct_values": 317,
+          "samples": [
+            "60200",
+            "50646"
+          ]
+        },
+        {
+          "field": "kontaktperson_ekstern",
+          "inferred_type": "string",
+          "total_non_empty": 318,
+          "distinct_values": 7,
+          "samples": [
+            "Kirsti Holte (Malerikonservator NKF)",
+            "Stian Haugen"
+          ]
+        },
+        {
+          "field": "godkjent_av_ansatt_id",
+          "inferred_type": "string",
+          "total_non_empty": 318,
+          "distinct_values": 4,
+          "samples": [
+            "KP-ANS-003",
+            "KP-ANS-005"
+          ]
+        },
+        {
+          "field": "godkjent_av_navn",
+          "inferred_type": "string",
+          "total_non_empty": 318,
+          "distinct_values": 4,
+          "samples": [
+            "Gunnar Viken (Samlingsforvalter)",
+            "Terje Bratt (Drifts- og eiendomssjef)"
+          ]
+        },
+        {
+          "field": "status",
+          "inferred_type": "string",
+          "total_non_empty": 318,
+          "distinct_values": 2,
+          "samples": [
+            "Utført og fakturert",
+            "Utført og fakturert"
+          ]
+        }
+      ]
+    },
+    "arbeidstid_grenser.csv": {
+      "total_rows": 6,
+      "fields": [
+        {
+          "field": "navn",
+          "inferred_type": "string",
+          "total_non_empty": 6,
+          "distinct_values": 6,
+          "samples": [
+            "ukenorm_timer",
+            "dognmaks_timer"
+          ]
+        },
+        {
+          "field": "verdi",
+          "inferred_type": "float",
+          "total_non_empty": 6,
+          "distinct_values": 6,
+          "samples": [
+            "37.5",
+            "9.0"
+          ]
+        },
+        {
+          "field": "enhet",
+          "inferred_type": "string",
+          "total_non_empty": 6,
+          "distinct_values": 4,
+          "samples": [
+            "timer per uke",
+            "timer per døgn"
+          ]
+        },
+        {
+          "field": "beskrivelse",
+          "inferred_type": "string",
+          "total_non_empty": 6,
+          "distinct_values": 6,
+          "samples": [
+            "Ordinær ukentlig arbeidstid for heltid",
+            "Alminnelig arbeidstid per døgn"
+          ]
+        },
+        {
+          "field": "kilde",
+          "inferred_type": "string",
+          "total_non_empty": 6,
+          "distinct_values": 5,
+          "samples": [
+            "Personalhåndbok (handbok_oppslag) og Virke",
+            "AML § 10-4 (ADR 009)"
+          ]
+        },
+        {
+          "field": "datakilde",
+          "inferred_type": "string",
+          "total_non_empty": 6,
+          "distinct_values": 1,
+          "samples": [
+            "syntetisk (archive_generator)",
+            "syntetisk (archive_generator)"
+          ]
+        }
+      ]
+    },
+    "virke_tariff_tillegg.csv": {
+      "total_rows": 21,
+      "fields": [
+        {
+          "field": "lonnstrinn",
+          "inferred_type": "integer",
+          "total_non_empty": 21,
+          "distinct_values": 21,
+          "samples": [
+            "66",
+            "67"
+          ]
+        },
+        {
+          "field": "tittel_eksempel",
+          "inferred_type": "string",
+          "total_non_empty": 21,
+          "distinct_values": 21,
+          "samples": [
+            "Virke trinn 66 (Leder / Fagspesialist)",
+            "Virke trinn 67 (Leder / Fagspesialist)"
+          ]
+        },
+        {
+          "field": "aarslonn_nok",
+          "inferred_type": "integer",
+          "total_non_empty": 21,
+          "distinct_values": 21,
+          "samples": [
+            "831600",
+            "848200"
+          ]
+        },
+        {
+          "field": "timesats_ordinar",
+          "inferred_type": "float",
+          "total_non_empty": 21,
+          "distinct_values": 21,
+          "samples": [
+            "426.46",
+            "434.97"
+          ]
+        },
+        {
+          "field": "timesats_kveld",
+          "inferred_type": "float",
+          "total_non_empty": 21,
+          "distinct_values": 21,
+          "samples": [
+            "482.46",
+            "490.97"
+          ]
+        },
+        {
+          "field": "timesats_helg",
+          "inferred_type": "float",
+          "total_non_empty": 21,
+          "distinct_values": 21,
+          "samples": [
+            "501.46",
+            "509.97"
+          ]
+        },
+        {
+          "field": "timesats_helligdag",
+          "inferred_type": "float",
+          "total_non_empty": 21,
+          "distinct_values": 21,
+          "samples": [
+            "993.65",
+            "1013.48"
+          ]
+        },
+        {
+          "field": "gjeldende_fra",
+          "inferred_type": "date (YYYY-MM-DD)",
+          "total_non_empty": 21,
+          "distinct_values": 1,
+          "samples": [
+            "2024-05-01",
+            "2024-05-01"
+          ]
+        },
+        {
+          "field": "datakilde",
+          "inferred_type": "string",
+          "total_non_empty": 21,
+          "distinct_values": 1,
+          "samples": [
+            "syntetisk (archive_generator)",
+            "syntetisk (archive_generator)"
+          ]
+        }
+      ]
+    }
+  }
+}
