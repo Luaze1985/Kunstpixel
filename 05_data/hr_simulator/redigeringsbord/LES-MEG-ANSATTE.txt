@@ -1,0 +1,12 @@
+UTKAST-ansatte-kandidater.csv er arbeidskopien for alle 168 fiktive ansatte.
+Åpne den med datasett-redigerer eller et regneark. Ikke rediger staff_source.csv.
+
+Kun skills, training og availability_profile kan endres. Skillnavn skilles med
+semikolon: formidling;vertskap;montering;arrangementsledelse. training inneholder
+bare ferdigheter som er gjennomført i øvingsdata. Tom training betyr ukjent.
+availability_profile er weekday, host, technical eller none.
+
+Etter lagring: gå til Museumsuke, trykk «Valider arbeidskopi», les avvik og
+konsekvenser, og trykk «Bruk datagrunnlag». Ny versjon får separat planstatus;
+gamle beslutninger kan åpnes ved å velge forrige versjon. Ingen data skrives
+til museum.db. Aktivering uten bestått validering er blokkert.

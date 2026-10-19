@@ -1,0 +1,16 @@
+{
+  "synthetic": true,
+  "as_of": "2026-10-17",
+  "source_sha256": "4c26e07b77e002da1f259b1500281d7f9d5a67b37fadc584ff1c922c096f49bf",
+  "employees": 168,
+  "shifts": 48298,
+  "hires": 312,
+  "exhibitions": 102,
+  "future_shifts": 693,
+  "person_days_over_13_hours": 4795,
+  "person_days_over_24_hours": 36,
+  "blocked_shift_rows": 145,
+  "review_shift_rows": 9945,
+  "use_in_planning": false,
+  "reason": "Historiske vakter har dato og timetall, men ikke klokkeslett. Dagssummer og hvile kan ikke brukes som planleggingsfasit."
+}

@@ -1,0 +1,86 @@
+{
+  "scenario_id": "HR-002",
+  "title": "Uenighet om senvakter og påstand om forskjellsbehandling",
+  "date": "2026-10-16",
+  "synthetic": true,
+  "description": "Fiktiv HR-sak: leder må hente inn begge parters syn, undersøke turnusgrunnlaget og unngå automatiserte personvurderinger.",
+  "providers": [],
+  "persons": [
+    {
+      "id": "EMP-04",
+      "name": "Sara Fiktiv",
+      "person_type": "employee",
+      "birth_year": 1993,
+      "email": "sara@example.invalid",
+      "phone": "00000004",
+      "position_percent": 80,
+      "skills": [
+        "kafe"
+      ],
+      "availability": [
+        [
+          "2026-10-16T08:00",
+          "2026-10-16T20:00"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "id": "EMP-05",
+      "name": "Amir Test",
+      "person_type": "employee",
+      "birth_year": 1994,
+      "email": "amir@example.invalid",
+      "phone": "00000005",
+      "position_percent": 100,
+      "skills": [
+        "kafe",
+        "vertskap"
+      ],
+      "availability": [
+        [
+          "2026-10-16T08:00",
+          "2026-10-16T20:00"
+        ]
+      ],
+      "synthetic": true
+    },
+    {
+      "id": "EMP-06",
+      "name": "Ingrid Øvelse",
+      "person_type": "employee",
+      "birth_year": 1981,
+      "email": "ingrid@example.invalid",
+      "phone": "00000006",
+      "position_percent": 100,
+      "skills": [
+        "hms",
+        "drift"
+      ],
+      "availability": [
+        [
+          "2026-10-16T08:00",
+          "2026-10-16T17:00"
+        ]
+      ],
+      "synthetic": true
+    }
+  ],
+  "activities": [],
+  "rental_requests": [],
+  "hr_cases": [
+    {
+      "id": "CASE-001",
+      "category": "fairness_and_workload",
+      "title": "Opplevd skjevfordeling av senvakter",
+      "summary": "Sara opplever at senvakter fordeles urettferdig. Amir mener fordelingen følger tilgjengelighet. Turnushistorikken er ikke lagt ved. Ingen av opplysningene er verifisert.",
+      "confidentiality": "hr_only",
+      "state": "new",
+      "owner_role": "hr",
+      "parties": [
+        "EMP-04",
+        "EMP-05"
+      ]
+    }
+  ]
+}
