@@ -11,12 +11,11 @@
 - Statusporten sier KLAR med 0 feil, og alle 262 tester består.
 
 ## 2. Hvor vi slapp
-- Regler og roller fra Antigravity var merket «autoritativ». Det er nå rettet til «syntetisk» i CSV-filene, men museum.db er ikke bygget på nytt. Inntil du bygger, viser Datafinner «autoritativ» i Grunnlag.
-- Ingenting er pushet. Ingenting er slått sammen inn i `hr-konsolidering`.
+- museum.db er bygget på nytt med regler og roller merket «syntetisk» (hash `0da9c837…`, lik prøvebygget).
+- Grenen er slått sammen inn i `hr-konsolidering`. Ingenting er pushet.
 
 ## 3. Første oppgave neste gang du setter deg ned
-- Bygg databasen i arbeidstreet `statusporten-loop-agent-722112`: `py -3.13 src/kunstpixel/data/build_museum_db.py`. Ny hash skal være `0da9c837…`.
-- Bestem deretter om grenen skal slås sammen inn i `hr-konsolidering`.
+- Les regeltekstene i `05_data/rapport_regler.csv`. Antigravity skrev dem selv, og terskler og kilder som «Bemanningsplan 2026» finnes ikke i repoet. Godkjenn dem eller skriv dem om.
 
 ## 4. Nyttige snarveier for dette prosjektet
 - Statusport: `py -3.13 scripts/db_status_gate.py` (rapport i `.scratch/db-status/`)
