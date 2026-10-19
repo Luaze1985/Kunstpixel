@@ -25,14 +25,9 @@ def test_vaktplan_viser_bare_databasefelt() -> None:
     vakter = query_shifts_on_date("2026-10-20")
     assert vakter
     for v in vakter:
-        assert "start" not in v and "slutt" not in v
         assert v["timer"] > 0 and v["navn"] and v["ansatt_id"].startswith("KP-ANS-")
-
-
-def test_hvem_har_vakt_sier_fra_om_manglende_klokkeslett() -> None:
-    r = query_staff_on_shift("2026-10-19")
-    assert r["antall_med_vakt"] == len(r["vakter"]) > 0
-    assert "Klokkeslett" in r["mangler"]
+        if "start" in v:  # bygget museum.db: klokkeslett skal være merket syntetiske
+            assert v["klokkeslett_datakilde"].startswith("syntetisk")
 
 
 def test_ugyldig_dato_avvises() -> None:
@@ -40,11 +35,9 @@ def test_ugyldig_dato_avvises() -> None:
         query_shifts_on_date("19.10.2026")
 
 
-def test_arbeidstid_beregner_ikke_overtid() -> None:
+def test_arbeidstid_paa_museum_db() -> None:
     r = query_working_hours("2026-09")
     assert r["antall_ansatte"] > 0 and r["timer_totalt"] > 0
-    assert all("overtid_timer" not in a for a in r["ansatte"])
-    assert "Overtidsgrensen" in r["mangler"]
 
 
 def test_vaktkostnad_paa_museum_db() -> None:
@@ -82,6 +75,18 @@ def mini_db(tmp_path: Path) -> Path:
     con.commit()
     con.close()
     return db
+
+
+def test_uten_klokkeslett_sier_svaret_fra(mini_db: Path) -> None:
+    r = query_staff_on_shift("2026-05-04", db_path=mini_db)
+    assert r["antall_med_vakt"] == len(r["vakter"]) == 2
+    assert "Klokkeslett" in r["mangler"] and "antall_pa_jobb" not in r
+
+
+def test_uten_grenser_beregnes_ikke_overtid(mini_db: Path) -> None:
+    r = query_working_hours("2026-05", db_path=mini_db)
+    assert all("overtid_timer" not in a for a in r["ansatte"])
+    assert "Overtidsgrensen" in r["mangler"]
 
 
 def test_arbeidstid_summerer_fra_databasen(mini_db: Path) -> None:

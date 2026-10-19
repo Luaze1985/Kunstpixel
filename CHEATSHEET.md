@@ -1,19 +1,18 @@
 # HUSKELAPP FOR LARS (CHEATSHEET)
-*Prosjekt: Kunstpixel (Datafinner og museum.db) | Sist oppdatert: 2026-10-19*
+*Prosjekt: Kunstpixel (museum.db og Datafinner) | Sist oppdatert: 2026-10-19 kl. 15:30*
 
 ## 1. Hva vi gjorde sist
-- Datafinner (internt oppslag, kun lesing) har forside med rollene HR og bemanning og Økonomi og innkjøp, seks faste spørsmål, kort svar og rapport.
-- Låst: alle svar skal komme fra museum.db. Det som mangler står som «Mangler». Klokkeslett og arbeidstidsgrenser er laget som syntetiske data og venter på bygget.
+- museum.db er live: du kjørte bygget, og det stemmer med prøvebygget (hash 63bf6cf4). Datafinner viser nå klokkeslett, «på jobb nå», overtid og kveldstimer, merket som syntetiske.
+- Ny statusport `scripts/db_status_gate.py` og loop-agenten `db-merge-vakt` sjekker databasen før sammenslåing. Status nå: KLAR, 0 feil, 8 åpne hull som advarsler.
 
 ## 2. Hvor vi slapp
-- Byggeskriptet `build_museum_db.py` er klart og testet mot en kopi, men museum.db er IKKE byttet ut ennå. Sikkerhetskontrollen lar ikke agenten gjøre det.
+- Briefen til Antigravity (datahull G2–G9) er sendt. Den nye databasen og porten er committet på grenen min, men ikke slått sammen med `hr-konsolidering`.
 
 ## 3. Første oppgave neste gang du setter deg ned
-- **Få databasen live:** åpne terminal i arbeidsmappen og kjør bygget (se snarvei under). Si fra til agenten etterpå, så sjekker den resultatet og committer.
+- **Når Antigravity er ferdig:** start en ny Claude-økt og si «kjør db-merge-vakt på Antigravitys gren med briefen». Les rapporten og bestem om grenene skal slås sammen.
 
 ## 4. Nyttige snarveier for dette prosjektet
-- Arbeidsmappe: `G:\Min disk\Kunstpixel\.claude\worktrees\arbeidsflyt-interne-sider-data-4e465d`
-- Bygg databasen: `py -3.13 src/kunstpixel/data/build_museum_db.py`
-- Prøvebygg uten å endre noe: `py -3.13 src/kunstpixel/data/build_museum_db.py --check`
-- Start Datafinner: `py -3.13 src/kunstpixel/adapters/datafinner.py` og åpne http://127.0.0.1:8010
+- Statusport: `py -3.13 scripts/db_status_gate.py` (rapport i `.scratch/db-status/`)
+- Bygg databasen: `py -3.13 src/kunstpixel/data/build_museum_db.py` (prøve: `--check`)
+- Datafinner: `py -3.13 src/kunstpixel/adapters/datafinner.py` og http://127.0.0.1:8010
 - Tester: `py -3.13 -m pytest -q`
