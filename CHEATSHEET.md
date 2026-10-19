@@ -1,19 +1,19 @@
 # HUSKELAPP FOR LARS (CHEATSHEET)
-*Prosjekt: Kunstpixel (Aura Kunstmuseum) | Sist oppdatert: 2026-10-19 kl. 06:40*
+*Prosjekt: Kunstpixel (Datafinner og museum.db) | Sist oppdatert: 2026-10-19*
 
 ## 1. Hva vi gjorde sist
-- Etablerte **4 realistiske virksomhetshåndbøker** (Personal, HMS & Sikkerhet, Drift & Kvalitet, Ledelse & Beredskap) og **4 kompakte SOP-er** (Varsling AML § 2 A, Ferie, Fravær/sykefraværsoppfølging, Vaktbytte).
-- Bygget to-lags oppslagsarkitektur: Markdown-dokumenter + indeksert tabell `handbok_oppslag` i `museum.db` med FastMCP-verktøy `lookup_handbook` (norsk avbøying og vektet relevans).
-- Kjørte benchmark på **30 realistiske søketemaer** (100 % treffsikkerhet) og oppnådde **203 av 203 passerte automatiske tester (100 % pass)**.
+- Datafinner (internt oppslag, kun lesing) har forside med rollene HR og bemanning og Økonomi og innkjøp, seks faste spørsmål, kort svar og rapport.
+- Låst: alle svar skal komme fra museum.db. Det som mangler står som «Mangler». Klokkeslett og arbeidstidsgrenser er laget som syntetiske data og venter på bygget.
 
 ## 2. Hvor vi slapp
-- Håndbokpakken og oppslagsmotoren er 100 % operative og ferdig testet. Klar for demonstrasjon, produksjonsbruk eller utvidelse mot neste modul.
+- Byggeskriptet `build_museum_db.py` er klart og testet mot en kopi, men museum.db er IKKE byttet ut ennå. Sikkerhetskontrollen lar ikke agenten gjøre det.
 
 ## 3. Første oppgave neste gang du setter deg ned
-- **Demonstrere og teste i terminal/web:** Åpne terminalen og test en vilkårlig regeloppslag med `py -3.13 src/cli.py "Hva er regelen for egenmelding?"`, eller gå videre til neste planlagte delmål.
+- **Få databasen live:** åpne terminal i arbeidsmappen og kjør bygget (se snarvei under). Si fra til agenten etterpå, så sjekker den resultatet og committer.
 
 ## 4. Nyttige snarveier for dette prosjektet
-- Interaktiv museumsvert: `py -3.13 src/cli.py`
-- Test 30 håndbok-søk: `py -3.13 src/kunstpixel/data/benchmark_30_searches.py`
-- Kjør full testsuite (203 tester): `py -3.13 -m pytest -v`
-- Start FastMCP-server: `py -3.13 src/mcp_server.py`
+- Arbeidsmappe: `G:\Min disk\Kunstpixel\.claude\worktrees\arbeidsflyt-interne-sider-data-4e465d`
+- Bygg databasen: `py -3.13 src/kunstpixel/data/build_museum_db.py`
+- Prøvebygg uten å endre noe: `py -3.13 src/kunstpixel/data/build_museum_db.py --check`
+- Start Datafinner: `py -3.13 src/kunstpixel/adapters/datafinner.py` og åpne http://127.0.0.1:8010
+- Tester: `py -3.13 -m pytest -q`

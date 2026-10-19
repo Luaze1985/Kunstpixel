@@ -11,7 +11,7 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
-from src.kunstpixel.core.config import get_db_path, get_historikk_db_path
+from src.kunstpixel.core.config import get_db_path
 
 # Prohibited keywords to strictly enforce read-only access at the application boundary
 FORBIDDEN_SQL_KEYWORDS = {
@@ -513,9 +513,9 @@ def query_archive_exhibitions(
     limit: int = 10,
     db_path: Path | str | None = None,
 ) -> list[dict]:
-    """Retrieve historical exhibitions from kunstpixel_historikk.db (2010-2026)."""
+    """Retrieve historical exhibitions from museum.db (2010-2026, ADR 004)."""
     if db_path is None:
-        db_path = get_historikk_db_path()
+        db_path = get_db_path()
 
     sql = """
     SELECT utstilling_id, aar, sesong, tittel, kurator, saler,
@@ -555,9 +555,9 @@ def query_contractors(
     limit: int = 10,
     db_path: Path | str | None = None,
 ) -> list[dict]:
-    """Retrieve contractor and temporary staffing records from kunstpixel_historikk.db."""
+    """Retrieve contractor and temporary staffing records from museum.db (ADR 004)."""
     if db_path is None:
-        db_path = get_historikk_db_path()
+        db_path = get_db_path()
 
     sql = """
     SELECT innleie_id, aar, leverandor, orgnr, kategori, oppdragsbeskrivelse,
@@ -591,12 +591,12 @@ def query_employee_cv(
     ident: str,
     db_path: Path | str | None = None,
 ) -> dict | None:
-    """Retrieve detailed persona and CV data for key personnel from kunstpixel_historikk.db."""
+    """Retrieve detailed persona and CV data for key personnel from museum.db (ADR 004)."""
     if not ident or not ident.strip():
         return None
 
     if db_path is None:
-        db_path = get_historikk_db_path()
+        db_path = get_db_path()
 
     ident_clean = ident.strip()
     sql = """
@@ -1114,3 +1114,231 @@ def query_handbook(
     return [dict(r) for r in rows]
 
 
+
+
+# --- Vakter, arbeidstid og vaktkostnad (Datafinner v1) ---
+# Bare det som står i museum.db. Klokkeslett (hr_vakter.start/slutt) og arbeidstid_grenser finnes når
+# museum.db er bygget med build_museum_db.py; de er syntetiske og merket med datakilde. Mangler de,
+# sier svaret fra i stedet for å regne ut noe.
+
+
+def _db(db_path: Path | str | None) -> Path | str:
+    return db_path or get_db_path()
+
+
+def _har_klokkeslett(db_path: Path | str) -> bool:
+    kolonner = {r["name"] for r in execute_read_query("SELECT name FROM pragma_table_info('hr_vakter')", (), db_path)}
+    return {"start", "slutt"} <= kolonner
+
+
+def query_working_time_limits(db_path: Path | str | None = None) -> dict:
+    """Arbeidstidsgrensene i databasen (tabellen arbeidstid_grenser), med kilde og datakilde."""
+    db = _db(db_path)
+    finnes = execute_read_query(
+        "SELECT count(*) AS n FROM sqlite_master WHERE type='table' AND name='arbeidstid_grenser'", (), db
+    )[0]["n"]
+    if not finnes:
+        return {}
+    return {r["navn"]: dict(r) for r in execute_read_query("SELECT * FROM arbeidstid_grenser ORDER BY navn", (), db)}
+
+
+def _maaned_grenser(maaned: str) -> tuple[str, str, str]:
+    from datetime import date
+
+    aar, mnd = (int(x) for x in maaned.strip().split("-"))
+    fra = date(aar, mnd, 1)
+    til = date(aar + (mnd == 12), mnd % 12 + 1, 1)
+    return f"{aar:04d}-{mnd:02d}", fra.isoformat(), til.isoformat()
+
+
+def _klokke_timer(hhmm: str) -> float:
+    return int(hhmm[:2]) + int(hhmm[3:5]) / 60
+
+
+VAKT_KOLONNER_SQL = """
+    v.vakt_id, v.dato, v.timer, v.rolle, v.stasjon, v.avdeling,
+    a.ansatt_id, a.navn, a.stilling, a.telefon, a.epost, a.kontor_sal
+"""
+
+
+def query_shifts_on_date(dato: str, db_path: Path | str | None = None) -> list[dict]:
+    """Alle vakter på én dato slik de står i hr_vakter, med klokkeslett når databasen har dem."""
+    from datetime import date
+
+    dato = date.fromisoformat(dato.strip()).isoformat()
+    db = _db(db_path)
+    klokke = _har_klokkeslett(db)
+    ekstra = ", v.start, v.slutt, v.klokkeslett_datakilde" if klokke else ""
+    rekkefolge = "v.start, a.navn" if klokke else "v.avdeling, a.navn"
+    sql = f"""
+    SELECT {VAKT_KOLONNER_SQL}{ekstra}
+    FROM hr_vakter v JOIN hr_ansatte a ON a.ansatt_id = v.ansatt_id
+    WHERE v.dato = :dato
+    ORDER BY {rekkefolge}
+    """
+    return [dict(r) for r in execute_read_query(sql, {"dato": dato}, db)]
+
+
+def query_staff_on_shift(dato: str | None = None, klokkeslett: str | None = None,
+                         db_path: Path | str | None = None) -> dict:
+    """Hvem har vakt på en dato (standard i dag), og hvem er på jobb på et klokkeslett (standard nå)."""
+    from datetime import date, datetime
+
+    na = datetime.now()
+    d = date.fromisoformat(dato.strip()) if dato else na.date()
+    db = _db(db_path)
+    vakter = query_shifts_on_date(d.isoformat(), db)
+    svar = {
+        "dato": d.isoformat(),
+        "antall_med_vakt": len(vakter),
+        "timer_totalt": round(sum(v["timer"] for v in vakter), 2),
+        "vakter": vakter,
+    }
+    if not _har_klokkeslett(db):
+        svar["mangler"] = "Klokkeslett for vaktene finnes ikke i databasen."
+        return svar
+    kl = klokkeslett or (na.strftime("%H:%M") if d == na.date() else None)
+    if kl:
+        svar["klokkeslett"] = kl
+        svar["pa_jobb"] = [v for v in vakter if v["start"] <= kl < v["slutt"]]
+        svar["antall_pa_jobb"] = len(svar["pa_jobb"])
+    svar["datakilde"] = vakter[0]["klokkeslett_datakilde"] if vakter else None
+    return svar
+
+
+def query_working_hours(maaned: str, db_path: Path | str | None = None) -> dict:
+    """Arbeidstid per ansatt i en måned ('YYYY-MM'). Overtid regnes bare når grensene finnes i databasen."""
+    from datetime import date
+
+    mnd, fra, til = _maaned_grenser(maaned)
+    db = _db(db_path)
+    sql = """
+    SELECT v.ansatt_id, a.navn, a.avdeling, a.stillingsprosent, v.dato, sum(v.timer) AS timer, count(*) AS vakter
+    FROM hr_vakter v JOIN hr_ansatte a ON a.ansatt_id = v.ansatt_id
+    WHERE v.dato >= :fra AND v.dato < :til
+    GROUP BY v.ansatt_id, v.dato
+    ORDER BY v.ansatt_id, v.dato
+    """
+    grenser = query_working_time_limits(db)
+    ukenorm = grenser.get("ukenorm_timer", {}).get("verdi")
+    dognmaks = grenser.get("dognmaks_timer", {}).get("verdi")
+    per: dict[str, dict] = {}
+    uker: dict[tuple[str, tuple[int, int]], float] = {}
+    for r in execute_read_query(sql, {"fra": fra, "til": til}, db):
+        p = per.setdefault(r["ansatt_id"], {
+            "ansatt_id": r["ansatt_id"], "navn": r["navn"], "avdeling": r["avdeling"],
+            "stillingsprosent": r["stillingsprosent"], "timer_totalt": 0.0, "antall_vakter": 0,
+            "hoyeste_dognsum": 0.0, "dognovertid_timer": 0.0,
+        })
+        p["timer_totalt"] += r["timer"]
+        p["antall_vakter"] += r["vakter"]
+        p["hoyeste_dognsum"] = max(p["hoyeste_dognsum"], r["timer"])
+        if dognmaks is not None and r["timer"] > dognmaks:
+            p["dognovertid_timer"] += r["timer"] - dognmaks
+        iso = date.fromisoformat(r["dato"]).isocalendar()
+        n = (r["ansatt_id"], (iso[0], iso[1]))
+        uker[n] = uker.get(n, 0.0) + r["timer"]
+    for p in per.values():
+        p["hoyeste_ukesum"] = 0.0
+        p["ukeovertid_timer"] = 0.0
+    for (ansatt_id, _), timer in uker.items():
+        p = per[ansatt_id]
+        p["hoyeste_ukesum"] = max(p["hoyeste_ukesum"], timer)
+        if ukenorm is not None and timer > ukenorm:
+            p["ukeovertid_timer"] += timer - ukenorm
+    ansatte = []
+    for p in per.values():
+        for k in ("timer_totalt", "hoyeste_dognsum", "hoyeste_ukesum", "dognovertid_timer", "ukeovertid_timer"):
+            p[k] = round(p[k], 2)
+        if ukenorm is not None and dognmaks is not None:
+            p["overtid_timer"] = max(p["dognovertid_timer"], p["ukeovertid_timer"])
+        else:
+            del p["dognovertid_timer"], p["ukeovertid_timer"]
+        ansatte.append(p)
+    ansatte.sort(key=lambda x: (-x.get("overtid_timer", 0), -x["hoyeste_ukesum"], x["navn"]))
+    svar = {
+        "maaned": mnd,
+        "antall_ansatte": len(ansatte),
+        "timer_totalt": round(sum(a["timer_totalt"] for a in ansatte), 2),
+        "hoyeste_ukesum": max((a["hoyeste_ukesum"] for a in ansatte), default=0),
+        "hoyeste_dognsum": max((a["hoyeste_dognsum"] for a in ansatte), default=0),
+        "ansatte": ansatte,
+    }
+    if ukenorm is None or dognmaks is None:
+        svar["mangler"] = "Overtidsgrensen finnes ikke som tall i databasen, så overtid er ikke beregnet."
+    else:
+        svar["overtid_timer_totalt"] = round(sum(a["overtid_timer"] for a in ansatte), 2)
+        svar["antall_med_overtid"] = sum(1 for a in ansatte if a["overtid_timer"] > 0)
+        svar["grenser"] = {k: grenser[k] for k in ("ukenorm_timer", "dognmaks_timer")}
+    return svar
+
+
+def query_shift_cost(maaned: str, db_path: Path | str | None = None) -> dict:
+    """Lønnskostnad for vakter i en måned per avdeling: timer x Virke-sats fra virke_tariff.
+
+    Helligdag (norske_helligdager) gir helligdagssats, lørdag og søndag helgesats. Timer etter
+    grensen kveldstillegg_fra (arbeidstid_grenser) gir kveldssats når vaktene har klokkeslett.
+    """
+    mnd, fra, til = _maaned_grenser(maaned)
+    db = _db(db_path)
+    kveld_fra = query_working_time_limits(db).get("kveldstillegg_fra", {}).get("verdi")
+    klokke = _har_klokkeslett(db) and kveld_fra is not None
+    ekstra = ", v.start, v.slutt" if klokke else ""
+    sql = f"""
+    SELECT v.avdeling, v.timer, a.lonnstrinn_virke AS trinn,
+           t.timesats_ordinar, t.timesats_kveld, t.timesats_helg, t.timesats_helligdag,
+           h.dato AS helligdag, strftime('%w', v.dato) AS ukedag{ekstra}
+    FROM hr_vakter v
+    JOIN hr_ansatte a ON a.ansatt_id = v.ansatt_id
+    LEFT JOIN virke_tariff t ON t.lonnstrinn = a.lonnstrinn_virke
+    LEFT JOIN norske_helligdager h ON h.dato = v.dato
+    WHERE v.dato >= :fra AND v.dato < :til
+    """
+    avd: dict[str, dict] = {}
+    for r in execute_read_query(sql, {"fra": fra, "til": til}, db):
+        a = avd.setdefault(r["avdeling"], {"avdeling": r["avdeling"], "vakter": 0, "timer": 0.0,
+                                           "kveldstimer": 0.0, "vakter_uten_tariff": 0, "kostnad_nok": 0.0})
+        a["vakter"] += 1
+        a["timer"] += r["timer"]
+        if r["timesats_ordinar"] is None:
+            a["vakter_uten_tariff"] += 1
+            continue
+        if r["helligdag"]:
+            a["kostnad_nok"] += r["timer"] * r["timesats_helligdag"]
+        elif r["ukedag"] in ("0", "6"):
+            a["kostnad_nok"] += r["timer"] * r["timesats_helg"]
+        else:
+            kveld = 0.0
+            if klokke:
+                kveld = min(r["timer"], max(0.0, _klokke_timer(r["slutt"]) - max(_klokke_timer(r["start"]), kveld_fra)))
+            a["kveldstimer"] += kveld
+            a["kostnad_nok"] += (r["timer"] - kveld) * r["timesats_ordinar"] + kveld * r["timesats_kveld"]
+    rader = sorted(avd.values(), key=lambda x: -x["kostnad_nok"])
+    for a in rader:
+        for k in ("timer", "kveldstimer", "kostnad_nok"):
+            a[k] = round(a[k], 2)
+    mangler = ["Vakter for ansatte med lønnstrinn som ikke finnes i virke_tariff er ikke kostnadsberegnet."]
+    if not klokke:
+        mangler.append("Kveldssats er ikke brukt, fordi vaktene mangler klokkeslett eller grensen mangler.")
+        for a in rader:
+            del a["kveldstimer"]
+    svar = {
+        "maaned": mnd,
+        "avdelinger": rader,
+        "kostnad_nok_totalt": round(sum(a["kostnad_nok"] for a in rader), 2),
+        "vakter_uten_tariff": sum(a["vakter_uten_tariff"] for a in rader),
+        "mangler": " ".join(mangler),
+    }
+    if klokke:
+        svar["datakilde"] = "syntetisk (archive_generator): klokkeslett og kveldstillegg_fra"
+    return svar
+
+
+def query_exhibitions_with_economy(db_path: Path | str | None = None) -> list[dict]:
+    """Alle utstillinger som har økonomirapport, nyeste først (id, tittel, år). Til lukkede filtre."""
+    sql = """
+    SELECT uh.utstilling_id, uh.tittel, uh.aar
+    FROM utstilling_okonomi uo JOIN utstillinger_historikk uh ON uh.utstilling_id = uo.utstilling_id
+    ORDER BY uh.aar DESC, uh.utstilling_id DESC
+    """
+    return [dict(r) for r in execute_read_query(sql, (), db_path or get_db_path())]

@@ -22,6 +22,7 @@ from src.kunstpixel.core.db import (
     query_employee_cv,
     query_events,
     query_exhibition_economy,
+    query_exhibitions_with_economy,
     query_faq,
     query_handbook,
     query_holidays,
@@ -29,6 +30,11 @@ from src.kunstpixel.core.db import (
     query_loans,
     query_quarterly_absence,
     query_room_artworks,
+    query_shift_cost,
+    query_shifts_on_date,
+    query_staff_on_shift,
+    query_working_hours,
+    query_working_time_limits,
     query_station_ergonomics,
     query_styrk_job_code,
     query_supplier_brreg,
@@ -378,6 +384,69 @@ def calculate_shift_cost(
         "total_kostnad_nok": total_cost,
         "tariff_kilde": "Virke Landsoverenskomst for museer",
     }
+
+
+@mcp.tool()
+def list_exhibitions_with_economy() -> list[dict[str, Any]]:
+    """List alle utstillinger som har økonomirapport (id, tittel, år), nyeste først."""
+    return query_exhibitions_with_economy()
+
+
+@mcp.tool()
+def get_staff_on_shift(dato: str | None = None, klokkeslett: str | None = None) -> dict[str, Any]:
+    """Finn hvem som har vakt på en dato, og hvem som er på jobb på et klokkeslett.
+
+    Args:
+        dato: Dato i ISO-format 'YYYY-MM-DD'. Standard er i dag.
+        klokkeslett: 'HH:MM'. Standard er nå når datoen er i dag.
+
+    Returns:
+        Vaktene slik de står i hr_vakter. Klokkeslett er syntetiske data (klokkeslett_datakilde);
+        mangler de i databasen, sier svaret fra.
+    """
+    return query_staff_on_shift(dato, klokkeslett)
+
+
+@mcp.tool()
+def get_working_time_limits() -> dict[str, Any]:
+    """Arbeidstidsgrensene i databasen (ukenorm, døgnmaks, hvile, lunsj, kveldstillegg) med kilde."""
+    return query_working_time_limits()
+
+
+@mcp.tool()
+def get_shifts_for_date(dato: str) -> list[dict[str, Any]]:
+    """Hent vaktplanen for én dato slik den står i hr_vakter (dato, timer, rolle, stasjon, ansatt).
+
+    Args:
+        dato: Dato i ISO-format 'YYYY-MM-DD'.
+    """
+    return query_shifts_on_date(dato)
+
+
+@mcp.tool()
+def get_working_hours_report(maaned: str) -> dict[str, Any]:
+    """Arbeidstid per ansatt for en måned: sum timer, antall vakter, høyeste uke- og døgnsum.
+
+    Args:
+        maaned: Måned i formatet 'YYYY-MM'.
+
+    Returns:
+        Tallene fra hr_vakter. Overtid beregnes mot arbeidstid_grenser når tabellen finnes.
+    """
+    return query_working_hours(maaned)
+
+
+@mcp.tool()
+def get_shift_cost_for_period(maaned: str) -> dict[str, Any]:
+    """Lønnskostnad for alle vakter i en måned per avdeling: timer x sats fra virke_tariff.
+
+    Args:
+        maaned: Måned i formatet 'YYYY-MM'.
+
+    Returns:
+        Kostnad per avdeling og totalt, og antall vakter uten tariffsats (ikke kostnadsberegnet).
+    """
+    return query_shift_cost(maaned)
 
 
 # --- HR, HMS & Kvalitetsverktøy (integrert) ---

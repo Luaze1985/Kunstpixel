@@ -59,7 +59,8 @@ def ensure_local_db() -> Path:
     )
 
 
-LOCAL_HISTORIKK_DB_PATH = PROJECT_ROOT / "05_data" / "kunstpixel_historikk.db"
+# Arkivert etter ADR 004: museum.db er eneste sannhetskilde. Brukes bare av datagenereringsskript.
+LOCAL_HISTORIKK_DB_PATH = PROJECT_ROOT / "05_data" / "arkiv" / "kunstpixel_historikk.db"
 
 
 def get_historikk_db_path() -> Path:

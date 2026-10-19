@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datafinner</title>
+<link rel="stylesheet" href="/af.css">
+<style>
+  body { margin: 0; background: #f3f6f8; padding: 24px 16px; }
+  .df-call { font-family: ui-monospace, Consolas, monospace; font-size: .82rem; white-space: pre-wrap; word-break: break-word; margin: 6px 0 0; }
+  #tabell td { overflow-wrap: anywhere; }
+  .df-row-btn { overflow-wrap: anywhere; border: 0; background: none; color: var(--blue); text-decoration: underline; padding: 0; text-align: left; }
+  .df-detail dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 10px; margin: 8px 0 0; font-size: .82rem; }
+  .df-detail dt { color: var(--muted); }
+  .df-detail dd { margin: 0; }
+  #svar .af-table-wrap { margin-top: 10px; }
+  .df-fil { max-height: 60vh; overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-field); padding: 10px; }
+  @media (max-width: 1050px) {
+    .af-context { display: block; grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<div class="af">
+  <div class="af-shell">
+    <nav class="af-sidebar" aria-label="Steg">
+      <p class="af-side-heading">Datafinner</p>
+      <ol class="af-flow-list">
+        <li><a class="af-flow-link" href="#hva" aria-current="step"><span class="af-step-dot">1</span><span>Hva</span></a></li>
+        <li><a class="af-flow-link" href="#avgrens"><span class="af-step-dot">2</span><span>Avgrens</span></a></li>
+        <li><a class="af-flow-link" href="#svar"><span class="af-step-dot">3</span><span>Svar</span></a></li>
+      </ol>
+      <hr class="af-side-rule">
+      <p class="af-task-hint">Kun lesing. Kun internt.</p>
+    </nav>
+
+    <main class="af-main">
+      <section class="af-view" data-step="hva" id="hva">
+        <p class="af-caption">Steg 1 av 3</p>
+        <h1 class="af-title">Hva</h1>
+        <fieldset class="af-group" id="hva-felt">
+          <legend class="af-label">Hva vil du finne?</legend>
+          <div class="af-radio-stack" id="hva-valg"></div>
+        </fieldset>
+      </section>
+
+      <section class="af-view" data-step="avgrens" id="avgrens" hidden>
+        <p class="af-caption">Steg 2 av 3</p>
+        <h2 class="af-title">Avgrens</h2>
+        <div class="af-error-summary" id="feil" role="alert" hidden>
+          <h2>Feil</h2>
+          <p id="feil-tekst"></p>
+        </div>
+        <div class="af-group" id="grp-sok">
+          <label class="af-label" for="sok" id="sok-label">Søkeord</label>
+          <input class="af-input" id="sok" type="text" autocomplete="off">
+        </div>
+        <div class="af-group" id="grp-filter">
+          <label class="af-label" for="filter" id="filter-label">Filter</label>
+          <select class="af-input" id="filter"></select>
+        </div>
+        <div class="af-group" id="grp-dato">
+          <label class="af-label" for="dato">Fra dato</label>
+          <span class="af-hint" id="dato-hint">Tomt betyr fra i dag.</span>
+          <input class="af-input" id="dato" type="date">
+        </div>
+        <div class="af-actions">
+          <button class="af-btn af-btn-primary" type="button" id="finn">Finn data</button>
+          <button class="af-btn af-btn-secondary" type="button" id="tilbake">Tilbake</button>
+        </div>
+      </section>
+
+      <section class="af-view" data-step="svar" id="svar" hidden>
+        <p class="af-caption">Steg 3 av 3</p>
+        <h2 class="af-title">Svar</h2>
+        <p class="af-table-meta" id="antall"></p>
+        <div class="af-table-wrap">
+          <table class="af-table" id="tabell"><thead></thead><tbody></tbody></table>
+        </div>
+        <div class="af-actions">
+          <button class="af-btn af-btn-secondary" type="button" id="endre">Endre søk</button>
+          <button class="af-btn af-btn-secondary" type="button" id="kopier">Kopier kallet</button>
+          <span class="af-save-status" id="kopi-status"></span>
+        </div>
+      </section>
+    </main>
+
+    <aside class="af-context">
+      <h2 class="af-context-title">Slik spør LLM-en</h2>
+      <div class="af-context-card">
+        <span class="af-small-label">Verktøykall</span>
+        <p class="df-call" id="kall">Velg hva du vil finne.</p>
+      </div>
+      <div class="af-context-card df-detail" id="detalj" hidden>
+        <span class="af-small-label" id="detalj-tittel">Verkskort</span>
+        <p class="df-call" id="detalj-kall"></p>
+        <dl id="detalj-liste"></dl>
+        <pre class="df-call df-fil" id="detalj-tekst" hidden></pre>
+      </div>
+      <p><span class="af-source system">Leser museum.db og interne mapper</span></p>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function () {
+  // Én kilde til regler: valg -> verktøy, felt og kolonner. Ellers -> avklar manuelt.
+  var REGLER = {
+    versjon: "1",
+    valg: [
+      { id: "R1", verdi: "mappe", navn: "Interne sider", verktoy: "grep_mappe",
+        sok: "Ord eller uttrykk", kreverSok: true, filter: { navn: "Mappe", arg: "mappe", kilde: "mapper", valgfri: true },
+        args: function (s, f) { return { query: s, mappe: f, limit: 50 }; },
+        kolonner: [["sti", "Fil"], ["linje", "Linje"], ["treff", "Treff"]] },
+      { id: "R2", verdi: "verk", navn: "Verk", verktoy: "search_collection",
+        sok: "Tittel, tema eller teknikk", filter: { navn: "Sal", arg: "room_id", kilde: "saler", valgfri: true },
+        args: function (s, f) { return { query: s, room_id: f, limit: 50 }; },
+        kolonner: [["id", "ID"], ["tittel", "Tittel"], ["kunstner", "Kunstner"], ["aar", "År"], ["sal_id", "Sal"], ["status", "Status"]] },
+      { id: "R3", verdi: "kunstner", navn: "Kunstnere", verktoy: "search_collection",
+        sok: "Kunstnerens navn", kreverSok: true,
+        args: function (s) { return { artist: s, limit: 50 }; },
+        kolonner: [["kunstner", "Kunstner"], ["id", "ID"], ["tittel", "Verk"], ["aar", "År"], ["sal_id", "Sal"]] },
+      { id: "R4", verdi: "sal", navn: "Saler", verktoy: "get_room_artworks",
+        filter: { navn: "Sal", arg: "room_id", kilde: "saler", valgfri: false },
+        args: function (s, f) { return { room_id: f }; },
+        kolonner: [["rekkefoelge", "Nr"], ["id", "ID"], ["tittel", "Tittel"], ["kunstner", "Kunstner"], ["sal_plassering", "Plassering"]] },
+      { id: "R5", verdi: "arrangement", navn: "Arrangementer", verktoy: "search_events", dato: true,
+        filter: { navn: "Type", arg: "event_type", kilde: "typer", valgfri: true },
+        args: function (s, f, d) { return { event_type: f, date_from: d, limit: 50 }; },
+        kolonner: [["dato", "Dato"], ["klokkeslett_start", "Start"], ["type", "Type"], ["tittel", "Tittel"], ["sal_id", "Sal"], ["status", "Status"]] },
+      { id: "R6", verdi: "faq", navn: "Vanlige spørsmål", verktoy: "search_faq",
+        sok: "Søkeord, f.eks. pris", kreverSok: true, filter: { navn: "Kategori", arg: "category", kilde: "kategorier", valgfri: true },
+        args: function (s, f) { return { query: s, category: f }; },
+        kolonner: [["spoersmaal", "Spørsmål"], ["svar", "Svar"], ["kategori", "Kategori"]] }
+    ],
+    ellers: { id: "R7", navn: "Ellers", utfall: "Avklar manuelt" },
+    lister: {
+      mapper: ["00_felles", "01_inbox", "02_deliverables", "03_team", "04_knowledge", "05_data/governance"],
+      saler: ["SAL-A", "SAL-B", "SAL-C", "SAL-D", "SAL-E", "MAG-1"],
+      typer: ["omvisning", "verksted", "foredrag", "konsert", "barnearrangement", "aaapning"],
+      kategorier: ["billett", "praktisk", "fasiliteter", "formidling", "tilgjengelighet", "utleie", "samling", "butikk"]
+    },
+    fil: { verktoy: "les_fil" },
+    detalj: { verktoy: "get_artwork_details", felt: [["kunstner", "Kunstner"], ["aar", "År"], ["teknikk", "Teknikk"], ["dimensjoner", "Mål"], ["sal_navn", "Sal"], ["status", "Status"], ["tilstand", "Tilstand"], ["proveniens", "Proveniens"], ["veggtekst", "Veggtekst"]] }
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var valgt = null, sisteKall = "";
+
+  function regel(verdi) {
+    for (var i = 0; i < REGLER.valg.length; i++) if (REGLER.valg[i].verdi === verdi) return REGLER.valg[i];
+    return null;
+  }
+
+  function visSteg(id) {
+    if (id === "avgrens") { $("avgrens").hidden = false; $("svar").hidden = true; }
+    if (id === "svar") { $("avgrens").hidden = false; $("svar").hidden = false; }
+    document.querySelectorAll(".af-flow-link").forEach(function (a) {
+      if (a.getAttribute("href") === "#" + id) a.setAttribute("aria-current", "step"); else a.removeAttribute("aria-current");
+    });
+    $(id).scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function kallTekst(navn, args) {
+    var rene = {};
+    Object.keys(args).forEach(function (k) { if (args[k] !== "" && args[k] != null) rene[k] = args[k]; });
+    return navn + "(" + JSON.stringify(rene, null, 1).replace(/\n\s*/g, " ") + ")";
+  }
+
+  function lagArgs() {
+    var r = regel(valgt);
+    return r.args($("sok").value.trim(), $("filter").value, $("dato").value);
+  }
+
+  function oppdaterKall() {
+    var r = regel(valgt);
+    if (!r) { $("kall").textContent = REGLER.ellers.utfall; return; }
+    sisteKall = kallTekst(r.verktoy, lagArgs());
+    $("kall").textContent = sisteKall;
+  }
+
+  // Steg 1: radiovalg fra REGLER
+  REGLER.valg.forEach(function (r) {
+    var lbl = document.createElement("label");
+    lbl.className = "af-radio";
+    var inp = document.createElement("input");
+    inp.type = "radio"; inp.name = "hva"; inp.value = r.verdi;
+    lbl.appendChild(inp);
+    lbl.appendChild(document.createTextNode(r.navn));
+    $("hva-valg").appendChild(lbl);
+    inp.addEventListener("change", function () { velg(r.verdi); });
+  });
+
+  function velg(verdi) {
+    valgt = verdi;
+    var r = regel(verdi);
+    $("feil").hidden = true;
+    $("grp-sok").hidden = !r.sok;
+    if (r.sok) { $("sok-label").textContent = r.sok; }
+    $("sok").value = "";
+    $("grp-filter").hidden = !r.filter;
+    var sel = $("filter");
+    sel.textContent = "";
+    if (r.filter) {
+      $("filter-label").textContent = r.filter.navn;
+      var tom = document.createElement("option");
+      tom.value = ""; tom.textContent = r.filter.valgfri ? "Alle" : "Velg";
+      sel.appendChild(tom);
+      REGLER.lister[r.filter.kilde].forEach(function (v) {
+        var o = document.createElement("option"); o.value = v; o.textContent = v; sel.appendChild(o);
+      });
+    }
+    $("grp-dato").hidden = !r.dato;
+    $("dato").value = "";
+    $("svar").hidden = true;
+    $("detalj").hidden = true;
+    oppdaterKall();
+    visSteg("avgrens");
+    if (r.sok) $("sok").focus(); else sel.focus();
+  }
+
+  ["sok", "filter", "dato"].forEach(function (id) {
+    $(id).addEventListener("input", function () { if (valgt) oppdaterKall(); });
+  });
+  $("sok").addEventListener("keydown", function (e) { if (e.key === "Enter") finn(); });
+
+  function feil(tekst) {
+    $("feil-tekst").textContent = tekst;
+    $("feil").hidden = false;
+  }
+
+  function hent(navn, args) {
+    var url = "/api/verktoy?navn=" + encodeURIComponent(navn) + "&args=" + encodeURIComponent(JSON.stringify(args));
+    return fetch(url).then(function (res) {
+      return res.json().then(function (body) {
+        if (!res.ok) throw new Error(body.error || "Ukjent feil");
+        return body.resultat;
+      });
+    });
+  }
+
+  function finn() {
+    var r = regel(valgt);
+    if (!r) { feil(REGLER.ellers.utfall); return; }
+    if (r.kreverSok && !$("sok").value.trim()) { feil("Skriv et søkeord for å fortsette."); $("sok").focus(); return; }
+    if (r.filter && !r.filter.valgfri && !$("filter").value) { feil("Velg " + r.filter.navn.toLowerCase() + " for å fortsette."); $("filter").focus(); return; }
+    $("feil").hidden = true;
+    oppdaterKall();
+    $("antall").textContent = "Henter …";
+    hent(r.verktoy, lagArgs()).then(function (rader) {
+      if (!Array.isArray(rader)) rader = rader && rader.error ? [] : [rader];
+      tegnTabell(r, rader);
+      visSteg("svar");
+    }).catch(function (e) { feil("Feil fra databasen: " + e.message); });
+  }
+
+  function tegnTabell(r, rader) {
+    var thead = $("tabell").tHead, tbody = $("tabell").tBodies[0];
+    thead.textContent = ""; tbody.textContent = "";
+    var tr = document.createElement("tr");
+    r.kolonner.forEach(function (k) { var th = document.createElement("th"); th.textContent = k[1]; tr.appendChild(th); });
+    thead.appendChild(tr);
+    rader.forEach(function (rad) {
+      var t = document.createElement("tr");
+      r.kolonner.forEach(function (k) {
+        var td = document.createElement("td");
+        var v = rad[k[0]];
+        if (k[0] === "sti") {
+          var bf = document.createElement("button");
+          bf.type = "button"; bf.className = "df-row-btn"; bf.textContent = v;
+          bf.addEventListener("click", function () { visFil(v); });
+          td.appendChild(bf);
+        } else if (k[0] === "id" && typeof v === "string" && v.indexOf("AURA-") === 0) {
+          var b = document.createElement("button");
+          b.type = "button"; b.className = "df-row-btn"; b.textContent = v;
+          b.addEventListener("click", function () { visDetalj(v); });
+          td.appendChild(b);
+        } else {
+          td.textContent = v == null ? "—" : String(v);
+        }
+        t.appendChild(td);
+      });
+      tbody.appendChild(t);
+    });
+    $("antall").textContent = rader.length === 0 ? "Ingen treff. Prøv et annet søkeord eller filter." : rader.length + " treff";
+  }
+
+  function visFil(sti) {
+    var args = { sti: sti };
+    $("detalj-tittel").textContent = "Fil";
+    $("detalj-kall").textContent = kallTekst(REGLER.fil.verktoy, args);
+    $("detalj-liste").textContent = "";
+    $("detalj-tekst").hidden = false;
+    $("detalj-tekst").textContent = "Henter …";
+    $("detalj").hidden = false;
+    hent(REGLER.fil.verktoy, args).then(function (d) { $("detalj-tekst").textContent = d.tekst; })
+      .catch(function (e) { $("detalj-tekst").textContent = "Feil: " + e.message; });
+  }
+
+  function visDetalj(id) {
+    var args = { artwork_id: id };
+    $("detalj-tittel").textContent = "Verkskort";
+    $("detalj-tekst").hidden = true;
+    $("detalj-kall").textContent = kallTekst(REGLER.detalj.verktoy, args);
+    $("detalj-liste").textContent = "";
+    $("detalj").hidden = false;
+    hent(REGLER.detalj.verktoy, args).then(function (d) {
+      var dl = $("detalj-liste");
+      var tittel = document.createElement("dt"); tittel.textContent = "Tittel";
+      var tv = document.createElement("dd"); tv.textContent = d.tittel || id;
+      dl.appendChild(tittel); dl.appendChild(tv);
+      REGLER.detalj.felt.forEach(function (f) {
+        if (d[f[0]] == null || d[f[0]] === "") return;
+        var dt = document.createElement("dt"); dt.textContent = f[1];
+        var dd = document.createElement("dd"); dd.textContent = String(d[f[0]]);
+        dl.appendChild(dt); dl.appendChild(dd);
+      });
+    }).catch(function (e) { $("detalj-liste").textContent = "Feil: " + e.message; });
+  }
+
+  $("finn").addEventListener("click", finn);
+  $("tilbake").addEventListener("click", function () { visSteg("hva"); });
+  $("endre").addEventListener("click", function () { visSteg("avgrens"); });
+  $("kopier").addEventListener("click", function () {
+    navigator.clipboard.writeText(sisteKall).then(function () { $("kopi-status").textContent = "Kallet er kopiert"; },
+      function () { $("kopi-status").textContent = "Kunne ikke kopiere"; });
+  });
+})();
+</script>
+</body>
+</html>

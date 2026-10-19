@@ -6,7 +6,7 @@ Calibrated to the exact size of Kunstsilo (Kristiansand):
 - Dedicated contractor & temporary staffing register ('innleie'): ~300 contracts (scenography, Avarn/Securitas, guest curators, conservation, art transport)
 - ~50,000 monthly shift records
 - 102 curated exhibitions across Sal A-F
-- Full export to CSV, Parquet (via DuckDB), and SQLite (05_data/kunstpixel_historikk.db)
+- Full export to CSV, Parquet (via DuckDB), and SQLite (05_data/arkiv/kunstpixel_historikk.db)
 """
 
 import calendar
@@ -15,8 +15,6 @@ import random
 import sqlite3
 from datetime import date
 from pathlib import Path
-import duckdb
-import pandas as pd
 
 # Paths
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
@@ -852,6 +850,9 @@ def generate_shift_history(employees: list[dict], exhibitions: list[dict]) -> li
 
 def export_all(employees: list[dict], personas: list[dict], exhibitions: list[dict], contracts: list[dict], shifts: list[dict]):
     """Export datasets to CSV, Parquet, JSON, and SQLite."""
+    import duckdb  # lastes her: blokkeres av Windows på noen maskiner
+    import pandas as pd
+
     print("Converting to Pandas DataFrames...")
     df_emp = pd.DataFrame(employees)
     df_exh = pd.DataFrame(exhibitions)
@@ -878,7 +879,7 @@ def export_all(employees: list[dict], personas: list[dict], exhibitions: list[di
     duckdb.query("SELECT * FROM df_shifts").write_parquet(str(DATA_DIR / "arkiv_hr_vakt_historikk.parquet"))
 
     # 4. SQLite Enterprise Archive Database
-    db_file = DATA_DIR / "kunstpixel_historikk.db"
+    db_file = DATA_DIR / "arkiv" / "kunstpixel_historikk.db"
     print(f"Creating and populating SQLite database: {db_file}...")
     if db_file.exists():
         db_file.unlink()
@@ -918,10 +919,79 @@ def export_all(employees: list[dict], personas: list[dict], exhibitions: list[di
     print(f"- Total rows across archive: {len(df_emp) + len(df_exh) + len(df_inn) + len(df_shifts):,}")
 
 
-if __name__ == "__main__":
+# --- Syntetiske klokkeslett og arbeidstidsgrenser (Datafinner) ---
+# Egne datafiler som byggeskriptet (build_museum_db.py) leser inn i museum.db. Klokkeslettene trekkes
+# med en egen Random per vakt_id, så de påvirker ikke resten av arkivet og er stabile mellom kjøringer.
+KLOKKESLETT_CSV = DATA_DIR / "arkiv_hr_vakt_klokkeslett.csv"
+GRENSER_CSV = DATA_DIR / "arbeidstid_grenser.csv"
+SYNTETISK = "syntetisk (archive_generator)"
+LUNSJ_TIMER = 0.5  # Personalhåndbok: 7,5 t per dag ekskl. 30 min ulønnet lunsj
+STARTVALG_HVERDAG = ["08:00", "08:30", "09:00", "09:30"]
+STARTVALG_HELG = ["10:00", "10:30"]
+STARTVALG_STASJON = {
+    "Vaktrom / Sikkerhetssentral": ["07:00", "15:00"],
+    "Museumskafé": ["09:00", "10:00"],
+}
+ARBEIDSTID_GRENSER = [
+    ("ukenorm_timer", 37.5, "timer per uke", "Ordinær ukentlig arbeidstid for heltid", "Personalhåndbok (handbok_oppslag) og Virke"),
+    ("dognmaks_timer", 9.0, "timer per døgn", "Alminnelig arbeidstid per døgn", "AML § 10-4 (ADR 009)"),
+    ("daglig_hvile_timer", 11.0, "timer", "Sammenhengende daglig arbeidsfri", "AML § 10-8 (ADR 009)"),
+    ("ukehvile_timer", 35.0, "timer", "Sammenhengende ukentlig arbeidsfri", "AML § 10-8 (ADR 009)"),
+    ("lunsj_timer", LUNSJ_TIMER, "timer", "Ulønnet lunsjpause per vakt", "Personalhåndbok (handbok_oppslag)"),
+    ("kveldstillegg_fra", 17.0, "klokketime", "Kveldstillegg for vakter som slutter etter dette", "Virke (calculate_shift_cost)"),
+]
+
+
+def _til_klokke(timer: float) -> str:
+    minutter = round(timer * 60)
+    return f"{minutter // 60:02d}:{minutter % 60:02d}"
+
+
+def generate_shift_times(vakter_csv: Path = DATA_DIR / "arkiv_hr_vakt_historikk.csv",
+                         ut_csv: Path = KLOKKESLETT_CSV) -> int:
+    """Lag syntetisk start og slutt for hver vakt: start fra faste valg, slutt = start + timer + lunsj."""
+    import csv
+
+    rader = []
+    with open(vakter_csv, encoding="utf-8", newline="") as f:
+        for r in csv.DictReader(f):
+            rng = random.Random(f"klokkeslett-{r['vakt_id']}")
+            dag = date.fromisoformat(r["dato"])
+            valg = STARTVALG_STASJON.get(r["stasjon"]) or (STARTVALG_HELG if dag.weekday() >= 5 else STARTVALG_HVERDAG)
+            start = rng.choice(valg)
+            start_t = int(start[:2]) + int(start[3:]) / 60
+            slutt_t = start_t + float(r["timer"]) + LUNSJ_TIMER
+            if slutt_t >= 24:
+                raise ValueError(f"Vakt {r['vakt_id']} går over midnatt")
+            rader.append((r["vakt_id"], start, _til_klokke(slutt_t), SYNTETISK))
+    with open(ut_csv, "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["vakt_id", "start", "slutt", "datakilde"])
+        w.writerows(rader)
+    return len(rader)
+
+
+def generate_working_time_limits(ut_csv: Path = GRENSER_CSV) -> int:
+    """Skriv arbeidstidsgrensene som data, merket syntetisk, med kilde for hver grense."""
+    import csv
+
+    with open(ut_csv, "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["navn", "verdi", "enhet", "beskrivelse", "kilde", "datakilde"])
+        for navn, verdi, enhet, beskrivelse, kilde in ARBEIDSTID_GRENSER:
+            w.writerow([navn, verdi, enhet, beskrivelse, kilde, SYNTETISK])
+    return len(ARBEIDSTID_GRENSER)
+
+
+if __name__ == "__main__" and "--bare-klokkeslett" in __import__("sys").argv:
+    print(f"Klokkeslett: {generate_shift_times()} vakter -> {KLOKKESLETT_CSV.name}")
+    print(f"Grenser: {generate_working_time_limits()} rader -> {GRENSER_CSV.name}")
+elif __name__ == "__main__":
     print("Generating Kunstpixel HR, Innleie & Exhibition History (Kunstsilo Scale 2010-2026)...")
     emps, pers = generate_employees()
     exhs = generate_exhibitions(emps)
     contracts = generate_contractors(exhs)
     shfts = generate_shift_history(emps, exhs)
     export_all(emps, pers, exhs, contracts, shfts)
+    generate_shift_times()
+    generate_working_time_limits()
