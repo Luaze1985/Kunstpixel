@@ -1,10 +1,13 @@
 """
-Genererer en interaktiv Google Colab Notebook (.ipynb) for
-analyse av time-for-time historiske vaktdata og personvernrisiko.
+Genererer en komplett Google Colab Notebook (.ipynb) for museet i Trondheim:
+Analyserer time-for-time vaktdata, utvidede personopplysninger for alle 168 ansatte,
+og simulerer innsamling/krysskobling av sensitive data (Helse Art. 9, Skattelister,
+Brønnøysund-habilitet og AtB/Trønderbanen-kollektivavvik).
 """
 
 import json
 import os
+
 
 def create_notebook():
     notebook_path = os.path.abspath("02_deliverables/02_rapporter/personvern_time_for_time_colab.ipynb")
@@ -28,160 +31,189 @@ def create_notebook():
             "source": [line + "\n" for line in code_str.strip().split("\n")]
         })
 
-    # Celle 1: Tittel & Intro
-    md("""# 🏛️ Kunstpixel: Time-for-time Vaktanalyse & Personvern
-### Re-identifisering, Kvasi-identifikatorer og Mosaikkteorien i Praksis
+    # Tittel
+    md("""# 🏛️ Kunstpixel Trondheim: Sensitiv Personprofilering & Mosaikk-innsamling (168 Ansatte)
+### Hvordan tilsynelatende harmløse driftsdata i Trondheim avslører helse, privatøkonomi, bosted og habilitet
 
-Denne notatblokken demonstrerer et sentralt paradoks i datavitenskap og personvern:
-> **Jo mer nøyaktig og operativt et datasett blir i tid og rom (f.eks. time-for-time per stasjon), desto mer dramatisk faller anonymitetsgraden ($k$-anonymitet $\\to 1$).**
+Denne Colab-notatblokken analyserer alle **168 simulerte ansatte** ved museet i **Trondheim** og demonstrerer hvordan en automatisert innsamlings- og koblingspipeline kan sette sammen åpne og interne kilder:
 
-Vi kobler sammen:
-1. **Time-for-time vaktlister** (439 952 historiske vakt-timer 2010–2026).
-2. **Avviks- og hendelsesrapporter** (HMS, tekniske feil, publikumskonflikter).
-3. **Ansattopplysninger** (lønnstrinn, stilling, fødselsår).
-4. **Fraværslogger** (sykemeldinger og permisjoner).
+1. **Grunnlagsdata & Utvidet HR-profil (`hr_utvidet_profil_trondheim`):** 168 ansatte bosatt i Trondheim og omegn (Midtbyen, Bakklandet, Ila, Byåsen, Lade, Moholt, Tiller, Heimdal, Ranheim, Stjørdal og Melhus).
+2. **Time-for-time vaktlogg (`vakt_time_for_time`):** 439 952 vakt-timer med eksakte klokkeslett og overtidsjusteringer.
+3. **Kollektivavvik i Trøndelag (`kollektiv_avvik_trondheim`):** Stans på **SJ Nord Trønderbanen** (Hommelvik/Stjørdal), **Gråkallbanen** (Byåsen/Ila) og **AtB Metrobuss M1/M2** (Okstadbakken/Heimdal).
+4. **Skattelister & Brønnøysund (`ekstern_osint_trondheim` + `hr_innleie`):** Kryssjekk av Virke-lønnstrinn mot faktisk nettoinntekt, gjeldsgrad og skjulte familiebånd til museets leverandører.
 """)
 
-    # Celle 2: Laste inn data
-    md("""## 1. Laste inn data (SQLite eller CSV)
-I Google Colab kan du enten laste opp SQLite-databasen `colab_personvern_historikk.db` direkte, eller bruke CSV-uttrekket `vakt_time_for_time_2025_2026.csv`.
+    # Steg 1: Innlasting
+    md("""## 1. Koble til Google Drive eller lokal database
+Kjører automatisk mot `colab_personvern_historikk.db` eller `ansatte_168_komplett_personvern_trondheim.csv`.
 """)
 
     code("""import sqlite3
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 import os
 
-# Automatisk sjekk for SQLite-fil eller CSV
-db_path = "colab_personvern_historikk.db"
-csv_path = "vakt_time_for_time_2025_2026.csv"
+# Hvis vi kjører i Google Colab, kan Google Drive monteres automatisk:
+try:
+    from google.colab import drive
+    if not os.path.exists("/content/drive"):
+        drive.mount("/content/drive")
+except ImportError:
+    pass
 
-if os.path.exists(db_path):
-    print(f"✅ Kobler til SQLite-database: {db_path}")
-    conn = sqlite3.connect(db_path)
-    df_vakt = pd.read_sql_query("SELECT * FROM vakt_time_for_time WHERE aar >= 2024", conn)
-    df_ansatte = pd.read_sql_query("SELECT * FROM hr_ansatte", conn)
-    df_fravaer = pd.read_sql_query("SELECT * FROM hr_fravaer", conn)
-    df_avvik = pd.read_sql_query("SELECT * FROM avvik_hms", conn)
-elif os.path.exists(csv_path):
-    print(f"✅ Laster fra CSV-fil: {csv_path}")
-    df_vakt = pd.read_csv(csv_path)
-    conn = sqlite3.connect(":memory:")
-    df_vakt.to_sql("vakt_time_for_time", conn, index=False)
-else:
-    print("ℹ️ Laster eksempeldata direkte i minnet...")
-    # Fallback syntetisk mini-sett
-    df_vakt = pd.DataFrame({
-        "vakt_id": ["VAKT-01", "VAKT-02", "VAKT-03"],
-        "ansatt_id": ["KP-ANS-008", "KP-ANS-011", "KP-ANS-005"],
-        "dato": ["2025-05-14", "2025-05-14", "2025-05-14"],
-        "time_slot": ["14:00", "14:00", "14:00"],
-        "stasjon": ["Resepsjon og billett", "Museumsbutikk", "Vaktrom"]
-    })
-
-print(f"Antall vakt-timer lastet inn: {len(df_vakt):,}")
-df_vakt.head(5)""")
-
-    # Celle 3: K-anonymitetsberegning
-    md("""## 2. Matematisk analyse: K-anonymitetsgradient
-$k$-anonymitet krever at enhver kombinasjon av kvasi-identifikatorer (her: **Dato + Klokketime + Stasjon**) skal deles av minst $k$ personer.
-- Dersom $k = 1$, er personen **100 % unikt identifiserbar**.
-""")
-
-    code("""# Grupperer på dato, time og stasjon for å finne antall unike ansatte
-k_scores = df_vakt.groupby(["dato", "time_slot", "stasjon"])["ansatt_id"].nunique()
-
-k_equal_1 = (k_scores == 1).mean() * 100
-print("--- K-ANONYMITETSRAPPORT ---")
-print(f"Totalt antall unike tids- og stasjonskombinasjoner: {len(k_scores):,}")
-print(f"Andel tidsrom der k = 1 (Fullstendig re-identifiserbar): {k_equal_1:.2f} %")
-print(f"Gjennomsnittlig k-verdi: {k_scores.mean():.2f}")
-print(f"Maksimal k-verdi: {k_scores.max()}")""")
-
-    # Celle 4: Visualisering
-    md("""## 3. Visualisering av tidsbemanningsmatrise
-La oss se på hvordan bemanningen fordeler seg gjennom døgnet på de ulike stasjonene for en typisk uke.
-""")
-
-    code("""pivot_time = df_vakt.groupby(["stasjon", "klokketime"]).size().unstack(fill_value=0)
-
-plt.figure(figsize=(14, 6))
-plt.imshow(pivot_time, cmap="YlOrRd", aspect="auto")
-plt.colorbar(label="Antall vakt-timer registrert")
-plt.yticks(range(len(pivot_time.index)), pivot_time.index, fontsize=9)
-plt.xticks(range(len(pivot_time.columns)), [f"{h:02d}:00" for h in pivot_time.columns], rotation=45)
-plt.title("Aktivitetsprofil per stasjon og klokketime (Høy oppløsning)", fontsize=13, fontweight="bold")
-plt.xlabel("Klokkeslett")
-plt.ylabel("Stasjon / Sal")
-plt.tight_layout()
-plt.show()""")
-
-    # Celle 5: Simulering av mosaikkangrep
-    md("""## 4. Simulering av et reelt mosaikkangrep
-Her simulerer vi en ekstern observasjon (f.eks. en klage eller et bilde fra et publikumsbesøk) og ser hvor raskt vi kan hente ut personens fulle profil, lønnstrinn og private fraværshistorikk.
-""")
-
-    code("""# Scenario: En hendelse observeres på en spesifikk dato, klokkeslett og stasjon
-observasjon_dato = "2025-05-14"
-observasjon_time = "14:00"
-observasjon_stasjon = "Resepsjon og billett"
-
-print(f"🔍 Søker etter tilstedeværelse for: {observasjon_dato} kl. {observasjon_time} på '{observasjon_stasjon}'...")
-
-treff = df_vakt[
-    (df_vakt["dato"] == observasjon_dato) &
-    (df_vakt["time_slot"] == observasjon_time) &
-    (df_vakt["stasjon"] == observasjon_stasjon)
+mulige_stier = [
+    "05_data",
+    ".",
+    "/content/drive/MyDrive/Kunstpixel/05_data",
+    "/content"
 ]
 
-if not treff.empty:
-    ansatt_id = treff["ansatt_id"].values[0]
-    vakt_id = treff["vakt_id"].values[0]
-    print(f"🎯 100 % entydig treff! Ansatt-ID: {ansatt_id} (Vakt-ID: {vakt_id})")
-    
-    # Kobling mot ansattregister (hvis tilgjengelig)
-    if 'df_ansatte' in locals() and not df_ansatte.empty:
-        person = df_ansatte[df_ansatte["ansatt_id"] == ansatt_id]
-        if not person.empty:
-            print("\n🚨 AVSLØRT PERSONPROFIL FRA GRUNNLAGSDATA:")
-            print(person[["navn", "fodselsaar", "kjonn", "stilling", "lonnstrinn_virke", "epost"]].to_dict(orient="records")[0])
-            
-    # Kobling mot fraværsregister
-    if 'df_fravaer' in locals() and not df_fravaer.empty:
-        fravaer = df_fravaer[df_fravaer["ansatt_id"] == ansatt_id]
-        if not fravaer.empty:
-            print(f"\n⚠️ SENSITIV FRAVÆRSHISTORIKK FUNNET (Artikkel 9): {len(fravaer)} registreringer:")
-            display(fravaer.head(3))
-else:
-    print("Ingen vakt registrert på det eksakte tidspunktet.")""")
+data_dir = next((p for p in mulige_stier if os.path.exists(os.path.join(p, "ansatte_168_komplett_personvern_trondheim.csv")) or os.path.exists(os.path.join(p, "colab_personvern_historikk.db"))), ".")
+db_path = os.path.join(data_dir, "colab_personvern_historikk.db")
+csv_168_path = os.path.join(data_dir, "ansatte_168_komplett_personvern_trondheim.csv")
 
-    # Celle 6: Avbøtende tiltak
-    md("""## 5. Beskyttelse: Hvordan rette opp personvernet?
-For å hindre at time-for-time data misbrukes til overvåking og re-identifisering, må vi innføre **beskyttende transformasjoner**:
-1. **Tidsmessig generalisering:** Slå sammen time-slots til hele dager eller skiftkategorier (Morgen / Kveld).
-2. **Romlig generalisering:** Erstatte eksakte saler med avdelinger (f.eks. 'Utstillingsfløy Vest').
-3. **$k$-anonymitetsfilter:** Undertrykke rader der færre enn $k=5$ personer deler profilen.
+if os.path.exists(db_path):
+    print(f"✅ Koblet til komplett SQLite-database: {db_path}")
+    conn = sqlite3.connect(db_path)
+    df_168 = pd.read_csv(csv_168_path) if os.path.exists(csv_168_path) else pd.read_sql_query("SELECT * FROM hr_utvidet_profil_trondheim", conn)
+    df_vakt = pd.read_sql_query("SELECT * FROM vakt_time_for_time WHERE aar >= 2024", conn)
+    df_innleie = pd.read_sql_query("SELECT * FROM hr_innleie", conn)
+    df_kollektiv = pd.read_sql_query("SELECT * FROM kollektiv_avvik_trondheim", conn)
+else:
+    print(f"✅ Laster 168 ansatte fra CSV: {csv_168_path}")
+    df_168 = pd.read_csv(csv_168_path)
+
+print(f"Totalt antall ansatte analysert: {len(df_168)}")
+df_168[["ansatt_id", "navn", "stilling", "bydel_kommune", "pendlerlinje_atb", "risikonivaa", "mosaikk_risikoscore"]].head(10)""")
+
+    # Steg 2: Oversikt over de 168 ansatte i Trondheim
+    md("""## 2. Geografisk fordeling i Trondheim og Risikoprofil (Alle 168 ansatte)
+Vi ser først på hvor de 168 ansatte bor i Trondheimsregionen og hvordan eksponeringsrisikoen fordeler seg når grunnlagsdataene kobles sammen.
 """)
 
-    code("""# Demonstrasjon av tidsgeneralisering
-df_generalisert = df_vakt.copy()
+    code("""print("=== FORDELING PER RISIKONIVÅ (168 ANSATTE) ===")
+print(df_168["risikonivaa"].value_counts())
 
-def categorize_time(hour):
-    if hour < 12:
-        return "Formiddag (08-12)"
-    elif hour < 16:
-        return "Ettermiddag (12-16)"
-    else:
-        return "Kveld (16-20)"
+print("\\n=== FORDELING PER BYDEL / KOMMUNE I TRONDHEIMSREGIONEN ===")
+print(df_168["bydel_kommune"].value_counts())
 
-df_generalisert["tidsblokk"] = df_generalisert["klokketime"].apply(categorize_time)
+try:
+    import matplotlib.pyplot as plt
+    fig, axes = plt.subplots(1, 2, figsize=(15, 5))
+    df_168["bydel_kommune"].value_counts().plot(kind="barh", ax=axes[0], color="#1f77b4")
+    axes[0].set_title("Bosted i Trondheim & omegn (168 ansatte)")
+    axes[0].set_xlabel("Antall ansatte")
 
-# Ny k-beregning med generaliserte tidsblokker og avdeling i stedet for stasjon
-k_beskyttet = df_generalisert.groupby(["dato", "tidsblokk", "avdeling"])["ansatt_id"].nunique()
+    df_168["risikonivaa"].value_counts().reindex(["KRITISK", "HØY", "MODERAT", "LAV"]).plot(
+        kind="bar", ax=axes[1], color=["#d62728", "#ff7f0e", "#ffbb78", "#2ca02c"]
+    )
+    axes[1].set_title("Mosaikk-risikonivå ved krysskobling av kilder")
+    axes[1].set_ylabel("Antall ansatte")
+    plt.tight_layout()
+    plt.show()
+except ImportError:
+    pass""")
 
-print(f"Gjennomsnittlig k etter tidsblokk-generalisering: {k_beskyttet.mean():.2f}")
-print(f"Andel unike treff (k=1) redusert fra {k_equal_1:.1f}% til {(k_beskyttet == 1).mean()*100:.1f}%!")""")
+    # Steg 3: Modul 1 - Kollektivavvik i Trondheim (AtB / Gråkallbanen / Trønderbanen)
+    md("""## 3. Kobling 1: Bosteds-avsløring via AtB Metrobuss, Gråkallbanen og Trønderbanen
+Selv om en vakt- og fraværsliste er «anonymisert» (kun `ansatt_id`), kan vi kryssjekke datoer for egenmeldinger/forsinkelser mot kjente kollektivsammenbrudd i Trondheim:
+- **SJ Nord Trønderbanen Nord:** Stengt ved Hommelvik/Leangen $\\rightarrow$ peker ut pendlere fra **Stjørdal og Ranheim**.
+- **AtB Metrobuss M1/M2:** Busskaos i Okstadbakken $\\rightarrow$ peker ut ansatte på **Tiller og Heimdal**.
+- **Gråkallbanen:** Strømstans ved Breidablikk $\\rightarrow$ peker ut ansatte på **Byåsen og Ila**.
+""")
+
+    code("""kollektiv_treff = df_168[df_168["kollektiv_avvik_kobling"] != "Ingen treff mot kollektivstans"]
+print(f"🚨 Fant {len(kollektiv_treff)} ansatte hvis fravær/forsinkelse avslører eksakt pendlerkorridor i Trondheim:\\n")
+display(kollektiv_treff[[
+    "ansatt_id", "navn", "bydel_kommune", "adresse_trondheim",
+    "pendlerlinje_atb", "kollektiv_avvik_kobling"
+]].head(12))""")
+
+    # Steg 4: Modul 2 - Helse, Ergonomi og AML-brudd (GDPR Art. 9)
+    md("""## 4. Kobling 2: Avsløring av Helseopplysninger (GDPR Art. 9), Fagforening og Overtidsbrudd
+Ved å kombinere stasjonsplassering time-for-time med fraværsmønster og overtidsjusteringer (`>= 10 timer`), kan algoritmen identifisere ansatte med rygg-/belastningslidelser, lysmigrene og høy utbrenthetsrisiko.
+""")
+
+    code("""helse_utsatte = df_168[
+    (df_168["helse_ergonomi_art9"] != "Ingen registrerte helsebegrensninger") &
+    (df_168["sykefravaer_dager"] >= 20)
+].sort_values(by="sykefravaer_dager", ascending=False)
+
+print(f"⚠️ {len(helse_utsatte)} ansatte med eksponert Art. 9 helseprofil kombinert med høyt fravær og stasjonsslitasje:")
+display(helse_utsatte[[
+    "ansatt_id", "navn", "stilling", "primar_stasjon",
+    "helse_ergonomi_art9", "fagforening_art9",
+    "sykefravaer_dager", "overtid_aml_brudd"
+]].head(12))""")
+
+    # Steg 5: Modul 3 - Skattelister, Gjeldsgrad og Skjulte Habilitetsbånd
+    md("""## 5. Kobling 3: Skattelister vs. Virke-lønnstrinn & Brønnøysund-habilitet
+Når museets interne lønnstrinn (Virke-tabellen) er kjent, kan hvem som helst kryssjekke dette mot offentlige skattelister og Brønnøysundregistrene:
+1. **Positivt gap (Skatteliste $\\gg$ Virke-lønn):** Avslører skjult bi-inntekt, konsulentvirksomhet eller utleie.
+2. **Negativt gap (Skatteliste $\\ll$ Virke-lønn):** Avslører store rentefradrag / tung privat gjeldsbelastning.
+3. **Etternavn + Roller mot `hr_innleie`:** Avslører ansatte som bestiller eller godkjenner oppdrag fra egne familiemedlemmer!
+""")
+
+    code("""habilitet_og_okonomi = df_168[
+    (df_168["habilitet_flagg"] != "Ingen registrert konflikt") |
+    (df_168["inntektsavvik_analyse"].str.contains("avslører"))
+].sort_values(by="mosaikk_risikoscore", ascending=False)
+
+print(f"🔍 Fant {len(habilitet_og_okonomi)} ansatte med betydelige økonomiske avvik eller habilitetsbånd:")
+display(habilitet_og_okonomi[[
+    "ansatt_id", "navn", "stilling", "virke_aarslonn_nok",
+    "skatteliste_nettoinntekt", "skatteliste_nettoformue",
+    "inntektsavvik_analyse", "habilitet_flagg"
+]].head(15))""")
+
+    # Steg 6: Topp 15 mest utsatte ansatte (Total Mosaikk-profil)
+    md("""## 6. Komplett Mosaikk-rapport: De mest eksponerte ansatte ved museet i Trondheim
+Tabellen under viser hvordan enkeltbitene danner et komplett, høy-sensitivt personkort når alle kildene slås sammen.
+""")
+
+    code("""kritiske = df_168[df_168["risikonivaa"] == "KRITISK"].sort_values(by="mosaikk_risikoscore", ascending=False)
+print(f"🔴 Totalt {len(kritiske)} ansatte har KRITISK eksponeringsrisiko (Score >= 75/100):")
+display(kritiske[[
+    "ansatt_id", "navn", "fodselsdato", "adresse_trondheim",
+    "stilling", "mosaikk_risikoscore", "avslort_sensitiv_innsikt"
+]].head(20))""")
+
+    # Steg 7: Nøktern oversikt over ansatte "på kanten" i arbeidshverdagen
+    md("""## 7. Nærmere om ansatte «på kanten» (Hverdagsslitasje, tidsklemme og stram økonomi)
+Her ser vi nøkternt på tre vanlige grupper som ligger i grenseland i arbeidshverdagen når vi kobler dataene:
+1. **Slitasje og lange vakter:** Ansatte med mange lange vakter (10–11 timer), helse-/ergonominotat (f.eks. rygg eller migrene) og hyppig fravær.
+2. **Tidsklemme og pendling:** Ansatte med småbarn under 12 år som pendler med Trønderbanen eller buss/trikk og får fravær ved kollektivstans.
+3. **Stram økonomi eller ekstrajobb:** Ansatte i deltid eller med høy gjeldsbelastning i skattelisten, eller med bi-inntekt ved siden av museumsjobben.
+""")
+
+    code("""print("--- A. SLITASJE & LANGE VAKTER (Overtid >= 12 vakter + Helse/Fravær) ---")
+slitasje = df_168[
+    (df_168["overtid_aml_brudd"] >= 12) &
+    (df_168["sykefravaer_dager"] >= 25)
+].sort_values(by=["overtid_aml_brudd", "sykefravaer_dager"], ascending=False)
+display(slitasje[[
+    "ansatt_id", "navn", "stilling", "stillingsprosent", "primar_stasjon",
+    "overtid_aml_brudd", "sykefravaer_dager", "helse_ergonomi_art9"
+]].head(10))
+
+print("\\n--- B. TIDSKLEMME (Småbarn + Pendling med kollektivavvik i Trondheim) ---")
+tidsklemme = df_168[
+    (df_168["antall_barn_under_12"] > 0) &
+    (df_168["kollektiv_avvik_kobling"] != "Ingen treff mot kollektivstans")
+].sort_values(by="antall_barn_under_12", ascending=False)
+display(tidsklemme[[
+    "ansatt_id", "navn", "bydel_kommune", "sivilstand",
+    "antall_barn_under_12", "pendlerlinje_atb", "kollektiv_avvik_kobling"
+]].head(10))
+
+print("\\n--- C. STRAM ØKONOMI / HØY GJELDSBELASTNING I SKATTELISTEN ---")
+stram_okonomi = df_168[
+    df_168["inntektsavvik_analyse"].str.contains("gjeldsgrad")
+].sort_values(by="virke_aarslonn_nok", ascending=True)
+display(stram_okonomi[[
+    "ansatt_id", "navn", "stilling", "stillingsprosent",
+    "virke_aarslonn_nok", "skatteliste_nettoinntekt", "sivilstand", "antall_barn_under_12"
+]].head(10))""")
 
     notebook_data = {
         "cells": cells,
@@ -203,7 +235,8 @@ print(f"Andel unike treff (k=1) redusert fra {k_equal_1:.1f}% til {(k_beskyttet 
     with open(notebook_path, "w", encoding="utf-8") as f:
         json.dump(notebook_data, f, indent=2, ensure_ascii=False)
 
-    print(f"✅ Skrevet ferdig Colab-notebook til: {notebook_path}")
+    print(f"✅ Oppdatert Trondheim Colab-notebook lagret til: {notebook_path}")
+
 
 if __name__ == "__main__":
     create_notebook()

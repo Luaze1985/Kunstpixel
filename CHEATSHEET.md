@@ -1,24 +1,18 @@
 # HUSKELAPP FOR LARS (CHEATSHEET)
-*Prosjekt: Kunstpixel (museum.db og Datafinner) | Sist oppdatert: 2026-10-19 kl. 20:10*
+*Prosjekt: Kunstpixel (Trondheim) | Sist oppdatert: 19. oktober 2026 kl. 23:38*
 
 ## 1. Hva vi gjorde sist
-- Antigravitys datahull (T1–T7) og statusporten ligger nå sammen på grenen `claude/statusporten-loop-agent-722112`.
-- Datafinner er ferdig koblet til databasen:
-  - Rollekortene kommer fra museum.db.
-  - Sykefravær viser museets eget fravær mot SSB.
-  - Vurdering og Forslag kommer fra regeltabellen.
-  - Vaktkostnad har 0 vakter uten tariff.
-- Statusporten sier KLAR med 0 feil, og alle 262 tester består.
+- Bygget time-for-time historisk personverndatabase (439 952 rader) og forankret museet til Trondheim med 168 simulerte ansatte i bydeler som Bakklandet, Byåsen, Tiller, Ranheim og Stjørdal.
+- Analyserte hvordan ufarlige data (vakter) blir sensitive når de krysses mot AtB/Trønderbanen kollektivstans, skattelister, og Virke-lønn.
+- La inn en nøktern Seksjon 7 i Colab-notebooken om ansatte i hverdagsgrenseland (slitasje, tidsklemme og stram økonomi).
 
 ## 2. Hvor vi slapp
-- museum.db er bygget på nytt med regler og roller merket «syntetisk» (hash `0da9c837…`, lik prøvebygget).
-- Grenen er slått sammen inn i `hr-konsolidering`. Ingenting er pushet.
+- Alle 168 profiler og Colab-notebooken ligger ferdigkjørt og synkronisert med Google Drive i `02_deliverables/02_rapporter/personvern_time_for_time_colab.ipynb` og `05_data/`.
+- Notatboken er åpnet i Playwright-vinduet i Colab scratchpad.
 
 ## 3. Første oppgave neste gang du setter deg ned
-- Les regeltekstene i `05_data/rapport_regler.csv`. Antigravity skrev dem selv, og terskler og kilder som «Bemanningsplan 2026» finnes ikke i repoet. Godkjenn dem eller skriv dem om.
+- **Utforsk Colab-analysen:** Åpne `personvern_time_for_time_colab.ipynb` i Google Colab (eller kjør opp Playwright) og se på tabellene i Seksjon 7.
 
 ## 4. Nyttige snarveier for dette prosjektet
-- Statusport: `py -3.13 scripts/db_status_gate.py` (rapport i `.scratch/db-status/`)
-- Bygg databasen: `py -3.13 src/kunstpixel/data/build_museum_db.py` (prøve: `--check`)
-- Datafinner: `py -3.13 src/kunstpixel/adapters/datafinner.py` og http://127.0.0.1:8010
-- Tester: `py -3.13 -m pytest -q`
+- Kjøre datakvalitetskontroll: `py -3.13 src/kunstpixel/data/audit_time_for_time_quality.py`
+- Relevant test: `py -3.13 -m pytest -q`

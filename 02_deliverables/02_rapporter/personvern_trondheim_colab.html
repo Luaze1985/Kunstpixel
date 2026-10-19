@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<title>Colab: Kunstpixel Trondheim – 168 Ansatte Personvern & Mosaikkanalyse</title>
+<style>
+  body { font-family: 'Segoe UI', Roboto, sans-serif; background: #f8f9fa; color: #202124; margin: 0; padding: 0; }
+  .topbar { background: #ffffff; border-bottom: 1px solid #dadce0; padding: 10px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+  .topbar-title { font-size: 18px; font-weight: 600; color: #f9ab00; display: flex; align-items: center; gap: 10px; }
+  .topbar-title span { color: #202124; }
+  .badge { background: #e6f4ea; color: #137333; padding: 4px 10px; border-radius: 16px; font-size: 12px; font-weight: 600; }
+  .container { max-width: 1180px; margin: 24px auto; padding: 0 16px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .kpi-card { background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 14px; }
+  .kpi-card h4 { margin: 0 0 6px 0; font-size: 13px; color: #5f6368; }
+  .kpi-card .val { font-size: 24px; font-weight: 700; }
+  .cell { background: #ffffff; border: 1px solid #dadce0; border-radius: 8px; margin-bottom: 18px; padding: 18px 22px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .code-header { font-size: 12px; color: #5f6368; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .play-btn { background: #1a73e8; color: white; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; }
+  .code-box { background: #f1f3f4; padding: 12px; border-radius: 6px; overflow-x: auto; font-family: Consolas, monospace; font-size: 12.5px; margin: 0 0 12px 0; }
+  .stdout { background: #202124; color: #e8eaed; padding: 12px; border-radius: 6px; font-family: Consolas, monospace; font-size: 12.5px; overflow-x: auto; }
+  .table-wrap { overflow-x: auto; margin-top: 10px; }
+  table.dataframe { border-collapse: collapse; width: 100%; font-size: 12px; }
+  table.dataframe th { background: #f1f3f4; color: #202124; text-align: left; padding: 8px; border: 1px solid #dadce0; }
+  table.dataframe td { padding: 7px 8px; border: 1px solid #dadce0; }
+  table.dataframe tr:nth-child(even) { background: #f8f9fa; }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-title">🔶 CO <span>personvern_time_for_time_colab.ipynb — Kunstpixel Trondheim (168 Ansatte)</span></div>
+    <div class="badge">● Tilkoblet: 439 952 vakt-timer | 168 ansatte i Trondheim</div>
+  </div>
+  <div class="container">
+    <div class="kpi-grid">
+      <div class="kpi-card"><h4>KRITISK RISIKO (Score ≥ 75)</h4><div class="val" style="color:#d93025">33 ansatte</div></div>
+      <div class="kpi-card"><h4>HØY RISIKO (Score 55–74)</h4><div class="val" style="color:#f29900">37 ansatte</div></div>
+      <div class="kpi-card"><h4>MODERAT RISIKO</h4><div class="val" style="color:#1a73e8">74 ansatte</div></div>
+      <div class="kpi-card"><h4>K-ANONYMITET TIME-FOR-TIME</h4><div class="val" style="color:#d93025">k = 1 (100 %)</div></div>
+    </div>
+    <div class="cell markdown-cell"><h1>🏛️ Kunstpixel Trondheim: Sensitiv Personprofilering & Mosaikk-innsamling (168 Ansatte)</h1><h3>Hvordan tilsynelatende harmløse driftsdata i Trondheim avslører helse, privatøkonomi, bosted og habilitet</h3><p>Denne Colab-notatblokken analyserer alle **168 simulerte ansatte** ved museet i **Trondheim** og demonstrerer hvordan en automatisert innsamlings- og koblingspipeline kan sette sammen åpne og interne kilder:</p><p>1. **Grunnlagsdata & Utvidet HR-profil (`hr_utvidet_profil_trondheim`):** 168 ansatte bosatt i Trondheim og omegn (Midtbyen, Bakklandet, Ila, Byåsen, Lade, Moholt, Tiller, Heimdal, Ranheim, Stjørdal og Melhus).</p><p>2. **Time-for-time vaktlogg (`vakt_time_for_time`):** 439 952 vakt-timer med eksakte klokkeslett og overtidsjusteringer.</p><p>3. **Kollektivavvik i Trøndelag (`kollektiv_avvik_trondheim`):** Stans på **SJ Nord Trønderbanen** (Hommelvik/Stjørdal), **Gråkallbanen** (Byåsen/Ila) og **AtB Metrobuss M1/M2** (Okstadbakken/Heimdal).</p><p>4. **Skattelister & Brønnøysund (`ekstern_osint_trondheim` + `hr_innleie`):** Kryssjekk av Virke-lønnstrinn mot faktisk nettoinntekt, gjeldsgrad og skjulte familiebånd til museets leverandører.</p></div><div class="cell markdown-cell"><h2>1. Koble til Google Drive eller lokal database</h2><p>Kjører automatisk mot `colab_personvern_historikk.db` eller `ansatte_168_komplett_personvern_trondheim.csv`.</p></div>
+            <div class="cell code-cell">
+                <div class="code-header"><span class="play-btn">▶</span> <code>[1]</code> Kjørt i Colab (Python 3)</div>
+                <pre class="code-box">import sqlite3
+import pandas as pd
+import numpy as np
+import os
+
+# Hvis vi kjører i Google Colab, kan Google Drive monteres automatisk:
+try:
+    from google.colab import drive
+    if not os.path.exists("/content/drive"):
+        drive.mount("/content/drive")
+except ImportError:
+    pass
+
+mulige_stier = [
+    "05_data",
+    ".",
+    "/content/drive/MyDrive/Kunstpixel/05_data",
+    "/content"
+]
+
+data_dir = next((p for p in mulige_stier if os.path.exists(os.path.join(p, "ansatte_168_komplett_personvern_trondheim.csv")) or os.path.exists(os.path.join(p, "colab_personvern_historikk.db"))), ".")
+db_path = os.path.join(data_dir, "colab_personvern_historikk.db")
+csv_168_path = os.path.join(data_dir, "ansatte_168_komplett_personvern_trondheim.csv")
+
+if os.path.exists(db_path):
+    print(f"✅ Koblet til komplett SQLite-database: {db_path}")
+    conn = sqlite3.connect(db_path)
+    df_168 = pd.read_csv(csv_168_path) if os.path.exists(csv_168_path) else pd.read_sql_query("SELECT * FROM hr_utvidet_profil_trondheim", conn)
+    df_vakt = pd.read_sql_query("SELECT * FROM vakt_time_for_time WHERE aar >= 2024", conn)
+    df_innleie = pd.read_sql_query("SELECT * FROM hr_innleie", conn)
+    df_kollektiv = pd.read_sql_query("SELECT * FROM kollektiv_avvik_trondheim", conn)
+else:
+    print(f"✅ Laster 168 ansatte fra CSV: {csv_168_path}")
+    df_168 = pd.read_csv(csv_168_path)
+
+print(f"Totalt antall ansatte analysert: {len(df_168)}")
+df_168[["ansatt_id", "navn", "stilling", "bydel_kommune", "pendlerlinje_atb", "risikonivaa", "mosaikk_risikoscore"]].head(10)
+</pre>
+                <div class="output-area"><pre class="stdout">✅ Koblet til komplett SQLite-database: 05_data\colab_personvern_historikk.db
+Totalt antall ansatte analysert: 168
+</pre><div class="table-wrap"><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ansatt_id</th>
+      <th>navn</th>
+      <th>stilling</th>
+      <th>bydel_kommune</th>
+      <th>pendlerlinje_atb</th>
+      <th>risikonivaa</th>
+      <th>mosaikk_risikoscore</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>KP-ANS-001</td>
+      <td>Henrik Faye-Lund</td>
+      <td>Museumsdirektør</td>
+      <td>Midtbyen (Trondheim)</td>
+      <td>Sykkel / Gange (Midtbyen)</td>
+      <td>HØY</td>
+      <td>65</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-002</td>
+      <td>Silje Lindqvist</td>
+      <td>Sjefkurator</td>
+      <td>Bakklandet (Trondheim)</td>
+      <td>Sykkel / Gange (Bakklandet)</td>
+      <td>MODERAT</td>
+      <td>50</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-003</td>
+      <td>Gunnar Viken</td>
+      <td>Samlingsforvalter / Registrar</td>
+      <td>Stjørdal</td>
+      <td>SJ Nord Trønderbanen Nord (Stjørdal–Ranheim–Trondheim S)</td>
+      <td>KRITISK</td>
+      <td>95</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-004</td>
+      <td>Astrid Moen</td>
+      <td>Formidlingsleder</td>
+      <td>Tyholt / Moholt (Trondheim)</td>
+      <td>AtB Metrobuss M3 (Moholt–Midtbyen)</td>
+      <td>LAV</td>
+      <td>35</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-005</td>
+      <td>Terje Bratt</td>
+      <td>Drifts- og eiendomssjef</td>
+      <td>Elgeseter / Øya (Trondheim)</td>
+      <td>AtB Metrobuss M1/M2 (Sør–Midtbyen)</td>
+      <td>KRITISK</td>
+      <td>95</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-006</td>
+      <td>Jonas Berg</td>
+      <td>Seniorvert / Skrankeleder</td>
+      <td>Stjørdal</td>
+      <td>SJ Nord Trønderbanen Nord (Stjørdal–Ranheim–Trondheim S)</td>
+      <td>LAV</td>
+      <td>35</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-007</td>
+      <td>Ragnhild Eide</td>
+      <td>Kvalitets- og complianceansvarlig</td>
+      <td>Bakklandet (Trondheim)</td>
+      <td>Sykkel / Gange (Bakklandet)</td>
+      <td>MODERAT</td>
+      <td>50</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-008</td>
+      <td>Guro Thorvaldsen</td>
+      <td>Museumspedagog</td>
+      <td>Stjørdal</td>
+      <td>SJ Nord Trønderbanen Nord (Stjørdal–Ranheim–Trondheim S)</td>
+      <td>MODERAT</td>
+      <td>50</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-009</td>
+      <td>Liv Eide</td>
+      <td>Sjefkurator</td>
+      <td>Midtbyen (Trondheim)</td>
+      <td>Sykkel / Gange (Midtbyen)</td>
+      <td>MODERAT</td>
+      <td>50</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-010</td>
+      <td>Håkon Bratt</td>
+      <td>Assisterende direktør</td>
+      <td>Byåsen (Trondheim)</td>
+      <td>Gråkallbanen (Lian–Byåsen–Ila–St. Olavs gt)</td>
+      <td>KRITISK</td>
+      <td>85</td>
+    </tr>
+  </tbody>
+</table></div></div>
+            </div>
+            <div class="cell markdown-cell"><h2>2. Geografisk fordeling i Trondheim og Risikoprofil (Alle 168 ansatte)</h2><p>Vi ser først på hvor de 168 ansatte bor i Trondheimsregionen og hvordan eksponeringsrisikoen fordeler seg når grunnlagsdataene kobles sammen.</p></div>
+            <div class="cell code-cell">
+                <div class="code-header"><span class="play-btn">▶</span> <code>[2]</code> Kjørt i Colab (Python 3)</div>
+                <pre class="code-box">print("=== FORDELING PER RISIKONIVÅ (168 ANSATTE) ===")
+print(df_168["risikonivaa"].value_counts())
+
+print("\n=== FORDELING PER BYDEL / KOMMUNE I TRONDHEIMSREGIONEN ===")
+print(df_168["bydel_kommune"].value_counts())
+
+try:
+    import matplotlib.pyplot as plt
+    fig, axes = plt.subplots(1, 2, figsize=(15, 5))
+    df_168["bydel_kommune"].value_counts().plot(kind="barh", ax=axes[0], color="#1f77b4")
+    axes[0].set_title("Bosted i Trondheim & omegn (168 ansatte)")
+    axes[0].set_xlabel("Antall ansatte")
+
+    df_168["risikonivaa"].value_counts().reindex(["KRITISK", "HØY", "MODERAT", "LAV"]).plot(
+        kind="bar", ax=axes[1], color=["#d62728", "#ff7f0e", "#ffbb78", "#2ca02c"]
+    )
+    axes[1].set_title("Mosaikk-risikonivå ved krysskobling av kilder")
+    axes[1].set_ylabel("Antall ansatte")
+    plt.tight_layout()
+    plt.show()
+except ImportError:
+    pass
+</pre>
+                <div class="output-area"><pre class="stdout">=== FORDELING PER RISIKONIVÅ (168 ANSATTE) ===
+risikonivaa
+MODERAT    74
+HØY        37
+KRITISK    33
+LAV        24
+Name: count, dtype: int64
+
+=== FORDELING PER BYDEL / KOMMUNE I TRONDHEIMSREGIONEN ===
+bydel_kommune
+Tiller (Trondheim)               24
+Byåsen (Trondheim)               20
+Stjørdal                         17
+Ranheim (Trondheim)              16
+Ila (Trondheim)                  14
+Lade / Møllenberg (Trondheim)    14
+Tyholt / Moholt (Trondheim)      12
+Bakklandet (Trondheim)           11
+Midtbyen (Trondheim)             10
+Elgeseter / Øya (Trondheim)      10
+Heimdal (Trondheim)              10
+Melhus                           10
+Name: count, dtype: int64
+</pre></div>
+            </div>
+            <div class="cell markdown-cell"><h2>3. Kobling 1: Bosteds-avsløring via AtB Metrobuss, Gråkallbanen og Trønderbanen</h2><p>Selv om en vakt- og fraværsliste er «anonymisert» (kun `ansatt_id`), kan vi kryssjekke datoer for egenmeldinger/forsinkelser mot kjente kollektivsammenbrudd i Trondheim:</p><li>**SJ Nord Trønderbanen Nord:** Stengt ved Hommelvik/Leangen $\rightarrow$ peker ut pendlere fra **Stjørdal og Ranheim**.</li><li>**AtB Metrobuss M1/M2:** Busskaos i Okstadbakken $\rightarrow$ peker ut ansatte på **Tiller og Heimdal**.</li><li>**Gråkallbanen:** Strømstans ved Breidablikk $\rightarrow$ peker ut ansatte på **Byåsen og Ila**.</li></div>
+            <div class="cell code-cell">
+                <div class="code-header"><span class="play-btn">▶</span> <code>[3]</code> Kjørt i Colab (Python 3)</div>
+                <pre class="code-box">kollektiv_treff = df_168[df_168["kollektiv_avvik_kobling"] != "Ingen treff mot kollektivstans"]
+print(f"🚨 Fant {len(kollektiv_treff)} ansatte hvis fravær/forsinkelse avslører eksakt pendlerkorridor i Trondheim:\n")
+display(kollektiv_treff[[
+    "ansatt_id", "navn", "bydel_kommune", "adresse_trondheim",
+    "pendlerlinje_atb", "kollektiv_avvik_kobling"
+]].head(12))
+</pre>
+                <div class="output-area"><pre class="stdout">🚨 Fant 16 ansatte hvis fravær/forsinkelse avslører eksakt pendlerkorridor i Trondheim:
+</pre><div class="table-wrap"><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ansatt_id</th>
+      <th>navn</th>
+      <th>bydel_kommune</th>
+      <th>adresse_trondheim</th>
+      <th>pendlerlinje_atb</th>
+      <th>kollektiv_avvik_kobling</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>KP-ANS-023</td>
+      <td>Thea Larsen</td>
+      <td>Tiller (Trondheim)</td>
+      <td>Ivar Lykkes veg 73, 7075 Tiller (Trondheim)</td>
+      <td>AtB Metrobuss M1/M2 (Tiller/Heimdal–Midtbyen)</td>
+      <td>TRD-AVV-02: Fravær (sykemelding) sammenfaller med 'Snøkaos og sperret Okstadbakken / E6 Sør – leddbusser fast på tvers'</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-029</td>
+      <td>Henrik Helgesen</td>
+      <td>Byåsen (Trondheim)</td>
+      <td>Byåsveien 103, 7020 Byåsen (Trondheim)</td>
+      <td>Gråkallbanen (Lian–Byåsen–Ila–St. Olavs gt)</td>
+      <td>TRD-AVV-03: Fravær (egenmelding) sammenfaller med 'Kjørestrømbrudd og sporvekselfeil ved Breidablikk / Kyvannet'</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-031</td>
+      <td>Bjørn Viken</td>
+      <td>Stjørdal</td>
+      <td>Kjøpmannsgata 28, 7500 Stjørdal</td>
+      <td>SJ Nord Trønderbanen Nord (Stjørdal–Ranheim–Trondheim S)</td>
+      <td>TRD-AVV-01: Fravær (sykemelding) sammenfaller med 'Rasfare og stengt jernbanespor ved Hommelvik/Leangen under ekstremvær'</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-041</td>
+      <td>Christian Pedersen</td>
+      <td>Melhus</td>
+      <td>Melhusvegen 82, 7224 Melhus</td>
+      <td>SJ Nord Trønderbanen Sør (Melhus–Heimdal–Trondheim S)</td>
+      <td>TRD-AVV-04: Fravær (sykemelding) sammenfaller med 'Signalfeil på Dovrebanen/Trønderbanen mellom Heimdal og Selsbakk'</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-089</td>
+      <td>Per Johnsen</td>
+      <td>Byåsen (Trondheim)</td>
+      <td>Byåsveien 76, 7020 Byåsen (Trondheim)</td>
+      <td>Gråkallbanen (Lian–Byåsen–Ila–St. Olavs gt)</td>
+      <td>TRD-AVV-03: Fravær (sykemelding) sammenfaller med 'Kjørestrømbrudd og sporvekselfeil ved Breidablikk / Kyvannet'</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-102</td>
+      <td>Frida Lund</td>
+      <td>Tiller (Trondheim)</td>
+      <td>Ivar Lykkes veg 129, 7075 Tiller (Trondheim)</td>
+      <td>AtB Metrobuss M1/M2 (Tiller/Heimdal–Midtbyen)</td>
+      <td>TRD-AVV-02: Fravær (egenmelding) sammenfaller med 'Snøkaos og sperret Okstadbakken / E6 Sør – leddbusser fast på tvers'</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-103</td>
+      <td>Hilde Johnsen</td>
+      <td>Tiller (Trondheim)</td>
+      <td>Ivar Lykkes veg 26, 7075 Tiller (Trondheim)</td>
+      <td>AtB Metrobuss M1/M2 (Tiller/Heimdal–Midtbyen)</td>
+      <td>TRD-AVV-02: Fravær (sykemelding) sammenfaller med 'Snøkaos og sperret Okstadbakken / E6 Sør – leddbusser fast på tvers'</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-104</td>
+      <td>Geir Viken</td>
+      <td>Stjørdal</td>
+      <td>Kjøpmannsgata 46, 7500 Stjørdal</td>
+      <td>SJ Nord Trønderbanen Nord (Stjørdal–Ranheim–Trondheim S)</td>
+      <td>TRD-AVV-01: Fravær (sykemelding) sammenfaller med 'Rasfare og stengt jernbanespor ved Hommelvik/Leangen under ekstremvær'</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-114</td>
+      <td>Liv Bratt</td>
+      <td>Tiller (Trondheim)</td>
+      <td>Ivar Lykkes veg 39, 7075 Tiller (Trondheim)</td>
+      <td>AtB Metrobuss M1/M2 (Tiller/Heimdal–Midtbyen)</td>
+      <td>TRD-AVV-02: Fravær (egenmelding) sammenfaller med 'Snøkaos og sperret Okstadbakken / E6 Sør – leddbusser fast på tvers'</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-125</td>
+      <td>Hege Nygård</td>
+      <td>Ranheim (Trondheim)</td>
+      <td>Ranheimsvegen 111, 7058 Ranheim (Trondheim)</td>
+      <td>SJ Nord Trønderbanen Nord (Stjørdal–Ranheim–Trondheim S)</td>
+      <td>TRD-AVV-01: Fravær (sykemelding) sammenfaller med 'Rasfare og stengt jernbanespor ved Hommelvik/Leangen under ekstremvær'</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-126</td>
+      <td>Frida Tangen</td>
+      <td>Ranheim (Trondheim)</td>
+      <td>Ranheimsvegen 104, 7058 Ranheim (Trondheim)</td>
+      <td>SJ Nord Trønderbanen Nord (Stjørdal–Ranheim–Trondheim S)</td>
+      <td>TRD-AVV-01: Fravær (sykemelding) sammenfaller med 'Rasfare og stengt jernbanespor ved Hommelvik/Leangen under ekstremvær'</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-127</td>
+      <td>Liv Johansen</td>
+      <td>Ranheim (Trondheim)</td>
+      <td>Ranheimsvegen 96, 7058 Ranheim (Trondheim)</td>
+      <td>SJ Nord Trønderbanen Nord (Stjørdal–Ranheim–Trondheim S)</td>
+      <td>TRD-AVV-01: Fravær (sykemelding) sammenfaller med 'Rasfare og stengt jernbanespor ved Hommelvik/Leangen under ekstremvær'</td>
+    </tr>
+  </tbody>
+</table></div></div>
+            </div>
+            <div class="cell markdown-cell"><h2>4. Kobling 2: Avsløring av Helseopplysninger (GDPR Art. 9), Fagforening og Overtidsbrudd</h2><p>Ved å kombinere stasjonsplassering time-for-time med fraværsmønster og overtidsjusteringer (`>= 10 timer`), kan algoritmen identifisere ansatte med rygg-/belastningslidelser, lysmigrene og høy utbrenthetsrisiko.</p></div>
+            <div class="cell code-cell">
+                <div class="code-header"><span class="play-btn">▶</span> <code>[4]</code> Kjørt i Colab (Python 3)</div>
+                <pre class="code-box">helse_utsatte = df_168[
+    (df_168["helse_ergonomi_art9"] != "Ingen registrerte helsebegrensninger") &
+    (df_168["sykefravaer_dager"] >= 20)
+].sort_values(by="sykefravaer_dager", ascending=False)
+
+print(f"⚠️ {len(helse_utsatte)} ansatte med eksponert Art. 9 helseprofil kombinert med høyt fravær og stasjonsslitasje:")
+display(helse_utsatte[[
+    "ansatt_id", "navn", "stilling", "primar_stasjon",
+    "helse_ergonomi_art9", "fagforening_art9",
+    "sykefravaer_dager", "overtid_aml_brudd"
+]].head(12))
+</pre>
+                <div class="output-area"><pre class="stdout">⚠️ 96 ansatte med eksponert Art. 9 helseprofil kombinert med høyt fravær og stasjonsslitasje:
+</pre><div class="table-wrap"><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ansatt_id</th>
+      <th>navn</th>
+      <th>stilling</th>
+      <th>primar_stasjon</th>
+      <th>helse_ergonomi_art9</th>
+      <th>fagforening_art9</th>
+      <th>sykefravaer_dager</th>
+      <th>overtid_aml_brudd</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>KP-ANS-001</td>
+      <td>Henrik Faye-Lund</td>
+      <td>Museumsdirektør</td>
+      <td>Administrasjonsfløyen 3. etg</td>
+      <td>Tinnitus / lydsensitivitet: Fritak fra barneverksteder og fullsatte skoleomvisninger</td>
+      <td>Econas</td>
+      <td>755</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-010</td>
+      <td>Håkon Bratt</td>
+      <td>Assisterende direktør</td>
+      <td>Administrasjonsfløyen 3. etg</td>
+      <td>BHT-notat: Migrene utløst av flimrende spotbelysning i Sal C og Sal E</td>
+      <td>Uorganisert</td>
+      <td>731</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-025</td>
+      <td>Maren Moen</td>
+      <td>HR- og organisasjonsrådgiver</td>
+      <td>Administrasjonsfløyen 3. etg</td>
+      <td>Astma/støvallergi: Skal unngå lengre arbeid i eldre magasin uten åndedrettsvern</td>
+      <td>Forskerforbundet</td>
+      <td>669</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-031</td>
+      <td>Bjørn Viken</td>
+      <td>Assisterende direktør</td>
+      <td>Administrasjonsfløyen 3. etg</td>
+      <td>Tinnitus / lydsensitivitet: Fritak fra barneverksteder og fullsatte skoleomvisninger</td>
+      <td>Samfunnsviterne</td>
+      <td>656</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-043</td>
+      <td>Sigrid Ruud</td>
+      <td>Kurator modernisme</td>
+      <td>Kuratorfløyen 2. etg</td>
+      <td>Tinnitus / lydsensitivitet: Fritak fra barneverksteder og fullsatte skoleomvisninger</td>
+      <td>Uorganisert</td>
+      <td>649</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-032</td>
+      <td>Fredrik Nygård</td>
+      <td>Kurator samtidskunst</td>
+      <td>Kuratorfløyen 2. etg</td>
+      <td>Redusert nattesøvn / fritak fra seine kveldsvakter etter kl. 20:00 (BHT)</td>
+      <td>Parat</td>
+      <td>625</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-041</td>
+      <td>Christian Pedersen</td>
+      <td>Sjefkurator</td>
+      <td>Kuratorfløyen 2. etg</td>
+      <td>Senebetennelse/belastningsskade skulder etter tung utstillingsmontering</td>
+      <td>Forskerforbundet</td>
+      <td>591</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-007</td>
+      <td>Ragnhild Eide</td>
+      <td>Kvalitets- og complianceansvarlig</td>
+      <td>Administrasjonsfløyen 3. etg</td>
+      <td>BHT-notat: Migrene utløst av flimrende spotbelysning i Sal C og Sal E</td>
+      <td>Uorganisert</td>
+      <td>530</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-009</td>
+      <td>Liv Eide</td>
+      <td>Sjefkurator</td>
+      <td>Kuratorfløyen 2. etg</td>
+      <td>Senebetennelse/belastningsskade skulder etter tung utstillingsmontering</td>
+      <td>Parat</td>
+      <td>461</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-002</td>
+      <td>Silje Lindqvist</td>
+      <td>Sjefkurator</td>
+      <td>Kuratorfløyen 2. etg</td>
+      <td>BHT-notat: Migrene utløst av flimrende spotbelysning i Sal C og Sal E</td>
+      <td>Forskerforbundet</td>
+      <td>457</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-016</td>
+      <td>Sverre Ruud</td>
+      <td>Økonomisjef</td>
+      <td>Administrasjonsfløyen 3. etg</td>
+      <td>Redusert nattesøvn / fritak fra seine kveldsvakter etter kl. 20:00 (BHT)</td>
+      <td>Samfunnsviterne</td>
+      <td>404</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-070</td>
+      <td>Per Moen</td>
+      <td>Kurator samtidskunst</td>
+      <td>Kuratorfløyen 2. etg</td>
+      <td>BHT-notat: Migrene utløst av flimrende spotbelysning i Sal C og Sal E</td>
+      <td>Parat</td>
+      <td>376</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table></div></div>
+            </div>
+            <div class="cell markdown-cell"><h2>5. Kobling 3: Skattelister vs. Virke-lønnstrinn & Brønnøysund-habilitet</h2><p>Når museets interne lønnstrinn (Virke-tabellen) er kjent, kan hvem som helst kryssjekke dette mot offentlige skattelister og Brønnøysundregistrene:</p><p>1. **Positivt gap (Skatteliste $\gg$ Virke-lønn):** Avslører skjult bi-inntekt, konsulentvirksomhet eller utleie.</p><p>2. **Negativt gap (Skatteliste $\ll$ Virke-lønn):** Avslører store rentefradrag / tung privat gjeldsbelastning.</p><p>3. **Etternavn + Roller mot `hr_innleie`:** Avslører ansatte som bestiller eller godkjenner oppdrag fra egne familiemedlemmer!</p></div>
+            <div class="cell code-cell">
+                <div class="code-header"><span class="play-btn">▶</span> <code>[5]</code> Kjørt i Colab (Python 3)</div>
+                <pre class="code-box">habilitet_og_okonomi = df_168[
+    (df_168["habilitet_flagg"] != "Ingen registrert konflikt") |
+    (df_168["inntektsavvik_analyse"].str.contains("avslører"))
+].sort_values(by="mosaikk_risikoscore", ascending=False)
+
+print(f"🔍 Fant {len(habilitet_og_okonomi)} ansatte med betydelige økonomiske avvik eller habilitetsbånd:")
+display(habilitet_og_okonomi[[
+    "ansatt_id", "navn", "stilling", "virke_aarslonn_nok",
+    "skatteliste_nettoinntekt", "skatteliste_nettoformue",
+    "inntektsavvik_analyse", "habilitet_flagg"
+]].head(15))
+</pre>
+                <div class="output-area"><pre class="stdout">🔍 Fant 56 ansatte med betydelige økonomiske avvik eller habilitetsbånd:
+</pre><div class="table-wrap"><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ansatt_id</th>
+      <th>navn</th>
+      <th>stilling</th>
+      <th>virke_aarslonn_nok</th>
+      <th>skatteliste_nettoinntekt</th>
+      <th>skatteliste_nettoformue</th>
+      <th>inntektsavvik_analyse</th>
+      <th>habilitet_flagg</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>KP-ANS-031</td>
+      <td>Bjørn Viken</td>
+      <td>Assisterende direktør</td>
+      <td>972700</td>
+      <td>1366024</td>
+      <td>2803991</td>
+      <td>Skatteliste er +510,048 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+      <td>OBS HABILITET: Nær familierelasjon til ekstern konsulent (45 kontrakter)</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-146</td>
+      <td>Espen Ruud</td>
+      <td>Kurator modernisme</td>
+      <td>874600</td>
+      <td>1179753</td>
+      <td>4090956</td>
+      <td>Skatteliste er +410,105 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+      <td>OBS HABILITET: Slektskap/styreverv hos fast kunsttransportør (49 kontrakter)</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-104</td>
+      <td>Geir Viken</td>
+      <td>Forskningsstipendiat</td>
+      <td>831000</td>
+      <td>1214364</td>
+      <td>9162884</td>
+      <td>Skatteliste er +483,084 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+      <td>OBS HABILITET: Nær familierelasjon til ekstern konsulent (45 kontrakter)</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-114</td>
+      <td>Liv Bratt</td>
+      <td>Magasinforvalter</td>
+      <td>722000</td>
+      <td>1138588</td>
+      <td>3602639</td>
+      <td>Skatteliste er +503,228 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+      <td>OBS HABILITET: Godkjenner egne driftskontrakter og har slekt i vakthold</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-128</td>
+      <td>Kari Ruud</td>
+      <td>Assisterende direktør</td>
+      <td>983600</td>
+      <td>1403850</td>
+      <td>5208135</td>
+      <td>Skatteliste er +538,282 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+      <td>OBS HABILITET: Slektskap/styreverv hos fast kunsttransportør (49 kontrakter)</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-003</td>
+      <td>Gunnar Viken</td>
+      <td>Samlingsforvalter / Registrar</td>
+      <td>918200</td>
+      <td>1425849</td>
+      <td>8259701</td>
+      <td>Skatteliste er +617,833 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+      <td>OBS HABILITET: Nær familierelasjon til ekstern konsulent (45 kontrakter)</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-021</td>
+      <td>Per Ruud</td>
+      <td>Kommunikasjons- og markedssjef</td>
+      <td>907300</td>
+      <td>1240501</td>
+      <td>4948575</td>
+      <td>Skatteliste er +442,077 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+      <td>OBS HABILITET: Slektskap/styreverv hos fast kunsttransportør (49 kontrakter)</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-005</td>
+      <td>Terje Bratt</td>
+      <td>Drifts- og eiendomssjef</td>
+      <td>961800</td>
+      <td>1107697</td>
+      <td>6130852</td>
+      <td>Skatteliste er +261,313 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+      <td>OBS HABILITET: Godkjenner egne driftskontrakter og har slekt i vakthold</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-023</td>
+      <td>Thea Larsen</td>
+      <td>Museumspedagog</td>
+      <td>216600</td>
+      <td>834244</td>
+      <td>8725519</td>
+      <td>Skatteliste er +643,636 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+      <td>Ingen registrert konflikt</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-085</td>
+      <td>Andreas Ruud</td>
+      <td>Digital innholdsprodusent / Web</td>
+      <td>831000</td>
+      <td>1012056</td>
+      <td>9638499</td>
+      <td>Skatteliste er +280,776 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+      <td>OBS HABILITET: Slektskap/styreverv hos fast kunsttransportør (49 kontrakter)</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-059</td>
+      <td>Guro Haugen</td>
+      <td>Forskningsstipendiat</td>
+      <td>820100</td>
+      <td>1071335</td>
+      <td>3172358</td>
+      <td>Skatteliste er +349,647 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+      <td>OBS HABILITET: Bånd til kontaktperson for vakthold (49 kontrakter)</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-074</td>
+      <td>Even Haugen</td>
+      <td>Kafémedarbeider (Deltid)</td>
+      <td>164300</td>
+      <td>424398</td>
+      <td>8396405</td>
+      <td>Skatteliste er +279,814 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+      <td>OBS HABILITET: Bånd til kontaktperson for vakthold (49 kontrakter)</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-075</td>
+      <td>Elin Viken</td>
+      <td>Forskningsstipendiat</td>
+      <td>765600</td>
+      <td>1023851</td>
+      <td>2493643</td>
+      <td>Skatteliste er +350,123 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+      <td>OBS HABILITET: Nær familierelasjon til ekstern konsulent (45 kontrakter)</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-143</td>
+      <td>Hilde Viken</td>
+      <td>Kaféleder</td>
+      <td>743800</td>
+      <td>1230210</td>
+      <td>4742735</td>
+      <td>Skatteliste er +575,666 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+      <td>OBS HABILITET: Nær familierelasjon til ekstern konsulent (45 kontrakter)</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-101</td>
+      <td>Kristian Solberg</td>
+      <td>Assisterende direktør</td>
+      <td>1016300</td>
+      <td>1549522</td>
+      <td>7021631</td>
+      <td>Skatteliste er +655,178 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+      <td>OBS HABILITET: Familierelasjon til leverandør av utstillingslys (48 kontrakter)</td>
+    </tr>
+  </tbody>
+</table></div></div>
+            </div>
+            <div class="cell markdown-cell"><h2>6. Komplett Mosaikk-rapport: De mest eksponerte ansatte ved museet i Trondheim</h2><p>Tabellen under viser hvordan enkeltbitene danner et komplett, høy-sensitivt personkort når alle kildene slås sammen.</p></div>
+            <div class="cell code-cell">
+                <div class="code-header"><span class="play-btn">▶</span> <code>[6]</code> Kjørt i Colab (Python 3)</div>
+                <pre class="code-box">kritiske = df_168[df_168["risikonivaa"] == "KRITISK"].sort_values(by="mosaikk_risikoscore", ascending=False)
+print(f"🔴 Totalt {len(kritiske)} ansatte har KRITISK eksponeringsrisiko (Score >= 75/100):")
+display(kritiske[[
+    "ansatt_id", "navn", "fodselsdato", "adresse_trondheim",
+    "stilling", "mosaikk_risikoscore", "avslort_sensitiv_innsikt"
+]].head(20))
+</pre>
+                <div class="output-area"><pre class="stdout">🔴 Totalt 33 ansatte har KRITISK eksponeringsrisiko (Score >= 75/100):
+</pre><div class="table-wrap"><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ansatt_id</th>
+      <th>navn</th>
+      <th>fodselsdato</th>
+      <th>adresse_trondheim</th>
+      <th>stilling</th>
+      <th>mosaikk_risikoscore</th>
+      <th>avslort_sensitiv_innsikt</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>KP-ANS-031</td>
+      <td>Bjørn Viken</td>
+      <td>1995-12-10</td>
+      <td>Kjøpmannsgata 28, 7500 Stjørdal</td>
+      <td>Assisterende direktør</td>
+      <td>100</td>
+      <td>k=1 på 'Administrasjonsfløyen 3. etg' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: Tinnitus / lydsensitivitet: Fritak fra barneverksteder og fullsatte skoleomvisninger (656 fraværsdager) | Geolokasjon avslørt via AtB/Trønderbanen: Bor i Stjørdal (7500) | OBS HABILITET: Nær familierelasjon til ekstern konsulent (45 kontrakter) | Skatteliste er +510,048 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-128</td>
+      <td>Kari Ruud</td>
+      <td>1976-03-06</td>
+      <td>Ilevollen 22, 7018 Ila (Trondheim)</td>
+      <td>Assisterende direktør</td>
+      <td>100</td>
+      <td>k=1 på 'Administrasjonsfløyen 3. etg' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: Senebetennelse/belastningsskade skulder etter tung utstillingsmontering (185 fraværsdager) | Geolokasjon avslørt via AtB/Trønderbanen: Bor i Ila (Trondheim) (7018) | OBS HABILITET: Slektskap/styreverv hos fast kunsttransportør (49 kontrakter) | Skatteliste er +538,282 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-146</td>
+      <td>Espen Ruud</td>
+      <td>1982-09-13</td>
+      <td>Melhusvegen 34, 7224 Melhus</td>
+      <td>Kurator modernisme</td>
+      <td>100</td>
+      <td>k=1 på 'Kuratorfløyen 2. etg' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: STAMI-tilrettelegging: Maks 2t sammenhengende ståtid (korsrygg/prolaps) (117 fraværsdager) | Geolokasjon avslørt via AtB/Trønderbanen: Bor i Melhus (7224) | OBS HABILITET: Slektskap/styreverv hos fast kunsttransportør (49 kontrakter) | Skatteliste er +410,105 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-104</td>
+      <td>Geir Viken</td>
+      <td>1976-05-11</td>
+      <td>Kjøpmannsgata 46, 7500 Stjørdal</td>
+      <td>Forskningsstipendiat</td>
+      <td>100</td>
+      <td>k=1 på 'Kuratorfløyen 2. etg' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: Redusert nattesøvn / fritak fra seine kveldsvakter etter kl. 20:00 (BHT) (179 fraværsdager) | Geolokasjon avslørt via AtB/Trønderbanen: Bor i Stjørdal (7500) | OBS HABILITET: Nær familierelasjon til ekstern konsulent (45 kontrakter) | Skatteliste er +483,084 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-114</td>
+      <td>Liv Bratt</td>
+      <td>1987-04-27</td>
+      <td>Ivar Lykkes veg 39, 7075 Tiller (Trondheim)</td>
+      <td>Magasinforvalter</td>
+      <td>100</td>
+      <td>k=1 på 'Magasin 1 (Klimastyrt lager)' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: BHT-notat: Migrene utløst av flimrende spotbelysning i Sal C og Sal E (71 fraværsdager) | Geolokasjon avslørt via AtB/Trønderbanen: Bor i Tiller (Trondheim) (7075) | OBS HABILITET: Godkjenner egne driftskontrakter og har slekt i vakthold | Skatteliste er +503,228 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-003</td>
+      <td>Gunnar Viken</td>
+      <td>1974-04-23</td>
+      <td>Kjøpmannsgata 109, 7500 Stjørdal</td>
+      <td>Samlingsforvalter / Registrar</td>
+      <td>95</td>
+      <td>k=1 på 'Magasin 1 (Klimastyrt lager)' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: STAMI-tilrettelegging: Maks 2t sammenhengende ståtid (korsrygg/prolaps) (127 fraværsdager) | OBS HABILITET: Nær familierelasjon til ekstern konsulent (45 kontrakter) | Skatteliste er +617,833 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring | AML-risiko: 15 vakter med 10-11 timers varighet</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-005</td>
+      <td>Terje Bratt</td>
+      <td>1969-06-20</td>
+      <td>Elgeseter gate 13, 7030 Elgeseter / Øya (Trondheim)</td>
+      <td>Drifts- og eiendomssjef</td>
+      <td>95</td>
+      <td>k=1 på 'Vaktrom / Sikkerhetssentral' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: Senebetennelse/belastningsskade skulder etter tung utstillingsmontering (193 fraværsdager) | OBS HABILITET: Godkjenner egne driftskontrakter og har slekt i vakthold | Skatteliste er +261,313 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring | AML-risiko: 12 vakter med 10-11 timers varighet</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-023</td>
+      <td>Thea Larsen</td>
+      <td>1981-08-05</td>
+      <td>Ivar Lykkes veg 73, 7075 Tiller (Trondheim)</td>
+      <td>Museumspedagog</td>
+      <td>95</td>
+      <td>k=1 på 'Sal A (Mytologi og natur)' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: Senebetennelse/belastningsskade skulder etter tung utstillingsmontering (135 fraværsdager) | Geolokasjon avslørt via AtB/Trønderbanen: Bor i Tiller (Trondheim) (7075) | Skatteliste er +643,636 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring | AML-risiko: 17 vakter med 10-11 timers varighet</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-021</td>
+      <td>Per Ruud</td>
+      <td>1985-08-26</td>
+      <td>Jonsvannsveien 50, 7052 Tyholt / Moholt (Trondheim)</td>
+      <td>Kommunikasjons- og markedssjef</td>
+      <td>95</td>
+      <td>k=1 på 'Resepsjon og billett' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: BHT-notat: Migrene utløst av flimrende spotbelysning i Sal C og Sal E (11 fraværsdager) | OBS HABILITET: Slektskap/styreverv hos fast kunsttransportør (49 kontrakter) | Skatteliste er +442,077 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring | AML-risiko: 46 vakter med 10-11 timers varighet</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-085</td>
+      <td>Andreas Ruud</td>
+      <td>1982-11-13</td>
+      <td>Ivar Lykkes veg 11, 7075 Tiller (Trondheim)</td>
+      <td>Digital innholdsprodusent / Web</td>
+      <td>95</td>
+      <td>k=1 på 'Museumsbutikk' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: BHT-notat: Migrene utløst av flimrende spotbelysning i Sal C og Sal E (1 fraværsdager) | OBS HABILITET: Slektskap/styreverv hos fast kunsttransportør (49 kontrakter) | Skatteliste er +280,776 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring | AML-risiko: 33 vakter med 10-11 timers varighet</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-078</td>
+      <td>Gunnar Viken</td>
+      <td>1984-03-18</td>
+      <td>Nedre Bakklandet 42, 7014 Bakklandet (Trondheim)</td>
+      <td>Samlingsforvalter / Registrar</td>
+      <td>85</td>
+      <td>k=1 på 'Magasin 1 (Klimastyrt lager)' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: Astma/støvallergi: Skal unngå lengre arbeid i eldre magasin uten åndedrettsvern (71 fraværsdager) | OBS HABILITET: Nær familierelasjon til ekstern konsulent (45 kontrakter) | Skatteliste er +237,112 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-059</td>
+      <td>Guro Haugen</td>
+      <td>1980-12-18</td>
+      <td>Munkegata 91, 7011 Midtbyen (Trondheim)</td>
+      <td>Forskningsstipendiat</td>
+      <td>85</td>
+      <td>k=1 på 'Kuratorfløyen 2. etg' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: STAMI-tilrettelegging: Maks 2t sammenhengende ståtid (korsrygg/prolaps) (321 fraværsdager) | OBS HABILITET: Bånd til kontaktperson for vakthold (49 kontrakter) | Skatteliste er +349,647 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-055</td>
+      <td>Sindre Ruud</td>
+      <td>2001-12-24</td>
+      <td>Ivar Lykkes veg 58, 7075 Tiller (Trondheim)</td>
+      <td>Museumsvert og omviser (Deltid)</td>
+      <td>85</td>
+      <td>k=1 på 'Sal D (Eksistens og modernisme)' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: Astma/støvallergi: Skal unngå lengre arbeid i eldre magasin uten åndedrettsvern (19 fraværsdager) | OBS HABILITET: Slektskap/styreverv hos fast kunsttransportør (49 kontrakter) | Skatteliste er +474,616 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-016</td>
+      <td>Sverre Ruud</td>
+      <td>1981-01-08</td>
+      <td>Rosten 22, 7088 Heimdal (Trondheim)</td>
+      <td>Økonomisjef</td>
+      <td>85</td>
+      <td>k=1 på 'Administrasjonsfløyen 3. etg' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: Redusert nattesøvn / fritak fra seine kveldsvakter etter kl. 20:00 (BHT) (404 fraværsdager) | OBS HABILITET: Slektskap/styreverv hos fast kunsttransportør (49 kontrakter) | Skatteliste er +621,517 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-010</td>
+      <td>Håkon Bratt</td>
+      <td>1984-12-11</td>
+      <td>Byåsveien 129, 7020 Byåsen (Trondheim)</td>
+      <td>Assisterende direktør</td>
+      <td>85</td>
+      <td>k=1 på 'Administrasjonsfløyen 3. etg' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: BHT-notat: Migrene utløst av flimrende spotbelysning i Sal C og Sal E (731 fraværsdager) | OBS HABILITET: Godkjenner egne driftskontrakter og har slekt i vakthold | Skatteliste er +349,303 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-028</td>
+      <td>Magnus Bratt</td>
+      <td>1983-02-19</td>
+      <td>Byåsveien 12, 7020 Byåsen (Trondheim)</td>
+      <td>Audioguide- og innholdsprodusent</td>
+      <td>85</td>
+      <td>k=1 på 'Sal D (Eksistens og modernisme)' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: STAMI-tilrettelegging: Maks 2t sammenhengende ståtid (korsrygg/prolaps) (31 fraværsdager) | OBS HABILITET: Godkjenner egne driftskontrakter og har slekt i vakthold | Skatteliste er +327,090 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-043</td>
+      <td>Sigrid Ruud</td>
+      <td>1991-02-24</td>
+      <td>Elgeseter gate 131, 7030 Elgeseter / Øya (Trondheim)</td>
+      <td>Kurator modernisme</td>
+      <td>85</td>
+      <td>k=1 på 'Kuratorfløyen 2. etg' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: Tinnitus / lydsensitivitet: Fritak fra barneverksteder og fullsatte skoleomvisninger (649 fraværsdager) | OBS HABILITET: Slektskap/styreverv hos fast kunsttransportør (49 kontrakter) | Skatteliste er +375,008 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-106</td>
+      <td>Lars Haugen</td>
+      <td>1987-04-28</td>
+      <td>Kjøpmannsgata 103, 7500 Stjørdal</td>
+      <td>Audioguide- og innholdsprodusent</td>
+      <td>85</td>
+      <td>k=1 på 'Sal E (Temporær utstilling)' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: STAMI-tilrettelegging: Maks 2t sammenhengende ståtid (korsrygg/prolaps) (40 fraværsdager) | OBS HABILITET: Bånd til kontaktperson for vakthold (49 kontrakter) | Skatteliste er +358,652 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-101</td>
+      <td>Kristian Solberg</td>
+      <td>1993-08-04</td>
+      <td>Byåsveien 99, 7020 Byåsen (Trondheim)</td>
+      <td>Assisterende direktør</td>
+      <td>85</td>
+      <td>k=1 på 'Administrasjonsfløyen 3. etg' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: STAMI-tilrettelegging: Maks 2t sammenhengende ståtid (korsrygg/prolaps) (75 fraværsdager) | OBS HABILITET: Familierelasjon til leverandør av utstillingslys (48 kontrakter) | Skatteliste er +655,178 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+    </tr>
+    <tr>
+      <td>KP-ANS-075</td>
+      <td>Elin Viken</td>
+      <td>1985-02-13</td>
+      <td>Ranheimsvegen 20, 7058 Ranheim (Trondheim)</td>
+      <td>Forskningsstipendiat</td>
+      <td>85</td>
+      <td>k=1 på 'Kuratorfløyen 2. etg' gir eksakt lokasjonssporing time-for-time | Art. 9 Helse: STAMI-tilrettelegging: Maks 2t sammenhengende ståtid (korsrygg/prolaps) (111 fraværsdager) | OBS HABILITET: Nær familierelasjon til ekstern konsulent (45 kontrakter) | Skatteliste er +350,123 kr høyere enn museets lønn -&gt; avslører skjult bi-inntekt/næring</td>
+    </tr>
+  </tbody>
+</table></div></div>
+            </div>
+            
+  </div>
+</body>
+</html>
