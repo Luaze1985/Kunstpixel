@@ -1,0 +1,5 @@
+UTKAST-aktiviteter.csv er en redigerbar arbeidskopi av aktivitetene i ../planning_week.json.
+
+Lagre-knappen i datasett-redigereren skriver bare til CSV-filen og lager en .bak-kopi.
+Den oppdaterer ikke museumsdemoen eller planning_week.json automatisk.
+Endringer må kontrolleres mot personer, vakter, tidspunkter og kilder før de kan tas inn i ukegrunnlaget.
