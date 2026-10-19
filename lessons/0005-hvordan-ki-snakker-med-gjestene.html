@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leksjon 5: Hvordan KI-en faktisk snakker med gjestene</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .dialog-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .bubble {
+      padding: 1.2rem 1.5rem;
+      border-radius: 12px;
+      max-width: 80%;
+      line-height: 1.5;
+    }
+    .bubble-user {
+      align-self: flex-start;
+      background: #f1f2f4;
+      border: 1px solid var(--border);
+    }
+    .bubble-engine {
+      align-self: center;
+      background: #edf5ff;
+      border: 2px dashed var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: #0043ce;
+    }
+    .bubble-agent {
+      align-self: flex-end;
+      background: #defbe6;
+      border: 1px solid #198038;
+      color: #0f5123;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="meta-tag">Leksjon 0005 • Kunstpixel & KI i drift</div>
+    <h1>Hvordan KI-en faktisk snakker med gjestene (Personaen)</h1>
+    
+    <p style="font-size: 1.2rem;">
+      Nå har vi sett på databasen (fasiten) og MCP (verktøykassen).<br>
+      Det siste leddet er <strong>Personaen</strong>: Hvordan KI-en tar kalde databasetall og forvandler dem til en varm, levende samtale.
+    </p>
+
+    <h2>Se hva som skjer i kulissene på ett sekund</h2>
+    <p>Når en gjest kommer inn og spør om "Skrik", skjer det en 3-trinns stafett:</p>
+
+    <div class="dialog-flow">
+      <!-- STEG 1: GJESTEN -->
+      <div class="bubble bubble-user">
+        <strong>🧑 Gjesten spør:</strong><br>
+        <em>"Hei! Hvor finner jeg Skrik, og hva henger i nærheten?"</em>
+      </div>
+
+      <!-- STEG 2: VERKTØYET -->
+      <div class="bubble bubble-engine">
+        ⚙️ <strong>Hjernen (FastMCP + SQLite):</strong><br>
+        1. Kaller verktøyet: <code>get_artwork_details('Skrik')</code><br>
+        2. Finner fasit: Sal <strong>SAL-D (2. etasje)</strong>, teknikk: Tempera/oljekritt.<br>
+        3. Finner nabo-verk i samme sal: <em>Pikene på broen</em> og <em>N. 7 – Stor blå fjellform</em>.
+      </div>
+
+      <!-- STEG 3: PERSONAEN -->
+      <div class="bubble bubble-agent">
+        🏛️ <strong>Museumsverten (KI-stemmen svarer):</strong><br>
+        <em>"Edvard Munchs mesterverk 'Skrik' henger utstilt i Sal D i 2. etasje. Ta hovedtrappen eller heisen ved kafeen rett opp! I samme sal kan du også oppleve hans poetiske 'Pikene på broen' og Anna-Eva Bergmans monumentale fjellform."</em>
+      </div>
+    </div>
+
+    <h2>Hvorfor kan vi ikke bare la databasen svare direkte?</h2>
+    <div class="box box-info">
+      <p style="margin: 0; font-size: 1.05rem;">
+        Hvis databasen svarte direkte uten KI, ville gjesten fått opp en rå tabellrad:<br>
+        <code>{"id": "AURA-2026-009", "sal": "SAL-D", "aar": 1893}</code>.<br>
+        Det er <strong>ubrukelig</strong> for et menneske som står i foajeen og lurer på hvor de skal gå.
+      </p>
+    </div>
+
+    <h2>De 3 reglene for god KI-formidling:</h2>
+    <ol style="font-size: 1.1rem; line-height: 1.8;">
+      <li><strong>Aldri akademisk snobberi:</strong> Ikke bruk tunge kunsthistoriske fremmedord med mindre gjesten spør om det. Hold det varmt og tilgjengelig.</li>
+      <li><strong>Konkret veivisning:</strong> Koble fakta til den fysiske bygningen (<em>"ta heisen ved kafeen til 2. etasje"</em>).</li>
+      <li><strong>Faktaene er låst:</strong> Verten har aldri lov til å flytte Skrik til Sal A bare for at det skal passe bedre i teksten. Sal D er Sal D.</li>
+    </ol>
+
+    <div class="interactive-quiz">
+      <h3 style="margin-top:0;">Spørsmål: Hva er den største fordelen med å ha en "Museumsvert-persona" oppå databasen?</h3>
+      
+      <div class="quiz-option" onclick="checkAnswer(1)">
+        <strong>A:</strong> Den gjør at vi slipper å ha en database i det hele tatt.
+      </div>
+      <div class="quiz-option" onclick="checkAnswer(2)">
+        <strong>B:</strong> Den oversetter tørre databasetall til en naturlig, hjelpsom og varm opplevelse for gjesten, uten at faktaene forandrer seg.
+      </div>
+
+      <div id="quiz-feedback" class="feedback-area"></div>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 2rem 0;">
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      <a href="0004-unnga-tallfeil-og-regler.html">← Leksjon 4 (Unngå tallfeil)</a> | 
+      <a href="0003-helt-enkelt-api-vs-mcp.html">Leksjon 3 (Enkelt forklart)</a>
+    </p>
+  </div>
+
+  <script>
+    function checkAnswer(choice) {
+      const fb = document.getElementById('quiz-feedback');
+      fb.style.display = 'block';
+      if (choice === 2) {
+        fb.className = 'feedback-area box-fasit';
+        fb.innerHTML = '<strong>Helt riktig!</strong> Det er dette som er magien med KI i drift: Faktaene forblir 100 % trygge og korrekte i databasen, mens KI-en gir opplevelsen sjel, varme og god veiledning.';
+      } else {
+        fb.className = 'feedback-area box-info';
+        fb.innerHTML = 'Nei, vi MÅ ha databasen for å ha fasiten. Personaen er bare formidleren!';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leksjon 7: Dag-for-dag data og deterministisk validering</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="meta-tag">Leksjon 0007 • Kunstpixel & KI i drift</div>
+    <h1>Dag-for-dag data, pandas og deterministisk validering</h1>
+    
+    <p style="font-size: 1.2rem; line-height: 1.5;">
+      Nå har vi oppgradert Kunstpixel! Fra å bare ha overordnede tall per utstilling, har vi nå 
+      <strong>full dag-for-dag og uke-for-uke historikk for alle 17 år (2010–2026)</strong>.
+    </p>
+
+    <div class="box box-fasit">
+      <strong>Hva vi har bygget og verifisert:</strong><br>
+      • <strong>6 209 dager</strong> generert med lokalt Python-skript (pandas + numpy).<br>
+      • Lagret autoritativt i tabellen <code>dagsbesok</code> i <code>05_data/museum.db</code> og som CSV.<br>
+      • <strong>100 % verifisert med <code>deterministisk-validator</code> (pytest):</strong> Alle 6 strenge matematiske regler bestått på 0,33 sekunder!
+    </div>
+
+    <h2>1. Se sesongsvingningene: Sommerhøyde vs. Vinter</h2>
+    <p>
+      Med dag-for-dag data kan vi nå visualisere akkurat når publikum kommer og når inntektene skapes:
+    </p>
+
+    <div style="text-align: center; margin: 1.5rem 0;">
+      <img src="../assets/uke_besok_2024.png" alt="Uke for uke besøkstall 2024" style="max-width: 90%; border: 1px solid var(--border); border-radius: 6px;">
+      <p style="font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem;">Figur: Ukentlig besøk i 2024. Merk toppen i uke 26–32 (fellesferien) på over 5 500 gjester/uke.</p>
+    </div>
+
+    <h2>2. Hva sjekker den "deterministiske validatoren"?</h2>
+    <p>
+      I stedet for å spørre en KI "ser disse tallene greie ut?", kjører vi <strong>deterministiske regler i kode</strong> (uten tokens, uten synsing):
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Regel</th>
+          <th>Hva som testes</th>
+          <th>Resultat</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Mandager stengt</strong></td>
+          <td>Er <code>besok_totalt == 0</code> og <code>inntekt_nok == 0</code> for alle mandager?</td>
+          <td><span style="color:var(--success); font-weight:bold;">PASS (100 %)</span></td>
+        </tr>
+        <tr>
+          <td><strong>Kategorisum</strong></td>
+          <td>Er <code>antall_voksne + antall_student + antall_barn == besok_totalt</code> på samtlige 6 209 rader?</td>
+          <td><span style="color:var(--success); font-weight:bold;">PASS (0 feil)</span></td>
+        </tr>
+        <tr>
+          <td><strong>Prisintegritet</strong></td>
+          <td>Er <code>inntekt == (voksne * 120 + student * 80)</code>, unntatt første søndag i måneden (gratisdag)?</td>
+          <td><span style="color:var(--success); font-weight:bold;">PASS (100 %)</span></td>
+        </tr>
+        <tr>
+          <td><strong>Fullstendighet</strong></td>
+          <td>Nøyaktig 6 209 dager fra 2010-01-01 til 2026-12-31 uten hull eller NULL-verdier.</td>
+          <td><span style="color:var(--success); font-weight:bold;">PASS</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>3. Hva kan du nå spørre systemet om?</h2>
+    <p>Prøv å stille slike spørsmål nå som databasen har fasiten:</p>
+    <ul>
+      <li><em>"Hvor mange besøkende hadde vi i uke 28 i 2024, og hva var billettinntekten?"</em><br>
+          👉 <strong>Fasit:</strong> 5 403 besøkende og 457 800 kr i inntekt.</li>
+      <li><em>"Hvor mye taper museet på gratis inngang første søndag i måneden i snitt?"</em><br>
+          👉 <strong>Fasit:</strong> Rundt 70 000–90 000 kr per søndag.</li>
+    </ul>
+
+    <div class="box box-info">
+      <strong>Verdien for deg som gründer:</strong><br>
+      Du har nå et komplett, helhetlig system: <strong>Historiske data (pandas) → Sannhetskilde (SQLite) → Verktøy (MCP) → Formidling (KI) → Kvalitetskontroll (Deterministisk validator)</strong>.
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 2rem 0;">
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      <a href="0006-handboker-og-inntektsberegning.html">← Leksjon 6 (Inntekter & Håndbøker)</a> | 
+      <a href="0003-helt-enkelt-api-vs-mcp.html">Leksjon 3 (Enkelt forklart)</a>
+    </p>
+  </div>
+</body>
+</html>

@@ -64,14 +64,17 @@ Alle 14 lovpålagte allergener (gluten, melk, egg, nøtter, peanøtter, soya, fi
 ### 4. Del B: Helse, miljø og sikkerhet (Arbeidstilsynet)
 
 #### 4.1 Fysisk arbeidsmiljø
-* **Ergonomi for museumsverter:** Roterende vakter mellom stasjonær tilstedeværelse i salene og kafé/skrankearbeid for å motvirke belastningsskader fra harde steingulv.
-* **Tunge løft og montering:** All forflytning av skulpturer eller malerier over 25 kg krever minimum to personer og godkjent løfteutstyr (sugekopper, jekketraller).
-* **Verneutstyr (PPE):** Hansker for kunsthåndtering (hvite bomullshansker eller nitril) og vernesko ved monteringsarbeid.
+* **Ergonomi for museumsverter:** Roterende vakter mellom stasjonær tilstedeværelse i salene og kafé/skrankearbeid (maks 90 minutter sammenhengende stående arbeid, obligatorisk rullering hver 2. time til sittende skranke/kafé) for å motvirke belastningsskader fra harde steingulv. Påbud om dempede arbeidssko.
+* **Manuell håndtering og løft:**
+  * **Maks 15 kg for én person:** All håndtering over 15 kg krever to personer.
+  * **15 til 40 kg for to personer:** Krever planlagt løfteteknikk og samkjøring.
+  * **Over 40 kg:** Kun med godkjent mekanisk løftehjelpemiddel (jekketralle, traverskran, sugekopper, jf. `HMS-003`).
+* **Verneutstyr (PPE):** Hansker for kunsthåndtering (ublekede hvite bomullshansker for malerier/tekstiler, nitrilhansker for glass/skulptur) og vernesko (S3) ved monteringsarbeid.
 
 #### 4.2 Psykososialt arbeidsmiljø og publikumskonflikter
-* **Konflikthåndtering:** Retningslinjer for opptreden ved berusede, aggressive eller utagerende gjester.
-* **Alenearbeid:** Forbud mot alenearbeid ved åpningsarrangementer med forventet over 100 gjester.
-* **Varslingsrutiner:** Etablert trygg kanal for varsling om kritikkverdige forhold etter arbeidsmiljøloven § 2 A.
+* **Konflikthåndtering og trusler:** Rolig opptreden, tilkall vaktkollega via radio/alarmknapp, politi 112 ved trusler (jf. `HMS-002`).
+* **Alenearbeid:** Strengt forbudt ved åpningskvelder, store arrangementer (> 80 gjester) og etter kl. 20:00 (jf. `hms_arbeidsmiljo.yaml`).
+* **Varslingsrutiner:** Etablert konfidensiell varslingskanal til verneombud og styreleder etter arbeidsmiljøloven § 2 A.
 
 ---
 

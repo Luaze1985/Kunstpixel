@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leksjon 13: Fra tynne data til dyp kuratering</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .thin-vs-rich {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .card-thin {
+      background: #fff5f5;
+      border: 2px solid #da1e28;
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    .card-rich {
+      background: #defbe6;
+      border: 2px solid #198038;
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    .quote-box {
+      background: #1e1e1e;
+      color: #79c0ff;
+      font-family: var(--font-mono);
+      padding: 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="meta-tag">Leksjon 0013 • Tekstdybde & Kuratering</div>
+    <h1>"Databasene er for tynne på tekst!"<br>Hvordan vi løste det med ekte kuratering</h1>
+    
+    <p style="font-size: 1.2rem; line-height: 1.5;">
+      Du traff spikeren på hodet: Databasen hadde tall, årstall og saler, men <strong>tekstfeltene var altfor tynne</strong> (bare 2–3 linjer med overflatisk beskrivelse). Feltene for <code>audioguide_manus</code> og <code>barneformidling</code> stod helt tomme!
+    </p>
+
+    <div class="box box-danger" style="background:#fff1f1; border-left:4px solid var(--danger);">
+      <strong>Faren med "tynne databaser" for KI:</strong><br>
+      Hvis databasen bare inneholder: <em>"Skrik, malt i 1893 av Edvard Munch"</em>, og en gjest spør etter historien bak bildet, blir KI-en tvunget til å <strong>fylle inn hullene selv (hallusinere)</strong>. Da risikerer du at den finner på usannheter.
+    </div>
+
+    <h2>1. Før og etter: Hva vi hentet inn fra primærkildene (Nasjonalmuseet & SNL)</h2>
+
+    <div class="thin-vs-rich">
+      <div class="card-thin">
+        <h3 style="margin-top:0; color:#da1e28;">❌ Før (Tynn database)</h3>
+        <p><strong>Felt i databasen:</strong></p>
+        <ul>
+          <li><code>veggtekst</code>: 3 linjer tørr tekst.</li>
+          <li><code>audioguide_manus</code>: <em>NULL (Tomt)</em></li>
+          <li><code>barneformidling</code>: <em>NULL (Tomt)</em></li>
+          <li><code>proveniens</code>: "Gave fra Munch" (ufullstendig).</li>
+        </ul>
+        <p><strong>Konsekvens:</strong> KI-en svarte det samme stive svaret uansett hvem som spurte.</p>
+      </div>
+
+      <div class="card-rich">
+        <h3 style="margin-top:0; color:#198038;">✅ Nå (Dyp, profesjonell tekst)</h3>
+        <p><strong>Felt beriket direkte i `museum.db`:</strong></p>
+        <ul>
+          <li><strong>Audioguide:</strong> Munchs blyantinnskrift i himmelen (<em>"Kan kun være malet af en gal Mand!"</em>), Olaf Schous donasjon i 1910, og at figuren <em>stenger ute</em> naturens skrik.</li>
+          <li><strong>Barneformidling:</strong> Egen dialogtekst som engasjerer barn om følelser, angst og de store øynene.</li>
+          <li><strong>Kittelsens Nøkken:</strong> Blandingsmetoden, lokkende vannliljer og de to gule øynene som stirrer fra tjernet.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>2. Se den nye dybden i praksis (Kjørt live i `cli.py`)</h2>
+
+    <h3>Spørsmål 1: "Hva kan du fortelle om Skrik til en 7-åring?"</h3>
+    <div class="quote-box">
+┌──────────────────────────── 🏛️ Aura Museumsvert ────────────────────────────┐
+│ Edvard Munchs mesterverk Skrik (1893) henger utstilt i Sal D (2. etasje)... │
+│                                                                             │
+│ Her er en barnevennlig fortelling om verket:                                │
+│                                                                             │
+│ Se paa ansiktet til figuren paa broen! Oeynene er kulerunde, munnen er vid  │
+│ aapen og hendene holder rundt hodet. Hva tror du han hoerer? Edvard Munch   │
+│ gikk tur med to venner da himmelen plutselig ble helt blodroed. Han ble     │
+│ kjemperedd og foelte at hele naturen hylte. Har du noen gang blitt saa redd │
+│ at det kjentes ut som alt rundt deg skrek?                                  │
+└───────────── Kategori: samling | Verktøy: get_artwork_details ──────────────┘
+    </div>
+
+    <h3>Spørsmål 2: "Hva sier audioguiden om Skrik og innskriften i himmelen?"</h3>
+    <div class="quote-box" style="color:#ffd33d;">
+┌──────────────────────────── 🏛️ Aura Museumsvert ────────────────────────────┐
+│ Fra museets offisielle audioguide:                                          │
+│                                                                             │
+│ «Velkommen foran Edvard Munchs Skrik fra 1893. Se noeye paa himmelen: Den   │
+│ boelger seg i aggressive flammer av oransje og roedt. Skikkelsen foran deg  │
+│ holder seg for oerene – ikke fordi han selv skriker, men for aa stenge ute  │
+│ det uendelige skriket han foelet gjennom naturen. Ser du oppe i venstre     │
+│ hjoerne? Der skrev Munch med blyant: Kan kun vaere malet af en gal Mand!    │
+│ Bildet ble gitt til Nasjonalgalleriet i 1910 av Olaf Schou.»                │
+└───────────── Kategori: samling | Verktøy: get_artwork_details ──────────────┘
+    </div>
+
+    <h2>3. Læringen for elevene: "Søppel inn = Søppel ut"</h2>
+    <div class="box box-fasit">
+      <h3 style="margin-top:0;">Dette er formelen du skal gi elevene:</h3>
+      <p style="font-size:1.15rem; margin:0;">
+        <strong>En KI blir aldri klokere enn tekstene du fôrer den med.</strong><br>
+        Hvis databasen din bare har 3 linjer stikkord, må KI-en dikte.<br>
+        Hvis databasen din har <strong>ferdig kuraterte audioguider, barnetekster og faganalyser</strong>, snakker KI-en som landets fremste kurator — med 100 % forankring i museets egne ord.
+      </p>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 2rem 0;">
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      <a href="0012-masterrapport-datakilder-hms-og-teach.html">← Gå til Masterrapporten (Leksjon 12)</a> | 
+      <a href="0010-laereplan-og-demo-katalog.html">Leksjon 10 (Læreplan)</a>
+    </p>
+  </div>
+</body>
+</html>

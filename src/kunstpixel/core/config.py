@@ -59,8 +59,31 @@ def ensure_local_db() -> Path:
     )
 
 
+LOCAL_HISTORIKK_DB_PATH = PROJECT_ROOT / "05_data" / "kunstpixel_historikk.db"
+
+
+def get_historikk_db_path() -> Path:
+    """Resolve the SQLite archive database path."""
+    env_path = os.environ.get("KUNSTPIXEL_HISTORIKK_DB_PATH")
+    if env_path:
+        p = Path(env_path)
+        if p.is_file():
+            return p
+        raise FileNotFoundError(f"KUNSTPIXEL_HISTORIKK_DB_PATH was set to '{env_path}', but file does not exist.")
+
+    if LOCAL_HISTORIKK_DB_PATH.is_file():
+        return LOCAL_HISTORIKK_DB_PATH
+
+    raise FileNotFoundError(f"Historikk database not found at: {LOCAL_HISTORIKK_DB_PATH}")
+
+
 # Export current resolved path
 try:
     DB_PATH = get_db_path()
 except FileNotFoundError:
     DB_PATH = LOCAL_DB_PATH
+
+try:
+    HISTORIKK_DB_PATH = get_historikk_db_path()
+except FileNotFoundError:
+    HISTORIKK_DB_PATH = LOCAL_HISTORIKK_DB_PATH

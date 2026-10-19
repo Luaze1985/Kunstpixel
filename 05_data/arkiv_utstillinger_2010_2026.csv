@@ -1,0 +1,103 @@
+utstilling_id,aar,sesong,tittel,kurator,saler,periode_start,periode_slutt,antall_verk,besokstall_total,budsjett_nok,katalog_isbn,status
+KP-EXH-2010-001,2010,Vinter,Algoritmisk skjønnhet: Generativ kunst og persepsjon (2010),Liv Eide,"Sal C, Sal D",2010-01-15,2010-03-01,25,10574,1605000,978-82-99812-17-9,Gjennomført
+KP-EXH-2010-002,2010,Vår,Munchs ekko: Ekspresjonisme i det 21. århundre (2010),Liv Eide,"Sal D, Sal B",2010-03-20,2010-05-30,28,25897,756000,978-82-99812-51-9,Gjennomført
+KP-EXH-2010-003,2010,Sommer,Taktile grenser: Keramikk og form (2010),Liv Eide,"Sal B, Sal E",2010-06-15,2010-08-30,63,34066,870000,978-82-99812-84-8,Gjennomført
+KP-EXH-2010-004,2010,Høst,Skogens hvisken: Myter fra Kittelsen til samtiden (2010),Liv Eide,"Sal A, Sal D",2010-09-15,2010-12-15,21,38705,1362000,978-82-99812-68-3,Gjennomført
+KP-EXH-2010-FOKUS-1,2010,Prosjektrom,Fokusrom 2010.1: Samtidens materialer,Silje Lindqvist,Sal E,2010-04-01,2010-10-31,13,12619,179000,978-82-99812-81-8,Prosjektrom gjestekunstner
+KP-EXH-2010-FOKUS-2,2010,Prosjektrom,Fokusrom 2010.2: Samtidens materialer,Silje Lindqvist,Sal E,2010-04-01,2010-10-31,6,11243,280000,978-82-99812-10-4,Prosjektrom gjestekunstner
+KP-EXH-2011-005,2011,Vinter,Skogens hvisken: Myter fra Kittelsen til samtiden (2011),Liv Eide,"Sal A, Sal D",2011-01-15,2011-03-01,62,10417,1155000,978-82-99812-18-9,Gjennomført
+KP-EXH-2011-006,2011,Vår,Det post-digitale lerret: Piksel og pigment (2011),Liv Eide,"Sal C, Sal D",2011-03-20,2011-05-30,48,29371,591000,978-82-99812-14-5,Gjennomført
+KP-EXH-2011-007,2011,Sommer,"Jord, mineraler og økologisk bevissthet (2011)",Liv Eide,"Sal E, Sal D",2011-06-15,2011-08-30,59,35035,727000,978-82-99812-92-7,Gjennomført
+KP-EXH-2011-008,2011,Høst,Algoritmisk skjønnhet: Generativ kunst og persepsjon (2011),Liv Eide,"Sal C, Sal D",2011-09-15,2011-12-15,46,39908,1233000,978-82-99812-58-7,Gjennomført
+KP-EXH-2011-FOKUS-1,2011,Prosjektrom,Fokusrom 2011.1: Samtidens materialer,Silje Lindqvist,Sal D,2011-04-01,2011-10-31,14,9089,328000,978-82-99812-25-3,Prosjektrom gjestekunstner
+KP-EXH-2011-FOKUS-2,2011,Prosjektrom,Fokusrom 2011.2: Samtidens materialer,Silje Lindqvist,Sal E,2011-04-01,2011-10-31,14,9043,264000,978-82-99812-10-1,Prosjektrom gjestekunstner
+KP-EXH-2012-009,2012,Vinter,"Skulpturens materialitet: Bronse, leire og 3D-print (2012)",Liv Eide,"Sal C, Sal E",2012-01-15,2012-03-01,52,12422,1922000,978-82-99812-64-9,Gjennomført
+KP-EXH-2012-010,2012,Vår,Nattens farger: Fra Backer til nattfotografi (2012),Liv Eide,"Sal A, Sal B",2012-03-20,2012-05-30,47,28304,956000,978-82-99812-54-3,Gjennomført
+KP-EXH-2012-011,2012,Sommer,Arkivets skjulte stemmer: Kvinner i modernismen (2012),Liv Eide,"Sal E, Sal D",2012-06-15,2012-08-30,25,35164,1934000,978-82-99812-14-7,Gjennomført
+KP-EXH-2012-012,2012,Høst,Nordisk lys og melankoli (2012),Liv Eide,"Sal A, Sal B",2012-09-15,2012-12-15,24,30280,587000,978-82-99812-86-1,Gjennomført
+KP-EXH-2012-FOKUS-1,2012,Prosjektrom,Fokusrom 2012.1: Samtidens materialer,Silje Lindqvist,Sal E,2012-04-01,2012-10-31,6,10004,172000,978-82-99812-61-8,Prosjektrom gjestekunstner
+KP-EXH-2012-FOKUS-2,2012,Prosjektrom,Fokusrom 2012.2: Samtidens materialer,Silje Lindqvist,Sal D,2012-04-01,2012-10-31,14,9779,178000,978-82-99812-27-9,Prosjektrom gjestekunstner
+KP-EXH-2013-013,2013,Vinter,"Skulpturens materialitet: Bronse, leire og 3D-print (2013)",Silje Lindqvist,"Sal C, Sal E",2013-01-15,2013-03-01,54,11323,1948000,978-82-99812-50-6,Gjennomført
+KP-EXH-2013-014,2013,Vår,"Havet, stormen og det sublime (2013)",Silje Lindqvist,"Sal A, Sal B",2013-03-20,2013-05-30,60,23296,743000,978-82-99812-76-4,Gjennomført
+KP-EXH-2013-015,2013,Sommer,"Jord, mineraler og økologisk bevissthet (2013)",Silje Lindqvist,"Sal E, Sal D",2013-06-15,2013-08-30,53,36867,574000,978-82-99812-85-3,Gjennomført
+KP-EXH-2013-016,2013,Høst,"Jord, mineraler og økologisk bevissthet (2013)",Silje Lindqvist,"Sal E, Sal D",2013-09-15,2013-12-15,40,34314,546000,978-82-99812-92-7,Gjennomført
+KP-EXH-2013-FOKUS-1,2013,Prosjektrom,Fokusrom 2013.1: Samtidens materialer,Silje Lindqvist,Sal E,2013-04-01,2013-10-31,12,11344,226000,978-82-99812-48-7,Prosjektrom gjestekunstner
+KP-EXH-2013-FOKUS-2,2013,Prosjektrom,Fokusrom 2013.2: Samtidens materialer,Silje Lindqvist,Sal D,2013-04-01,2013-10-31,14,11879,273000,978-82-99812-38-5,Prosjektrom gjestekunstner
+KP-EXH-2014-017,2014,Vinter,"Tekstil, vev og motstand: Hannah Ryggen i dialog (2014)",Silje Lindqvist,"Sal E, Sal D",2014-01-15,2014-03-01,53,14067,568000,978-82-99812-62-7,Gjennomført
+KP-EXH-2014-018,2014,Vår,"Tekstil, vev og motstand: Hannah Ryggen i dialog (2014)",Silje Lindqvist,"Sal E, Sal D",2014-03-20,2014-05-30,31,24128,972000,978-82-99812-52-2,Gjennomført
+KP-EXH-2014-019,2014,Sommer,Taktile grenser: Keramikk og form (2014),Silje Lindqvist,"Sal B, Sal E",2014-06-15,2014-08-30,52,45176,639000,978-82-99812-34-1,Gjennomført
+KP-EXH-2014-020,2014,Høst,Arkivets skjulte stemmer: Kvinner i modernismen (2014),Silje Lindqvist,"Sal E, Sal D",2014-09-15,2014-12-15,56,32027,1688000,978-82-99812-15-2,Gjennomført
+KP-EXH-2014-FOKUS-1,2014,Prosjektrom,Fokusrom 2014.1: Samtidens materialer,Silje Lindqvist,Sal D,2014-04-01,2014-10-31,14,9777,395000,978-82-99812-36-6,Prosjektrom gjestekunstner
+KP-EXH-2014-FOKUS-2,2014,Prosjektrom,Fokusrom 2014.2: Samtidens materialer,Silje Lindqvist,Sal E,2014-04-01,2014-10-31,6,9735,247000,978-82-99812-25-8,Prosjektrom gjestekunstner
+KP-EXH-2015-021,2015,Vinter,"Havet, stormen og det sublime (2015)",Silje Lindqvist,"Sal A, Sal B",2015-01-15,2015-03-01,31,13539,1891000,978-82-99812-60-4,Gjennomført
+KP-EXH-2015-022,2015,Vår,Mellom drøm og virkelighet: Surrealistiske impulser (2015),Silje Lindqvist,"Sal A, Sal D",2015-03-20,2015-05-30,47,27844,1229000,978-82-99812-78-6,Gjennomført
+KP-EXH-2015-023,2015,Sommer,"Skulpturens materialitet: Bronse, leire og 3D-print (2015)",Silje Lindqvist,"Sal C, Sal E",2015-06-15,2015-08-30,49,36275,1500000,978-82-99812-69-2,Gjennomført
+KP-EXH-2015-024,2015,Høst,Stille kraft: Nordisk modernisme 1910-1970 (2015),Silje Lindqvist,"Sal A, Sal C, Sal D",2015-09-15,2015-12-15,31,36948,1105000,978-82-99812-57-6,Gjennomført
+KP-EXH-2015-FOKUS-1,2015,Prosjektrom,Fokusrom 2015.1: Samtidens materialer,Silje Lindqvist,Sal E,2015-04-01,2015-10-31,6,12608,263000,978-82-99812-28-1,Prosjektrom gjestekunstner
+KP-EXH-2015-FOKUS-2,2015,Prosjektrom,Fokusrom 2015.2: Samtidens materialer,Silje Lindqvist,Sal E,2015-04-01,2015-10-31,14,15657,449000,978-82-99812-84-7,Prosjektrom gjestekunstner
+KP-EXH-2016-025,2016,Vinter,"Skulpturens materialitet: Bronse, leire og 3D-print (2016)",Silje Lindqvist,"Sal C, Sal E",2016-01-15,2016-03-01,32,10931,1125000,978-82-99812-58-4,Gjennomført
+KP-EXH-2016-026,2016,Vår,Stille kraft: Nordisk modernisme 1910-1970 (2016),Silje Lindqvist,"Sal A, Sal C, Sal D",2016-03-20,2016-05-30,39,25686,1852000,978-82-99812-42-8,Gjennomført
+KP-EXH-2016-027,2016,Sommer,Stille kraft: Nordisk modernisme 1910-1970 (2016),Silje Lindqvist,"Sal A, Sal C, Sal D",2016-06-15,2016-08-30,40,39304,1950000,978-82-99812-31-3,Gjennomført
+KP-EXH-2016-028,2016,Høst,Stille kraft: Nordisk modernisme 1910-1970 (2016),Silje Lindqvist,"Sal A, Sal C, Sal D",2016-09-15,2016-12-15,59,29555,1560000,978-82-99812-17-9,Gjennomført
+KP-EXH-2016-FOKUS-1,2016,Prosjektrom,Fokusrom 2016.1: Samtidens materialer,Silje Lindqvist,Sal D,2016-04-01,2016-10-31,7,15742,174000,978-82-99812-10-7,Prosjektrom gjestekunstner
+KP-EXH-2016-FOKUS-2,2016,Prosjektrom,Fokusrom 2016.2: Samtidens materialer,Silje Lindqvist,Sal D,2016-04-01,2016-10-31,9,8556,227000,978-82-99812-11-4,Prosjektrom gjestekunstner
+KP-EXH-2017-029,2017,Vinter,Taktile grenser: Keramikk og form (2017),Silje Lindqvist,"Sal B, Sal E",2017-01-15,2017-03-01,58,11991,1715000,978-82-99812-95-8,Gjennomført
+KP-EXH-2017-030,2017,Vår,Stille kraft: Nordisk modernisme 1910-1970 (2017),Silje Lindqvist,"Sal A, Sal C, Sal D",2017-03-20,2017-05-30,53,20551,1539000,978-82-99812-62-1,Gjennomført
+KP-EXH-2017-031,2017,Sommer,Nordisk lys og melankoli (2017),Silje Lindqvist,"Sal A, Sal B",2017-06-15,2017-08-30,52,40347,1012000,978-82-99812-46-1,Gjennomført
+KP-EXH-2017-032,2017,Høst,"Jord, mineraler og økologisk bevissthet (2017)",Silje Lindqvist,"Sal E, Sal D",2017-09-15,2017-12-15,24,37518,817000,978-82-99812-22-9,Gjennomført
+KP-EXH-2017-FOKUS-1,2017,Prosjektrom,Fokusrom 2017.1: Samtidens materialer,Silje Lindqvist,Sal D,2017-04-01,2017-10-31,9,9572,419000,978-82-99812-42-6,Prosjektrom gjestekunstner
+KP-EXH-2017-FOKUS-2,2017,Prosjektrom,Fokusrom 2017.2: Samtidens materialer,Silje Lindqvist,Sal E,2017-04-01,2017-10-31,12,8647,341000,978-82-99812-61-8,Prosjektrom gjestekunstner
+KP-EXH-2018-033,2018,Vinter,"Havet, stormen og det sublime (2018)",Silje Lindqvist,"Sal A, Sal B",2018-01-15,2018-03-01,37,14953,912000,978-82-99812-97-2,Gjennomført
+KP-EXH-2018-034,2018,Vår,Det post-digitale lerret: Piksel og pigment (2018),Silje Lindqvist,"Sal C, Sal D",2018-03-20,2018-05-30,42,21297,1226000,978-82-99812-80-8,Gjennomført
+KP-EXH-2018-035,2018,Sommer,Det post-digitale lerret: Piksel og pigment (2018),Silje Lindqvist,"Sal C, Sal D",2018-06-15,2018-08-30,28,41978,1889000,978-82-99812-20-8,Gjennomført
+KP-EXH-2018-036,2018,Høst,"Jord, mineraler og økologisk bevissthet (2018)",Silje Lindqvist,"Sal E, Sal D",2018-09-15,2018-12-15,54,35454,1128000,978-82-99812-22-9,Gjennomført
+KP-EXH-2018-FOKUS-1,2018,Prosjektrom,Fokusrom 2018.1: Samtidens materialer,Silje Lindqvist,Sal D,2018-04-01,2018-10-31,9,9731,440000,978-82-99812-70-5,Prosjektrom gjestekunstner
+KP-EXH-2018-FOKUS-2,2018,Prosjektrom,Fokusrom 2018.2: Samtidens materialer,Silje Lindqvist,Sal D,2018-04-01,2018-10-31,7,13606,293000,978-82-99812-79-1,Prosjektrom gjestekunstner
+KP-EXH-2019-037,2019,Vinter,Geometri og abstraksjon: Anna-Eva Bergman retrospektiv (2019),Silje Lindqvist,"Sal A, Sal C",2019-01-15,2019-03-01,19,14658,1094000,978-82-99812-36-3,Gjennomført
+KP-EXH-2019-038,2019,Vår,Nattens farger: Fra Backer til nattfotografi (2019),Silje Lindqvist,"Sal A, Sal B",2019-03-20,2019-05-30,28,29317,1062000,978-82-99812-82-4,Gjennomført
+KP-EXH-2019-039,2019,Sommer,Nattens farger: Fra Backer til nattfotografi (2019),Silje Lindqvist,"Sal A, Sal B",2019-06-15,2019-08-30,39,42590,1557000,978-82-99812-59-3,Gjennomført
+KP-EXH-2019-040,2019,Høst,Skogens hvisken: Myter fra Kittelsen til samtiden (2019),Silje Lindqvist,"Sal A, Sal D",2019-09-15,2019-12-15,21,33610,1158000,978-82-99812-22-7,Gjennomført
+KP-EXH-2019-FOKUS-1,2019,Prosjektrom,Fokusrom 2019.1: Samtidens materialer,Silje Lindqvist,Sal D,2019-04-01,2019-10-31,7,10790,353000,978-82-99812-51-1,Prosjektrom gjestekunstner
+KP-EXH-2019-FOKUS-2,2019,Prosjektrom,Fokusrom 2019.2: Samtidens materialer,Silje Lindqvist,Sal E,2019-04-01,2019-10-31,13,12019,266000,978-82-99812-55-9,Prosjektrom gjestekunstner
+KP-EXH-2020-041,2020,Vinter,Nattens farger: Fra Backer til nattfotografi (2020),Silje Lindqvist,"Sal A, Sal B",2020-01-15,2020-03-01,55,4295,1842000,978-82-99812-94-7,Gjennomført med kohort- og smittevernsrestriksjoner
+KP-EXH-2020-042,2020,Vår,Skogens hvisken: Myter fra Kittelsen til samtiden (2020),Silje Lindqvist,"Sal A, Sal D",2020-03-20,2020-05-30,33,9734,1054000,978-82-99812-19-2,Gjennomført med kohort- og smittevernsrestriksjoner
+KP-EXH-2020-043,2020,Sommer,Arkivets skjulte stemmer: Kvinner i modernismen (2020),Silje Lindqvist,"Sal E, Sal D",2020-06-15,2020-08-30,58,12125,1907000,978-82-99812-29-7,Gjennomført med kohort- og smittevernsrestriksjoner
+KP-EXH-2020-044,2020,Høst,Mellom drøm og virkelighet: Surrealistiske impulser (2020),Silje Lindqvist,"Sal A, Sal D",2020-09-15,2020-12-15,18,11135,637000,978-82-99812-49-8,Gjennomført med kohort- og smittevernsrestriksjoner
+KP-EXH-2020-FOKUS-1,2020,Prosjektrom,Fokusrom 2020.1: Samtidens materialer,Silje Lindqvist,Sal E,2020-04-01,2020-10-31,10,3534,217000,978-82-99812-21-3,Prosjektrom gjestekunstner
+KP-EXH-2020-FOKUS-2,2020,Prosjektrom,Fokusrom 2020.2: Samtidens materialer,Silje Lindqvist,Sal E,2020-04-01,2020-10-31,13,5024,434000,978-82-99812-75-7,Prosjektrom gjestekunstner
+KP-EXH-2021-045,2021,Vinter,Stillhetens Rom: Kunst i Isolasjon (2021),Silje Lindqvist,"Sal B, Sal C",2021-01-15,2021-03-01,53,5679,1174000,978-82-99812-21-6,Gjennomført med kapasitetsbegrensning (50 pers per sal)
+KP-EXH-2021-046,2021,Vår,Nattens farger: Fra Backer til nattfotografi (2021),Silje Lindqvist,"Sal A, Sal B",2021-03-20,2021-05-30,42,11285,1297000,978-82-99812-20-9,Gjennomført med kapasitetsbegrensning (50 pers per sal)
+KP-EXH-2021-047,2021,Sommer,"Havet, stormen og det sublime (2021)",Silje Lindqvist,"Sal A, Sal B",2021-06-15,2021-08-30,61,22546,797000,978-82-99812-58-3,Gjennomført med kapasitetsbegrensning (50 pers per sal)
+KP-EXH-2021-048,2021,Høst,"Tekstil, vev og motstand: Hannah Ryggen i dialog (2021)",Silje Lindqvist,"Sal E, Sal D",2021-09-15,2021-12-15,49,16853,999000,978-82-99812-28-2,Gjennomført med kapasitetsbegrensning (50 pers per sal)
+KP-EXH-2021-FOKUS-1,2021,Prosjektrom,Fokusrom 2021.1: Samtidens materialer,Silje Lindqvist,Sal D,2021-04-01,2021-10-31,12,4104,365000,978-82-99812-48-8,Prosjektrom gjestekunstner
+KP-EXH-2021-FOKUS-2,2021,Prosjektrom,Fokusrom 2021.2: Samtidens materialer,Silje Lindqvist,Sal D,2021-04-01,2021-10-31,11,4024,276000,978-82-99812-90-8,Prosjektrom gjestekunstner
+KP-EXH-2022-049,2022,Vinter,Munchs ekko: Ekspresjonisme i det 21. århundre (2022),Silje Lindqvist,"Sal D, Sal B",2022-01-15,2022-03-01,37,12397,727000,978-82-99812-10-7,Gjennomført
+KP-EXH-2022-050,2022,Vår,Mellom drøm og virkelighet: Surrealistiske impulser (2022),Silje Lindqvist,"Sal A, Sal D",2022-03-20,2022-05-30,39,28479,1228000,978-82-99812-66-6,Gjennomført
+KP-EXH-2022-051,2022,Sommer,"Jord, mineraler og økologisk bevissthet (2022)",Silje Lindqvist,"Sal E, Sal D",2022-06-15,2022-08-30,56,44695,1783000,978-82-99812-27-5,Gjennomført
+KP-EXH-2022-052,2022,Høst,Mellom drøm og virkelighet: Surrealistiske impulser (2022),Silje Lindqvist,"Sal A, Sal D",2022-09-15,2022-12-15,30,34921,1873000,978-82-99812-71-6,Gjennomført
+KP-EXH-2022-FOKUS-1,2022,Prosjektrom,Fokusrom 2022.1: Samtidens materialer,Silje Lindqvist,Sal D,2022-04-01,2022-10-31,12,15935,313000,978-82-99812-47-8,Prosjektrom gjestekunstner
+KP-EXH-2022-FOKUS-2,2022,Prosjektrom,Fokusrom 2022.2: Samtidens materialer,Silje Lindqvist,Sal D,2022-04-01,2022-10-31,11,11080,293000,978-82-99812-60-6,Prosjektrom gjestekunstner
+KP-EXH-2023-053,2023,Vinter,Stillhetens Rom: Kunst i Isolasjon (2023),Silje Lindqvist,"Sal B, Sal C",2023-01-15,2023-03-01,55,14673,859000,978-82-99812-79-3,Gjennomført
+KP-EXH-2023-054,2023,Vår,Nordisk lys og melankoli (2023),Silje Lindqvist,"Sal A, Sal B",2023-03-20,2023-05-30,63,29548,1395000,978-82-99812-36-8,Gjennomført
+KP-EXH-2023-055,2023,Sommer,"Skulpturens materialitet: Bronse, leire og 3D-print (2023)",Silje Lindqvist,"Sal C, Sal E",2023-06-15,2023-08-30,44,44935,591000,978-82-99812-96-8,Gjennomført
+KP-EXH-2023-056,2023,Høst,"Tekstil, vev og motstand: Hannah Ryggen i dialog (2023)",Silje Lindqvist,"Sal E, Sal D",2023-09-15,2023-12-15,34,35306,945000,978-82-99812-94-3,Gjennomført
+KP-EXH-2023-FOKUS-1,2023,Prosjektrom,Fokusrom 2023.1: Samtidens materialer,Silje Lindqvist,Sal E,2023-04-01,2023-10-31,12,8605,379000,978-82-99812-86-8,Prosjektrom gjestekunstner
+KP-EXH-2023-FOKUS-2,2023,Prosjektrom,Fokusrom 2023.2: Samtidens materialer,Silje Lindqvist,Sal E,2023-04-01,2023-10-31,14,12150,364000,978-82-99812-79-1,Prosjektrom gjestekunstner
+KP-EXH-2024-057,2024,Vinter,Algoritmisk skjønnhet: Generativ kunst og persepsjon (2024),Silje Lindqvist,"Sal C, Sal D",2024-01-15,2024-03-01,52,13567,2113000,978-82-99812-86-2,Gjennomført
+KP-EXH-2024-058,2024,Vår,Stillhetens Rom: Kunst i Isolasjon (2024),Silje Lindqvist,"Sal B, Sal C",2024-03-20,2024-05-30,60,27781,1796000,978-82-99812-55-3,Gjennomført
+KP-EXH-2024-059,2024,Sommer,Det post-digitale lerret: Piksel og pigment (2024),Silje Lindqvist,"Sal C, Sal D",2024-06-15,2024-08-30,61,40860,1771000,978-82-99812-92-7,Gjennomført
+KP-EXH-2024-060,2024,Høst,Mellom drøm og virkelighet: Surrealistiske impulser (2024),Silje Lindqvist,"Sal A, Sal D",2024-09-15,2024-12-15,24,39561,1331000,978-82-99812-11-2,Gjennomført
+KP-EXH-2024-FOKUS-1,2024,Prosjektrom,Fokusrom 2024.1: Samtidens materialer,Silje Lindqvist,Sal E,2024-04-01,2024-10-31,9,12183,415000,978-82-99812-81-4,Prosjektrom gjestekunstner
+KP-EXH-2024-FOKUS-2,2024,Prosjektrom,Fokusrom 2024.2: Samtidens materialer,Silje Lindqvist,Sal E,2024-04-01,2024-10-31,11,11204,387000,978-82-99812-96-9,Prosjektrom gjestekunstner
+KP-EXH-2025-061,2025,Vinter,"Tekstil, vev og motstand: Hannah Ryggen i dialog (2025)",Silje Lindqvist,"Sal E, Sal D",2025-01-15,2025-03-01,48,11855,500000,978-82-99812-23-5,Gjennomført
+KP-EXH-2025-062,2025,Vår,"Jord, mineraler og økologisk bevissthet (2025)",Silje Lindqvist,"Sal E, Sal D",2025-03-20,2025-05-30,25,29237,625000,978-82-99812-28-6,Gjennomført
+KP-EXH-2025-063,2025,Sommer,"Skulpturens materialitet: Bronse, leire og 3D-print (2025)",Silje Lindqvist,"Sal C, Sal E",2025-06-15,2025-08-30,31,37514,2056000,978-82-99812-76-8,Gjennomført
+KP-EXH-2025-064,2025,Høst,Algoritmisk skjønnhet: Generativ kunst og persepsjon (2025),Silje Lindqvist,"Sal C, Sal D",2025-09-15,2025-12-15,64,33294,1347000,978-82-99812-99-8,Gjennomført
+KP-EXH-2025-FOKUS-1,2025,Prosjektrom,Fokusrom 2025.1: Samtidens materialer,Silje Lindqvist,Sal E,2025-04-01,2025-10-31,7,10459,172000,978-82-99812-24-1,Prosjektrom gjestekunstner
+KP-EXH-2025-FOKUS-2,2025,Prosjektrom,Fokusrom 2025.2: Samtidens materialer,Silje Lindqvist,Sal E,2025-04-01,2025-10-31,7,13547,234000,978-82-99812-41-9,Prosjektrom gjestekunstner
+KP-EXH-2026-065,2026,Vinter,Geometri og abstraksjon: Anna-Eva Bergman retrospektiv (2026),Silje Lindqvist,"Sal A, Sal C",2026-01-15,2026-03-01,53,12849,1127000,978-82-99812-64-8,Pågående / Planlagt sesong 2026
+KP-EXH-2026-066,2026,Vår,"Havet, stormen og det sublime (2026)",Silje Lindqvist,"Sal A, Sal B",2026-03-20,2026-05-30,29,28058,1739000,978-82-99812-33-7,Pågående / Planlagt sesong 2026
+KP-EXH-2026-067,2026,Sommer,Nattens farger: Fra Backer til nattfotografi (2026),Silje Lindqvist,"Sal A, Sal B",2026-06-15,2026-08-30,30,32743,1707000,978-82-99812-67-7,Pågående / Planlagt sesong 2026
+KP-EXH-2026-068,2026,Høst,Nattens farger: Fra Backer til nattfotografi (2026),Silje Lindqvist,"Sal A, Sal B",2026-09-15,2026-12-15,31,27256,889000,978-82-99812-45-2,Pågående / Planlagt sesong 2026
+KP-EXH-2026-FOKUS-1,2026,Prosjektrom,Fokusrom 2026.1: Samtidens materialer,Silje Lindqvist,Sal D,2026-04-01,2026-10-31,14,9531,337000,978-82-99812-51-4,Prosjektrom gjestekunstner
+KP-EXH-2026-FOKUS-2,2026,Prosjektrom,Fokusrom 2026.2: Samtidens materialer,Silje Lindqvist,Sal E,2026-04-01,2026-10-31,7,10149,400000,978-82-99812-77-6,Prosjektrom gjestekunstner

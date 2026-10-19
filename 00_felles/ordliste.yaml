@@ -53,3 +53,81 @@ begreper:
     forklaring: >
       Prosesser som går av seg selv når de først er satt opp, slik at vi slipper kjedelige repetisjoner.
     i_praksis: "At en rapport settes sammen automatisk fra databasen fremfor at vi klipper og limer manuelt."
+
+  apne_kilder_og_api:
+    forklaring: >
+      Offisielle, gratis databaser og oppslagsverk på nett (f.eks. Store norske leksikon,
+      DigitaltMuseum og SSB) som vi henter autoritativ kunnskap fra uten å bruke KI-tokens.
+    synonymer: ["ekstern sannhetskilde", "fagkilde", "0-token berikelse"]
+    i_praksis: "Vi slipper å finne opp kruttet eller betale for KI-skriving når nasjonale eksperter allerede har skrevet fasiten gratis for oss."
+
+  ssot_database:
+    forklaring: >
+      Single Source of Truth. Én samlet lokal database (museum.db) som inneholder både
+      samling, utstillinger, vaktplan, innleie og avvik for å unngå sprik mellom fagsystemer.
+    synonymer: ["felles sannhetskilde", "hoveddatabase"]
+    i_praksis: "Alle seks roller ser de samme tallene, slik at kurator og økonomisjef aldri er uenige om fakta."
+
+  trelags_tekststandard:
+    forklaring: >
+      Fast struktur for kunstformidling i tre nivåer: Veggtekst (50–90 ord for sal),
+      audioguide (130–180 ord / 60–90 sek muntlig), og barneformidling (60–100 ord med sanselig undring).
+    synonymer: ["formidlingstriade", "3-lags tekst"]
+    i_praksis: "Hvert verk kan formidles til alle publikumsgrupper uten at teksten må skrives om på sparket."
+
+  doffin_og_terskelverdier:
+    forklaring: >
+      Norske regler for offentlige anskaffelser (LOA) med tre nivåer: Direkteanskaffelse (<100k),
+      nasjonal kunngjøring på Doffin (100k–1,4 mill) og EØS-anbud (>1,4 mill).
+    synonymer: ["anskaffelsesgrenser", "anbudsregler"]
+    i_praksis: "Vi unngår ulovlige direkteanskaffelser og holder orden på alle innleiekontrakter."
+
+  virke_museumstariff:
+    forklaring: >
+      Landsoverenskomsten for museer med lønnstrinn (20–65) og ubekvemstillegg for kveld, helg og overtid.
+    synonymer: ["tariffavtale", "lønnstrinn"]
+    i_praksis: "Vaktkostnader og overtid beregnes nøyaktig og i tråd med norsk arbeidsrett."
+
+  aml_hviletid:
+    forklaring: >
+      Arbeidsmiljølovens § 10-8 krav om minimum 11 timer sammenhengende hvile per 24 timer
+      og 35 timer per uke.
+    synonymer: ["daglig hvile", "døgnhvile", "11-timersregelen"]
+    i_praksis: "En vaktleder kan aldri sette opp en ansatt på morgenvakt kl. 08:00 hvis vedkommende jobbet til 22:00 kvelden før."
+
+  styrk08_yrkeskode:
+    forklaring: >
+      Standard for yrkesklassifisering (SSB STYRK-08) som entydig koder museumsfaglige
+      stillinger (f.eks. kurator 2651, konservator 2621, salvert 5113).
+    synonymer: ["yrkeskode", "STYRK", "stillingskode"]
+    i_praksis: "Sikrer at ansatte innplasseres i riktig lønns- og kompetansekategori overfor myndigheter og tariff."
+
+  renholdsregisteret:
+    forklaring: >
+      Arbeidstilsynets autoritative register over godkjente renholdsvirksomheter med krav om godkjente HMS-kort.
+    synonymer: ["godkjent renholdsbedrift", "HMS-kort renhold"]
+    i_praksis: "Museet kan aldri leie inn renholdere som mangler offentlig godkjenning fra Arbeidstilsynet."
+
+  stami_ergonomi_rotasjon:
+    forklaring: >
+      Statens arbeidsmiljøinstitutts faglige retningslinjer for stående arbeid på hardt underlag,
+      med krav om maks 2 timer sammenhengende salvakt og obligatorisk sittepause/rotasjon.
+    synonymer: ["salrotasjon", "ergonomisk avlastning"]
+    i_praksis: "Museumsverter roterer jevnlig mellom salovervåking og skranke/kiosk for å hindre belastningsskader i rygg og ben."
+
+  virksomhetshandboker:
+    forklaring: >
+      Aura Kunstmuseums fire autoritative styrings- og veiledningsdokumenter: Personalhåndbok,
+      HMS- og Sikkerhetshåndbok, Drifts- og Kvalitetshåndbok, og Leder- og Beredskapshåndbok.
+    synonymer: ["museumshåndbøker", "ansatthåndbok", "styringshåndbøker"]
+    i_praksis: "Håndbøkene sikrer at alle ansatte og ledere vet nøyaktig hva som gjelder for vakt, HMS, kafé og beredskap."
+
+  to_lags_handbokarkitektur:
+    forklaring: >
+      Kombinasjon av fullstendige menneskelesbare Markdown-dokumenter og en indeksert SQLite/FastMCP-database
+      som tillater umiddelbare og token-effektive oppslag ved behov.
+    synonymer: ["on-demand håndbok", "selektivt oppslag"]
+    i_praksis: "En museumsvert eller AI kan spørre om én spesifikk regel uten å måtte laste inn hele personalhåndboken på 50 sider."
+
+
+
