@@ -100,7 +100,11 @@ Neste agent bør benytte følgende skills via verktøykall:
 
 ---
 
-## 7. Ett Konkret Neste Steg
-**Koble nasjonal HMS-veiledning (`hms_veiledning_nasjonal.yaml`) direkte til et søkeverktøy i `hr_cli.py` og `hr_mcp_server.py`:**
-- Implementer en funksjon `search_hms_guidance(query: str, topic: str | None)` i `src/kunstpixel/core/hrdemo.py` som lar agenter og museumsledere søke blant de 344 veiledningspunktene over FastMCP og CLI.
-- Legg til tilhørende test i `tests/test_hrdemo.py`.
+## 7. Status på Forrige Steg & Neste Etappe
+- **Fullført (2026-10-19):**
+  * `search_hms_guidance(query, topic, limit)` implementert i [`src/kunstpixel/core/hrdemo.py`](file:///g:/Min%20disk/Kunstpixel/src/kunstpixel/core/hrdemo.py) med rask minne-caching av de 344 autoritative veiledningspunktene i [`04_knowledge/01_governance/hms_veiledning_nasjonal.yaml`](file:///g:/Min%20disk/Kunstpixel/04_knowledge/01_governance/hms_veiledning_nasjonal.yaml).
+  * Tilgjengelig via FastMCP ([`src/hr_mcp_server.py`](file:///g:/Min%20disk/Kunstpixel/src/hr_mcp_server.py) og [`src/mcp_server.py`](file:///g:/Min%20disk/Kunstpixel/src/mcp_server.py)), CLI (`py src/hr_cli.py hms "<ord>"`) og REST API (`/api/v1/hr/hms-guidance`).
+  * 206 av 206 automatiserte tester bestått 100 %.
+
+- **Neste konkrete etappe:**
+  * **Ukeplan-simulator:** Koble kandidatvelgeren og AML-sjekken sammen med 4-ukers simulatormotoren fra `BEHOV_UKEPLAN_2026-10-16.md` for å generere helhetlige vaktturnuser med vikarreserver.

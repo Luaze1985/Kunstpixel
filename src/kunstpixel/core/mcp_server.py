@@ -42,6 +42,7 @@ from src.kunstpixel.core.hrdemo import (
     find_rules,
     get_person,
     list_skills,
+    search_hms_guidance as find_hms_guidance,
 )
 
 # Initialize FastMCP application
@@ -560,6 +561,25 @@ def lookup_handbook(
         Relevante håndbokpunkter med kapittel, tittel, juridisk hjemmel, innhold og målgruppe.
     """
     return query_handbook(query=query, handbok=handbok, role=role, limit=limit)
+
+
+@mcp.tool()
+def search_hms_guidance(
+    query: str | None = None,
+    topic: str | None = None,
+    limit: int = 5,
+) -> list[dict[str, Any]]:
+    """Søk i 344 autoritative nasjonale HMS- og arbeidsmiljøveiledningspunkter (Arbeidstilsynet/BHT).
+
+    Args:
+        query: Fritekst-søkeord (f.eks. 'ergonomi', 'vernerunde', 'ulykke', 'psykososialt', 'støy').
+        topic: Tema- eller kategorifilter (f.eks. 'Lederansvar', 'Risikovurdering', 'Lovverk').
+        limit: Maksimalt antall veiledningspunkter som returneres (1–50, standard 5).
+
+    Returns:
+        Liste med strukturerte oppslag som inneholder id, tema, sporsmal, kort_svar og detaljert_veiledning.
+    """
+    return find_hms_guidance(query=query, topic=topic, limit=limit)
 
 
 if __name__ == "__main__":

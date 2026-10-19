@@ -38,9 +38,9 @@
 - **Automatisert testsuite (`py -3.13 -m pytest -v`):**
   - **Totalt 161 tester bestått 100 %** på 6,66 sekunder:
     * `tests/test_archive_quality.py`: 9 tester (legacy-stresstest baseline med 36 >24h og 4759 >13h feil, 0 feil i nytt arkiv, 0 mandagspublikumsvakter, ingen Sal F, dag 29–31 dekning, ren arbeidskopi, 15kg/80 gjester-harmonisering, 0 FK-brudd i museum.db, 344 HMS-veiledningsoppslag, R-01 til R-08 rutiner).
-    * `tests/test_hrdemo.py`: 28 tester (kjernefunksjoner, tilgjengelighet, kompetansekatalog).
+    * `tests/test_hrdemo.py`: 29 tester (kjernefunksjoner, tilgjengelighet, kompetansekatalog, nasjonal HMS-veiledning).
     * `tests/test_hr_eval.py`: 7 tester (felleevaluering L01–L03 og F01–F10).
-    * `tests/test_mcp_server.py`: 23 tester.
+    * `tests/test_mcp_server.py`: 25 tester (inkl. search_hms_guidance).
     * `tests/test_db_quality.py`: 23 tester.
     * `tests/test_challenger_2_adversarial.py`: 17 tester.
     * `tests/test_integration.py`: 14 tester.
