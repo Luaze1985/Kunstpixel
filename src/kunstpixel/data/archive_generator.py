@@ -1165,6 +1165,65 @@ def generate_absence_records(ut_csv: Path = DATA_DIR / "arkiv_hr_fravaer.csv") -
     return len(absence_records)
 
 
+def generate_shift_adjustments(ut_csv: Path = DATA_DIR / "arkiv_hr_vakt_justering.csv") -> int:
+    """Generer justeringer for 2-4 % av vaktene som forlenges til 9-11 timer.
+
+    Knyttet til datoer for utstillingsaapninger (vernissasjer), kveldsarrangementer og fredag/loerdag.
+    Endrer IKKE arkiv_hr_vakt_historikk.csv.
+    """
+    import csv
+
+    base_db_path = DATA_DIR / "kilde" / "museum_base.db"
+    if not base_db_path.is_file():
+        raise FileNotFoundError(f"Mangler {base_db_path}")
+
+    con = sqlite3.connect(f"file:{base_db_path.resolve().as_posix()}?mode=ro", uri=True)
+    try:
+        exh_dates = set(r[0] for r in con.execute("SELECT DISTINCT periode_start FROM utstillinger_historikk WHERE periode_start IS NOT NULL").fetchall())
+        ev_dates = set(r[0] for r in con.execute("SELECT DISTINCT dato FROM hendelser WHERE dato IS NOT NULL").fetchall())
+        special_dates = exh_dates | ev_dates
+
+        # Hent alle vakter
+        shifts = con.execute("SELECT vakt_id, dato FROM hr_vakter ORDER BY vakt_id").fetchall()
+    finally:
+        con.close()
+
+    # Prioriter vakter på spesialdatoer og fredager/lørdager
+    candidate_shifts = []
+    other_shifts = []
+    for vakt_id, dato in shifts:
+        d = date.fromisoformat(dato)
+        if dato in special_dates or d.weekday() in (4, 5):
+            candidate_shifts.append((vakt_id, dato))
+        else:
+            other_shifts.append((vakt_id, dato))
+
+    rng = random.Random("kunstpixel-vakt-justering-overtid-2026")
+    # Mål: ~3 % av 54 994 = ~1650 vakter
+    target_count = round(len(shifts) * 0.03)
+
+    # Velg ~80 % fra kandidater og ~20 % fra andre
+    cand_sample_count = min(len(candidate_shifts), round(target_count * 0.85))
+    selected_cands = rng.sample(candidate_shifts, cand_sample_count)
+    rem_count = target_count - len(selected_cands)
+    selected_others = rng.sample(other_shifts, rem_count)
+
+    chosen = sorted(selected_cands + selected_others, key=lambda x: x[0])
+
+    rader = []
+    for vakt_id, dato in chosen:
+        # Forleng til 9.0, 9.5, 10.0, 10.5 eller 11.0 timer
+        nye_timer = rng.choice([9.0, 9.5, 10.0, 10.5, 11.0])
+        rader.append([vakt_id, nye_timer, SYNTETISK])
+
+    with open(ut_csv, "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["vakt_id", "nye_timer", "datakilde"])
+        w.writerows(rader)
+
+    return len(rader)
+
+
 if __name__ == "__main__" and "--bare-klokkeslett" in __import__("sys").argv:
     print(f"Klokkeslett: {generate_shift_times()} vakter -> {KLOKKESLETT_CSV.name}")
     print(f"Grenser: {generate_working_time_limits()} rader -> {GRENSER_CSV.name}")
@@ -1172,6 +1231,8 @@ elif __name__ == "__main__" and "--bare-tariff" in __import__("sys").argv:
     print(f"Tariff tillegg: {generate_virke_tariff_tillegg()} trinn -> virke_tariff_tillegg.csv")
 elif __name__ == "__main__" and "--bare-fravaer" in __import__("sys").argv:
     print(f"Sykefravær: {generate_absence_records()} rader -> arkiv_hr_fravaer.csv")
+elif __name__ == "__main__" and "--bare-overtid" in __import__("sys").argv:
+    print(f"Vaktjusteringer (overtid): {generate_shift_adjustments()} vakter -> arkiv_hr_vakt_justering.csv")
 elif __name__ == "__main__":
     print("Generating Kunstpixel HR, Innleie & Exhibition History (Kunstsilo Scale 2010-2026)...")
     emps, pers = generate_employees()
