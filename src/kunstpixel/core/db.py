@@ -1265,3 +1265,13 @@ def query_shift_cost(maaned: str, db_path: Path | str | None = None) -> dict:
         "tariff_kilde": "Virke Landsoverenskomst for museer (virke_tariff, trinn 20-65)",
         "merknad": "Vakter for ansatte med lønnstrinn utenfor tariff-tabellen er ikke kostnadsberegnet.",
     }
+
+
+def query_exhibitions_with_economy(db_path: Path | str | None = None) -> list[dict]:
+    """Alle utstillinger som har økonomirapport, nyeste først (id, tittel, år). Til lukkede filtre."""
+    sql = """
+    SELECT uh.utstilling_id, uh.tittel, uh.aar
+    FROM utstilling_okonomi uo JOIN utstillinger_historikk uh ON uh.utstilling_id = uo.utstilling_id
+    ORDER BY uh.aar DESC, uh.utstilling_id DESC
+    """
+    return [dict(r) for r in execute_read_query(sql, (), db_path or get_db_path())]

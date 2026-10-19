@@ -33,7 +33,14 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.kunstpixel.core.mcp_server import (
     get_artwork_details,
+    get_exhibition_economy,
+    get_overtime_report,
     get_room_artworks,
+    get_shift_cost_for_period,
+    get_shifts_for_date,
+    get_sickness_absence_statistics,
+    get_staff_on_duty,
+    list_exhibitions_with_economy,
     search_collection,
     search_events,
     search_faq,
@@ -43,6 +50,7 @@ ASSET_DIR = Path(__file__).resolve().parent / "datafinner"
 ASSETS = {
     "/": ("index.html", "text/html; charset=utf-8"),
     "/index.html": ("index.html", "text/html; charset=utf-8"),
+    "/sok.html": ("sok.html", "text/html; charset=utf-8"),
     "/af.css": ("af.css", "text/css; charset=utf-8"),
 }
 
@@ -118,6 +126,15 @@ VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
     "get_room_artworks": (get_room_artworks, {"room_id"}),
     "search_events": (search_events, {"event_type", "date_from", "date_to", "limit"}),
     "search_faq": (search_faq, {"query", "category"}),
+    # HR og bemanning
+    "get_staff_on_duty": (get_staff_on_duty, {"tidspunkt"}),
+    "get_shifts_for_date": (get_shifts_for_date, {"dato"}),
+    "get_overtime_report": (get_overtime_report, {"maaned"}),
+    "get_sickness_absence_statistics": (get_sickness_absence_statistics, {"year", "quarter"}),
+    # Økonomi og innkjøp
+    "get_exhibition_economy": (get_exhibition_economy, {"exhibition_id"}),
+    "get_shift_cost_for_period": (get_shift_cost_for_period, {"maaned"}),
+    "list_exhibitions_with_economy": (list_exhibitions_with_economy, set()),
 }
 
 

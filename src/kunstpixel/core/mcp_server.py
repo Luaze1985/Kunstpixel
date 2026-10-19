@@ -22,6 +22,7 @@ from src.kunstpixel.core.db import (
     query_employee_cv,
     query_events,
     query_exhibition_economy,
+    query_exhibitions_with_economy,
     query_faq,
     query_handbook,
     query_holidays,
@@ -381,6 +382,12 @@ def calculate_shift_cost(
         "total_kostnad_nok": total_cost,
         "tariff_kilde": "Virke Landsoverenskomst for museer",
     }
+
+
+@mcp.tool()
+def list_exhibitions_with_economy() -> list[dict[str, Any]]:
+    """List alle utstillinger som har økonomirapport (id, tittel, år), nyeste først."""
+    return query_exhibitions_with_economy()
 
 
 @mcp.tool()

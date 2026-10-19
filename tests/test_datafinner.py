@@ -91,3 +91,26 @@ def test_les_fil_leser_formaal() -> None:
 def test_les_fil_avviser_stier_utenfor_mappene(sti: str) -> None:
     with pytest.raises(ValueError):
         run_tool("les_fil", {"sti": sti})
+
+
+@pytest.mark.parametrize(
+    "navn,args",
+    [
+        ("get_staff_on_duty", {"tidspunkt": "2026-10-19T12:00"}),
+        ("get_shifts_for_date", {"dato": "2026-10-20"}),
+        ("get_overtime_report", {"maaned": "2026-09"}),
+        ("get_sickness_absence_statistics", {"year": 2025, "quarter": 2}),
+        ("get_exhibition_economy", {"exhibition_id": "KP-EXH-2026-065"}),
+        ("get_shift_cost_for_period", {"maaned": "2026-09"}),
+        ("list_exhibitions_with_economy", {}),
+    ],
+)
+def test_api_svarer_paa_hr_og_okonomi(server_url: str, navn: str, args: dict) -> None:
+    q = urllib.parse.quote(json.dumps(args))
+    status, body = _get(f"{server_url}/api/verktoy?navn={navn}&args={q}")
+    assert status == 200, body
+    assert json.loads(body)["resultat"]
+
+
+def test_utstillingsliste_dekker_alle_med_okonomi() -> None:
+    assert len(run_tool("list_exhibitions_with_economy", {})) == 102
