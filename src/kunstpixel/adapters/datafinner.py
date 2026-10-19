@@ -46,8 +46,70 @@ ASSETS = {
     "/af.css": ("af.css", "text/css; charset=utf-8"),
 }
 
+# Interne mapper siden kan lese. Bare tekstfiler, aldri skriving.
+MAPPER = ["00_felles", "01_inbox", "02_deliverables", "03_team", "04_knowledge", "05_data/governance"]
+FILTYPER = {".md", ".yaml", ".yml", ".json", ".txt", ".csv"}
+MAKS_FILSTORRELSE = 512_000
+
+
+def _filer(mappe: str | None) -> list[Path]:
+    roots = [mappe] if mappe else MAPPER
+    files: list[Path] = []
+    for r in roots:
+        if r not in MAPPER:
+            raise ValueError(f"Ukjent mappe: {r}")
+        base = PROJECT_ROOT / r
+        if base.is_dir():
+            files += [
+                p
+                for p in sorted(base.rglob("*"))
+                if p.is_file() and p.suffix.lower() in FILTYPER and p.stat().st_size <= MAKS_FILSTORRELSE
+            ]
+    return files
+
+
+def grep_mappe(query: str, mappe: str | None = None, limit: int = 50) -> list[dict[str, Any]]:
+    """Søk etter tekst i interne mapper. Returnerer fil, linje og treff."""
+    if not query or not query.strip():
+        return []
+    needle = query.strip().lower()
+    hits: list[dict[str, Any]] = []
+    for path in _filer(mappe):
+        try:
+            lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+        except OSError:
+            continue
+        for no, line in enumerate(lines, start=1):
+            if needle in line.lower():
+                hits.append(
+                    {
+                        "sti": path.relative_to(PROJECT_ROOT).as_posix(),
+                        "linje": no,
+                        "treff": line.strip()[:200],
+                    }
+                )
+                if len(hits) >= limit:
+                    return hits
+    return hits
+
+
+def les_fil(sti: str) -> dict[str, Any]:
+    """Les én tekstfil i en intern mappe. Stier utenfor MAPPER avvises."""
+    path = (PROJECT_ROOT / sti).resolve()
+    allowed = [(PROJECT_ROOT / m).resolve() for m in MAPPER]
+    if not any(path.is_relative_to(a) for a in allowed):
+        raise ValueError(f"Stien er utenfor de interne mappene: {sti}")
+    if not path.is_file() or path.suffix.lower() not in FILTYPER:
+        raise ValueError(f"Fant ingen lesbar tekstfil: {sti}")
+    if path.stat().st_size > MAKS_FILSTORRELSE:
+        raise ValueError(f"Filen er for stor til å vises: {sti}")
+    return {"sti": path.relative_to(PROJECT_ROOT).as_posix(), "tekst": path.read_text(encoding="utf-8", errors="replace")}
+
+
 # Hvitliste: verktøynavn -> (funksjon, tillatte argumenter)
 VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
+    "grep_mappe": (grep_mappe, {"query", "mappe", "limit"}),
+    "les_fil": (les_fil, {"sti"}),
     "search_collection": (
         search_collection,
         {"query", "artist", "title", "technique", "theme", "room_id", "limit"},

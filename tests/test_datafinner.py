@@ -70,3 +70,24 @@ def test_side_og_stil_serveres(server_url: str) -> None:
     assert status == 200 and b"Datafinner" in body
     status, _ = _get(f"{server_url}/af.css")
     assert status == 200
+
+
+def test_grep_mappe_finner_tekst_i_knowledge() -> None:
+    hits = run_tool("grep_mappe", {"query": "Kunstpixel", "mappe": "04_knowledge"})
+    assert hits and all(h["sti"].startswith("04_knowledge/") for h in hits)
+
+
+def test_grep_mappe_avviser_ukjent_mappe() -> None:
+    with pytest.raises(ValueError):
+        run_tool("grep_mappe", {"query": "x", "mappe": "src"})
+
+
+def test_les_fil_leser_formaal() -> None:
+    data = run_tool("les_fil", {"sti": "00_felles/FORMAAL.md"})
+    assert data["tekst"]
+
+
+@pytest.mark.parametrize("sti", ["../AGENTS.md", "AGENTS.md", "05_data/museum.db", "00_felles/../src/mcp_server.py"])
+def test_les_fil_avviser_stier_utenfor_mappene(sti: str) -> None:
+    with pytest.raises(ValueError):
+        run_tool("les_fil", {"sti": sti})
