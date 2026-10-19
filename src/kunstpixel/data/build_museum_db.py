@@ -8,11 +8,12 @@ dette skriptet. Hvert bygg starter fra grunnlaget og gjør de samme stegene:
 
 1. HR-demotabellene (hr_people, hr_skills, hr_person_skill, hr_availability, hr_rules)
    lastes fra `05_data/hr_demo/seed.json`, så alt ligger i én database.
-2. hr_vakter bygges om med fremmednøkkel til hr_ansatte og utledet start/slutt.
-   Regelen er den samme som AML-kontrollen i db.py (ADR 009): slutt kl. 22 for
-   kvelds- og vernissasjeroller, ellers kl. 17; start = slutt minus timer.
-3. Indekser for vaktoppslag.
-4. PRAGMA user_version = SKJEMAVERSJON, VACUUM, integrity_check og foreign_key_check.
+2. hr_vakter bygges om med fremmednøkkel til hr_ansatte og start/slutt fra
+   `05_data/arkiv_hr_vakt_klokkeslett.csv` (syntetiske data fra archive_generator).
+   Kolonnen klokkeslett_datakilde merker dem som syntetiske.
+3. Tabellen arbeidstid_grenser lastes fra `05_data/arbeidstid_grenser.csv` (syntetisk merket).
+4. Indekser for vaktoppslag.
+5. PRAGMA user_version = SKJEMAVERSJON, VACUUM, integrity_check og foreign_key_check.
 
 Bygget skjer i en midlertidig fil utenfor Google Drive. Resultatet kopieres inn og
 erstatter museum.db atomisk, og sha256 skrives til museum.db.sha256.
@@ -44,7 +45,9 @@ DATA_DIR = PROJECT_ROOT / "05_data"
 BASE_DB = DATA_DIR / "kilde" / "museum_base.db"
 OUT_DB = DATA_DIR / "museum.db"
 SHA_FILE = DATA_DIR / "museum.db.sha256"
-SKJEMAVERSJON = 1
+SKJEMAVERSJON = 2
+KLOKKESLETT_CSV = DATA_DIR / "arkiv_hr_vakt_klokkeslett.csv"
+GRENSER_CSV = DATA_DIR / "arbeidstid_grenser.csv"
 
 HR_DEMO_TABLES = ["hr_rules", "hr_availability", "hr_person_skill", "hr_skills", "hr_people"]
 
@@ -62,7 +65,19 @@ CREATE TABLE hr_vakter_ny (
     rolle TEXT,
     timer REAL NOT NULL CHECK(timer > 0),
     utstilling_id TEXT REFERENCES utstillinger_historikk(utstilling_id),
+    klokkeslett_datakilde TEXT NOT NULL,
     CHECK(start < slutt)
+)
+"""
+
+GRENSER_SQL = """
+CREATE TABLE arbeidstid_grenser (
+    navn TEXT PRIMARY KEY,
+    verdi REAL NOT NULL,
+    enhet TEXT NOT NULL,
+    beskrivelse TEXT NOT NULL,
+    kilde TEXT NOT NULL,
+    datakilde TEXT NOT NULL
 )
 """
 
@@ -72,17 +87,17 @@ INDEXES = [
 ]
 
 
-def slutt_for_rolle(rolle: str | None) -> float:
-    r = (rolle or "").lower()
-    return 22.0 if "kveld" in r or "vernissasje" in r else 17.0
+def les_csv(path: Path) -> list[dict]:
+    import csv
 
-
-def klokkeslett(timer: float) -> str:
-    minutter = round(timer * 60)
-    return f"{minutter // 60:02d}:{minutter % 60:02d}"
+    if not path.is_file():
+        raise FileNotFoundError(f"Mangler datafil: {path}. Kjør archive_generator.py --bare-klokkeslett")
+    with open(path, encoding="utf-8", newline="") as f:
+        return list(csv.DictReader(f))
 
 
 def bygg_hr_vakter(con: sqlite3.Connection) -> int:
+    klokke = {r["vakt_id"]: r for r in les_csv(KLOKKESLETT_CSV)}
     con.execute("DROP TABLE IF EXISTS hr_vakter_ny")
     con.execute(HR_VAKTER_SQL)
     rader = con.execute(
@@ -91,16 +106,26 @@ def bygg_hr_vakter(con: sqlite3.Connection) -> int:
     ).fetchall()
     ut = []
     for vakt_id, ansatt_id, aar, maaned, dato, stasjon, avdeling, rolle, timer, utstilling_id in rader:
-        slutt = slutt_for_rolle(rolle)
-        start = slutt - float(timer)
-        if start < 0:
-            raise ValueError(f"Vakt {vakt_id} starter før midnatt ({timer} timer)")
-        ut.append((vakt_id, ansatt_id, aar, maaned, dato, klokkeslett(start), klokkeslett(slutt),
-                   stasjon, avdeling, rolle, timer, utstilling_id or None))
-    con.executemany("INSERT INTO hr_vakter_ny VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", ut)
+        k = klokke.get(vakt_id)
+        if k is None:
+            raise ValueError(f"Vakt {vakt_id} mangler klokkeslett i {KLOKKESLETT_CSV.name}")
+        ut.append((vakt_id, ansatt_id, aar, maaned, dato, k["start"], k["slutt"],
+                   stasjon, avdeling, rolle, timer, utstilling_id or None, k["datakilde"]))
+    con.executemany("INSERT INTO hr_vakter_ny VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", ut)
     con.execute("DROP TABLE hr_vakter")
     con.execute("ALTER TABLE hr_vakter_ny RENAME TO hr_vakter")
     return len(ut)
+
+
+def bygg_grenser(con: sqlite3.Connection) -> int:
+    rader = les_csv(GRENSER_CSV)
+    con.execute("DROP TABLE IF EXISTS arbeidstid_grenser")
+    con.execute(GRENSER_SQL)
+    con.executemany(
+        "INSERT INTO arbeidstid_grenser VALUES (?,?,?,?,?,?)",
+        [(r["navn"], float(r["verdi"]), r["enhet"], r["beskrivelse"], r["kilde"], r["datakilde"]) for r in rader],
+    )
+    return len(rader)
 
 
 def bygg(til: Path) -> dict:
@@ -121,6 +146,7 @@ def bygg(til: Path) -> dict:
         load_seed(con, json.loads(Path(SEED).read_text(encoding="utf-8")))
         with con:
             antall_vakter = bygg_hr_vakter(con)
+            antall_grenser = bygg_grenser(con)
             for sql in INDEXES:
                 con.execute(sql)
             con.execute(f"PRAGMA user_version = {SKJEMAVERSJON}")
@@ -130,7 +156,7 @@ def bygg(til: Path) -> dict:
         fk_brudd = con.execute("PRAGMA foreign_key_check").fetchall()
         if integritet != "ok" or fk_brudd:
             raise ValueError(f"Kontroll feilet: integrity={integritet}, fk_brudd={fk_brudd[:5]}")
-        return {"vakter": antall_vakter, "user_version": SKJEMAVERSJON}
+        return {"vakter": antall_vakter, "grenser": antall_grenser, "user_version": SKJEMAVERSJON}
     finally:
         con.close()
 

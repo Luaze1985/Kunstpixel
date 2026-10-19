@@ -112,18 +112,20 @@
   var kr = function (n) { return Math.round(n).toLocaleString("nb-NO") + " kr"; };
   var tall = function (n) { return Number(n).toLocaleString("nb-NO"); };
   var KONTROLL = ["Tallene stemmer med kilden", "Utvalget dekker det jeg spurte om"];
-  var VAKTKOLONNER = [["navn", "Navn"], ["stilling", "Stilling"], ["timer", "Timer"], ["stasjon", "Stasjon"], ["avdeling", "Avdeling"], ["telefon", "Telefon"], ["epost", "E-post"]];
+  // Kolonner med true vises bare når feltet finnes i svaret fra databasen.
+  var VAKTKOLONNER = [["start", "Start", true], ["slutt", "Slutt", true], ["navn", "Navn"], ["stilling", "Stilling"], ["timer", "Timer"], ["stasjon", "Stasjon"], ["avdeling", "Avdeling"], ["telefon", "Telefon"], ["epost", "E-post"]];
   var FRA_DB = ["confirmed", "Fra museum.db"];
+  var SYNTETISK = ["system", "Syntetiske data i museum.db"];
 
   // Bare data fra museum.db. Vurdering og forslag vises bare når databasen har tekst for det.
   var SPORSMAL = {
-    versjon: "5",
+    versjon: "6",
     roller: [
       { navn: "HR og bemanning", merknad: "/hr", sporsmal: [
         { id: "vakt-i-dag", tekst: "Hvem har vakt i dag?", kort: "Vakt i dag", filtre: [],
           verktoy: "get_staff_on_shift", args: function () { return {}; },
-          svar: function (d) { return d.antall_med_vakt + " har vakt i dag"; },
-          nokkeltall: function (d) { return [["Med vakt", d.antall_med_vakt], ["Timer", tall(d.timer_totalt)]]; },
+          svar: function (d) { return d.antall_pa_jobb !== undefined ? d.antall_pa_jobb + " på jobb nå, " + d.antall_med_vakt + " med vakt i dag" : d.antall_med_vakt + " har vakt i dag"; },
+          nokkeltall: function (d) { var n = [["Med vakt", d.antall_med_vakt], ["Timer", tall(d.timer_totalt)]]; if (d.antall_pa_jobb !== undefined) n.unshift(["På jobb kl. " + d.klokkeslett, d.antall_pa_jobb]); return n; },
           rader: function (d) { return d.vakter; }, kolonner: VAKTKOLONNER,
           kildeMerke: FRA_DB, periode: function (d) { return d.dato; } },
         { id: "vaktplan", tekst: "Vaktplan for en dag", kort: "Vaktplan",
@@ -135,10 +137,10 @@
         { id: "arbeidstid", tekst: "Arbeidstid i perioden", kort: "Arbeidstid",
           filtre: [{ id: "maaned", label: "Måned", type: "month" }],
           verktoy: "get_working_hours_report", args: function (f) { return { maaned: f.maaned }; },
-          svar: function (d) { return tall(d.timer_totalt) + " timer på " + d.antall_ansatte + " ansatte"; },
-          nokkeltall: function (d) { return [["Timer", tall(d.timer_totalt)], ["Ansatte", d.antall_ansatte], ["Høyeste ukesum", tall(d.hoyeste_ukesum) + " t"], ["Høyeste døgnsum", tall(d.hoyeste_dognsum) + " t"]]; },
+          svar: function (d) { return d.overtid_timer_totalt !== undefined ? tall(d.overtid_timer_totalt) + " timer overtid, " + d.antall_med_overtid + " av " + d.antall_ansatte + " ansatte" : tall(d.timer_totalt) + " timer på " + d.antall_ansatte + " ansatte"; },
+          nokkeltall: function (d) { var n = [["Timer", tall(d.timer_totalt)], ["Ansatte", d.antall_ansatte], ["Høyeste ukesum", tall(d.hoyeste_ukesum) + " t"]]; if (d.overtid_timer_totalt !== undefined) n.unshift(["Overtid", tall(d.overtid_timer_totalt) + " t"]); else n.push(["Høyeste døgnsum", tall(d.hoyeste_dognsum) + " t"]); return n; },
           rader: function (d) { return d.ansatte; },
-          kolonner: [["navn", "Navn"], ["avdeling", "Avdeling"], ["stillingsprosent", "Stilling %"], ["timer_totalt", "Timer"], ["antall_vakter", "Vakter"], ["hoyeste_ukesum", "Høyeste uke"], ["hoyeste_dognsum", "Høyeste døgn"]],
+          kolonner: [["navn", "Navn"], ["avdeling", "Avdeling"], ["stillingsprosent", "Stilling %"], ["timer_totalt", "Timer"], ["antall_vakter", "Vakter"], ["hoyeste_ukesum", "Høyeste uke"], ["hoyeste_dognsum", "Høyeste døgn"], ["overtid_timer", "Overtid t", true]],
           kildeMerke: FRA_DB, periode: function (d) { return d.maaned; } },
         { id: "sykefravaer", tekst: "Sykefravær i kultursektoren", kort: "Sykefravær",
           filtre: [{ id: "aar", label: "År", type: "number" }, { id: "kvartal", label: "Kvartal", type: "select", valg: ["1", "2", "3", "4"] }],
@@ -166,7 +168,7 @@
           svar: function (d) { return kr(d.kostnad_nok_totalt) + " for vakter"; },
           nokkeltall: function (d) { return [["Kostnad", kr(d.kostnad_nok_totalt)], ["Avdelinger", d.avdelinger.length], ["Uten tariff", d.vakter_uten_tariff + " vakter"]]; },
           rader: function (d) { return d.avdelinger; },
-          kolonner: [["avdeling", "Avdeling"], ["vakter", "Vakter"], ["timer", "Timer"], ["kostnad_nok", "Kostnad kr"], ["vakter_uten_tariff", "Uten tariff"]],
+          kolonner: [["avdeling", "Avdeling"], ["vakter", "Vakter"], ["timer", "Timer"], ["kveldstimer", "Kveldstimer", true], ["kostnad_nok", "Kostnad kr"], ["vakter_uten_tariff", "Uten tariff"]],
           kildeMerke: ["verify", "Ufullstendig tariff"], periode: function (d) { return d.maaned; } }
       ] }
     ]
@@ -342,6 +344,13 @@
     }).catch(function (e) { feil("Feil fra databasen: " + e.message); });
   });
 
+  function erSyntetisk(d) {
+    if (!d) return false;
+    if (d.datakilde || d.grenser) return true;
+    var r = Array.isArray(d) ? d : [];
+    return r.some(function (x) { return x && x.klokkeslett_datakilde; });
+  }
+
   function oppdaterStatus() {
     var bokser = document.querySelectorAll("#kontroll input");
     var avkrysset = bokser.length > 0 && [].every.call(bokser, function (c) { return c.checked; });
@@ -351,7 +360,7 @@
     merke.textContent = avkrysset ? "Bekreftet" : "Bør verifiseres";
     var fm = $("fakta-merke");
     if (avkrysset) { fm.className = "af-source confirmed"; fm.textContent = "Bekreftet"; }
-    else { fm.className = "af-source " + s.kildeMerke[0]; fm.textContent = s.kildeMerke[1]; }
+    else { var m = erSyntetisk(sisteSvar) && s.kildeMerke === FRA_DB ? SYNTETISK : s.kildeMerke; fm.className = "af-source " + m[0]; fm.textContent = m[1]; }
     var ubekreftet = document.querySelectorAll("#rapport-innhold .af-source.missing, #rapport-innhold .af-source.suggested, #rapport-innhold .af-source.verify").length > 0;
     var ok = avkrysset && !ubekreftet;
     $("status").textContent = ok ? "Bekreftet" : "Utkast";
@@ -374,16 +383,17 @@
     });
     var thead = $("fakta").tHead, tbody = $("fakta").tBodies[0];
     thead.textContent = ""; tbody.textContent = "";
-    var hr = el("tr");
-    s.kolonner.forEach(function (k) { hr.appendChild(el("th", null, k[1])); });
-    thead.appendChild(hr);
     var rader = s.rader(d);
+    var kolonner = s.kolonner.filter(function (k) { return !k[2] || rader.some(function (r) { return r[k[0]] !== undefined; }); });
+    var hr = el("tr");
+    kolonner.forEach(function (k) { hr.appendChild(el("th", null, k[1])); });
+    thead.appendChild(hr);
     if (!rader.length) {
-      var tr0 = el("tr"), td0 = el("td", null, "Ingen rader."); td0.colSpan = s.kolonner.length; tr0.appendChild(td0); tbody.appendChild(tr0);
+      var tr0 = el("tr"), td0 = el("td", null, "Ingen rader."); td0.colSpan = kolonner.length; tr0.appendChild(td0); tbody.appendChild(tr0);
     }
     rader.forEach(function (r) {
       var tr = el("tr");
-      s.kolonner.forEach(function (k) { var v = r[k[0]]; tr.appendChild(el("td", typeof v === "number" ? "num" : null, v == null ? "—" : (typeof v === "number" ? tall(v) : String(v)))); });
+      kolonner.forEach(function (k) { var v = r[k[0]]; tr.appendChild(el("td", typeof v === "number" ? "num" : null, v == null ? "—" : (typeof v === "number" ? tall(v) : String(v)))); });
       tbody.appendChild(tr);
     });
     var v = s.vurdering ? s.vurdering(d) : null;
@@ -398,7 +408,7 @@
       l.appendChild(c); l.appendChild(document.createTextNode(t)); k.appendChild(l);
     });
     oppdaterStatus();
-    $("grunnlag").textContent = "Kilde: museum.db via " + kallTekst(s.verktoy, sisteArgs) + ". Periode: " + s.periode(d, sisteFiltre) + ". Regelversjon " + SPORSMAL.versjon + "." + (d.mangler ? " Mangler i databasen: " + d.mangler : "");
+    $("grunnlag").textContent = "Kilde: museum.db via " + kallTekst(s.verktoy, sisteArgs) + ". Periode: " + s.periode(d, sisteFiltre) + ". Regelversjon " + SPORSMAL.versjon + "." + (erSyntetisk(d) ? " Klokkeslett og arbeidstidsgrenser er syntetiske data laget av archive_generator." : "") + (d.mangler ? " Mangler i databasen: " + d.mangler : "");
     $("rapport").hidden = false;
     gaaTil($("rapport"), $("rapport-tittel"));
   });

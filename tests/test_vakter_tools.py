@@ -102,3 +102,44 @@ def test_vaktkostnad_bruker_satser_fra_databasen(mini_db: Path) -> None:
 
 def test_sporringene_er_lesende() -> None:
     validate_read_only_query("SELECT " + VAKT_KOLONNER_SQL + " FROM hr_vakter v JOIN hr_ansatte a USING(ansatt_id)")
+
+
+# --- Mot en database bygget av build_museum_db.py (temp-fil, museum.db røres ikke) ---
+
+
+@pytest.fixture(scope="module")
+def bygget_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    from src.kunstpixel.data.build_museum_db import bygg
+
+    db = tmp_path_factory.mktemp("bygg") / "museum.db"
+    bygg(db)
+    return db
+
+
+def test_bygget_db_har_syntetisk_merkede_klokkeslett(bygget_db: Path) -> None:
+    vakter = query_shifts_on_date("2026-10-20", db_path=bygget_db)
+    assert vakter and all(v["start"] < v["slutt"] for v in vakter)
+    assert all(v["klokkeslett_datakilde"].startswith("syntetisk") for v in vakter)
+
+
+def test_bygget_db_gir_hvem_er_paa_jobb(bygget_db: Path) -> None:
+    morgen = query_staff_on_shift("2026-10-19", "06:00", db_path=bygget_db)
+    midt = query_staff_on_shift("2026-10-19", "12:00", db_path=bygget_db)
+    assert "mangler" not in midt
+    assert morgen["antall_pa_jobb"] == 0
+    forventet = [v for v in midt["vakter"] if v["start"] <= "12:00" < v["slutt"]]
+    assert midt["antall_pa_jobb"] == len(forventet) > 0
+
+
+def test_bygget_db_beregner_overtid_mot_grenser(bygget_db: Path) -> None:
+    r = query_working_hours("2026-09", db_path=bygget_db)
+    assert "mangler" not in r
+    assert r["grenser"]["ukenorm_timer"]["verdi"] == 37.5
+    assert r["grenser"]["ukenorm_timer"]["datakilde"].startswith("syntetisk")
+    assert all("overtid_timer" in a for a in r["ansatte"])
+
+
+def test_bygget_db_bruker_kveldssats_for_timer_etter_grensen(bygget_db: Path) -> None:
+    r = query_shift_cost("2026-09", db_path=bygget_db)
+    assert sum(a["kveldstimer"] for a in r["avdelinger"]) > 0
+    assert "Kveldssats er ikke brukt" not in r["mangler"]

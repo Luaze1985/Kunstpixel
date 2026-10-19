@@ -40,6 +40,7 @@ from src.kunstpixel.core.mcp_server import (
     get_sickness_absence_statistics,
     get_staff_on_shift,
     get_working_hours_report,
+    get_working_time_limits,
     list_exhibitions_with_economy,
     search_collection,
     search_events,
@@ -127,7 +128,8 @@ VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
     "search_events": (search_events, {"event_type", "date_from", "date_to", "limit"}),
     "search_faq": (search_faq, {"query", "category"}),
     # HR og bemanning
-    "get_staff_on_shift": (get_staff_on_shift, {"dato"}),
+    "get_staff_on_shift": (get_staff_on_shift, {"dato", "klokkeslett"}),
+    "get_working_time_limits": (get_working_time_limits, set()),
     "get_shifts_for_date": (get_shifts_for_date, {"dato"}),
     "get_working_hours_report": (get_working_hours_report, {"maaned"}),
     "get_sickness_absence_statistics": (get_sickness_absence_statistics, {"year", "quarter"}),

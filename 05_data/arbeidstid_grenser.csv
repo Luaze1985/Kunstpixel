@@ -1,0 +1,7 @@
+navn,verdi,enhet,beskrivelse,kilde,datakilde
+ukenorm_timer,37.5,timer per uke,Ordinær ukentlig arbeidstid for heltid,Personalhåndbok (handbok_oppslag) og Virke,syntetisk (archive_generator)
+dognmaks_timer,9.0,timer per døgn,Alminnelig arbeidstid per døgn,AML § 10-4 (ADR 009),syntetisk (archive_generator)
+daglig_hvile_timer,11.0,timer,Sammenhengende daglig arbeidsfri,AML § 10-8 (ADR 009),syntetisk (archive_generator)
+ukehvile_timer,35.0,timer,Sammenhengende ukentlig arbeidsfri,AML § 10-8 (ADR 009),syntetisk (archive_generator)
+lunsj_timer,0.5,timer,Ulønnet lunsjpause per vakt,Personalhåndbok (handbok_oppslag),syntetisk (archive_generator)
+kveldstillegg_fra,17.0,klokketime,Kveldstillegg for vakter som slutter etter dette,Virke (calculate_shift_cost),syntetisk (archive_generator)

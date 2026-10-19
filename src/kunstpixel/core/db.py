@@ -1117,13 +1117,29 @@ def query_handbook(
 
 
 # --- Vakter, arbeidstid og vaktkostnad (Datafinner v1) ---
-# Bare det som står i museum.db: hr_vakter har dato og timer, ikke klokkeslett, og databasen har
-# ingen overtidsgrense som tall. Svarene regner derfor ikke ut klokkeslett eller overtid.
+# Bare det som står i museum.db. Klokkeslett (hr_vakter.start/slutt) og arbeidstid_grenser finnes når
+# museum.db er bygget med build_museum_db.py; de er syntetiske og merket med datakilde. Mangler de,
+# sier svaret fra i stedet for å regne ut noe.
 
-VAKT_KOLONNER_SQL = """
-    v.vakt_id, v.dato, v.timer, v.rolle, v.stasjon, v.avdeling,
-    a.ansatt_id, a.navn, a.stilling, a.telefon, a.epost, a.kontor_sal
-"""
+
+def _db(db_path: Path | str | None) -> Path | str:
+    return db_path or get_db_path()
+
+
+def _har_klokkeslett(db_path: Path | str) -> bool:
+    kolonner = {r["name"] for r in execute_read_query("SELECT name FROM pragma_table_info('hr_vakter')", (), db_path)}
+    return {"start", "slutt"} <= kolonner
+
+
+def query_working_time_limits(db_path: Path | str | None = None) -> dict:
+    """Arbeidstidsgrensene i databasen (tabellen arbeidstid_grenser), med kilde og datakilde."""
+    db = _db(db_path)
+    finnes = execute_read_query(
+        "SELECT count(*) AS n FROM sqlite_master WHERE type='table' AND name='arbeidstid_grenser'", (), db
+    )[0]["n"]
+    if not finnes:
+        return {}
+    return {r["navn"]: dict(r) for r in execute_read_query("SELECT * FROM arbeidstid_grenser ORDER BY navn", (), db)}
 
 
 def _maaned_grenser(maaned: str) -> tuple[str, str, str]:
@@ -1135,103 +1151,187 @@ def _maaned_grenser(maaned: str) -> tuple[str, str, str]:
     return f"{aar:04d}-{mnd:02d}", fra.isoformat(), til.isoformat()
 
 
+def _klokke_timer(hhmm: str) -> float:
+    return int(hhmm[:2]) + int(hhmm[3:5]) / 60
+
+
+VAKT_KOLONNER_SQL = """
+    v.vakt_id, v.dato, v.timer, v.rolle, v.stasjon, v.avdeling,
+    a.ansatt_id, a.navn, a.stilling, a.telefon, a.epost, a.kontor_sal
+"""
+
+
 def query_shifts_on_date(dato: str, db_path: Path | str | None = None) -> list[dict]:
-    """Alle vakter på én dato slik de står i hr_vakter, sortert på avdeling og navn."""
+    """Alle vakter på én dato slik de står i hr_vakter, med klokkeslett når databasen har dem."""
     from datetime import date
 
     dato = date.fromisoformat(dato.strip()).isoformat()
+    db = _db(db_path)
+    klokke = _har_klokkeslett(db)
+    ekstra = ", v.start, v.slutt, v.klokkeslett_datakilde" if klokke else ""
+    rekkefolge = "v.start, a.navn" if klokke else "v.avdeling, a.navn"
     sql = f"""
-    SELECT {VAKT_KOLONNER_SQL}
+    SELECT {VAKT_KOLONNER_SQL}{ekstra}
     FROM hr_vakter v JOIN hr_ansatte a ON a.ansatt_id = v.ansatt_id
     WHERE v.dato = :dato
-    ORDER BY v.avdeling, a.navn
+    ORDER BY {rekkefolge}
     """
-    return [dict(r) for r in execute_read_query(sql, {"dato": dato}, db_path or get_db_path())]
+    return [dict(r) for r in execute_read_query(sql, {"dato": dato}, db)]
 
 
-def query_staff_on_shift(dato: str | None = None, db_path: Path | str | None = None) -> dict:
-    """Hvem har vakt på en dato (standard i dag). Databasen har ikke klokkeslett, bare dato og timer."""
-    from datetime import date
+def query_staff_on_shift(dato: str | None = None, klokkeslett: str | None = None,
+                         db_path: Path | str | None = None) -> dict:
+    """Hvem har vakt på en dato (standard i dag), og hvem er på jobb på et klokkeslett (standard nå)."""
+    from datetime import date, datetime
 
-    d = date.fromisoformat(dato.strip()) if dato else date.today()
-    vakter = query_shifts_on_date(d.isoformat(), db_path)
-    return {
+    na = datetime.now()
+    d = date.fromisoformat(dato.strip()) if dato else na.date()
+    db = _db(db_path)
+    vakter = query_shifts_on_date(d.isoformat(), db)
+    svar = {
         "dato": d.isoformat(),
         "antall_med_vakt": len(vakter),
         "timer_totalt": round(sum(v["timer"] for v in vakter), 2),
         "vakter": vakter,
-        "mangler": "Klokkeslett for vaktene finnes ikke i databasen.",
     }
+    if not _har_klokkeslett(db):
+        svar["mangler"] = "Klokkeslett for vaktene finnes ikke i databasen."
+        return svar
+    kl = klokkeslett or (na.strftime("%H:%M") if d == na.date() else None)
+    if kl:
+        svar["klokkeslett"] = kl
+        svar["pa_jobb"] = [v for v in vakter if v["start"] <= kl < v["slutt"]]
+        svar["antall_pa_jobb"] = len(svar["pa_jobb"])
+    svar["datakilde"] = vakter[0]["klokkeslett_datakilde"] if vakter else None
+    return svar
 
 
 def query_working_hours(maaned: str, db_path: Path | str | None = None) -> dict:
-    """Arbeidstid per ansatt i en måned ('YYYY-MM'): sum timer, antall vakter og høyeste uke- og døgnsum."""
+    """Arbeidstid per ansatt i en måned ('YYYY-MM'). Overtid regnes bare når grensene finnes i databasen."""
+    from datetime import date
+
     mnd, fra, til = _maaned_grenser(maaned)
+    db = _db(db_path)
     sql = """
-    WITH dag AS (
-        SELECT v.ansatt_id, v.dato, sum(v.timer) AS timer, count(*) AS vakter
-        FROM hr_vakter v WHERE v.dato >= :fra AND v.dato < :til
-        GROUP BY v.ansatt_id, v.dato
-    ), uke AS (
-        SELECT ansatt_id, strftime('%Y-%W', dato) AS uke, sum(timer) AS timer
-        FROM dag GROUP BY ansatt_id, uke
-    )
-    SELECT a.ansatt_id, a.navn, a.avdeling, a.stillingsprosent,
-           round(sum(dag.timer), 2) AS timer_totalt, sum(dag.vakter) AS antall_vakter,
-           max(dag.timer) AS hoyeste_dognsum,
-           (SELECT max(u.timer) FROM uke u WHERE u.ansatt_id = a.ansatt_id) AS hoyeste_ukesum
-    FROM dag JOIN hr_ansatte a ON a.ansatt_id = dag.ansatt_id
-    GROUP BY a.ansatt_id
-    ORDER BY hoyeste_ukesum DESC, a.navn
+    SELECT v.ansatt_id, a.navn, a.avdeling, a.stillingsprosent, v.dato, sum(v.timer) AS timer, count(*) AS vakter
+    FROM hr_vakter v JOIN hr_ansatte a ON a.ansatt_id = v.ansatt_id
+    WHERE v.dato >= :fra AND v.dato < :til
+    GROUP BY v.ansatt_id, v.dato
+    ORDER BY v.ansatt_id, v.dato
     """
-    ansatte = [dict(r) for r in execute_read_query(sql, {"fra": fra, "til": til}, db_path or get_db_path())]
-    return {
+    grenser = query_working_time_limits(db)
+    ukenorm = grenser.get("ukenorm_timer", {}).get("verdi")
+    dognmaks = grenser.get("dognmaks_timer", {}).get("verdi")
+    per: dict[str, dict] = {}
+    uker: dict[tuple[str, tuple[int, int]], float] = {}
+    for r in execute_read_query(sql, {"fra": fra, "til": til}, db):
+        p = per.setdefault(r["ansatt_id"], {
+            "ansatt_id": r["ansatt_id"], "navn": r["navn"], "avdeling": r["avdeling"],
+            "stillingsprosent": r["stillingsprosent"], "timer_totalt": 0.0, "antall_vakter": 0,
+            "hoyeste_dognsum": 0.0, "dognovertid_timer": 0.0,
+        })
+        p["timer_totalt"] += r["timer"]
+        p["antall_vakter"] += r["vakter"]
+        p["hoyeste_dognsum"] = max(p["hoyeste_dognsum"], r["timer"])
+        if dognmaks is not None and r["timer"] > dognmaks:
+            p["dognovertid_timer"] += r["timer"] - dognmaks
+        iso = date.fromisoformat(r["dato"]).isocalendar()
+        n = (r["ansatt_id"], (iso[0], iso[1]))
+        uker[n] = uker.get(n, 0.0) + r["timer"]
+    for p in per.values():
+        p["hoyeste_ukesum"] = 0.0
+        p["ukeovertid_timer"] = 0.0
+    for (ansatt_id, _), timer in uker.items():
+        p = per[ansatt_id]
+        p["hoyeste_ukesum"] = max(p["hoyeste_ukesum"], timer)
+        if ukenorm is not None and timer > ukenorm:
+            p["ukeovertid_timer"] += timer - ukenorm
+    ansatte = []
+    for p in per.values():
+        for k in ("timer_totalt", "hoyeste_dognsum", "hoyeste_ukesum", "dognovertid_timer", "ukeovertid_timer"):
+            p[k] = round(p[k], 2)
+        if ukenorm is not None and dognmaks is not None:
+            p["overtid_timer"] = max(p["dognovertid_timer"], p["ukeovertid_timer"])
+        else:
+            del p["dognovertid_timer"], p["ukeovertid_timer"]
+        ansatte.append(p)
+    ansatte.sort(key=lambda x: (-x.get("overtid_timer", 0), -x["hoyeste_ukesum"], x["navn"]))
+    svar = {
         "maaned": mnd,
         "antall_ansatte": len(ansatte),
         "timer_totalt": round(sum(a["timer_totalt"] for a in ansatte), 2),
         "hoyeste_ukesum": max((a["hoyeste_ukesum"] for a in ansatte), default=0),
         "hoyeste_dognsum": max((a["hoyeste_dognsum"] for a in ansatte), default=0),
         "ansatte": ansatte,
-        "mangler": "Overtidsgrensen finnes ikke som tall i databasen, så overtid er ikke beregnet.",
     }
+    if ukenorm is None or dognmaks is None:
+        svar["mangler"] = "Overtidsgrensen finnes ikke som tall i databasen, så overtid er ikke beregnet."
+    else:
+        svar["overtid_timer_totalt"] = round(sum(a["overtid_timer"] for a in ansatte), 2)
+        svar["antall_med_overtid"] = sum(1 for a in ansatte if a["overtid_timer"] > 0)
+        svar["grenser"] = {k: grenser[k] for k in ("ukenorm_timer", "dognmaks_timer")}
+    return svar
 
 
 def query_shift_cost(maaned: str, db_path: Path | str | None = None) -> dict:
     """Lønnskostnad for vakter i en måned per avdeling: timer x Virke-sats fra virke_tariff.
 
-    Helligdag (norske_helligdager) gir helligdagssats, lørdag og søndag helgesats, ellers ordinær sats.
-    Kveldssats brukes ikke, fordi databasen ikke har klokkeslett for vaktene.
+    Helligdag (norske_helligdager) gir helligdagssats, lørdag og søndag helgesats. Timer etter
+    grensen kveldstillegg_fra (arbeidstid_grenser) gir kveldssats når vaktene har klokkeslett.
     """
     mnd, fra, til = _maaned_grenser(maaned)
-    sql = """
-    SELECT v.avdeling,
-           count(*) AS vakter,
-           sum(v.timer) AS timer,
-           sum(CASE WHEN t.lonnstrinn IS NULL THEN 1 ELSE 0 END) AS vakter_uten_tariff,
-           sum(CASE WHEN t.lonnstrinn IS NULL THEN 0 ELSE v.timer * (
-               CASE WHEN h.dato IS NOT NULL THEN t.timesats_helligdag
-                    WHEN strftime('%w', v.dato) IN ('0', '6') THEN t.timesats_helg
-                    ELSE t.timesats_ordinar END) END) AS kostnad_nok
+    db = _db(db_path)
+    kveld_fra = query_working_time_limits(db).get("kveldstillegg_fra", {}).get("verdi")
+    klokke = _har_klokkeslett(db) and kveld_fra is not None
+    ekstra = ", v.start, v.slutt" if klokke else ""
+    sql = f"""
+    SELECT v.avdeling, v.timer, a.lonnstrinn_virke AS trinn,
+           t.timesats_ordinar, t.timesats_kveld, t.timesats_helg, t.timesats_helligdag,
+           h.dato AS helligdag, strftime('%w', v.dato) AS ukedag{ekstra}
     FROM hr_vakter v
     JOIN hr_ansatte a ON a.ansatt_id = v.ansatt_id
     LEFT JOIN virke_tariff t ON t.lonnstrinn = a.lonnstrinn_virke
     LEFT JOIN norske_helligdager h ON h.dato = v.dato
     WHERE v.dato >= :fra AND v.dato < :til
-    GROUP BY v.avdeling
-    ORDER BY kostnad_nok DESC
     """
-    rows = [dict(r) for r in execute_read_query(sql, {"fra": fra, "til": til}, db_path or get_db_path())]
-    for r in rows:
-        r["timer"] = round(r["timer"], 2)
-        r["kostnad_nok"] = round(r["kostnad_nok"] or 0.0, 2)
-    return {
+    avd: dict[str, dict] = {}
+    for r in execute_read_query(sql, {"fra": fra, "til": til}, db):
+        a = avd.setdefault(r["avdeling"], {"avdeling": r["avdeling"], "vakter": 0, "timer": 0.0,
+                                           "kveldstimer": 0.0, "vakter_uten_tariff": 0, "kostnad_nok": 0.0})
+        a["vakter"] += 1
+        a["timer"] += r["timer"]
+        if r["timesats_ordinar"] is None:
+            a["vakter_uten_tariff"] += 1
+            continue
+        if r["helligdag"]:
+            a["kostnad_nok"] += r["timer"] * r["timesats_helligdag"]
+        elif r["ukedag"] in ("0", "6"):
+            a["kostnad_nok"] += r["timer"] * r["timesats_helg"]
+        else:
+            kveld = 0.0
+            if klokke:
+                kveld = min(r["timer"], max(0.0, _klokke_timer(r["slutt"]) - max(_klokke_timer(r["start"]), kveld_fra)))
+            a["kveldstimer"] += kveld
+            a["kostnad_nok"] += (r["timer"] - kveld) * r["timesats_ordinar"] + kveld * r["timesats_kveld"]
+    rader = sorted(avd.values(), key=lambda x: -x["kostnad_nok"])
+    for a in rader:
+        for k in ("timer", "kveldstimer", "kostnad_nok"):
+            a[k] = round(a[k], 2)
+    mangler = ["Vakter for ansatte med lønnstrinn som ikke finnes i virke_tariff er ikke kostnadsberegnet."]
+    if not klokke:
+        mangler.append("Kveldssats er ikke brukt, fordi vaktene mangler klokkeslett eller grensen mangler.")
+        for a in rader:
+            del a["kveldstimer"]
+    svar = {
         "maaned": mnd,
-        "avdelinger": rows,
-        "kostnad_nok_totalt": round(sum(r["kostnad_nok"] for r in rows), 2),
-        "vakter_uten_tariff": sum(r["vakter_uten_tariff"] for r in rows),
-        "mangler": "Vakter for ansatte med lønnstrinn som ikke finnes i virke_tariff er ikke kostnadsberegnet. "
-                   "Kveldssats er ikke brukt, fordi vaktene mangler klokkeslett.",
+        "avdelinger": rader,
+        "kostnad_nok_totalt": round(sum(a["kostnad_nok"] for a in rader), 2),
+        "vakter_uten_tariff": sum(a["vakter_uten_tariff"] for a in rader),
+        "mangler": " ".join(mangler),
     }
+    if klokke:
+        svar["datakilde"] = "syntetisk (archive_generator): klokkeslett og kveldstillegg_fra"
+    return svar
 
 
 def query_exhibitions_with_economy(db_path: Path | str | None = None) -> list[dict]:

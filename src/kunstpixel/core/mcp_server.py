@@ -34,6 +34,7 @@ from src.kunstpixel.core.db import (
     query_shifts_on_date,
     query_staff_on_shift,
     query_working_hours,
+    query_working_time_limits,
     query_station_ergonomics,
     query_styrk_job_code,
     query_supplier_brreg,
@@ -391,16 +392,24 @@ def list_exhibitions_with_economy() -> list[dict[str, Any]]:
 
 
 @mcp.tool()
-def get_staff_on_shift(dato: str | None = None) -> dict[str, Any]:
-    """Finn hvem som har vakt på en dato, med navn, stilling, stasjon, timer og kontaktinfo.
+def get_staff_on_shift(dato: str | None = None, klokkeslett: str | None = None) -> dict[str, Any]:
+    """Finn hvem som har vakt på en dato, og hvem som er på jobb på et klokkeslett.
 
     Args:
         dato: Dato i ISO-format 'YYYY-MM-DD'. Standard er i dag.
+        klokkeslett: 'HH:MM'. Standard er nå når datoen er i dag.
 
     Returns:
-        Antall med vakt, sum timer og vaktene slik de står i hr_vakter. Databasen har ikke klokkeslett.
+        Vaktene slik de står i hr_vakter. Klokkeslett er syntetiske data (klokkeslett_datakilde);
+        mangler de i databasen, sier svaret fra.
     """
-    return query_staff_on_shift(dato)
+    return query_staff_on_shift(dato, klokkeslett)
+
+
+@mcp.tool()
+def get_working_time_limits() -> dict[str, Any]:
+    """Arbeidstidsgrensene i databasen (ukenorm, døgnmaks, hvile, lunsj, kveldstillegg) med kilde."""
+    return query_working_time_limits()
 
 
 @mcp.tool()
@@ -421,7 +430,7 @@ def get_working_hours_report(maaned: str) -> dict[str, Any]:
         maaned: Måned i formatet 'YYYY-MM'.
 
     Returns:
-        Tallene fra hr_vakter. Overtid beregnes ikke, fordi overtidsgrensen ikke finnes i databasen.
+        Tallene fra hr_vakter. Overtid beregnes mot arbeidstid_grenser når tabellen finnes.
     """
     return query_working_hours(maaned)
 
