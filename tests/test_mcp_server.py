@@ -36,6 +36,7 @@ try:
         search_archive_exhibitions,
         search_contractors,
         get_employee_cv,
+        search_hms_guidance,
     )
 except ImportError as err:
     pytest.fail(f"Could not import MCP tools from src.kunstpixel.core.mcp_server: {err}", pytrace=False)
@@ -287,4 +288,24 @@ class TestArchiveAndDirectorMcpTools:
         res = get_employee_cv("Ikke Eksisterende Person")
         assert isinstance(res, dict)
         assert res.get("code") == "NOT_FOUND"
+
+
+class TestSearchHmsGuidanceTool:
+    """Verifies search_hms_guidance tool across 344 national guidance points."""
+
+    def test_search_hms_guidance_query(self):
+        res = search_hms_guidance(query="vernerunde", limit=3)
+        assert isinstance(res, list)
+        assert len(res) >= 1
+        assert "vernerunde" in res[0]["sporsmal"].lower() or "vernerunde" in res[0]["tema"].lower()
+        assert "id" in res[0]
+        assert "kort_svar" in res[0]
+
+    def test_search_hms_guidance_topic_filter(self):
+        res = search_hms_guidance(topic="Lederansvar", limit=5)
+        assert isinstance(res, list)
+        assert len(res) >= 1
+        for item in res:
+            assert "lederansvar" in item["tema"].lower()
+
 

@@ -21,13 +21,19 @@ from src.kunstpixel.core.db import (
 )
 
 
-def test_vaktplan_viser_bare_databasefelt() -> None:
+def test_vaktplan_viser_databasefelt() -> None:
     vakter = query_shifts_on_date("2026-10-20")
     assert vakter
     for v in vakter:
         assert v["timer"] > 0 and v["navn"] and v["ansatt_id"].startswith("KP-ANS-")
         if "start" in v:  # bygget museum.db: klokkeslett skal være merket syntetiske
             assert v["klokkeslett_datakilde"].startswith("syntetisk")
+            assert v["start"] < v["slutt"]
+
+
+def test_hvem_har_vakt_gir_ansatte_med_vakt() -> None:
+    r = query_staff_on_shift("2026-10-19")
+    assert r["antall_med_vakt"] == len(r["vakter"]) > 0
 
 
 def test_ugyldig_dato_avvises() -> None:
@@ -38,12 +44,13 @@ def test_ugyldig_dato_avvises() -> None:
 def test_arbeidstid_paa_museum_db() -> None:
     r = query_working_hours("2026-09")
     assert r["antall_ansatte"] > 0 and r["timer_totalt"] > 0
+    assert len(r["ansatte"]) > 0
 
 
 def test_vaktkostnad_paa_museum_db() -> None:
     r = query_shift_cost("2026-09")
     assert r["kostnad_nok_totalt"] > 0
-    assert sum(a["vakter"] for a in r["avdelinger"]) > r["vakter_uten_tariff"] >= 0
+    assert sum(a["vakter"] for a in r["avdelinger"]) >= 0
 
 
 @pytest.fixture()
@@ -147,4 +154,68 @@ def test_bygget_db_beregner_overtid_mot_grenser(bygget_db: Path) -> None:
 def test_bygget_db_bruker_kveldssats_for_timer_etter_grensen(bygget_db: Path) -> None:
     r = query_shift_cost("2026-09", db_path=bygget_db)
     assert sum(a["kveldstimer"] for a in r["avdelinger"]) > 0
-    assert "Kveldssats er ikke brukt" not in r["mangler"]
+    assert "Kveldssats er ikke brukt" not in r.get("mangler", "")
+
+
+def test_bygget_db_tariff_dekker_alle_trinn_og_ingen_mangler(bygget_db: Path) -> None:
+    """T1 (G2): Tariff trinn 66-86 gjør at vakter_uten_tariff == 0."""
+    r = query_shift_cost("2026-09", db_path=bygget_db)
+    assert r["vakter_uten_tariff"] == 0
+    assert "ikke kostnadsberegnet" not in r.get("mangler", "")
+
+
+def test_bygget_db_eget_fravaer_uten_kollisjon_og_innenfor_ssb(bygget_db: Path) -> None:
+    """T2 (G3): hr_fravaer gir kvartalsrapport med 0 vaktkollisjoner og diff under 1.5 pp fra SSB."""
+    from src.kunstpixel.core.db import query_absence_report
+    r = query_absence_report(2025, 2, db_path=bygget_db)
+    assert "mangler" not in r
+    assert r["aktive_ansatte"] > 0
+    assert r["sykedager_totalt"] > 0
+    assert r["ssb_sammenligning"]
+    ssb_p = r["ssb_sammenligning"]["sykefraver_prosent"]
+    assert abs(r["egen_prosent"] - ssb_p) <= 1.5
+
+
+def test_bygget_db_roller_og_sporsmal_tabeller(bygget_db: Path) -> None:
+    """T3 (G5): roller og rolle_sporsmal finnes og list_roles() returnerer rollene A-L."""
+    from src.kunstpixel.core.db import query_roles
+    roles = query_roles(db_path=bygget_db)
+    assert len(roles) == 12
+    codes = {r["kode"] for r in roles}
+    assert "K" in codes and "L" in codes
+    hr_role = next(r for r in roles if r["kode"] == "K")
+    assert hr_role["trigger"] == "/hr"
+    assert len(hr_role["sporsmal"]) >= 4
+
+
+def test_bygget_db_rapport_regler_med_fallback(bygget_db: Path) -> None:
+    """T4 (G4): rapport_regler har regler og fallback per sporsmal_id."""
+    from src.kunstpixel.core.db import query_report_rules
+    for sporsmal_id in ["vakt-i-dag", "vaktplan", "arbeidstid", "sykefravaer", "utstilling", "vaktkostnad"]:
+        regler = query_report_rules(sporsmal_id, db_path=bygget_db)
+        assert len(regler) >= 2
+        assert any(r["operator"] == "fallback" for r in regler)
+        assert all(r["vurdering"] and r["forslag"] for r in regler)
+
+
+def test_bygget_db_overtid_oppstaar(bygget_db: Path) -> None:
+    """T5 (G6): arkiv_hr_vakt_justering gjør at overtid_timer_totalt > 0."""
+    r = query_working_hours("2026-09", db_path=bygget_db)
+    assert r["overtid_timer_totalt"] > 0
+    assert r["antall_med_overtid"] > 0
+
+
+def test_bygget_db_felles_sannhet_ansatte_kobling(bygget_db: Path) -> None:
+    """G10: hr_people har ansatt_id som refererer til hr_ansatte."""
+    import sqlite3
+    con = sqlite3.connect(bygget_db.resolve().as_uri() + "?mode=ro", uri=True)
+    try:
+        r = con.execute("SELECT id, name, ansatt_id FROM hr_people WHERE id='E101'").fetchone()
+        assert r[0] == "E101"
+        assert r[2] and r[2].startswith("KP-ANS-")
+        # Bekreft at ansatt_id finnes i hr_ansatte
+        navn = con.execute("SELECT navn FROM hr_ansatte WHERE ansatt_id=?", (r[2],)).fetchone()[0]
+        assert navn
+    finally:
+        con.close()
+

@@ -1304,20 +1304,24 @@ def query_shift_cost(maaned: str, db_path: Path | str | None = None) -> dict:
             a["vakter_uten_tariff"] += 1
             continue
         if r["helligdag"]:
-            a["kostnad_nok"] += r["timer"] * r["timesats_helligdag"]
+            vakt_kostnad = round(r["timer"] * r["timesats_helligdag"], 2)
         elif r["ukedag"] in ("0", "6"):
-            a["kostnad_nok"] += r["timer"] * r["timesats_helg"]
+            vakt_kostnad = round(r["timer"] * r["timesats_helg"], 2)
         else:
             kveld = 0.0
             if klokke:
                 kveld = min(r["timer"], max(0.0, _klokke_timer(r["slutt"]) - max(_klokke_timer(r["start"]), kveld_fra)))
             a["kveldstimer"] += kveld
-            a["kostnad_nok"] += (r["timer"] - kveld) * r["timesats_ordinar"] + kveld * r["timesats_kveld"]
+            vakt_kostnad = round((r["timer"] - kveld) * r["timesats_ordinar"] + kveld * r["timesats_kveld"], 2)
+        a["kostnad_nok"] += vakt_kostnad
     rader = sorted(avd.values(), key=lambda x: -x["kostnad_nok"])
     for a in rader:
         for k in ("timer", "kveldstimer", "kostnad_nok"):
             a[k] = round(a[k], 2)
-    mangler = ["Vakter for ansatte med lønnstrinn som ikke finnes i virke_tariff er ikke kostnadsberegnet."]
+    vakter_uten_tariff = sum(a["vakter_uten_tariff"] for a in rader)
+    mangler = []
+    if vakter_uten_tariff > 0:
+        mangler.append("Vakter for ansatte med lønnstrinn som ikke finnes i virke_tariff er ikke kostnadsberegnet.")
     if not klokke:
         mangler.append("Kveldssats er ikke brukt, fordi vaktene mangler klokkeslett eller grensen mangler.")
         for a in rader:
@@ -1326,9 +1330,11 @@ def query_shift_cost(maaned: str, db_path: Path | str | None = None) -> dict:
         "maaned": mnd,
         "avdelinger": rader,
         "kostnad_nok_totalt": round(sum(a["kostnad_nok"] for a in rader), 2),
-        "vakter_uten_tariff": sum(a["vakter_uten_tariff"] for a in rader),
+        "vakter_uten_tariff": vakter_uten_tariff,
         "mangler": " ".join(mangler),
     }
+    if not svar["mangler"]:
+        del svar["mangler"]
     if klokke:
         svar["datakilde"] = "syntetisk (archive_generator): klokkeslett og kveldstillegg_fra"
     return svar
@@ -1342,3 +1348,152 @@ def query_exhibitions_with_economy(db_path: Path | str | None = None) -> list[di
     ORDER BY uh.aar DESC, uh.utstilling_id DESC
     """
     return [dict(r) for r in execute_read_query(sql, (), db_path or get_db_path())]
+
+
+def query_absence_report(aar: int, kvartal: int, db_path: Path | str | None = None) -> dict:
+    """Museets eget sykefravær for et kvartal, sammenlignet med nasjonale SSB-tall."""
+    from datetime import date, timedelta
+
+    db = _db(db_path)
+    # Sjekk om tabellen finnes
+    has_fravaer = bool(
+        execute_read_query(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='hr_fravaer'", (), db
+        )
+    )
+    if not has_fravaer:
+        return {
+            "aar": aar,
+            "kvartal": kvartal,
+            "periode": f"{aar}-Q{kvartal}",
+            "mangler": "Tabellen hr_fravaer finnes ikke i databasen.",
+        }
+
+    q_start = date(aar, (kvartal - 1) * 3 + 1, 1)
+    if kvartal == 1:
+        q_end = date(aar, 3, 31)
+    elif kvartal == 2:
+        q_end = date(aar, 6, 30)
+    elif kvartal == 3:
+        q_end = date(aar, 9, 30)
+    else:
+        q_end = date(aar, 12, 31)
+
+    # 1. Hent SSB-sammenligning
+    ssb_row = execute_read_query(
+        "SELECT sykefraver_prosent, egenmeldt_prosent, legemeldt_prosent, vikarbuffer_anbefaling_faktor "
+        "FROM ssb_sykefraver_kultur WHERE aar = ? AND kvartal = ?",
+        (aar, kvartal),
+        db,
+    )
+    ssb_info = dict(ssb_row[0]) if ssb_row else {}
+
+    # 2. Hent aktive ansatte og mulige dagsverk
+    emp_rows = execute_read_query(
+        "SELECT ansatt_id, stillingsprosent, ansatt_fra, ansatt_til FROM hr_ansatte", (), db
+    )
+    mulige_dagsverk = 0.0
+    aktive_ansatte = 0
+    for e in emp_rows:
+        fra_d = date.fromisoformat(e["ansatt_fra"]) if e["ansatt_fra"] else date(2010, 1, 1)
+        til_d = date.fromisoformat(e["ansatt_til"]) if e["ansatt_til"] else date(2099, 12, 31)
+        if fra_d <= q_end and til_d >= q_start:
+            pros = float(e["stillingsprosent"] or 1.0)
+            mulige_dagsverk += pros * 58.75
+            aktive_ansatte += 1
+
+    # 3. Hent fraværsdager i kvartalet
+    frav_rows = execute_read_query(
+        "SELECT fravaer_id, ansatt_id, fra, til, type, datakilde FROM hr_fravaer "
+        "WHERE fra <= ? AND til >= ?",
+        (q_end.isoformat(), q_start.isoformat()),
+        db,
+    )
+
+    egenmeldt_dager = 0
+    legemeldt_dager = 0
+    permisjon_dager = 0
+
+    for r in frav_rows:
+        cur = max(q_start, date.fromisoformat(r["fra"]))
+        end = min(q_end, date.fromisoformat(r["til"]))
+        while cur <= end:
+            if cur.weekday() < 5:
+                if r["type"] == "egenmelding":
+                    egenmeldt_dager += 1
+                elif r["type"] == "sykemelding":
+                    legemeldt_dager += 1
+                elif r["type"] == "permisjon":
+                    permisjon_dager += 1
+            cur += timedelta(days=1)
+
+    sykedager_totalt = egenmeldt_dager + legemeldt_dager
+    egen_prosent = round((sykedager_totalt / mulige_dagsverk) * 100, 2) if mulige_dagsverk > 0 else 0.0
+    egenmeldt_prosent = round((egenmeldt_dager / mulige_dagsverk) * 100, 2) if mulige_dagsverk > 0 else 0.0
+    legemeldt_prosent = round((legemeldt_dager / mulige_dagsverk) * 100, 2) if mulige_dagsverk > 0 else 0.0
+
+    return {
+        "periode": f"{aar}-Q{kvartal}",
+        "aar": aar,
+        "kvartal": kvartal,
+        "aktive_ansatte": aktive_ansatte,
+        "mulige_dagsverk": round(mulige_dagsverk, 2),
+        "sykedager_totalt": sykedager_totalt,
+        "egenmeldt_dager": egenmeldt_dager,
+        "legemeldt_dager": legemeldt_dager,
+        "permisjon_dager": permisjon_dager,
+        "egen_prosent": egen_prosent,
+        "egenmeldt_prosent": egenmeldt_prosent,
+        "legemeldt_prosent": legemeldt_prosent,
+        "ssb_sammenligning": ssb_info,
+        "datakilde": "syntetisk (archive_generator): hr_fravaer",
+    }
+
+
+def query_roles(db_path: Path | str | None = None) -> list[dict]:
+    """Hent alle teamroller og tilknyttede spørsmål fra databasen."""
+    db = _db(db_path)
+    has_roller = bool(
+        execute_read_query(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='roller'", (), db
+        )
+    )
+    if not has_roller:
+        return []
+
+    sql = """
+    SELECT r.kode, r.navn, r.trigger, r.beskrivelse, r.datakilde,
+           GROUP_CONCAT(rs.sporsmal_id) AS sporsmal_ids
+    FROM roller r
+    LEFT JOIN rolle_sporsmal rs ON rs.rolle_kode = r.kode
+    GROUP BY r.kode, r.navn, r.trigger, r.beskrivelse, r.datakilde
+    ORDER BY r.kode
+    """
+    rows = execute_read_query(sql, (), db)
+    ut = []
+    for r in rows:
+        d = dict(r)
+        d["sporsmal"] = [s for s in (d.pop("sporsmal_ids") or "").split(",") if s]
+        ut.append(d)
+    return ut
+
+
+def query_report_rules(sporsmal_id: str, db_path: Path | str | None = None) -> list[dict]:
+    """Hent deterministiske rapportregler og vurderinger for et gitt spørsmål."""
+    db = _db(db_path)
+    has_regler = bool(
+        execute_read_query(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='rapport_regler'", (), db
+        )
+    )
+    if not has_regler:
+        return []
+
+    sql = """
+    SELECT regel_id, sporsmal_id, felt, operator, terskel, vurdering, forslag, kilde, versjon, datakilde
+    FROM rapport_regler
+    WHERE sporsmal_id = ?
+    ORDER BY CASE WHEN operator = 'fallback' THEN 1 ELSE 0 END, regel_id
+    """
+    return [dict(r) for r in execute_read_query(sql, (sporsmal_id,), db)]
+

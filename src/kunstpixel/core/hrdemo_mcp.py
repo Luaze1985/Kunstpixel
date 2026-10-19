@@ -10,6 +10,7 @@ from src.kunstpixel.core.hrdemo import (
     find_rules,
     get_person,
     list_skills,
+    search_hms_guidance as find_hms_guidance,
 )
 from src.kunstpixel.core.hr_eval import evaluate_staffing_proposal
 
@@ -49,6 +50,11 @@ def get_staff_member(person_id: str, as_of: str = '2026-11-07') -> dict:
 def evaluate_kiosk_proposal(suggested_ids: list[str], work_date: str = '2026-11-07', need: int = 5) -> dict:
     """Deterministically audit a proposed staffing roster against safety constraints and cognitive traps."""
     return evaluate_staffing_proposal(suggested_ids, work_date=work_date, need=need)
+
+@mcp.tool()
+def search_hms_guidance(query: str | None = None, topic: str | None = None, limit: int = 5) -> list[dict]:
+    """Search authoritative national HMS and occupational health guidance (344 topics)."""
+    return find_hms_guidance(query=query, topic=topic, limit=limit)
 
 if __name__ == '__main__':
     mcp.run()

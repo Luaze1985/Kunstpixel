@@ -13,6 +13,7 @@ from src.kunstpixel.core.db import (
     VALID_ROOM_IDS,
     audit_shift_aml_compliance,
     normalize_room_identifier,
+    query_absence_report,
     query_archive_exhibitions,
     query_artwork_details,
     query_cleaning_registry,
@@ -29,6 +30,8 @@ from src.kunstpixel.core.db import (
     query_incidents,
     query_loans,
     query_quarterly_absence,
+    query_report_rules,
+    query_roles,
     query_room_artworks,
     query_shift_cost,
     query_shifts_on_date,
@@ -48,6 +51,7 @@ from src.kunstpixel.core.hrdemo import (
     find_rules,
     get_person,
     list_skills,
+    search_hms_guidance as find_hms_guidance,
 )
 
 # Initialize FastMCP application
@@ -629,6 +633,62 @@ def lookup_handbook(
         Relevante håndbokpunkter med kapittel, tittel, juridisk hjemmel, innhold og målgruppe.
     """
     return query_handbook(query=query, handbok=handbok, role=role, limit=limit)
+
+
+@mcp.tool()
+def search_hms_guidance(
+    query: str | None = None,
+    topic: str | None = None,
+    limit: int = 5,
+) -> list[dict[str, Any]]:
+    """Søk i 344 autoritative nasjonale HMS- og arbeidsmiljøveiledningspunkter (Arbeidstilsynet/BHT).
+
+    Args:
+        query: Fritekst-søkeord (f.eks. 'ergonomi', 'vernerunde', 'ulykke', 'psykososialt', 'støy').
+        topic: Tema- eller kategorifilter (f.eks. 'Lederansvar', 'Risikovurdering', 'Lovverk').
+        limit: Maksimalt antall veiledningspunkter som returneres (1–50, standard 5).
+
+    Returns:
+        Liste med strukturerte oppslag som inneholder id, tema, sporsmal, kort_svar og detaljert_veiledning.
+    """
+    return find_hms_guidance(query=query, topic=topic, limit=limit)
+
+
+@mcp.tool()
+def get_absence_report(aar: int, kvartal: int) -> dict[str, Any]:
+    """Hent museets eget sykefravær for et kvartal, sammenlignet med SSB-tall.
+
+    Args:
+        aar: Årstall (f.eks. 2025).
+        kvartal: Kvartal (1-4).
+
+    Returns:
+        Sykefraværsrapport for kvartalet med museets egen fraværsprosent, dagsverk og SSB-sammenligning.
+    """
+    return query_absence_report(aar=aar, kvartal=kvartal)
+
+
+@mcp.tool()
+def list_roles() -> list[dict[str, Any]]:
+    """Hent alle teamroller og tilknyttede spørsmål fra databasen.
+
+    Returns:
+        Liste over roller med kode, navn, trigger, beskrivelse og spørsmål.
+    """
+    return query_roles()
+
+
+@mcp.tool()
+def get_report_rules(sporsmal_id: str) -> list[dict[str, Any]]:
+    """Hent deterministiske rapportregler, vurderinger og forslag for et spørsmål.
+
+    Args:
+        sporsmal_id: Identifikator for spørsmålet (f.eks. 'vakt-i-dag', 'vaktplan', 'arbeidstid', 'sykefravaer', 'utstilling', 'vaktkostnad').
+
+    Returns:
+        Liste over regelrader med felt, operator, terskel, vurdering og forslag.
+    """
+    return query_report_rules(sporsmal_id=sporsmal_id)
 
 
 if __name__ == "__main__":

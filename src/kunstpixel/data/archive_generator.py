@@ -983,9 +983,325 @@ def generate_working_time_limits(ut_csv: Path = GRENSER_CSV) -> int:
     return len(ARBEIDSTID_GRENSER)
 
 
+def generate_virke_tariff_tillegg(ut_csv: Path = DATA_DIR / "virke_tariff_tillegg.csv") -> int:
+    """Generer tariff-trinn 66-86 med jevn stigning fra trinn 65."""
+    import csv
+
+    # Trinn 65: aarslonn = 815 000, trinn 64: 798 400 (stigning 16 600 per trinn)
+    # kveldstillegg = +56 kr/t, helgetillegg = +75 kr/t, helligdag = ordinaer * (973.82 / 417.95)
+    rader = []
+    base_lonn = 815000
+    stigning = 16600
+    for trinn in range(66, 87):
+        aarslonn = base_lonn + (trinn - 65) * stigning
+        timesats_ordinar = round(aarslonn / 1950, 2)
+        timesats_kveld = round(timesats_ordinar + 56.0, 2)
+        timesats_helg = round(timesats_ordinar + 75.0, 2)
+        timesats_helligdag = round(timesats_ordinar * 2.3299916, 2)
+        if trinn == 86:
+            tittel = "Museumsdirektør"
+        elif trinn >= 78:
+            tittel = f"Virke trinn {trinn} (Toppledelse / Direktør)"
+        elif trinn >= 72:
+            tittel = f"Virke trinn {trinn} (Assisterende direktør / Sjefkurator / Avdelingssjef)"
+        else:
+            tittel = f"Virke trinn {trinn} (Leder / Fagspesialist)"
+        rader.append([
+            trinn, tittel, aarslonn, timesats_ordinar, timesats_kveld, timesats_helg,
+            timesats_helligdag, "2024-05-01", SYNTETISK
+        ])
+
+    with open(ut_csv, "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow([
+            "lonnstrinn", "tittel_eksempel", "aarslonn_nok", "timesats_ordinar",
+            "timesats_kveld", "timesats_helg", "timesats_helligdag", "gjeldende_fra", "datakilde"
+        ])
+        w.writerows(rader)
+    return len(rader)
+
+
+def generate_absence_records(ut_csv: Path = DATA_DIR / "arkiv_hr_fravaer.csv") -> int:
+    """Generer syntetisk sykefravær og permisjon (2010-2026).
+
+    Krav:
+    - Kvartalsvis sykefraversprosent innenfor +-1.5 prosentpoeng av ssb_sykefraver_kultur.
+    - INGEN fravaersdag kan kollidere med vakt i hr_vakter for samme ansatt.
+    - Fravaer registreres for aktive ansatte i kvartalet.
+    """
+    import csv
+    from datetime import timedelta
+
+    base_db_path = DATA_DIR / "kilde" / "museum_base.db"
+    if not base_db_path.is_file():
+        raise FileNotFoundError(f"Mangler {base_db_path}")
+
+    con = sqlite3.connect(f"file:{base_db_path.resolve().as_posix()}?mode=ro", uri=True)
+    try:
+        emps = con.execute("SELECT ansatt_id, ansatt_fra, ansatt_til, stillingsprosent FROM hr_ansatte").fetchall()
+        ssb_quarters = con.execute(
+            "SELECT aar, kvartal, sykefraver_prosent, egenmeldt_prosent, legemeldt_prosent "
+            "FROM ssb_sykefraver_kultur ORDER BY aar, kvartal"
+        ).fetchall()
+        shift_days: set[tuple[str, str]] = set(
+            con.execute("SELECT ansatt_id, dato FROM hr_vakter").fetchall()
+        )
+    finally:
+        con.close()
+
+    quarter_dates = {
+        1: (date(2000, 1, 1), date(2000, 3, 31)),
+        2: (date(2000, 4, 1), date(2000, 6, 30)),
+        3: (date(2000, 7, 1), date(2000, 9, 30)),
+        4: (date(2000, 10, 1), date(2000, 12, 31)),
+    }
+
+    absence_records = []
+    fravaer_idx = 1
+    rng = random.Random("kunstpixel-fravaer-2010-2026-v1")
+
+    for aar, kvartal, ssb_tot, ssb_egen, ssb_lege in ssb_quarters:
+        q_start = date(aar, (kvartal - 1) * 3 + 1, 1)
+        if kvartal == 1:
+            q_end = date(aar, 3, 31)
+        elif kvartal == 2:
+            q_end = date(aar, 6, 30)
+        elif kvartal == 3:
+            q_end = date(aar, 9, 30)
+        else:
+            q_end = date(aar, 12, 31)
+
+        # Aktive ansatte i kvartalet
+        aktive_i_kvartal = []
+        mulige_dagsverk = 0.0
+        for emp_id, fra_s, til_s, st_pros in emps:
+            e_fra = date.fromisoformat(fra_s) if fra_s else date(2010, 1, 1)
+            e_til = date.fromisoformat(til_s) if til_s else date(2099, 12, 31)
+            if e_fra <= q_end and e_til >= q_start:
+                pros = float(st_pros or 1.0)
+                aktive_i_kvartal.append((emp_id, pros, e_fra, e_til))
+                mulige_dagsverk += pros * 58.75
+
+        # Mål for antall sykedager (sykefraver_prosent)
+        target_sick_days = (ssb_tot / 100.0) * mulige_dagsverk
+        actual_sick_days = 0
+
+        # Alle tilgjengelige hverdager i kvartalet
+        all_q_weekdays = []
+        cur_d = q_start
+        while cur_d <= q_end:
+            if cur_d.weekday() < 5:
+                all_q_weekdays.append(cur_d)
+            cur_d += timedelta(days=1)
+
+        # Trekk fraværsepisoder deterministisk
+        used_employee_days: set[tuple[str, str]] = set()
+        attempts = 0
+        while actual_sick_days < target_sick_days and attempts < 3000:
+            attempts += 1
+            emp_id, pros, e_fra, e_til = rng.choice(aktive_i_kvartal)
+            # Velg type: egenmelding (1-3 dager) eller sykemelding (4-12 dager)
+            is_egen = rng.random() < (ssb_egen / ssb_tot if ssb_tot > 0 else 0.2)
+            varighet = rng.randint(1, 3) if is_egen else rng.randint(4, 10)
+            ftype = "egenmelding" if is_egen else "sykemelding"
+
+            start_cand = rng.choice(all_q_weekdays)
+            # Episode må ligge helt innenfor kvartalet og ansettelsesperioden
+            slutt_cand = start_cand + timedelta(days=varighet - 1)
+            if slutt_cand > q_end or slutt_cand > e_til or start_cand < e_fra:
+                continue
+
+            # Sjekk HVER kalenderdag i intervallet [start_cand, slutt_cand]
+            kollisjon = False
+            cur_check = start_cand
+            while cur_check <= slutt_cand:
+                d_iso = cur_check.isoformat()
+                if (emp_id, d_iso) in shift_days or (emp_id, d_iso) in used_employee_days:
+                    kollisjon = True
+                    break
+                cur_check += timedelta(days=1)
+
+            if not kollisjon:
+                cur_mark = start_cand
+                added_sick = 0
+                while cur_mark <= slutt_cand:
+                    used_employee_days.add((emp_id, cur_mark.isoformat()))
+                    if cur_mark.weekday() < 5:
+                        added_sick += 1
+                    cur_mark += timedelta(days=1)
+                actual_sick_days += added_sick
+                fid = f"FRAV-{fravaer_idx:06d}"
+                fravaer_idx += 1
+                absence_records.append([fid, emp_id, start_cand.isoformat(), slutt_cand.isoformat(), ftype, SYNTETISK])
+
+        # Legg til permisjoner per kvartal for variasjon (kun hvis ingen kollisjon)
+        if rng.random() < 0.5 and aktive_i_kvartal:
+            emp_id, pros, e_fra, e_til = rng.choice(aktive_i_kvartal)
+            start_cand = rng.choice(all_q_weekdays)
+            slutt_cand = start_cand + timedelta(days=4)
+            if slutt_cand <= q_end and slutt_cand <= e_til and start_cand >= e_fra:
+                kollisjon = False
+                cur_check = start_cand
+                while cur_check <= slutt_cand:
+                    d_iso = cur_check.isoformat()
+                    if (emp_id, d_iso) in shift_days or (emp_id, d_iso) in used_employee_days:
+                        kollisjon = True
+                        break
+                    cur_check += timedelta(days=1)
+                if not kollisjon:
+                    cur_mark = start_cand
+                    while cur_mark <= slutt_cand:
+                        used_employee_days.add((emp_id, cur_mark.isoformat()))
+                        cur_mark += timedelta(days=1)
+                    fid = f"FRAV-{fravaer_idx:06d}"
+                    fravaer_idx += 1
+                    absence_records.append([fid, emp_id, start_cand.isoformat(), slutt_cand.isoformat(), "permisjon", SYNTETISK])
+
+    with open(ut_csv, "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["fravaer_id", "ansatt_id", "fra", "til", "type", "datakilde"])
+        w.writerows(absence_records)
+
+    return len(absence_records)
+
+
+def generate_shift_adjustments(ut_csv: Path = DATA_DIR / "arkiv_hr_vakt_justering.csv") -> int:
+    """Generer justeringer for 2-4 % av vaktene som forlenges til 9-11 timer.
+
+    Knyttet til datoer for utstillingsaapninger (vernissasjer), kveldsarrangementer og fredag/loerdag.
+    Endrer IKKE arkiv_hr_vakt_historikk.csv.
+    """
+    import csv
+
+    base_db_path = DATA_DIR / "kilde" / "museum_base.db"
+    if not base_db_path.is_file():
+        raise FileNotFoundError(f"Mangler {base_db_path}")
+
+    con = sqlite3.connect(f"file:{base_db_path.resolve().as_posix()}?mode=ro", uri=True)
+    try:
+        exh_dates = set(r[0] for r in con.execute("SELECT DISTINCT periode_start FROM utstillinger_historikk WHERE periode_start IS NOT NULL").fetchall())
+        ev_dates = set(r[0] for r in con.execute("SELECT DISTINCT dato FROM hendelser WHERE dato IS NOT NULL").fetchall())
+        special_dates = exh_dates | ev_dates
+
+        # Hent alle vakter
+        shifts = con.execute("SELECT vakt_id, dato FROM hr_vakter ORDER BY vakt_id").fetchall()
+    finally:
+        con.close()
+
+    # Prioriter vakter på spesialdatoer og fredager/lørdager
+    candidate_shifts = []
+    other_shifts = []
+    for vakt_id, dato in shifts:
+        d = date.fromisoformat(dato)
+        if dato in special_dates or d.weekday() in (4, 5):
+            candidate_shifts.append((vakt_id, dato))
+        else:
+            other_shifts.append((vakt_id, dato))
+
+    rng = random.Random("kunstpixel-vakt-justering-overtid-2026")
+    # Mål: ~3 % av 54 994 = ~1650 vakter
+    target_count = round(len(shifts) * 0.03)
+
+    # Velg ~80 % fra kandidater og ~20 % fra andre
+    cand_sample_count = min(len(candidate_shifts), round(target_count * 0.85))
+    selected_cands = rng.sample(candidate_shifts, cand_sample_count)
+    rem_count = target_count - len(selected_cands)
+    selected_others = rng.sample(other_shifts, rem_count)
+
+    chosen = sorted(selected_cands + selected_others, key=lambda x: x[0])
+
+    rader = []
+    for vakt_id, dato in chosen:
+        # Forleng til 9.0, 9.5, 10.0, 10.5 eller 11.0 timer
+        nye_timer = rng.choice([9.0, 9.5, 10.0, 10.5, 11.0])
+        rader.append([vakt_id, nye_timer, SYNTETISK])
+
+    with open(ut_csv, "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["vakt_id", "nye_timer", "datakilde"])
+        w.writerows(rader)
+
+    return len(rader)
+
+
+def generate_events_extension(ut_csv: Path = DATA_DIR / "hendelser_tillegg_2026.csv") -> int:
+    """Generer syntetiske hendelser (omvisninger, verksteder, foredrag) ut 2026.
+
+    Sikrer minst én omvisning per uke fra 2026-10-20 til 2026-12-31 slik at
+    test_search_events_filter_by_type_omvisning alltid passerer.
+    """
+    import csv
+    from datetime import timedelta
+
+    start_d = date(2026, 10, 20)
+    end_d = date(2026, 12, 31)
+
+    hendelser = []
+    rng = random.Random("kunstpixel-events-extension-2026")
+
+    # Omvisningstitler og beskrivelser
+    omvisning_temaer = [
+        ("Guidet omvisning: Høstens høydepunkter", "SAL-A", "Bli med formidleren på en guidet vandring gjennom museets faste samling og høstens høydepunkter."),
+        ("Edvard Munch i dybden", "SAL-D", "Spesialomvisning med fokus på Munchs mesterverk, teknikk og symbolikk i Sal D."),
+        ("Harriet Backer og lysets magi", "SAL-C", "Intim omvisning med fordypning i Harriet Backers interiører og dagslysets nyanser."),
+        ("Fra nasjonalromantikk til modernisme", "SAL-B", "En historisk vandring fra Tidemand og Gude til det tidlige 1900-tallets brytningstid."),
+    ]
+
+    cur_d = start_d
+    while cur_d <= end_d:
+        # Hver søndag og onsdag: fast omvisning
+        if cur_d.weekday() in (2, 6):
+            tittel, sal, beskrivelse = rng.choice(omvisning_temaer)
+            hendelser.append([
+                "omvisning", tittel, cur_d.isoformat(), "13:00", "14:00",
+                sal, 25, 60.0, 0.0, beskrivelse, "formidler", "planlagt", SYNTETISK
+            ])
+        # Hver lørdag: verksted eller barnearrangement
+        elif cur_d.weekday() == 5:
+            if rng.random() < 0.5:
+                hendelser.append([
+                    "verksted", "Helgeverksted: Farger og form", cur_d.isoformat(), "12:00", "14:30",
+                    "SAL-E", 15, 120.0, 60.0, "Praktisk kunstverksted for nysgjerrige skapere i alle aldre.",
+                    "formidler", "planlagt", SYNTETISK
+                ])
+            else:
+                hendelser.append([
+                    "barnearrangement", "Lørdagsjakt for miniforskere", cur_d.isoformat(), "11:30", "13:00",
+                    "SAL-A", 20, 0.0, 0.0, "Morsom detektivjakt for barn blant museets mest spennende motiver.",
+                    "formidler", "planlagt", SYNTETISK
+                ])
+        # Annenhver torsdag kveld: foredrag
+        elif cur_d.weekday() == 3 and (cur_d.day // 7) % 2 == 0:
+            hendelser.append([
+                "foredrag", "Torsdagskveld i museet: Kunsthistorisk dypdykk", cur_d.isoformat(), "18:00", "19:30",
+                "SAL-E", 40, 100.0, 0.0, "Foredrag med inviterte kuratorer og forskere etterfulgt av spørsmål og kaffe.",
+                "kurator", "planlagt", SYNTETISK
+            ])
+        cur_d += timedelta(days=1)
+
+    with open(ut_csv, "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow([
+            "type", "tittel", "dato", "klokkeslett_start", "klokkeslett_slutt",
+            "sal_id", "maks_deltakere", "pris_voksen", "pris_barn", "beskrivelse",
+            "ansvarlig_rolle", "status", "datakilde"
+        ])
+        w.writerows(hendelser)
+
+    return len(hendelser)
+
+
 if __name__ == "__main__" and "--bare-klokkeslett" in __import__("sys").argv:
     print(f"Klokkeslett: {generate_shift_times()} vakter -> {KLOKKESLETT_CSV.name}")
     print(f"Grenser: {generate_working_time_limits()} rader -> {GRENSER_CSV.name}")
+elif __name__ == "__main__" and "--bare-tariff" in __import__("sys").argv:
+    print(f"Tariff tillegg: {generate_virke_tariff_tillegg()} trinn -> virke_tariff_tillegg.csv")
+elif __name__ == "__main__" and "--bare-fravaer" in __import__("sys").argv:
+    print(f"Sykefravær: {generate_absence_records()} rader -> arkiv_hr_fravaer.csv")
+elif __name__ == "__main__" and "--bare-overtid" in __import__("sys").argv:
+    print(f"Vaktjusteringer (overtid): {generate_shift_adjustments()} vakter -> arkiv_hr_vakt_justering.csv")
+elif __name__ == "__main__" and "--bare-hendelser" in __import__("sys").argv:
+    print(f"Hendelser tillegg: {generate_events_extension()} rader -> hendelser_tillegg_2026.csv")
 elif __name__ == "__main__":
     print("Generating Kunstpixel HR, Innleie & Exhibition History (Kunstsilo Scale 2010-2026)...")
     emps, pers = generate_employees()
@@ -995,3 +1311,8 @@ elif __name__ == "__main__":
     export_all(emps, pers, exhs, contracts, shfts)
     generate_shift_times()
     generate_working_time_limits()
+    generate_virke_tariff_tillegg()
+    generate_absence_records()
+    generate_shift_adjustments()
+    generate_events_extension()
+

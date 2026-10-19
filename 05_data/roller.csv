@@ -1,0 +1,13 @@
+kode,navn,trigger,beskrivelse,datakilde
+A,Museumsdirektør,/direktor,Orkestrator og leder for Aura Kunstmuseum,autoritativ (team_roster)
+B,Samlingsforvalter,/samlingsforvalter,Registrar og ansvarlig for samling og metadata,autoritativ (team_roster)
+C,Kurator,/kurator,Faglig skaper og utstillingsansvarlig,autoritativ (team_roster)
+D,Formidler,/formidler,Publikumstekst og formidlingsopplegg,autoritativ (team_roster)
+E,Museumsvert,/museumsvert,Førstelinje vertskap og veiledning i salene,autoritativ (team_roster)
+F,Driftsansvarlig,/drift,Drift og sikkerhet i museumsbygget,autoritativ (team_roster)
+G,Kvalitetsvokter,/qa,QA og etterlevelse av regelverk,autoritativ (team_roster)
+H,Repoforvalter,/repo,Versjonskontroll og kodestruktur,autoritativ (team_roster)
+I,Kontekstforvalter,/kontekst,Kunnskap og kontinuitet i styringsdokumenter,autoritativ (team_roster)
+J,MCP-vokteren,/mcp,Verktøygrensesnitt og verktøysikkerhet,autoritativ (team_roster)
+K,HR og bemanning,/hr,Bemanning og arbeidstid etter arbeidsmiljøloven,autoritativ (team_roster)
+L,Økonomi og innkjøp,/okonomi,Økonomi og anskaffelser etter Virke-tariff,autoritativ (team_roster)

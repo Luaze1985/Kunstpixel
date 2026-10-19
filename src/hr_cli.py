@@ -31,6 +31,7 @@ from src.kunstpixel.core.hrdemo import (
     init_demo,
     list_people,
     list_skills,
+    search_hms_guidance,
 )
 from src.kunstpixel.core.hr_eval import evaluate_staffing_proposal
 
@@ -87,6 +88,12 @@ def main() -> int:
     p_eval.add_argument("--need", type=int, default=5, help="Bemanningsbehov")
     p_eval.add_argument("--db", default=str(RUNTIME), help="Database")
 
+    # hms
+    p_hms = subparsers.add_parser("hms", help="Søk i 344 autoritative nasjonale HMS- og arbeidsmiljøveiledningspunkter")
+    p_hms.add_argument("query", nargs="?", default=None, help="Søkeord (f.eks. ergonomi, vernerunde, løft)")
+    p_hms.add_argument("--topic", default=None, help="Tema (f.eks. Lederansvar, Risikovurdering)")
+    p_hms.add_argument("--limit", type=int, default=5, help="Maks antall treff (standard 5)")
+
     args = parser.parse_args()
 
     if not args.command:
@@ -118,6 +125,8 @@ def main() -> int:
         elif args.command == "eval":
             raw_ids = [x.strip() for x in args.ids.split(",") if x.strip()]
             data = evaluate_staffing_proposal(suggested_ids=raw_ids, work_date=args.date, need=args.need, db_path=args.db)
+        elif args.command == "hms":
+            data = search_hms_guidance(query=args.query, topic=args.topic, limit=args.limit)
         else:
             parser.print_help()
             return 1

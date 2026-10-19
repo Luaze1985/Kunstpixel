@@ -220,4 +220,33 @@ def test_hrdemo_api_handler():
     h404 = FakeServerHandler('/api/v1/nonexistent')
     assert '"error": "NOT_FOUND"' in h404.wfile.getvalue().decode('utf-8')
 
+    h_hms = FakeServerHandler('/api/v1/hr/hms-guidance?q=ergonomi&limit=2')
+    res_text = h_hms.wfile.getvalue().decode('utf-8')
+    assert 'HMS-NASJONAL-' in res_text
+    assert 'ergonomi' in res_text.lower()
+
+
+def test_search_hms_guidance_deterministic():
+    from src.kunstpixel.core.hrdemo import search_hms_guidance
+
+    # 1. Search for ergonomi
+    results = search_hms_guidance(query="ergonomi", limit=3)
+    assert len(results) >= 1
+    assert any("ergonomi" in r["sporsmal"].lower() or "ergonomi" in r["tema"].lower() for r in results)
+
+    # 2. Filter by topic
+    results_topic = search_hms_guidance(topic="Lederansvar", limit=5)
+    assert len(results_topic) >= 1
+    assert all("lederansvar" in r["tema"].lower() for r in results_topic)
+
+    # 3. Specific ID match
+    results_id = search_hms_guidance(query="HMS-NASJONAL-004")
+    assert len(results_id) >= 1
+    assert results_id[0]["id"] == "HMS-NASJONAL-004"
+    assert "vernerunde" in results_id[0]["sporsmal"].lower()
+
+    # 4. Limit clamping
+    assert len(search_hms_guidance(limit=2)) == 2
+
+
 

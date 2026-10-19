@@ -42,11 +42,11 @@ def run_scenario_suite():
     # 1. Sommer vs. Vinter vaktbehov
     q1 = """
     SELECT 
-        CASE WHEN maaned IN (6,7,8) THEN 'Sommer' ELSE 'Vinter' END AS sesong,
+        CASE WHEN CAST(maaned AS INTEGER) IN (6,7,8) THEN 'Sommer' ELSE 'Vinter' END AS sesong,
         COUNT(*) AS vakter,
         ROUND(SUM(timer), 1) AS total_timer
     FROM hr_vakter
-    WHERE maaned IN (6,7,8) OR maaned IN (12,1,2)
+    WHERE CAST(maaned AS INTEGER) IN (6,7,8,12,1,2)
     GROUP BY sesong
     """
     res1 = c_hist.execute(q1).fetchall()
@@ -300,10 +300,10 @@ def run_scenario_suite():
 
     # 22. Vikar- og deltidsvakter under pandemien
     q22 = """
-    SELECT aar, COUNT(*)
+    SELECT CAST(aar AS INTEGER) AS a, COUNT(*)
     FROM hr_vakter
-    WHERE aar IN (2019, 2020, 2021, 2022)
-    GROUP BY aar
+    WHERE CAST(aar AS INTEGER) IN (2019, 2020, 2021, 2022)
+    GROUP BY a
     """
     shifts_yr = dict(c_hist.execute(q22).fetchall())
     record(22, "5. Fravær, Kriser & Pandemi", "Vaktjustering under pandemien", q22,

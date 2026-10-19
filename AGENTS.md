@@ -18,7 +18,7 @@
 - **Python:** 3.13 (`py -3.13` på Windows)
 - **Database:** SQLite i `05_data/museum.db` (kunstnere, verk, saler, utstillinger, hendelser, publikum_faq)
 - **Protokoll:** Model Context Protocol (FastMCP)
-- **Tester:** `pytest` med 191 automatiserte tester
+- **Tester:** `pytest` med 206 automatiserte tester
 
 
 ---
@@ -50,6 +50,7 @@ py -3.13 src/mcp_server.py
 
 # HR, HMS & Kvalitet (Syntetisk demomodell)
 py -3.13 src/hr_cli.py kiosk                     # Generer bemanningsorakel for kiosk
+py -3.13 src/hr_cli.py hms "ergonomi"          # Søk i 344 autoritative nasjonale HMS-veiledningspunkter
 py -3.13 src/hr_cli.py rules                     # Søk i 8 gjeldende HR/HMS/kvalitetsregler
 py -3.13 src/hr_cli.py person E101               # Inspiser verifiserte kompetanser for ansatt
 py -3.13 src/hr_cli.py eval E101,E102,E106       # Evaluer bemanningsforslag mot KI-feller (L01-L03)
@@ -120,6 +121,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode man
     - STAMI ergonomiske retningslinjer, maksimal ståtid (2t) og rotasjonskrav for salverter.
 26. `get_sickness_absence_statistics(year, quarter)`
     - Offisiell SSB sykefraværsstatistikk (tabell 12441) og vikarreservefaktor for kultursektoren.
+27. `search_hms_guidance(query, topic, limit)`
+    - Søk i 344 autoritative nasjonale HMS- og arbeidsmiljøveiledningspunkter (Arbeidstilsynet/BHT).
+28. `lookup_handbook(query, handbok, role, limit)`
+    - Søk i museets fire virksomhetshåndbøker (Personal, HMS, Drift, Beredskap).
 
 
 ---

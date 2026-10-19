@@ -14,6 +14,7 @@ from src.kunstpixel.core.hrdemo import (
     get_person,
     list_people,
     list_skills,
+    search_hms_guidance,
 )
 from src.kunstpixel.core.hr_eval import evaluate_staffing_proposal
 
@@ -56,6 +57,8 @@ class Handler(BaseHTTPRequestHandler):
                     end=arg('end', '16:00'),
                     need=int(arg('need', '5')),
                 )
+            elif parsed.path == '/api/v1/hr/hms-guidance':
+                result = search_hms_guidance(query=arg('q', None), topic=arg('topic', None), limit=int(arg('limit', '5')))
             elif parsed.path == '/api/v1/rules':
                 result = find_rules(arg('domain',None),arg('topic',None),arg('date','2026-11-07'))
             else:

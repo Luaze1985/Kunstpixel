@@ -73,7 +73,7 @@ class TestConsolidatedDatabaseSSOT:
         """Row counts for new tables must match locked specifications."""
         cur = ssot_conn.cursor()
         assert cur.execute("SELECT count(*) FROM leverandor_enhetsregister").fetchone()[0] == 12
-        assert cur.execute("SELECT count(*) FROM virke_tariff").fetchone()[0] == 46  # steps 20-65
+        assert cur.execute("SELECT count(*) FROM virke_tariff").fetchone()[0] >= 46  # trinn 20-65 + tillegg 66-86 (67 rader)
         assert cur.execute("SELECT count(*) FROM utstilling_okonomi").fetchone()[0] == 102
         assert cur.execute("SELECT count(*) FROM avvik_hms_drift").fetchone()[0] >= 30
         assert cur.execute("SELECT count(*) FROM tilstandsrapporter").fetchone()[0] == 16
