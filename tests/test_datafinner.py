@@ -96,9 +96,9 @@ def test_les_fil_avviser_stier_utenfor_mappene(sti: str) -> None:
 @pytest.mark.parametrize(
     "navn,args",
     [
-        ("get_staff_on_duty", {"tidspunkt": "2026-10-19T12:00"}),
+        ("get_staff_on_shift", {"dato": "2026-10-19"}),
         ("get_shifts_for_date", {"dato": "2026-10-20"}),
-        ("get_overtime_report", {"maaned": "2026-09"}),
+        ("get_working_hours_report", {"maaned": "2026-09"}),
         ("get_sickness_absence_statistics", {"year": 2025, "quarter": 2}),
         ("get_exhibition_economy", {"exhibition_id": "KP-EXH-2026-065"}),
         ("get_shift_cost_for_period", {"maaned": "2026-09"}),

@@ -60,7 +60,7 @@
       <section class="af-view" data-step="rapport" id="rapport" hidden>
         <div class="af-report" id="rapport-innhold">
           <p class="af-caption">Rapport <span class="af-badge active" id="status">Utkast</span></p>
-          <p class="af-table-meta">Utkast til kontrollpunktene er bekreftet.</p>
+          <p class="af-table-meta">Utkast så lenge noe mangler.</p>
           <h2 class="af-title" id="rapport-tittel" tabindex="-1"></h2>
           <p id="rapport-formal"></p>
           <div class="af-kpis" id="nokkeltall"></div>
@@ -70,11 +70,11 @@
           </div>
           <div class="af-report-block">
             <span class="af-report-kind">Vurdering</span>
-            <div><p id="vurdering"></p><span class="af-source system">Regelbasert</span></div>
+            <div><p id="vurdering"></p><span class="af-source missing" id="vurdering-merke">Mangler</span></div>
           </div>
           <div class="af-report-block">
             <span class="af-report-kind">Forslag</span>
-            <div><p id="forslag"></p><span class="af-source system">Regelbasert</span></div>
+            <div><p id="forslag">Databasen har ingen forslag for dette spørsmålet.</p><span class="af-source missing">Mangler</span></div>
           </div>
           <div class="af-report-block">
             <span class="af-report-kind">Kontroll</span>
@@ -100,6 +100,7 @@
       <div class="af-context-card">
         <span class="af-small-label">Kilde</span>
         <p id="kilde">museum.db, kun lesing</p>
+        <p id="db-mangler"></p>
       </div>
     </aside>
   </div>
@@ -110,54 +111,43 @@
   // Én kilde til roller og spørsmål. Forside, meny, filtre, verktøykall, kort svar og rapport leser herfra.
   var kr = function (n) { return Math.round(n).toLocaleString("nb-NO") + " kr"; };
   var tall = function (n) { return Number(n).toLocaleString("nb-NO"); };
-  var KONTROLL_STANDARD = ["Tallene stemmer med kilden", "Utvalget dekker det jeg spurte om"];
-  var VAKTKOLONNER = [["navn", "Navn"], ["stilling", "Stilling"], ["start", "Start"], ["slutt", "Slutt"], ["stasjon", "Stasjon"], ["avdeling", "Avdeling"], ["telefon", "Telefon"], ["epost", "E-post"]];
+  var KONTROLL = ["Tallene stemmer med kilden", "Utvalget dekker det jeg spurte om"];
+  var VAKTKOLONNER = [["navn", "Navn"], ["stilling", "Stilling"], ["timer", "Timer"], ["stasjon", "Stasjon"], ["avdeling", "Avdeling"], ["telefon", "Telefon"], ["epost", "E-post"]];
+  var FRA_DB = ["confirmed", "Fra museum.db"];
 
+  // Bare data fra museum.db. Vurdering og forslag vises bare når databasen har tekst for det.
   var SPORSMAL = {
-    versjon: "4",
+    versjon: "5",
     roller: [
       { navn: "HR og bemanning", merknad: "/hr", sporsmal: [
-        { id: "pa-jobb", tekst: "Hvem er på jobb nå?", kort: "På jobb nå", filtre: [],
-          verktoy: "get_staff_on_duty", args: function () { return {}; },
-          svar: function (d) { return d.antall_pa_jobb + " på jobb nå, " + d.antall_vakter_i_dag + " vakter i dag"; },
-          rader: function (d) { return d.pa_jobb; }, kolonner: VAKTKOLONNER,
-          kildeMerke: ["verify", "Utledet start og slutt"],
-          kontroll: ["Utledet start og slutt er godtatt"].concat(KONTROLL_STANDARD),
-          vurdering: function (d) { return d.antall_pa_jobb === 0 ? "Ingen er på jobb akkurat nå." : d.antall_pa_jobb + " av " + d.antall_vakter_i_dag + " vakter i dag pågår nå."; },
-          forslag: function (d) { return d.antall_pa_jobb === 0 && d.antall_vakter_i_dag > 0 ? "Sjekk vaktplanen for dagen for å se når vaktene starter." : "Ingen oppfølging etter regelen."; },
-          periode: function (d) { return d.tidspunkt; } },
+        { id: "vakt-i-dag", tekst: "Hvem har vakt i dag?", kort: "Vakt i dag", filtre: [],
+          verktoy: "get_staff_on_shift", args: function () { return {}; },
+          svar: function (d) { return d.antall_med_vakt + " har vakt i dag"; },
+          nokkeltall: function (d) { return [["Med vakt", d.antall_med_vakt], ["Timer", tall(d.timer_totalt)]]; },
+          rader: function (d) { return d.vakter; }, kolonner: VAKTKOLONNER,
+          kildeMerke: FRA_DB, periode: function (d) { return d.dato; } },
         { id: "vaktplan", tekst: "Vaktplan for en dag", kort: "Vaktplan",
           filtre: [{ id: "dato", label: "Dato", type: "date" }],
           verktoy: "get_shifts_for_date", args: function (f) { return { dato: f.dato }; },
           svar: function (d) { return d.length + " vakter"; },
           rader: function (d) { return d; }, kolonner: VAKTKOLONNER,
-          kildeMerke: ["verify", "Utledet start og slutt"],
-          kontroll: ["Utledet start og slutt er godtatt"].concat(KONTROLL_STANDARD),
-          vurdering: function (d) { return d.length === 0 ? "Ingen vakter registrert denne dagen." : d.length + " vakter fordelt på " + new Set(d.map(function (v) { return v.avdeling; })).size + " avdelinger."; },
-          forslag: function (d) { return d.length === 0 ? "Sjekk om datoen er en stengedag." : "Ingen oppfølging etter regelen."; },
-          periode: function (d, f) { return f.dato; } },
-        { id: "overtid", tekst: "Overtidsbruk i perioden", kort: "Overtid",
+          kildeMerke: FRA_DB, periode: function (d, f) { return f.dato; } },
+        { id: "arbeidstid", tekst: "Arbeidstid i perioden", kort: "Arbeidstid",
           filtre: [{ id: "maaned", label: "Måned", type: "month" }],
-          verktoy: "get_overtime_report", args: function (f) { return { maaned: f.maaned }; },
-          svar: function (d) { return d.overtid_timer_totalt + " timer overtid, " + d.antall_med_overtid + " av " + d.antall_ansatte + " ansatte"; },
-          nokkeltall: function (d) { return [["Overtid", d.overtid_timer_totalt + " t"], ["Med overtid", d.antall_med_overtid], ["Ansatte med vakter", d.antall_ansatte]]; },
+          verktoy: "get_working_hours_report", args: function (f) { return { maaned: f.maaned }; },
+          svar: function (d) { return tall(d.timer_totalt) + " timer på " + d.antall_ansatte + " ansatte"; },
+          nokkeltall: function (d) { return [["Timer", tall(d.timer_totalt)], ["Ansatte", d.antall_ansatte], ["Høyeste ukesum", tall(d.hoyeste_ukesum) + " t"], ["Høyeste døgnsum", tall(d.hoyeste_dognsum) + " t"]]; },
           rader: function (d) { return d.ansatte; },
-          kolonner: [["navn", "Navn"], ["avdeling", "Avdeling"], ["timer_totalt", "Timer"], ["antall_vakter", "Vakter"], ["overtid_timer", "Overtid t"], ["dager_over_9t", "Dager over 9 t"], ["uker_over_37_5t", "Uker over 37,5 t"]],
-          kildeMerke: ["confirmed", "Fra museum.db"], kontroll: KONTROLL_STANDARD,
-          vurdering: function (d) { return d.regel; },
-          forslag: function (d) { return d.antall_med_overtid > 0 ? "Følg opp de " + d.antall_med_overtid + " ansatte med overtid mot arbeidsmiljøloven kap. 10." : "Ingen oppfølging etter regelen."; },
-          periode: function (d) { return d.maaned; } },
-        { id: "sykefravaer", tekst: "Sykefravær per kvartal", kort: "Sykefravær",
+          kolonner: [["navn", "Navn"], ["avdeling", "Avdeling"], ["stillingsprosent", "Stilling %"], ["timer_totalt", "Timer"], ["antall_vakter", "Vakter"], ["hoyeste_ukesum", "Høyeste uke"], ["hoyeste_dognsum", "Høyeste døgn"]],
+          kildeMerke: FRA_DB, periode: function (d) { return d.maaned; } },
+        { id: "sykefravaer", tekst: "Sykefravær i kultursektoren", kort: "Sykefravær",
           filtre: [{ id: "aar", label: "År", type: "number" }, { id: "kvartal", label: "Kvartal", type: "select", valg: ["1", "2", "3", "4"] }],
           verktoy: "get_sickness_absence_statistics", args: function (f) { return { year: Number(f.aar), quarter: Number(f.kvartal) }; },
-          svar: function (d) { return d.error ? d.error : d.sykefraver_prosent + " % sykefravær"; },
+          svar: function (d) { return d.error ? d.error : d.sykefraver_prosent + " % sykefravær i kultursektoren"; },
           nokkeltall: function (d) { return d.error ? [] : [["Sykefravær", d.sykefraver_prosent + " %"], ["Egenmeldt", d.egenmeldt_prosent + " %"], ["Legemeldt", d.legemeldt_prosent + " %"], ["Vikarbuffer", d.vikarbuffer_anbefaling_faktor]]; },
           rader: function (d) { return d.error ? [] : [d]; },
           kolonner: [["periode", "Periode"], ["sykefraver_prosent", "Sykefravær %"], ["egenmeldt_prosent", "Egenmeldt %"], ["legemeldt_prosent", "Legemeldt %"], ["vikarbuffer_anbefaling_faktor", "Vikarbuffer"]],
-          kildeMerke: ["confirmed", "SSB tabell 12441"], kontroll: KONTROLL_STANDARD,
-          vurdering: function (d) { return d.error ? "Ingen data for perioden." : "Tallene gjelder kultursektoren nasjonalt, ikke museets egne ansatte."; },
-          forslag: function (d) { return d.error ? "Velg et kvartal mellom 2010 og 2026." : "Planlegg vikarbuffer med faktor " + d.vikarbuffer_anbefaling_faktor + "."; },
-          periode: function (d, f) { return f.aar + " kvartal " + f.kvartal; } }
+          kildeMerke: ["confirmed", "SSB-tall i museum.db"], periode: function (d, f) { return f.aar + " kvartal " + f.kvartal; } }
       ] },
       { navn: "Økonomi og innkjøp", merknad: "/okonomi", sporsmal: [
         { id: "utstilling", tekst: "Økonomi per utstilling", kort: "Utstillingsøkonomi",
@@ -167,9 +157,8 @@
           nokkeltall: function (d) { return d.error ? [] : [["Budsjett", kr(d.budsjett_nok)], ["Totalkostnad", kr(d.faktisk_totalkostnad_nok)], ["Billettinntekter", kr(d.billettinntekter_nok)], ["Netto", kr(d.netto_resultat_nok)]]; },
           rader: function (d) { return d.error ? [] : [d]; },
           kolonner: [["tittel", "Utstilling"], ["besokstall_total", "Besøk"], ["faktisk_innleie_nok", "Innleie"], ["katalogsalg_nok", "Katalogsalg"], ["sponsorstotte_nok", "Sponsor"]],
-          kildeMerke: ["confirmed", "Fra museum.db"], kontroll: KONTROLL_STANDARD,
-          vurdering: function (d) { return d.error ? "Ingen økonomirapport." : d.avvik_forklaring; },
-          forslag: function (d) { return d.error ? "Velg en annen utstilling." : (d.netto_resultat_nok < 0 ? "Gjennomgå kostnadene, resultatet er negativt." : "Ingen oppfølging etter regelen."); },
+          kildeMerke: FRA_DB,
+          vurdering: function (d) { return d.error ? null : d.avvik_forklaring; },
           periode: function (d) { return d.aar; } },
         { id: "vaktkostnad", tekst: "Kostnad for vakter", kort: "Vaktkostnad",
           filtre: [{ id: "maaned2", label: "Måned", type: "month" }],
@@ -178,11 +167,7 @@
           nokkeltall: function (d) { return [["Kostnad", kr(d.kostnad_nok_totalt)], ["Avdelinger", d.avdelinger.length], ["Uten tariff", d.vakter_uten_tariff + " vakter"]]; },
           rader: function (d) { return d.avdelinger; },
           kolonner: [["avdeling", "Avdeling"], ["vakter", "Vakter"], ["timer", "Timer"], ["kostnad_nok", "Kostnad kr"], ["vakter_uten_tariff", "Uten tariff"]],
-          kildeMerke: ["verify", "Ufullstendig tariff"],
-          kontroll: ["Vakter uten tariff er akseptert"].concat(KONTROLL_STANDARD),
-          vurdering: function (d) { return d.merknad + " " + d.vakter_uten_tariff + " vakter mangler sats."; },
-          forslag: function (d) { return d.vakter_uten_tariff > 0 ? "Utvid tariff-tabellen til lønnstrinn over 65 for full kostnad." : "Ingen oppfølging etter regelen."; },
-          periode: function (d) { return d.maaned; } }
+          kildeMerke: ["verify", "Ufullstendig tariff"], periode: function (d) { return d.maaned; } }
       ] }
     ]
   };
@@ -352,6 +337,7 @@
     hent(s.verktoy, args).then(function (d) {
       sisteSvar = d; sisteFiltre = verdier; sisteArgs = args;
       $("kort-verdi").textContent = s.svar(d);
+      $("db-mangler").textContent = d.mangler || "";
       $("kort-verdi").focus({ preventScroll: true });
     }).catch(function (e) { feil("Feil fra databasen: " + e.message); });
   });
@@ -400,17 +386,19 @@
       s.kolonner.forEach(function (k) { var v = r[k[0]]; tr.appendChild(el("td", typeof v === "number" ? "num" : null, v == null ? "—" : (typeof v === "number" ? tall(v) : String(v)))); });
       tbody.appendChild(tr);
     });
-    $("vurdering").textContent = s.vurdering(d);
-    $("forslag").textContent = s.forslag(d);
+    var v = s.vurdering ? s.vurdering(d) : null;
+    $("vurdering").textContent = v || "Databasen har ingen vurdering for dette spørsmålet.";
+    $("vurdering-merke").className = "af-source " + (v ? "confirmed" : "missing");
+    $("vurdering-merke").textContent = v ? "Fra museum.db" : "Mangler";
     var k = $("kontroll"); k.textContent = "";
-    s.kontroll.forEach(function (t, i) {
+    KONTROLL.forEach(function (t, i) {
       var l = el("label", "af-radio");
       var c = document.createElement("input"); c.type = "checkbox"; c.name = "kontroll" + i;
       c.addEventListener("change", oppdaterStatus);
       l.appendChild(c); l.appendChild(document.createTextNode(t)); k.appendChild(l);
     });
     oppdaterStatus();
-    $("grunnlag").textContent = "Kilde: museum.db via " + kallTekst(s.verktoy, sisteArgs) + ". Periode: " + s.periode(d, sisteFiltre) + ". Regelversjon " + SPORSMAL.versjon + ".";
+    $("grunnlag").textContent = "Kilde: museum.db via " + kallTekst(s.verktoy, sisteArgs) + ". Periode: " + s.periode(d, sisteFiltre) + ". Regelversjon " + SPORSMAL.versjon + "." + (d.mangler ? " Mangler i databasen: " + d.mangler : "");
     $("rapport").hidden = false;
     gaaTil($("rapport"), $("rapport-tittel"));
   });

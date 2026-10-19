@@ -29,11 +29,11 @@ from src.kunstpixel.core.db import (
     query_incidents,
     query_loans,
     query_quarterly_absence,
-    query_overtime,
     query_room_artworks,
     query_shift_cost,
     query_shifts_on_date,
-    query_staff_on_duty,
+    query_staff_on_shift,
+    query_working_hours,
     query_station_ergonomics,
     query_styrk_job_code,
     query_supplier_brreg,
@@ -391,22 +391,21 @@ def list_exhibitions_with_economy() -> list[dict[str, Any]]:
 
 
 @mcp.tool()
-def get_staff_on_duty(tidspunkt: str | None = None) -> dict[str, Any]:
-    """Finn hvem som er på jobb på et tidspunkt, med navn, rolle, stasjon og kontaktinfo.
+def get_staff_on_shift(dato: str | None = None) -> dict[str, Any]:
+    """Finn hvem som har vakt på en dato, med navn, stilling, stasjon, timer og kontaktinfo.
 
     Args:
-        tidspunkt: ISO-tidspunkt 'YYYY-MM-DDTHH:MM'. Standard er nå (lokal tid).
+        dato: Dato i ISO-format 'YYYY-MM-DD'. Standard er i dag.
 
     Returns:
-        Antall på jobb, antall vakter samme dag og liste over pågående vakter.
-        Start og slutt er utledet fra rolle og timer etter ADR 009.
+        Antall med vakt, sum timer og vaktene slik de står i hr_vakter. Databasen har ikke klokkeslett.
     """
-    return query_staff_on_duty(tidspunkt)
+    return query_staff_on_shift(dato)
 
 
 @mcp.tool()
 def get_shifts_for_date(dato: str) -> list[dict[str, Any]]:
-    """Hent vaktplanen for én dato: alle vakter med start, slutt, rolle, stasjon og ansatt.
+    """Hent vaktplanen for én dato slik den står i hr_vakter (dato, timer, rolle, stasjon, ansatt).
 
     Args:
         dato: Dato i ISO-format 'YYYY-MM-DD'.
@@ -415,18 +414,21 @@ def get_shifts_for_date(dato: str) -> list[dict[str, Any]]:
 
 
 @mcp.tool()
-def get_overtime_report(maaned: str) -> dict[str, Any]:
-    """Overtidsrapport for en måned: per ansatt timer over 9 per døgn og over 37,5 per uke (ADR 009).
+def get_working_hours_report(maaned: str) -> dict[str, Any]:
+    """Arbeidstid per ansatt for en måned: sum timer, antall vakter, høyeste uke- og døgnsum.
 
     Args:
         maaned: Måned i formatet 'YYYY-MM'.
+
+    Returns:
+        Tallene fra hr_vakter. Overtid beregnes ikke, fordi overtidsgrensen ikke finnes i databasen.
     """
-    return query_overtime(maaned)
+    return query_working_hours(maaned)
 
 
 @mcp.tool()
 def get_shift_cost_for_period(maaned: str) -> dict[str, Any]:
-    """Lønnskostnad for alle vakter i en måned per avdeling etter Virke-tariff.
+    """Lønnskostnad for alle vakter i en måned per avdeling: timer x sats fra virke_tariff.
 
     Args:
         maaned: Måned i formatet 'YYYY-MM'.

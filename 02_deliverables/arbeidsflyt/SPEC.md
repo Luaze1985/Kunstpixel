@@ -21,18 +21,22 @@ Forsiden er en oppgaveliste med ett kort per rolle. Kortet viser rollenavn, merk
 
 **Avklart:** HR og bemanning og Økonomi og innkjøp er ført inn som roller K og L i `03_team/team_roster.md`. Triggerne `/hr` og `/okonomi` er foreslått og kan endres. Driftsansvarlig og Museumsdirektør har ingen spørsmål i v1 og vises ikke.
 
-## Spørsmålskatalog (versjon 3)
+## Spørsmålskatalog (versjon 5, koblet til museum.db)
 
-| Rolle | Spørsmål | Filter | Verktøy | Status | Rapporten dekker |
-|---|---|---|---|---|---|
-| HR og bemanning | Hvem er på jobb nå? | ingen | mangler: oppslag på pågående vakter | mangler | navn, rolle, stasjon, avdeling, telefon, e-post, kontor |
-| HR og bemanning | Overtidsbruk i perioden | måned | mangler: overtid per ansatt i periode (`audit_shift_compliance` gjelder ett skift) | mangler | ansatt, avdeling, timer over normal, antall vakter, AML-avvik |
-| HR og bemanning | Vaktplan for en dag | dato | mangler: vakter per dato | mangler | navn, rolle, stasjon, avdeling, timer |
-| HR og bemanning | Sykefravær per kvartal | år, kvartal | `get_sickness_absence_statistics` | finnes | sykefravær, egenmeldt, legemeldt, vikarbuffer, SSB-sammenligning |
-| Økonomi og innkjøp | Økonomi per utstilling | utstilling | `get_exhibition_economy` | finnes | budsjett, innleie, totalkostnad, billettinntekter, katalogsalg, sponsorstøtte, netto, avvik |
-| Økonomi og innkjøp | Kostnad for vakter | måned | mangler: kostnad per periode (`calculate_shift_cost` gjelder ett skift) | mangler | avdeling, timer, kostnad etter Virke-tariff |
+Regel: alle svar kommer fra museum.db. Det databasen ikke har, vises som «Mangler», aldri utledet.
 
-Verktøynavn er hentet fra `src/kunstpixel/core/mcp_server.py` i hovedmappen (ADR 008, ucommittet). Fire av seks spørsmål har ikke et ferdig verktøy; de må lages før kobling.
+| Rolle | Spørsmål | Filter | Verktøy | Mangler i databasen |
+|---|---|---|---|---|
+| HR og bemanning | Hvem har vakt i dag? | ingen | `get_staff_on_shift` | klokkeslett for vakter |
+| HR og bemanning | Vaktplan for en dag | dato | `get_shifts_for_date` | klokkeslett for vakter |
+| HR og bemanning | Arbeidstid i perioden | måned | `get_working_hours_report` | overtidsgrense som tall |
+| HR og bemanning | Sykefravær i kultursektoren | år, kvartal | `get_sickness_absence_statistics` | museets eget sykefravær (bare SSB-tall finnes) |
+| Økonomi og innkjøp | Økonomi per utstilling | utstilling, lukket liste | `get_exhibition_economy`, `list_exhibitions_with_economy` | – |
+| Økonomi og innkjøp | Kostnad for vakter | måned | `get_shift_cost_for_period` | tariff for lønnstrinn over 65, kveldssats |
+
+Vurdering vises bare når databasen har tekst (utstillingens avviksforklaring). Forslag står som «Mangler». Rapporten er derfor «Utkast» til databasen er utvidet.
+
+**Neste: utvid databasen** (byggeskriptet, kjøres av Lars): klokkeslett for vakter, overtidsgrenser som tall, roller, og museets eget fravær.
 
 ## Rapportens fem deler
 1. Tittel og formål, én setning.
