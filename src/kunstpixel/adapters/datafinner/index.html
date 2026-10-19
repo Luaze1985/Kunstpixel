@@ -74,7 +74,7 @@
           </div>
           <div class="af-report-block">
             <span class="af-report-kind">Forslag</span>
-            <div><p id="forslag">Databasen har ingen forslag for dette spørsmålet.</p><span class="af-source missing">Mangler</span></div>
+            <div><p id="forslag"></p><span class="af-source missing" id="forslag-merke">Mangler</span></div>
           </div>
           <div class="af-report-block">
             <span class="af-report-kind">Kontroll</span>
@@ -117,11 +117,13 @@
   var FRA_DB = ["confirmed", "Fra museum.db"];
   var SYNTETISK = ["system", "Syntetiske data i museum.db"];
 
-  // Bare data fra museum.db. Vurdering og forslag vises bare når databasen har tekst for det.
+  // Bare data fra museum.db. Roller og rekkefølge kommer fra list_roles (tabellene roller og
+  // rolle_sporsmal). Vurdering og forslag velges av get_report_assessment fra rapport_regler.
+  // Her står bare hvordan hvert spørsmål kalles og vises, slått opp på sporsmal_id.
   var SPORSMAL = {
-    versjon: "6",
-    roller: [
-      { navn: "HR og bemanning", merknad: "/hr", sporsmal: [
+    versjon: "7",
+    roller: [],
+    sporsmal: [
         { id: "vakt-i-dag", tekst: "Hvem har vakt i dag?", kort: "Vakt i dag", filtre: [],
           verktoy: "get_staff_on_shift", args: function () { return {}; },
           svar: function (d) { return d.antall_pa_jobb !== undefined ? d.antall_pa_jobb + " på jobb nå, " + d.antall_med_vakt + " med vakt i dag" : d.antall_med_vakt + " har vakt i dag"; },
@@ -132,6 +134,7 @@
           filtre: [{ id: "dato", label: "Dato", type: "date" }],
           verktoy: "get_shifts_for_date", args: function (f) { return { dato: f.dato }; },
           svar: function (d) { return d.length + " vakter"; },
+          regelverdier: function (d) { return { antall_vakter: d.length }; },
           rader: function (d) { return d; }, kolonner: VAKTKOLONNER,
           kildeMerke: FRA_DB, periode: function (d, f) { return f.dato; } },
         { id: "arbeidstid", tekst: "Arbeidstid i perioden", kort: "Arbeidstid",
@@ -142,16 +145,17 @@
           rader: function (d) { return d.ansatte; },
           kolonner: [["navn", "Navn"], ["avdeling", "Avdeling"], ["stillingsprosent", "Stilling %"], ["timer_totalt", "Timer"], ["antall_vakter", "Vakter"], ["hoyeste_ukesum", "Høyeste uke"], ["hoyeste_dognsum", "Høyeste døgn"], ["overtid_timer", "Overtid t", true]],
           kildeMerke: FRA_DB, periode: function (d) { return d.maaned; } },
-        { id: "sykefravaer", tekst: "Sykefravær i kultursektoren", kort: "Sykefravær",
+        { id: "sykefravaer", tekst: "Sykefravær i museet", kort: "Sykefravær",
           filtre: [{ id: "aar", label: "År", type: "number" }, { id: "kvartal", label: "Kvartal", type: "select", valg: ["1", "2", "3", "4"] }],
-          verktoy: "get_sickness_absence_statistics", args: function (f) { return { year: Number(f.aar), quarter: Number(f.kvartal) }; },
-          svar: function (d) { return d.error ? d.error : d.sykefraver_prosent + " % sykefravær i kultursektoren"; },
-          nokkeltall: function (d) { return d.error ? [] : [["Sykefravær", d.sykefraver_prosent + " %"], ["Egenmeldt", d.egenmeldt_prosent + " %"], ["Legemeldt", d.legemeldt_prosent + " %"], ["Vikarbuffer", d.vikarbuffer_anbefaling_faktor]]; },
-          rader: function (d) { return d.error ? [] : [d]; },
-          kolonner: [["periode", "Periode"], ["sykefraver_prosent", "Sykefravær %"], ["egenmeldt_prosent", "Egenmeldt %"], ["legemeldt_prosent", "Legemeldt %"], ["vikarbuffer_anbefaling_faktor", "Vikarbuffer"]],
-          kildeMerke: ["confirmed", "SSB-tall i museum.db"], periode: function (d, f) { return f.aar + " kvartal " + f.kvartal; } }
-      ] },
-      { navn: "Økonomi og innkjøp", merknad: "/okonomi", sporsmal: [
+          verktoy: "get_absence_report", args: function (f) { return { aar: Number(f.aar), kvartal: Number(f.kvartal) }; },
+          svar: function (d) { var ssb = d.ssb_sammenligning || {}; return d.mangler ? d.mangler : tall(d.egen_prosent) + " % sykefravær i museet" + (ssb.sykefraver_prosent !== undefined ? " (kultursektoren " + tall(ssb.sykefraver_prosent) + " %)" : ""); },
+          nokkeltall: function (d) { var ssb = d.ssb_sammenligning || {}; return d.mangler ? [] : [["Museet", tall(d.egen_prosent) + " %"], ["Kultursektoren", ssb.sykefraver_prosent !== undefined ? tall(ssb.sykefraver_prosent) + " %" : "Mangler"], ["Egenmeldt", tall(d.egenmeldt_prosent) + " %"], ["Legemeldt", tall(d.legemeldt_prosent) + " %"]]; },
+          // Samme tall som verktøyet gir, stilt side om side: museet (hr_fravaer) og SSB.
+          rader: function (d) { var ssb = d.ssb_sammenligning || {}; return d.mangler ? [] : [
+            { kilde: "Museet (hr_fravaer)", sykefravaer: d.egen_prosent, egenmeldt: d.egenmeldt_prosent, legemeldt: d.legemeldt_prosent, sykedager: d.sykedager_totalt, dagsverk: d.mulige_dagsverk },
+            { kilde: "Kultursektoren (SSB)", sykefravaer: ssb.sykefraver_prosent, egenmeldt: ssb.egenmeldt_prosent, legemeldt: ssb.legemeldt_prosent }]; },
+          kolonner: [["kilde", "Kilde"], ["sykefravaer", "Sykefravær %"], ["egenmeldt", "Egenmeldt %"], ["legemeldt", "Legemeldt %"], ["sykedager", "Sykedager"], ["dagsverk", "Mulige dagsverk"]],
+          kildeMerke: FRA_DB, periode: function (d) { return d.periode; } },
         { id: "utstilling", tekst: "Økonomi per utstilling", kort: "Utstillingsøkonomi",
           filtre: [{ id: "utstilling", label: "Utstilling", type: "select", kilde: { verktoy: "list_exhibitions_with_economy", args: {}, verdi: "utstilling_id", tekst: "tittel" } }],
           verktoy: "get_exhibition_economy", args: function (f) { return { exhibition_id: f.utstilling }; },
@@ -169,14 +173,13 @@
           nokkeltall: function (d) { return [["Kostnad", kr(d.kostnad_nok_totalt)], ["Avdelinger", d.avdelinger.length], ["Uten tariff", d.vakter_uten_tariff + " vakter"]]; },
           rader: function (d) { return d.avdelinger; },
           kolonner: [["avdeling", "Avdeling"], ["vakter", "Vakter"], ["timer", "Timer"], ["kveldstimer", "Kveldstimer", true], ["kostnad_nok", "Kostnad kr"], ["vakter_uten_tariff", "Uten tariff"]],
-          kildeMerke: ["verify", "Ufullstendig tariff"], periode: function (d) { return d.maaned; } }
-      ] }
+          kildeMerke: function (d) { return d.vakter_uten_tariff > 0 ? ["verify", "Ufullstendig tariff"] : FRA_DB; },
+          periode: function (d) { return d.maaned; } }
     ]
   };
 
   var $ = function (id) { return document.getElementById(id); };
-  var alle = [];
-  SPORSMAL.roller.forEach(function (r) { r.sporsmal.forEach(function (s) { s.rolle = r; alle.push(s); }); });
+  var alle = SPORSMAL.sporsmal;
   var gjeldendeRolle = null, sisteSvar = null, sisteFiltre = null, sisteArgs = null;
 
   function el(tag, cls, tekst) {
@@ -242,15 +245,33 @@
     mobil.value = id || "";
   }
 
-  SPORSMAL.roller.forEach(function (r) {
-    var li = el("li");
-    var b = el("button", "af-task-card"); b.type = "button";
-    var t = el("span"); t.appendChild(el("strong", null, r.navn));
-    t.appendChild(el("small", null, r.merknad + " · " + r.sporsmal.length + " spørsmål"));
-    b.appendChild(t);
-    b.addEventListener("click", function () { velgRolle(r.navn); });
-    li.appendChild(b); $("roller").appendChild(li);
-  });
+  function tegnForside(mangler) {
+    var ul = $("roller"); ul.textContent = "";
+    if (mangler) { var li0 = el("li"); li0.appendChild(el("p", null, mangler)); ul.appendChild(li0); return; }
+    SPORSMAL.roller.forEach(function (r) {
+      var li = el("li");
+      var b = el("button", "af-task-card"); b.type = "button";
+      var t = el("span"); t.appendChild(el("strong", null, r.navn));
+      if (r.beskrivelse) t.appendChild(el("small", null, r.beskrivelse));
+      t.appendChild(el("small", null, r.merknad + " · " + r.sporsmal.length + " spørsmål"));
+      b.appendChild(t);
+      b.addEventListener("click", function () { velgRolle(r.navn); });
+      li.appendChild(b); ul.appendChild(li);
+    });
+  }
+
+  // Rollekortene kommer fra museum.db. Bare roller med spørsmål som siden kan vise, tas med.
+  function lastRoller() {
+    return hent("list_roles", {}).then(function (rader) {
+      SPORSMAL.roller = rader.map(function (r) {
+        return { navn: r.navn, merknad: r.trigger, beskrivelse: r.beskrivelse,
+          sporsmal: r.sporsmal.map(finnSporsmal).filter(Boolean) };
+      }).filter(function (r) { return r.sporsmal.length > 0; });
+      SPORSMAL.roller.forEach(function (r) { r.sporsmal.forEach(function (s) { if (!s.rolle) s.rolle = r; }); });
+      tegnForside(SPORSMAL.roller.length ? null : "Mangler: roller med spørsmål finnes ikke i museum.db (tabellene roller og rolle_sporsmal).");
+      byggMeny();
+    }).catch(function (e) { tegnForside("Feil fra databasen: " + e.message); });
+  }
 
   function visForside() {
     gjeldendeRolle = null; skjulSvar(); vis("tom");
@@ -360,7 +381,11 @@
     merke.textContent = avkrysset ? "Bekreftet" : "Bør verifiseres";
     var fm = $("fakta-merke");
     if (avkrysset) { fm.className = "af-source confirmed"; fm.textContent = "Bekreftet"; }
-    else { var m = erSyntetisk(sisteSvar) && s.kildeMerke === FRA_DB ? SYNTETISK : s.kildeMerke; fm.className = "af-source " + m[0]; fm.textContent = m[1]; }
+    else {
+      var km = typeof s.kildeMerke === "function" ? s.kildeMerke(sisteSvar) : s.kildeMerke;
+      var m = erSyntetisk(sisteSvar) && km === FRA_DB ? SYNTETISK : km;
+      fm.className = "af-source " + m[0]; fm.textContent = m[1];
+    }
     var ubekreftet = document.querySelectorAll("#rapport-innhold .af-source.missing, #rapport-innhold .af-source.suggested, #rapport-innhold .af-source.verify").length > 0;
     var ok = avkrysset && !ubekreftet;
     $("status").textContent = ok ? "Bekreftet" : "Utkast";
@@ -396,10 +421,8 @@
       kolonner.forEach(function (k) { var v = r[k[0]]; tr.appendChild(el("td", typeof v === "number" ? "num" : null, v == null ? "—" : (typeof v === "number" ? tall(v) : String(v)))); });
       tbody.appendChild(tr);
     });
-    var v = s.vurdering ? s.vurdering(d) : null;
-    $("vurdering").textContent = v || "Databasen har ingen vurdering for dette spørsmålet.";
-    $("vurdering-merke").className = "af-source " + (v ? "confirmed" : "missing");
-    $("vurdering-merke").textContent = v ? "Fra museum.db" : "Mangler";
+    var avvik = s.vurdering ? s.vurdering(d) : null;
+    settRegel(null, "Henter regel fra museum.db …");
     var k = $("kontroll"); k.textContent = "";
     KONTROLL.forEach(function (t, i) {
       var l = el("label", "af-radio");
@@ -408,10 +431,56 @@
       l.appendChild(c); l.appendChild(document.createTextNode(t)); k.appendChild(l);
     });
     oppdaterStatus();
-    $("grunnlag").textContent = "Kilde: museum.db via " + kallTekst(s.verktoy, sisteArgs) + ". Periode: " + s.periode(d, sisteFiltre) + ". Regelversjon " + SPORSMAL.versjon + "." + (erSyntetisk(d) ? " Klokkeslett og arbeidstidsgrenser er syntetiske data laget av archive_generator." : "") + (d.mangler ? " Mangler i databasen: " + d.mangler : "");
+    var dk = datakildeTekst(d);
+    var grunnlag = "Kilde: museum.db via " + kallTekst(s.verktoy, sisteArgs) + ". Periode: " + s.periode(d, sisteFiltre) + ". Regelversjon " + SPORSMAL.versjon + "." + (dk ? " Datakilde: " + dk + "." : "") + (d.mangler ? " Mangler i databasen: " + d.mangler : "");
+    $("grunnlag").textContent = grunnlag;
     $("rapport").hidden = false;
     gaaTil($("rapport"), $("rapport-tittel"));
+    var vArgs = { sporsmal_id: s.id, verdier: regelverdier(s, d) };
+    hent("get_report_assessment", vArgs).then(function (r) {
+      if (sisteSvar !== d) return;  // et nyere svar har tatt over
+      settRegel(r, null, avvik);
+      if (!r.mangler) $("grunnlag").textContent = grunnlag + " Vurdering og forslag: regel " + r.regel_id + " via " + kallTekst("get_report_assessment", vArgs) + " (kilde " + r.kilde + ", versjon " + r.versjon + ", " + r.datakilde + ").";
+      oppdaterStatus();
+    }).catch(function (e) { settRegel({ mangler: "Feil fra databasen: " + e.message }, null, avvik); oppdaterStatus(); });
   });
+
+  // Tallfeltene i svaret som regelen kan sammenlignes mot. Sammenligningen skjer i Python.
+  function regelverdier(s, d) {
+    if (s.regelverdier) return s.regelverdier(d);
+    var v = {};
+    if (d && !Array.isArray(d)) Object.keys(d).forEach(function (k) { if (typeof d[k] === "number") v[k] = d[k]; });
+    return v;
+  }
+
+  function datakildeTekst(d) {
+    if (!d) return "";
+    if (d.datakilde) return d.datakilde;
+    var r = Array.isArray(d) ? d.filter(function (x) { return x && x.klokkeslett_datakilde; })[0] : null;
+    return r ? r.klokkeslett_datakilde + " (klokkeslett)" : "";
+  }
+
+  function merk(id, m) { $(id).className = "af-source " + m[0]; $(id).textContent = m[1]; }
+
+  // Viser regelen fra rapport_regler i Vurdering og Forslag. Uten regel står det Mangler.
+  function settRegel(r, venter, avvik) {
+    if (venter) {
+      $("vurdering").textContent = venter; $("forslag").textContent = venter;
+      merk("vurdering-merke", ["verify", "Henter"]); merk("forslag-merke", ["verify", "Henter"]);
+      return;
+    }
+    if (!r || r.mangler) {
+      var tekst = (r && r.mangler) || "Databasen har ingen regel for dette spørsmålet.";
+      $("vurdering").textContent = avvik ? "Avviksforklaring: " + avvik : tekst;
+      $("forslag").textContent = tekst;
+      merk("vurdering-merke", avvik ? FRA_DB : ["missing", "Mangler"]); merk("forslag-merke", ["missing", "Mangler"]);
+      return;
+    }
+    var m = String(r.datakilde || "").indexOf("syntetisk") === 0 ? ["system", "Syntetisk regel i museum.db"] : ["confirmed", "Regel i museum.db"];
+    $("vurdering").textContent = r.vurdering + (avvik ? " Avviksforklaring: " + avvik : "");
+    $("forslag").textContent = r.forslag;
+    merk("vurdering-merke", m); merk("forslag-merke", m);
+  }
 
   $("last").addEventListener("click", function () {
     var tekst = $("rapport-innhold").innerText.replace(/\n{3,}/g, "\n\n");
@@ -424,6 +493,7 @@
   });
 
   byggMeny();
+  lastRoller();
 })();
 </script>
 </body>

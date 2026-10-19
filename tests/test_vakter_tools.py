@@ -198,6 +198,37 @@ def test_bygget_db_rapport_regler_med_fallback(bygget_db: Path) -> None:
         assert all(r["vurdering"] and r["forslag"] for r in regler)
 
 
+def test_bygget_db_roller_folger_rekkefolge(bygget_db: Path) -> None:
+    from src.kunstpixel.core.db import query_roles
+    roller = {r["kode"]: r["sporsmal"] for r in query_roles(db_path=bygget_db)}
+    assert roller["K"] == ["vakt-i-dag", "vaktplan", "arbeidstid", "sykefravaer"]
+    assert roller["L"] == ["utstilling", "vaktkostnad"]
+
+
+@pytest.mark.parametrize("sporsmal_id,verdier,forventet", [
+    ("vakt-i-dag", {"antall_med_vakt": 9}, "R-VAKT-01"),
+    ("vakt-i-dag", {"antall_med_vakt": 3}, "R-VAKT-FALLBACK"),
+    ("vaktplan", {"antall_vakter": 6}, "R-PLAN-01"),
+    ("arbeidstid", {"overtid_timer_totalt": 12.5}, "R-ARB-01"),
+    ("arbeidstid", {"timer_totalt": 900}, "R-ARB-FALLBACK"),  # felt mangler -> fallback
+    ("sykefravaer", {"egen_prosent": 5.1}, "R-FRAV-01"),
+    ("utstilling", {"netto_resultat_nok": -1}, "R-UTST-FALLBACK"),
+    ("vaktkostnad", {"vakter_uten_tariff": 0}, "R-KOST-01"),
+    ("vaktkostnad", {"vakter_uten_tariff": "0"}, "R-KOST-FALLBACK"),  # ikke et tall -> fallback
+])
+def test_bygget_db_vurdering_velger_en_regel(bygget_db: Path, sporsmal_id: str, verdier: dict, forventet: str) -> None:
+    from src.kunstpixel.core.db import query_report_assessment
+    r = query_report_assessment(sporsmal_id, verdier, db_path=bygget_db)
+    assert r["regel_id"] == forventet
+    assert r["vurdering"] and r["forslag"] and r["datakilde"].startswith("syntetisk")
+    assert query_report_assessment(sporsmal_id, verdier, db_path=bygget_db) == r
+
+
+def test_vurdering_sier_mangler_uten_regeltabell(mini_db: Path) -> None:
+    from src.kunstpixel.core.db import query_report_assessment
+    assert "mangler" in query_report_assessment("vakt-i-dag", {"antall_med_vakt": 9}, db_path=mini_db)
+
+
 def test_bygget_db_overtid_oppstaar(bygget_db: Path) -> None:
     """T5 (G6): arkiv_hr_vakt_justering gjør at overtid_timer_totalt > 0."""
     r = query_working_hours("2026-09", db_path=bygget_db)

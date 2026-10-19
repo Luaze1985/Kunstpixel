@@ -10,6 +10,7 @@ import urllib.request
 from http.server import ThreadingHTTPServer
 
 import pytest
+
 from src.kunstpixel.adapters.datafinner import DatafinnerHandler, run_tool
 
 
@@ -103,6 +104,9 @@ def test_les_fil_avviser_stier_utenfor_mappene(sti: str) -> None:
         ("get_exhibition_economy", {"exhibition_id": "KP-EXH-2026-065"}),
         ("get_shift_cost_for_period", {"maaned": "2026-09"}),
         ("list_exhibitions_with_economy", {}),
+        ("get_absence_report", {"aar": 2025, "kvartal": 2}),
+        ("list_roles", {}),
+        ("get_report_assessment", {"sporsmal_id": "vakt-i-dag", "verdier": {"antall_med_vakt": 9}}),
     ],
 )
 def test_api_svarer_paa_hr_og_okonomi(server_url: str, navn: str, args: dict) -> None:

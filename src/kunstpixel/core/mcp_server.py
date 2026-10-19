@@ -30,20 +30,20 @@ from src.kunstpixel.core.db import (
     query_incidents,
     query_loans,
     query_quarterly_absence,
+    query_report_assessment,
     query_report_rules,
     query_roles,
     query_room_artworks,
     query_shift_cost,
     query_shifts_on_date,
     query_staff_on_shift,
-    query_working_hours,
-    query_working_time_limits,
     query_station_ergonomics,
     query_styrk_job_code,
     query_supplier_brreg,
     query_tariff_pay,
+    query_working_hours,
+    query_working_time_limits,
 )
-
 from src.kunstpixel.core.hr_eval import evaluate_staffing_proposal
 from src.kunstpixel.core.hrdemo import (
     candidates,
@@ -51,6 +51,8 @@ from src.kunstpixel.core.hrdemo import (
     find_rules,
     get_person,
     list_skills,
+)
+from src.kunstpixel.core.hrdemo import (
     search_hms_guidance as find_hms_guidance,
 )
 
@@ -689,6 +691,20 @@ def get_report_rules(sporsmal_id: str) -> list[dict[str, Any]]:
         Liste over regelrader med felt, operator, terskel, vurdering og forslag.
     """
     return query_report_rules(sporsmal_id=sporsmal_id)
+
+
+@mcp.tool()
+def get_report_assessment(sporsmal_id: str, verdier: dict[str, Any]) -> dict[str, Any]:
+    """Velg vurdering og forslag fra rapport_regler for et konkret svar (deterministisk, ingen fritekst).
+
+    Args:
+        sporsmal_id: Identifikator for spørsmålet (f.eks. 'vakt-i-dag').
+        verdier: Tallfeltene i svaret, f.eks. {"antall_med_vakt": 9}.
+
+    Returns:
+        Regelen som gjelder (regel_id, vurdering, forslag, kilde, versjon, datakilde), eller mangler.
+    """
+    return query_report_assessment(sporsmal_id=sporsmal_id, verdier=verdier)
 
 
 if __name__ == "__main__":

@@ -397,7 +397,7 @@ FAQ_STOPWORDS: set[str] = {
     "komme", "kommer", "kom", "kommet",
     # Norwegian prepositions, conjunctions, subjunctions
     "i", "på", "paa", "til", "fra", "med", "av", "om", "for", "ved", "under", "over", "etter", "mellom", "mot", "hos", "uten",
-    "og", "eller", "men", "så", "saa", "som", "at", "da", "hvis", "dersom",
+    "og", "eller", "men", "som", "at", "da", "hvis", "dersom",
     # Norwegian adverbs / conversational particles
     "ja", "nei", "jo", "ikke", "ikkje", "her", "der", "bare", "nok", "vel", "også", "ogsaa", "gjerne",
     # Generic museum environment words that appear in almost all FAQs
@@ -405,9 +405,9 @@ FAQ_STOPWORDS: set[str] = {
     # English conversational words from foreign tourists
     "the", "a", "an", "is", "are", "was", "were", "do", "does", "did",
     "have", "has", "had", "can", "could", "will", "would",
-    "you", "your", "i", "my", "we", "our", "it", "its", "they", "them",
+    "you", "your", "my", "we", "our", "it", "its", "they", "them",
     "what", "where", "when", "who", "how", "why",
-    "in", "on", "at", "to", "for", "of", "with", "by", "from", "about",
+    "in", "on", "to", "of", "with", "by", "from", "about",
     "and", "or", "but", "not", "hello", "hi", "please",
 }
 
@@ -1461,19 +1461,17 @@ def query_roles(db_path: Path | str | None = None) -> list[dict]:
     if not has_roller:
         return []
 
-    sql = """
-    SELECT r.kode, r.navn, r.trigger, r.beskrivelse, r.datakilde,
-           GROUP_CONCAT(rs.sporsmal_id) AS sporsmal_ids
-    FROM roller r
-    LEFT JOIN rolle_sporsmal rs ON rs.rolle_kode = r.kode
-    GROUP BY r.kode, r.navn, r.trigger, r.beskrivelse, r.datakilde
-    ORDER BY r.kode
-    """
-    rows = execute_read_query(sql, (), db)
+    roller = execute_read_query(
+        "SELECT kode, navn, trigger, beskrivelse, datakilde FROM roller ORDER BY kode", (), db
+    )
+    # Spørsmålene i rekkefølgen fra rolle_sporsmal (GROUP_CONCAT gir ingen garantert rekkefølge).
+    kobling = execute_read_query(
+        "SELECT rolle_kode, sporsmal_id FROM rolle_sporsmal ORDER BY rolle_kode, rekkefolge, sporsmal_id", (), db
+    )
     ut = []
-    for r in rows:
+    for r in roller:
         d = dict(r)
-        d["sporsmal"] = [s for s in (d.pop("sporsmal_ids") or "").split(",") if s]
+        d["sporsmal"] = [k["sporsmal_id"] for k in kobling if k["rolle_kode"] == d["kode"]]
         ut.append(d)
     return ut
 
@@ -1496,4 +1494,45 @@ def query_report_rules(sporsmal_id: str, db_path: Path | str | None = None) -> l
     ORDER BY CASE WHEN operator = 'fallback' THEN 1 ELSE 0 END, regel_id
     """
     return [dict(r) for r in execute_read_query(sql, (sporsmal_id,), db)]
+
+
+_OPERATORER = {
+    ">=": lambda a, b: a >= b,
+    ">": lambda a, b: a > b,
+    "<=": lambda a, b: a <= b,
+    "<": lambda a, b: a < b,
+    "==": lambda a, b: a == b,
+}
+
+
+def query_report_assessment(
+    sporsmal_id: str, verdier: dict[str, Any], db_path: Path | str | None = None
+) -> dict:
+    """Velg én regel fra rapport_regler for et svar: første treff i regel_id-rekkefølge, ellers fallback.
+
+    verdier er tallfeltene i svaret (f.eks. {"antall_med_vakt": 9}). Mangler feltet eller er det
+    ikke et tall, brukes fallback-regelen. Samme verdier gir alltid samme regel.
+    """
+    if not isinstance(verdier, dict):
+        raise ValueError("verdier må være et objekt med feltnavn og tall")
+    regler = query_report_rules(sporsmal_id, db_path)
+    if not regler:
+        return {"sporsmal_id": sporsmal_id, "mangler": f"rapport_regler har ingen regler for {sporsmal_id}."}
+    valgt = None
+    for r in regler:
+        if r["operator"] == "fallback":
+            continue
+        verdi = verdier.get(r["felt"])
+        sammenlign = _OPERATORER.get(r["operator"])
+        if sammenlign is None or isinstance(verdi, bool) or not isinstance(verdi, (int, float)):
+            continue
+        if sammenlign(float(verdi), float(r["terskel"])):
+            valgt = r
+            break
+    if valgt is None:
+        valgt = next((r for r in regler if r["operator"] == "fallback"), None)
+    if valgt is None:
+        return {"sporsmal_id": sporsmal_id, "mangler": f"rapport_regler mangler fallback for {sporsmal_id}."}
+    return {k: valgt[k] for k in ("regel_id", "sporsmal_id", "felt", "operator", "terskel", "vurdering",
+                                   "forslag", "kilde", "versjon", "datakilde")}
 

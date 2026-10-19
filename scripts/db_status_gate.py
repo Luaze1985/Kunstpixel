@@ -108,10 +108,11 @@ def sjekk_tracer(con: sqlite3.Connection, dbsti: Path) -> None:
     s_t = "(CAST(substr(v.start,1,2) AS REAL) + CAST(substr(v.start,4,2) AS REAL)/60)"
     e_t = "(CAST(substr(v.slutt,1,2) AS REAL) + CAST(substr(v.slutt,4,2) AS REAL)/60)"
     kveld = f"min(v.timer, max(0, {e_t} - max({s_t}, :kf)))" if har_kveld else "0"
+    # Avrundet per vakt før summering, som query_shift_cost (T7/G11).
     rader = con.execute(
-        "SELECT v.avdeling, round(sum(CASE WHEN h.dato IS NOT NULL THEN v.timer * t.timesats_helligdag "
+        "SELECT v.avdeling, round(sum(round(CASE WHEN h.dato IS NOT NULL THEN v.timer * t.timesats_helligdag "
         "WHEN strftime('%w', v.dato) IN ('0','6') THEN v.timer * t.timesats_helg "
-        f"ELSE (v.timer - {kveld}) * t.timesats_ordinar + {kveld} * t.timesats_kveld END), 2) "
+        f"ELSE (v.timer - {kveld}) * t.timesats_ordinar + {kveld} * t.timesats_kveld END, 2)), 2) "
         "FROM hr_vakter v JOIN hr_ansatte a USING(ansatt_id) JOIN virke_tariff t ON t.lonnstrinn = a.lonnstrinn_virke "
         "LEFT JOIN norske_helligdager h ON h.dato = v.dato WHERE substr(v.dato, 1, 7) = :mnd GROUP BY v.avdeling",
         {"mnd": mnd, "kf": kveld_fra}).fetchall()

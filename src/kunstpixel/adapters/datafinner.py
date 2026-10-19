@@ -35,6 +35,7 @@ from src.kunstpixel.core.mcp_server import (
     get_absence_report,
     get_artwork_details,
     get_exhibition_economy,
+    get_report_assessment,
     get_report_rules,
     get_room_artworks,
     get_shift_cost_for_period,
@@ -139,6 +140,7 @@ VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
     "get_absence_report": (get_absence_report, {"aar", "kvartal"}),
     "list_roles": (list_roles, set()),
     "get_report_rules": (get_report_rules, {"sporsmal_id"}),
+    "get_report_assessment": (get_report_assessment, {"sporsmal_id", "verdier"}),
     # Økonomi og innkjøp
     "get_exhibition_economy": (get_exhibition_economy, {"exhibition_id"}),
     "get_shift_cost_for_period": (get_shift_cost_for_period, {"maaned"}),
