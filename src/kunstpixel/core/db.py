@@ -1318,7 +1318,10 @@ def query_shift_cost(maaned: str, db_path: Path | str | None = None) -> dict:
     for a in rader:
         for k in ("timer", "kveldstimer", "kostnad_nok"):
             a[k] = round(a[k], 2)
-    mangler = ["Vakter for ansatte med lønnstrinn som ikke finnes i virke_tariff er ikke kostnadsberegnet."]
+    vakter_uten_tariff = sum(a["vakter_uten_tariff"] for a in rader)
+    mangler = []
+    if vakter_uten_tariff > 0:
+        mangler.append("Vakter for ansatte med lønnstrinn som ikke finnes i virke_tariff er ikke kostnadsberegnet.")
     if not klokke:
         mangler.append("Kveldssats er ikke brukt, fordi vaktene mangler klokkeslett eller grensen mangler.")
         for a in rader:
@@ -1327,9 +1330,11 @@ def query_shift_cost(maaned: str, db_path: Path | str | None = None) -> dict:
         "maaned": mnd,
         "avdelinger": rader,
         "kostnad_nok_totalt": round(sum(a["kostnad_nok"] for a in rader), 2),
-        "vakter_uten_tariff": sum(a["vakter_uten_tariff"] for a in rader),
+        "vakter_uten_tariff": vakter_uten_tariff,
         "mangler": " ".join(mangler),
     }
+    if not svar["mangler"]:
+        del svar["mangler"]
     if klokke:
         svar["datakilde"] = "syntetisk (archive_generator): klokkeslett og kveldstillegg_fra"
     return svar
