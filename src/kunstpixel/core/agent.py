@@ -280,15 +280,15 @@ class MuseumsvertAgent:
                 resp = self._handle_faq_result(faq_results[0], raw, norm)
                 return self._sanitize_response(resp)
 
-        # 8. Events & workshops (omvisning, barnearrangement, verksted)
-        if any(w in norm for w in ["omvisning", "guidet", "guide", "verksted", "trolljakt", "barn", "familie", "foredrag", "kveldskafe", "hendelse", "arrangement", "i helgen", "hva skjer"]):
-            resp = self._handle_events(raw, norm)
-            return self._sanitize_response(resp)
-
-        # 9. Specific artwork lookup
+        # 8. Specific artwork lookup (prioriteres før generelle ord som barn/familie)
         artwork_id = self._match_artwork_title(raw, norm)
         if artwork_id:
             resp = self._handle_artwork_details(artwork_id, raw, norm)
+            return self._sanitize_response(resp)
+
+        # 9. Events & workshops (omvisning, barnearrangement, verksted)
+        if any(w in norm for w in ["omvisning", "guidet", "guide", "verksted", "trolljakt", "barn", "familie", "foredrag", "kveldskafe", "hendelse", "arrangement", "i helgen", "hva skjer"]):
+            resp = self._handle_events(raw, norm)
             return self._sanitize_response(resp)
 
         # 10. Specific artist lookup
@@ -302,7 +302,28 @@ class MuseumsvertAgent:
             resp = self._handle_pricing(raw, norm)
             return self._sanitize_response(resp)
 
-        # 12. General FAQ lookup (opening hours, cafe, cloakroom, parking, stroller, etc.)
+        # 12. Virksomhetshåndbøker og interne retningslinjer
+        if any(w in norm for w in [
+            "handbok", "håndbok", "egenmelding", "hviletid", "fravaer", "fravær", "loeftegrense", "løftegrense",
+            "alenearbeid", "brann", "brannalarm", "varsling", "stami", "haccp", "persontall", "evakuering",
+            "restverdiredning", "rvr", "verneombud", "amu", "overtid", "karantene"
+        ]):
+            from src.kunstpixel.core.db import query_handbook
+            hb_results = query_handbook(query=raw, limit=2, db_path=self.db_path)
+            if hb_results:
+                hb = hb_results[0]
+                text = (
+                    f"I henhold til {hb['handbok_navn']} (kapittel {hb['kapittel_nr']}: {hb['kapittel_tittel']} – *{hb['avsnitt_tittel']}*):\n\n"
+                    f"{hb['innhold']}\n\n"
+                    f"(Lovhjemmel: {hb['lovhjemmel']} | Målgruppe: {hb['malgruppe']})"
+                )
+                return self._sanitize_response(AgentResponse(
+                    text=text,
+                    category="handbok",
+                    tools_used=list(self._turn_tools_used) + ["lookup_handbook"],
+                ))
+
+        # 13. General FAQ lookup (opening hours, cafe, cloakroom, parking, stroller, etc.)
         faq_results = self._call_tool("search_faq", query=raw)
         if faq_results:
             resp = self._handle_faq_result(faq_results[0], raw, norm)
@@ -729,8 +750,21 @@ class MuseumsvertAgent:
         else:
             direction = f"Du finner {sal_navn} i 1. etasje, like inn til høyre fra resepsjonen."
 
-        # 4. Additional suggestion / Provenance if requested
-        if "proveniens" in norm or "historikk" in norm or "opprinnelse" in norm:
+        # 4. Spørsmål om barn, audioguide eller proveniens
+        barneformidling = details.get("barneformidling", "")
+        audioguide = details.get("audioguide_manus", "")
+        
+        if any(w in norm for w in ["barn", "7-aaring", "7-åring", "7 aaring", "7 åring", "unge", "skole", "forklar for barn"]):
+            if barneformidling:
+                suggestion = f"Her er en barnevennlig fortelling om verket:\n\n{barneformidling}"
+            else:
+                suggestion = "I resepsjonen har vi gratis tegnehefter og morsomme oppgaver knyttet til dette verket for barn!"
+        elif any(w in norm for w in ["audioguide", "lydspor", "innskrift", "gal mand", "i himmelen"]):
+            if audioguide:
+                suggestion = f"Fra museets offisielle audioguide:\n\n«{audioguide}»"
+            else:
+                suggestion = "Du kan låne gratis audioguide i resepsjonen for å høre hele historien bak verket."
+        elif "proveniens" in norm or "historikk" in norm or "opprinnelse" in norm or "eier" in norm:
             suggestion = f"Verkets dokumenterte proveniens er: {proveniens}."
         else:
             if sal_id == "SAL-D":

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leksjon 11: 3 Konkrete Database-utdrag — Verdi og Arbeidshverdag</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .case-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.8rem;
+      margin: 2rem 0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    .raw-data-box {
+      background: #1e1e1e;
+      color: #79c0ff;
+      font-family: var(--font-mono);
+      padding: 1rem;
+      border-radius: 6px;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      overflow-x: auto;
+    }
+    .badge-case {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .value-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    .value-box {
+      background: #f8f9fa;
+      border-left: 4px solid var(--accent);
+      padding: 1rem;
+      border-radius: 4px;
+    }
+    .impact-box {
+      background: #defbe6;
+      border-left: 4px solid var(--success);
+      padding: 1rem;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="meta-tag">Leksjon 0011 • Pedagogisk verktøykasse</div>
+    <h1>3 Konkrete Database-utdrag: Hva er verdien og hvordan endrer det hverdagen?</h1>
+    
+    <p style="font-size: 1.2rem; line-height: 1.5;">
+      Her er de 3 konkrete eksemplene du kan vise rett fra Kunstpixels database. 
+      For hvert eksempel viser du elevene: <strong>(1) Den rå datalinjen</strong>, <strong>(2) Hva slags forretningsverdi det gir</strong>, og <strong>(3) Hvordan det konkret endrer måten de jobber på</strong>.
+    </p>
+
+    <!-- EKSEMPEL 1: PENGER OG BESØK -->
+    <div class="case-card">
+      <span class="badge-case" style="background:#edf5ff; color:#0043ce;">Eksempel 1: Økonomi & Besøk</span>
+      <h2 style="margin-top:0;">Dagsbesøk fra fellesferien 2024</h2>
+      
+      <p>Dette er den rå raden som ligger lagret i tabellen <code>dagsbesok</code>:</p>
+      
+      <div class="raw-data-box">
+{
+  "dato": "2024-07-13",
+  "ukedag": "Lørdag",
+  "voksne": 578,
+  "studenter": 305,
+  "barn_gratis": 232,
+  "besok_totalt": 1115,
+  "inntekt_nok": 93760
+}
+      </div>
+
+      <div class="value-grid">
+        <div class="value-box">
+          <strong style="color:var(--accent);">Hva slags verdi gir dette?</strong>
+          <p style="margin-bottom:0; font-size:0.95rem;">
+            <strong>Full kontroll på inntektsstrømmen:</strong><br>
+            Du slipper å lure på hvor mye en lørdag i juli er verdt. Du vet nøyaktig at 1 115 gjester ga <strong>93 760 kr i kassa</strong>, og at over 20 % var gratis barn (familieprofil).
+          </p>
+        </div>
+        <div class="impact-box">
+          <strong style="color:var(--success);">Hvordan påvirker det hverdagen deres?</strong>
+          <p style="margin-bottom:0; font-size:0.95rem;">
+            <strong>Fra 4 timer i Excel til 10 sekunder med KI:</strong><br>
+            I stedet for at en leder sitter på mandag morgen og eksporterer billettlogger og regner ut snittpriser, spør de KI-en: <em>"Hvor mye dro vi inn i helgen?"</em>. KI-en henter tallet 93 760 kr og skriver et ferdig avsnitt til ukebrevet.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- EKSEMPEL 2: KUNST & SAMLING -->
+    <div class="case-card">
+      <span class="badge-case" style="background:#fbf1f9; color:#ba4e9b;">Eksempel 2: Samling & Sikkerhet</span>
+      <h2 style="margin-top:0;">Verkskortet for "Skrik"</h2>
+      
+      <p>Dette er den rå raden fra tabellen <code>verk</code>:</p>
+      
+      <div class="raw-data-box" style="color: #f692d4;">
+{
+  "id": "AURA-2026-009",
+  "tittel": "Skrik",
+  "kunstner": "Edvard Munch",
+  "aar": 1893,
+  "sal_id": "SAL-D",
+  "teknikk": "Tempera og oljekritt på papp"
+}
+      </div>
+
+      <div class="value-grid">
+        <div class="value-box">
+          <strong style="color:var(--accent);">Hva slags verdi gir dette?</strong>
+          <p style="margin-bottom:0; font-size:0.95rem;">
+            <strong>100 % revisjonssikker fysisk lokasjon:</strong><br>
+            Verket har et unikt ID-nummer og en låst sal (<code>SAL-D</code>). Ingen KI-modell kan flytte verket til Sal A eller påstå at det er malt med akvarell.
+          </p>
+        </div>
+        <div class="impact-box">
+          <strong style="color:var(--success);">Hvordan påvirker det hverdagen deres?</strong>
+          <p style="margin-bottom:0; font-size:0.95rem;">
+            <strong>Umiddelbar produksjon av skreddersydd innhold:</strong><br>
+            Når markedsteamet skal lage en brosjyre til en barnehage, og en artikkel til Aftenposten, bruker de <em>samme datalinje</em>. KI-en lager barneversjonen og fagversjonen på 2 sekunder — med <strong>garantert korrekt romplassering og teknikk</strong>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- EKSEMPEL 3: REGLER & HÅNDBOK -->
+    <div class="case-card">
+      <span class="badge-case" style="background:#fef7e0; color:#b28600;">Eksempel 3: Regler & Priser</span>
+      <h2 style="margin-top:0;">Prisreglement fra publikum_faq</h2>
+      
+      <p>Dette er den rå raden fra tabellen <code>publikum_faq</code>:</p>
+      
+      <div class="raw-data-box" style="color: #ffd33d;">
+{
+  "spoersmaal": "Hva koster det aa besoke museet?",
+  "svar": "Voksne: 120 kr. Barn under 16: gratis. Studenter: 80 kr. Familiepass: 250 kr. Foerste sondag i maaneden er det gratis inngang for alle."
+}
+      </div>
+
+      <div class="value-grid">
+        <div class="value-box">
+          <strong style="color:var(--accent);">Hva slags verdi gir dette?</strong>
+          <p style="margin-bottom:0; font-size:0.95rem;">
+            <strong>Ingen feilinformasjon til kunder:</strong><br>
+            Hvis en kunde spør: <em>"Kan jeg ta med mine 3 barn og betale studentpris?"</em>, gjetter ikke KI-en. Den vet at barn er gratis og at student koster 80 kr, eller anbefaler familiepass (250 kr) hvis det lønner seg.
+          </p>
+        </div>
+        <div class="impact-box">
+          <strong style="color:var(--success);">Hvordan påvirker det hverdagen deres?</strong>
+          <p style="margin-bottom:0; font-size:0.95rem;">
+            <strong>Slutt på å svare på de samme 50 e-postene hver dag:</strong><br>
+            Kundeservice eller resepsjonen slipper å taste inn de samme prisene om og om igjen. KI-en kan håndtere 90 % av henvendelsene automatisk, uten risiko for at den lover bort gratisbilletter på feil dager.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Oppsummering for elevene: "Hva betyr dette når DU skal jobbe?"</h2>
+    <div class="box box-fasit">
+      <ol style="margin:0; font-size:1.1rem; line-height: 1.8;">
+        <li><strong>Før:</strong> Du brukte halve arbeidsdagen på å finne frem tall, lete i permer og dobbeltsjekke om ting stemte.</li>
+        <li><strong>Nå med KI + Database:</strong> Databasen passer på pengene, rommene og reglene. KI-en gjør skrivejobben, analysen og kundekommunikasjonen på sekunder.</li>
+        <li><strong>Din nye rolle:</strong> Du slutter å være en "dataregistrerer" — du blir en <strong>kvalitetskontrollør og beslutningstaker</strong>.</li>
+      </ol>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 2rem 0;">
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      <a href="0010-laereplan-og-demo-katalog.html">← Leksjon 10 (Læreplan & Demo)</a> | 
+      <a href="0009-okonomisk-kriseanalyse-korona.html">Leksjon 9 (Kriseanalyse)</a>
+    </p>
+  </div>
+</body>
+</html>

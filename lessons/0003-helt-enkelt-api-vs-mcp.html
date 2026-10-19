@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leksjon 3: Helt enkelt forklart — API vs. MCP</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .comparison-card {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .metaphor {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .badge-api { background: #e0e2e6; color: #333; }
+    .badge-mcp { background: #defbe6; color: #198038; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="meta-tag">Leksjon 0003 • Klarspråk</div>
+    <h1>Helt enkelt forklart: API vs. MCP</h1>
+    
+    <p style="font-size: 1.2rem; line-height: 1.5;">
+      Glem kode, servere og JSON et øyeblikk.<br>
+      Tenk på Kunstpixel som et <strong>fysisk museum</strong> med en datamaskin bak i resepsjonen.
+    </p>
+
+    <!-- METAFOR 1: REST API -->
+    <div class="comparison-card">
+      <span class="badge badge-api">Tradisjonelt API</span>
+      <div class="metaphor">🔌 Som en stikkontakt i veggen</div>
+      <p>
+        En stikkontakt gir strøm, men den <strong>snakker ikke med deg</strong>.
+      </p>
+      <ul>
+        <li>For at noe skal fungere, må et menneske (en elektriker/programmerer) på forhånd ha koblet riktig ledning med riktig plugg inn i kontakten.</li>
+        <li>Hvis du spør en KI om å bruke en stikkontakt uten ledning, vet den ikke hvor kontakten er, hvor mange volt den har, eller hva som skjer hvis den plugger i feil ting.</li>
+      </ul>
+      <p><strong>I praksis:</strong> Et API er bygget for <em>programmerere</em> som vet nøyaktig hvilken adresse de skal gå til.</p>
+    </div>
+
+    <!-- METAFOR 2: MCP -->
+    <div class="comparison-card" style="border-color: #198038;">
+      <span class="badge badge-mcp">MCP (Model Context Protocol)</span>
+      <div class="metaphor">🛠️ Som en verktøykasse med bruksanvisning</div>
+      <p>
+        Tenk deg at du gir KI-en en verktøykasse der hvert verktøy har en <strong>stor merkelapp</strong>:
+      </p>
+      <ul>
+        <li>🏷️ <strong>Verktøy 1: "Søk etter bilde"</strong> — <em>Bruk dette når publikum spør hvor et bilde henger.</em></li>
+        <li>🏷️ <strong>Verktøy 2: "Sjekk åpningstid"</strong> — <em>Bruk dette for å finne ut når dørene åpner.</em></li>
+      </ul>
+      <p>
+        KI-en <em>ser verktøykassen selv</em>. Når en gjest spør: <em>"Hvor er Skrik?"</em>, skjønner KI-en automatisk: 
+        <br>👉 <em>"Aha! Da må jeg plukke opp Verktøy 1, slå opp 'Skrik', og så fortelle svaret til gjesten."</em>
+      </p>
+      <p><strong>I praksis:</strong> MCP gjør at KI-en kan bruke fagsystemet ditt <strong>uten at du må kode hver minste samtale på forhånd</strong>.</p>
+    </div>
+
+    <h2>Kort oppsummert: Hva skal du si til andre?</h2>
+    
+    <div class="box box-fasit">
+      <p style="margin: 0; font-size: 1.1rem;">
+        <strong>"Et API er for dataprogrammer som snakker med dataprogrammer.</strong><br>
+        <strong>MCP er for at KI-agenter skal få hender og verktøy til å gjøre oppgaver for oss trygt."</strong>
+      </p>
+    </div>
+
+    <h2>De 3 tingene du trenger å huske:</h2>
+    <ol style="font-size: 1.1rem; line-height: 1.8;">
+      <li><strong>API:</strong> Krever en programmerer som bygger broen hver eneste gang.</li>
+      <li><strong>MCP:</strong> KI-en forstår selv når og hvordan den skal bruke verktøyet.</li>
+      <li><strong>Trygghet:</strong> Med MCP kan vi gi KI-en lov til å <em>lese</em> samlingen, men vi låser døra så den aldri kan <em>slette</em> eller <em>endre</em> noe.</li>
+    </ol>
+
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 2rem 0;">
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      <a href="0002-mcp-vs-api-koblinger.html">← Se den tekniske versjonen (Leksjon 2)</a> | 
+      <a href="0001-sqlite-vs-rag-samlingsdata.html">Leksjon 1 (Fasit vs Skjønn)</a>
+    </p>
+  </div>
+</body>
+</html>

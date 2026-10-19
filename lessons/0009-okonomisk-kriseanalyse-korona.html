@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leksjon 9: Økonomisk kriseanalyse — Koronakrakket i praksis</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .split-kpi {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .kpi-box {
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .kpi-normal { background: #defbe6; border: 2px solid #198038; }
+    .kpi-crisis { background: #fff1f1; border: 2px solid #da1e28; }
+    .number-large { font-size: 2.2rem; font-weight: bold; margin: 0.3rem 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="meta-tag">Leksjon 0009 • /teach • Mestring i praksis</div>
+    <h1>Hvordan KI regner og forklarer en reell krise</h1>
+    
+    <p style="font-size: 1.2rem; line-height: 1.5;">
+      Nå som vi har <strong>reelle, troverdige SSB-tall</strong> i databasen vår, skal vi se på selve rosinen i pølsa for en gründer eller rådgiver:<br>
+      <strong>Hvordan bruke KI til å analysere et reelt økonomisk sjokk uten at den regner feil.</strong>
+    </p>
+
+    <h2>Scenariet: Styret ber om en rapport på korona-effekten</h2>
+    <p>
+      Styret i Aura Kunstmuseum stiller spørsmålet: 
+      <em>"Hva var det faktiske inntektstapet vårt under nedstengingen våren 2020 sammenlignet med 2019, og hvordan så fellesferien ut?"</em>
+    </p>
+
+    <!-- SAMMENLIGNINGSKORT -->
+    <div class="split-kpi">
+      <div class="kpi-box kpi-normal">
+        <div style="font-weight: 600; text-transform: uppercase; color: #198038;">Normalåret 2019 (Før krisen)</div>
+        <div class="number-large" style="color: #198038;">142 984</div>
+        <div>Besøkende totalt</div>
+        <div style="font-size: 1.3rem; font-weight: bold; margin-top: 0.8rem; color: #111;">8,66 mill. kr</div>
+        <div style="font-size: 0.85rem; color: var(--muted);">i billettinntekter</div>
+      </div>
+
+      <div class="kpi-box kpi-crisis">
+        <div style="font-weight: 600; text-transform: uppercase; color: #da1e28;">Kriseåret 2020 (Korona)</div>
+        <div class="number-large" style="color: #da1e28;">45 847</div>
+        <div>Besøkende totalt (-68 %)</div>
+        <div style="font-size: 1.3rem; font-weight: bold; margin-top: 0.8rem; color: #111;">3,12 mill. kr</div>
+        <div style="font-size: 0.85rem; color: var(--muted);">i billettinntekter (-5,54 mill. kr)</div>
+      </div>
+    </div>
+
+    <h2>1. Databasen leverer fasiten (Helt uten gjetting)</h2>
+    <p>
+      Når vi spør databasen om uke 12 til 14 (rett etter 12. mars 2020), får vi de harde faktaene:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Periode</th>
+          <th>Besøk 2019</th>
+          <th>Inntekt 2019</th>
+          <th>Besøk 2020</th>
+          <th>Inntekt 2020</th>
+          <th>Faktisk tap</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Uke 12 (Mars)</strong></td>
+          <td>2 215</td>
+          <td>141 060 kr</td>
+          <td><strong>0</strong> (Stengt)</td>
+          <td><strong>0 kr</strong></td>
+          <td>-141 060 kr</td>
+        </tr>
+        <tr>
+          <td><strong>Uke 13 (Mars)</strong></td>
+          <td>2 401</td>
+          <td>119 160 kr</td>
+          <td><strong>0</strong> (Stengt)</td>
+          <td><strong>0 kr</strong></td>
+          <td>-119 160 kr</td>
+        </tr>
+        <tr>
+          <td><strong>Uke 14 (Påske)</strong></td>
+          <td>2 499</td>
+          <td>156 090 kr</td>
+          <td><strong>0</strong> (Stengt)</td>
+          <td><strong>0 kr</strong></td>
+          <td>-156 090 kr</td>
+        </tr>
+        <tr>
+          <td><strong>Uke 28 (Fellesferie)</strong></td>
+          <td>4 310</td>
+          <td>273 540 kr</td>
+          <td>1 643</td>
+          <td>118 610 kr</td>
+          <td>-154 930 kr (-62 %)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>2. Hva gjør KI-en oppå disse tallene? (Skjønn & Innsikt)</h2>
+    <p>
+      Her ser du den enorme forskjellen på en dum kalkulator og en KI i drift:
+    </p>
+
+    <div class="box box-skjonn">
+      <strong>Slik formulerer KI-en styrenotatet basert på tallene:</strong><br><br>
+      <em>"Nedstengningen fra 12. mars 2020 førte til et umiddelbart månedlig inntektstap på ca. 550 000 kr i mars og april. Da museet gjenåpnet for sommeren med strenge avstands- og kapasitetsbegrensninger, tok fellesferien (uke 28) inn 1 643 gjester — en nedgang på 62 % mot 2019. Det samlede billettinntektstapet for 2020 endte på 5,54 millioner kroner. For å opprettholde drift i 2021 må bemanningskostnadene i kafé og resepsjon tilpasses dette reduserte volumet."</em>
+    </div>
+
+    <h2>3. Refleksjon og sjekkpunkt (Bygg din lagringsstyrke)</h2>
+    <div class="interactive-quiz">
+      <h3 style="margin-top:0;">Spørsmål: Hvorfor er denne 2-delte metoden (Fasit fra SQL + Tekst fra KI) overlegen å bare la en leder skrive inn i ChatGPT: "Skriv et styrenotat om korona for museet vårt"?</h3>
+      
+      <div class="quiz-option" onclick="checkAnswer(1)">
+        <strong>A:</strong> Fordi ren ChatGPT vil dikte opp et fiktivt inntektstap (f.eks. gjette på 10 millioner eller 2 millioner), mens med Kunstpixel-metoden er hver eneste krone og prosent basert på en revidert database.
+      </div>
+      <div class="quiz-option" onclick="checkAnswer(2)">
+        <strong>B:</strong> Fordi ren ChatGPT ikke har tilgang til internett på mandager.
+      </div>
+
+      <div id="quiz-feedback" class="feedback-area"></div>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 2rem 0;">
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      <a href="0008-realisme-ssb-korona.html">← Leksjon 8 (SSB-tall & Korona)</a> | 
+      <a href="0007-dag-for-dag-og-validator.html">Leksjon 7 (Dag-for-dag data)</a> | 
+      <a href="0001-sqlite-vs-rag-samlingsdata.html">Leksjon 1 (Fasit vs Skjønn)</a>
+    </p>
+  </div>
+
+  <script>
+    function checkAnswer(choice) {
+      const fb = document.getElementById('quiz-feedback');
+      fb.style.display = 'block';
+      if (choice === 1) {
+        fb.className = 'feedback-area box-fasit';
+        fb.innerHTML = '<strong>Helt innertier!</strong> En leder kan aldri legge frem et styrenotat der tallene er hallusinert. Ved å la SQL levere de eksakte tallene (-5,54 mill. kr) og la KI-en skrive analysen, får du det beste fra to verdener: 100 % revisjonssikkerhet og perfekt lederspråk.';
+      } else {
+        fb.className = 'feedback-area box-info';
+        fb.innerHTML = 'Nei, se på presisjonen og risikoen for å bløffe overfor et styre.';
+      }
+    }
+  </script>
+</body>
+</html>

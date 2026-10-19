@@ -1,0 +1,740 @@
+[
+  {
+    "id": "KP-ANS-001",
+    "navn": "Henrik Faye-Lund",
+    "kjonn": "M",
+    "fodselsaar": 1968,
+    "avdeling": "Ledelse",
+    "stilling": "Museumsdirektør",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 86,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Dr.philos. Kunsthistorie",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 1999
+      },
+      {
+        "grad": "Cand.philol. Kunsthistorie og filosofi",
+        "institusjon": "UiO",
+        "aar": 1994
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Sjefkurator",
+        "periode": "2002-2009"
+      },
+      {
+        "institusjon": "Nasjonalgalleriet",
+        "rolle": "Kurator",
+        "periode": "1999-2002"
+      }
+    ],
+    "publikasjoner": [
+      "Modernismens grenseland: Nordisk kunst etter 1945 (2005)",
+      "Institusjonsbygging og samfunnsansvar i kunstmuseet (2018)"
+    ],
+    "icor_rolle": "Museumsdirektør (/direktor)"
+  },
+  {
+    "id": "KP-ANS-002",
+    "navn": "Silje Lindqvist",
+    "kjonn": "K",
+    "fodselsaar": 1977,
+    "avdeling": "Kuratering",
+    "stilling": "Sjefkurator",
+    "ansatt_fra": "2012-03-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 76,
+    "kontor_sal": "Kuratorfløyen 2. etg",
+    "utdanning": [
+      {
+        "grad": "MA Curating Contemporary Art",
+        "institusjon": "Goldsmiths, University of London",
+        "aar": 2003
+      },
+      {
+        "grad": "Bachelor i Estetiske studier",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2000
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Astrup Fearnley Museet",
+        "rolle": "Kurator",
+        "periode": "2006-2012"
+      },
+      {
+        "institusjon": "Kunstnernes Hus",
+        "rolle": "Formidlingskonsulent",
+        "periode": "2003-2006"
+      }
+    ],
+    "publikasjoner": [
+      "Det post-digitale blikk: Nye medier i norsk samtidskunst (2016)",
+      "Stillhetens Rom: Kuratoriske refleksjoner under pandemien (2021)"
+    ],
+    "icor_rolle": "Kurator (/kurator)"
+  },
+  {
+    "id": "KP-ANS-003",
+    "navn": "Gunnar Viken",
+    "kjonn": "M",
+    "fodselsaar": 1974,
+    "avdeling": "Samling",
+    "stilling": "Samlingsforvalter / Registrar",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 68,
+    "kontor_sal": "Hovedmagasinet U1",
+    "utdanning": [
+      {
+        "grad": "Master i Konservering (NKF-N)",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2001
+      },
+      {
+        "grad": "Museumspedagogikk og arkivfag",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 1997
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "KODE Kunstmuseer i Bergen",
+        "rolle": "Registrator",
+        "periode": "2001-2009"
+      }
+    ],
+    "publikasjoner": [
+      "Standarder for magasinering og klimakontroll i kystklima (2012)",
+      "Proveniensforskning i norske privatsamlinger (2019)"
+    ],
+    "icor_rolle": "Samlingsforvalter (/samlingsforvalter)"
+  },
+  {
+    "id": "KP-ANS-004",
+    "navn": "Astrid Moen",
+    "kjonn": "K",
+    "fodselsaar": 1983,
+    "avdeling": "Formidling",
+    "stilling": "Formidlingsleder",
+    "ansatt_fra": "2014-08-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 70,
+    "kontor_sal": "Formidlingssenteret 1. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Kunstformidling og drama",
+        "institusjon": "Kunsthøgskolen i Oslo (KHiO)",
+        "aar": 2009
+      },
+      {
+        "grad": "Pedagogisk grunnmodul",
+        "institusjon": "UiO",
+        "aar": 2006
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Museumspedagog",
+        "periode": "2009-2014"
+      }
+    ],
+    "publikasjoner": [
+      "Sanselig møte med kunsten: DKS i det 21. århundre (2017)"
+    ],
+    "icor_rolle": "Formidler (/formidler)"
+  },
+  {
+    "id": "KP-ANS-005",
+    "navn": "Terje Bratt",
+    "kjonn": "M",
+    "fodselsaar": 1969,
+    "avdeling": "Drift",
+    "stilling": "Drifts- og eiendomssjef",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 72,
+    "kontor_sal": "Driftssentralen U1",
+    "utdanning": [
+      {
+        "grad": "Fagbrev Byggdrift & Sertifisert RVR-leder",
+        "institusjon": "Forsvarsbygg / Teknisk Fagskole",
+        "aar": 1993
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Forsvarsbygg",
+        "rolle": "Eiendomssjef",
+        "periode": "1995-2009"
+      }
+    ],
+    "publikasjoner": [
+      "Beredskapsplan for uerstattelig kulturarv ved brann og flom (2015)"
+    ],
+    "icor_rolle": "Driftsansvarlig (/drift)"
+  },
+  {
+    "id": "KP-ANS-006",
+    "navn": "Jonas Berg",
+    "kjonn": "M",
+    "fodselsaar": 2000,
+    "avdeling": "Formidling",
+    "stilling": "Seniorvert / Skrankeleder",
+    "ansatt_fra": "2021-09-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 0.8,
+    "lonnstrinn_virke": 45,
+    "kontor_sal": "Skranken / Vestibylen",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Kunsthistorie",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2023
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Kunstnernes Hus",
+        "rolle": "Galleriassistent",
+        "periode": "2020-2021"
+      }
+    ],
+    "publikasjoner": [],
+    "icor_rolle": "Museumsvert (/museumsvert)"
+  },
+  {
+    "id": "KP-ANS-007",
+    "navn": "Ragnhild Eide",
+    "kjonn": "K",
+    "fodselsaar": 1976,
+    "avdeling": "Ledelse",
+    "stilling": "Kvalitets- og complianceansvarlig",
+    "ansatt_fra": "2015-01-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 74,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Cand.jur. Forvaltningsrett og opphavsrett",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2002
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Kulturrådet",
+        "rolle": "Seniorrådgiver juridisk",
+        "periode": "2005-2014"
+      }
+    ],
+    "publikasjoner": [
+      "Opphavsrett og digitale museer: En veileder (2018)"
+    ],
+    "icor_rolle": "Kvalitetsvokter (/qa)"
+  },
+  {
+    "id": "KP-ANS-009",
+    "navn": "Liv Eide",
+    "avdeling": "Kuratering",
+    "stilling": "Sjefkurator",
+    "utdanning": [
+      {
+        "grad": "Master i Kunsthistorie",
+        "institusjon": "Goldsmiths, University of London",
+        "aar": 2002
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Tidligere sjefkurator",
+        "periode": "2004-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om digital kuratering (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-010",
+    "navn": "Håkon Bratt",
+    "avdeling": "Ledelse",
+    "stilling": "Assisterende direktør",
+    "utdanning": [
+      {
+        "grad": "Master i Kuratering",
+        "institusjon": "Københavns Universitet",
+        "aar": 2010
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Stavanger kunstmuseum",
+        "rolle": "Tidligere assisterende direktør",
+        "periode": "2006-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om materiell bevaring (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-012",
+    "navn": "Christian Sivertsen",
+    "avdeling": "Samling",
+    "stilling": "Samlingsforvalter / Registrar",
+    "utdanning": [
+      {
+        "grad": "Master i Kuratering",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2008
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Stavanger kunstmuseum",
+        "rolle": "Tidligere samlingsforvalter / registrar",
+        "periode": "2005-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om veggtekstens dramaturgi (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-016",
+    "navn": "Sverre Ruud",
+    "avdeling": "Ledelse",
+    "stilling": "Økonomisjef",
+    "utdanning": [
+      {
+        "grad": "Master i Konservering",
+        "institusjon": "Kunstakademiet i Bergen (KMD)",
+        "aar": 2007
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Haugar Kunstmuseum",
+        "rolle": "Tidligere økonomisjef",
+        "periode": "2007-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om nordisk modernisme (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-017",
+    "navn": "Mikkel Lindqvist",
+    "avdeling": "Kuratering",
+    "stilling": "Kurator samtidskunst",
+    "utdanning": [
+      {
+        "grad": "Master i Konservering",
+        "institusjon": "Kunstakademiet i Bergen (KMD)",
+        "aar": 2010
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Stavanger kunstmuseum",
+        "rolle": "Tidligere kurator samtidskunst",
+        "periode": "2005-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om materiell bevaring (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-019",
+    "navn": "Andreas Jensen",
+    "avdeling": "Kuratering",
+    "stilling": "Kurator samtidskunst",
+    "utdanning": [
+      {
+        "grad": "Master i Kunsthistorie",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2001
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Tidligere kurator samtidskunst",
+        "periode": "2008-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om digital kuratering (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-020",
+    "navn": "Katrine Jensen",
+    "avdeling": "Samling",
+    "stilling": "Digitaliserings- og samlingstekniker",
+    "utdanning": [
+      {
+        "grad": "Master i Konservering",
+        "institusjon": "Kunsthøgskolen i Oslo (KHiO)",
+        "aar": 2007
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Tidligere digitaliserings- og samlingstekniker",
+        "periode": "2005-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om digital kuratering (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-022",
+    "navn": "Thea Pedersen",
+    "avdeling": "Kuratering",
+    "stilling": "Kurator modernisme",
+    "utdanning": [
+      {
+        "grad": "Master i Kunsthistorie",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2005
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Stavanger kunstmuseum",
+        "rolle": "Tidligere kurator modernisme",
+        "periode": "2004-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om nordisk modernisme (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-025",
+    "navn": "Maren Moen",
+    "avdeling": "Ledelse",
+    "stilling": "HR- og organisasjonsrådgiver",
+    "utdanning": [
+      {
+        "grad": "Master i Kunsthistorie",
+        "institusjon": "Kunstakademiet i Bergen (KMD)",
+        "aar": 2017
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Tidligere hr- og organisasjonsrådgiver",
+        "periode": "2004-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om nordisk modernisme (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-031",
+    "navn": "Bjørn Viken",
+    "avdeling": "Ledelse",
+    "stilling": "Assisterende direktør",
+    "utdanning": [
+      {
+        "grad": "Master i Kunsthistorie",
+        "institusjon": "Kunsthøgskolen i Oslo (KHiO)",
+        "aar": 2021
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Tidligere assisterende direktør",
+        "periode": "2007-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om nordisk modernisme (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-032",
+    "navn": "Fredrik Nygård",
+    "avdeling": "Kuratering",
+    "stilling": "Kurator samtidskunst",
+    "utdanning": [
+      {
+        "grad": "Master i Konservering",
+        "institusjon": "Kunsthøgskolen i Oslo (KHiO)",
+        "aar": 2012
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Haugar Kunstmuseum",
+        "rolle": "Tidligere kurator samtidskunst",
+        "periode": "2004-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om veggtekstens dramaturgi (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-035",
+    "navn": "Emilie Bakke",
+    "avdeling": "Samling",
+    "stilling": "Samlingsforvalter / Registrar",
+    "utdanning": [
+      {
+        "grad": "Master i Kunsthistorie",
+        "institusjon": "NTNU (Trondheim)",
+        "aar": 2009
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Astrup Fearnley Museet",
+        "rolle": "Tidligere samlingsforvalter / registrar",
+        "periode": "2004-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om digital kuratering (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-041",
+    "navn": "Christian Pedersen",
+    "avdeling": "Kuratering",
+    "stilling": "Sjefkurator",
+    "utdanning": [
+      {
+        "grad": "Master i Konservering",
+        "institusjon": "Goldsmiths, University of London",
+        "aar": 1998
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Galleri F 15",
+        "rolle": "Tidligere sjefkurator",
+        "periode": "2005-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om materiell bevaring (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-043",
+    "navn": "Sigrid Ruud",
+    "avdeling": "Kuratering",
+    "stilling": "Kurator modernisme",
+    "utdanning": [
+      {
+        "grad": "Master i Estetikk",
+        "institusjon": "Uppsala Universitet",
+        "aar": 2017
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Galleri F 15",
+        "rolle": "Tidligere kurator modernisme",
+        "periode": "2007-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om veggtekstens dramaturgi (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-045",
+    "navn": "Kirsti Bakke",
+    "avdeling": "Samling",
+    "stilling": "Magasinforvalter",
+    "utdanning": [
+      {
+        "grad": "Master i Estetikk",
+        "institusjon": "Goldsmiths, University of London",
+        "aar": 2003
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Haugar Kunstmuseum",
+        "rolle": "Tidligere magasinforvalter",
+        "periode": "2004-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om veggtekstens dramaturgi (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-058",
+    "navn": "Emilie Jensen",
+    "avdeling": "Samling",
+    "stilling": "Magasinforvalter",
+    "utdanning": [
+      {
+        "grad": "Master i Estetikk",
+        "institusjon": "NTNU (Trondheim)",
+        "aar": 2012
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Lillehammer Kunstmuseum",
+        "rolle": "Tidligere magasinforvalter",
+        "periode": "2008-2012"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om materiell bevaring (2011)"
+    ]
+  },
+  {
+    "id": "KP-ANS-059",
+    "navn": "Guro Haugen",
+    "avdeling": "Kuratering",
+    "stilling": "Forskningsstipendiat",
+    "utdanning": [
+      {
+        "grad": "Master i Kunsthistorie",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2006
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Lillehammer Kunstmuseum",
+        "rolle": "Tidligere forskningsstipendiat",
+        "periode": "2009-2012"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om digital kuratering (2011)"
+    ]
+  },
+  {
+    "id": "KP-ANS-064",
+    "navn": "Erik Larsen",
+    "avdeling": "Kuratering",
+    "stilling": "Forskningsstipendiat",
+    "utdanning": [
+      {
+        "grad": "Master i Konservering",
+        "institusjon": "NTNU (Trondheim)",
+        "aar": 2003
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Kulturrådet",
+        "rolle": "Tidligere forskningsstipendiat",
+        "periode": "2008-2012"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om veggtekstens dramaturgi (2011)"
+    ]
+  },
+  {
+    "id": "KP-ANS-067",
+    "navn": "Erik Strand",
+    "avdeling": "Ledelse",
+    "stilling": "HR- og organisasjonsrådgiver",
+    "utdanning": [
+      {
+        "grad": "Master i Konservering",
+        "institusjon": "Københavns Universitet",
+        "aar": 2011
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Kunstnernes Hus",
+        "rolle": "Tidligere hr- og organisasjonsrådgiver",
+        "periode": "2008-2013"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om digital kuratering (2012)"
+    ]
+  },
+  {
+    "id": "KP-ANS-070",
+    "navn": "Per Moen",
+    "avdeling": "Kuratering",
+    "stilling": "Kurator samtidskunst",
+    "utdanning": [
+      {
+        "grad": "Master i Estetikk",
+        "institusjon": "Københavns Universitet",
+        "aar": 2020
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Tidligere kurator samtidskunst",
+        "periode": "2011-2013"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om materiell bevaring (2012)"
+    ]
+  },
+  {
+    "id": "KP-ANS-071",
+    "navn": "Synnøve Dahl",
+    "avdeling": "Ledelse",
+    "stilling": "HR- og organisasjonsrådgiver",
+    "utdanning": [
+      {
+        "grad": "Master i Kuratering",
+        "institusjon": "Goldsmiths, University of London",
+        "aar": 2003
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Galleri F 15",
+        "rolle": "Tidligere hr- og organisasjonsrådgiver",
+        "periode": "2008-2013"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om materiell bevaring (2012)"
+    ]
+  }
+]

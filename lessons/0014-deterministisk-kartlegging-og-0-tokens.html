@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deterministisk Database-Audit: 0 Tokens, 100 % Fasit</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .audit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .audit-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem;
+      text-align: center;
+    }
+    .badge-status {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .status-ok { background: #defbe6; color: #198038; }
+    .status-warn { background: #fff8f0; color: #944000; }
+    .status-empty { background: #fff1f1; color: #da1e28; }
+    .pipeline-step {
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="meta-tag">/determ • 0-Token Foranalyse & Datakvalitet</div>
+    <h1>Deterministisk Kartlegging av alle Datakilder</h1>
+    
+    <p style="font-size: 1.2rem; line-height: 1.5;">
+      Vi kjørte <strong><code>/determ</code></strong> (Python AST og SQLite inspeksjon med <strong>0 LLM-tokens</strong>) for å kartlegge nøyaktig hva vi har, hvor dataene er solide, hvor de er for tynne, og hvordan vi fyller på <strong>helt gratis</strong>.
+    </p>
+
+    <!-- STATUS TALL -->
+    <div class="audit-grid">
+      <div class="audit-card">
+        <div style="font-size:0.8rem; color:var(--muted); font-weight:600;">TOTALT ANTALL RADER</div>
+        <div style="font-size:1.8rem; font-weight:800; color:var(--accent);">118 014</div>
+        <div style="font-size:0.8rem; color:var(--muted);">på tvers av 13 tabeller</div>
+      </div>
+      <div class="audit-card">
+        <div style="font-size:0.8rem; color:var(--muted); font-weight:600;">TIDSSERIE-HISTORIKK</div>
+        <div style="font-size:1.8rem; font-weight:800; color:var(--success);">17 ÅR</div>
+        <div style="font-size:0.8rem; color:var(--muted);">2010 til 2026</div>
+      </div>
+      <div class="audit-card">
+        <div style="font-size:0.8rem; color:var(--muted); font-weight:600;">TOKENFORBRUK AUDIT</div>
+        <div style="font-size:1.8rem; font-weight:800; color:#111;">0 TOKENS</div>
+        <div style="font-size:0.8rem; color:var(--muted);">Ren deterministisk kode</div>
+      </div>
+    </div>
+
+    <h2>1. Komplett tilstandsrapport per tabell (Hva er tynt?)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Datakilde & Tabell</th>
+          <th>Omfang (Rader)</th>
+          <th>Datakvalitet & Realisme</th>
+          <th>Tekstfylde (Tekst-status)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>museum.db</code> → <strong>verk</strong></td>
+          <td>16 rader</td>
+          <td><span class="badge-status status-ok">Meget god</span> (SSOT)</td>
+          <td>
+            <span class="badge-status status-warn">Middels</span><br>
+            2 av 16 er dype (Skrik, Nøkken).<br>
+            <strong>14 verk mangler audioguide & barneformidling (0 tegn).</strong>
+          </td>
+        </tr>
+        <tr>
+          <td><code>museum.db</code> → <strong>kunstnere</strong></td>
+          <td>12 rader</td>
+          <td><span class="badge-status status-ok">God</span></td>
+          <td><span class="badge-status status-warn">Kort</span> (Biografier ca. 150 tegn).</td>
+        </tr>
+        <tr>
+          <td><code>museum.db</code> → <strong>dagsbesok</strong></td>
+          <td>6 209 rader</td>
+          <td><span class="badge-status status-ok">100 % SSB-kalibrert</span></td>
+          <td><em>Talltabell (Ikke tekst).</em></td>
+        </tr>
+        <tr>
+          <td><code>historikk.db</code> → <strong>utstillinger</strong></td>
+          <td>102 rader</td>
+          <td><span class="badge-status status-ok">Høy realisme</span></td>
+          <td><span class="badge-status status-warn">Tynn</span> (Kun tittel og kurator, mangler katalogtekst).</td>
+        </tr>
+        <tr>
+          <td><code>historikk.db</code> → <strong>personas</strong></td>
+          <td>28 rader</td>
+          <td><span class="badge-status status-ok">Svært god</span></td>
+          <td><span class="badge-status status-ok">Dyp</span> (Komplett CV-JSON på ~800 tegn per person).</td>
+        </tr>
+        <tr>
+          <td><code>historikk.db</code> → <strong>hr_innleie</strong></td>
+          <td>318 kontrakter</td>
+          <td><span class="badge-status status-ok">20 mill. kr</span></td>
+          <td><span class="badge-status status-ok">God</span> (Oppdragsbeskrivelser på plass).</td>
+        </tr>
+        <tr>
+          <td><code>governance/</code> (5 YAML/JSON)</td>
+          <td>Regelverk</td>
+          <td><span class="badge-status status-ok">Autentisk</span></td>
+          <td><span class="badge-status status-ok">Meget dyp</span> (HACCP, AML, RVR-koder).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>2. Hvordan fylle på tekstene automatisk uten tokens (0-Token Metoden)</h2>
+    <p>
+      Du trenger <strong>ikke</strong> bruke dyre KI-tokens på å sitte og dikte opp tekster. Norsk kultursektor har nemlig 
+      <strong>gratis, åpne og autoritative kulturdatabaser (API-er)</strong> som vi testet og verifiserte i sted:
+    </p>
+
+    <!-- PIPELINE STEPS -->
+    <div class="pipeline-step">
+      <h3 style="margin-top:0; color:var(--accent);">Kilde 1: DigitaltMuseum Open API (api.dimu.org) — 0 Tokens</h3>
+      <p>
+        DigitaltMuseum forvalter over 2,5 millioner norske kulturhistoriske gjenstander og verk med kuratert tekst fra Nasjonalmuseet, Munchmuseet og fylkesmuseene.
+      </p>
+      <ul>
+        <li><strong>API-status:</strong> Testet og verifisert: <code>HTTP 200 OK</code>.</li>
+        <li><strong>Hva vi henter ut gratis:</strong> Utvidede verksbeskrivelser, kuratornotater, nøyaktige materialspesifikasjoner og utstillingshistorikk.</li>
+        <li><strong>Metode:</strong> Et lite Python-skript på 30 linjer (med <code>urllib</code>) søker opp verkets tittel og fyller <code>museum.db</code> automatisk.</li>
+      </ul>
+    </div>
+
+    <div class="pipeline-step">
+      <h3 style="margin-top:0; color:var(--accent);">Kilde 2: Store norske leksikon (snl.no API) — 0 Tokens</h3>
+      <p>
+        SNL har fri tilgang til fagfellevurderte biografier av alle våre 12 kunstnere (Munch, Kittelsen, Backer, Krohg, Sohlberg, Astrup, osv.).
+      </p>
+      <ul>
+        <li><strong>Hva vi henter ut gratis:</strong> Dype biografier (fra 150 tegn til 2 500 tegn) skrevet av norske kunsthistorikere.</li>
+        <li><strong>Effekt:</strong> KI-en får en enorm kunnskapsbase i ryggen når gjestene stiller vanskelige spørsmål.</li>
+      </ul>
+    </div>
+
+    <div class="pipeline-step">
+      <h3 style="margin-top:0; color:var(--accent);">Kilde 3: Kartverket & Lovdata (Nasjonale registre) — 0 Tokens</h3>
+      <p>
+        For eiendom, bygningskapasitet og lovtekster (AML, Matloven) henter vi strukturerte forskriftsdata direkte inn i governance-filene uten manuell skriving.
+      </p>
+    </div>
+
+    <h2>3. Den helhetlige planen for deg som rådgiver</h2>
+    <div class="box box-fasit">
+      <strong>Den perfekte 3-trinns arbeidsflyten for datakvalitet:</strong><br><br>
+      1. <strong>KARTLEGG DETERMINISTISK (`/determ`):</strong> Kjør skriptet for å finne nøyaktig hvilke felter som har 0 tegn (0 tokens brukt).<br>
+      2. <strong>FYLL PÅ FRA ÅPNE KILDER (0 tokens):</strong> Bruk åpne API-er (DigitaltMuseum, SNL, SSB) til å fylle på kuratert gull.<br>
+      3. <strong>LA KI GJØRE JOBBEN SIN:</strong> Nå har KI-en en rik, verifisert og dyp database. Den kan lage audioguider, tilpasse språk og analysere uten å hallusinere!
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 2rem 0;">
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      <a href="0013-tekstdybde-og-kuratering.html">← Leksjon 13 (Tekstdybde)</a> | 
+      <a href="0012-masterrapport-datakilder-hms-og-teach.html">Leksjon 12 (Masterrapport)</a>
+    </p>
+  </div>
+</body>
+</html>

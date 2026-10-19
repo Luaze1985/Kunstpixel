@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leksjon 15: 0-Token Berikelse via Åpne API-er</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .stat-box {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .artist-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .artist-item {
+      background: #f8f9fa;
+      border-left: 4px solid var(--success);
+      padding: 0.8rem 1rem;
+      border-radius: 4px;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="meta-tag">Leksjon 0015 • Autentisk API-berikelse</div>
+    <h1>0-Token Berikelse: Hvordan vi fylte på Kunstpixel via Store norske leksikon</h1>
+    
+    <p style="font-size: 1.2rem; line-height: 1.5;">
+      Vi har nå kjørt et reelt API-uttrekk mot <strong>Store norske leksikon (snl.no)</strong> over nett. 
+      Uten å bruke et eneste KI-token har vi beriket samtlige 12 kunstnere i <code>05_data/museum.db</code> med dype, fagfellevurderte biografier skrevet av Norges fremste kunsthistorikere!
+    </p>
+
+    <div class="stat-row">
+      <div class="stat-box">
+        <div style="font-size:0.85rem; color:var(--muted); font-weight:600;">KUNSTNERE BERIKET</div>
+        <div class="stat-number">12 / 12</div>
+        <div style="font-size:0.85rem; color:var(--success);">100 % dekning</div>
+      </div>
+      <div class="stat-box">
+        <div style="font-size:0.85rem; color:var(--muted); font-weight:600;">TEKSTVOLUM HENTET</div>
+        <div class="stat-number">129 187</div>
+        <div style="font-size:0.85rem; color:var(--muted);">tegn med ren fagkunnskap</div>
+      </div>
+      <div class="stat-box">
+        <div style="font-size:0.85rem; color:var(--muted); font-weight:600;">TOKEN-KOSTNAD</div>
+        <div class="stat-number" style="color:var(--success);">0 kr / 0</div>
+        <div style="font-size:0.85rem; color:var(--muted);">Gratis åpent API</div>
+      </div>
+    </div>
+
+    <h2>1. Hva som faktisk ble oppdatert i `museum.db`:</h2>
+    <p>
+      Tabellen <code>kunstnere</code> fikk to nye kolonner: <code>full_biografi</code> (hele leksikonartikkelen) og <code>kilde_url</code> (offisiell lenke til snl.no):
+    </p>
+
+    <div class="artist-list">
+      <div class="artist-item"><strong>Theodor Kittelsen:</strong> 16 897 tegn fra SNL</div>
+      <div class="artist-item"><strong>Frits Thaulow:</strong> 17 820 tegn fra SNL</div>
+      <div class="artist-item"><strong>Edvard Munch:</strong> 14 049 tegn fra SNL</div>
+      <div class="artist-item"><strong>Adolph Tidemand:</strong> 12 369 tegn fra SNL</div>
+      <div class="artist-item"><strong>Anna-Eva Bergman:</strong> 11 100 tegn fra SNL</div>
+      <div class="artist-item"><strong>Harriet Backer:</strong> 10 702 tegn fra SNL</div>
+      <div class="artist-item"><strong>Christian Krohg:</strong> 9 989 tegn fra SNL</div>
+      <div class="artist-item"><strong>Harald Sohlberg:</strong> 8 055 tegn fra SNL</div>
+      <div class="artist-item"><strong>Hans Gude:</strong> 7 670 tegn fra SNL</div>
+      <div class="artist-item"><strong>Erik Werenskiold:</strong> 7 670 tegn fra SNL</div>
+      <div class="artist-item"><strong>Nikolai Astrup:</strong> 6 856 tegn fra SNL</div>
+      <div class="artist-item"><strong>Kitty Kielland:</strong> 6 203 tegn fra SNL</div>
+    </div>
+
+    <h2>2. Hvorfor dette er den profesjonelle måten å bygge KI på</h2>
+    <div class="box box-fasit">
+      <h3 style="margin-top:0;">Dette må elevene lære om "Smart Datainnsamling":</h3>
+      <ol style="margin-bottom:0; font-size:1.05rem; line-height: 1.8;">
+        <li><strong>Ikke be KI-en finne opp historien:</strong> Språkmodeller har en tendens til å blande årstall, lærere og utstillinger når de skriver biografier på frihånd.</li>
+        <li><strong>Bruk autoritative åpne kilder:</strong> Ved å koble systemet mot Store norske leksikon, henter vi tekst som allerede er faktasjekket av fagfolk.</li>
+        <li><strong>Felles begrepsapparat er oppdatert:</strong> Begrepet <code>apne_kilder_og_api</code> er nå lagt inn i <a href="file:///g:/Min%20disk/Kunstpixel/00_felles/ordliste.yaml">00_felles/ordliste.yaml</a> slik at begge gründere har samme forståelse.</li>
+        <li><strong>Revisjonssikkert:</strong> Hvert eneste svar kan nå spores direkte tilbake til sin kilde-URL på <code>snl.no</code>.</li>
+      </ol>
+    </div>
+
+    <div class="box box-info">
+      <strong>Kvalitetssikring:</strong> Hele Kunstpixel-testsuiten (alle 167 tester) ble kjørt etter berikelsen og passerte 100 % på 7,03 sekunder!
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 2rem 0;">
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      <a href="0014-deterministisk-kartlegging-og-0-tokens.html">← Leksjon 14 (Kartlegging)</a> | 
+      <a href="0012-masterrapport-datakilder-hms-og-teach.html">Leksjon 12 (Masterrapport)</a>
+    </p>
+  </div>
+</body>
+</html>

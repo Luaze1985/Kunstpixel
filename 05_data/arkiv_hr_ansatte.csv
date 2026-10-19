@@ -1,0 +1,169 @@
+ansatt_id,navn,kjonn,fodselsaar,avdeling,stilling,ansatt_fra,ansatt_til,status,stillingsprosent,lonnstrinn_virke,epost,telefon,kontor_sal
+KP-ANS-001,Henrik Faye-Lund,M,1968,Ledelse,Museumsdirektør,2010-01-01,,Fast,1.0,86,henrik.fayelund@kunstpixel.no,+47 981 24 13,Administrasjonsfløyen 3. etg
+KP-ANS-002,Silje Lindqvist,K,1977,Kuratering,Sjefkurator,2012-03-01,,Fast,1.0,76,silje.lindqvist@kunstpixel.no,+47 994 45 41,Kuratorfløyen 2. etg
+KP-ANS-003,Gunnar Viken,M,1974,Samling,Samlingsforvalter / Registrar,2010-01-01,,Fast,1.0,68,gunnar.viken@kunstpixel.no,+47 928 27 23,Hovedmagasinet U1
+KP-ANS-004,Astrid Moen,K,1983,Formidling,Formidlingsleder,2014-08-01,,Fast,1.0,70,astrid.moen@kunstpixel.no,+47 986 79 21,Formidlingssenteret 1. etg
+KP-ANS-005,Terje Bratt,M,1969,Drift,Drifts- og eiendomssjef,2010-01-01,,Fast,1.0,72,terje.bratt@kunstpixel.no,+47 975 64 14,Driftssentralen U1
+KP-ANS-006,Jonas Berg,M,2000,Formidling,Seniorvert / Skrankeleder,2021-09-01,,Fast,0.8,45,jonas.berg@kunstpixel.no,+47 903 21 37,Skranken / Vestibylen
+KP-ANS-007,Ragnhild Eide,K,1976,Ledelse,Kvalitets- og complianceansvarlig,2015-01-01,,Fast,1.0,74,ragnhild.eide@kunstpixel.no,+47 929 74 87,Administrasjonsfløyen 3. etg
+KP-ANS-008,Guro Thorvaldsen,K,1982,Formidling,Museumspedagog,2010-01-01,2016-05-28,Sluttet,0.3,50,guro.thorvaldsen@kunstpixel.no,+47 832 53 45,Sal B
+KP-ANS-009,Liv Eide,K,1976,Kuratering,Sjefkurator,2010-01-01,2020-10-28,Sluttet,1.0,74,liv.eide@kunstpixel.no,+47 444 68 78,Kuratorfløyen 2. etg
+KP-ANS-010,Håkon Bratt,M,1984,Ledelse,Assisterende direktør,2010-01-01,,Fast,1.0,78,hakon.bratt@kunstpixel.no,+47 638 22 58,Administrasjonsfløyen 3. etg
+KP-ANS-011,Alexander Nilsen,M,2002,Formidling,Museumsvert og omviser (Deltid),2010-01-01,2013-10-28,Sluttet,0.4,44,alexander.nilsen@kunstpixel.no,+47 650 30 69,Sal D
+KP-ANS-012,Christian Sivertsen,M,1982,Samling,Samlingsforvalter / Registrar,2010-01-01,2020-06-28,Sluttet,1.0,68,christian.sivertsen@kunstpixel.no,+47 674 18 37,Konserveringsatelier U1 / Magasin
+KP-ANS-013,Fredrik Karlsen,M,1992,Kuratering,Kuratorassistent,2010-01-01,2016-12-28,Sluttet,0.6,52,fredrik.karlsen@kunstpixel.no,+47 770 38 27,Kuratorfløyen 2. etg
+KP-ANS-014,Erik Moen,M,1995,Marked,Digital innholdsprodusent / Web,2010-01-01,2013-11-28,Sluttet,1.0,58,erik.moen@kunstpixel.no,+47 465 59 58,Kafé / Butikk / Markedskontor
+KP-ANS-015,Morten Dahl,M,1968,Marked,Kommunikasjons- og markedssjef,2010-01-01,2020-09-28,Sluttet,1.0,70,morten.dahl@kunstpixel.no,+47 748 24 47,Kafé / Butikk / Markedskontor
+KP-ANS-016,Sverre Ruud,M,1981,Ledelse,Økonomisjef,2010-01-01,2020-09-28,Sluttet,1.0,69,sverre.ruud@kunstpixel.no,+47 705 91 74,Administrasjonsfløyen 3. etg
+KP-ANS-017,Mikkel Lindqvist,M,1984,Kuratering,Kurator samtidskunst,2010-01-01,2013-04-28,Sluttet,1.0,59,mikkel.lindqvist@kunstpixel.no,+47 487 72 18,Kuratorfløyen 2. etg
+KP-ANS-018,Arild Nilsen,M,2003,Marked,Kafémedarbeider (Deltid),2010-01-01,2012-05-28,Sluttet,0.6,37,arild.nilsen@kunstpixel.no,+47 782 66 76,Kafé / Butikk / Markedskontor
+KP-ANS-019,Andreas Jensen,M,1975,Kuratering,Kurator samtidskunst,2010-01-01,2016-04-28,Sluttet,1.0,61,andreas.jensen@kunstpixel.no,+47 407 19 90,Kuratorfløyen 2. etg
+KP-ANS-020,Katrine Jensen,K,1981,Samling,Digitaliserings- og samlingstekniker,2010-01-01,2016-12-28,Sluttet,1.0,57,katrine.jensen@kunstpixel.no,+47 648 70 62,Konserveringsatelier U1 / Magasin
+KP-ANS-021,Per Ruud,M,1985,Marked,Kommunikasjons- og markedssjef,2010-01-01,,Fast,1.0,67,per.ruud@kunstpixel.no,+47 462 61 53,Kafé / Butikk / Markedskontor
+KP-ANS-022,Thea Pedersen,K,1979,Kuratering,Kurator modernisme,2010-01-01,2016-05-28,Sluttet,1.0,65,thea.pedersen@kunstpixel.no,+47 655 19 66,Kuratorfløyen 2. etg
+KP-ANS-023,Thea Larsen,K,1981,Formidling,Museumspedagog,2010-01-01,,Fast,0.3,50,thea.larsen@kunstpixel.no,+47 788 10 59,Sal C
+KP-ANS-024,Trond Nygård,M,2004,Formidling,Museumsvert og omviser (Deltid),2010-01-01,2013-12-28,Sluttet,0.6,38,trond.nygard@kunstpixel.no,+47 594 47 37,Sal A
+KP-ANS-025,Maren Moen,K,1991,Ledelse,HR- og organisasjonsrådgiver,2010-01-01,,Fast,1.0,68,maren.moen@kunstpixel.no,+47 561 17 75,Administrasjonsfløyen 3. etg
+KP-ANS-026,Emilie Hansen,K,1972,Marked,Kaféleder,2010-01-01,2013-01-28,Sluttet,1.0,47,emilie.hansen@kunstpixel.no,+47 829 94 84,Kafé / Butikk / Markedskontor
+KP-ANS-027,Morten Nilsen,M,1972,Formidling,Senior museumspedagog,2010-01-01,2016-03-28,Sluttet,1.0,58,morten.nilsen@kunstpixel.no,+47 868 50 19,Sal A
+KP-ANS-028,Magnus Bratt,M,1983,Formidling,Audioguide- og innholdsprodusent,2010-01-01,2013-06-28,Sluttet,0.3,53,magnus.bratt@kunstpixel.no,+47 778 46 30,Sal D
+KP-ANS-029,Henrik Helgesen,M,1978,Drift,AV- og utstillingslystekniker,2010-01-01,,Fast,1.0,52,henrik.helgesen@kunstpixel.no,+47 670 24 23,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-030,Kirsti Pettersen,K,1997,Formidling,Museumsvert og omviser (Deltid),2010-01-01,2012-11-28,Sluttet,0.5,44,kirsti.pettersen@kunstpixel.no,+47 900 42 16,Sal A
+KP-ANS-031,Bjørn Viken,M,1995,Ledelse,Assisterende direktør,2010-01-01,,Fast,1.0,73,bjorn.viken@kunstpixel.no,+47 852 80 64,Administrasjonsfløyen 3. etg
+KP-ANS-032,Fredrik Nygård,M,1986,Kuratering,Kurator samtidskunst,2010-01-01,,Fast,1.0,58,fredrik.nygard@kunstpixel.no,+47 766 36 97,Kuratorfløyen 2. etg
+KP-ANS-033,Thea Larsen,K,1988,Marked,Digital innholdsprodusent / Web,2010-01-01,2013-12-28,Sluttet,1.0,57,thea.larsen@kunstpixel.no,+47 821 95 41,Kafé / Butikk / Markedskontor
+KP-ANS-034,Sverre Eide,M,1980,Formidling,Formidlingsleder,2010-01-01,2013-08-28,Sluttet,1.0,69,sverre.eide@kunstpixel.no,+47 712 39 38,Sal A
+KP-ANS-035,Emilie Bakke,K,1983,Samling,Samlingsforvalter / Registrar,2010-01-01,2016-09-28,Sluttet,1.0,68,emilie.bakke@kunstpixel.no,+47 949 52 13,Konserveringsatelier U1 / Magasin
+KP-ANS-036,Ragnhild Strand,K,2004,Formidling,Museumsvert og omviser (Deltid),2010-01-01,2012-10-28,Sluttet,0.3,42,ragnhild.strand@kunstpixel.no,+47 990 34 42,Sal A
+KP-ANS-037,Henrik Sandvik,M,1971,Marked,Kaféleder,2010-01-01,2013-02-28,Sluttet,1.0,51,henrik.sandvik@kunstpixel.no,+47 721 94 25,Kafé / Butikk / Markedskontor
+KP-ANS-038,Harald Eriksen,M,1977,Formidling,Senior museumspedagog,2010-01-01,2020-09-28,Sluttet,1.0,56,harald.eriksen@kunstpixel.no,+47 596 63 95,Sal D
+KP-ANS-039,Synnøve Myhre,K,1974,Formidling,Formidlingsleder,2010-01-01,2016-07-28,Sluttet,1.0,69,synnove.myhre@kunstpixel.no,+47 876 66 66,Resepsjon / Skranke
+KP-ANS-040,Katrine Tangen,K,1977,Drift,Bygningstekniker / Montør,2010-01-01,2016-11-28,Sluttet,1.0,53,katrine.tangen@kunstpixel.no,+47 495 40 96,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-041,Christian Pedersen,M,1972,Kuratering,Sjefkurator,2010-01-01,,Fast,1.0,71,christian.pedersen@kunstpixel.no,+47 866 63 90,Kuratorfløyen 2. etg
+KP-ANS-042,Ingrid Eide,K,1980,Drift,Bygningstekniker / Montør,2010-01-01,2020-12-28,Sluttet,1.0,56,ingrid.eide@kunstpixel.no,+47 875 16 81,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-043,Sigrid Ruud,K,1991,Kuratering,Kurator modernisme,2010-01-01,,Fast,1.0,63,sigrid.ruud@kunstpixel.no,+47 853 88 74,Kuratorfløyen 2. etg
+KP-ANS-044,Morten Jensen,M,1991,Drift,AV- og utstillingslystekniker,2010-01-01,2016-04-28,Sluttet,1.0,54,morten.jensen@kunstpixel.no,+47 850 19 46,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-045,Kirsti Bakke,K,1977,Samling,Magasinforvalter,2010-01-01,2013-04-28,Sluttet,1.0,54,kirsti.bakke@kunstpixel.no,+47 556 37 18,Konserveringsatelier U1 / Magasin
+KP-ANS-046,Jonas Nilsen,M,1983,Drift,Sikkerhetsleder / RVR,2010-01-01,,Fast,1.0,54,jonas.nilsen@kunstpixel.no,+47 989 58 71,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-047,Anja Eriksen,K,1982,Drift,Sikkerhetsleder / RVR,2010-01-01,2020-09-28,Sluttet,1.0,57,anja.eriksen@kunstpixel.no,+47 899 38 44,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-048,Mikkel Lindqvist,M,2002,Formidling,Museumsvert og omviser (Deltid),2010-01-01,2014-12-28,Sluttet,0.4,43,mikkel.lindqvist@kunstpixel.no,+47 530 89 78,Sal A
+KP-ANS-049,Gunnar Berg,M,1989,Formidling,DKS-koordinator (Skolesekken),2010-01-01,2013-05-28,Sluttet,1.0,62,gunnar.berg@kunstpixel.no,+47 735 37 68,Sal C
+KP-ANS-050,Vegard Johnsen,M,1973,Drift,Sikkerhetsleder / RVR,2011-02-15,2014-09-28,Sluttet,1.0,54,vegard.johnsen@kunstpixel.no,+47 758 38 93,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-051,Astrid Lindqvist,K,1975,Marked,Digital innholdsprodusent / Web,2011-10-01,2014-08-28,Sluttet,1.0,53,astrid.lindqvist@kunstpixel.no,+47 977 37 69,Kafé / Butikk / Markedskontor
+KP-ANS-052,Simen Larsen,M,2003,Formidling,Museumsvert og omviser (Deltid),2011-02-01,2016-02-28,Sluttet,0.3,40,simen.larsen@kunstpixel.no,+47 989 96 58,Sal D
+KP-ANS-053,Kari Sæther,K,1995,Formidling,Museumsvert og omviser (Deltid),2011-02-15,2015-10-28,Sluttet,0.3,36,kari.saether@kunstpixel.no,+47 755 78 64,Resepsjon / Skranke
+KP-ANS-054,Lars Moe,M,1978,Formidling,Formidlingsleder,2011-08-01,2017-06-28,Sluttet,1.0,71,lars.moe@kunstpixel.no,+47 556 65 32,Resepsjon / Skranke
+KP-ANS-055,Sindre Ruud,M,2001,Formidling,Museumsvert og omviser (Deltid),2011-05-15,2015-02-28,Sluttet,0.5,43,sindre.ruud@kunstpixel.no,+47 649 69 82,Sal E
+KP-ANS-056,Kristian Lindqvist,M,1970,Formidling,Senior museumspedagog,2011-08-01,2017-05-28,Sluttet,1.0,59,kristian.lindqvist@kunstpixel.no,+47 686 86 99,Sal C
+KP-ANS-057,Hanna Pedersen,K,1988,Kuratering,Kuratorassistent,2012-08-01,2022-11-28,Sluttet,0.6,53,hanna.pedersen@kunstpixel.no,+47 417 21 47,Kuratorfløyen 2. etg
+KP-ANS-058,Emilie Jensen,K,1986,Samling,Magasinforvalter,2012-08-15,2018-12-28,Sluttet,1.0,56,emilie.jensen@kunstpixel.no,+47 738 55 99,Konserveringsatelier U1 / Magasin
+KP-ANS-059,Guro Haugen,K,1980,Kuratering,Forskningsstipendiat,2012-04-01,2022-05-28,Sluttet,1.0,59,guro.haugen@kunstpixel.no,+47 937 86 46,Kuratorfløyen 2. etg
+KP-ANS-060,Synnøve Faye-Lund,K,1983,Formidling,DKS-koordinator (Skolesekken),2012-01-01,2018-12-28,Sluttet,1.0,58,synnove.faye-lund@kunstpixel.no,+47 902 23 11,Sal E
+KP-ANS-061,Sindre Tangen,M,1976,Formidling,DKS-koordinator (Skolesekken),2012-05-15,2015-02-28,Sluttet,1.0,62,sindre.tangen@kunstpixel.no,+47 903 19 83,Resepsjon / Skranke
+KP-ANS-062,Camilla Olsen,K,1977,Drift,AV- og utstillingslystekniker,2012-04-01,2018-07-28,Sluttet,1.0,53,camilla.olsen@kunstpixel.no,+47 935 58 67,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-063,Geir Sæther,M,1983,Marked,Museumsbutikkleder,2012-10-01,2018-12-28,Sluttet,1.0,49,geir.saether@kunstpixel.no,+47 612 90 37,Kafé / Butikk / Markedskontor
+KP-ANS-064,Erik Larsen,M,1977,Kuratering,Forskningsstipendiat,2012-03-01,2018-12-28,Sluttet,1.0,58,erik.larsen@kunstpixel.no,+47 881 47 14,Kuratorfløyen 2. etg
+KP-ANS-065,Nora Karlsen,K,1981,Drift,Vekter og sikkerhetsvakt,2013-07-01,2019-11-28,Sluttet,0.4,42,nora.karlsen@kunstpixel.no,+47 545 19 17,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-066,Synnøve Strand,K,1984,Drift,Vekter og sikkerhetsvakt,2013-08-01,2019-05-28,Sluttet,0.6,42,synnove.strand@kunstpixel.no,+47 912 79 73,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-067,Erik Strand,M,1985,Ledelse,HR- og organisasjonsrådgiver,2013-10-15,2016-04-28,Sluttet,1.0,60,erik.strand@kunstpixel.no,+47 675 83 15,Administrasjonsfløyen 3. etg
+KP-ANS-068,Benedicte Gulliksen,K,1980,Drift,Drifts- og eiendomssjef,2013-06-15,2019-11-28,Sluttet,1.0,67,benedicte.gulliksen@kunstpixel.no,+47 564 52 62,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-069,Trond Helgesen,M,1966,Marked,Kaféleder,2013-08-01,2015-06-28,Sluttet,1.0,47,trond.helgesen@kunstpixel.no,+47 813 75 10,Kafé / Butikk / Markedskontor
+KP-ANS-070,Per Moen,M,1994,Kuratering,Kurator samtidskunst,2013-08-15,2023-04-28,Sluttet,1.0,62,per.moen@kunstpixel.no,+47 962 26 46,Kuratorfløyen 2. etg
+KP-ANS-071,Synnøve Dahl,K,1977,Ledelse,HR- og organisasjonsrådgiver,2013-04-01,2019-02-28,Sluttet,1.0,62,synnove.dahl@kunstpixel.no,+47 910 47 75,Administrasjonsfløyen 3. etg
+KP-ANS-072,Fredrik Lie,M,1991,Kuratering,Forskningsstipendiat,2014-12-01,,Fast,1.0,56,fredrik.lie@kunstpixel.no,+47 824 53 74,Kuratorfløyen 2. etg
+KP-ANS-073,Henrik Pettersen,M,1993,Drift,Vekter og sikkerhetsvakt,2014-11-15,,Deltid / Sesong,0.6,46,henrik.pettersen@kunstpixel.no,+47 895 54 52,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-074,Even Haugen,M,1995,Marked,Kafémedarbeider (Deltid),2014-10-15,2016-07-28,Sluttet,0.3,34,even.haugen@kunstpixel.no,+47 884 58 59,Kafé / Butikk / Markedskontor
+KP-ANS-075,Elin Viken,K,1985,Kuratering,Forskningsstipendiat,2014-02-15,2017-08-28,Sluttet,1.0,54,elin.viken@kunstpixel.no,+47 547 62 93,Kuratorfløyen 2. etg
+KP-ANS-076,Kari Tangen,K,1985,Drift,AV- og utstillingslystekniker,2014-10-15,2020-06-28,Sluttet,1.0,58,kari.tangen@kunstpixel.no,+47 789 50 90,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-077,Terje Aas,M,1972,Ledelse,Økonomisjef,2014-12-01,2020-02-28,Sluttet,1.0,69,terje.aas@kunstpixel.no,+47 854 31 98,Administrasjonsfløyen 3. etg
+KP-ANS-078,Gunnar Viken,M,1984,Samling,Samlingsforvalter / Registrar,2014-06-15,2020-04-28,Sluttet,1.0,70,gunnar.viken@kunstpixel.no,+47 821 82 97,Konserveringsatelier U1 / Magasin
+KP-ANS-079,Tone Andersen,K,1994,Ledelse,HR- og organisasjonsrådgiver,2014-11-01,2020-10-28,Sluttet,1.0,62,tone.andersen@kunstpixel.no,+47 637 69 91,Administrasjonsfløyen 3. etg
+KP-ANS-080,Even Karlsen,M,1979,Formidling,Seniorvert / Skrankeleder,2015-05-01,2017-06-28,Sluttet,0.5,47,even.karlsen@kunstpixel.no,+47 834 98 42,Sal D
+KP-ANS-081,Håkon Lie,M,1972,Drift,Drifts- og eiendomssjef,2015-07-15,2021-12-28,Sluttet,1.0,70,hakon.lie@kunstpixel.no,+47 422 94 60,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-082,Henrik Hagen,M,1992,Marked,Kafémedarbeider (Deltid),2015-10-15,2019-05-28,Sluttet,0.4,36,henrik.hagen@kunstpixel.no,+47 760 38 91,Kafé / Butikk / Markedskontor
+KP-ANS-083,Tuva Sivertsen,K,1995,Drift,Bygningstekniker / Montør,2015-02-01,2021-08-28,Sluttet,1.0,48,tuva.sivertsen@kunstpixel.no,+47 993 56 26,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-084,Hege Haugen,K,1981,Drift,Bygningstekniker / Montør,2015-03-15,2021-05-28,Sluttet,1.0,50,hege.haugen@kunstpixel.no,+47 663 71 47,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-085,Andreas Ruud,M,1982,Marked,Digital innholdsprodusent / Web,2015-11-15,,Fast,1.0,60,andreas.ruud@kunstpixel.no,+47 774 21 60,Kafé / Butikk / Markedskontor
+KP-ANS-086,Tuva Brekke,K,1983,Kuratering,Kurator samtidskunst,2015-10-15,2025-06-28,Sluttet,1.0,59,tuva.brekke@kunstpixel.no,+47 639 70 13,Kuratorfløyen 2. etg
+KP-ANS-087,Christian Thorvaldsen,M,1984,Ledelse,HR- og organisasjonsrådgiver,2015-11-15,2018-01-28,Sluttet,1.0,60,christian.thorvaldsen@kunstpixel.no,+47 711 73 24,Administrasjonsfløyen 3. etg
+KP-ANS-088,Thea Brekke,K,1986,Kuratering,Kurator modernisme,2016-11-15,2022-12-28,Sluttet,1.0,60,thea.brekke@kunstpixel.no,+47 824 93 22,Kuratorfløyen 2. etg
+KP-ANS-089,Per Johnsen,M,1971,Ledelse,Økonomisjef,2016-08-15,,Fast,1.0,73,per.johnsen@kunstpixel.no,+47 501 97 57,Administrasjonsfløyen 3. etg
+KP-ANS-090,Jonas Myhre,M,1989,Samling,Samlingsforvalter / Registrar,2016-02-01,2022-10-28,Sluttet,1.0,62,jonas.myhre@kunstpixel.no,+47 451 52 41,Konserveringsatelier U1 / Magasin
+KP-ANS-091,Sunniva Bratt,K,1981,Drift,Vekter og sikkerhetsvakt,2016-10-01,,Deltid / Sesong,0.4,43,sunniva.bratt@kunstpixel.no,+47 551 86 10,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-092,Fredrik Johansen,M,1970,Formidling,Seniorvert / Skrankeleder,2016-02-01,2018-06-28,Sluttet,0.4,46,fredrik.johansen@kunstpixel.no,+47 731 12 32,Sal C
+KP-ANS-093,Ida Lund,K,1993,Formidling,Museumsvert og omviser (Deltid),2016-08-15,2020-09-28,Sluttet,0.3,43,ida.lund@kunstpixel.no,+47 915 38 88,Sal A
+KP-ANS-094,Even Thorvaldsen,M,1980,Marked,Kommunikasjons- og markedssjef,2016-07-15,,Fast,1.0,73,even.thorvaldsen@kunstpixel.no,+47 854 19 20,Kafé / Butikk / Markedskontor
+KP-ANS-095,Fredrik Bratt,M,1995,Kuratering,Forskningsstipendiat,2017-10-15,2023-10-28,Sluttet,1.0,58,fredrik.bratt@kunstpixel.no,+47 701 68 74,Kuratorfløyen 2. etg
+KP-ANS-096,Magnus Hansen,M,1981,Drift,Vekter og sikkerhetsvakt,2017-07-15,,Deltid / Sesong,0.6,43,magnus.hansen@kunstpixel.no,+47 864 61 63,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-097,Maren Nygård,K,1986,Samling,Papir- og fotokonservator,2017-03-15,2020-02-28,Sluttet,1.0,61,maren.nygard@kunstpixel.no,+47 842 22 57,Konserveringsatelier U1 / Magasin
+KP-ANS-098,Marit Sæther,K,1975,Marked,Kaféleder,2017-11-01,2020-11-28,Sluttet,1.0,52,marit.saether@kunstpixel.no,+47 452 46 86,Kafé / Butikk / Markedskontor
+KP-ANS-099,Alexander Eide,M,1979,Formidling,DKS-koordinator (Skolesekken),2017-11-15,2020-02-28,Sluttet,1.0,61,alexander.eide@kunstpixel.no,+47 969 57 24,Formidlingsrom
+KP-ANS-100,Christian Nygård,M,1994,Drift,Vekter og sikkerhetsvakt,2017-11-01,2023-11-28,Sluttet,0.5,38,christian.nygard@kunstpixel.no,+47 584 44 99,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-101,Kristian Solberg,M,1993,Ledelse,Assisterende direktør,2017-11-15,2020-12-28,Sluttet,1.0,77,kristian.solberg@kunstpixel.no,+47 431 21 77,Administrasjonsfløyen 3. etg
+KP-ANS-102,Frida Lund,K,1986,Formidling,DKS-koordinator (Skolesekken),2017-05-15,,Fast,1.0,57,frida.lund@kunstpixel.no,+47 453 29 30,Formidlingsrom
+KP-ANS-103,Hilde Johnsen,K,1990,Formidling,Museumspedagog,2018-10-15,2024-04-28,Sluttet,0.3,53,hilde.johnsen@kunstpixel.no,+47 840 24 46,Resepsjon / Skranke
+KP-ANS-104,Geir Viken,M,1976,Kuratering,Forskningsstipendiat,2018-01-01,2024-04-28,Sluttet,1.0,60,geir.viken@kunstpixel.no,+47 540 42 47,Kuratorfløyen 2. etg
+KP-ANS-105,Andreas Faye-Lund,M,1980,Formidling,Museumspedagog,2018-03-15,2024-04-28,Sluttet,0.5,49,andreas.faye-lund@kunstpixel.no,+47 806 15 65,Sal A
+KP-ANS-106,Lars Haugen,M,1987,Formidling,Audioguide- og innholdsprodusent,2018-12-15,2024-07-28,Sluttet,0.3,55,lars.haugen@kunstpixel.no,+47 575 89 68,Formidlingsrom
+KP-ANS-107,Erik Nygård,M,1988,Drift,Bygningstekniker / Montør,2018-10-15,2024-07-28,Sluttet,1.0,52,erik.nygard@kunstpixel.no,+47 747 38 52,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-108,Kari Moe,K,1991,Formidling,Audioguide- og innholdsprodusent,2018-04-15,2024-11-28,Sluttet,0.4,53,kari.moe@kunstpixel.no,+47 505 28 42,Sal B
+KP-ANS-109,Camilla Thorvaldsen,K,1989,Ledelse,HR- og organisasjonsrådgiver,2018-10-15,,Fast,1.0,65,camilla.thorvaldsen@kunstpixel.no,+47 723 29 66,Administrasjonsfløyen 3. etg
+KP-ANS-110,Marie Sørensen,K,1973,Formidling,Seniorvert / Skrankeleder,2019-10-01,2022-02-28,Sluttet,0.5,45,marie.sorensen@kunstpixel.no,+47 862 14 17,Sal C
+KP-ANS-111,Lars Thorvaldsen,M,1984,Marked,Kommunikasjons- og markedssjef,2019-10-15,2025-09-28,Sluttet,1.0,66,lars.thorvaldsen@kunstpixel.no,+47 860 83 93,Kafé / Butikk / Markedskontor
+KP-ANS-112,Maren Strand,K,1976,Formidling,DKS-koordinator (Skolesekken),2019-08-01,,Fast,1.0,61,maren.strand@kunstpixel.no,+47 486 74 92,Sal B
+KP-ANS-113,Thea Sørensen,K,1981,Marked,Kaféleder,2019-10-01,2022-05-28,Sluttet,1.0,52,thea.sorensen@kunstpixel.no,+47 818 53 96,Kafé / Butikk / Markedskontor
+KP-ANS-114,Liv Bratt,K,1987,Samling,Magasinforvalter,2019-05-15,,Fast,1.0,50,liv.bratt@kunstpixel.no,+47 741 20 84,Konserveringsatelier U1 / Magasin
+KP-ANS-115,Anja Eriksen,K,2002,Marked,Kafémedarbeider (Deltid),2019-07-01,2022-02-28,Sluttet,0.5,36,anja.eriksen@kunstpixel.no,+47 785 92 52,Kafé / Butikk / Markedskontor
+KP-ANS-116,Hanna Berg,K,1991,Formidling,Museumspedagog,2019-06-01,2025-03-28,Sluttet,0.4,53,hanna.berg@kunstpixel.no,+47 897 34 38,Sal B
+KP-ANS-117,Kari Pettersen,K,1981,Drift,Drifts- og eiendomssjef,2019-09-01,,Fast,1.0,68,kari.pettersen@kunstpixel.no,+47 785 29 30,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-118,Tone Sørensen,K,1972,Ledelse,Økonomisjef,2020-08-15,,Fast,1.0,75,tone.sorensen@kunstpixel.no,+47 639 78 40,Administrasjonsfløyen 3. etg
+KP-ANS-119,Sindre Pedersen,M,1989,Formidling,Audioguide- og innholdsprodusent,2020-08-15,,Deltid / Sesong,0.6,52,sindre.pedersen@kunstpixel.no,+47 604 87 27,Formidlingsrom
+KP-ANS-120,Jonas Thorvaldsen,M,1982,Formidling,Senior museumspedagog,2020-02-01,,Fast,1.0,56,jonas.thorvaldsen@kunstpixel.no,+47 679 67 75,Sal B
+KP-ANS-121,Erik Kristiansen,M,1975,Drift,AV- og utstillingslystekniker,2020-07-01,,Fast,1.0,55,erik.kristiansen@kunstpixel.no,+47 641 59 20,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-122,Christian Lindqvist,M,1995,Samling,Samlingsforvalter / Registrar,2020-06-01,2023-05-28,Sluttet,1.0,69,christian.lindqvist@kunstpixel.no,+47 542 70 67,Konserveringsatelier U1 / Magasin
+KP-ANS-123,Hilde Lindqvist,K,1992,Samling,Malerikonservator NKF-N,2020-12-15,2023-05-28,Sluttet,1.0,63,hilde.lindqvist@kunstpixel.no,+47 708 25 16,Konserveringsatelier U1 / Magasin
+KP-ANS-124,Signe Gulliksen,K,1967,Drift,Sikkerhetsleder / RVR,2021-02-15,,Fast,1.0,54,signe.gulliksen@kunstpixel.no,+47 927 83 40,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-125,Hege Nygård,K,1972,Ledelse,Økonomisjef,2021-10-15,2024-11-28,Sluttet,1.0,69,hege.nygard@kunstpixel.no,+47 936 56 18,Administrasjonsfløyen 3. etg
+KP-ANS-126,Frida Tangen,K,1986,Ledelse,HR- og organisasjonsrådgiver,2021-05-01,,Fast,1.0,61,frida.tangen@kunstpixel.no,+47 753 40 94,Administrasjonsfløyen 3. etg
+KP-ANS-127,Liv Johansen,K,1985,Ledelse,Administrasjonskonsulent,2021-11-01,,Fast,1.0,57,liv.johansen@kunstpixel.no,+47 890 90 33,Administrasjonsfløyen 3. etg
+KP-ANS-128,Kari Ruud,K,1976,Ledelse,Assisterende direktør,2021-04-01,,Fast,1.0,74,kari.ruud@kunstpixel.no,+47 927 60 79,Administrasjonsfløyen 3. etg
+KP-ANS-129,Morten Viken,M,1984,Drift,Bygningstekniker / Montør,2021-06-01,,Fast,1.0,53,morten.viken@kunstpixel.no,+47 679 25 57,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-130,Kjetil Sørensen,M,1997,Marked,Butikkmedarbeider (Deltid),2021-03-15,2024-06-28,Sluttet,0.5,40,kjetil.sorensen@kunstpixel.no,+47 484 64 20,Kafé / Butikk / Markedskontor
+KP-ANS-131,Olav Brekke,M,1977,Samling,Samlingsforvalter / Registrar,2022-06-15,,Fast,1.0,68,olav.brekke@kunstpixel.no,+47 570 98 66,Konserveringsatelier U1 / Magasin
+KP-ANS-132,Thomas Viken,M,1994,Drift,AV- og utstillingslystekniker,2022-07-15,,Fast,1.0,50,thomas.viken@kunstpixel.no,+47 476 95 91,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-133,Simen Moe,M,1975,Drift,Bygningstekniker / Montør,2022-03-15,2025-02-28,Sluttet,1.0,51,simen.moe@kunstpixel.no,+47 775 56 59,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-134,Camilla Sivertsen,K,1976,Formidling,Senior museumspedagog,2022-08-01,,Fast,1.0,62,camilla.sivertsen@kunstpixel.no,+47 775 60 50,Resepsjon / Skranke
+KP-ANS-135,Espen Hansen,M,1990,Ledelse,Assisterende direktør,2022-09-15,,Fast,1.0,72,espen.hansen@kunstpixel.no,+47 668 43 67,Administrasjonsfløyen 3. etg
+KP-ANS-136,Hege Bjerke,K,1967,Kuratering,Seniorkurator,2022-08-01,,Fast,1.0,71,hege.bjerke@kunstpixel.no,+47 489 97 50,Kuratorfløyen 2. etg
+KP-ANS-137,Lars Dahl,M,1970,Formidling,Senior museumspedagog,2022-12-01,,Fast,1.0,62,lars.dahl@kunstpixel.no,+47 629 25 35,Formidlingsrom
+KP-ANS-138,Thea Bjerke,K,1993,Ledelse,Administrasjonskonsulent,2022-06-15,,Fast,1.0,58,thea.bjerke@kunstpixel.no,+47 532 88 21,Administrasjonsfløyen 3. etg
+KP-ANS-139,Synnøve Myhre,K,1999,Marked,Kafémedarbeider (Deltid),2022-09-15,,Deltid / Sesong,0.3,33,synnove.myhre@kunstpixel.no,+47 724 92 19,Kafé / Butikk / Markedskontor
+KP-ANS-140,Even Sivertsen,M,1992,Formidling,DKS-koordinator (Skolesekken),2022-11-01,,Fast,1.0,58,even.sivertsen@kunstpixel.no,+47 843 74 17,Formidlingsrom
+KP-ANS-141,Hanna Olsen,K,1985,Samling,Malerikonservator NKF-N,2023-12-01,,Fast,1.0,68,hanna.olsen@kunstpixel.no,+47 690 20 42,Konserveringsatelier U1 / Magasin
+KP-ANS-142,Kirsti Johansen,K,1992,Formidling,Audioguide- og innholdsprodusent,2023-02-01,,Deltid / Sesong,0.4,52,kirsti.johansen@kunstpixel.no,+47 745 82 15,Formidlingsrom
+KP-ANS-143,Hilde Viken,K,1973,Marked,Kaféleder,2023-11-01,,Fast,1.0,52,hilde.viken@kunstpixel.no,+47 431 73 90,Kafé / Butikk / Markedskontor
+KP-ANS-144,Geir Tangen,M,1984,Samling,Digitaliserings- og samlingstekniker,2023-08-01,,Fast,1.0,52,geir.tangen@kunstpixel.no,+47 850 63 71,Konserveringsatelier U1 / Magasin
+KP-ANS-145,Torstein Bakke,M,1975,Formidling,Senior museumspedagog,2023-12-15,,Fast,1.0,56,torstein.bakke@kunstpixel.no,+47 779 75 81,Sal A
+KP-ANS-146,Espen Ruud,M,1982,Kuratering,Kurator modernisme,2023-03-01,,Fast,1.0,64,espen.ruud@kunstpixel.no,+47 828 41 30,Kuratorfløyen 2. etg
+KP-ANS-147,Stian Pedersen,M,1981,Drift,Sikkerhetsleder / RVR,2023-08-15,,Fast,1.0,61,stian.pedersen@kunstpixel.no,+47 423 21 60,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-148,Espen Nilsen,M,1966,Formidling,Formidlingsleder,2023-05-15,,Fast,1.0,71,espen.nilsen@kunstpixel.no,+47 692 78 11,Formidlingsrom
+KP-ANS-149,Benedicte Johansen,K,1997,Marked,Kafémedarbeider (Deltid),2023-07-15,2025-01-28,Sluttet,0.4,34,benedicte.johansen@kunstpixel.no,+47 966 46 19,Kafé / Butikk / Markedskontor
+KP-ANS-150,Harald Sørensen,M,1994,Drift,AV- og utstillingslystekniker,2024-11-01,,Fast,1.0,51,harald.sorensen@kunstpixel.no,+47 803 57 53,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-151,Fredrik Pedersen,M,1991,Formidling,Museumspedagog,2024-01-01,,Fast,0.5,55,fredrik.pedersen@kunstpixel.no,+47 931 68 29,Sal E
+KP-ANS-152,Maren Aas,K,1994,Samling,Digitaliserings- og samlingstekniker,2024-12-15,,Fast,1.0,58,maren.aas@kunstpixel.no,+47 921 78 72,Konserveringsatelier U1 / Magasin
+KP-ANS-153,Sindre Lindqvist,M,1993,Formidling,Museumsvert og omviser (Deltid),2024-07-15,,Deltid / Sesong,0.3,43,sindre.lindqvist@kunstpixel.no,+47 671 93 84,Sal E
+KP-ANS-154,Marit Sæther,K,1995,Formidling,Audioguide- og innholdsprodusent,2024-12-15,,Deltid / Sesong,0.4,50,marit.saether@kunstpixel.no,+47 986 99 24,Sal B
+KP-ANS-155,Stine Haugen,K,1981,Formidling,Museumspedagog,2024-07-15,,Fast,0.3,50,stine.haugen@kunstpixel.no,+47 931 36 81,Sal C
+KP-ANS-156,Vegard Haugen,M,2000,Marked,Butikkmedarbeider (Deltid),2024-06-15,,Deltid / Sesong,0.5,38,vegard.haugen@kunstpixel.no,+47 895 34 41,Kafé / Butikk / Markedskontor
+KP-ANS-157,Geir Kristiansen,M,1974,Marked,Museumsbutikkleder,2024-12-01,,Fast,1.0,55,geir.kristiansen@kunstpixel.no,+47 724 71 54,Kafé / Butikk / Markedskontor
+KP-ANS-158,Trond Hansen,M,1987,Formidling,Audioguide- og innholdsprodusent,2025-07-15,,Deltid / Sesong,0.4,54,trond.hansen@kunstpixel.no,+47 443 46 20,Sal C
+KP-ANS-159,Morten Tangen,M,1983,Kuratering,Forskningsstipendiat,2025-09-15,,Fast,1.0,58,morten.tangen@kunstpixel.no,+47 645 41 16,Kuratorfløyen 2. etg
+KP-ANS-160,Nora Moen,K,1990,Kuratering,Kurator samtidskunst,2025-02-01,,Fast,1.0,66,nora.moen@kunstpixel.no,+47 561 62 93,Kuratorfløyen 2. etg
+KP-ANS-161,Sindre Thorvaldsen,M,1985,Kuratering,Kurator samtidskunst,2025-05-01,,Fast,1.0,59,sindre.thorvaldsen@kunstpixel.no,+47 987 39 78,Kuratorfløyen 2. etg
+KP-ANS-162,Ellen Lund,K,1976,Marked,Digital innholdsprodusent / Web,2025-07-15,,Fast,1.0,56,ellen.lund@kunstpixel.no,+47 438 11 48,Kafé / Butikk / Markedskontor
+KP-ANS-163,Liv Pettersen,K,2000,Formidling,Museumsvert og omviser (Deltid),2025-09-15,,Deltid / Sesong,0.4,44,liv.pettersen@kunstpixel.no,+47 879 44 34,Formidlingsrom
+KP-ANS-164,Liv Larsen,K,1980,Drift,AV- og utstillingslystekniker,2025-01-15,,Fast,1.0,53,liv.larsen@kunstpixel.no,+47 579 88 91,Driftssentralen U1 / Sikkerhetsrom
+KP-ANS-165,Arild Moe,M,1978,Samling,Digitaliserings- og samlingstekniker,2026-03-01,,Fast,1.0,53,arild.moe@kunstpixel.no,+47 406 43 59,Konserveringsatelier U1 / Magasin
+KP-ANS-166,Stine Johnsen,K,1983,Marked,Museumsbutikkleder,2026-12-01,,Fast,1.0,53,stine.johnsen@kunstpixel.no,+47 641 17 95,Kafé / Butikk / Markedskontor
+KP-ANS-167,Sofie Eriksen,K,1991,Kuratering,Kuratorassistent,2026-12-15,,Fast,0.5,51,sofie.eriksen@kunstpixel.no,+47 626 38 27,Kuratorfløyen 2. etg
+KP-ANS-168,Fredrik Ruud,M,1986,Drift,Vekter og sikkerhetsvakt,2026-07-15,,Deltid / Sesong,0.4,41,fredrik.ruud@kunstpixel.no,+47 483 77 67,Driftssentralen U1 / Sikkerhetsrom

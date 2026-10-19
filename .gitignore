@@ -23,4 +23,6 @@ desktop.ini
 
 # Agent traces & temporary scratch
 .agents/
+.runtime/
+
 
