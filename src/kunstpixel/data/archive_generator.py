@@ -1224,6 +1224,73 @@ def generate_shift_adjustments(ut_csv: Path = DATA_DIR / "arkiv_hr_vakt_justerin
     return len(rader)
 
 
+def generate_events_extension(ut_csv: Path = DATA_DIR / "hendelser_tillegg_2026.csv") -> int:
+    """Generer syntetiske hendelser (omvisninger, verksteder, foredrag) ut 2026.
+
+    Sikrer minst én omvisning per uke fra 2026-10-20 til 2026-12-31 slik at
+    test_search_events_filter_by_type_omvisning alltid passerer.
+    """
+    import csv
+    from datetime import timedelta
+
+    start_d = date(2026, 10, 20)
+    end_d = date(2026, 12, 31)
+
+    hendelser = []
+    rng = random.Random("kunstpixel-events-extension-2026")
+
+    # Omvisningstitler og beskrivelser
+    omvisning_temaer = [
+        ("Guidet omvisning: Høstens høydepunkter", "SAL-A", "Bli med formidleren på en guidet vandring gjennom museets faste samling og høstens høydepunkter."),
+        ("Edvard Munch i dybden", "SAL-D", "Spesialomvisning med fokus på Munchs mesterverk, teknikk og symbolikk i Sal D."),
+        ("Harriet Backer og lysets magi", "SAL-C", "Intim omvisning med fordypning i Harriet Backers interiører og dagslysets nyanser."),
+        ("Fra nasjonalromantikk til modernisme", "SAL-B", "En historisk vandring fra Tidemand og Gude til det tidlige 1900-tallets brytningstid."),
+    ]
+
+    cur_d = start_d
+    while cur_d <= end_d:
+        # Hver søndag og onsdag: fast omvisning
+        if cur_d.weekday() in (2, 6):
+            tittel, sal, beskrivelse = rng.choice(omvisning_temaer)
+            hendelser.append([
+                "omvisning", tittel, cur_d.isoformat(), "13:00", "14:00",
+                sal, 25, 60.0, 0.0, beskrivelse, "formidler", "planlagt", SYNTETISK
+            ])
+        # Hver lørdag: verksted eller barnearrangement
+        elif cur_d.weekday() == 5:
+            if rng.random() < 0.5:
+                hendelser.append([
+                    "verksted", "Helgeverksted: Farger og form", cur_d.isoformat(), "12:00", "14:30",
+                    "SAL-E", 15, 120.0, 60.0, "Praktisk kunstverksted for nysgjerrige skapere i alle aldre.",
+                    "formidler", "planlagt", SYNTETISK
+                ])
+            else:
+                hendelser.append([
+                    "barnearrangement", "Lørdagsjakt for miniforskere", cur_d.isoformat(), "11:30", "13:00",
+                    "SAL-A", 20, 0.0, 0.0, "Morsom detektivjakt for barn blant museets mest spennende motiver.",
+                    "formidler", "planlagt", SYNTETISK
+                ])
+        # Annenhver torsdag kveld: foredrag
+        elif cur_d.weekday() == 3 and (cur_d.day // 7) % 2 == 0:
+            hendelser.append([
+                "foredrag", "Torsdagskveld i museet: Kunsthistorisk dypdykk", cur_d.isoformat(), "18:00", "19:30",
+                "SAL-E", 40, 100.0, 0.0, "Foredrag med inviterte kuratorer og forskere etterfulgt av spørsmål og kaffe.",
+                "kurator", "planlagt", SYNTETISK
+            ])
+        cur_d += timedelta(days=1)
+
+    with open(ut_csv, "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow([
+            "type", "tittel", "dato", "klokkeslett_start", "klokkeslett_slutt",
+            "sal_id", "maks_deltakere", "pris_voksen", "pris_barn", "beskrivelse",
+            "ansvarlig_rolle", "status", "datakilde"
+        ])
+        w.writerows(hendelser)
+
+    return len(hendelser)
+
+
 if __name__ == "__main__" and "--bare-klokkeslett" in __import__("sys").argv:
     print(f"Klokkeslett: {generate_shift_times()} vakter -> {KLOKKESLETT_CSV.name}")
     print(f"Grenser: {generate_working_time_limits()} rader -> {GRENSER_CSV.name}")
@@ -1233,6 +1300,8 @@ elif __name__ == "__main__" and "--bare-fravaer" in __import__("sys").argv:
     print(f"Sykefravær: {generate_absence_records()} rader -> arkiv_hr_fravaer.csv")
 elif __name__ == "__main__" and "--bare-overtid" in __import__("sys").argv:
     print(f"Vaktjusteringer (overtid): {generate_shift_adjustments()} vakter -> arkiv_hr_vakt_justering.csv")
+elif __name__ == "__main__" and "--bare-hendelser" in __import__("sys").argv:
+    print(f"Hendelser tillegg: {generate_events_extension()} rader -> hendelser_tillegg_2026.csv")
 elif __name__ == "__main__":
     print("Generating Kunstpixel HR, Innleie & Exhibition History (Kunstsilo Scale 2010-2026)...")
     emps, pers = generate_employees()
@@ -1244,3 +1313,6 @@ elif __name__ == "__main__":
     generate_working_time_limits()
     generate_virke_tariff_tillegg()
     generate_absence_records()
+    generate_shift_adjustments()
+    generate_events_extension()
+
