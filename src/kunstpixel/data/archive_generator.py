@@ -1021,11 +1021,157 @@ def generate_virke_tariff_tillegg(ut_csv: Path = DATA_DIR / "virke_tariff_tilleg
     return len(rader)
 
 
+def generate_absence_records(ut_csv: Path = DATA_DIR / "arkiv_hr_fravaer.csv") -> int:
+    """Generer syntetisk sykefravær og permisjon (2010-2026).
+
+    Krav:
+    - Kvartalsvis sykefraversprosent innenfor +-1.5 prosentpoeng av ssb_sykefraver_kultur.
+    - INGEN fravaersdag kan kollidere med vakt i hr_vakter for samme ansatt.
+    - Fravaer registreres for aktive ansatte i kvartalet.
+    """
+    import csv
+    from datetime import timedelta
+
+    base_db_path = DATA_DIR / "kilde" / "museum_base.db"
+    if not base_db_path.is_file():
+        raise FileNotFoundError(f"Mangler {base_db_path}")
+
+    con = sqlite3.connect(f"file:{base_db_path.resolve().as_posix()}?mode=ro", uri=True)
+    try:
+        emps = con.execute("SELECT ansatt_id, ansatt_fra, ansatt_til, stillingsprosent FROM hr_ansatte").fetchall()
+        ssb_quarters = con.execute(
+            "SELECT aar, kvartal, sykefraver_prosent, egenmeldt_prosent, legemeldt_prosent "
+            "FROM ssb_sykefraver_kultur ORDER BY aar, kvartal"
+        ).fetchall()
+        shift_days: set[tuple[str, str]] = set(
+            con.execute("SELECT ansatt_id, dato FROM hr_vakter").fetchall()
+        )
+    finally:
+        con.close()
+
+    quarter_dates = {
+        1: (date(2000, 1, 1), date(2000, 3, 31)),
+        2: (date(2000, 4, 1), date(2000, 6, 30)),
+        3: (date(2000, 7, 1), date(2000, 9, 30)),
+        4: (date(2000, 10, 1), date(2000, 12, 31)),
+    }
+
+    absence_records = []
+    fravaer_idx = 1
+    rng = random.Random("kunstpixel-fravaer-2010-2026-v1")
+
+    for aar, kvartal, ssb_tot, ssb_egen, ssb_lege in ssb_quarters:
+        q_start = date(aar, (kvartal - 1) * 3 + 1, 1)
+        if kvartal == 1:
+            q_end = date(aar, 3, 31)
+        elif kvartal == 2:
+            q_end = date(aar, 6, 30)
+        elif kvartal == 3:
+            q_end = date(aar, 9, 30)
+        else:
+            q_end = date(aar, 12, 31)
+
+        # Aktive ansatte i kvartalet
+        aktive_i_kvartal = []
+        mulige_dagsverk = 0.0
+        for emp_id, fra_s, til_s, st_pros in emps:
+            e_fra = date.fromisoformat(fra_s) if fra_s else date(2010, 1, 1)
+            e_til = date.fromisoformat(til_s) if til_s else date(2099, 12, 31)
+            if e_fra <= q_end and e_til >= q_start:
+                pros = float(st_pros or 1.0)
+                aktive_i_kvartal.append((emp_id, pros, e_fra, e_til))
+                mulige_dagsverk += pros * 58.75
+
+        # Mål for antall sykedager (sykefraver_prosent)
+        target_sick_days = (ssb_tot / 100.0) * mulige_dagsverk
+        actual_sick_days = 0
+
+        # Alle tilgjengelige hverdager i kvartalet
+        all_q_weekdays = []
+        cur_d = q_start
+        while cur_d <= q_end:
+            if cur_d.weekday() < 5:
+                all_q_weekdays.append(cur_d)
+            cur_d += timedelta(days=1)
+
+        # Trekk fraværsepisoder deterministisk
+        used_employee_days: set[tuple[str, str]] = set()
+        attempts = 0
+        while actual_sick_days < target_sick_days and attempts < 3000:
+            attempts += 1
+            emp_id, pros, e_fra, e_til = rng.choice(aktive_i_kvartal)
+            # Velg type: egenmelding (1-3 dager) eller sykemelding (4-12 dager)
+            is_egen = rng.random() < (ssb_egen / ssb_tot if ssb_tot > 0 else 0.2)
+            varighet = rng.randint(1, 3) if is_egen else rng.randint(4, 10)
+            ftype = "egenmelding" if is_egen else "sykemelding"
+
+            start_cand = rng.choice(all_q_weekdays)
+            # Episode må ligge helt innenfor kvartalet og ansettelsesperioden
+            slutt_cand = start_cand + timedelta(days=varighet - 1)
+            if slutt_cand > q_end or slutt_cand > e_til or start_cand < e_fra:
+                continue
+
+            # Sjekk HVER kalenderdag i intervallet [start_cand, slutt_cand]
+            kollisjon = False
+            cur_check = start_cand
+            while cur_check <= slutt_cand:
+                d_iso = cur_check.isoformat()
+                if (emp_id, d_iso) in shift_days or (emp_id, d_iso) in used_employee_days:
+                    kollisjon = True
+                    break
+                cur_check += timedelta(days=1)
+
+            if not kollisjon:
+                cur_mark = start_cand
+                added_sick = 0
+                while cur_mark <= slutt_cand:
+                    used_employee_days.add((emp_id, cur_mark.isoformat()))
+                    if cur_mark.weekday() < 5:
+                        added_sick += 1
+                    cur_mark += timedelta(days=1)
+                actual_sick_days += added_sick
+                fid = f"FRAV-{fravaer_idx:06d}"
+                fravaer_idx += 1
+                absence_records.append([fid, emp_id, start_cand.isoformat(), slutt_cand.isoformat(), ftype, SYNTETISK])
+
+        # Legg til permisjoner per kvartal for variasjon (kun hvis ingen kollisjon)
+        if rng.random() < 0.5 and aktive_i_kvartal:
+            emp_id, pros, e_fra, e_til = rng.choice(aktive_i_kvartal)
+            start_cand = rng.choice(all_q_weekdays)
+            slutt_cand = start_cand + timedelta(days=4)
+            if slutt_cand <= q_end and slutt_cand <= e_til and start_cand >= e_fra:
+                kollisjon = False
+                cur_check = start_cand
+                while cur_check <= slutt_cand:
+                    d_iso = cur_check.isoformat()
+                    if (emp_id, d_iso) in shift_days or (emp_id, d_iso) in used_employee_days:
+                        kollisjon = True
+                        break
+                    cur_check += timedelta(days=1)
+                if not kollisjon:
+                    cur_mark = start_cand
+                    while cur_mark <= slutt_cand:
+                        used_employee_days.add((emp_id, cur_mark.isoformat()))
+                        cur_mark += timedelta(days=1)
+                    fid = f"FRAV-{fravaer_idx:06d}"
+                    fravaer_idx += 1
+                    absence_records.append([fid, emp_id, start_cand.isoformat(), slutt_cand.isoformat(), "permisjon", SYNTETISK])
+
+    with open(ut_csv, "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["fravaer_id", "ansatt_id", "fra", "til", "type", "datakilde"])
+        w.writerows(absence_records)
+
+    return len(absence_records)
+
+
 if __name__ == "__main__" and "--bare-klokkeslett" in __import__("sys").argv:
     print(f"Klokkeslett: {generate_shift_times()} vakter -> {KLOKKESLETT_CSV.name}")
     print(f"Grenser: {generate_working_time_limits()} rader -> {GRENSER_CSV.name}")
 elif __name__ == "__main__" and "--bare-tariff" in __import__("sys").argv:
     print(f"Tariff tillegg: {generate_virke_tariff_tillegg()} trinn -> virke_tariff_tillegg.csv")
+elif __name__ == "__main__" and "--bare-fravaer" in __import__("sys").argv:
+    print(f"Sykefravær: {generate_absence_records()} rader -> arkiv_hr_fravaer.csv")
 elif __name__ == "__main__":
     print("Generating Kunstpixel HR, Innleie & Exhibition History (Kunstsilo Scale 2010-2026)...")
     emps, pers = generate_employees()
@@ -1036,3 +1182,4 @@ elif __name__ == "__main__":
     generate_shift_times()
     generate_working_time_limits()
     generate_virke_tariff_tillegg()
+    generate_absence_records()
