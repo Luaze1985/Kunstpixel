@@ -81,8 +81,21 @@ class ClosingConnection(sqlite3.Connection):
             self.close()
 
 
+def _default_hr_db() -> Path:
+    if MASTER.is_file():
+        con = sqlite3.connect(MASTER.resolve().as_uri() + '?mode=ro', uri=True)
+        try:
+            if con.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='hr_people'").fetchone():
+                return MASTER
+        finally:
+            con.close()
+    return RUNTIME
+
+
 def _open(db_path: Path | str | None = None) -> sqlite3.Connection:
-    path = Path(db_path or os.environ.get('KUNSTPIXEL_DEMO_DB', RUNTIME)).resolve()
+    # ADR 004: HR-tabellene skal ligge i museum.db (bygges av build_museum_db.py). Til museum.db er
+    # bygget, faller vi tilbake til den separate demokopien. KUNSTPIXEL_DEMO_DB overstyrer begge.
+    path = Path(db_path or os.environ.get('KUNSTPIXEL_DEMO_DB') or _default_hr_db()).resolve()
     if not path.is_file():
         raise FileNotFoundError(f'Demobase mangler: {path}. Kjør init_demo først.')
     con = sqlite3.connect(path.as_uri() + '?mode=ro', uri=True, factory=ClosingConnection)
@@ -150,6 +163,27 @@ def validate_seed(seed: dict[str, Any]) -> None:
             raise ValueError('Regel mangler kilde eller eier')
 
 
+def load_seed(con: sqlite3.Connection, seed: dict[str, Any]) -> None:
+    """Create HR demo tables and load a validated seed. Shared by init_demo and build_museum_db."""
+    validate_seed(seed)
+    with con:
+        con.executescript(SCHEMA)
+        con.executemany('INSERT INTO hr_people VALUES (?,?,?,?,?)', [
+            (p['id'],p['name'],p['role'],p['active'],p['employment']) for p in seed['people']])
+        con.executemany('INSERT INTO hr_skills VALUES (?,?,?)', [
+            (s['code'],s['name'],s['expires']) for s in seed['skills']])
+        con.executemany('INSERT INTO hr_person_skill VALUES (?,?,?,?,?,?)', [
+            (x['person_id'],x['skill_code'],x['verified'],x.get('evidence'),x.get('acquired'),x.get('valid_to'))
+            for x in seed['person_skills']])
+        con.executemany('INSERT INTO hr_availability VALUES (?,?,?,?,?)', [
+            (x['person_id'],x['work_date'],x['start_time'],x['end_time'],x['state']) for x in seed['availability']])
+        con.executemany('INSERT INTO hr_rules VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [
+            (r['id'],r['version'],r['domain'],r['topic'],json.dumps(r['condition'],ensure_ascii=False),
+             json.dumps(r['actions'],ensure_ascii=False),r['owner_role'],r.get('deadline'),
+             json.dumps(r.get('exceptions',[]),ensure_ascii=False),r['source'],r['priority'],
+             r['valid_from'],r.get('valid_to'),r['status']) for r in seed['rules']])
+
+
 def init_demo(target: Path | str = RUNTIME, master: Path | str = MASTER,
               seed_path: Path | str = SEED, reset: bool = False) -> Path:
     """Make one combined runtime DB while keeping tracked original DB untouched."""
@@ -179,22 +213,7 @@ def init_demo(target: Path | str = RUNTIME, master: Path | str = MASTER,
         con = sqlite3.connect(temp)
         try:
             con.execute('PRAGMA foreign_keys=ON')
-            with con:
-                con.executescript(SCHEMA)
-                con.executemany('INSERT INTO hr_people VALUES (?,?,?,?,?)', [
-                    (p['id'],p['name'],p['role'],p['active'],p['employment']) for p in seed['people']])
-                con.executemany('INSERT INTO hr_skills VALUES (?,?,?)', [
-                    (s['code'],s['name'],s['expires']) for s in seed['skills']])
-                con.executemany('INSERT INTO hr_person_skill VALUES (?,?,?,?,?,?)', [
-                    (x['person_id'],x['skill_code'],x['verified'],x.get('evidence'),x.get('acquired'),x.get('valid_to'))
-                    for x in seed['person_skills']])
-                con.executemany('INSERT INTO hr_availability VALUES (?,?,?,?,?)', [
-                    (x['person_id'],x['work_date'],x['start_time'],x['end_time'],x['state']) for x in seed['availability']])
-                con.executemany('INSERT INTO hr_rules VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [
-                    (r['id'],r['version'],r['domain'],r['topic'],json.dumps(r['condition'],ensure_ascii=False),
-                     json.dumps(r['actions'],ensure_ascii=False),r['owner_role'],r.get('deadline'),
-                     json.dumps(r.get('exceptions',[]),ensure_ascii=False),r['source'],r['priority'],
-                     r['valid_from'],r.get('valid_to'),r['status']) for r in seed['rules']])
+            load_seed(con, seed)
             if con.execute('PRAGMA foreign_key_check').fetchall():
                 raise ValueError('Referanseintegritet feilet')
         finally:

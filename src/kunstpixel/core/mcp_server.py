@@ -28,7 +28,11 @@ from src.kunstpixel.core.db import (
     query_incidents,
     query_loans,
     query_quarterly_absence,
+    query_overtime,
     query_room_artworks,
+    query_shift_cost,
+    query_shifts_on_date,
+    query_staff_on_duty,
     query_station_ergonomics,
     query_styrk_job_code,
     query_supplier_brreg,
@@ -377,6 +381,53 @@ def calculate_shift_cost(
         "total_kostnad_nok": total_cost,
         "tariff_kilde": "Virke Landsoverenskomst for museer",
     }
+
+
+@mcp.tool()
+def get_staff_on_duty(tidspunkt: str | None = None) -> dict[str, Any]:
+    """Finn hvem som er på jobb på et tidspunkt, med navn, rolle, stasjon og kontaktinfo.
+
+    Args:
+        tidspunkt: ISO-tidspunkt 'YYYY-MM-DDTHH:MM'. Standard er nå (lokal tid).
+
+    Returns:
+        Antall på jobb, antall vakter samme dag og liste over pågående vakter.
+        Start og slutt er utledet fra rolle og timer etter ADR 009.
+    """
+    return query_staff_on_duty(tidspunkt)
+
+
+@mcp.tool()
+def get_shifts_for_date(dato: str) -> list[dict[str, Any]]:
+    """Hent vaktplanen for én dato: alle vakter med start, slutt, rolle, stasjon og ansatt.
+
+    Args:
+        dato: Dato i ISO-format 'YYYY-MM-DD'.
+    """
+    return query_shifts_on_date(dato)
+
+
+@mcp.tool()
+def get_overtime_report(maaned: str) -> dict[str, Any]:
+    """Overtidsrapport for en måned: per ansatt timer over 9 per døgn og over 37,5 per uke (ADR 009).
+
+    Args:
+        maaned: Måned i formatet 'YYYY-MM'.
+    """
+    return query_overtime(maaned)
+
+
+@mcp.tool()
+def get_shift_cost_for_period(maaned: str) -> dict[str, Any]:
+    """Lønnskostnad for alle vakter i en måned per avdeling etter Virke-tariff.
+
+    Args:
+        maaned: Måned i formatet 'YYYY-MM'.
+
+    Returns:
+        Kostnad per avdeling og totalt, og antall vakter uten tariffsats (ikke kostnadsberegnet).
+    """
+    return query_shift_cost(maaned)
 
 
 # --- HR, HMS & Kvalitetsverktøy (integrert) ---

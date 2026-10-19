@@ -23,7 +23,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = ROOT / "05_data"
 MUSEUM_DB = DATA_DIR / "museum.db"
-HISTORIKK_DB = DATA_DIR / "kunstpixel_historikk.db"
+HISTORIKK_DB = DATA_DIR / "arkiv" / "kunstpixel_historikk.db"
 
 
 def consolidate_and_enrich() -> dict[str, int]:

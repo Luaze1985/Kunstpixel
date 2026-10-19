@@ -6,7 +6,7 @@ Calibrated to the exact size of Kunstsilo (Kristiansand):
 - Dedicated contractor & temporary staffing register ('innleie'): ~300 contracts (scenography, Avarn/Securitas, guest curators, conservation, art transport)
 - ~50,000 monthly shift records
 - 102 curated exhibitions across Sal A-F
-- Full export to CSV, Parquet (via DuckDB), and SQLite (05_data/kunstpixel_historikk.db)
+- Full export to CSV, Parquet (via DuckDB), and SQLite (05_data/arkiv/kunstpixel_historikk.db)
 """
 
 import calendar
@@ -878,7 +878,7 @@ def export_all(employees: list[dict], personas: list[dict], exhibitions: list[di
     duckdb.query("SELECT * FROM df_shifts").write_parquet(str(DATA_DIR / "arkiv_hr_vakt_historikk.parquet"))
 
     # 4. SQLite Enterprise Archive Database
-    db_file = DATA_DIR / "kunstpixel_historikk.db"
+    db_file = DATA_DIR / "arkiv" / "kunstpixel_historikk.db"
     print(f"Creating and populating SQLite database: {db_file}...")
     if db_file.exists():
         db_file.unlink()
