@@ -72,3 +72,21 @@ Funn 3 og 4 er rettet. Funn 6–10 gjenstår.
 **Ikke testet:** vaktkostnad for en måned med vakter uten tariff. Det finnes ingen slik måned i dagens data, så den grenen er kontrollert bare ved lesing av koden.
 
 **Gjenstår:** 6 (kommandoer `/hr` og `/okonomi` på forsidekortene), 7 (tomtilstand), 8 (`lang="nb"`), 9 (`scope`, `caption`, tastatur på tabellramme), 10 (opplesing av vurdering) og forsiden som er tom mens rollene hentes.
+
+---
+
+## Status etter tredje retting (2026-10-20)
+Funn 6–10 og forsidens tomme tilstand er rettet. Alle 10 funn i rapporten er nå lukket. Det som er igjen under «Ikke testet» (skjermleser, axe/WAVE, brukertest) er fortsatt ikke gjort.
+
+| # | Status | Hva som ble gjort | Bevis |
+|---|---|---|---|
+| 6 | **Rettet** | Rollekortene viser bare navn, beskrivelse og antall spørsmål. Kommandoene `/hr` og `/okonomi` er fjernet fra kortene. | `etter4-pc-forside-uten-kommando.jpg` |
+| 7 | **Rettet** | En tom tabell vises som Tomtilstand: «Ingen rader», hvorfor («museum.db har ingen rader for 2030-01-01.») og én handling, «Endre utvalget», som flytter fokus til første filter. | Målt: tabellrammen er skjult, tomtilstanden vises, og fokus havner på datofeltet. Bilder: `etter4-pc-tomtilstand.jpg`, `etter4-mobil-tomtilstand.jpg` |
+| 8 | **Rettet** | `lang="nb"` på begge sidene (`index.html`, `sok.html`). | Målt: `document.documentElement.lang` = nb |
+| 9 | **Rettet** | Tabellhoder har `scope="col"`. Tabellen har en skjult `caption` («Arbeidstid: 2026-09»). Tabellrammen har `tabindex="0"`, `role="region"` og `aria-label`, så den kan rulles med tastatur. | Målt: alle `th` har scope col, rammen tar fokus. |
+| 10 | **Rettet** | Vurdering og forslag er `aria-live="polite"`, så skjermlesere får vite at regelen er lastet. | Målt: `vurdering` og `forslag` finnes blant live-regionene. |
+| – | **Rettet** | Forsiden er ikke lenger tom mens rollene hentes. Den viser «Henter roller …» til listen er kommet. | Teksten finnes i HTML-en som serveren sender. Hentingen er for rask til å fotografere. |
+
+**Målt etter rettingen:** ingen sidelengs rulling på mobil (375 av 375 px) og PC (1100 px), ingen feil i konsollen, og statusporten gir KLAR med 0 feil.
+
+**Ikke testet:** at en skjermleser faktisk leser opp tabellen og endringene. Funn 9 og 10 er målt som markering i koden, ikke som opplevelse.

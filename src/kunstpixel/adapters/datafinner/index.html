@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="no">
+<html lang="nb">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +24,7 @@
 
       <section class="af-view" data-step="tom" id="tom">
         <h1 class="af-title" id="start-tittel" tabindex="-1">Datafinner</h1>
-        <ul class="af-task-board" id="roller"></ul>
+        <ul class="af-task-board" id="roller"><li><p>Henter roller …</p></li></ul>
       </section>
 
       <section class="af-view" data-step="rolle" id="rolle" hidden>
@@ -72,11 +72,11 @@
           </div>
           <div class="af-report-block">
             <span class="af-report-kind">Vurdering</span>
-            <div><p id="vurdering"></p><span class="af-source missing" id="vurdering-merke">Mangler</span></div>
+            <div><p id="vurdering" aria-live="polite"></p><span class="af-source missing" id="vurdering-merke">Mangler</span></div>
           </div>
           <div class="af-report-block">
             <span class="af-report-kind">Forslag</span>
-            <div><p id="forslag"></p><span class="af-source missing" id="forslag-merke">Mangler</span></div>
+            <div><p id="forslag" aria-live="polite"></p><span class="af-source missing" id="forslag-merke">Mangler</span></div>
           </div>
           <div class="af-report-block">
             <span class="af-report-kind">Kontroll</span>
@@ -253,7 +253,7 @@
       var b = el("button", "af-task-card"); b.type = "button";
       var t = el("span"); t.appendChild(el("strong", null, r.navn));
       if (r.beskrivelse) t.appendChild(el("small", null, r.beskrivelse));
-      t.appendChild(el("small", null, r.merknad + " · " + r.sporsmal.length + " spørsmål"));
+      t.appendChild(el("small", null, r.sporsmal.length + " spørsmål"));
       b.appendChild(t);
       b.addEventListener("click", function () { velgRolle(r.navn); });
       li.appendChild(b); ul.appendChild(li);
@@ -411,10 +411,24 @@
     var rader = s.rader(d);
     var kolonner = s.kolonner.filter(function (k) { return !k[2] || rader.some(function (r) { return r[k[0]] !== undefined; }); });
     var hr = el("tr");
-    kolonner.forEach(function (k) { hr.appendChild(el("th", null, k[1])); });
+    kolonner.forEach(function (k) { var th = el("th", null, k[1]); th.scope = "col"; hr.appendChild(th); });
     thead.appendChild(hr);
+    // Tabellen får navn og kan nås med tastatur når den ruller sidelengs.
+    var tabell = $("fakta"), ramme = tabell.parentNode;
+    var cap = tabell.caption || tabell.createCaption();
+    cap.textContent = s.kort + ": " + s.periode(d, sisteFiltre);
+    cap.style.cssText = "position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap";
+    ramme.tabIndex = 0; ramme.setAttribute("role", "region"); ramme.setAttribute("aria-label", cap.textContent);
+    // Tomtilstand: si hvorfor det er tomt og gi én handling.
+    var gammelTom = $("fakta-tom"); if (gammelTom) gammelTom.remove();
+    ramme.hidden = rader.length === 0;
     if (!rader.length) {
-      var tr0 = el("tr"), td0 = el("td", null, "Ingen rader."); td0.colSpan = kolonner.length; tr0.appendChild(td0); tbody.appendChild(tr0);
+      var tom = el("div", "af-empty"); tom.id = "fakta-tom";
+      tom.appendChild(el("h3", null, "Ingen rader"));
+      tom.appendChild(el("p", null, "museum.db har ingen rader for " + s.periode(d, sisteFiltre) + "."));
+      var tb = el("button", "af-btn af-btn-secondary", "Endre utvalget"); tb.type = "button";
+      tb.addEventListener("click", function () { var f1 = $("filtre").querySelector("input,select"); gaaTil($("sporsmal"), f1 || $("tittel")); });
+      tom.appendChild(tb); ramme.parentNode.insertBefore(tom, ramme);
     }
     rader.forEach(function (r) {
       var tr = el("tr");
