@@ -26,3 +26,6 @@ desktop.ini
 .runtime/
 
 
+
+# Demokopi av museum.db (bygges av build_demo_db.py)
+05_data/demo/

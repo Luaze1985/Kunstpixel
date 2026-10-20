@@ -14,6 +14,12 @@ Kjøres med:
     py -3.13 src/kunstpixel/adapters/datafinner.py
 
 Åpnes på http://127.0.0.1:8010
+
+Demomodus (for hosting):
+    DATAFINNER_DEMO=1          fjerner filverktøyene (grep_mappe, les_fil) og /sok.html
+    DATAFINNER_HOST=0.0.0.0    lytter på alle adresser (bare bak en omvendt proxy med innlogging)
+    KUNSTPIXEL_DB_PATH=<sti>   databasen som skal brukes (bruk demokopien, se build_demo_db.py)
+Serveren har ingen innlogging selv. Den skal alltid ligge bak noe som krever det.
 """
 
 from __future__ import annotations
@@ -148,6 +154,35 @@ VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
 }
 
 
+# Verktøy og sider som leser filer utenfor databasen. De skal ikke være med i en hostet demo.
+FILVERKTOY = ("grep_mappe", "les_fil")
+DEMO_SKJULTE_SIDER = ("/sok.html",)
+
+
+def bruk_demomodus(verktoy: dict[str, Any], sider: dict[str, Any]) -> None:
+    """Fjern filverktøyene og søkesiden som bruker dem. Endrer ordbøkene på stedet."""
+    for navn in FILVERKTOY:
+        verktoy.pop(navn, None)
+    for sti in DEMO_SKJULTE_SIDER:
+        sider.pop(sti, None)
+
+
+DEMO = os.environ.get("DATAFINNER_DEMO") == "1"
+if DEMO:
+    bruk_demomodus(VERKTOY, ASSETS)
+
+# Siden bruker bare egne filer, ett skript og stilark i samme side. Alt annet er stengt.
+SIKKERHETSHODER = {
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "no-referrer",
+    "Content-Security-Policy": (
+        "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; "
+        "connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+    ),
+}
+
+
 def run_tool(name: str, args: dict[str, Any]) -> Any:
     """Kjør ett hvitelistet MCP-verktøy med kun tillatte argumenter."""
     if name not in VERKTOY:
@@ -168,6 +203,8 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
+        for navn, verdi in SIKKERHETSHODER.items():
+            self.send_header(navn, verdi)
         self.end_headers()
         self.wfile.write(body)
 
@@ -192,7 +229,9 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
                 self._json(400, {"error": str(exc)})
                 return
             except Exception as exc:  # databasefeil o.l.
-                self._json(500, {"error": f"Feil ved oppslag: {exc}"})
+                # Detaljene (stier, SQL) står i loggen, ikke i svaret til nettleseren.
+                sys.stderr.write(f"[datafinner] FEIL i {name}: {exc!r}\n")
+                self._json(500, {"error": "Feil ved oppslag. Prøv igjen, eller si ifra til den som drifter siden."})
                 return
             self._json(200, {"verktoy": name, "args": args, "resultat": result})
             return
@@ -204,8 +243,9 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
 
 def main() -> None:
     port = int(os.environ.get("DATAFINNER_PORT", "8010"))
-    server = ThreadingHTTPServer(("127.0.0.1", port), DatafinnerHandler)
-    print(f"Datafinner kjører på http://127.0.0.1:{port} (Ctrl+C for å stoppe)")
+    host = os.environ.get("DATAFINNER_HOST", "127.0.0.1")
+    server = ThreadingHTTPServer((host, port), DatafinnerHandler)
+    print(f"Datafinner kjører på http://{host}:{port}{' (demomodus)' if DEMO else ''} (Ctrl+C for å stoppe)")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

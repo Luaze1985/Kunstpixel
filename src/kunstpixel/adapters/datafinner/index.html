@@ -115,7 +115,7 @@
   var tall = function (n) { return Number(n).toLocaleString("nb-NO"); };
   var KONTROLL = ["Tallene stemmer med kilden", "Utvalget dekker det jeg spurte om"];
   // Kolonner med true vises bare når feltet finnes i svaret fra databasen.
-  var VAKTKOLONNER = [["start", "Start", true], ["slutt", "Slutt", true], ["navn", "Navn"], ["stilling", "Stilling"], ["timer", "Timer"], ["stasjon", "Stasjon"], ["avdeling", "Avdeling"], ["telefon", "Telefon"], ["epost", "E-post"]];
+  var VAKTKOLONNER = [["start", "Start", true], ["slutt", "Slutt", true], ["navn", "Navn"], ["stilling", "Stilling"], ["timer", "Timer"], ["stasjon", "Stasjon"], ["avdeling", "Avdeling"], ["telefon", "Telefon", true], ["epost", "E-post", true]];
 
   // Bare data fra museum.db. Roller og rekkefølge kommer fra list_roles (tabellene roller og
   // rolle_sporsmal). Vurdering og forslag velges av get_report_assessment fra rapport_regler.
@@ -409,7 +409,7 @@
     var thead = $("fakta").tHead, tbody = $("fakta").tBodies[0];
     thead.textContent = ""; tbody.textContent = "";
     var rader = s.rader(d);
-    var kolonner = s.kolonner.filter(function (k) { return !k[2] || rader.some(function (r) { return r[k[0]] !== undefined; }); });
+    var kolonner = s.kolonner.filter(function (k) { return !k[2] || rader.some(function (r) { return r[k[0]] != null && r[k[0]] !== ""; }); });
     var hr = el("tr");
     kolonner.forEach(function (k) { var th = el("th", null, k[1]); th.scope = "col"; hr.appendChild(th); });
     thead.appendChild(hr);
