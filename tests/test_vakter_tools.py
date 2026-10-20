@@ -45,6 +45,8 @@ def test_arbeidstid_paa_museum_db() -> None:
     r = query_working_hours("2026-09")
     assert r["antall_ansatte"] > 0 and r["timer_totalt"] > 0
     assert len(r["ansatte"]) > 0
+    # Stillingsprosent vises som prosent (30-100), ikke som andel (0,3-1).
+    assert all(a["stillingsprosent"] is None or 30 <= a["stillingsprosent"] <= 100 for a in r["ansatte"])
 
 
 def test_vaktkostnad_paa_museum_db() -> None:

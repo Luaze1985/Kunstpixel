@@ -1227,7 +1227,9 @@ def query_working_hours(maaned: str, db_path: Path | str | None = None) -> dict:
     for r in execute_read_query(sql, {"fra": fra, "til": til}, db):
         p = per.setdefault(r["ansatt_id"], {
             "ansatt_id": r["ansatt_id"], "navn": r["navn"], "avdeling": r["avdeling"],
-            "stillingsprosent": r["stillingsprosent"], "timer_totalt": 0.0, "antall_vakter": 0,
+            # hr_ansatte lagrer en andel (0,4); rapporten viser prosent (40).
+            "stillingsprosent": round(r["stillingsprosent"] * 100, 1) if r["stillingsprosent"] is not None else None,
+            "timer_totalt": 0.0, "antall_vakter": 0,
             "hoyeste_dognsum": 0.0, "dognovertid_timer": 0.0,
         })
         p["timer_totalt"] += r["timer"]

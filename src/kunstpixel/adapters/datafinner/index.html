@@ -20,6 +20,8 @@
         <select id="mobilvalg"></select>
       </div>
 
+      <div class="af-alert info" role="status"><strong>Øvingsdata</strong><span>Alle ansatte, vakter og tall i Datafinner er syntetiske.</span></div>
+
       <section class="af-view" data-step="tom" id="tom">
         <h1 class="af-title" id="start-tittel" tabindex="-1">Datafinner</h1>
         <ul class="af-task-board" id="roller"></ul>
@@ -82,7 +84,7 @@
           </div>
           <div class="af-report-block">
             <span class="af-report-kind">Grunnlag</span>
-            <div><p id="grunnlag"></p><span class="af-source system">Regelversjon</span></div>
+            <div><p id="grunnlag" style="overflow-wrap:anywhere"></p><span class="af-source system">Regelversjon</span></div>
           </div>
           <div class="af-actions">
             <button class="af-btn af-btn-primary" type="button" id="last">Last ned rapport</button>
@@ -95,12 +97,12 @@
       <h2 class="af-context-title">Slik spør LLM-en</h2>
       <div class="af-context-card">
         <span class="af-small-label">Verktøy</span>
-        <p id="verktoy">Velg et spørsmål.</p>
+        <p id="verktoy" style="overflow-wrap:anywhere">Velg et spørsmål.</p>
       </div>
       <div class="af-context-card">
         <span class="af-small-label">Kilde</span>
-        <p id="kilde">museum.db, kun lesing</p>
-        <p id="db-mangler"></p>
+        <p id="kilde" style="overflow-wrap:anywhere">museum.db, kun lesing</p>
+        <p id="db-mangler" style="overflow-wrap:anywhere"></p>
       </div>
     </aside>
   </div>

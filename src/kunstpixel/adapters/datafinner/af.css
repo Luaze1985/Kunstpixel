@@ -234,7 +234,7 @@
 
 /* Rapport */
 .af-report { max-width: 720px; }
-.af-report-block { padding: 14px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 110px 1fr; gap: 12px; }
+.af-report-block { padding: 14px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 12px; }
 .af-report-kind { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; font-weight: 750; color: var(--muted); padding-top: 3px; }
 .af-report-block p { margin: 0 0 6px; }
 .af-report-block ul { margin: 0; padding-left: 18px; }
@@ -288,7 +288,7 @@
   .af-review-row button { grid-column: 2; grid-row: 1 / span 2; }
   .af-save-status { width: 100%; margin-left: 0; }
   .af-actions .af-btn { flex: 1 1 130px; }
-  .af-report-block { grid-template-columns: 1fr; gap: 4px; }
+  .af-report-block { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   .af-bar-row { grid-template-columns: 90px 1fr 40px; }
 }
 @media (prefers-reduced-motion: reduce) { .af *, .af *::before, .af *::after { transition: none !important; } }
