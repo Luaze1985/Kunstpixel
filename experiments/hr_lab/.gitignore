@@ -1,0 +1,12 @@
+# HR-lab: ingen reelle eller syntetiske personopplysninger i git
+*.sqlite
+*.sqlite3
+*.db
+*.db-*
+generated/
+runtime/
+tmp/
+.env
+.venv/
+__pycache__/
+*.py[cod]
