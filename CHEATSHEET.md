@@ -12,8 +12,8 @@
 - KI-laget er bare testet mot en falsk server, ikke mot en ekte leverandør. To grener fra før er ikke flettet (se `HANDOFF`).
 
 ## 3. Første oppgave neste gang du setter deg ned
-- **Bygg databasen på nytt:** `py -3.13 src/kunstpixel/data/build_museum_db.py`. Kjør så `--check` (skal gi LIK) og si ifra, så committer jeg.
-- Deretter: kjør veilederen, gå gjennom navnene i `.scratch/demo/navneliste.md` og regeltekstene i `05_data/rapport_regler.csv`.
+- **Åpne `G:\Min disk\Kunstpixel` i VS Code** og si til agenten: «Les `02_deliverables/opplaering/BESTILLING-opplaeringsarena.md` og gjør steg 1 til 3. Spør meg før hver installasjon.» Da blir verktøyene installert, databasen bygget på nytt, og du får en notatbok å utforske tallene i.
+- Senere: kjør VPS-veilederen når du vil legge demoen ut.
 
 ## 4. Nyttige snarveier for dette prosjektet
 - Demoen lokalt: `py -3.13 scripts/start_demo.py` (http://127.0.0.1:8011)
