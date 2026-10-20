@@ -58,3 +58,17 @@ Funn 1, 2 og 5 er rettet og målt på nytt (1100 px og 375 px). Funn 3, 4 og 6�
 **Nytt funn under testingen (lav):** forsiden er tom i et øyeblikk mens rollene hentes fra databasen. Vis «Henter roller …» i den tiden.
 
 **Merk:** `bundle.css` og `DESIGN.md` ligger i `G:\Min disk\Designssystemer\arbeidsflyt`. Det er ikke et git-repo, så endringen er ikke versjonert. Andre prosjekter som kopierer `bundle.css` får rettingen først når de kopierer den på nytt.
+
+---
+
+## Status etter andre retting (2026-10-20)
+Funn 3 og 4 er rettet. Funn 6–10 gjenstår.
+
+| # | Status | Hva som ble gjort | Bevis |
+|---|---|---|---|
+| 3 | **Rettet** | Alle egne merker («Fra museum.db», «Syntetiske data i museum.db», «Syntetisk regel i museum.db», «Henter», «Ufullstendig tariff») er fjernet. Siden bruker nå bare de faste ordene: Bekreftet, Systemforslag, Bør verifiseres og Mangler. At dataene er syntetiske står i varselet øverst og i Grunnlag, ikke som kildemerke. Merket «Regelversjon» i Grunnlag var misbrukt som kildemerke og er fjernet. Under lasting vises ingen merker. | Målt på alle seks spørsmål: ingen ord utenfor de faste. |
+| 4 | **Rettet** | Vurdering og forslag fra `rapport_regler` er **Systemforslag** til en person har godtatt dem. Kontroll har fått et tredje punkt, «Jeg godtar vurdering og forslag». Rapporten er Utkast til alle tre punktene er krysset av. Fakta er «Bør verifiseres» til de to faktakontrollene er krysset av. Har vaktkostnaden vakter uten tariff, blir fakta stående som «Bør verifiseres». Mangler regelen, står det Mangler, og rapporten forblir Utkast. | Målt: etter «Lag rapport» er status Utkast, med fakta «Bør verifiseres» og vurdering og forslag «Systemforslag». Med bare faktapunktene krysset av er fakta Bekreftet, og vurdering og forslag er fortsatt Systemforslag (Utkast). Med alle tre krysset av er alt Bekreftet. Bilder: `etter3-pc-systemforslag-utkast.jpg`, `etter3-pc-godtatt-bekreftet.jpg`, `etter3-mobil-systemforslag-utkast.jpg`. |
+
+**Ikke testet:** vaktkostnad for en måned med vakter uten tariff. Det finnes ingen slik måned i dagens data, så den grenen er kontrollert bare ved lesing av koden.
+
+**Gjenstår:** 6 (kommandoer `/hr` og `/okonomi` på forsidekortene), 7 (tomtilstand), 8 (`lang="nb"`), 9 (`scope`, `caption`, tastatur på tabellramme), 10 (opplesing av vurdering) og forsiden som er tom mens rollene hentes.

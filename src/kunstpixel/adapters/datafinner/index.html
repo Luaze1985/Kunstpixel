@@ -116,8 +116,6 @@
   var KONTROLL = ["Tallene stemmer med kilden", "Utvalget dekker det jeg spurte om"];
   // Kolonner med true vises bare når feltet finnes i svaret fra databasen.
   var VAKTKOLONNER = [["start", "Start", true], ["slutt", "Slutt", true], ["navn", "Navn"], ["stilling", "Stilling"], ["timer", "Timer"], ["stasjon", "Stasjon"], ["avdeling", "Avdeling"], ["telefon", "Telefon"], ["epost", "E-post"]];
-  var FRA_DB = ["confirmed", "Fra museum.db"];
-  var SYNTETISK = ["system", "Syntetiske data i museum.db"];
 
   // Bare data fra museum.db. Roller og rekkefølge kommer fra list_roles (tabellene roller og
   // rolle_sporsmal). Vurdering og forslag velges av get_report_assessment fra rapport_regler.
@@ -131,14 +129,14 @@
           svar: function (d) { return d.antall_pa_jobb !== undefined ? d.antall_pa_jobb + " på jobb nå, " + d.antall_med_vakt + " med vakt i dag" : d.antall_med_vakt + " har vakt i dag"; },
           nokkeltall: function (d) { var n = [["Med vakt", d.antall_med_vakt], ["Timer", tall(d.timer_totalt)]]; if (d.antall_pa_jobb !== undefined) n.unshift(["På jobb kl. " + d.klokkeslett, d.antall_pa_jobb]); return n; },
           rader: function (d) { return d.vakter; }, kolonner: VAKTKOLONNER,
-          kildeMerke: FRA_DB, periode: function (d) { return d.dato; } },
+          periode: function (d) { return d.dato; } },
         { id: "vaktplan", tekst: "Vaktplan for en dag", kort: "Vaktplan",
           filtre: [{ id: "dato", label: "Dato", type: "date" }],
           verktoy: "get_shifts_for_date", args: function (f) { return { dato: f.dato }; },
           svar: function (d) { return d.length + " vakter"; },
           regelverdier: function (d) { return { antall_vakter: d.length }; },
           rader: function (d) { return d; }, kolonner: VAKTKOLONNER,
-          kildeMerke: FRA_DB, periode: function (d, f) { return f.dato; } },
+          periode: function (d, f) { return f.dato; } },
         { id: "arbeidstid", tekst: "Arbeidstid i perioden", kort: "Arbeidstid",
           filtre: [{ id: "maaned", label: "Måned", type: "month" }],
           verktoy: "get_working_hours_report", args: function (f) { return { maaned: f.maaned }; },
@@ -146,7 +144,7 @@
           nokkeltall: function (d) { var n = [["Timer", tall(d.timer_totalt)], ["Ansatte", d.antall_ansatte], ["Høyeste ukesum", tall(d.hoyeste_ukesum) + " t"]]; if (d.overtid_timer_totalt !== undefined) n.unshift(["Overtid", tall(d.overtid_timer_totalt) + " t"]); else n.push(["Høyeste døgnsum", tall(d.hoyeste_dognsum) + " t"]); return n; },
           rader: function (d) { return d.ansatte; },
           kolonner: [["navn", "Navn"], ["avdeling", "Avdeling"], ["stillingsprosent", "Stilling %"], ["timer_totalt", "Timer"], ["antall_vakter", "Vakter"], ["hoyeste_ukesum", "Høyeste uke"], ["hoyeste_dognsum", "Høyeste døgn"], ["overtid_timer", "Overtid t", true]],
-          kildeMerke: FRA_DB, periode: function (d) { return d.maaned; } },
+          periode: function (d) { return d.maaned; } },
         { id: "sykefravaer", tekst: "Sykefravær i museet", kort: "Sykefravær",
           filtre: [{ id: "aar", label: "År", type: "number" }, { id: "kvartal", label: "Kvartal", type: "select", valg: ["1", "2", "3", "4"] }],
           verktoy: "get_absence_report", args: function (f) { return { aar: Number(f.aar), kvartal: Number(f.kvartal) }; },
@@ -157,7 +155,7 @@
             { kilde: "Museet (hr_fravaer)", sykefravaer: d.egen_prosent, egenmeldt: d.egenmeldt_prosent, legemeldt: d.legemeldt_prosent, sykedager: d.sykedager_totalt, dagsverk: d.mulige_dagsverk },
             { kilde: "Kultursektoren (SSB)", sykefravaer: ssb.sykefraver_prosent, egenmeldt: ssb.egenmeldt_prosent, legemeldt: ssb.legemeldt_prosent }]; },
           kolonner: [["kilde", "Kilde"], ["sykefravaer", "Sykefravær %"], ["egenmeldt", "Egenmeldt %"], ["legemeldt", "Legemeldt %"], ["sykedager", "Sykedager"], ["dagsverk", "Mulige dagsverk"]],
-          kildeMerke: FRA_DB, periode: function (d) { return d.periode; } },
+          periode: function (d) { return d.periode; } },
         { id: "utstilling", tekst: "Økonomi per utstilling", kort: "Utstillingsøkonomi",
           filtre: [{ id: "utstilling", label: "Utstilling", type: "select", kilde: { verktoy: "list_exhibitions_with_economy", args: {}, verdi: "utstilling_id", tekst: "tittel" } }],
           verktoy: "get_exhibition_economy", args: function (f) { return { exhibition_id: f.utstilling }; },
@@ -165,7 +163,6 @@
           nokkeltall: function (d) { return d.error ? [] : [["Budsjett", kr(d.budsjett_nok)], ["Totalkostnad", kr(d.faktisk_totalkostnad_nok)], ["Billettinntekter", kr(d.billettinntekter_nok)], ["Netto", kr(d.netto_resultat_nok)]]; },
           rader: function (d) { return d.error ? [] : [d]; },
           kolonner: [["tittel", "Utstilling"], ["besokstall_total", "Besøk"], ["faktisk_innleie_nok", "Innleie"], ["katalogsalg_nok", "Katalogsalg"], ["sponsorstotte_nok", "Sponsor"]],
-          kildeMerke: FRA_DB,
           vurdering: function (d) { return d.error ? null : d.avvik_forklaring; },
           periode: function (d) { return d.aar; } },
         { id: "vaktkostnad", tekst: "Kostnad for vakter", kort: "Vaktkostnad",
@@ -175,13 +172,14 @@
           nokkeltall: function (d) { return [["Kostnad", kr(d.kostnad_nok_totalt)], ["Avdelinger", d.avdelinger.length], ["Uten tariff", d.vakter_uten_tariff + " vakter"]]; },
           rader: function (d) { return d.avdelinger; },
           kolonner: [["avdeling", "Avdeling"], ["vakter", "Vakter"], ["timer", "Timer"], ["kveldstimer", "Kveldstimer", true], ["kostnad_nok", "Kostnad kr"], ["vakter_uten_tariff", "Uten tariff"]],
-          kildeMerke: function (d) { return d.vakter_uten_tariff > 0 ? ["verify", "Ufullstendig tariff"] : FRA_DB; },
+          ufullstendig: function (d) { return d.vakter_uten_tariff > 0; },
           periode: function (d) { return d.maaned; } }
     ]
   };
 
   var $ = function (id) { return document.getElementById(id); };
   var alle = SPORSMAL.sporsmal;
+  var regel = { status: "venter" };  // venter | system | mangler: hva Vurdering og Forslag viser nå
   var gjeldendeRolle = null, sisteSvar = null, sisteFiltre = null, sisteArgs = null;
 
   function el(tag, cls, tekst) {
@@ -367,29 +365,29 @@
     }).catch(function (e) { feil("Feil fra databasen: " + e.message); });
   });
 
-  function erSyntetisk(d) {
-    if (!d) return false;
-    if (d.datakilde || d.grenser) return true;
-    var r = Array.isArray(d) ? d : [];
-    return r.some(function (x) { return x && x.klokkeslett_datakilde; });
-  }
+  // Kildemerkene er Arbeidsflyts fem faste ord. Alt systemet fyller ut er Systemforslag
+  // eller Bør verifiseres til en person har godtatt det.
+  var MERKE = {
+    bekreftet: ["confirmed", "Bekreftet"], system: ["system", "Systemforslag"],
+    verifiser: ["verify", "Bør verifiseres"], mangler: ["missing", "Mangler"]
+  };
 
   function oppdaterStatus() {
-    var bokser = document.querySelectorAll("#kontroll input");
-    var avkrysset = bokser.length > 0 && [].every.call(bokser, function (c) { return c.checked; });
+    var bokser = [].slice.call(document.querySelectorAll("#kontroll input"));
+    var faktaBokser = bokser.filter(function (c) { return !c.dataset.godta; });
+    var godtaBoks = bokser.filter(function (c) { return c.dataset.godta; })[0];
+    var faktaOk = faktaBokser.length > 0 && faktaBokser.every(function (c) { return c.checked; });
+    var godtatt = !!(godtaBoks && godtaBoks.checked);
     var s = finnSporsmal($("lag").dataset.id);
-    var merke = $("kontroll-merke");
-    merke.className = "af-source " + (avkrysset ? "confirmed" : "verify");
-    merke.textContent = avkrysset ? "Bekreftet" : "Bør verifiseres";
-    var fm = $("fakta-merke");
-    if (avkrysset) { fm.className = "af-source confirmed"; fm.textContent = "Bekreftet"; }
-    else {
-      var km = typeof s.kildeMerke === "function" ? s.kildeMerke(sisteSvar) : s.kildeMerke;
-      var m = erSyntetisk(sisteSvar) && km === FRA_DB ? SYNTETISK : km;
-      fm.className = "af-source " + m[0]; fm.textContent = m[1];
-    }
-    var ubekreftet = document.querySelectorAll("#rapport-innhold .af-source.missing, #rapport-innhold .af-source.suggested, #rapport-innhold .af-source.verify").length > 0;
-    var ok = avkrysset && !ubekreftet;
+    var ufullstendig = !!(s.ufullstendig && s.ufullstendig(sisteSvar));
+    // Fakta: Bekreftet først når en person har krysset av og databasen ikke melder hull.
+    merk("fakta-merke", faktaOk && !ufullstendig ? MERKE.bekreftet : MERKE.verifiser);
+    if (regel.status === "system") merk("vurdering-merke", godtatt ? MERKE.bekreftet : MERKE.system);
+    if (regel.status === "system") merk("forslag-merke", godtatt ? MERKE.bekreftet : MERKE.system);
+    var alleOk = faktaOk && !ufullstendig && regel.status !== "venter" && (regel.status !== "system" || godtatt);
+    merk("kontroll-merke", alleOk ? MERKE.bekreftet : MERKE.verifiser);
+    var ubekreftet = document.querySelectorAll("#rapport-innhold .af-source.missing, #rapport-innhold .af-source.suggested, #rapport-innhold .af-source.system, #rapport-innhold .af-source.verify").length > 0;
+    var ok = alleOk && !ubekreftet;
     $("status").textContent = ok ? "Bekreftet" : "Utkast";
     $("status").className = "af-badge " + (ok ? "done" : "active");
   }
@@ -432,6 +430,10 @@
       c.addEventListener("change", oppdaterStatus);
       l.appendChild(c); l.appendChild(document.createTextNode(t)); k.appendChild(l);
     });
+    var lg = el("label", "af-radio");
+    var cg = document.createElement("input"); cg.type = "checkbox"; cg.name = "godta"; cg.dataset.godta = "1";
+    cg.addEventListener("change", oppdaterStatus);
+    lg.appendChild(cg); lg.appendChild(document.createTextNode("Jeg godtar vurdering og forslag")); k.appendChild(lg);
     oppdaterStatus();
     var dk = datakildeTekst(d);
     var grunnlag = "Kilde: museum.db via " + kallTekst(s.verktoy, sisteArgs) + ". Periode: " + s.periode(d, sisteFiltre) + ". Regelversjon " + SPORSMAL.versjon + "." + (dk ? " Datakilde: " + dk + "." : "") + (d.mangler ? " Mangler i databasen: " + d.mangler : "");
@@ -462,26 +464,33 @@
     return r ? r.klokkeslett_datakilde + " (klokkeslett)" : "";
   }
 
-  function merk(id, m) { $(id).className = "af-source " + m[0]; $(id).textContent = m[1]; }
+  function merk(id, m) { $(id).hidden = false; $(id).className = "af-source " + m[0]; $(id).textContent = m[1]; }
 
-  // Viser regelen fra rapport_regler i Vurdering og Forslag. Uten regel står det Mangler.
+  // Viser regelen fra rapport_regler i Vurdering og Forslag. Teksten er ferdig utfylt av faste
+  // regler, så den er Systemforslag til en person har godtatt den. Uten regel står det Mangler.
   function settRegel(r, venter, avvik) {
     if (venter) {
+      regel.status = "venter";
       $("vurdering").textContent = venter; $("forslag").textContent = venter;
-      merk("vurdering-merke", ["verify", "Henter"]); merk("forslag-merke", ["verify", "Henter"]);
+      $("vurdering-merke").hidden = true; $("forslag-merke").hidden = true;  // ingen merke før svaret er kommet
       return;
     }
     if (!r || r.mangler) {
       var tekst = (r && r.mangler) || "Databasen har ingen regel for dette spørsmålet.";
-      $("vurdering").textContent = avvik ? "Avviksforklaring: " + avvik : tekst;
-      $("forslag").textContent = tekst;
-      merk("vurdering-merke", avvik ? FRA_DB : ["missing", "Mangler"]); merk("forslag-merke", ["missing", "Mangler"]);
+      $("forslag").textContent = tekst; merk("forslag-merke", MERKE.mangler);
+      if (avvik) {
+        $("vurdering").textContent = "Avviksforklaring: " + avvik; merk("vurdering-merke", MERKE.system);
+        regel.status = "system";
+      } else {
+        $("vurdering").textContent = tekst; merk("vurdering-merke", MERKE.mangler);
+        regel.status = "mangler";
+      }
       return;
     }
-    var m = String(r.datakilde || "").indexOf("syntetisk") === 0 ? ["system", "Syntetisk regel i museum.db"] : ["confirmed", "Regel i museum.db"];
+    regel.status = "system";
     $("vurdering").textContent = r.vurdering + (avvik ? " Avviksforklaring: " + avvik : "");
     $("forslag").textContent = r.forslag;
-    merk("vurdering-merke", m); merk("forslag-merke", m);
+    merk("vurdering-merke", MERKE.system); merk("forslag-merke", MERKE.system);
   }
 
   $("last").addEventListener("click", function () {
