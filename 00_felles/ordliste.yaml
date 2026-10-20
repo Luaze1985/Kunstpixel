@@ -129,5 +129,13 @@ begreper:
     synonymer: ["on-demand håndbok", "selektivt oppslag"]
     i_praksis: "En museumsvert eller AI kan spørre om én spesifikk regel uten å måtte laste inn hele personalhåndboken på 50 sider."
 
+  notatbok_og_datautforsking:
+    forklaring: >
+      Interaktiv arbeidsflate (.ipynb-notatbok med Data Wrangler i VS Code og Antigravity) som kobler fri
+      tabellutforsking (mode=ro) med museets ferdige fasit-kalkulatorer i db.py for lønn, overtid og fravær.
+    synonymer: ["tall-utforsking", "Jupyter-notatbok", "Data Wrangler"]
+    i_praksis: "Du kan se tabeller som regneark, lage grafer og utforske nye koblinger helt trygt uten at tallene avviker fra nettsiden."
+
+
 
 

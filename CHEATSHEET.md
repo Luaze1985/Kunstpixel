@@ -1,22 +1,20 @@
 # HUSKELAPP FOR LARS (CHEATSHEET)
-*Prosjekt: Kunstpixel (museum.db, Datafinner og personvernanalysen) | Sist oppdatert: 2026-10-20 kl. 11:00*
+*Prosjekt: Kunstpixel (museum.db, Datafinner og personvernanalysen) | Sist oppdatert: 2026-10-20 kl. 14:19*
 
 ## 1. Hva vi gjorde sist
-- **Alt er flettet** (AGYs personvernanalyse og mitt arbeid) og testet: 349 tester og statusporten er grønne, og Docker-testen består.
-- **Demoen virker lokalt** med faste rapporter, Docker og innlogging via Caddy. Det finnes nå et åpent API, og en valgfri KI-forklaring som er **av** til du slår den på. Den er alltid merket «AI-forslag», og navn og kontaktopplysninger sendes aldri ut.
-- **Datadelen kan tas over av en hvilken som helst modell med Python**, også i Colab: `docs/DATAPIPELINE.md` og `notebooks/data_pipeline_colab.ipynb`.
+- **Databasen er bygget på nytt** og sjekket: samme fingeravtrykk som fasit (`93cfcdaa…`), statusporten sier KLAR, og alle tester er grønne.
+- **Notatboken `notebooks/utforsk.ipynb` er laget** med tre eksempler: tabelloversikt, besøk per vakttime i 2026, og lønnskostnad per avdeling.
+- Alt dette er committet på grenen `hr-konsolidering`. Ingenting er pushet.
 
 ## 2. Hvor vi slapp
-- Ingenting er hostet. Du har ikke kjørt veilederen (`scripts\vps_veileder.ps1`).
-- **museum.db er utdatert.** Jeg rettet en feil i `05_data/rapport_regler.csv` (et komma som kuttet en kolonne), og databasen må bygges på nytt.
-- KI-laget er bare testet mot en falsk server, ikke mot en ekte leverandør. To grener fra før er ikke flettet (se `HANDOFF`).
+- Alle tre cellene i `notebooks/utforsk.ipynb` er nå kjørt med kjernen `Python 3.13 (Kunstpixel)`, slik at både tabellene og stolpediagrammet (besøk per vakttime i 2026) ligger ferdig tegnet i filen.
+- `ordliste.yaml`, `BESTILLING-opplaeringsarena.md`, `datafinner/index.html` og `CHEATSHEET.md` er committet på `hr-konsolidering`.
 
 ## 3. Første oppgave neste gang du setter deg ned
-- **Åpne `G:\Min disk\Kunstpixel` i VS Code** og si til agenten: «Les `02_deliverables/opplaering/BESTILLING-opplaeringsarena.md` og gjør steg 1 til 3. Spør meg før hver installasjon.» Da blir verktøyene installert, databasen bygget på nytt, og du får en notatbok å utforske tallene i.
-- Senere: kjør VPS-veilederen når du vil legge demoen ut.
+- **Åpne `notebooks/utforsk.ipynb` i VS Code** — da ser du grafen og tabellene med én gang. Du kan klikke på Data Wrangler-knappen over tabellene for å sortere og filtrere som et regneark.
+- Spør deretter agenten om noe du vil vite om tallene, for eksempel «Hvilke dager har mange besøkende, men få vakter?».
 
 ## 4. Nyttige snarveier for dette prosjektet
 - Demoen lokalt: `py -3.13 scripts/start_demo.py` (http://127.0.0.1:8011)
 - Statusport: `py -3.13 scripts/db_status_gate.py` · Tester: `py -3.13 -m pytest -q`
-- Test hosting i Docker: `powershell -ExecutionPolicy Bypass -File scripts\test_demo_container.ps1`
-- Overlevering: `docs/HANDOFF-2026-10-20.md` · API: `docs/DATAFINNER_API.md` · Hosting: `deploy/demo/README.md`
+- Overlevering til neste agent: `.scratch/handoffs/HANDOFF-20261020-1419.md`
