@@ -89,7 +89,7 @@ Slett VPS-en hos leverandøren når du er ferdig, ellers fortsetter regningen.
 | Låst ute av SSH | Passord slått av uten at nøkkelen virket | Bruk leverandørens nettkonsoll |
 
 ## Hva som er testet og ikke
-- **Testet (Docker Desktop på Windows, 24 sjekker i `scripts	est_demo_container.ps1`):**
+- **Testet (Docker Desktop på Windows, 24 sjekker i `scripts\test_demo_container.ps1`):**
   - Bildet bygger, og containerne starter slik de gjør på serveren: bare compose-filene ligger der, og bildet er lastet inn på forhånd (`--no-build`).
   - Innlogging: 401 uten, 401 med feil passord, 200 med riktig. Gjelder også API-et.
   - `les_fil` og `grep_mappe` gir 400, og `/sok.html` gir 404.

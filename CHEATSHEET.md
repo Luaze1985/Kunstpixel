@@ -21,5 +21,5 @@
 - Statusport: `py -3.13 scripts/db_status_gate.py` (rapport i `.scratch/db-status/`)
 - Datafinner vanlig: `py -3.13 src/kunstpixel/adapters/datafinner.py` (http://127.0.0.1:8010)
 - Tester: `py -3.13 -m pytest -q`
-- Test hosting-oppsettet i Docker: `powershell -ExecutionPolicy Bypass -File scripts	est_demo_container.ps1`
+- Test hosting-oppsettet i Docker: `powershell -ExecutionPolicy Bypass -File scripts\test_demo_container.ps1`
 - Status og kjørebok for hosting: `02_deliverables/arbeidsflyt/hosting-demo.md`
