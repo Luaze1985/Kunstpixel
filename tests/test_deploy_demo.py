@@ -156,3 +156,24 @@ def test_brukerskriptet_tar_ikke_imot_passord() -> None:
     b = _les("bruker.sh")
     assert "caddy hash-password" in b
     assert "--plaintext" not in b and "read -s" not in b
+
+
+def test_bildet_har_alle_adaptermodulene_datafinner_importerer() -> None:
+    """datafinner.py importerer egne moduler fra adapters/. Mangler en i Dockerfile, krasjer containeren ved oppstart."""
+    import ast
+    d = _les("Dockerfile")
+    kilde = ast.parse((ROOT / "src/kunstpixel/adapters/datafinner.py").read_text(encoding="utf-8"))
+    for node in ast.walk(kilde):
+        if isinstance(node, ast.ImportFrom) and node.module == "src.kunstpixel.adapters":
+            for navn in node.names:
+                assert f"adapters/{navn.name}.py" in d, f"{navn.name}.py mangler i Dockerfile"
+
+
+def test_ki_noekkelen_kommer_fra_miljoet_og_ingen_ligger_i_filene() -> None:
+    compose = _les("compose.yaml")
+    assert "LLM_API_KEY: ${LLM_API_KEY:-}" in compose
+    assert "LLM_PROVIDER: ${LLM_PROVIDER:-}" in compose, "Tom verdi skal bety at KI-laget er av"
+    ukommentert = [linje for linje in _les(".env.example").splitlines() if linje.strip() and not linje.startswith("#")]
+    assert not any(linje.startswith("LLM_") for linje in ukommentert), "KI-laget skal være av i eksempelfilen"
+    for fil in ("Dockerfile", "compose.yaml", "Caddyfile", ".env.example"):
+        assert not re.search(r"sk-[A-Za-z0-9_-]{16,}", _les(fil)), f"Ser ut som en nøkkel i {fil}"

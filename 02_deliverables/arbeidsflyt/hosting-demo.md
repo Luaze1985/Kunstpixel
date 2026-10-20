@@ -11,6 +11,8 @@
 | Lokal start i demomodus | `scripts/start_demo.py` | Ferdig. Porten er 8011. |
 | Veileder for domene og VPS | `scripts/vps_veileder.ps1` | Selvtest og testsele består. Trinn 3 (lage nøkkel) og 6 (ekte SSH) er ikke kjørt: de krever deg. |
 | Docker, Caddy med innlogging, brukerskript, serveroppsett, kjørebok | `deploy/demo/` | Ferdig. Testet i Docker lokalt (24 sjekker, `scripts/test_demo_container.ps1`). `server-oppsett.sh` og `bruker.sh` er ikke kjørt på en ekte server. |
+| Åpent API og valgfritt KI-lag | `src/kunstpixel/adapters/datafinner_api.py`, `src/kunstpixel/core/llm.py`, `docs/DATAFINNER_API.md` | Ferdig. Faste rapporter og verktøyskjema testet i Docker. KI-laget er av som standard og testet mot en falsk KI-server (OpenAI- og Claude-format), **ikke mot en ekte leverandør**. |
+| Datadel for annen Python-modell og Colab | `docs/DATAPIPELINE.md`, `notebooks/data_pipeline_colab.ipynb` | Ferdig. Cellene er kjørt lokalt, ikke i selve Colab. |
 | Utrulling til VPS | `deploy/demo/README.md` | Gjenstår, og må gjøres av deg etter veilederen. |
 
 ## Slik bruker du det

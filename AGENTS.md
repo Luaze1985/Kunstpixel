@@ -153,7 +153,16 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode man
 - `04_knowledge/`: Domenedokumentasjon, rutiner og masterprompter.
 - `05_data/`: Autoritativ samlingsdatabase (`museum.db`) og datafiler.
 - `src/`: Inngangspunkter (`cli.py`, `mcp_server.py`) og kjernelogikk under `src/kunstpixel/`.
-- `tests/`: 191 automatiserte tester som verifiserer datakvalitet, MCP, agent, SSOT, Kategori C og helhet.
+- `tests/`: automatiserte tester som verifiserer datakvalitet, MCP, agent, SSOT, Kategori C og helhet.
 - `arkiv/`: Historiske filer, eldre testkjøringer og tidligere proxy-lag.
 
 
+
+---
+
+## 7. Datadelen og hostet demo (les før du rører `05_data/`, `src/kunstpixel/data/` eller `deploy/`)
+- **Datadelen kan gjøres av enhver modell som kan Python**, i hvilket som helst verktøy eller i Google Colab. Les `docs/DATAPIPELINE.md` først (kart, kommandoer, regler, oppskrift). Colab: `notebooks/data_pipeline_colab.ipynb`.
+- `museum.db` bygges av datafiler (`05_data/*.csv`) via `build_museum_db.py`. Rediger datafilene, aldri databasen. Bare Lars kjører bygget uten `--check`. Bruk `python scripts/db_status_gate.py`.
+- Alle nye data har `datakilde` som starter med «syntetisk». `tests/test_data_csv.py` vokter CSV-filene (komma i tekst må stå i anførselstegn).
+- Åpent API og valgfritt KI-lag (av som standard, alltid merket AI-forslag): `docs/DATAFINNER_API.md`. Hosting på VPS: `deploy/demo/README.md`.
+- Bruk `mcp==1.29.1`. Versjon 2.x brøt demoen.

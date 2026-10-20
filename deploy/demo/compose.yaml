@@ -25,6 +25,13 @@ services:
     pids_limit: 100
     expose:
       - "8010"
+    # Valgfritt KI-lag. Tomme verdier betyr at det er av. Nøkkelen settes bare i .env på serveren, aldri i git.
+    environment:
+      LLM_PROVIDER: ${LLM_PROVIDER:-}
+      LLM_MODEL: ${LLM_MODEL:-}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_BASE_URL: ${LLM_BASE_URL:-}
+      LLM_MAKS_PER_TIME: ${LLM_MAKS_PER_TIME:-30}
 
   caddy:
     image: caddy:2

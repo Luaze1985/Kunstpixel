@@ -84,9 +84,14 @@
           </div>
           <div class="af-report-block">
             <span class="af-report-kind">Grunnlag</span>
-            <div><p id="grunnlag" style="overflow-wrap:anywhere"></p><span class="af-source system">Regelversjon</span></div>
+            <div><p id="grunnlag" style="overflow-wrap:anywhere"></p></div>
+          </div>
+          <div class="af-report-block" id="ki-blokk" hidden>
+            <span class="af-report-kind">KI-forklaring</span>
+            <div><p id="ki-tekst" aria-live="polite"></p><span class="af-source suggested" id="ki-merke">AI-forslag</span><p id="ki-kontroll"></p></div>
           </div>
           <div class="af-actions">
+            <button class="af-btn af-btn-secondary" type="button" id="ki" hidden>Forklar med KI</button>
             <button class="af-btn af-btn-primary" type="button" id="last">Last ned rapport</button>
           </div>
         </div>
@@ -369,13 +374,15 @@
   // eller Bør verifiseres til en person har godtatt det.
   var MERKE = {
     bekreftet: ["confirmed", "Bekreftet"], system: ["system", "Systemforslag"],
-    verifiser: ["verify", "Bør verifiseres"], mangler: ["missing", "Mangler"]
+    verifiser: ["verify", "Bør verifiseres"], mangler: ["missing", "Mangler"], aiforslag: ["suggested", "AI-forslag"]
   };
 
   function oppdaterStatus() {
     var bokser = [].slice.call(document.querySelectorAll("#kontroll input"));
-    var faktaBokser = bokser.filter(function (c) { return !c.dataset.godta; });
+    var faktaBokser = bokser.filter(function (c) { return !c.dataset.godta && !c.dataset.kigodta; });
     var godtaBoks = bokser.filter(function (c) { return c.dataset.godta; })[0];
+    var kiBoks = bokser.filter(function (c) { return c.dataset.kigodta; })[0];
+    var kiGodtatt = !kiBoks || kiBoks.checked;  // uten KI-forklaring er det ingenting å godta
     var faktaOk = faktaBokser.length > 0 && faktaBokser.every(function (c) { return c.checked; });
     var godtatt = !!(godtaBoks && godtaBoks.checked);
     var s = finnSporsmal($("lag").dataset.id);
@@ -384,9 +391,12 @@
     merk("fakta-merke", faktaOk && !ufullstendig ? MERKE.bekreftet : MERKE.verifiser);
     if (regel.status === "system") merk("vurdering-merke", godtatt ? MERKE.bekreftet : MERKE.system);
     if (regel.status === "system") merk("forslag-merke", godtatt ? MERKE.bekreftet : MERKE.system);
-    var alleOk = faktaOk && !ufullstendig && regel.status !== "venter" && (regel.status !== "system" || godtatt);
+    // KI-forklaringen er AI-forslag til en person har godtatt den. Rapporten er Utkast så lenge den ikke er det.
+    if (kiBoks) merk("ki-merke", kiBoks.checked ? MERKE.bekreftet : MERKE.aiforslag);
+    var alleOk = faktaOk && !ufullstendig && regel.status !== "venter" && (regel.status !== "system" || godtatt) && kiGodtatt;
     merk("kontroll-merke", alleOk ? MERKE.bekreftet : MERKE.verifiser);
-    var ubekreftet = document.querySelectorAll("#rapport-innhold .af-source.missing, #rapport-innhold .af-source.suggested, #rapport-innhold .af-source.system, #rapport-innhold .af-source.verify").length > 0;
+    // Skjulte blokker (f.eks. KI-forklaringen før den er hentet) teller ikke.
+    var ubekreftet = [].some.call(document.querySelectorAll("#rapport-innhold .af-source.missing, #rapport-innhold .af-source.suggested, #rapport-innhold .af-source.system, #rapport-innhold .af-source.verify"), function (n) { return !n.closest("[hidden]"); });
     var ok = alleOk && !ubekreftet;
     $("status").textContent = ok ? "Bekreftet" : "Utkast";
     $("status").className = "af-badge " + (ok ? "done" : "active");
@@ -437,6 +447,7 @@
     });
     var avvik = s.vurdering ? s.vurdering(d) : null;
     settRegel(null, "Henter regel fra museum.db …");
+    nullstillKi();
     var k = $("kontroll"); k.textContent = "";
     KONTROLL.forEach(function (t, i) {
       var l = el("label", "af-radio");
@@ -516,6 +527,45 @@
     a.click();
     URL.revokeObjectURL(a.href);
   });
+
+  // Valgfri KI-forklaring. Knappen vises bare når serveren har slått KI-laget på (LLM_PROVIDER).
+  // Svaret er AI-forslag til en person har godtatt det, og tallene i teksten er kontrollert mot rapporten.
+  function nullstillKi() {
+    $("ki-blokk").hidden = true; $("ki-tekst").textContent = ""; $("ki-kontroll").textContent = "";
+    $("ki").disabled = false; $("ki").textContent = "Forklar med KI";
+  }
+
+  $("ki").addEventListener("click", function () {
+    var s = finnSporsmal($("lag").dataset.id);
+    if (!s || !sisteArgs) return;
+    $("ki").disabled = true; $("ki").textContent = "Henter KI-forklaring …";
+    fetch("/api/forklar", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sporsmal: s.id, args: sisteArgs }) })
+      .then(function (res) { return res.json().then(function (body) { if (!res.ok) throw new Error(body.error || "Ukjent feil"); return body; }); })
+      .then(function (svar) {
+        $("ki-tekst").textContent = svar.tekst;
+        $("ki-blokk").hidden = false;
+        var tk = svar.tallkontroll || { ok: false, ukjente_tall: [] };
+        $("ki-kontroll").textContent = tk.ok ? "Alle tall i teksten finnes i rapporten." : "Tall som ikke finnes i rapporten: " + tk.ukjente_tall.join(", ") + ". Sjekk dem før du bruker teksten.";
+        var boks = document.querySelector("#kontroll input[data-kigodta]");
+        if (!boks) {
+          var l = el("label", "af-radio");
+          boks = document.createElement("input"); boks.type = "checkbox"; boks.name = "kigodta"; boks.dataset.kigodta = "1";
+          boks.addEventListener("change", oppdaterStatus);
+          l.appendChild(boks); l.appendChild(document.createTextNode("Jeg godtar KI-forklaringen")); $("kontroll").appendChild(l);
+        }
+        boks.checked = false;
+        oppdaterStatus();
+      })
+      .catch(function (e) {
+        $("ki-blokk").hidden = false; $("ki-merke").hidden = true;
+        $("ki-tekst").textContent = "Fikk ikke en KI-forklaring: " + e.message; $("ki-kontroll").textContent = "";
+        var gammel = document.querySelector("#kontroll input[data-kigodta]"); if (gammel) gammel.parentNode.remove();
+        oppdaterStatus();
+      })
+      .then(function () { $("ki").disabled = false; $("ki").textContent = "Forklar med KI på nytt"; });
+  });
+
+  fetch("/api/status").then(function (r) { return r.json(); }).then(function (d) { if (d && d.llm) $("ki").hidden = false; }).catch(function () {});
 
   byggMeny();
   lastRoller();

@@ -31,7 +31,7 @@ WORKDIR /app
 COPY src/__init__.py ./src/__init__.py
 COPY src/kunstpixel/__init__.py ./src/kunstpixel/__init__.py
 COPY src/kunstpixel/core ./src/kunstpixel/core
-COPY src/kunstpixel/adapters/__init__.py src/kunstpixel/adapters/datafinner.py ./src/kunstpixel/adapters/
+COPY src/kunstpixel/adapters/__init__.py src/kunstpixel/adapters/datafinner.py src/kunstpixel/adapters/datafinner_api.py ./src/kunstpixel/adapters/
 COPY src/kunstpixel/adapters/datafinner ./src/kunstpixel/adapters/datafinner
 COPY --from=bygg /ut/museum_demo.db ./data/museum_demo.db
 RUN chmod -R a-w /app && chmod 444 /app/data/museum_demo.db

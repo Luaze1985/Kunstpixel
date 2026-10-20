@@ -58,6 +58,15 @@ docker compose logs caddy # se at Caddy har hentet sertifikat
 ```
 Åpne `https://<underdomene>.<domene>`. Du skal få et påloggingsvindu, og så Datafinner.
 
+## Valgfritt: KI-forklaring av rapportene
+Demoen virker uten dette. Slik slår du det på, bare på serveren:
+```bash
+nano .env      # fjern # foran LLM_-linjene og fyll inn. Nøkkelen skriver du selv, aldri i chat eller git.
+docker compose up -d --no-build
+```
+Siden får da en knapp «Forklar med KI». Svaret er alltid merket AI-forslag, personnavn og kontaktopplysninger sendes aldri ut, og tallene kontrolleres mot rapporten.
+Sett også en utgiftsgrense hos KI-leverandøren. Les risikoene i `docs/DATAFINNER_API.md` før du slår det på. Vil du heller holde alt på egen maskin, kan du bruke en lokal modell (Ollama).
+
 ## Brukere
 ```bash
 ./bruker.sh ola            # legg til
@@ -96,6 +105,7 @@ Slett VPS-en hos leverandøren når du er ferdig, ellers fortsetter regningen.
   - Sikkerhetshodene er på plass, og Server-hodet er fjernet.
   - Datafinner har ingen åpen port, kjører ikke som root og har skrivebeskyttet filsystem. `/app` inneholder bare `src` og `data`.
   - Demobasen har ingen e-post, telefon eller fødselsår.
+  - Åpent API (`/api/status`, `/api/verktoyskjema`, `/api/rapport`) gir faste rapporter, og `/api/forklar` gir 503 når KI-laget er av.
 - **Fanget av testen:** `mcp` 2.x brøt demoen. Versjonene er nå låst i `requirements.txt`. Ikke oppgrader uten å kjøre testen.
 - **Ikke testet (krever en ekte server):** `server-oppsett.sh`, `bruker.sh`, sertifikat fra Let's Encrypt, `docker save`-overføring over SSH og oppdatering. Syntaksen er sjekket, men skriptene er ikke kjørt på Ubuntu.
 - **Merk om testmiljøet:** Docker Desktop kan ikke montere enkeltfiler fra Google Drive (`G:`). Testen kopierer derfor compose-filene til en vanlig mappe. På serveren er det ikke noe problem.

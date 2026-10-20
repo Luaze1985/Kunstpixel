@@ -33,9 +33,10 @@ function Sjekk([string]$navn, [bool]$ok, [string]$detalj = '') {
 function Compose { & docker compose -p $Prosjekt -f $ComposeFil @args; if ($LASTEXITCODE -ne 0) { throw ("compose feilet: " + ($args -join ' ')) } }
 
 # curl.exe følger med Windows 10 og nyere. Returnerer statuskode og hoder.
-function Hent([string]$sti, [string]$bruker = '', [string]$passord = '') {
+function Hent([string]$sti, [string]$bruker = '', [string]$passord = '', [string]$kropp = '') {
     $a = @('-s', '-i', '--max-time', '20')
     if ($bruker) { $a += @('-u', ($bruker + ':' + $passord)) }
+    if ($kropp) { $a += @('-X', 'POST', '-H', 'Content-Type: application/json', '--data-binary', $kropp) }
     $ut = & curl.exe @a ($Url + $sti) | Out-String
     $status = 0
     if ($ut -match '^HTTP/[\d.]+ (\d{3})') { $status = [int]$Matches[1] }
@@ -99,6 +100,25 @@ try {
     Sjekk 'vaktplan gir 200' ($vakter.Status -eq 200)
     Sjekk 'vaktplanen har ingen e-postadresser' ($vakter.Tekst -notmatch '@')
     Sjekk 'vaktplanen har ingen telefonnummer' ($vakter.Tekst -notmatch '\+47')
+
+    Write-Host '== Åpent API (faste rapporter, KI-laget er av)'
+    $status = Hent '/api/status' $Bruker $Passord
+    Sjekk '/api/status sier at KI-laget er av' (($status.Status -eq 200) -and ($status.Tekst -match '"llm":\s*false'))
+    $skjema = Hent '/api/verktoyskjema' $Bruker $Passord
+    Sjekk '/api/verktoyskjema gir verktøylisten' (($skjema.Status -eq 200) -and ($skjema.Tekst -match '"get_absence_report"'))
+    Sjekk 'verktøylisten har ikke filverktøyene' (($skjema.Tekst -notmatch 'les_fil') -and ($skjema.Tekst -notmatch 'grep_mappe'))
+    $rap1 = Hent '/api/rapport?sporsmal=vaktplan&args=%7B%22dato%22%3A%222026-10-20%22%7D' $Bruker $Passord
+    $rap2 = Hent '/api/rapport?sporsmal=vaktplan&args=%7B%22dato%22%3A%222026-10-20%22%7D' $Bruker $Passord
+    Sjekk '/api/rapport gir en rapport med regel og merker' (($rap1.Status -eq 200) -and ($rap1.Tekst -match 'R-PLAN-') -and ($rap1.Tekst -match 'Systemforslag'))
+    # Sammenligner bare selve rapporten (etter hodene), for hodene har et Date som endrer seg.
+    $kropp1 = [regex]::Split($rap1.Tekst, '\r?\n\r?\n', 2)[1]
+    $kropp2 = [regex]::Split($rap2.Tekst, '\r?\n\r?\n', 2)[1]
+    Sjekk 'samme rapport to ganger gir samme svar' (($kropp1.Length -gt 100) -and ($kropp1 -ceq $kropp2))
+    Sjekk 'rapporten har ingen e-postadresser' ($rap1.Tekst -notmatch '@')
+    $forklar = Hent '/api/forklar' $Bruker $Passord '{"sporsmal":"vaktplan","args":{"dato":"2026-10-20"}}'
+    Sjekk '/api/forklar gir 503 når KI-laget er av' ($forklar.Status -eq 503) ("fikk " + $forklar.Status)
+    $forklarUten = Hent '/api/forklar' '' '' '{"sporsmal":"vaktplan"}'
+    Sjekk '/api/forklar uten innlogging gir 401' ($forklarUten.Status -eq 401) ("fikk " + $forklarUten.Status)
 
     Write-Host '== Hoder'
     Sjekk 'X-Frame-Options er DENY' ($ok.Tekst -match '(?i)x-frame-options:\s*DENY')

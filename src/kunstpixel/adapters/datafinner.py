@@ -20,6 +20,12 @@ Demomodus (for hosting):
     DATAFINNER_HOST=0.0.0.0    lytter på alle adresser (bare bak en omvendt proxy med innlogging)
     KUNSTPIXEL_DB_PATH=<sti>   databasen som skal brukes (bruk demokopien, se build_demo_db.py)
 Serveren har ingen innlogging selv. Den skal alltid ligge bak noe som krever det.
+
+Åpent API (se docs/DATAFINNER_API.md):
+    GET  /api/verktoyskjema    verktøyene med parametere (JSON Schema), klare for en språkmodell
+    GET  /api/rapport          deterministisk rapport: fakta + vurdering/forslag fra faste regler
+    GET  /api/status           hva som er slått på (demomodus, KI-lag)
+    POST /api/forklar          valgfritt: KI forklarer rapporten, merket AI-forslag (av som standard)
 """
 
 from __future__ import annotations
@@ -37,6 +43,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.kunstpixel.adapters import datafinner_api
+from src.kunstpixel.core import llm
 from src.kunstpixel.core.mcp_server import (
     get_absence_report,
     get_artwork_details,
@@ -171,6 +179,11 @@ DEMO = os.environ.get("DATAFINNER_DEMO") == "1"
 if DEMO:
     bruk_demomodus(VERKTOY, ASSETS)
 
+# KI-laget er av med mindre LLM_PROVIDER er satt. Feil innstilling stopper oppstarten med en tydelig melding.
+LLM_KONFIG = llm.fra_miljo(os.environ)
+LLM_BEGRENSER = llm.Begrenser(LLM_KONFIG.maks_per_time) if LLM_KONFIG else None
+MAKS_POST_BYTES = 4096
+
 # Siden bruker bare egne filer, ett skript og stilark i samme side. Alt annet er stengt.
 SIKKERHETSHODER = {
     "X-Content-Type-Options": "nosniff",
@@ -217,6 +230,33 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
             filename, ctype = ASSETS[url.path]
             self._send(200, (ASSET_DIR / filename).read_bytes(), ctype)
             return
+        if url.path == "/api/status":
+            self._json(200, {
+                "demo": DEMO,
+                "llm": LLM_KONFIG is not None,
+                "llm_modell": LLM_KONFIG.modell if LLM_KONFIG else None,
+                "verktoy": len(VERKTOY),
+            })
+            return
+        if url.path == "/api/verktoyskjema":
+            self._json(200, {"verktoy": datafinner_api.verktoyskjema(VERKTOY), "sporsmal": datafinner_api.SPORSMAL})
+            return
+        if url.path == "/api/rapport":
+            params = parse_qs(url.query)
+            try:
+                args = json.loads(params.get("args", ["{}"])[0] or "{}")
+                if not isinstance(args, dict):
+                    raise ValueError("args må være et JSON-objekt")
+                rapport = datafinner_api.lag_rapport(params.get("sporsmal", [""])[0], args, run_tool)
+            except (ValueError, TypeError, json.JSONDecodeError) as exc:
+                self._json(400, {"error": str(exc)})
+                return
+            except Exception as exc:  # databasefeil o.l.
+                sys.stderr.write(f"[datafinner] FEIL i rapport: {exc!r}\n")
+                self._json(500, {"error": "Feil ved oppslag. Prøv igjen, eller si ifra til den som drifter siden."})
+                return
+            self._json(200, rapport)
+            return
         if url.path == "/api/verktoy":
             params = parse_qs(url.query)
             name = params.get("navn", [""])[0]
@@ -236,6 +276,56 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
             self._json(200, {"verktoy": name, "args": args, "resultat": result})
             return
         self._json(404, {"error": "Finnes ikke"})
+
+    def do_POST(self) -> None:
+        """Eneste POST: /api/forklar. Koster penger hos KI-leverandøren, så den har flere sperrer."""
+        if urlparse(self.path).path != "/api/forklar":
+            self._json(404, {"error": "Finnes ikke"})
+            return
+        # Nettleseren sender innloggingen din automatisk. Uten disse sperrene kunne en annen nettside
+        # få den til å kalle KI-en på din regning. Samme opprinnelse eller ingen opprinnelse (curl) er greit.
+        opprinnelse = self.headers.get("Origin")
+        if opprinnelse and urlparse(opprinnelse).netloc != self.headers.get("Host", ""):
+            self._json(403, {"error": "Forespørselen kom fra en annen side."})
+            return
+        if self.headers.get("Sec-Fetch-Site") not in (None, "same-origin", "none"):
+            self._json(403, {"error": "Forespørselen kom fra en annen side."})
+            return
+        if self.headers.get("Content-Type", "").split(";")[0].strip().lower() != "application/json":
+            self._json(415, {"error": "Bruk Content-Type: application/json."})
+            return
+        try:
+            lengde = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            lengde = 0
+        if lengde <= 0 or lengde > MAKS_POST_BYTES:
+            self._json(413, {"error": f"Kroppen må være mellom 1 og {MAKS_POST_BYTES} byte."})
+            return
+        if LLM_KONFIG is None:
+            self._json(503, {"error": "KI-laget er ikke slått på. Rapportene er likevel tilgjengelige uten KI."})
+            return
+        try:
+            kropp = json.loads(self.rfile.read(lengde).decode("utf-8"))
+            if not isinstance(kropp, dict) or not isinstance(kropp.get("args", {}), dict):
+                raise ValueError("Send et JSON-objekt: {\"sporsmal\": \"...\", \"args\": {...}}")
+            rapport = datafinner_api.lag_rapport(str(kropp.get("sporsmal", "")), kropp.get("args", {}), run_tool)
+        except (ValueError, TypeError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+            self._json(400, {"error": str(exc)})
+            return
+        except Exception as exc:
+            sys.stderr.write(f"[datafinner] FEIL i forklar/rapport: {exc!r}\n")
+            self._json(500, {"error": "Feil ved oppslag. Prøv igjen, eller si ifra til den som drifter siden."})
+            return
+        if LLM_BEGRENSER is not None and not LLM_BEGRENSER.tillat():
+            self._json(429, {"error": "For mange KI-kall den siste timen. Prøv igjen senere."})
+            return
+        try:
+            svar = llm.forklar(rapport, LLM_KONFIG)
+        except llm.LlmFeil as exc:
+            sys.stderr.write(f"[datafinner] KI-feil ({exc.kode}): {exc}\n")
+            self._json(504 if exc.kode == "tidsavbrudd" else 502, {"error": str(exc)})
+            return
+        self._json(200, {**svar, "status": "Utkast", "rapport": rapport})
 
     def log_message(self, format: str, *args: Any) -> None:
         sys.stderr.write("[datafinner] " + (format % args) + "\n")
