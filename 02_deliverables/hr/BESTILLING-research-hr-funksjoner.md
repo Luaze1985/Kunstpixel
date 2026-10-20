@@ -15,6 +15,11 @@
 
 **Slik bruker du den:** Lim inn alt fra «Selve bestillingen» og ned i research-modellen. Lagre svaret i `01_inbox/hr-research/` og gi det til Antigravity sammen med `docs/DATAPIPELINE.md`.
 
+**Kommando for å starte (i VS Code, Antigravity eller en research-modell):**
+> «Les `02_deliverables/hr/BESTILLING-research-hr-funksjoner.md` og gjør selve bestillingen **stegvis, én arbeidspakke om gangen** (se punkt 6). Start med AP0. Stopp etter hver arbeidspakke, vis sjekkpunktet, og vent til jeg skriver *neste*. Lagre filene i `01_inbox/hr-research/`.»
+
+Underveis kan du skrive *neste*, *gjenta AP3 med mer om industri* eller *hopp over AP7*.
+
 ---
 
 # Selve bestillingen (lim inn herfra)
@@ -81,7 +86,36 @@ For **hvert område**, lever punkt A–G under. Skill alltid mellom **industri**
 4. **`fasit_sporsmal.csv`:** alle spørsmål fra punkt C, med kolonnene `sporsmal_id, omraade, sektor, sporsmal, kort_svar, kilde, vanskelig (ja/nei), hvorfor_vanskelig`.
 5. **`kilder.md`:** alle kilder med lenke, utgiver og dato, og hvilket område de støtter.
 
-## 6. Avgrensning
+## 6. Arbeid stegvis: arbeidspakker
+Gjør **én arbeidspakke om gangen**, i rekkefølge. Etter hver pakke: **stopp**, vis sjekkpunktet under, og **vent til jeg skriver «neste»** før du går videre.
+Ikke gjør flere pakker i ett svar, selv om du har plass.
+
+| AP | Innhold | Leverer (legg til i filene fra punkt 5) |
+|---|---|---|
+| **AP0** | Kildekart: finn og list primærkildene for alle åtte områdene (lover, forskrifter, tariffavtaler, SSB-tabeller, veiledere). Ingen innhold ennå | `kilder.md` (første versjon) og en plan: hvilke kilder du bruker per område |
+| **AP1** | Område 1: personalhåndbok | `rapport.md` § 1, `fasit_sporsmal.csv` (område 1) |
+| **AP2** | Område 2: lønn og lønnsarter | `rapport.md` § 2, forslag i `datasett_forslag.yaml` og `regler_forslag.csv`, fasitspørsmål |
+| **AP3** | Område 3: arbeidstid og bemanning | som AP2 |
+| **AP4** | Område 4: fravær og oppfølging | som AP2 |
+| **AP5** | Område 5: produktivitet og grensetilfeller | som AP2 |
+| **AP6** | Område 6: innsamling fra ansatte | som AP2 |
+| **AP7** | Område 7: likelønn og redegjørelse | som AP2 |
+| **AP8** | Område 8: livsløp (rekruttering til oppsigelse) | som AP2 |
+| **AP9** | Sammenstilling: sammendrag øverst i `rapport.md`, sjekk at alle filene er konsistente (samme `omraade`- og `regel_id`-numre, ingen duplikater), og oppdater `kilder.md` | Alle fem filer, ferdige |
+
+**Sjekkpunkt etter hver arbeidspakke** (maks 10 linjer):
+1. Hva som er gjort, og hvilke filer som er endret.
+2. Antall påstander per merke (`[Lov/forskrift]`, `[Tariffavtale]`, `[Offisiell statistikk]`, `[Myndighetsveiledning]`, `[Bransjepraksis]`, `[Antakelse]`).
+3. Hva som er «Ikke funnet».
+4. Det du er mest usikker på, i én setning.
+5. Ett spørsmål til meg hvis noe må avklares før neste pakke. Ellers: «Klar for neste: APx».
+
+**Regler for pakkene:**
+- Bygg på det forrige. Skriv aldri over en tidligere pakke uten å si det.
+- Får du for lite plass i et svar, del pakken i del a og del b, og si det. Ikke kutt kildene.
+- Hold numrene stabile: `omraade` = 1–8, `regel_id` = `R-<område>-<løpenr>`, `sporsmal_id` = `Q-<område>-<løpenr>`.
+
+## 7. Avgrensning
 - Ikke skriv kode og ikke lag selve datasettene. Bare grunnlag og forslag.
 - Ikke ta med juridisk rådgivning for enkeltsaker. Dette er generelt grunnlag for øvingsdata.
 - Prioriter bredde over dybde. Hvert område skal være brukbart, heller enn at ett område er perfekt.
