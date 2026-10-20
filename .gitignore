@@ -29,3 +29,7 @@ desktop.ini
 
 # Demokopi av museum.db (bygges av build_demo_db.py)
 05_data/demo/
+
+# Hosting: brukerliste (passordhasher) og adresse hører ikke hjemme i git
+deploy/demo/brukere.caddy
+deploy/demo/.env

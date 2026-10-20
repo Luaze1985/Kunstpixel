@@ -1,0 +1,57 @@
+# Datafinner-demo: to containere. Bare Caddy er åpen mot internett (port 80 og 443).
+# Datafinner har ingen åpen port og nås bare gjennom Caddy, som krever innlogging.
+#
+# Bruk (fra denne mappen, på serveren):
+#   cp .env.example .env     # fyll inn DEMO_DOMAIN
+#   ./bruker.sh <navn>       # lag minst én bruker
+#   docker compose up -d --build
+
+name: kpdemo
+
+services:
+  datafinner:
+    build:
+      context: ../..
+      dockerfile: deploy/demo/Dockerfile
+    image: ${DATAFINNER_IMAGE:-kunstpixel-datafinner:demo}
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    pids_limit: 100
+    expose:
+      - "8010"
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      datafinner:
+        condition: service_healthy
+    environment:
+      DEMO_DOMAIN: ${DEMO_DOMAIN:?Sett DEMO_DOMAIN i .env}
+    ports:
+      - "${BIND_ADRESSE:-0.0.0.0}:${HTTP_PORT:-80}:80"
+      - "${BIND_ADRESSE:-0.0.0.0}:${HTTPS_PORT:-443}:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ${BRUKERE_FIL:-./brukere.caddy}:/etc/caddy/brukere.caddy:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 256m
+    pids_limit: 100
+
+volumes:
+  caddy_data:
+  caddy_config:

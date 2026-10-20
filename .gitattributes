@@ -1,0 +1,6 @@
+
+# Hosting: linjeskift må være LF for filer som kjøres på Linux-serveren
+deploy/demo/*.sh text eol=lf
+deploy/demo/Dockerfile text eol=lf
+deploy/demo/Caddyfile text eol=lf
+deploy/demo/*.yaml text eol=lf

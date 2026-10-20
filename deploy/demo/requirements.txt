@@ -1,0 +1,6 @@
+# Bare det Datafinner trenger, låst til versjonene som er testet på utviklings-PC-en.
+# mcp 2.x virker IKKE: FastMCP er omdøpt der, og koden importerer mcp.server.fastmcp. Ikke oppgrader uten å teste.
+# fastmcp og rich brukes ikke av Datafinner og er derfor ikke med.
+mcp==1.29.1
+pydantic==2.12.5
+PyYAML==6.0.3

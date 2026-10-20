@@ -10,7 +10,8 @@
 | Demokopi av databasen | `src/kunstpixel/data/build_demo_db.py` | Ferdig og testet. 20 av 35 tabeller beholdes. Fødselsår, e-post og telefon er tatt ut. |
 | Lokal start i demomodus | `scripts/start_demo.py` | Ferdig. Porten er 8011. |
 | Veileder for domene og VPS | `scripts/vps_veileder.ps1` | Selvtest og testsele består. Trinn 3 (lage nøkkel) og 6 (ekte SSH) er ikke kjørt: de krever deg. |
-| Dockerfile, Caddy, innlogging, utrulling | – | **Ikke laget.** Neste steg. |
+| Docker, Caddy med innlogging, brukerskript, serveroppsett, kjørebok | `deploy/demo/` | Ferdig. Testet i Docker lokalt (24 sjekker, `scripts/test_demo_container.ps1`). `server-oppsett.sh` og `bruker.sh` er ikke kjørt på en ekte server. |
+| Utrulling til VPS | `deploy/demo/README.md` | Gjenstår, og må gjøres av deg etter veilederen. |
 
 ## Slik bruker du det
 
