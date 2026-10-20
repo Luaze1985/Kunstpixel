@@ -901,7 +901,7 @@ def query_station_ergonomics(
     SELECT stasjon_id, navn, underlag_type, maks_sammenhengende_timer,
            krav_om_sittepause_minutter, anbefalt_rotasjon_stasjon_id
     FROM hms_ergonomi_rotasjon
-    WHERE UPPER(stasjon_id) = :sid OR LOWER(navn) LIKE LOWER(:name_term)
+    WHERE UPPER(stasjon_id) IN (:sid, 'STASJON-' || :sid) OR LOWER(navn) LIKE LOWER(:name_term)
     LIMIT 1
     """
     rows = execute_read_query(sql, {"sid": clean_id, "name_term": f"%{station_id.strip()}%"}, db_path=db_path)
