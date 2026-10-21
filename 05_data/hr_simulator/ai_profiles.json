@@ -1,0 +1,4348 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "reference_date": "2026-10-21",
+    "synthetic": true,
+    "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+    "source": "05_data/hr_simulator/staff_source.csv",
+    "modern_ai_start": "2023-01-01",
+    "scales": {
+      "competence": {
+        "1": "Nybegynner, trenger veiledning",
+        "2": "Enkel bruk med støtte",
+        "3": "Selvstendig grunnbruk og kontroll",
+        "4": "Avansert bruk og kildekritikk",
+        "5": "Veileder andre og vurderer begrensninger"
+      },
+      "maturity": {
+        "1": "Utforsking",
+        "2": "Enkeltstående forsøk",
+        "3": "Gjentatt arbeidsmåte",
+        "4": "Avklarte rutiner og kontroll",
+        "5": "Systematisk forbedring og oppfølging"
+      }
+    },
+    "limitations": [
+      "Alle svar og skårer er konstruerte, også synthetic_report.",
+      "Ingen effekt på arbeidsinnsats, kvalitet eller fravær er målt.",
+      "Historiske profiler beskriver en historisk periode, ikke nåværende bruk.",
+      "Ukjent svar er adskilt fra aldri-bruk."
+    ]
+  },
+  "departments": [
+    {
+      "id": "drift",
+      "name": "Drift",
+      "description": "Rutiner kan støttes; vakthold, servering og tekniske kontroller krever faglig utføring.",
+      "assumptions": [
+        "Syntetisk avdelingsscenario, ikke målt bruk.",
+        "Rolle og oppgaver gir bare et antakelsesgrunnlag for individer."
+      ],
+      "source": "Konstruert demoscenario v1; avdelingsnavn fra 05_data/hr_simulator/staff_source.csv"
+    },
+    {
+      "id": "formidling",
+      "name": "Formidling",
+      "description": "Forberedelse kan støttes av KI; publikumsarbeidet er fortsatt menneskelig.",
+      "assumptions": [
+        "Syntetisk avdelingsscenario, ikke målt bruk.",
+        "Rolle og oppgaver gir bare et antakelsesgrunnlag for individer."
+      ],
+      "source": "Konstruert demoscenario v1; avdelingsnavn fra 05_data/hr_simulator/staff_source.csv"
+    },
+    {
+      "id": "kuratering",
+      "name": "Kuratering",
+      "description": "Utkast og språkstøtte kan brukes; kunstfaglige påstander må kontrolleres.",
+      "assumptions": [
+        "Syntetisk avdelingsscenario, ikke målt bruk.",
+        "Rolle og oppgaver gir bare et antakelsesgrunnlag for individer."
+      ],
+      "source": "Konstruert demoscenario v1; avdelingsnavn fra 05_data/hr_simulator/staff_source.csv"
+    },
+    {
+      "id": "ledelse",
+      "name": "Ledelse",
+      "description": "Administrative tekster og møtearbeid gir mulige bruksområder.",
+      "assumptions": [
+        "Syntetisk avdelingsscenario, ikke målt bruk.",
+        "Rolle og oppgaver gir bare et antakelsesgrunnlag for individer."
+      ],
+      "source": "Konstruert demoscenario v1; avdelingsnavn fra 05_data/hr_simulator/staff_source.csv"
+    },
+    {
+      "id": "marked",
+      "name": "Marked",
+      "description": "Digitale innholdsoppgaver gir flere mulige bruksflater; publisering krever kontroll.",
+      "assumptions": [
+        "Syntetisk avdelingsscenario, ikke målt bruk.",
+        "Rolle og oppgaver gir bare et antakelsesgrunnlag for individer."
+      ],
+      "source": "Konstruert demoscenario v1; avdelingsnavn fra 05_data/hr_simulator/staff_source.csv"
+    },
+    {
+      "id": "samling",
+      "name": "Samling",
+      "description": "Digital dokumentasjon er mulig; fysisk konservering erstattes ikke av KI.",
+      "assumptions": [
+        "Syntetisk avdelingsscenario, ikke målt bruk.",
+        "Rolle og oppgaver gir bare et antakelsesgrunnlag for individer."
+      ],
+      "source": "Konstruert demoscenario v1; avdelingsnavn fra 05_data/hr_simulator/staff_source.csv"
+    }
+  ],
+  "profiles": [
+    {
+      "person_id": "KP-ANS-001",
+      "department": "Ledelse",
+      "department_id": "ledelse",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Microsoft Copilot"
+      ],
+      "frequency": "daily",
+      "competence": 1,
+      "maturity": 5,
+      "task_types": [
+        "rapportutkast"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-001",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:ledelse",
+        "stilling:Museumsdirektør"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-002",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "assumed",
+      "tools": [],
+      "frequency": "never",
+      "competence": 1,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Antakelse fra rolle-/oppgavemal. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-002",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Sjefkurator"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-003",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Microsoft Copilot"
+      ],
+      "frequency": "monthly",
+      "competence": 1,
+      "maturity": 1,
+      "task_types": [
+        "dokumentasjonsutkast",
+        "metadatastøtte",
+        "språkstøtte"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-003",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:samling",
+        "stilling:Samlingsforvalter / Registrar"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-004",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "Microsoft Copilot"
+      ],
+      "frequency": "daily",
+      "competence": 2,
+      "maturity": 4,
+      "task_types": [
+        "formidlingsutkast",
+        "idéutvikling"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-004",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Formidlingsleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-005",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT"
+      ],
+      "frequency": "monthly",
+      "competence": 4,
+      "maturity": 2,
+      "task_types": [
+        "rutineutkast",
+        "sjekklisteutkast"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-005",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:drift",
+        "stilling:Drifts- og eiendomssjef"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-006",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 2,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-006",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Seniorvert / Skrankeleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-007",
+      "department": "Ledelse",
+      "department_id": "ledelse",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Microsoft Copilot"
+      ],
+      "frequency": "weekly",
+      "competence": 1,
+      "maturity": 4,
+      "task_types": [
+        "rutineutkast"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-007",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:ledelse",
+        "stilling:Kvalitets- og complianceansvarlig"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-008",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-008",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-009",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-009",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Senior museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-010",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-010",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Sjefkurator"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-011",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-011",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Audioguide- og innholdsprodusent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-012",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-012",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Formidlingsleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-013",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-013",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:drift",
+        "stilling:Sikkerhetsleder / RVR"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-014",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-014",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Kuratorassistent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-015",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-015",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:drift",
+        "stilling:AV- og utstillingslystekniker"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-016",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-016",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:DKS-koordinator (Skolesekken)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-017",
+      "department": "Ledelse",
+      "department_id": "ledelse",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-017",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:ledelse",
+        "stilling:Administrasjonskonsulent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-018",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 1,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-018",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-019",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-019",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Sjefkurator"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-020",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-020",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:drift",
+        "stilling:Bygningstekniker / Montør"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-021",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-021",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:drift",
+        "stilling:Drifts- og eiendomssjef"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-022",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "unknown",
+      "tools": [],
+      "frequency": "unknown",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Syntetisk manglende svar. Verktøy, bruk og vurderinger er ukjent; dette betyr ikke aldri-bruk.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-022",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:drift",
+        "stilling:Vekter og sikkerhetsvakt"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-023",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-023",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Sjefkurator"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-024",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Microsoft Copilot"
+      ],
+      "frequency": "daily",
+      "competence": 3,
+      "maturity": 4,
+      "task_types": [
+        "idéutvikling",
+        "tilpasning av språk"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-024",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Audioguide- og innholdsprodusent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-025",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-025",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:samling",
+        "stilling:Magasinforvalter"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-026",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-026",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:marked",
+        "stilling:Kommunikasjons- og markedssjef"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-027",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-027",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:samling",
+        "stilling:Digitaliserings- og samlingstekniker"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-028",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-028",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:samling",
+        "stilling:Malerikonservator NKF-N"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-029",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-029",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-030",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-030",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:samling",
+        "stilling:Samlingsforvalter / Registrar"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-031",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-031",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:drift",
+        "stilling:Bygningstekniker / Montør"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-032",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-032",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Kuratorassistent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-033",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-033",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:marked",
+        "stilling:Museumsbutikkleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-034",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-034",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Sjefkurator"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-035",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-035",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Kurator modernisme"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-036",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-036",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Audioguide- og innholdsprodusent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-037",
+      "department": "Ledelse",
+      "department_id": "ledelse",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-037",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:ledelse",
+        "stilling:HR- og organisasjonsrådgiver"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-038",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 2,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-038",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:drift",
+        "stilling:Vekter og sikkerhetsvakt"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-039",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 2,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-039",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:drift",
+        "stilling:Vekter og sikkerhetsvakt"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-040",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-040",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Kurator modernisme"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-041",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-041",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:samling",
+        "stilling:Digitaliserings- og samlingstekniker"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-042",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-042",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:samling",
+        "stilling:Digitaliserings- og samlingstekniker"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-043",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-043",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:marked",
+        "stilling:Digital innholdsprodusent / Web"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-044",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-044",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Museumsvert og omviser (Deltid)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-045",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-045",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Audioguide- og innholdsprodusent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-046",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-046",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:marked",
+        "stilling:Digital innholdsprodusent / Web"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-047",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-047",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Senior museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-048",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-048",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:drift",
+        "stilling:Vekter og sikkerhetsvakt"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-049",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-049",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Senior museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-050",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-050",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Kuratorassistent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-051",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-051",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:samling",
+        "stilling:Magasinforvalter"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-052",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-052",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Forskningsstipendiat"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-053",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-053",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:DKS-koordinator (Skolesekken)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-054",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-054",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:samling",
+        "stilling:Samlingsforvalter / Registrar"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-055",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-055",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-056",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-056",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Senior museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-057",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 2,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-057",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:samling",
+        "stilling:Papir- og fotokonservator"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-058",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-058",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Seniorvert / Skrankeleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-059",
+      "department": "Ledelse",
+      "department_id": "ledelse",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-059",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:ledelse",
+        "stilling:HR- og organisasjonsrådgiver"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-060",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-060",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:drift",
+        "stilling:Drifts- og eiendomssjef"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-061",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-061",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:marked",
+        "stilling:Kaféleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-062",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-062",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Kurator samtidskunst"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-063",
+      "department": "Ledelse",
+      "department_id": "ledelse",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-063",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:ledelse",
+        "stilling:HR- og organisasjonsrådgiver"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-064",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "assumed",
+      "tools": [
+        "Claude"
+      ],
+      "frequency": "daily",
+      "competence": 5,
+      "maturity": 2,
+      "task_types": [
+        "språkstøtte",
+        "tekstutkast"
+      ],
+      "description": "Antakelse fra rolle-/oppgavemal. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-064",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Forskningsstipendiat"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-065",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "Microsoft Copilot"
+      ],
+      "frequency": "monthly",
+      "competence": 4,
+      "maturity": 1,
+      "task_types": [
+        "oppsummering"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-065",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:drift",
+        "stilling:Vekter og sikkerhetsvakt"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-066",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-066",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:marked",
+        "stilling:Kafémedarbeider (Deltid)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-067",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-067",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Forskningsstipendiat"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-068",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-068",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:drift",
+        "stilling:AV- og utstillingslystekniker"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-069",
+      "department": "Ledelse",
+      "department_id": "ledelse",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-069",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:ledelse",
+        "stilling:Økonomisjef"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-070",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-070",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:samling",
+        "stilling:Samlingsforvalter / Registrar"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-071",
+      "department": "Ledelse",
+      "department_id": "ledelse",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-071",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:ledelse",
+        "stilling:HR- og organisasjonsrådgiver"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-072",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-072",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Seniorvert / Skrankeleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-073",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-073",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:drift",
+        "stilling:Drifts- og eiendomssjef"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-074",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-074",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:marked",
+        "stilling:Kafémedarbeider (Deltid)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-075",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-075",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:drift",
+        "stilling:Bygningstekniker / Montør"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-076",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-076",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:drift",
+        "stilling:Bygningstekniker / Montør"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-077",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "Adobe Firefly",
+        "ChatGPT"
+      ],
+      "frequency": "daily",
+      "competence": 4,
+      "maturity": 3,
+      "task_types": [
+        "kampanjeutkast"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-077",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:marked",
+        "stilling:Digital innholdsprodusent / Web"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-078",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": "2024-06-28",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Claude"
+      ],
+      "frequency": "daily",
+      "competence": 1,
+      "maturity": 5,
+      "task_types": [
+        "språkstøtte"
+      ],
+      "description": "Konstruert demosvar. Historisk periode; ikke nåværende bruk. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-078",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2024-06-28",
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Kurator samtidskunst"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-079",
+      "department": "Ledelse",
+      "department_id": "ledelse",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-079",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:ledelse",
+        "stilling:HR- og organisasjonsrådgiver"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-080",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-080",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Kurator modernisme"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-081",
+      "department": "Ledelse",
+      "department_id": "ledelse",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 3,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-081",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:ledelse",
+        "stilling:Økonomisjef"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-082",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-082",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:samling",
+        "stilling:Samlingsforvalter / Registrar"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-083",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "historical",
+      "observation_date": "2025-04-28",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 2,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Konstruert demosvar. Historisk periode; ikke nåværende bruk. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-083",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2025-04-28",
+      "basis": [
+        "avdeling:drift",
+        "stilling:Vekter og sikkerhetsvakt"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-084",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-084",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:drift",
+        "stilling:Drifts- og eiendomssjef"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-085",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-085",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Museumsvert og omviser (Deltid)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-086",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "historical",
+      "observation_date": "2025-08-28",
+      "knowledge_status": "unknown",
+      "tools": [],
+      "frequency": "unknown",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Syntetisk manglende svar. Verktøy, bruk og vurderinger er ukjent; dette betyr ikke aldri-bruk.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-086",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2025-08-28",
+      "basis": [
+        "avdeling:marked",
+        "stilling:Kommunikasjons- og markedssjef"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-087",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-087",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:samling",
+        "stilling:Magasinforvalter"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-088",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 2,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-088",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:drift",
+        "stilling:Vekter og sikkerhetsvakt"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-089",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-089",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:samling",
+        "stilling:Papir- og fotokonservator"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-090",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-090",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:marked",
+        "stilling:Kaféleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-091",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-091",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:DKS-koordinator (Skolesekken)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-092",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-092",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:marked",
+        "stilling:Kaféleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-093",
+      "department": "Ledelse",
+      "department_id": "ledelse",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-093",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:ledelse",
+        "stilling:Assisterende direktør"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-094",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT"
+      ],
+      "frequency": "daily",
+      "competence": 3,
+      "maturity": 4,
+      "task_types": [
+        "formidlingsutkast",
+        "idéutvikling",
+        "tilpasning av språk"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-094",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:DKS-koordinator (Skolesekken)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-095",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": "2023-09-28",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 2,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Konstruert demosvar. Historisk periode; ikke nåværende bruk. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-095",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2023-09-28",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-096",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": "2023-04-28",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT"
+      ],
+      "frequency": "weekly",
+      "competence": 2,
+      "maturity": 3,
+      "task_types": [
+        "formidlingsutkast",
+        "tilpasning av språk"
+      ],
+      "description": "Konstruert demosvar. Historisk periode; ikke nåværende bruk. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-096",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2023-04-28",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Audioguide- og innholdsprodusent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-097",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-097",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Forskningsstipendiat"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-098",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-098",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-099",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "assumed",
+      "tools": [],
+      "frequency": "never",
+      "competence": 1,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Antakelse fra rolle-/oppgavemal. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-099",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-100",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "historical",
+      "observation_date": "2023-03-28",
+      "knowledge_status": "assumed",
+      "tools": [],
+      "frequency": "never",
+      "competence": 1,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Antakelse fra rolle-/oppgavemal. Historisk periode; ikke nåværende bruk. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-100",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2023-03-28",
+      "basis": [
+        "avdeling:drift",
+        "stilling:Bygningstekniker / Montør"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-101",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 2,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-101",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:drift",
+        "stilling:Sikkerhetsleder / RVR"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-102",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "historical",
+      "observation_date": "2023-05-28",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT"
+      ],
+      "frequency": "daily",
+      "competence": 3,
+      "maturity": 4,
+      "task_types": [
+        "språkstøtte"
+      ],
+      "description": "Konstruert demosvar. Historisk periode; ikke nåværende bruk. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-102",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2023-05-28",
+      "basis": [
+        "avdeling:samling",
+        "stilling:Papir- og fotokonservator"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-103",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-103",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Seniorvert / Skrankeleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-104",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-104",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:marked",
+        "stilling:Butikkmedarbeider (Deltid)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-105",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-105",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:marked",
+        "stilling:Butikkmedarbeider (Deltid)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-106",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "historical",
+      "observation_date": "2024-03-28",
+      "knowledge_status": "assumed",
+      "tools": [
+        "ChatGPT",
+        "Microsoft Copilot"
+      ],
+      "frequency": "weekly",
+      "competence": 2,
+      "maturity": 5,
+      "task_types": [
+        "rutineutkast",
+        "sjekklisteutkast"
+      ],
+      "description": "Antakelse fra rolle-/oppgavemal. Historisk periode; ikke nåværende bruk. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-106",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2024-03-28",
+      "basis": [
+        "avdeling:drift",
+        "stilling:Vekter og sikkerhetsvakt"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-107",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-107",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Seniorvert / Skrankeleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-108",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "assumed",
+      "tools": [
+        "Claude"
+      ],
+      "frequency": "daily",
+      "competence": 3,
+      "maturity": 3,
+      "task_types": [
+        "idéutvikling",
+        "språkstøtte",
+        "tekstutkast"
+      ],
+      "description": "Antakelse fra rolle-/oppgavemal. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-108",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Seniorkurator"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-109",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "Claude"
+      ],
+      "frequency": "daily",
+      "competence": 4,
+      "maturity": 1,
+      "task_types": [
+        "idéutvikling"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-109",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Kurator modernisme"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-110",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-110",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Seniorvert / Skrankeleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-111",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "assumed",
+      "tools": [],
+      "frequency": "never",
+      "competence": 1,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Antakelse fra rolle-/oppgavemal. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-111",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:DKS-koordinator (Skolesekken)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-112",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 2,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-112",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:drift",
+        "stilling:AV- og utstillingslystekniker"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-113",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": "2025-01-28",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 4,
+      "maturity": 4,
+      "task_types": [],
+      "description": "Konstruert demosvar. Historisk periode; ikke nåværende bruk. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-113",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2025-01-28",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Senior museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-114",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "historical",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Ansettelsen sluttet før demoens moderne KI-periode; ingen bruk konstruert.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-114",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:marked",
+        "stilling:Butikkmedarbeider (Deltid)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-115",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": "2025-10-28",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Claude"
+      ],
+      "frequency": "weekly",
+      "competence": 3,
+      "maturity": 3,
+      "task_types": [
+        "språkstøtte",
+        "tekstutkast"
+      ],
+      "description": "Konstruert demosvar. Historisk periode; ikke nåværende bruk. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-115",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2025-10-28",
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Sjefkurator"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-116",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "historical",
+      "observation_date": "2025-04-28",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 3,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Konstruert demosvar. Historisk periode; ikke nåværende bruk. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-116",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2025-04-28",
+      "basis": [
+        "avdeling:samling",
+        "stilling:Malerikonservator NKF-N"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-117",
+      "department": "Ledelse",
+      "department_id": "ledelse",
+      "employment_status": "historical",
+      "observation_date": "2025-08-28",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "Microsoft Copilot"
+      ],
+      "frequency": "daily",
+      "competence": 4,
+      "maturity": 2,
+      "task_types": [
+        "møteforberedelse",
+        "rapportutkast",
+        "rutineutkast"
+      ],
+      "description": "Konstruert demosvar. Historisk periode; ikke nåværende bruk. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-117",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2025-08-28",
+      "basis": [
+        "avdeling:ledelse",
+        "stilling:Administrasjonskonsulent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-118",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "historical",
+      "observation_date": "2023-06-28",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "Microsoft Copilot"
+      ],
+      "frequency": "weekly",
+      "competence": 2,
+      "maturity": 3,
+      "task_types": [
+        "dokumentasjonsutkast",
+        "metadatastøtte"
+      ],
+      "description": "Konstruert demosvar. Historisk periode; ikke nåværende bruk. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-118",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2023-06-28",
+      "basis": [
+        "avdeling:samling",
+        "stilling:Samlingsforvalter / Registrar"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-119",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "historical",
+      "observation_date": "2023-04-28",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 4,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Konstruert demosvar. Historisk periode; ikke nåværende bruk. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-119",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2023-04-28",
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Seniorkurator"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-120",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "historical",
+      "observation_date": "2024-04-28",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 1,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Konstruert demosvar. Historisk periode; ikke nåværende bruk. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-120",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2024-04-28",
+      "basis": [
+        "avdeling:marked",
+        "stilling:Kaféleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-121",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 2,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-121",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:drift",
+        "stilling:Sikkerhetsleder / RVR"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-122",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 2,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-122",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:samling",
+        "stilling:Samlingsforvalter / Registrar"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-123",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": "2023-08-28",
+      "knowledge_status": "unknown",
+      "tools": [],
+      "frequency": "unknown",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Syntetisk manglende svar. Verktøy, bruk og vurderinger er ukjent; dette betyr ikke aldri-bruk.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-123",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2023-08-28",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Senior museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-124",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Microsoft Copilot"
+      ],
+      "frequency": "daily",
+      "competence": 2,
+      "maturity": 2,
+      "task_types": [
+        "formidlingsutkast",
+        "tilpasning av språk"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-124",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-125",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "Adobe Firefly",
+        "ChatGPT",
+        "Microsoft Copilot"
+      ],
+      "frequency": "weekly",
+      "competence": 1,
+      "maturity": 2,
+      "task_types": [
+        "kampanjeutkast",
+        "språkstøtte"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-125",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:marked",
+        "stilling:Kommunikasjons- og markedssjef"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-126",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": "2023-03-28",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 1,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Konstruert demosvar. Historisk periode; ikke nåværende bruk. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-126",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2023-03-28",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Museumsvert og omviser (Deltid)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-127",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "historical",
+      "observation_date": "2024-02-28",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "Microsoft Copilot"
+      ],
+      "frequency": "weekly",
+      "competence": 3,
+      "maturity": 4,
+      "task_types": [
+        "kampanjeutkast"
+      ],
+      "description": "Konstruert demosvar. Historisk periode; ikke nåværende bruk. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-127",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2024-02-28",
+      "basis": [
+        "avdeling:marked",
+        "stilling:Museumsbutikkleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-128",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "unknown",
+      "tools": [],
+      "frequency": "unknown",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Syntetisk manglende svar. Verktøy, bruk og vurderinger er ukjent; dette betyr ikke aldri-bruk.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-128",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Senior museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-129",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "assumed",
+      "tools": [
+        "Microsoft Copilot"
+      ],
+      "frequency": "monthly",
+      "competence": 4,
+      "maturity": 4,
+      "task_types": [
+        "tilpasning av språk"
+      ],
+      "description": "Antakelse fra rolle-/oppgavemal. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-129",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Audioguide- og innholdsprodusent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-130",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "historical",
+      "observation_date": "2024-06-28",
+      "knowledge_status": "assumed",
+      "tools": [],
+      "frequency": "never",
+      "competence": 2,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Antakelse fra rolle-/oppgavemal. Historisk periode; ikke nåværende bruk. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-130",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2024-06-28",
+      "basis": [
+        "avdeling:marked",
+        "stilling:Kafémedarbeider (Deltid)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-131",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": "2024-03-28",
+      "knowledge_status": "assumed",
+      "tools": [
+        "Microsoft Copilot"
+      ],
+      "frequency": "monthly",
+      "competence": 2,
+      "maturity": 3,
+      "task_types": [
+        "formidlingsutkast",
+        "idéutvikling",
+        "tilpasning av språk"
+      ],
+      "description": "Antakelse fra rolle-/oppgavemal. Historisk periode; ikke nåværende bruk. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-131",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2024-03-28",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Seniorvert / Skrankeleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-132",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "assumed",
+      "tools": [],
+      "frequency": "never",
+      "competence": 1,
+      "maturity": 3,
+      "task_types": [],
+      "description": "Antakelse fra rolle-/oppgavemal. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-132",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Audioguide- og innholdsprodusent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-133",
+      "department": "Ledelse",
+      "department_id": "ledelse",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "Microsoft Copilot"
+      ],
+      "frequency": "weekly",
+      "competence": 5,
+      "maturity": 5,
+      "task_types": [
+        "møteforberedelse",
+        "rapportutkast",
+        "rutineutkast"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-133",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:ledelse",
+        "stilling:Museumsdirektør"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-134",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Microsoft Copilot"
+      ],
+      "frequency": "daily",
+      "competence": 2,
+      "maturity": 4,
+      "task_types": [
+        "idéutvikling"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-134",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Museumsvert og omviser (Deltid)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-135",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 5,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-135",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:DKS-koordinator (Skolesekken)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-136",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": "2025-05-28",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 4,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Konstruert demosvar. Historisk periode; ikke nåværende bruk. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-136",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2025-05-28",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Senior museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-137",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "unknown",
+      "tools": [],
+      "frequency": "unknown",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Syntetisk manglende svar. Verktøy, bruk og vurderinger er ukjent; dette betyr ikke aldri-bruk.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-137",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Audioguide- og innholdsprodusent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-138",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "Microsoft Copilot"
+      ],
+      "frequency": "monthly",
+      "competence": 4,
+      "maturity": 2,
+      "task_types": [
+        "språkstøtte"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-138",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:samling",
+        "stilling:Magasinforvalter"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-139",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 1,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-139",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-140",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "unknown",
+      "tools": [],
+      "frequency": "unknown",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Syntetisk manglende svar. Verktøy, bruk og vurderinger er ukjent; dette betyr ikke aldri-bruk.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-140",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Seniorvert / Skrankeleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-141",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "historical",
+      "observation_date": "2025-09-28",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 1,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Konstruert demosvar. Historisk periode; ikke nåværende bruk. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-141",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-09-15",
+      "period_end": "2025-09-28",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Seniorvert / Skrankeleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-142",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Microsoft Copilot"
+      ],
+      "frequency": "weekly",
+      "competence": 2,
+      "maturity": 4,
+      "task_types": [
+        "formidlingsutkast",
+        "tilpasning av språk"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-142",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-05-15",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Museumsvert og omviser (Deltid)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-143",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 1,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-143",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-04-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:marked",
+        "stilling:Kaféleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-144",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "unknown",
+      "tools": [],
+      "frequency": "unknown",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Syntetisk manglende svar. Verktøy, bruk og vurderinger er ukjent; dette betyr ikke aldri-bruk.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-144",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-04-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:samling",
+        "stilling:Magasinforvalter"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-145",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 1,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-145",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-12-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:drift",
+        "stilling:Sikkerhetsleder / RVR"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-146",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Microsoft Copilot"
+      ],
+      "frequency": "monthly",
+      "competence": 2,
+      "maturity": 5,
+      "task_types": [
+        "formidlingsutkast",
+        "tilpasning av språk"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-146",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-09-15",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Audioguide- og innholdsprodusent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-147",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 1,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-147",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-08-15",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Museumsvert og omviser (Deltid)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-148",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Microsoft Copilot"
+      ],
+      "frequency": "daily",
+      "competence": 5,
+      "maturity": 3,
+      "task_types": [
+        "metadatastøtte"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-148",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-06-15",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:samling",
+        "stilling:Papir- og fotokonservator"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-149",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Claude"
+      ],
+      "frequency": "daily",
+      "competence": 3,
+      "maturity": 3,
+      "task_types": [
+        "idéutvikling",
+        "språkstøtte",
+        "tekstutkast"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-149",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2023-04-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Kuratorassistent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-150",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Microsoft Copilot"
+      ],
+      "frequency": "daily",
+      "competence": 4,
+      "maturity": 3,
+      "task_types": [
+        "formidlingsutkast",
+        "idéutvikling"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-150",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2024-09-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:DKS-koordinator (Skolesekken)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-151",
+      "department": "Ledelse",
+      "department_id": "ledelse",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Microsoft Copilot"
+      ],
+      "frequency": "daily",
+      "competence": 3,
+      "maturity": 2,
+      "task_types": [
+        "møteforberedelse",
+        "rapportutkast"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-151",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2024-10-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:ledelse",
+        "stilling:Museumsdirektør"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-152",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 2,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-152",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2024-01-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Kuratorassistent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-153",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 1,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-153",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2024-06-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:DKS-koordinator (Skolesekken)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-154",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 1,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-154",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2024-09-15",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:drift",
+        "stilling:Sikkerhetsleder / RVR"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-155",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 1,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-155",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2024-05-15",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:samling",
+        "stilling:Malerikonservator NKF-N"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-156",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "unknown",
+      "tools": [],
+      "frequency": "unknown",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Syntetisk manglende svar. Verktøy, bruk og vurderinger er ukjent; dette betyr ikke aldri-bruk.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-156",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2024-07-15",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Kurator samtidskunst"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-157",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "assumed",
+      "tools": [
+        "ChatGPT"
+      ],
+      "frequency": "weekly",
+      "competence": 1,
+      "maturity": 3,
+      "task_types": [
+        "tekstutkast"
+      ],
+      "description": "Antakelse fra rolle-/oppgavemal. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-157",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2024-06-15",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Kuratorassistent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-158",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Microsoft Copilot"
+      ],
+      "frequency": "daily",
+      "competence": 3,
+      "maturity": 1,
+      "task_types": [
+        "formidlingsutkast",
+        "idéutvikling"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-158",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2025-10-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Senior museumspedagog"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-159",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Microsoft Copilot"
+      ],
+      "frequency": "daily",
+      "competence": 3,
+      "maturity": 5,
+      "task_types": [
+        "formidlingsutkast",
+        "idéutvikling",
+        "tilpasning av språk"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-159",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2025-12-15",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Museumsvert og omviser (Deltid)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-160",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 2,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-160",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2025-12-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Seniorvert / Skrankeleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-161",
+      "department": "Formidling",
+      "department_id": "formidling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 2,
+      "maturity": 1,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-161",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2025-08-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:formidling",
+        "stilling:Formidlingsleder"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-162",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "Adobe Firefly",
+        "ChatGPT",
+        "Microsoft Copilot"
+      ],
+      "frequency": "weekly",
+      "competence": 3,
+      "maturity": 4,
+      "task_types": [
+        "innholdsideer",
+        "kampanjeutkast",
+        "språkstøtte"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-162",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2025-02-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:marked",
+        "stilling:Butikkmedarbeider (Deltid)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-163",
+      "department": "Drift",
+      "department_id": "drift",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [],
+      "frequency": "never",
+      "competence": 2,
+      "maturity": 2,
+      "task_types": [],
+      "description": "Konstruert demosvar. Ingen bruk i denne syntetiske perioden; dette er et eksplisitt demosvar.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-163",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2025-11-15",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:drift",
+        "stilling:AV- og utstillingslystekniker"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-164",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "assumed",
+      "tools": [
+        "Adobe Firefly",
+        "ChatGPT"
+      ],
+      "frequency": "weekly",
+      "competence": 3,
+      "maturity": 4,
+      "task_types": [
+        "kampanjeutkast",
+        "språkstøtte"
+      ],
+      "description": "Antakelse fra rolle-/oppgavemal. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-164",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2025-02-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:marked",
+        "stilling:Kafémedarbeider (Deltid)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-165",
+      "department": "Ledelse",
+      "department_id": "ledelse",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT"
+      ],
+      "frequency": "daily",
+      "competence": 5,
+      "maturity": 2,
+      "task_types": [
+        "møteforberedelse",
+        "rapportutkast"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-165",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2026-04-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:ledelse",
+        "stilling:Administrasjonskonsulent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-166",
+      "department": "Kuratering",
+      "department_id": "kuratering",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "synthetic_report",
+      "tools": [
+        "ChatGPT",
+        "Claude"
+      ],
+      "frequency": "weekly",
+      "competence": 4,
+      "maturity": 1,
+      "task_types": [
+        "språkstøtte",
+        "tekstutkast"
+      ],
+      "description": "Konstruert demosvar. Mulig KI-støtte i utvalgte oppgaver; innhold må kontrolleres.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-166",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2026-06-15",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:kuratering",
+        "stilling:Kuratorassistent"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-167",
+      "department": "Marked",
+      "department_id": "marked",
+      "employment_status": "future",
+      "observation_date": null,
+      "knowledge_status": "not_applicable",
+      "tools": [],
+      "frequency": "not_applicable",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Fremtidig ansettelse; ingen nåværende KI-vurdering.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-167",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": null,
+      "period_end": null,
+      "basis": [
+        "avdeling:marked",
+        "stilling:Kafémedarbeider (Deltid)"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    },
+    {
+      "person_id": "KP-ANS-168",
+      "department": "Samling",
+      "department_id": "samling",
+      "employment_status": "active",
+      "observation_date": "2026-10-21",
+      "knowledge_status": "unknown",
+      "tools": [],
+      "frequency": "unknown",
+      "competence": null,
+      "maturity": null,
+      "task_types": [],
+      "description": "Syntetisk manglende svar. Verktøy, bruk og vurderinger er ukjent; dette betyr ikke aldri-bruk.",
+      "source": "05_data/hr_simulator/staff_source.csv#ansatt_id=KP-ANS-168",
+      "method": "ki-demo-v1: SHA256(ansatt_id), rolle-/oppgavemal og avdelingsscenario; ingen demografi",
+      "synthetic": true,
+      "period_start": "2026-08-01",
+      "period_end": "2026-10-21",
+      "basis": [
+        "avdeling:samling",
+        "stilling:Malerikonservator NKF-N"
+      ],
+      "uncertainty": "Ikke en måling; konstruert scenario uten individuell dokumentasjon."
+    }
+  ]
+}

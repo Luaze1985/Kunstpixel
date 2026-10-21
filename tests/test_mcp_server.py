@@ -175,10 +175,20 @@ class TestSearchEventsTool:
     """Verifies tool 4: search_events."""
 
     def test_search_events_upcoming_with_date_and_type(self):
-        """R1 criterion: Search events returns upcoming events with date and type."""
+        """Standardfilteret følger dagens dato, også etter siste demoarrangement."""
+        from datetime import date
+
+        catalog = search_events(date_from="0001-01-01", limit=50)
         events = search_events()
         assert isinstance(events, list)
-        assert len(events) >= 1, "Expected at least 1 upcoming event"
+        expected = [ev for ev in catalog if date.fromisoformat(ev["dato"]) >= date.today()]
+        assert events == expected[:5]
+
+    def test_search_events_historical_catalog_has_structured_data(self):
+        """Et fast historisk vindu bevarer ikke-tomme strukturkontroller."""
+        events = search_events(date_from="2026-09-01", date_to="2026-10-12")
+        assert isinstance(events, list)
+        assert len(events) >= 1, "Expected historical demo events"
 
         for ev in events:
             assert "id" in ev

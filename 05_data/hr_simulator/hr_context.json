@@ -1,0 +1,1524 @@
+{
+  "metadata": {
+    "source_commit": "ce6fbfc7b3726527f01d3f29e7bc35a441e92059",
+    "source": "origin/hr-konsolidering:05_data/museum.db",
+    "synthetic": true,
+    "period_from": "2026-01-01",
+    "period_to": "2026-10-21",
+    "note": "Syntetiske vakter og fravær, ikke produktivitet eller effekt av KI. Fravær er union av kalenderdager klippet til periode og ansettelse, ikke sykefraværsprosent. Null betyr manglende kildegrunnlag; null vakter i dekket grunnlag gir 0."
+  },
+  "people": [
+    {
+      "person_id": "KP-ANS-001",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 34,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-002",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 23,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-003",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 32,
+      "shift_hours": 240.0,
+      "absence_days": 18,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-004",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 105,
+      "shift_hours": 805.5,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-005",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 32,
+      "shift_hours": 246.0,
+      "absence_days": 23,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-006",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 77,
+      "shift_hours": 586.0,
+      "absence_days": 1,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-007",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 52,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-008",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-009",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-010",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 10,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-011",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-012",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-013",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-014",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-015",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-016",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-017",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-018",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-019",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-020",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-021",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 99,
+      "shift_hours": 748.5,
+      "absence_days": 1,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-022",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-023",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 33,
+      "shift_hours": 247.5,
+      "absence_days": 21,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-024",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-025",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 23,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-026",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-027",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-028",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-029",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 30,
+      "shift_hours": 225.0,
+      "absence_days": 18,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-030",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-031",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 29,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-032",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 32,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-033",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-034",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-035",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-036",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-037",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-038",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-039",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-040",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-041",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 21,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-042",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-043",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 22,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-044",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-045",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-046",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 30,
+      "shift_hours": 228.0,
+      "absence_days": 6,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-047",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-048",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-049",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-050",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-051",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-052",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-053",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-054",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-055",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-056",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-057",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-058",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-059",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-060",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-061",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-062",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-063",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-064",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-065",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-066",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-067",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-068",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-069",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-070",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-071",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-072",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 31,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-073",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 20,
+      "shift_hours": 150.0,
+      "absence_days": 21,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-074",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-075",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-076",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-077",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-078",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-079",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-080",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-081",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-082",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-083",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-084",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-085",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 99,
+      "shift_hours": 751.5,
+      "absence_days": 1,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-086",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-087",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-088",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-089",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 18,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-090",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-091",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 17,
+      "shift_hours": 131.0,
+      "absence_days": 34,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-092",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-093",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-094",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 99,
+      "shift_hours": 748.0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-095",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-096",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 20,
+      "shift_hours": 150.0,
+      "absence_days": 19,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-097",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-098",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-099",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-100",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-101",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-102",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 104,
+      "shift_hours": 793.5,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-103",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-104",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-105",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-106",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-107",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-108",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-109",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 61,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-110",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-111",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-112",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 104,
+      "shift_hours": 790.5,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-113",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-114",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 30,
+      "shift_hours": 225.0,
+      "absence_days": 10,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-115",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-116",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-117",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 29,
+      "shift_hours": 225.0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-118",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 35,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-119",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 58,
+      "shift_hours": 439.0,
+      "absence_days": 2,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-120",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 104,
+      "shift_hours": 789.0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-121",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 29,
+      "shift_hours": 220.0,
+      "absence_days": 2,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-122",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-123",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-124",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 29,
+      "shift_hours": 223.0,
+      "absence_days": 1,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-125",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-126",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 41,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-127",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 4,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-128",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 8,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-129",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 29,
+      "shift_hours": 223.0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-130",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-131",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 29,
+      "shift_hours": 217.5,
+      "absence_days": 20,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-132",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 29,
+      "shift_hours": 217.5,
+      "absence_days": 1,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-133",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-134",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 104,
+      "shift_hours": 787.5,
+      "absence_days": 2,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-135",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 6,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-136",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 13,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-137",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 104,
+      "shift_hours": 789.0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-138",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 41,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-139",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 29,
+      "shift_hours": 217.5,
+      "absence_days": 4,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-140",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 99,
+      "shift_hours": 747.5,
+      "absence_days": 2,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-141",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 29,
+      "shift_hours": 224.5,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-142",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 39,
+      "shift_hours": 300.5,
+      "absence_days": 6,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-143",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 95,
+      "shift_hours": 730.5,
+      "absence_days": 1,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-144",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 29,
+      "shift_hours": 220.0,
+      "absence_days": 11,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-145",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 99,
+      "shift_hours": 750.0,
+      "absence_days": 1,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-146",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 24,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-147",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 29,
+      "shift_hours": 217.5,
+      "absence_days": 22,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-148",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 99,
+      "shift_hours": 748.0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-149",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-150",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 29,
+      "shift_hours": 220.5,
+      "absence_days": 13,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-151",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 49,
+      "shift_hours": 370.5,
+      "absence_days": 5,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-152",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 29,
+      "shift_hours": 217.5,
+      "absence_days": 10,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-153",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 33,
+      "shift_hours": 250.0,
+      "absence_days": 20,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-154",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 39,
+      "shift_hours": 295.5,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-155",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 30,
+      "shift_hours": 225.0,
+      "absence_days": 2,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-156",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 48,
+      "shift_hours": 363.5,
+      "absence_days": 7,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-157",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 95,
+      "shift_hours": 722.0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-158",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 39,
+      "shift_hours": 292.5,
+      "absence_days": 7,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-159",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 27,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-160",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 14,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-161",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 22,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-162",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 94,
+      "shift_hours": 710.5,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-163",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 39,
+      "shift_hours": 295.5,
+      "absence_days": 7,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-164",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 29,
+      "shift_hours": 219.0,
+      "absence_days": 11,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-165",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 23,
+      "shift_hours": 172.5,
+      "absence_days": 6,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-166",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-167",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 0,
+      "shift_hours": 0,
+      "absence_days": 0,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    },
+    {
+      "person_id": "KP-ANS-168",
+      "period_from": "2026-01-01",
+      "period_to": "2026-10-21",
+      "shift_count": 6,
+      "shift_hours": 45.0,
+      "absence_days": 8,
+      "source": "origin/hr-konsolidering:05_data/museum.db"
+    }
+  ]
+}

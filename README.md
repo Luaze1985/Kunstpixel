@@ -54,6 +54,8 @@ py -3.13 -m src.kunstpixel.hr_simulator web
 
 Åpne `http://127.0.0.1:8001/`. Søk i personregisteret, velg uke, vurder arrangementer og faste oppgaver, registrer kontaktsvar og lag et lokalt forslag. Hver endring kan godkjennes eller avvises. Ved avmelding blir behovet synlig igjen, mens fjerning av en avtalt vakt krever egen godkjenning. Plan og beslutninger bevares i versjonerte lokale SQLite-filer under `05_data/hr_simulator/`, som ikke legges i Git. Demomodus har tre isolerte syntetiske starttilstander på samme personregister, knyttet til HR-001–003. `02_deliverables/referanse/hr-simulator-demo-feature-cc83db2.html` er en byte-lik kopi av den opprinnelige HTML-prototypen.
 
+For lokal oppstart på Windows/macOS/Linux og gjennomgang av KI-register, syntetiske profiler og suppleringer, se [KI- og ansattdemo](docs/DEMO_KI.md).
+
 Den flate personalfilen `05_data/hr_simulator/redigeringsbord/UTKAST-ansatte-kandidater.csv` kan åpnes i datasett-redigerer. Etter lagring trykker du «Valider arbeidskopi» og «Bruk datagrunnlag» i Museumsuke. Bare kompetanse, fiktiv opplæring og tilgjengelighetsprofil kan endres. Ved aktivering får du en ny dataversjon med egen planstatus; gamle beslutninger ligger i forrige versjon. `05_data/hr_simulator/DATAKILDER.md` forklarer kilde, syntetiske regler og grenser. Historiske vakter vises som datakvalitet og brukes ikke til kapasitet eller forslag.
 
 Kildegrunnlag og egne øvingsregler finnes i `04_knowledge/04_domain/projects/hr_simulator/`. Fireukersdatasettet er `05_data/hr_simulator/planning_week.json`. Kjør `py -3.13 -m pytest` for automatiserte kontroller.

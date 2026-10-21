@@ -65,13 +65,14 @@ class TestEmptyAndWhitespaceBoundaries:
         assert res_ws.get("code") == "INVALID_ROOM"
 
     def test_search_events_empty_and_whitespace(self):
+        expected = search_events()
         res_empty = search_events(event_type="")
         assert isinstance(res_empty, list)
-        assert len(res_empty) >= 1
+        assert res_empty == expected
 
         res_ws = search_events(event_type="   ", date_from="   ", date_to="   ")
         assert isinstance(res_ws, list)
-        assert len(res_ws) >= 1
+        assert res_ws == expected
 
     def test_search_faq_empty_and_whitespace(self):
         res_empty = search_faq(query="")
@@ -278,7 +279,7 @@ class TestInvalidLimits:
             res_coll = search_collection(limit=lim)
             assert len(res_coll) == 1, f"Expected limit {lim} to clamp to 1, got {len(res_coll)}"
 
-            res_ev = search_events(limit=lim)
+            res_ev = search_events(limit=lim, date_from="2026-09-01")
             assert len(res_ev) == 1, f"Expected limit {lim} to clamp to 1, got {len(res_ev)}"
 
     def test_excessive_limits_clamped_to_fifty(self):
@@ -286,7 +287,7 @@ class TestInvalidLimits:
             res_coll = search_collection(limit=lim)
             assert 1 <= len(res_coll) <= 50
 
-            res_ev = search_events(limit=lim)
+            res_ev = search_events(limit=lim, date_from="2026-09-01")
             assert 1 <= len(res_ev) <= 50
 
 

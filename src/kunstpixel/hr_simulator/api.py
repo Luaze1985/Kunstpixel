@@ -47,7 +47,7 @@ class ActivationInput(BaseModel):
     expected_checksum: str
 
 
-def create_app(state_path: Path | None = None, draft_path: Path | None = None) -> FastAPI:
+def create_app(state_path: Path | None = None, draft_path: Path | None = None, ai_state_path: Path | None = None) -> FastAPI:
     base = ROOT / "05_data/hr_simulator"
     registry = DatasetRegistry(base / "planning_week.json",
         state_path or base / "local_state_v2.sqlite3",
@@ -56,6 +56,10 @@ def create_app(state_path: Path | None = None, draft_path: Path | None = None) -
     app = FastAPI(title="Kunstpixel museumsuke", docs_url="/api/docs")
     app.state.planning_store = registry.store()
     app.state.datasets = registry
+    from .ai_registry import AIRegistry
+    from .ai_api import create_router
+    ai_path = ai_state_path or (state_path.parent if state_path else base) / "ai_observations.sqlite3"
+    app.include_router(create_router(AIRegistry(base, ai_path)))
 
     @app.exception_handler(StateError)
     async def state_error(_request: Request, exc: StateError):
