@@ -4,9 +4,10 @@ Demoen er en del av samme Kunstpixel-repo og kjører på egen PC med Python 3.13
 
 ## Hent riktig kode og start
 
-Åpne en terminal i din lokale Kunstpixel-mappe. Demogrenen heter `feat/ki-ansatt-demo`. Dette er navnet på leveransegrenen; instruksjonen forutsetter at grenen er gjort tilgjengelig i din kopi, og innebærer ingen påstand om at den er pushet til GitHub.
+Åpne en terminal i din lokale Kunstpixel-mappe. Demogrenen `feat/ki-ansatt-demo` er tilgjengelig i GitHub-repoet `Luaze1985/Kunstpixel`. Hent den før oppstart:
 
 ```text
+git fetch origin
 git switch feat/ki-ansatt-demo
 ```
 
