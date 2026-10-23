@@ -31,6 +31,13 @@ Datafilene som bygges inn (se `CSV_FILER` i `tests/test_data_csv.py`):
 `arbeidstid_grenser.csv`, `arkiv_hr_fravaer.csv`, `arkiv_hr_vakt_justering.csv`, `arkiv_hr_vakt_klokkeslett.csv`, `hendelser_tillegg_2026.csv`,
 `rapport_regler.csv`, `rolle_sporsmal.csv`, `roller.csv`, `virke_tariff_tillegg.csv`. De tre siste i rekken er skrevet for hånd (ingen generator).
 
+Intern organisasjon (generator `src/kunstpixel/data/org_builder.py`, notatbok `notebooks/intern_org_databygger.ipynb`, skjemaversjon 4):
+`mock_interne_ferdigheter.csv` → `org_ferdigheter`, `mock_ansatt_kompetanser.csv` → `org_ansatt_kompetanse`,
+`mock_interne_henvendelser.csv` → `interne_henvendelser`, `mock_avvik_hms_tekst.csv` → `hms_avvik_tekst`.
+Navn og avdeling lagres ikke på nytt, de hentes fra `hr_ansatte`. Verktøyene `get_employee_skills` og `search_internal_requests`
+ligger bare i `core/mcp_server.py`, med vilje ikke i Datafinner eller demokopien (personsaker). Varsler (CASE-013) skjermes alltid.
+**Generatoren skriver CSV-ene på nytt hver gang pytest kjører** (`tests/test_org_builder.py`), så rett data i `org_builder.py`, ikke i CSV-ene.
+
 ## Kommandoer
 
 Bruk `python` på macOS, Linux og Colab, og `py -3.13` på Windows. Kjør fra rotmappen i repoet.

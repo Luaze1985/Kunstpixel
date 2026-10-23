@@ -1538,3 +1538,113 @@ def query_report_assessment(
     return {k: valgt[k] for k in ("regel_id", "sporsmal_id", "felt", "operator", "terskel", "vurdering",
                                    "forslag", "kilde", "versjon", "datakilde")}
 
+
+
+INTERN_KATEGORIER = ("vaktbytte", "permisjon", "sykefraver", "arbeidsmiljo", "varsling", "tilrettelegging")
+SKJERMET_FELT = "Skjermet: varsler beskyttes mot identifisering (aml. kap. 2 A), så identitet og fritekst utelates."
+
+
+def _har_tabell(navn: str, db: Path | str) -> bool:
+    return bool(execute_read_query("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (navn,), db))
+
+
+def query_employee_skills(ansatt_id: str, as_of: str = "2026-11-07", db_path: Path | str | None = None) -> dict:
+    """Kompetansekortet til én ansatt (org_ansatt_kompetanse), vurdert mot as_of.
+
+    `gyldig_na` regnes ut fra gyldig_til og as_of. Den lagrede statusen vises som `lagret_status`,
+    siden den ble satt da dataene ble laget og kan være utdatert.
+    """
+    from datetime import date
+
+    as_of = date.fromisoformat(as_of.strip()).isoformat()
+    ansatt_id = ansatt_id.strip().upper()
+    db = _db(db_path)
+    if not (_har_tabell("org_ansatt_kompetanse", db) and _har_tabell("org_ferdigheter", db)):
+        return {"ansatt_id": ansatt_id, "mangler": "Tabellene org_ansatt_kompetanse og org_ferdigheter finnes ikke i databasen."}
+    ansatt = execute_read_query(
+        "SELECT ansatt_id, navn, avdeling, stilling FROM hr_ansatte WHERE ansatt_id = ?", (ansatt_id,), db
+    )
+    if not ansatt:
+        return {"ansatt_id": ansatt_id, "mangler": f"Fant ingen ansatt med id {ansatt_id}."}
+    rader = execute_read_query(
+        """
+        SELECT k.skill_code, f.navn AS skill_navn, f.kategori, f.utloper, k.sertifisert_dato, k.gyldig_til,
+               k.status AS lagret_status, k.datakilde
+        FROM org_ansatt_kompetanse k JOIN org_ferdigheter f ON f.skill_code = k.skill_code
+        WHERE k.ansatt_id = ?
+        ORDER BY f.kategori, k.skill_code
+        """,
+        (ansatt_id,),
+        db,
+    )
+    kompetanser = []
+    for r in rader:
+        d = dict(r)
+        d["utloper"] = bool(d["utloper"])
+        d["gyldig_na"] = d["sertifisert_dato"] <= as_of and (d["gyldig_til"] is None or d["gyldig_til"] >= as_of)
+        kompetanser.append(d)
+    return {
+        **dict(ansatt[0]),
+        "as_of": as_of,
+        "antall": len(kompetanser),
+        "antall_gyldige": sum(k["gyldig_na"] for k in kompetanser),
+        "kompetanser": kompetanser,
+        "datakilde": "syntetisk (colab_org_bygger): org_ansatt_kompetanse",
+    }
+
+
+def query_internal_requests(
+    kategori: str | None = None,
+    ansatt_id: str | None = None,
+    limit: int = 20,
+    db_path: Path | str | None = None,
+) -> dict:
+    """Søk i interne henvendelser (interne_henvendelser), nyeste først.
+
+    Varsler (kategori 'varsling') skjermes alltid: ansatt, avdeling og fritekst utelates, og de kan
+    ikke slås opp via ansatt_id. Det gjelder uansett hvilke filtre som er satt.
+    """
+    kategori = kategori.strip().lower() if kategori else None
+    if kategori is not None and kategori not in INTERN_KATEGORIER:
+        raise ValueError(f"Ukjent kategori '{kategori}'. Gyldige: {', '.join(INTERN_KATEGORIER)}")
+    limit = max(1, min(int(limit), 100))
+    db = _db(db_path)
+    if not _har_tabell("interne_henvendelser", db):
+        return {"mangler": "Tabellen interne_henvendelser finnes ikke i databasen."}
+
+    where, params = [], {"limit": limit}
+    if kategori:
+        where.append("h.kategori = :kategori")
+        params["kategori"] = kategori
+    if ansatt_id:
+        # Varsler tas ut av ansatt-oppslag, ellers kunne en ansatt_id avsløre hvem som varslet.
+        where.append("h.ansatt_id = :ansatt_id AND h.kategori <> 'varsling'")
+        params["ansatt_id"] = ansatt_id.strip().upper()
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    rader = execute_read_query(
+        f"""
+        SELECT h.sak_id, h.dato_tid, h.ansatt_id, a.navn, a.avdeling, h.kategori, h.tittel, h.fritekst,
+               h.case_ref, h.paragraf_hjemmel, h.forventet_utfall, h.datakilde
+        FROM interne_henvendelser h JOIN hr_ansatte a ON a.ansatt_id = h.ansatt_id
+        {filter_sql}
+        ORDER BY h.dato_tid DESC, h.sak_id
+        LIMIT :limit
+        """,
+        params,
+        db,
+    )
+    henvendelser = []
+    for r in rader:
+        d = dict(r)
+        if d["kategori"] == "varsling":
+            d["dato_tid"] = d["dato_tid"][:10]
+            for felt in ("ansatt_id", "navn", "avdeling", "fritekst"):
+                d[felt] = None
+            d["skjermet"] = SKJERMET_FELT
+        henvendelser.append(d)
+    return {
+        "kategori": kategori,
+        "antall": len(henvendelser),
+        "henvendelser": henvendelser,
+        "datakilde": "syntetisk (colab_org_bygger): interne_henvendelser",
+    }

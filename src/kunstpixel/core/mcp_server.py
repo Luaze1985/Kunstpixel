@@ -21,6 +21,7 @@ from src.kunstpixel.core.db import (
     query_condition_report,
     query_contractors,
     query_employee_cv,
+    query_employee_skills,
     query_events,
     query_exhibition_economy,
     query_exhibitions_with_economy,
@@ -28,6 +29,7 @@ from src.kunstpixel.core.db import (
     query_handbook,
     query_holidays,
     query_incidents,
+    query_internal_requests,
     query_loans,
     query_quarterly_absence,
     query_report_assessment,
@@ -705,6 +707,39 @@ def get_report_assessment(sporsmal_id: str, verdier: dict[str, Any]) -> dict[str
         Regelen som gjelder (regel_id, vurdering, forslag, kilde, versjon, datakilde), eller mangler.
     """
     return query_report_assessment(sporsmal_id=sporsmal_id, verdier=verdier)
+
+
+@mcp.tool()
+def get_employee_skills(ansatt_id: str, as_of: str = "2026-11-07") -> dict[str, Any]:
+    """Hent en ansatts fulle kompetansekort (interne ferdigheter og sertifiseringer) vurdert mot en dato.
+
+    Args:
+        ansatt_id: Ansatt-ID (f.eks. 'KP-ANS-001').
+        as_of: Dato (YYYY-MM-DD) som gyldighet vurderes mot.
+
+    Returns:
+        Navn, avdeling og stilling, med hver kompetanse (gyldig_na, gyldig_til, lagret_status), eller mangler.
+    """
+    return query_employee_skills(ansatt_id=ansatt_id, as_of=as_of)
+
+
+@mcp.tool()
+def search_internal_requests(
+    kategori: str | None = None,
+    ansatt_id: str | None = None,
+    limit: int = 20,
+) -> dict[str, Any]:
+    """Søk i interne henvendelser fra ansatte, nyeste først. Varsler skjermes alltid (ingen identitet eller fritekst).
+
+    Args:
+        kategori: vaktbytte, permisjon, sykefraver, arbeidsmiljo, varsling eller tilrettelegging.
+        ansatt_id: Begrens til én ansatt (varsler tas aldri med i et ansatt-oppslag).
+        limit: Maks antall treff (1-100).
+
+    Returns:
+        Henvendelser med case_ref, hjemmel og forventet utfall.
+    """
+    return query_internal_requests(kategori=kategori, ansatt_id=ansatt_id, limit=limit)
 
 
 if __name__ == "__main__":

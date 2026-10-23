@@ -18,8 +18,14 @@ dette skriptet. Hvert bygg starter fra grunnlaget og gjør de samme stegene:
 7. rapport_regler lastes fra `05_data/rapport_regler.csv`.
 8. hendelser berikes med syntetiske omvisninger ut 2026 fra `05_data/hendelser_tillegg_2026.csv`.
 9. Fremmednøkler legges til på hr_innleie, avvik_hms_drift, utstillingsinnlan, hendelser, hms_ergonomi_rotasjon.
-10. Indekser for vaktoppslag.
-11. PRAGMA user_version = SKJEMAVERSJON, VACUUM, integrity_check og foreign_key_check.
+10. Intern organisasjon (colab_org_bygger) lastes fra fire CSV-er, normalisert mot hr_ansatte:
+    org_ferdigheter (`mock_interne_ferdigheter.csv`), org_ansatt_kompetanse (`mock_ansatt_kompetanser.csv`),
+    interne_henvendelser (`mock_interne_henvendelser.csv`) og hms_avvik_tekst (`mock_avvik_hms_tekst.csv`).
+    Navn og avdeling hentes ved oppslag fra hr_ansatte, de lagres ikke på nytt.
+    NB: org_ferdigheter overlapper de 7 første kodene i hr_skills (HR-demoen) med litt andre navn.
+    Dette er to kilder for samme ferdigheter, og må samkjøres av Lars før de brukes sammen.
+11. Indekser for vaktoppslag og interne tabeller.
+12. PRAGMA user_version = SKJEMAVERSJON, VACUUM, integrity_check og foreign_key_check.
 
 Kjøres med:
     py -3.13 src/kunstpixel/data/build_museum_db.py          # bygg og erstatt
@@ -48,7 +54,7 @@ DATA_DIR = PROJECT_ROOT / "05_data"
 BASE_DB = DATA_DIR / "kilde" / "museum_base.db"
 OUT_DB = DATA_DIR / "museum.db"
 SHA_FILE = DATA_DIR / "museum.db.sha256"
-SKJEMAVERSJON = 3
+SKJEMAVERSJON = 4
 
 KLOKKESLETT_CSV = DATA_DIR / "arkiv_hr_vakt_klokkeslett.csv"
 GRENSER_CSV = DATA_DIR / "arbeidstid_grenser.csv"
@@ -59,6 +65,10 @@ ROLLE_SPORSMAL_CSV = DATA_DIR / "rolle_sporsmal.csv"
 RAPPORT_REGLER_CSV = DATA_DIR / "rapport_regler.csv"
 VAKT_JUSTERING_CSV = DATA_DIR / "arkiv_hr_vakt_justering.csv"
 HENDELSER_TILLEGG_CSV = DATA_DIR / "hendelser_tillegg_2026.csv"
+ORG_FERDIGHETER_CSV = DATA_DIR / "mock_interne_ferdigheter.csv"
+ORG_KOMPETANSE_CSV = DATA_DIR / "mock_ansatt_kompetanser.csv"
+INTERNE_HENVENDELSER_CSV = DATA_DIR / "mock_interne_henvendelser.csv"
+HMS_AVVIK_TEKST_CSV = DATA_DIR / "mock_avvik_hms_tekst.csv"
 
 HR_DEMO_TABLES = ["hr_rules", "hr_availability", "hr_person_skill", "hr_skills", "hr_people"]
 
@@ -138,7 +148,64 @@ CREATE TABLE rapport_regler (
 )
 """
 
+ORG_FERDIGHETER_SQL = """
+CREATE TABLE org_ferdigheter (
+    skill_code TEXT PRIMARY KEY,
+    navn TEXT NOT NULL,
+    utloper INTEGER NOT NULL CHECK(utloper IN (0, 1)),
+    kategori TEXT NOT NULL,
+    datakilde TEXT NOT NULL
+)
+"""
+
+ORG_KOMPETANSE_SQL = """
+CREATE TABLE org_ansatt_kompetanse (
+    ansatt_id TEXT NOT NULL REFERENCES hr_ansatte(ansatt_id),
+    skill_code TEXT NOT NULL REFERENCES org_ferdigheter(skill_code),
+    sertifisert_dato TEXT NOT NULL CHECK(sertifisert_dato GLOB '????-??-??'),
+    gyldig_til TEXT CHECK(gyldig_til IS NULL OR gyldig_til GLOB '????-??-??'),
+    status TEXT NOT NULL CHECK(status IN ('gyldig', 'utlopt')),
+    datakilde TEXT NOT NULL,
+    PRIMARY KEY(ansatt_id, skill_code)
+)
+"""
+
+INTERNE_HENVENDELSER_SQL = """
+CREATE TABLE interne_henvendelser (
+    sak_id TEXT PRIMARY KEY,
+    dato_tid TEXT NOT NULL CHECK(dato_tid GLOB '????-??-?? ??:??'),
+    ansatt_id TEXT NOT NULL REFERENCES hr_ansatte(ansatt_id),
+    kategori TEXT NOT NULL CHECK(kategori IN
+        ('vaktbytte', 'permisjon', 'sykefraver', 'arbeidsmiljo', 'varsling', 'tilrettelegging')),
+    tittel TEXT NOT NULL,
+    fritekst TEXT NOT NULL,
+    case_ref TEXT NOT NULL,
+    paragraf_hjemmel TEXT NOT NULL,
+    forventet_utfall TEXT NOT NULL,
+    datakilde TEXT NOT NULL
+)
+"""
+
+HMS_AVVIK_TEKST_SQL = """
+CREATE TABLE hms_avvik_tekst (
+    avvik_id TEXT PRIMARY KEY,
+    dato TEXT NOT NULL CHECK(dato GLOB '????-??-??'),
+    avdeling TEXT NOT NULL,
+    stasjon TEXT NOT NULL,
+    alvorlighetsgrad TEXT NOT NULL CHECK(alvorlighetsgrad IN ('LAV', 'MIDDELS', 'HØY', 'KRITISK')),
+    beskrivelse TEXT NOT NULL,
+    strakstiltak TEXT NOT NULL,
+    ansvarlig_rolle TEXT NOT NULL,
+    status TEXT NOT NULL CHECK(status IN ('LUKKET', 'UNDER_OPPFOLGING')),
+    datakilde TEXT NOT NULL
+)
+"""
+
 INDEXES = [
+    "CREATE INDEX IF NOT EXISTS org_kompetanse_skill_idx ON org_ansatt_kompetanse(skill_code, gyldig_til)",
+    "CREATE INDEX IF NOT EXISTS interne_henvendelser_kategori_idx ON interne_henvendelser(kategori, dato_tid)",
+    "CREATE INDEX IF NOT EXISTS interne_henvendelser_ansatt_idx ON interne_henvendelser(ansatt_id)",
+    "CREATE INDEX IF NOT EXISTS hms_avvik_tekst_alvor_idx ON hms_avvik_tekst(alvorlighetsgrad, dato)",
     "CREATE INDEX IF NOT EXISTS hr_vakter_ansatt_dato_idx ON hr_vakter(ansatt_id, dato)",
     "CREATE INDEX IF NOT EXISTS hr_vakter_dato_idx ON hr_vakter(dato, start, slutt)",
     "CREATE INDEX IF NOT EXISTS hr_fravaer_ansatt_idx ON hr_fravaer(ansatt_id, fra, til)",
@@ -296,6 +363,66 @@ def bygg_hendelser(con: sqlite3.Connection) -> int:
                 r["beskrivelse"],
                 r["ansvarlig_rolle"],
                 r["status"],
+            )
+            for r in rader
+        ],
+    )
+    return len(rader)
+
+
+def bygg_org_ferdigheter(con: sqlite3.Connection) -> int:
+    rader = les_csv(ORG_FERDIGHETER_CSV)
+    con.execute("DROP TABLE IF EXISTS org_ferdigheter")
+    con.execute(ORG_FERDIGHETER_SQL)
+    con.executemany(
+        "INSERT INTO org_ferdigheter VALUES (?,?,?,?,?)",
+        [(r["skill_code"], r["name"], int(r["expires"]), r["kategori"], r["datakilde"]) for r in rader],
+    )
+    return len(rader)
+
+
+def bygg_org_kompetanse(con: sqlite3.Connection) -> int:
+    """Bygg org_ansatt_kompetanse. Må kjøres etter bygg_org_ferdigheter. Navn og avdeling lagres ikke."""
+    rader = les_csv(ORG_KOMPETANSE_CSV)
+    con.execute("DROP TABLE IF EXISTS org_ansatt_kompetanse")
+    con.execute(ORG_KOMPETANSE_SQL)
+    con.executemany(
+        "INSERT INTO org_ansatt_kompetanse VALUES (?,?,?,?,?,?)",
+        [
+            (r["ansatt_id"], r["skill_code"], r["sertifisert_dato"], r["gyldig_til"] or None, r["status"], r["datakilde"])
+            for r in rader
+        ],
+    )
+    return len(rader)
+
+
+def bygg_interne_henvendelser(con: sqlite3.Connection) -> int:
+    rader = les_csv(INTERNE_HENVENDELSER_CSV)
+    con.execute("DROP TABLE IF EXISTS interne_henvendelser")
+    con.execute(INTERNE_HENVENDELSER_SQL)
+    con.executemany(
+        "INSERT INTO interne_henvendelser VALUES (?,?,?,?,?,?,?,?,?,?)",
+        [
+            (
+                r["sak_id"], r["dato_tid"], r["ansatt_id"], r["kategori"], r["tittel"], r["fritekst"],
+                r["case_ref"], r["paragraf_hjemmel"], r["forventet_utfall"], r["datakilde"],
+            )
+            for r in rader
+        ],
+    )
+    return len(rader)
+
+
+def bygg_hms_avvik_tekst(con: sqlite3.Connection) -> int:
+    rader = les_csv(HMS_AVVIK_TEKST_CSV)
+    con.execute("DROP TABLE IF EXISTS hms_avvik_tekst")
+    con.execute(HMS_AVVIK_TEKST_SQL)
+    con.executemany(
+        "INSERT INTO hms_avvik_tekst VALUES (?,?,?,?,?,?,?,?,?,?)",
+        [
+            (
+                r["avvik_id"], r["dato"], r["avdeling"], r["stasjon"], r["alvorlighetsgrad"], r["beskrivelse"],
+                r["strakstiltak"], r["ansvarlig_rolle"], r["status"], r["datakilde"],
             )
             for r in rader
         ],
@@ -493,6 +620,10 @@ def bygg(til: Path) -> dict:
             antall_roller = bygg_roller(con)
             antall_regler = bygg_rapport_regler(con)
             antall_nye_hendelser = bygg_hendelser(con)
+            antall_org_ferdigheter = bygg_org_ferdigheter(con)
+            antall_org_kompetanse = bygg_org_kompetanse(con)
+            antall_henvendelser = bygg_interne_henvendelser(con)
+            antall_hms_avvik_tekst = bygg_hms_avvik_tekst(con)
             oppgrader_fremmednokler(con)
             koble_ansattregistre(con)
             for sql in INDEXES:
@@ -512,6 +643,10 @@ def bygg(til: Path) -> dict:
             "roller": antall_roller,
             "rapport_regler": antall_regler,
             "nye_hendelser": antall_nye_hendelser,
+            "org_ferdigheter": antall_org_ferdigheter,
+            "org_kompetanse": antall_org_kompetanse,
+            "interne_henvendelser": antall_henvendelser,
+            "hms_avvik_tekst": antall_hms_avvik_tekst,
             "user_version": SKJEMAVERSJON,
         }
     finally:
