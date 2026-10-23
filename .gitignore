@@ -25,6 +25,9 @@ desktop.ini
 .agents/
 .runtime/
 
+# validated-builder: tilvoksende kjørelogg fra Stop-gaten (konfig og script committes)
+gate-log.jsonl
+
 
 
 # Demokopi av museum.db (bygges av build_demo_db.py)
