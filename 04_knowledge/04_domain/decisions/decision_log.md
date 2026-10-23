@@ -20,3 +20,4 @@
 | **ADR-012** | 2026-10-19 | Virksomhetshåndbøker | To-lags arkitektur for Personal, HMS, Drift og Lederhåndbok (Markdown + SQLite/FastMCP). | Eier / System | `ADR_012_virksomhetshandboker_arkitektur.md` |
 
 
+| **ADR-013** | 2026-10-23 | Internside | Én hovedversjon uten demokopi, åpent hostet, Claude med kostnadsgrense, AI svarer fra dokumentene, arbeidsroller styrer oppslagsverket. | Lars | `ADR_013_internside_hovedversjon_og_ai_oppslag.md` |

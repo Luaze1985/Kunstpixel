@@ -129,6 +129,92 @@ begreper:
     synonymer: ["on-demand håndbok", "selektivt oppslag"]
     i_praksis: "En museumsvert eller AI kan spørre om én spesifikk regel uten å måtte laste inn hele personalhåndboken på 50 sider."
 
+  oppslagsverk:
+    forklaring: >
+      Internsidens inngang til kvalitetssystemet og dokumentasjonen, organisert etter rolle:
+      den ansatte velger sin rolle og ser hva som gjelder for den. Låst 2026-10-23 (grilling).
+    synonymer: ["kvalitetsoppslag", "dokumentoppslag"]
+    i_praksis: "En salvert åpner oppslagsverket og ser rutinene, håndbokpunktene og reglene som gjelder salverter, ikke hele bunken."
+    ikke: "Ikke en tilsyns- eller revisorvisning i første runde. Det kan komme senere som et filter."
+    innhold: >
+      Håndbøkene og rutinene (SOP) og reglene (hr_rules, rapport_regler) som lesbare regler. Skal fungere
+      som en ekte dokumenthåndbok, men AI-basert. Ikke HR-saker eller nasjonal HMS-veiledning i første runde.
+    ai_rolle: >
+      AI (Claude via API) svarer på spørsmål og viser hvilke punkter svaret bygger på, merket AI-forslag.
+      Finner den ingen kilde, sier den det. Dokumentene er fasit og endres aldri av AI.
+      Plassering etter designsystemet, minst mulig støy: ett søkefelt i midten, AI-svaret kort øverst over
+      de vanlige treffene. Ingen chat. Siden virker også uten AI.
+    dokumentstyring: >
+      Lett: hvert dokument og punkt har ID, versjon og sist revidert. Ikke eier, godkjenning eller revisjonsfrister.
+
+  kompetanse:
+    forklaring: >
+      To lag. Sertifikat: dokumentert ferdighet med sertifiseringsdato og eventuelt utløp (f.eks. førstehjelp, kran).
+      Fagområde: strategisk kompetanse med nivå 1–3 (f.eks. kuratering, registrar, digital formidling).
+      Låst 2026-10-23 (grilling).
+    synonymer: ["ferdighet", "kompetansebevis"]
+    i_praksis: "En utstilling kan kreve både to med gyldig kranbevis (sertifikat) og én registrar på nivå 3 (fagområde)."
+
+  kompetanseplan:
+    forklaring: >
+      Plan som sammenligner kompetansebehovet i utstillinger og interne prosjekter med kompetansen museet har,
+      og foreslår tiltak der det mangler. Horisont: kalenderåret 2027, delt i kvartaler.
+      Tilgangen regnes uten avgang: alle som er ansatt nå, er med hele året. Låst 2026-10-23 (grilling).
+    synonymer: ["kompetanseplanlegging", "gap-analyse"]
+    i_praksis: "Planen viser at høsten 2027 mangler to kunsthåndterere, og foreslår kurs eller innleie."
+
+  arbeidsrolle:
+    forklaring: >
+      Én av 6–8 faste roller som styrer oppslagsverket (f.eks. Salvert, Montør/drift, Kafé, Formidling,
+      Samling/kurator, Leder, Verneombud). Hver stilling i hr_ansatte og hver målgruppe i håndbøkene kobles til
+      én eller flere arbeidsroller. Låst 2026-10-23 (grilling).
+    synonymer: ["rolle i oppslagsverket"]
+    i_praksis: "En kaféleder er både Kafé og Leder, og ser rutinene for begge."
+
+  fagomrade:
+    forklaring: >
+      Strategisk kompetanse med nivå 1–3, i fire grupper: Samling og bevaring (registrar og innlån, konservering,
+      proveniens), Formidling og publikum (pedagogikk, DKS, digital formidling), Kuratering og forskning,
+      og Ledelse og drift (prosjektledelse, økonomi, teknisk drift). Låst 2026-10-23 (grilling).
+      Nivå settes ut fra utdanning og erfaring i faget: 1 = relevant kurs eller bachelor og under 2 år,
+      2 = bachelor og 2–5 år eller master, 3 = master og over 5 år. Tersklene ligger i en CSV og kan justeres.
+    synonymer: ["kompetanseområde", "strategisk kompetanse"]
+    i_praksis: "Innlånene i 2027 krever én registrar på nivå 3 under Samling og bevaring."
+    ikke: "Ikke det samme som roller A–L i Datafinner (der er også utviklerroller), og ikke stillingstittel."
+
+  internt_prosjekt:
+    forklaring: >
+      Tidsavgrenset intern satsing som ikke er en utstilling, men krever kompetanse, f.eks. digitalisering av
+      samlingen, nytt billettsystem, DKS-program eller magasinflytting. 4–6 syntetiske prosjekter i 2027.
+      Låst 2026-10-23 (grilling).
+    synonymer: ["prosjekt", "satsing"]
+    i_praksis: "Digitaliseringsprosjektet trenger registrar på nivå 3 og to med fotokompetanse i første halvår."
+
+  kompetansetiltak:
+    forklaring: >
+      Det kompetanseplanen foreslår der behov er større enn tilgang: kurs, rekruttering eller innleie.
+      Velges med faste regler etter varighet og gjentakelse, med terskler i en CSV (som rapport_regler).
+      Engangsbehov gir innleie, gjentatt behov eller sertifikat gir kurs, varig mangel på nivå 3 gir rekruttering.
+      Låst 2026-10-23 (grilling).
+    synonymer: ["tiltak", "lukke gap"]
+    i_praksis: "Kranbevis mangler i tre monteringsuker i 2027, så regelen foreslår kurs for to egne montører."
+
+  rollekrav:
+    forklaring: >
+      Faste kompetansekrav per arbeidsrolle (sertifikater og eventuelt fagområde med nivå). Vises i oppslagsverket
+      og teller som grunnbehov i kompetanseplanen. Behov = rollekrav (drift) + ekstra fra utstillinger og prosjekter.
+      Låst 2026-10-23 (grilling).
+    synonymer: ["minimumskrav", "grunnbehov"]
+    i_praksis: "Alle salverter skal ha gyldig førstehjelp. Utløper fem kurs i mars 2027, viser planen et gap i drift selv uten utstilling."
+
+  skjermet_varsel:
+    forklaring: >
+      Henvendelse i kategorien varsling (CASE-013, aml. kap. 2 A). Verktøyene viser aldri ansatt, avdeling,
+      fritekst eller klokkeslett, og varsler kan ikke slås opp via ansatt-ID. Beholdt med vilje som demonstrert
+      prinsipp, ikke som forsiktighet. Låst 2026-10-23 (grilling).
+    synonymer: ["konfidensielt varsel"]
+    i_praksis: "search_internal_requests('varsling') viser tittel, dato og hjemmel, men ikke hvem som varslet."
+
   notatbok_og_datautforsking:
     forklaring: >
       Interaktiv arbeidsflate (.ipynb-notatbok med Data Wrangler i VS Code og Antigravity) som kobler fri
