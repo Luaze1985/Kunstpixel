@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+
 from src.kunstpixel.cases.models import Case, CaseDocument
 
 CASES_DIR = Path(__file__).resolve().parent.parent.parent.parent / "04_knowledge" / "06_hr_caser"
@@ -109,8 +110,8 @@ _MUSEUM_METADATA: dict[str, dict[str, any]] = {
     }
 }
 
-# Source json directory in staging
-_STAGING_DIR = Path(__file__).resolve().parent.parent.parent.parent / "02_deliverables" / "hr_produksjon_v1" / "staging" / "Kunstpixel_HR_KI_casepack_2024-2026_oppdatert" / "Kunstpixel_HR_KI_casepack_oppdatert" / "scenarios"
+# Source json directory (in git, copied from 02_deliverables/hr_produksjon_v1/staging so clean checkouts work)
+_STAGING_DIR = CASES_DIR / "scenarios"
 
 
 def _build_case(raw: dict) -> Case:

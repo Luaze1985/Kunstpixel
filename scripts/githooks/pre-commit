@@ -1,0 +1,13 @@
+#!/bin/sh
+# Statusporten før hver commit (ca. 3 s, uten pytest, 0 tokens). Stopper commiten ved FEIL.
+# Gjelder alle som committer: Lars, Codex og Claude. Slått på med:
+#   git config core.hooksPath scripts/githooks
+# Slå av: git config --unset core.hooksPath. Hopp over én gang: git commit --no-verify
+
+ut=$(py -3.13 scripts/db_status_gate.py --uten-pytest 2>&1)
+if [ $? -ne 0 ]; then
+  echo "$ut" | grep -E "^\[(FEIL|ADVARSEL)" >&2
+  echo "Commit stoppet: statusporten sier BLOKKERT. Se rapporten i .scratch/db-status/." >&2
+  exit 1
+fi
+exit 0
