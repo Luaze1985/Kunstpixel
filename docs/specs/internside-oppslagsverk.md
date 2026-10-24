@@ -4,13 +4,20 @@
 **Oppgaver:** [internside-oppslagsverk/](internside-oppslagsverk/)
 
 ## MVP (besluttet av Lars 2026-10-24)
-**Mål:** Lars skriver et spørsmål på en åpen nettside og får treffene fra håndbøkene, med et kort AI-svar
-øverst som viser kildene. AI-kostnaden har et tak.
+**Mål:** En åpen nettside der en LLM gjør tre ting, og der alle tre er AI-forslag som faste regler kontrollerer:
+1. **Oppslag:** Lars spør, og får håndbokpunkter med et kort AI-svar og kildene.
+2. **Bemanning:** For en dato foreslår AI-en hvem som skal ta hver vakt i vaktplanen. Kontrollen stopper
+   forslag med personer som har sluttet, er borte, mangler kurs, er dobbeltbooket eller har for kort hviletid.
+   Et menneske godkjenner forslaget.
+3. **Vurdering av ansatte:** Om en person er egnet for en vakt eller stasjon, ut fra dokumenterte fakta.
 
-**Rekkefølge:** 02 → 03 → 04 → 05. Oppgave 01 og 06 kommer etter MVP.
+AI-kostnaden har et tak.
 
-**Fasit:** [`tests/test_mvp_oppslag.py`](../../tests/test_mvp_oppslag.py) har seks vitale sjekker, skrevet før
-koden. Hver sjekk er merket med oppgaven den hører til (`@VENTER_PA_02` til `@VENTER_PA_05`). Når en oppgave
+**Rekkefølge:** 02 → 03 → 04 → 07 → 08 → 09 → 05. Oppgave 01 og 06 kommer etter MVP.
+
+**Fasit:** [`tests/test_mvp_oppslag.py`](../../tests/test_mvp_oppslag.py) har 6 sjekker for oppslag og nett.
+[`tests/test_mvp_bemanning.py`](../../tests/test_mvp_bemanning.py) har 6 sjekker for bemanning og vurdering.
+Begge er skrevet før koden. Hver sjekk er merket med oppgaven den hører til (`@VENTER_PA_02` til `@VENTER_PA_09`). Når en oppgave
 er ferdig, fjernes merkene for den oppgaven, og sjekkene skal da bestå. Sjekkene i seg selv endres ikke uten at
 Lars godtar det. Kontrakten (funksjonsnavn og returverdier) står øverst i fila.
 
@@ -125,6 +132,27 @@ beskytter Claude-nøkkelen.
 - Grensen i koden nullstilles når serveren starter på nytt. Lars setter i tillegg et månedlig utgiftstak i
   Anthropic-konsollen. Det gjøres manuelt.
 
+**Bemanning og vurdering av ansatte (Lars 2026-10-24)**
+- **«Vurdere ansatte»** betyr egnethet for en vakt eller stasjon: aktiv, ikke borte, ikke allerede på vakt,
+  nok hviletid og gyldige kurs. Det betyr ikke prestasjon, atferd, slutterisiko eller helse. Det er i strid
+  med CASE-005, -008, -011 og -012.
+- **Omfang:** alle vakter i `hr_vakter` (10 stasjoner per dag ut 2026) og alle 168 i `hr_ansatte`. Bare de 74
+  aktive kan settes på vakt.
+- **Kompetansekilde:** `org_ferdigheter` og `org_ansatt_kompetanse`, som dekker alle 168. `hr_skills` og
+  `hr_people` (kioskdemoen med 12 personer) blir stående som referanse for AI-fellene L01–L03, men brukes ikke
+  i motoren. Samkjøringen som byggeskriptet etterlyser, er dermed løst ved at én kilde velges.
+- **Krav per stasjon** er nye syntetiske data som Lars godkjenner (oppgave 07).
+- **Deterministisk motor** (`core/bemanning.py`, oppgave 08) finner kandidater og kontrollerer forslag. Den
+  gir et forslag også uten AI.
+- **AI-laget** (oppgave 09) får bare `ansatt_id`, stilling, egnethet og grunnkoder. Det får aldri navn,
+  fødselsår, kjønn, e-post, telefon eller fraværsårsak (CASE-012 og -015). Fravær vises bare som `FRAVAER`.
+  AI-en svarer med et JSON-forslag, og hele forslaget går gjennom `vurder_forslag`. Resultatet er alltid
+  merket AI-forslag og krever godkjenning. Det lagres ikke, og ingenting skrives til databasen.
+- **Åpent på nett:** alt er syntetisk, og AI-taket gjelder samlet for oppslag og bemanning. Dette føres inn i
+  ADR-013 som et tillegg.
+- **Manuell sjekk:** Lars kjører de relevante HR-casene (`evaluate_case_response`, minst CASE-004, -012, -013
+  og -015) mot ekte Claude før publisering.
+
 **Arbeidsroller (ADR-013 punkt 5)**
 - Rollelisten (6–8 roller) og koblingene ligger som syntetiske CSV-filer i `05_data/`, med `datakilde` som
   starter med «syntetisk». Koblingene går fra stilling i `hr_ansatte` og fra `malgruppe` i håndbøkene til en
@@ -162,8 +190,12 @@ Godkjent av Lars 2026-10-24.
 - Semantisk søk (embeddings). Dagens nøkkelordsøk beholdes, og svake treff på naturlige spørsmål er en
   kjent risiko.
 - En grense for AI-kall som overlever omstart, og grense per bruker.
-- Nye interne verktøy i Datafinner ut over `lookup_handbook`, for eksempel `get_employee_skills` og
+- Interne verktøy i Datafinner ut over `lookup_handbook` og bemanningen, for eksempel
   `search_internal_requests`. Varsler (CASE-013) skjermes fortsatt.
+- En fri AI-agent som selv velger verktøy. I MVP-en får AI-en et ferdig grunnlag og foreslår, og
+  maskinen kontrollerer.
+- Å lagre eller skrive godkjente vaktplaner til databasen. Godkjenningen er foreløpig at Lars leser forslaget.
+- Prestasjonsvurdering, slutterisiko og alt som bygger på helse eller fraværsårsak.
 - Å bytte navn på `deploy/demo/`.
 - Å bygge `museum.db`. Det gjør Lars.
 

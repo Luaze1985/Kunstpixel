@@ -2,14 +2,14 @@
 
 **Hva som skal bygges:** Siden kan publiseres på VPS uten innlogging, med filsøket på og AI-taket herdet.
 
-**Må gjøres først:** 02 (bildet bruker allerede full `museum.db`) og 04 (siden skal ikke åpnes før grensen er
-herdet).
+**Må gjøres først:** 02 (bildet bruker allerede full `museum.db`), 04 (siden skal ikke åpnes før grensen er
+herdet) og 09 (bemanningen er en del av MVP-en). Dette er siste oppgave i MVP-en.
 
 **Status:** ready-for-agent · **Spesifikasjon:** [../internside-oppslagsverk.md](../internside-oppslagsverk.md)
 
 ### Akseptansekriterier
 - [ ] MVP-fasit: merket `@VENTER_PA_05` er fjernet i `tests/test_mvp_oppslag.py`, og sjekken består.
-      Ingen sjekker i fila er merket som ventende lenger.
+      Ingen sjekker i `test_mvp_oppslag.py` eller `test_mvp_bemanning.py` er merket som ventende lenger.
 - [ ] `Caddyfile` er uten `basic_auth`. HTTPS, HSTS, `-Server` og `reverse_proxy` beholdes.
 - [ ] `bruker.sh`, `BRUKERE_FIL` og volumet `brukere.caddy` er fjernet fra hostingoppsettet, og
       `.gitignore`/`.gitattributes` er ryddet.
