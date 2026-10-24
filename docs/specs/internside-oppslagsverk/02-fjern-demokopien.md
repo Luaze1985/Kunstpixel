@@ -3,7 +3,7 @@
 **Hva som skal bygges:** Datafinner har én utgave. Docker-bildet kjører mot full `museum.db`. Innloggingen
 i Caddy blir stående til oppgave 05.
 
-**Må gjøres først:** 01. Begge oppdaterer `docs/DATAPIPELINE.md`, så de gjøres etter hverandre.
+**Må gjøres først:** Ingen. Dette er første oppgave i MVP.
 
 **Status:** ready-for-agent · **Spesifikasjon:** [../internside-oppslagsverk.md](../internside-oppslagsverk.md)
 
@@ -20,4 +20,5 @@ i Caddy blir stående til oppgave 05.
       `tests/`, `scripts/`, `deploy/`, `docs/` og `AGENTS.md` gir ingen treff, bortsett fra ADR-013 og
       historiske handoff-filer.
 - [ ] `AGENTS.md` §7 og `docs/DATAPIPELINE.md` er uten demokopi og demomodus.
+- [ ] MVP-fasit: merket `@VENTER_PA_02` er fjernet i `tests/test_mvp_oppslag.py`, og sjekken består.
 - [ ] `py -3.13 -m pytest -q` er grønn.

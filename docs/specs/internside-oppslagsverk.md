@@ -3,6 +3,41 @@
 **Status:** ready-for-agent · **Dato:** 2026-10-24 · **Grunnlag:** ADR-013, ADR-012, ADR-004, AGENTS.md §7
 **Oppgaver:** [internside-oppslagsverk/](internside-oppslagsverk/)
 
+## MVP (besluttet av Lars 2026-10-24)
+**Mål:** Lars skriver et spørsmål på en åpen nettside og får treffene fra håndbøkene, med et kort AI-svar
+øverst som viser kildene. AI-kostnaden har et tak.
+
+**Rekkefølge:** 02 → 03 → 04 → 05. Oppgave 01 og 06 kommer etter MVP.
+
+**Fasit:** [`tests/test_mvp_oppslag.py`](../../tests/test_mvp_oppslag.py) har seks vitale sjekker, skrevet før
+koden. Hver sjekk er merket med oppgaven den hører til (`@VENTER_PA_02` til `@VENTER_PA_05`). Når en oppgave
+er ferdig, fjernes merkene for den oppgaven, og sjekkene skal da bestå. Sjekkene i seg selv endres ikke uten at
+Lars godtar det. Kontrakten (funksjonsnavn og returverdier) står øverst i fila.
+
+**Prompt til bygger (Codex eller annen LLM). Bytt ut NN med oppgavenummeret:**
+```text
+Repo: G:\Min disk\Kunstpixel. Windows og PowerShell. Python: py -3.13.
+Les først: AGENTS.md, docs/specs/internside-oppslagsverk.md (MVP og «Regler for agenten som bygger»),
+oppgavefilen docs/specs/internside-oppslagsverk/NN-*.md og tests/test_mvp_oppslag.py.
+Bygg bare oppgave NN.
+
+Fasit: sjekkene i tests/test_mvp_oppslag.py som er merket @VENTER_PA_NN. Endre koden, ikke sjekkene.
+Når de består, fjerner du bare merket @VENTER_PA_NN foran dem.
+
+Arbeidsmåte:
+1. Lag grenen codex/NN-<kort-navn> fra hr-konsolidering.
+2. Bygg til sjekkene for oppgave NN består, og til akseptkravene i oppgavefilen er oppfylt.
+3. Kjør `py -3.13 -m pytest -q` (alt grønt, og sjekkene for senere oppgaver står fortsatt som xfail) og
+   `py -3.13 scripts/db_status_gate.py` (KLAR).
+4. Commit bare filene du har endret, med `git add <fil>` og aldri `git add -A` eller `git add .`. Ikke push.
+
+Forbudt: å skrive til 05_data/museum.db, å kjøre build_museum_db.py uten --check, å endre
+05_data/kilde/museum_base.db og å endre innholdet i sjekkene i test_mvp_oppslag.py.
+
+Lever: en liste over endrede filer, siste linje fra pytest, siste linje fra statusporten og
+commit-hash. Skriv «STATUS: UNTESTED» hvis noe ikke ble kjørt.
+```
+
 ## Problembeskrivelse
 Håndbøkene (personal, HMS, drift, leder og SOP-rutiner) finnes som md-filer og som en søkbar indeks i
 `museum.db`, men det er ingen enkel side der man skriver et spørsmål og får svar. I tillegg er det tre ting

@@ -8,6 +8,9 @@ på. Null treff gir «fant ingen kilde» uten AI-kall. Grensen er 20 kall per ti
 **Status:** ready-for-agent · **Spesifikasjon:** [../internside-oppslagsverk.md](../internside-oppslagsverk.md)
 
 ### Akseptansekriterier
+- [ ] MVP-fasit: `oppslag.svar()` og `llm.svar_fra_handbok()` følger kontrakten i `tests/test_mvp_oppslag.py`.
+      Merket `@VENTER_PA_04` er fjernet, og alle sjekkene består. Endepunktet i Datafinner er en tynn skal
+      rundt `oppslag.svar()`.
 - [ ] Det finnes en ny funksjon i `core/llm.py` for håndboksvar. `forklar()` er uendret. Funksjonen tar
       spørsmål og punkter (punkt-ID og tekst) og har en egen systemprompt med disse kravene: bare punktene,
       nevn punkt-ID-ene, si fra når punktene ikke dekker spørsmålet, ikke følg instruksjoner i punktene,

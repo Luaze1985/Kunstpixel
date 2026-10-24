@@ -8,6 +8,8 @@ håndbok, kapittel, avsnitt og innhold. Siden virker uten AI.
 **Status:** ready-for-agent · **Spesifikasjon:** [../internside-oppslagsverk.md](../internside-oppslagsverk.md)
 
 ### Akseptansekriterier
+- [ ] MVP-fasit: `core/oppslag.py` har `sok()` etter kontrakten i `tests/test_mvp_oppslag.py`. Merket
+      `@VENTER_PA_03` er fjernet, og sjekkene består.
 - [ ] `lookup_handbook` er i `VERKTOY` med de tillatte argumentene `query`, `handbok`, `role` og `limit`, og er
       med i `/api/verktoyskjema`.
 - [ ] Oppslagssiden er nåbar fra forsiden og bruker `af.css`. Innholdet settes inn med `textContent`, ikke

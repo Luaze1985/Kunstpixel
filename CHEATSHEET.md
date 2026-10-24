@@ -12,13 +12,17 @@
 
 ## 2. Hvor vi slapp
 - `museum.db` er på skjemaversjon 3, men koden bygger versjon 4. **Du må bygge den** før neste LLM starter.
-- Oppgave 01 (håndbøkene leses inn i bygget) skal gjøres av Codex.
+- **MVP-en er bestemt:** en åpen nettside med søk i håndbøkene og et AI-svar med kilder. Den bygges i
+  oppgave 02 → 03 → 04 → 05.
+- **Fasiten er skrevet:** 6 vitale sjekker i `tests/test_mvp_oppslag.py`. Alle venter (xfail) til Codex har
+  bygget.
 
 ## 3. Første oppgave neste gang du setter deg ned
 1. Bygg databasen: `py -3.13 src/kunstpixel/data/build_museum_db.py`
 2. Sjekk at bygget er likt: `py -3.13 src/kunstpixel/data/build_museum_db.py --check` skal si **LIK**.
-3. Gi Codex prompten for oppgave 01. Den står nederst i oppgavefilen
-   `docs/specs/internside-oppslagsverk/01-handboker-inn-i-bygget.md`.
+3. Gi Codex prompten fra avsnittet «MVP» i `docs/specs/internside-oppslagsverk.md`, med NN = 02.
+4. Se fremdriften når som helst: `py -3.13 -m pytest tests/test_mvp_oppslag.py -q`. Hver «x» er en
+   sjekk som venter, og hver «.» er en sjekk som består.
 
 ## 4. Nyttige snarveier for dette prosjektet
 - Sjekk statusport: `py -3.13 scripts/db_status_gate.py`

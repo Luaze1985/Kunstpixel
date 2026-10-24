@@ -3,7 +3,8 @@
 **Hva som skal bygges:** Når Lars endrer en håndbok eller SOP i md og bygger `museum.db`, står endringen i
 `handbok_oppslag`. Ingen skript skriver i databasen utenom byggeskriptet.
 
-**Må gjøres først:** Ingen (kan startes umiddelbart).
+**Må gjøres først:** 02, fordi begge endrer `docs/DATAPIPELINE.md`. Oppgaven er ikke del av MVP og tas etter 05.
+Dataene er allerede riktige: paritet ble bekreftet 2026-10-24.
 
 **Status:** ready-for-agent · **Spesifikasjon:** [../internside-oppslagsverk.md](../internside-oppslagsverk.md)
 

@@ -8,6 +8,8 @@ herdet).
 **Status:** ready-for-agent · **Spesifikasjon:** [../internside-oppslagsverk.md](../internside-oppslagsverk.md)
 
 ### Akseptansekriterier
+- [ ] MVP-fasit: merket `@VENTER_PA_05` er fjernet i `tests/test_mvp_oppslag.py`, og sjekken består.
+      Ingen sjekker i fila er merket som ventende lenger.
 - [ ] `Caddyfile` er uten `basic_auth`. HTTPS, HSTS, `-Server` og `reverse_proxy` beholdes.
 - [ ] `bruker.sh`, `BRUKERE_FIL` og volumet `brukere.caddy` er fjernet fra hostingoppsettet, og
       `.gitignore`/`.gitattributes` er ryddet.
