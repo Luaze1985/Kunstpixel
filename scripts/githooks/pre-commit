@@ -1,13 +1,23 @@
 #!/bin/sh
 # Statusporten før hver commit (ca. 3 s, uten pytest, 0 tokens). Stopper commiten ved FEIL.
-# Gjelder alle som committer: Lars, Codex og Claude. Slått på med:
-#   git config core.hooksPath scripts/githooks
+# Gjelder alle som committer: Lars, Codex og Claude. Resultatet skrives stille til
+# .scratch/kvalitet/RAPPORT.md. Bare når commiten stoppes, vises grunnen.
+# Slått på med:  git config core.hooksPath scripts/githooks
 # Slå av: git config --unset core.hooksPath. Hopp over én gang: git commit --no-verify
 
-ut=$(py -3.13 scripts/db_status_gate.py --uten-pytest 2>&1)
-if [ $? -ne 0 ]; then
-  echo "$ut" | grep -E "^\[(FEIL|ADVARSEL)" >&2
-  echo "Commit stoppet: statusporten sier BLOKKERT. Se rapporten i .scratch/db-status/." >&2
+ut=$(PYTHONIOENCODING=utf-8 py -3.13 scripts/db_status_gate.py --uten-pytest 2>&1)
+kode=$?
+funn=$(printf '%s\n' "$ut" | grep -E "^\[(FEIL|ADVARSEL)|KLAR|BLOKKERT")
+
+if [ $kode -ne 0 ]; then status=FEIL
+elif printf '%s\n' "$ut" | grep -q "^\[ADVARSEL"; then status=OBS
+else status=OK
+fi
+printf '%s\n' "$funn" | PYTHONIOENCODING=utf-8 py -3.13 scripts/kvalitetsrapport.py commit "$status" >/dev/null 2>&1
+
+if [ $kode -ne 0 ]; then
+  printf '%s\n' "$funn" | grep -E "^\[FEIL" >&2
+  echo "Commit stoppet: statusporten sier BLOKKERT. Se .scratch/kvalitet/RAPPORT.md." >&2
   exit 1
 fi
 exit 0

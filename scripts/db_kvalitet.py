@@ -27,6 +27,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import db_status_gate as port
+import kvalitetsrapport
 
 from src.kunstpixel.data import build_museum_db as bygger
 
@@ -192,6 +193,9 @@ def main() -> int:
     ap.add_argument("--fra-data", action="store_true",
                     help="bygg til en midlertidig fil fra datafilene nå og sjekk den (museum.db røres ikke)")
     ap.add_argument("--problems", action="store_true", help="skriv også PROBLEM-linjer til Problems-panelet i VS Code")
+    ap.add_argument("--rapport", choices=sorted(kvalitetsrapport.SEKSJONER),
+                    help="skriv resultatet til .scratch/kvalitet/RAPPORT.md under denne seksjonen")
+    ap.add_argument("--stille", action="store_true", help="ikke vis rapporten (bare PROBLEM-linjer hvis --problems)")
     args = ap.parse_args()
     if args.fra_data:
         # Sjekker det som ville blitt bygget av datafilene slik de ligger nå. Nyttig rett etter at en CSV er endret.
@@ -199,37 +203,42 @@ def main() -> int:
             midlertidig = Path(t) / "museum.db"
             bygger.bygg(midlertidig)
             resultat = kjor(midlertidig, med_bygg=False)
-        return skriv("bygget nå fra datafilene i 05_data (museum.db er ikke endret)", resultat, args.problems)
-    if not args.db.is_file():
+        hva_sjekket = "bygget nå fra datafilene i 05_data (museum.db er ikke endret)"
+    elif not args.db.is_file():
         print(f"Fant ikke databasen: {args.db}\nBygg den: py -3.13 src/kunstpixel/data/build_museum_db.py")
         return 1
-
-    return skriv(str(args.db), kjor(args.db, med_bygg=not args.uten_bygg), args.problems)
-
-
-def skriv(hva_sjekket: str, resultat: list[tuple[str, str, str, str]], problems: bool = False) -> int:
-    feil = [r for r in resultat if r[1] == FEIL]
-    obs = [r for r in resultat if r[1] == ADVARSEL]
-
-    print(f"DATABASEKVALITET  {hva_sjekket}")
-    print("=" * 70)
-    if feil:
-        print(f"RESULTAT: {len(feil)} FEIL må rettes før databasen kan brukes. {len(obs)} ting å se på.")
-    elif obs:
-        print(f"RESULTAT: I orden, men {len(obs)} ting du bør ta stilling til.")
     else:
-        print("RESULTAT: Alt er i orden.")
-    print("=" * 70)
-    for navn, niva, hva, tiltak in resultat:
-        print(f"\n{NIVAIKON[niva]} {navn}")
-        print(f"         {hva}")
-        if tiltak and niva != OK:
-            print(f"         Gjør dette: {tiltak}")
-    print()
-    if problems:
+        resultat, hva_sjekket = kjor(args.db, med_bygg=not args.uten_bygg), str(args.db)
+
+    tekst = lag_tekst(hva_sjekket, resultat)
+    if not args.stille:
+        print(tekst)
+    if args.problems:
         for linje in problemlinjer(resultat):
             print(linje)
-    return 1 if feil else 0
+    nivaer = {r[1] for r in resultat}
+    if args.rapport:
+        status = "FEIL" if FEIL in nivaer else "OBS" if ADVARSEL in nivaer else "OK"
+        kvalitetsrapport.oppdater(args.rapport, status, tekst)
+    return 1 if FEIL in nivaer else 0
+
+
+def lag_tekst(hva_sjekket: str, resultat: list[tuple[str, str, str, str]]) -> str:
+    feil = [r for r in resultat if r[1] == FEIL]
+    obs = [r for r in resultat if r[1] == ADVARSEL]
+    ut = [f"DATABASEKVALITET  {hva_sjekket}", "=" * 70]
+    if feil:
+        ut.append(f"RESULTAT: {len(feil)} FEIL må rettes før databasen kan brukes. {len(obs)} ting å se på.")
+    elif obs:
+        ut.append(f"RESULTAT: I orden, men {len(obs)} ting du bør ta stilling til.")
+    else:
+        ut.append("RESULTAT: Alt er i orden.")
+    ut.append("=" * 70)
+    for navn, niva, hva, tiltak in resultat:
+        ut += ["", f"{NIVAIKON[niva]} {navn}", f"         {hva}"]
+        if tiltak and niva != OK:
+            ut.append(f"         Gjør dette: {tiltak}")
+    return "\n".join(ut) + "\n"
 
 
 if __name__ == "__main__":

@@ -4,8 +4,8 @@
     {
       "label": "Databasekvalitet (klartekst)",
       "type": "shell",
-      "command": "py -3.13 scripts/db_kvalitet.py --problems",
-      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true, "focus": false },
+      "command": "py -3.13 scripts/db_kvalitet.py --problems --stille --rapport apning",
+      "presentation": { "reveal": "never", "panel": "dedicated", "clear": true, "focus": false, "showReuseMessage": false, "close": true },
       "runOptions": { "runOn": "folderOpen" },
       "problemMatcher": {
         "owner": "db-kvalitet",
@@ -34,6 +34,13 @@
       "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
       "problemMatcher": [],
       "group": "test"
+    },
+    {
+      "label": "Åpne kvalitetsrapport",
+      "type": "shell",
+      "command": "code -r .scratch/kvalitet/RAPPORT.md",
+      "presentation": { "reveal": "never", "close": true },
+      "problemMatcher": []
     },
     {
       "label": "MVP-fremdrift",

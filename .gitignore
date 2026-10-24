@@ -24,6 +24,8 @@ desktop.ini
 # Agent traces & temporary scratch
 .agents/
 .runtime/
+# Kvalitetsrapporten skrives av de stille sjekkene (scripts/kvalitetsrapport.py)
+.scratch/kvalitet/
 
 # validated-builder: tilvoksende kjørelogg fra Stop-gaten (konfig og script committes)
 gate-log.jsonl
