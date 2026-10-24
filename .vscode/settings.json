@@ -1,6 +1,9 @@
 {
   "jupyter.notebookFileRoot": "${workspaceFolder}",
 
+  // Stavekontrollen viser ord som hint (prikker), ikke som feil, så Problems-panelet bare viser ekte funn.
+  "spellright.notificationClass": "hint",
+
   // Lagrer du en datafil i 05_data, bygges databasen til en midlertidig fil og sjekkes i klartekst.
   // museum.db røres ikke. Svaret kommer i Output-fanen «Run on Save».
   "emeraldwalk.runonsave": {
