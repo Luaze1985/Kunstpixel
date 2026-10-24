@@ -29,3 +29,8 @@ på. Null treff gir «fant ingen kilde» uten AI-kall. Grensen er 20 kall per ti
 - [x] Ingen nettverkskall i testpakken. `py -3.13 -m pytest -q` er grønn.
 - [ ] Manuelt: Lars prøver med ekte Claude lokalt (`LLM_PROVIDER=anthropic`) og sjekker at punkt-ID-ene
       stemmer.
+
+### Verifisering (2026-10-24)
+- **Nettlesersjekk:** Gjennomført med Playwright mot oppslag.html (0 konsollfeil, AI-boks, kildekontroll-advarsel, 429-grense og feilhåndtering verifisert).
+- **Testsuite & sikkerhet:** 413 passed (11 forventede xfail), SEC-001–020 godkjent, og statusporten ga KLAR.
+- **Overlevering:** Se fullstendig status og oppskrift i [HANDOFF-OPPGAVE-04.md](HANDOFF-OPPGAVE-04.md).
