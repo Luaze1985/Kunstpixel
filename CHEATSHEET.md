@@ -1,20 +1,26 @@
 # HUSKELAPP FOR LARS (CHEATSHEET)
-*Prosjekt: Kunstpixel (museum.db, Datafinner og personvernanalysen) | Sist oppdatert: 2026-10-20 kl. 14:19*
+*Prosjekt: Kunstpixel | Sist oppdatert: 2026-10-24*
 
 ## 1. Hva vi gjorde sist
-- **Databasen er bygget på nytt** og sjekket: samme fingeravtrykk som fasit (`93cfcdaa…`), statusporten sier KLAR, og alle tester er grønne.
-- **Notatboken `notebooks/utforsk.ipynb` er laget** med tre eksempler: tabelloversikt, besøk per vakttime i 2026, og lønnskostnad per avdeling.
-- Alt dette er committet på grenen `hr-konsolidering`. Ingenting er pushet.
+- **Spesifikasjon for internsiden er skrevet:** `docs/specs/internside-oppslagsverk.md`, med seks oppgaver i
+  `docs/specs/internside-oppslagsverk/`. Der står søkefelt i håndbøkene, AI-svar med kilder, fjerning av
+  demokopien, åpen hosting og arbeidsroller.
+- **HR-casepakken er committet:** 14 øvingscaser i `04_knowledge/06_hr_caser/`, koden i `src/kunstpixel/cases/`
+  og `hr_cli.py cases`.
+- Antigravity-rettingen av org-dataene (`25c45da`) ligger allerede i grenen. Den trenger ikke slås sammen.
+- Testet 2026-10-24: pytest 387 består, og statusporten sier KLAR.
 
 ## 2. Hvor vi slapp
-- Alle tre cellene i `notebooks/utforsk.ipynb` er nå kjørt med kjernen `Python 3.13 (Kunstpixel)`, slik at både tabellene og stolpediagrammet (besøk per vakttime i 2026) ligger ferdig tegnet i filen.
-- `ordliste.yaml`, `BESTILLING-opplaeringsarena.md`, `datafinner/index.html` og `CHEATSHEET.md` er committet på `hr-konsolidering`.
+- `museum.db` er på skjemaversjon 3, men koden bygger versjon 4. **Du må bygge den** før neste LLM starter.
+- Oppgave 01 (håndbøkene leses inn i bygget) skal gjøres av Codex.
 
 ## 3. Første oppgave neste gang du setter deg ned
-- **Åpne `notebooks/utforsk.ipynb` i VS Code** — da ser du grafen og tabellene med én gang. Du kan klikke på Data Wrangler-knappen over tabellene for å sortere og filtrere som et regneark.
-- Spør deretter agenten om noe du vil vite om tallene, for eksempel «Hvilke dager har mange besøkende, men få vakter?».
+1. Bygg databasen: `py -3.13 src/kunstpixel/data/build_museum_db.py`
+2. Sjekk at bygget er likt: `py -3.13 src/kunstpixel/data/build_museum_db.py --check` skal si **LIK**.
+3. Gi Codex prompten for oppgave 01. Den står nederst i oppgavefilen
+   `docs/specs/internside-oppslagsverk/01-handboker-inn-i-bygget.md`.
 
 ## 4. Nyttige snarveier for dette prosjektet
-- Demoen lokalt: `py -3.13 scripts/start_demo.py` (http://127.0.0.1:8011)
-- Statusport: `py -3.13 scripts/db_status_gate.py` · Tester: `py -3.13 -m pytest -q`
-- Overlevering til neste agent: `.scratch/handoffs/HANDOFF-20261020-1419.md`
+- Sjekk statusport: `py -3.13 scripts/db_status_gate.py`
+- Tester: `py -3.13 -m pytest -q`
+- Spesifikasjon: `docs/specs/internside-oppslagsverk.md`
