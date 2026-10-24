@@ -1,33 +1,23 @@
 # HUSKELAPP FOR LARS (CHEATSHEET)
-*Prosjekt: Kunstpixel | Sist oppdatert: 2026-10-24*
+*Prosjekt: Kunstpixel | Sist oppdatert: 2026-10-24 kl. 14:05*
 
 ## 1. Hva vi gjorde sist
-- **Spesifikasjon for internsiden er skrevet:** `docs/specs/internside-oppslagsverk.md`, med seks oppgaver i
-  `docs/specs/internside-oppslagsverk/`. Der står søkefelt i håndbøkene, AI-svar med kilder, fjerning av
-  demokopien, åpen hosting og arbeidsroller.
-- **HR-casepakken er committet:** 14 øvingscaser i `04_knowledge/06_hr_caser/`, koden i `src/kunstpixel/cases/`
-  og `hr_cli.py cases`.
-- Antigravity-rettingen av org-dataene (`25c45da`) ligger allerede i grenen. Den trenger ikke slås sammen.
-- Testet 2026-10-24: pytest 387 består, og statusporten sier KLAR.
+- **Oppgave 02 er ferdig:** demokopien av Datafinner er borte, det finnes nå bare én utgave.
+- **Fasiten for MVP-en er skrevet:** 23 sjekker i `tests/test_mvp_oppslag.py` og `tests/test_mvp_bemanning.py`. 1 består, 22 venter på at Codex bygger.
+- **Kvalitetssjekkene kjører stille:** ved åpning av VS Code, ved lagring av en CSV og ved hver commit. Resultatet står i `.scratch/kvalitet/RAPPORT.md`.
+- Din `museum.db` er bygget på nytt (versjon 4) og committet.
 
 ## 2. Hvor vi slapp
-- `museum.db` er på skjemaversjon 3, men koden bygger versjon 4. **Du må bygge den** før neste LLM starter.
-- **MVP-en er bestemt:** en åpen nettside der AI-en slår opp i håndbøkene, foreslår bemanning for alle vakter
-  og vurderer om ansatte er egnet. Faste regler kontrollerer AI-forslagene. Den bygges i oppgave
-  02 → 03 → 04 → 07 → 08 → 09 → 05.
-- **Fasiten er skrevet:** 23 vitale sjekker i `tests/test_mvp_oppslag.py` og `tests/test_mvp_bemanning.py`.
-  Alle venter (xfail) til Codex har bygget.
-- **Du må godkjenne kravene per stasjon** (oppgave 07) før Codex lager dataene. Forslaget står i
-  `docs/specs/internside-oppslagsverk/07-krav-per-stasjon.md`.
+- MVP-en = en åpen nettside der AI slår opp i håndbøkene, foreslår bemanning for alle vakter og vurderer om ansatte er egnet. Faste regler kontrollerer AI-en.
+- Neste bygg er **oppgave 03** (oppslagsside uten AI). Ingen er startet på den.
+- Full teknisk overlevering: `.scratch/handoffs/HANDOFF-20261024-1405.md`
 
 ## 3. Første oppgave neste gang du setter deg ned
-1. Bygg databasen: `py -3.13 src/kunstpixel/data/build_museum_db.py`
-2. Sjekk at bygget er likt: `py -3.13 src/kunstpixel/data/build_museum_db.py --check` skal si **LIK**.
-3. Gi Codex prompten fra avsnittet «MVP» i `docs/specs/internside-oppslagsverk.md`, med NN = 02.
-4. Se fremdriften når som helst: `py -3.13 -m pytest tests/test_mvp_oppslag.py tests/test_mvp_bemanning.py -q`. Hver «x» er en
-   sjekk som venter, og hver «.» er en sjekk som består.
+- **Åpne kvalitetsrapporten** (`.scratch/kvalitet/RAPPORT.md`) og se at den sier OK eller OBS, ikke FEIL.
+- **Bestill oppgave 03 hos Codex** med prompten under «MVP» i `docs/specs/internside-oppslagsverk.md` (bytt NN med 03).
+- Du må selv: godkjenne kravene per stasjon før oppgave 07, og bygge `museum.db` etter 07.
 
 ## 4. Nyttige snarveier for dette prosjektet
-- Sjekk statusport: `py -3.13 scripts/db_status_gate.py`
-- Tester: `py -3.13 -m pytest -q`
-- Spesifikasjon: `docs/specs/internside-oppslagsverk.md`
+- Fremdrift: `py -3.13 -m pytest tests/test_mvp_oppslag.py tests/test_mvp_bemanning.py -q` (`.` = ferdig, `x` = venter)
+- Alle tester: `py -3.13 -m pytest -q` · Statusport: `py -3.13 scripts/db_status_gate.py`
+- Databasekvalitet i klartekst: `py -3.13 scripts/db_kvalitet.py`
