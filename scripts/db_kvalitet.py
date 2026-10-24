@@ -66,6 +66,34 @@ FORKLARING: dict[str, tuple[str, str]] = {
 
 NIVAIKON = {OK: "[ OK ]", ADVARSEL: "[ OBS ]", FEIL: "[FEIL ]"}
 
+# Hvilken fil du rette i når en sjekk slår til. Brukes til Problems-panelet i VS Code (klikk på funnet = åpner filen).
+BYGGESKRIPT = "src/kunstpixel/data/build_museum_db.py"
+FIL_FOR_FUNN: dict[str, str] = {
+    "Databasen er hel": BYGGESKRIPT,
+    "Riktig skjemaversjon": BYGGESKRIPT,
+    "Filen er urørt": "05_data/museum.db.sha256",
+    "Bygget fra gjeldende kode": BYGGESKRIPT,
+    "Alt er merket syntetisk": BYGGESKRIPT,
+    "vakt på dag med eget fravær": "05_data/arkiv_hr_fravaer.csv",
+    "vakt utenfor ansettelsesperioden": "05_data/arkiv_hr_vakt_klokkeslett.csv",
+    "samme person på to vakter samtidig": "05_data/arkiv_hr_vakt_klokkeslett.csv",
+    "for kort hviletid mellom vakter": "05_data/arkiv_hr_vakt_klokkeslett.csv",
+    "kurs som utløper før det er tatt": "05_data/mock_ansatt_kompetanser.csv",
+    "fravær som slutter før det begynner": "05_data/arkiv_hr_fravaer.csv",
+    "vakter over døgnmaks (overtid eller feil?)": "05_data/arkiv_hr_vakt_klokkeslett.csv",
+}
+
+
+def problemlinjer(resultat: list[tuple[str, str, str, str]]) -> list[str]:
+    """Én linje per funn som ikke er OK: PROBLEM|error/warning|fil|linje|melding. VS Code leser dem inn i Problems-panelet."""
+    linjer = []
+    for navn, niva, hva, tiltak in resultat:
+        if niva == OK:
+            continue
+        melding = " ".join(f"{navn}: {hva} Gjør dette: {tiltak}".split())
+        linjer.append(f"PROBLEM|{'error' if niva == FEIL else 'warning'}|{FIL_FOR_FUNN.get(navn, BYGGESKRIPT)}|1|{melding}")
+    return linjer
+
 
 def _ro(sti: Path) -> sqlite3.Connection:
     return sqlite3.connect(sti.resolve().as_uri() + "?mode=ro", uri=True)
@@ -161,6 +189,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--db", type=Path, default=bygger.OUT_DB)
     ap.add_argument("--uten-bygg", action="store_true")
+    ap.add_argument("--problems", action="store_true", help="skriv også PROBLEM-linjer til Problems-panelet i VS Code")
     args = ap.parse_args()
     if not args.db.is_file():
         print(f"Fant ikke databasen: {args.db}\nBygg den: py -3.13 src/kunstpixel/data/build_museum_db.py")
@@ -185,6 +214,9 @@ def main() -> int:
         if tiltak and niva != OK:
             print(f"         Gjør dette: {tiltak}")
     print()
+    if args.problems:
+        for linje in problemlinjer(resultat):
+            print(linje)
     return 1 if feil else 0
 
 

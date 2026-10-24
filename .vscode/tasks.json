@@ -4,10 +4,20 @@
     {
       "label": "Databasekvalitet (klartekst)",
       "type": "shell",
-      "command": "py -3.13 scripts/db_kvalitet.py",
+      "command": "py -3.13 scripts/db_kvalitet.py --problems",
       "presentation": { "reveal": "always", "panel": "dedicated", "clear": true, "focus": false },
       "runOptions": { "runOn": "folderOpen" },
-      "problemMatcher": [],
+      "problemMatcher": {
+        "owner": "db-kvalitet",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^PROBLEM\\|(error|warning)\\|([^|]+)\\|(\\d+)\\|(.*)$",
+          "severity": 1,
+          "file": 2,
+          "line": 3,
+          "message": 4
+        }
+      },
       "group": { "kind": "build", "isDefault": true }
     },
     {
