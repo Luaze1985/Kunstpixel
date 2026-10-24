@@ -68,11 +68,11 @@ def test_bildet_har_alle_pakkene_koden_importerer() -> None:
     assert not mangler, f"Ikke i requirements.txt: {sorted(mangler)}"
 
 
-def test_dockerfile_kjorer_som_vanlig_bruker_i_demomodus() -> None:
+def test_dockerfile_kjorer_som_vanlig_bruker_med_full_database() -> None:
     d = _les("Dockerfile")
     assert "USER 10001:10001" in d
-    assert "DATAFINNER_DEMO=1" in d
-    assert "KUNSTPIXEL_DB_PATH=/app/data/museum_demo.db" in d
+    assert "DATAFINNER_DEMO" not in d
+    assert "KUNSTPIXEL_DB_PATH=/app/data/museum.db" in d
 
 
 def test_dockerfile_tar_ikke_med_interne_mapper_eller_hele_repoet() -> None:
@@ -83,10 +83,8 @@ def test_dockerfile_tar_ikke_med_interne_mapper_eller_hele_repoet() -> None:
         assert not re.search(r"COPY\s+(--from=\w+\s+)?\.\s", linje), linje
         for mappe in INTERNE_MAPPER:
             assert mappe not in linje, linje
-    # museum.db hentes bare inn i byggetrinnet. Sluttbildet får bare demokopien.
-    sluttbilde = d.split("AS bygg", 1)[1].split("FROM python", 1)[1]
-    assert "05_data/museum.db" not in sluttbilde
-    assert "COPY --from=bygg /ut/museum_demo.db" in sluttbilde
+    assert "COPY 05_data/museum.db ./data/museum.db" in d
+    assert "build_demo_db" not in d
 
 
 def test_byggekonteksten_er_en_tillatelsesliste() -> None:

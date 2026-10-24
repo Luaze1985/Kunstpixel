@@ -12,8 +12,7 @@ Du endrer datafilene eller generatoren, ikke databasen.
 05_data/kilde/museum_base.db  (frosset grunnlag, rør aldri)  ─┐
 05_data/*.csv  (syntetiske datafiler)                          ├─ build_museum_db.py ─▶ 05_data/museum.db  (+ museum.db.sha256)
 src/kunstpixel/data/archive_generator.py  (lager noen av CSV-ene) ┘                              │
-                                                                                                 ├─ build_demo_db.py ─▶ demokopi (hostes)
-                                                                                                 └─ Datafinner (kun lesing) ─▶ API ─▶ (valgfritt) KI-forklaring
+                                                                                                 └─ Datafinner (kun lesing, også hostet) ─▶ API ─▶ (valgfritt) KI-forklaring
 ```
 
 | Del | Fil | Hva den gjør |
@@ -21,7 +20,6 @@ src/kunstpixel/data/archive_generator.py  (lager noen av CSV-ene) ┘           
 | Datafiler | `05_data/*.csv` | Det som bygges inn. Alt har kolonnen `datakilde` som starter med «syntetisk» |
 | Generator | `src/kunstpixel/data/archive_generator.py` | Lager CSV-ene for vakter, klokkeslett, fravær, overtid, tariff og arrangementer. Egen tilfeldighet per post, så resultatet er det samme hver gang |
 | Bygger | `src/kunstpixel/data/build_museum_db.py` | Grunnlaget + CSV-ene → `museum.db`. Ett `bygg_*`-trinn per datasett, og `SKJEMAVERSJON` |
-| Demokopi | `src/kunstpixel/data/build_demo_db.py` | Kopi uten e-post, telefon og fødselsår, med bare tabellene Datafinner bruker |
 | Spørringer | `src/kunstpixel/core/db.py` | Alle lesende SQL-spørringer. `mode=ro` |
 | Verktøy | `src/kunstpixel/core/mcp_server.py` | Spørringene som verktøy (MCP) |
 | Nett og API | `src/kunstpixel/adapters/datafinner.py`, `datafinner_api.py` | Hvitelistet HTTP-API, se `docs/DATAFINNER_API.md` |
@@ -48,9 +46,7 @@ Bruk `python` på macOS, Linux og Colab, og `py -3.13` på Windows. Kjør fra ro
 | Alle tester | `python -m pytest -q` |
 | Prøvebygg uten å røre noe | `python src/kunstpixel/data/build_museum_db.py --check` |
 | Lag en CSV på nytt | `python src/kunstpixel/data/archive_generator.py --bare-fravaer` (også `--bare-klokkeslett`, `--bare-tariff`, `--bare-overtid`, `--bare-hendelser`) |
-| Demokopi | `python src/kunstpixel/data/build_demo_db.py` |
 | Datafinner lokalt | `python src/kunstpixel/adapters/datafinner.py` (port 8010) |
-| Demomodus lokalt | `python scripts/start_demo.py` (port 8011) |
 
 Avhengigheter: `pip install -r deploy/demo/requirements.txt pytest`. Bruk `mcp==1.29.1`: versjon 2.x virker ikke.
 
@@ -68,9 +64,9 @@ Avhengigheter: `pip install -r deploy/demo/requirements.txt pytest`. Bruk `mcp==
 1. **Lag dataene.** Ny funksjon i `archive_generator.py` med eget flagg (`--bare-<navn>`), og egen `random.Random("<stabil streng>")`, aldri den globale `random`. Skriv til en CSV i `05_data/` med `datakilde = "syntetisk (archive_generator)"`. For håndskrevne data: rediger CSV-en direkte.
 2. **Sjekk CSV-en.** Komma i en tekst må stå i anførselstegn. `python -m pytest tests/test_data_csv.py -q` fanger feil antall felt.
 3. **Les den inn.** Ny `bygg_<navn>`-funksjon i `build_museum_db.py`, kalt i `bygg()`, og øk `SKJEMAVERSJON`. Bygget skal feile høyt hvis filen mangler eller har brutte referanser.
-4. **Gi tilgang.** Spørring i `core/db.py`, verktøy i `core/mcp_server.py`, og hvitelist i `adapters/datafinner.py`. Verktøyet skal si `mangler` når tabellen ikke finnes. Skal det i demoen: legg tabellen til i `BEHOLD` i `build_demo_db.py`.
-5. **Test** mot en temp-bygget database (se `bygget_db` i `tests/test_vakter_tools.py`). Nye verktøy må få eksempelargumenter i `tests/test_build_demo_db.py` (`EKSEMPLER`), ellers feiler testen med vilje.
-6. **Bevis.** `python scripts/db_status_gate.py` skal gi KLAR. Be Lars bygge `museum.db` og lag deretter demokopien.
+4. **Gi tilgang.** Spørring i `core/db.py`, verktøy i `core/mcp_server.py`, og hvitelist i `adapters/datafinner.py`. Verktøyet skal si `mangler` når tabellen ikke finnes.
+5. **Test** mot en temp-bygget database (se `bygget_db` i `tests/test_vakter_tools.py`). Oppdater API-testene når et nytt verktøy legges til.
+6. **Bevis.** `python scripts/db_status_gate.py` skal gi KLAR. Be Lars bygge `museum.db`.
 
 Skal en regel for vurdering og forslag endres: rediger `05_data/rapport_regler.csv` (én rad per regel, `fallback` per spørsmål), bygg på nytt.
 

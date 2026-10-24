@@ -20,7 +20,7 @@ curl -u navn:passord https://demo.eksempel.no/api/status
 
 | Metode | Adresse | Hva den gir |
 |---|---|---|
-| GET | `/api/status` | `{"demo": true, "llm": false, "llm_modell": null, "verktoy": 17}` |
+| GET | `/api/status` | `{"llm": false, "llm_modell": null, "verktoy": 19}` |
 | GET | `/api/verktoyskjema` | Alle verktøy med parametere (JSON Schema), og de seks spørsmålene |
 | GET | `/api/verktoy?navn=<verktøy>&args=<json>` | Kjører ett hvitelistet verktøy |
 | GET | `/api/rapport?sporsmal=<id>&args=<json>` | Deterministisk rapport: fakta, regel, vurdering, forslag, merker |
@@ -70,7 +70,7 @@ claude_verktoy = [{"name": v["navn"], "description": v["beskrivelse"], "input_sc
 openai_verktoy = [{"type": "function", "function": {"name": v["navn"], "description": v["beskrivelse"], "parameters": v["parametre"]}} for v in skjema]
 ```
 Når modellen ber om et verktøykall, kjør `GET /api/verktoy?navn=<navn>&args=<json>` og gi svaret tilbake til modellen. For en hel rapport med regel og vurdering: bruk `/api/rapport`.
-I demomodus finnes ikke filverktøyene (`grep_mappe`, `les_fil`).
+Filverktøyene (`grep_mappe`, `les_fil`) er på verktøylisten. De kan bare lese tillatte mapper som faktisk er kopiert inn i kjøreområdet.
 
 ## Valgfritt KI-lag (`POST /api/forklar`)
 Av som standard. Slås på med miljøvariabler på serveren:

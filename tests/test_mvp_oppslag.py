@@ -197,7 +197,6 @@ def test_5_feil_hos_claude_gir_likevel_treffene(bygget_db: Path) -> None:
 
 # ---------- 6 Nettoppsettet har tak og ingen demo ----------
 
-@VENTER_PA_02
 def test_6_demokopien_er_borte() -> None:
     assert not (ROOT / "src" / "kunstpixel" / "data" / "build_demo_db.py").exists()
     assert "DATAFINNER_DEMO" not in (ROOT / "deploy" / "demo" / "Dockerfile").read_text(encoding="utf-8")

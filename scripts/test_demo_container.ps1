@@ -1,7 +1,7 @@
 ﻿# test_demo_container.ps1 - Bygger og starter demo-oppsettet lokalt i Docker og sjekker det.
 #
 # Hva den gjør: bygger bildet, starter datafinner + Caddy på 127.0.0.1:18080 (bare din PC), tester
-# innlogging, stengte verktøy, sikkerhetshoder, og at ingen personopplysninger er i bildet. Rydder etterpå.
+# innlogging, verktøy, sikkerhetshoder og at den fulle databasen er i bildet. Rydder etterpå.
 # Den rører ikke andre containere eller bilder. Alt den lager heter kpdemo-test.
 #
 #   powershell -ExecutionPolicy Bypass -File scripts\test_demo_container.ps1
@@ -91,11 +91,11 @@ try {
     $roller = Hent '/api/verktoy?navn=list_roles&args=%7B%7D' $Bruker $Passord
     Sjekk 'list_roles gir 200' ($roller.Status -eq 200)
     $les = Hent '/api/verktoy?navn=les_fil&args=%7B%22sti%22%3A%2200_felles%2FFORMAAL.md%22%7D' $Bruker $Passord
-    Sjekk 'les_fil er stengt (400)' ($les.Status -eq 400) ("fikk " + $les.Status)
+    Sjekk 'les_fil finner ikke mapper som ikke er kopiert inn (400)' ($les.Status -eq 400) ("fikk " + $les.Status)
     $grep = Hent '/api/verktoy?navn=grep_mappe&args=%7B%22query%22%3A%22x%22%7D' $Bruker $Passord
-    Sjekk 'grep_mappe er stengt (400)' ($grep.Status -eq 400) ("fikk " + $grep.Status)
+    Sjekk 'grep_mappe svarer uten interne mapper (200)' (($grep.Status -eq 200) -and ($grep.Tekst -match '\[\]')) ("fikk " + $grep.Status)
     $sok = Hent '/sok.html' $Bruker $Passord
-    Sjekk '/sok.html er borte (404)' ($sok.Status -eq 404) ("fikk " + $sok.Status)
+    Sjekk '/sok.html finnes (200)' ($sok.Status -eq 200) ("fikk " + $sok.Status)
     $vakter = Hent '/api/verktoy?navn=get_shifts_for_date&args=%7B%22dato%22%3A%222026-10-20%22%7D' $Bruker $Passord
     Sjekk 'vaktplan gir 200' ($vakter.Status -eq 200)
     Sjekk 'vaktplanen har ingen e-postadresser' ($vakter.Tekst -notmatch '@')
@@ -106,7 +106,7 @@ try {
     Sjekk '/api/status sier at KI-laget er av' (($status.Status -eq 200) -and ($status.Tekst -match '"llm":\s*false'))
     $skjema = Hent '/api/verktoyskjema' $Bruker $Passord
     Sjekk '/api/verktoyskjema gir verktøylisten' (($skjema.Status -eq 200) -and ($skjema.Tekst -match '"get_absence_report"'))
-    Sjekk 'verktøylisten har ikke filverktøyene' (($skjema.Tekst -notmatch 'les_fil') -and ($skjema.Tekst -notmatch 'grep_mappe'))
+    Sjekk 'verktøylisten har filverktøyene' (($skjema.Tekst -match 'les_fil') -and ($skjema.Tekst -match 'grep_mappe'))
     $rap1 = Hent '/api/rapport?sporsmal=vaktplan&args=%7B%22dato%22%3A%222026-10-20%22%7D' $Bruker $Passord
     $rap2 = Hent '/api/rapport?sporsmal=vaktplan&args=%7B%22dato%22%3A%222026-10-20%22%7D' $Bruker $Passord
     Sjekk '/api/rapport gir en rapport med regel og merker' (($rap1.Status -eq 200) -and ($rap1.Tekst -match 'R-PLAN-') -and ($rap1.Tekst -match 'Systemforslag'))
@@ -140,16 +140,20 @@ try {
     Sjekk '/app har bare src og data (ingen interne mapper)' ($innhold -eq 'data,src') ("fikk " + $innhold)
     $py = @'
 import sqlite3
-c = sqlite3.connect("file:/app/data/museum_demo.db?mode=ro", uri=True)
-print(c.execute("select count(*) from hr_ansatte where epost is not null or telefon is not null or fodselsaar is not null").fetchone()[0])
-print(c.execute("select count(*) from sqlite_master where type='table' and name in ('hr_people','personas','leverandor_enhetsregister','hr_innleie')").fetchone()[0])
+c = sqlite3.connect("file:/app/data/museum.db?mode=ro", uri=True)
+print(c.execute("select count(*) from hr_ansatte").fetchone()[0])
+print(c.execute("pragma user_version").fetchone()[0])
+print(c.execute("select count(*) from sqlite_master where type='table' and name='hr_people'").fetchone()[0])
 '@
     # Koden sendes via stdin (python -). Som argument ville linjeskiftene gått tapt.
     $tall = ($py | & docker compose -p $Prosjekt -f $ComposeFil exec -T datafinner python -) -join ','
-    Sjekk 'demobasen har ingen kontaktopplysninger eller fødselsår' ($tall -eq '0,0') ("fikk " + $tall)
+    Sjekk 'bildet har full museum.db med HR-tabeller' ($tall -eq '168,4,1') ("fikk " + $tall)
 }
 catch {
     Write-Host ("[FEIL] " + $_.Exception.Message) -ForegroundColor Red
+    if (Test-Path $ComposeFil) {
+        & docker compose -p $Prosjekt -f $ComposeFil logs --no-color --tail 30 datafinner 2>&1 | Out-Host
+    }
     $feil++
 }
 finally {

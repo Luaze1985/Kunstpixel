@@ -4,8 +4,8 @@ Lokal side der gründerne velger hva de vil finne i museum.db og får svaret
 fra de samme fem MCP-verktøyene som LLM-en bruker. Siden viser også selve
 verktøykallet, slik at man ser nøyaktig hvordan LLM-en ville spurt.
 
-Kun for internt bruk: serveren bindes til 127.0.0.1 og kan ikke nås fra
-andre maskiner. Ikke endre vertsadressen før databasen er klarert for deling.
+Serveren bindes til 127.0.0.1 som standard. Ved hosting settes vertsadressen
+av driftsoppsettet, som inntil videre krever innlogging i Caddy.
 
 100 % standardbibliotek for webdelen. Databasen åpnes skrivebeskyttet via
 src.kunstpixel.core.db (mode=ro), og bare verktøyene i VERKTOY kan kalles.
@@ -15,16 +15,15 @@ Kjøres med:
 
 Åpnes på http://127.0.0.1:8010
 
-Demomodus (for hosting):
-    DATAFINNER_DEMO=1          fjerner filverktøyene (grep_mappe, les_fil) og /sok.html
-    DATAFINNER_HOST=0.0.0.0    lytter på alle adresser (bare bak en omvendt proxy med innlogging)
-    KUNSTPIXEL_DB_PATH=<sti>   databasen som skal brukes (bruk demokopien, se build_demo_db.py)
+Hosting:
+    DATAFINNER_HOST=0.0.0.0    lytter på alle adresser (bak omvendt proxy)
+    KUNSTPIXEL_DB_PATH=<sti>   databasen som skal brukes
 Serveren har ingen innlogging selv. Den skal alltid ligge bak noe som krever det.
 
 Åpent API (se docs/DATAFINNER_API.md):
     GET  /api/verktoyskjema    verktøyene med parametere (JSON Schema), klare for en språkmodell
     GET  /api/rapport          deterministisk rapport: fakta + vurdering/forslag fra faste regler
-    GET  /api/status           hva som er slått på (demomodus, KI-lag)
+    GET  /api/status           hva som er slått på (KI-lag)
     POST /api/forklar          valgfritt: KI forklarer rapporten, merket AI-forslag (av som standard)
 """
 
@@ -162,23 +161,6 @@ VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
 }
 
 
-# Verktøy og sider som leser filer utenfor databasen. De skal ikke være med i en hostet demo.
-FILVERKTOY = ("grep_mappe", "les_fil")
-DEMO_SKJULTE_SIDER = ("/sok.html",)
-
-
-def bruk_demomodus(verktoy: dict[str, Any], sider: dict[str, Any]) -> None:
-    """Fjern filverktøyene og søkesiden som bruker dem. Endrer ordbøkene på stedet."""
-    for navn in FILVERKTOY:
-        verktoy.pop(navn, None)
-    for sti in DEMO_SKJULTE_SIDER:
-        sider.pop(sti, None)
-
-
-DEMO = os.environ.get("DATAFINNER_DEMO") == "1"
-if DEMO:
-    bruk_demomodus(VERKTOY, ASSETS)
-
 # KI-laget er av med mindre LLM_PROVIDER er satt. Feil innstilling stopper oppstarten med en tydelig melding.
 LLM_KONFIG = llm.fra_miljo(os.environ)
 LLM_BEGRENSER = llm.Begrenser(LLM_KONFIG.maks_per_time) if LLM_KONFIG else None
@@ -232,7 +214,6 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
             return
         if url.path == "/api/status":
             self._json(200, {
-                "demo": DEMO,
                 "llm": LLM_KONFIG is not None,
                 "llm_modell": LLM_KONFIG.modell if LLM_KONFIG else None,
                 "verktoy": len(VERKTOY),
@@ -335,7 +316,7 @@ def main() -> None:
     port = int(os.environ.get("DATAFINNER_PORT", "8010"))
     host = os.environ.get("DATAFINNER_HOST", "127.0.0.1")
     server = ThreadingHTTPServer((host, port), DatafinnerHandler)
-    print(f"Datafinner kjører på http://{host}:{port}{' (demomodus)' if DEMO else ''} (Ctrl+C for å stoppe)")
+    print(f"Datafinner kjører på http://{host}:{port} (Ctrl+C for å stoppe)")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

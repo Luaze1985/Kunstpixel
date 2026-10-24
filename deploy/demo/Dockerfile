@@ -1,26 +1,17 @@
 # Datafinner som hostet demo. Bygges fra rotmappen i repoet:
 #   docker build -f deploy/demo/Dockerfile -t kunstpixel-datafinner:demo .
 #
-# To trinn:
-#   1. bygg: lager demokopien av museum.db (uten fødselsår, e-post og telefon)
-#   2. kjør: bare den lille koden Datafinner trenger, demokopien, og ingenting annet fra repoet.
-# Selve museum.db, 01_inbox, 03_team og 04_knowledge kommer aldri inn i bildet.
-
-FROM python:3.13-slim AS bygg
-WORKDIR /bygg
-COPY src ./src
-COPY 05_data/museum.db ./05_data/museum.db
-RUN python src/kunstpixel/data/build_demo_db.py --ut /ut/museum_demo.db
+# Bildet inneholder bare Datafinner-koden og den ferdigbygde museum.db.
+# Interne mapper kopieres ikke inn. Caddy krever innlogging frem til oppgave 05.
 
 FROM python:3.13-slim
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    DATAFINNER_DEMO=1 \
     DATAFINNER_HOST=0.0.0.0 \
     DATAFINNER_PORT=8010 \
-    KUNSTPIXEL_DB_PATH=/app/data/museum_demo.db
+    KUNSTPIXEL_DB_PATH=/app/data/museum.db
 
 COPY deploy/demo/requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt && rm /tmp/requirements.txt
@@ -33,8 +24,8 @@ COPY src/kunstpixel/__init__.py ./src/kunstpixel/__init__.py
 COPY src/kunstpixel/core ./src/kunstpixel/core
 COPY src/kunstpixel/adapters/__init__.py src/kunstpixel/adapters/datafinner.py src/kunstpixel/adapters/datafinner_api.py ./src/kunstpixel/adapters/
 COPY src/kunstpixel/adapters/datafinner ./src/kunstpixel/adapters/datafinner
-COPY --from=bygg /ut/museum_demo.db ./data/museum_demo.db
-RUN chmod -R a-w /app && chmod 444 /app/data/museum_demo.db
+COPY 05_data/museum.db ./data/museum.db
+RUN chmod -R a-w /app && chmod 444 /app/data/museum.db
 
 USER 10001:10001
 EXPOSE 8010

@@ -3,7 +3,7 @@
 Slik legger du Datafinner ut som demo med innlogging per person. Du gjør hvert steg selv. Ingenting her går gjennom Claude, og ingen hemmeligheter ligger i git.
 
 ```
-Nettleser ──HTTPS──▶ Caddy (hengelås + innlogging) ──▶ Datafinner (demomodus, demokopi av databasen)
+Nettleser ──HTTPS──▶ Caddy (hengelås + innlogging) ──▶ Datafinner (full museum.db, skrivebeskyttet)
                      åpen: port 80 og 443               ingen åpen port, nås bare fra Caddy
 ```
 
@@ -19,7 +19,7 @@ Under: `<bruker>`, `<ip>` og `<nokkel>` er verdiene fra `vps-valg.json`. `<nokke
 docker build -f deploy/demo/Dockerfile -t kunstpixel-datafinner:demo .
 powershell -ExecutionPolicy Bypass -File scripts\test_demo_container.ps1
 ```
-Testen starter alt lokalt (bare på din PC), sjekker innlogging og at filverktøyene er stengt, og rydder etterpå.
+Testen starter alt lokalt (bare på din PC), sjekker innlogging, database og verktøy, og rydder etterpå.
 
 ## 2. Send filene til serveren
 ```powershell
@@ -43,7 +43,7 @@ Tilbake på PC-en:
 ```powershell
 cmd /c "docker save kunstpixel-datafinner:demo | ssh -C -i <nokkel> <bruker>@<ip> docker load"
 ```
-(`cmd /c` må brukes: PowerShells egen rør ødelegger binære data.) Bildet inneholder demokopien av databasen, ikke museum.db.
+(`cmd /c` må brukes: PowerShells egen rør ødelegger binære data.) Bildet inneholder full `museum.db`.
 
 ## 5. På serveren: sett opp og start
 ```bash

@@ -73,13 +73,6 @@ def test_skjemaet_er_gyldig_json_schema_pa_parametrene() -> None:
             assert egenskap["type"] in {"string", "integer", "number", "boolean", "object", "array"}
 
 
-def test_skjemaet_i_demomodus_har_ikke_filverktoyene() -> None:
-    verktoy = dict(datafinner.VERKTOY)
-    datafinner.bruk_demomodus(verktoy, {})
-    navn = {v["navn"] for v in datafinner_api.verktoyskjema(verktoy)}
-    assert not navn & set(datafinner.FILVERKTOY)
-
-
 # ---------- deterministiske rapporter ----------
 
 @pytest.mark.parametrize("sporsmal", sorted(EKSEMPEL_ARGS))
