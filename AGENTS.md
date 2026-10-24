@@ -143,6 +143,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode man
 - Enhver kodeendring, nytt verktøy eller refaktorering skal verifiseres ved å kjøre `py -3.13 -m pytest`.
 - Ingen oppgave regnes som ferdig hvis testene feiler.
 
+### Regel 4: Kvalitetssjekk før analyse
+- Før du analyserer data fra `museum.db`: kjør `py -3.13 scripts/db_kvalitet.py` og vis resultatlinjen og eventuelle FEIL/OBS øverst i svaret.
+- Er det FEIL: si fra og stopp analysen. Er det OBS: ta det med som forbehold i svaret.
+
 ---
 
 ## 6. Prosjektstruktur
