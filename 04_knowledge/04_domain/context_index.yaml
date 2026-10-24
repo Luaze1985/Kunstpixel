@@ -34,6 +34,8 @@ loading_policy:
       - "context/projects/samling_til_publikum/decisions.md"
       - "context/projects/samling_til_publikum/sources.md"
       - "context/projects/samling_til_publikum/open_questions.md"
+    hr_caser:
+      - "04_knowledge/06_hr_caser/README.md"
     governance:
       - "docs/adr/0001-lean-independent-museum-model.md"
       - "context/decisions/decision_log.md"

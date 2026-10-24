@@ -84,3 +84,7 @@ L01–L03 er **manuelle eller senere automatiserbare evalueringer** – det er i
 ## Før eventuell produksjon/VPS
 
 Lokal API mangler pålogging, rate limit og TLS; bindes derfor bare til 127.0.0.1. Gjør rollebasert tilgang, vurder personvernrettslig grunnlag, gjennomgå konkrete lov- og tariffkrav og verifiser eventuelle HMS-grenseverdier før ekte ansatte tas i bruk. Demokilden er **ikke** en juridisk etterlevelsesgaranti.
+
+## Operative KI- og HR-caser (Casepakke 2024–2026)
+
+De 14 etiske og operative øvingscasene for museum og sammenligningssektorer er dokumentert i [`04_knowledge/06_hr_caser/`](file:///G:/Min%20disk/Kunstpixel/04_knowledge/06_hr_caser/README.md) (CASE-004 til CASE-017), med tilhørende koderunner i `src/kunstpixel/cases/`. Se [README.md](file:///G:/Min%20disk/Kunstpixel/04_knowledge/06_hr_caser/README.md) for full oversikt over museumsrelevans.
