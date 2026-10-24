@@ -86,7 +86,7 @@ def test_ugyldige_innstillinger_gir_tydelig_feil() -> None:
 
 def test_innstillinger_leses_med_standardverdier() -> None:
     k = llm.fra_miljo({"LLM_PROVIDER": "Anthropic", "LLM_MODEL": "claude-haiku-5-5", "LLM_API_KEY": "hemmelig"})
-    assert (k.leverandor, k.max_tokens, k.timeout, k.maks_per_time) == ("anthropic", 600, 30.0, 30)
+    assert (k.leverandor, k.max_tokens, k.timeout, k.maks_per_time) == ("anthropic", 600, 30.0, 20)
     assert k.adresse() == "https://api.anthropic.com"
     assert llm.fra_miljo({"LLM_PROVIDER": "openai", "LLM_MODEL": "m", "LLM_BASE_URL": "http://ollama:11434/v1/"}).adresse() == "http://ollama:11434/v1"
 
@@ -299,3 +299,68 @@ def test_alle_spor_smalene_kan_forklares_uten_personfelt() -> None:
         ren = json.dumps(llm.forenkle_for_llm(rapport), ensure_ascii=False)
         for felt in llm.PERSONFELT:
             assert f'"{felt}"' not in ren, (sporsmal, felt)
+
+
+# ---------- endepunktet /api/oppslag (håndboksvar) ----------
+
+def _post_oppslag(url: str, sporsmal: str, hoder: dict | None = None) -> tuple[int, dict]:
+    h = {"Content-Type": "application/json", **(hoder or {})}
+    kropp = json.dumps({"sporsmal": sporsmal}).encode()
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url + "/api/oppslag", data=kropp, headers=h, method="POST"), timeout=20) as res:
+            return res.status, json.loads(res.read())
+    except urllib.error.HTTPError as exc:
+        return exc.code, json.loads(exc.read())
+
+
+def test_oppslag_gir_ai_forslag_med_kilder_og_flagger_ukjent_punkt(server_med_ki: tuple[str, FalskKi]) -> None:
+    url, ki = server_med_ki
+    ki.svar = {"choices": [{"message": {"content": "Se PERSONAL-99.9 om egenmelding."}}]}
+    status, data = _post_oppslag(url, "egenmelding")
+    assert status == 200 and data["status"] == "ok" and data["treff"]
+    assert data["ai"]["merke"] == "AI-forslag" and data["ai"]["ukjente_kilder"] == ["PERSONAL-99.9"]
+    sendt = json.dumps(ki.sett[0]["kropp"], ensure_ascii=False)
+    assert "egenmelding" in sendt and "system" in sendt
+
+
+def test_oppslag_uten_treff_spor_ikke_ki(server_med_ki: tuple[str, FalskKi]) -> None:
+    url, ki = server_med_ki
+    status, data = _post_oppslag(url, "zxqvw blorft")
+    assert status == 200 and data["status"] == "ingen_kilde" and data["ai"] is None and data["treff"] == []
+    assert not ki.sett
+
+
+def test_oppslag_har_samme_sperrer_og_taket(server_med_ki: tuple[str, FalskKi]) -> None:
+    url, ki = server_med_ki
+    assert _post_oppslag(url, "egenmelding", {"Origin": "https://ond-side.example"})[0] == 403
+    assert _post_oppslag(url, "egenmelding", {"Sec-Fetch-Site": "cross-site"})[0] == 403
+    assert _post_oppslag(url, "egenmelding", {"Content-Type": "text/plain"})[0] == 415
+    assert _post_oppslag(url, "   ")[0] == 400
+    assert not ki.sett
+    koder = [_post_oppslag(url, "egenmelding")[0] for _ in range(3)]
+    assert koder == [200, 200, 429]
+    status, data = _post_oppslag(url, "egenmelding")
+    assert status == 429 and data["treff"], "treffene skal vises selv om taket er nådd"
+
+
+def test_oppslag_gir_503_uten_ki_og_502_ved_leverandorfeil(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(datafinner, "LLM_KONFIG", None)
+    s = ThreadingHTTPServer(("127.0.0.1", 0), datafinner.DatafinnerHandler)
+    threading.Thread(target=s.serve_forever, daemon=True).start()
+    try:
+        assert _post_oppslag(f"http://127.0.0.1:{s.server_address[1]}", "egenmelding")[0] == 503
+    finally:
+        s.shutdown()
+        s.server_close()
+    ki = FalskKi({"error": "x"}, status=500)
+    monkeypatch.setattr(datafinner, "LLM_KONFIG", llm.LlmKonfig("openai", "m", api_key="nokkel-hemmelig", base_url=ki.url))
+    monkeypatch.setattr(datafinner, "LLM_BEGRENSER", None)
+    s = ThreadingHTTPServer(("127.0.0.1", 0), datafinner.DatafinnerHandler)
+    threading.Thread(target=s.serve_forever, daemon=True).start()
+    try:
+        status, data = _post_oppslag(f"http://127.0.0.1:{s.server_address[1]}", "egenmelding")
+    finally:
+        s.shutdown()
+        s.server_close()
+        ki.stopp()
+    assert status == 502 and data["treff"] and "nokkel-hemmelig" not in json.dumps(data)

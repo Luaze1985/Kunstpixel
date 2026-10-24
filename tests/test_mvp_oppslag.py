@@ -1,16 +1,16 @@
-"""MVP-fasit for oppslagsverket (docs/specs/internside-oppslagsverk.md, oppgave 02–05).
+﻿"""MVP-fasit for oppslagsverket (docs/specs/internside-oppslagsverk.md, oppgave 02â€“05).
 
-Seks vitale sjekker, skrevet 2026-10-24 FØR koden finnes:
-  1 Søk gir håndbokpunkter          4 Taket på AI-kall holder (20 per time)
+Seks vitale sjekker, skrevet 2026-10-24 FÃ˜R koden finnes:
+  1 SÃ¸k gir hÃ¥ndbokpunkter          4 Taket pÃ¥ AI-kall holder (20 per time)
   2 Ingen treff = ingen AI-kall     5 Siden virker uten AI
   3 AI kan bare vise til punktene   6 Nettoppsettet har tak og ingen demo
   den fikk
 
-Regel for den som bygger: Endre koden, ikke sjekkene. Når en del er bygget, fjernes bare
-merket (@VENTER_PA_03 osv.) foran sjekkene som hører til. Merket er strict, så en sjekk
-som består mens merket står, feiler med vilje. Endringer i selve sjekkene avtales med Lars.
+Regel for den som bygger: Endre koden, ikke sjekkene. NÃ¥r en del er bygget, fjernes bare
+merket (@VENTER_PA_03 osv.) foran sjekkene som hÃ¸rer til. Merket er strict, sÃ¥ en sjekk
+som bestÃ¥r mens merket stÃ¥r, feiler med vilje. Endringer i selve sjekkene avtales med Lars.
 
-Kontrakten koden må oppfylle:
+Kontrakten koden mÃ¥ oppfylle:
   core/oppslag.py
     sok(sporsmal, db_path=None, limit=5) -> list[dict]
         hvert treff har minst punkt_id, handbok_kode, avsnitt_tittel, innhold
@@ -20,7 +20,7 @@ Kontrakten koden må oppfylle:
   core/llm.py
     svar_fra_handbok(sporsmal, punkter, konfig, apne=urllib.request.urlopen) -> dict
         {"tekst": str, "merke": "AI-forslag", "kilder": [punkt_id], "ukjente_kilder": [punkt_id]}
-    fra_miljo(): standard maks_per_time = 20. ValueError når LLM_MAKS_PER_TIME ikke er et positivt heltall.
+    fra_miljo(): standard maks_per_time = 20. ValueError nÃ¥r LLM_MAKS_PER_TIME ikke er et positivt heltall.
   adapters/datafinner.py: "lookup_handbook" i VERKTOY.
 """
 
@@ -41,7 +41,7 @@ ROOT = Path(__file__).resolve().parents[1]
 VENTER_PA_02 = pytest.mark.xfail(strict=True, reason="MVP: bygges i oppgave 02 (fjern demokopien)")
 VENTER_PA_03 = pytest.mark.xfail(strict=True, reason="MVP: bygges i oppgave 03 (oppslag uten AI)")
 VENTER_PA_04 = pytest.mark.xfail(strict=True, reason="MVP: bygges i oppgave 04 (AI-svar med kilder)")
-VENTER_PA_05 = pytest.mark.xfail(strict=True, reason="MVP: bygges i oppgave 05 (åpen hosting)")
+VENTER_PA_05 = pytest.mark.xfail(strict=True, reason="MVP: bygges i oppgave 05 (Ã¥pen hosting)")
 
 KONFIG = llm.LlmKonfig(leverandor="anthropic", modell="test-modell", api_key="falsk")
 PUNKT_ID = re.compile(r"\b[A-Z][A-Z_]+-\d+(?:[.-]\d+)*\b")
@@ -81,7 +81,7 @@ class FalskLeverandor:
 
 
 def _brukertekst(kall: dict) -> str:
-    """Det som ble sendt som brukermelding (spørsmål og punkter), uten systemprompten."""
+    """Det som ble sendt som brukermelding (spÃ¸rsmÃ¥l og punkter), uten systemprompten."""
     return json.dumps(kall["messages"], ensure_ascii=False)
 
 
@@ -94,7 +94,7 @@ def bygget_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     return db
 
 
-# ---------- 1 Søk gir håndbokpunkter ----------
+# ---------- 1 SÃ¸k gir hÃ¥ndbokpunkter ----------
 
 def test_1_egenmelding_gir_treff_i_personalhandboken(bygget_db: Path) -> None:
     treff = _oppslag().sok("egenmelding", db_path=bygget_db)
@@ -109,22 +109,20 @@ def test_1_datafinner_kan_sla_opp_i_handbokene() -> None:
 
 # ---------- 2 Ingen treff = ingen AI-kall ----------
 
-@VENTER_PA_04
 def test_2_ingen_treff_gir_ingen_kilde_og_ingen_ai(bygget_db: Path) -> None:
     lev = FalskLeverandor()
     res = _oppslag().svar(TULL, KONFIG, llm.Begrenser(20), apne=lev, db_path=bygget_db)
     assert res["status"] == "ingen_kilde"
     assert res["treff"] == []
     assert res["ai"] is None
-    assert lev.kall == [], "AI-en skal ikke spørres (og ikke koste penger) når håndbøkene ikke har svaret"
+    assert lev.kall == [], "AI-en skal ikke spÃ¸rres (og ikke koste penger) nÃ¥r hÃ¥ndbÃ¸kene ikke har svaret"
 
 
 # ---------- 3 AI kan bare vise til punktene den fikk ----------
 
-@VENTER_PA_04
 def test_3_ukjent_punkt_i_ai_svaret_blir_flagget() -> None:
     punkter = [{"punkt_id": "PERSONAL-5.2", "avsnitt_tittel": "Egenmeldingsregler", "innhold": "Egenmelding ..."}]
-    lev = FalskLeverandor("Du kan bruke egenmelding (PERSONAL-5.2). Se også PERSONAL-99.9.")
+    lev = FalskLeverandor("Du kan bruke egenmelding (PERSONAL-5.2). Se ogsÃ¥ PERSONAL-99.9.")
     ai = llm.svar_fra_handbok("hvor mange dager egenmelding?", punkter, KONFIG, apne=lev)
     assert ai["merke"] == "AI-forslag"
     assert "PERSONAL-5.2" in ai["kilder"]
@@ -132,7 +130,6 @@ def test_3_ukjent_punkt_i_ai_svaret_blir_flagget() -> None:
     assert len(lev.kall) == 1
 
 
-@VENTER_PA_04
 def test_3_ai_far_bare_sporsmalet_og_treffene(bygget_db: Path) -> None:
     lev = FalskLeverandor("Se PERSONAL-5.2.")
     res = _oppslag().svar("egenmelding", KONFIG, llm.Begrenser(20), apne=lev, db_path=bygget_db)
@@ -144,9 +141,8 @@ def test_3_ai_far_bare_sporsmalet_og_treffene(bygget_db: Path) -> None:
     assert set(PUNKT_ID.findall(sendt)) <= treff_ider, "ingenting annet fra databasen skal sendes"
 
 
-# ---------- 4 Taket på AI-kall holder ----------
+# ---------- 4 Taket pÃ¥ AI-kall holder ----------
 
-@VENTER_PA_04
 def test_4_sporsmal_21_i_timen_stoppes_men_treffene_vises(bygget_db: Path) -> None:
     tid = [0.0]
     begrenser = llm.Begrenser(20, klokke=lambda: tid[0])
@@ -155,19 +151,17 @@ def test_4_sporsmal_21_i_timen_stoppes_men_treffene_vises(bygget_db: Path) -> No
         assert _oppslag().svar("egenmelding", KONFIG, begrenser, apne=lev, db_path=bygget_db)["status"] == "ok"
     res = _oppslag().svar("egenmelding", KONFIG, begrenser, apne=lev, db_path=bygget_db)
     assert res["status"] == "grense_naadd"
-    assert res["treff"], "treffene skal vises selv om AI-taket er nådd"
+    assert res["treff"], "treffene skal vises selv om AI-taket er nÃ¥dd"
     assert len(lev.kall) == 20
     tid[0] = 3600.0
     assert _oppslag().svar("egenmelding", KONFIG, begrenser, apne=lev, db_path=bygget_db)["status"] == "ok"
 
 
-@VENTER_PA_04
 def test_4_standardtaket_er_20() -> None:
     konfig = llm.fra_miljo({"LLM_PROVIDER": "anthropic", "LLM_MODEL": "m"})
     assert konfig is not None and konfig.maks_per_time == 20
 
 
-@VENTER_PA_04
 @pytest.mark.parametrize("verdi", ["0", "-5"])
 def test_4_ugyldig_tak_stopper_oppstarten(verdi: str) -> None:
     with pytest.raises(ValueError):
@@ -176,14 +170,12 @@ def test_4_ugyldig_tak_stopper_oppstarten(verdi: str) -> None:
 
 # ---------- 5 Siden virker uten AI ----------
 
-@VENTER_PA_04
 def test_5_uten_ai_vises_treffene(bygget_db: Path) -> None:
     res = _oppslag().svar("egenmelding", None, None, db_path=bygget_db)
     assert res["status"] == "ai_av"
     assert res["treff"] and res["ai"] is None
 
 
-@VENTER_PA_04
 def test_5_feil_hos_claude_gir_likevel_treffene(bygget_db: Path) -> None:
     def nede(foresporsel, timeout=None):
         raise urllib.error.URLError("nede")

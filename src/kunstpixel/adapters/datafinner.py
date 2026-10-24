@@ -233,6 +233,7 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
             self._json(200, {
                 "llm": LLM_KONFIG is not None,
                 "llm_modell": LLM_KONFIG.modell if LLM_KONFIG else None,
+                "llm_maks_per_time": LLM_KONFIG.maks_per_time if LLM_KONFIG else None,
                 "verktoy": len(VERKTOY),
             })
             return
@@ -275,35 +276,50 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
             return
         self._json(404, {"error": "Finnes ikke"})
 
-    def do_POST(self) -> None:
-        """Eneste POST: /api/forklar. Koster penger hos KI-leverandøren, så den har flere sperrer."""
-        if urlparse(self.path).path != "/api/forklar":
-            self._json(404, {"error": "Finnes ikke"})
-            return
-        # Nettleseren sender innloggingen din automatisk. Uten disse sperrene kunne en annen nettside
-        # få den til å kalle KI-en på din regning. Samme opprinnelse eller ingen opprinnelse (curl) er greit.
+    def _les_post(self) -> bytes | None:
+        """Felles sperrer for POST-endepunktene som koster penger hos KI-leverandøren. Returnerer kroppen,
+        eller None etter at feilsvaret er sendt.
+
+        Siden har ingen innlogging. Sperrene stopper andre nettsider fra å bruke kvoten din via nettleseren til en
+        besøkende: samme opprinnelse eller ingen opprinnelse (curl) er greit. Selve kostnaden begrenses av
+        LLM_BEGRENSER (standard 20 kall per time for hele serveren).
+        """
         opprinnelse = self.headers.get("Origin")
         if opprinnelse and urlparse(opprinnelse).netloc != self.headers.get("Host", ""):
             self._json(403, {"error": "Forespørselen kom fra en annen side."})
-            return
+            return None
         if self.headers.get("Sec-Fetch-Site") not in (None, "same-origin", "none"):
             self._json(403, {"error": "Forespørselen kom fra en annen side."})
-            return
+            return None
         if self.headers.get("Content-Type", "").split(";")[0].strip().lower() != "application/json":
             self._json(415, {"error": "Bruk Content-Type: application/json."})
-            return
+            return None
         try:
             lengde = int(self.headers.get("Content-Length") or 0)
         except ValueError:
             lengde = 0
         if lengde <= 0 or lengde > MAKS_POST_BYTES:
             self._json(413, {"error": f"Kroppen må være mellom 1 og {MAKS_POST_BYTES} byte."})
-            return
+            return None
         if LLM_KONFIG is None:
-            self._json(503, {"error": "KI-laget er ikke slått på. Rapportene er likevel tilgjengelige uten KI."})
+            self._json(503, {"error": "KI-laget er ikke slått på. Treffene og rapportene virker likevel uten KI."})
+            return None
+        return self.rfile.read(lengde)
+
+    def do_POST(self) -> None:
+        """POST-endepunkter: /api/forklar (rapport) og /api/oppslag (håndboksvar). Begge koster penger hos KI-leverandøren."""
+        sti = urlparse(self.path).path
+        if sti not in ("/api/forklar", "/api/oppslag"):
+            self._json(404, {"error": "Finnes ikke"})
+            return
+        kropp_bytes = self._les_post()
+        if kropp_bytes is None:
+            return
+        if sti == "/api/oppslag":
+            self._post_oppslag(kropp_bytes)
             return
         try:
-            kropp = json.loads(self.rfile.read(lengde).decode("utf-8"))
+            kropp = json.loads(kropp_bytes.decode("utf-8"))
             if not isinstance(kropp, dict) or not isinstance(kropp.get("args", {}), dict):
                 raise ValueError("Send et JSON-objekt: {\"sporsmal\": \"...\", \"args\": {...}}")
             rapport = datafinner_api.lag_rapport(str(kropp.get("sporsmal", "")), kropp.get("args", {}), run_tool)
@@ -325,6 +341,27 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
             return
         self._json(200, {**svar, "status": "Utkast", "rapport": rapport})
 
+    def _post_oppslag(self, kropp_bytes: bytes) -> None:
+        """Tynn skal rundt oppslag.svar(). Treffene følger alltid med, også når AI-svaret mangler."""
+        try:
+            kropp = json.loads(kropp_bytes.decode("utf-8"))
+            if not isinstance(kropp, dict) or not str(kropp.get("sporsmal", "")).strip():
+                raise ValueError("Send et JSON-objekt med et spørsmål: {\"sporsmal\": \"...\"}")
+            res = oppslag.svar(str(kropp["sporsmal"]), LLM_KONFIG, LLM_BEGRENSER)
+        except (ValueError, TypeError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+            self._json(400, {"error": str(exc)})
+            return
+        except Exception as exc:
+            sys.stderr.write(f"[datafinner] FEIL i oppslag: {exc!r}\n")
+            self._json(500, {"error": "Feil ved oppslag. Prøv igjen, eller si ifra til den som drifter siden."})
+            return
+        if res["status"] == "grense_naadd":
+            self._json(429, {"error": "For mange KI-kall den siste timen. Prøv igjen senere.", **res})
+        elif res["status"] == "ai_feil":
+            sys.stderr.write(f"[datafinner] KI-feil ({res.get('feilkode')}): {res.get('melding')}\n")
+            self._json(504 if res.get("feilkode") == "tidsavbrudd" else 502, {"error": res.get("melding"), **res})
+        else:
+            self._json(200, res)
     def log_message(self, format: str, *args: Any) -> None:
         sys.stderr.write("[datafinner] " + (format % args) + "\n")
 

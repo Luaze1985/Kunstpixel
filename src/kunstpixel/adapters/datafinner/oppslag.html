@@ -9,6 +9,9 @@
   body { margin: 0; background: #f3f6f8; padding: 24px 16px; }
   .op-rad { display: flex; gap: var(--space-10); align-items: end; max-width: var(--form-width); }
   .op-rad .af-input { flex: 1; min-width: 0; }
+  #ai { max-width: 760px; margin: 0 0 var(--space-23); }
+  #ai .af-outcome { max-width: 760px; }
+  #ai .op-tekst { font-size: .95rem; }
   .op-gruppe { margin: 0 0 var(--space-28); max-width: 760px; }
   .op-gruppe h2 { font-size: 1.05rem; margin: 0 0 8px; }
   .op-treff { padding: 12px 0; border-top: 1px solid var(--line); }
@@ -52,6 +55,7 @@
           </div>
         </div>
       </form>
+      <div id="ai" hidden></div>
       <p class="af-table-meta" id="antall"></p>
       <div id="resultat"></div>
     </main>
@@ -114,15 +118,53 @@
     });
   }
 
+  var ai = document.getElementById("ai");
+  var aiPa = false;
+  fetch("/api/status").then(function (r) { return r.json(); }).then(function (s) { aiPa = !!s.llm; }).catch(function () {});
+
+  function visAi(deler) {
+    ai.textContent = "";
+    ai.hidden = !deler;
+    if (!deler) return;
+    var boks = el("div", "af-outcome");
+    boks.appendChild(el("p", "af-outcome-label", "Kort svar fra håndbøkene"));
+    boks.appendChild(el("span", "af-source suggested", "AI-forslag"));
+    boks.appendChild(el("p", "op-tekst", deler.tekst));
+    if (deler.kilder && deler.kilder.length) boks.appendChild(el("p", "op-id", "Bygger på: " + deler.kilder.join(", ")));
+    if (deler.ukjente) boks.appendChild(el("p", "af-field-error", "Feil: svaret viser til punkt som ikke var med i treffene (" + deler.ukjente + "). Sjekk mot kilden."));
+    if (deler.melding) boks.appendChild(el("p", "af-table-meta", deler.melding));
+    ai.appendChild(boks);
+  }
+
+  function hentAi(q) {
+    if (!aiPa) return;
+    fetch("/api/oppslag", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sporsmal: q }) })
+      .then(function (r) { return r.json().then(function (d) { return { kode: r.status, data: d }; }); })
+      .then(function (s) {
+        if (s.kode === 200 && s.data.ai) {
+          visAi({ tekst: s.data.ai.tekst, kilder: s.data.ai.kilder, ukjente: (s.data.ai.ukjente_kilder || []).join(", ") });
+        } else if (s.kode === 429) {
+          visAi({ tekst: "AI-svar er stoppet for nå fordi taket på kall per time er nådd. Treffene under virker som vanlig.", melding: "" });
+        } else if (s.kode >= 500) {
+          visAi({ tekst: "Fikk ikke noe AI-svar akkurat nå. Treffene under virker som vanlig.", melding: "" });
+        } else {
+          visAi(null);
+        }
+      })
+      .catch(function () { visAi(null); });
+  }
+
   skjema.addEventListener("submit", function (e) {
     e.preventDefault();
     feil.hidden = true;
+    visAi(null);
     var q = felt.value.trim();
     if (!q) { visFeil("Skriv hva du leter etter, for eksempel egenmelding eller hviletid."); return; }
     var url = "/api/verktoy?navn=sok_internt&args=" + encodeURIComponent(JSON.stringify({ query: q, limit: 3 }));
     fetch(url).then(function (r) { return r.json(); }).then(function (svar) {
       if (svar.error) { visFeil(svar.error); return; }
       tegn(svar.resultat);
+      hentAi(q);
     }).catch(function () { visFeil("Fikk ikke kontakt med siden. Prøv igjen."); });
   });
 })();

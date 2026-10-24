@@ -11,10 +11,12 @@ Slike spørsmål hører til bemanning og vurdering (oppgave 07–09).
 from __future__ import annotations
 
 import re
+import urllib.request
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
+from src.kunstpixel.core import llm
 from src.kunstpixel.core.db import execute_read_query, query_handbook
 
 STOPPORD = {
@@ -131,6 +133,32 @@ def sok(sporsmal: str, db_path: Path | str | None = None, limit: int = 5) -> lis
     if not sporsmal or not sporsmal.strip():
         return []
     return query_handbook(query=sporsmal.strip(), limit=limit, db_path=db_path)
+
+
+def svar(
+    sporsmal: str,
+    konfig: llm.LlmKonfig | None,
+    begrenser: llm.Begrenser | None,
+    apne=urllib.request.urlopen,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Håndbokoppslag med et kort AI-svar over treffene. Treffene kommer alltid med.
+
+    status: "ok" (AI-svar finnes), "ingen_kilde" (null treff, AI blir ikke spurt), "ai_av" (ingen konfig),
+    "grense_naadd" (taket på kall per time er nådd) eller "ai_feil" (feil hos leverandøren, `feilkode` sier hvilken).
+    """
+    treff = sok(sporsmal, db_path=db_path)
+    if not treff:
+        return {"treff": [], "ai": None, "status": "ingen_kilde"}
+    if konfig is None:
+        return {"treff": treff, "ai": None, "status": "ai_av"}
+    if begrenser is not None and not begrenser.tillat():
+        return {"treff": treff, "ai": None, "status": "grense_naadd"}
+    try:
+        ai = llm.svar_fra_handbok(sporsmal, treff, konfig, apne=apne)
+    except llm.LlmFeil as feil:
+        return {"treff": treff, "ai": None, "status": "ai_feil", "feilkode": feil.kode, "melding": str(feil)}
+    return {"treff": treff, "ai": ai, "status": "ok"}
 
 
 def _finnes(tabell: str, db_path: Path | str | None) -> bool:
