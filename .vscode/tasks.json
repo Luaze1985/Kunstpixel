@@ -1,0 +1,36 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Databasekvalitet (klartekst)",
+      "type": "shell",
+      "command": "py -3.13 scripts/db_kvalitet.py",
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true, "focus": false },
+      "runOptions": { "runOn": "folderOpen" },
+      "problemMatcher": [],
+      "group": { "kind": "build", "isDefault": true }
+    },
+    {
+      "label": "Statusport (full, med tester)",
+      "type": "shell",
+      "command": "py -3.13 scripts/db_status_gate.py",
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Tester (pytest)",
+      "type": "shell",
+      "command": "py -3.13 -m pytest -q",
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": [],
+      "group": "test"
+    },
+    {
+      "label": "MVP-fremdrift",
+      "type": "shell",
+      "command": "py -3.13 -m pytest tests/test_mvp_oppslag.py tests/test_mvp_bemanning.py -q",
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    }
+  ]
+}
