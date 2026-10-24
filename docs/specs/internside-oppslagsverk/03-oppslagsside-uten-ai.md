@@ -14,6 +14,8 @@ håndbok, kapittel, avsnitt og innhold. Siden virker uten AI.
       med i `/api/verktoyskjema`.
 - [ ] Oppslagssiden er nåbar fra forsiden og bruker `af.css`. Innholdet settes inn med `textContent`, ikke
       `innerHTML`, og `SIKKERHETSHODER`/CSP gjelder uendret.
+- [x] Internsøk: `sok_internt` finner treff på tvers av håndbøker, interne tabeller og interne dokumenter, grupper
+      per kilde, og er i `VERKTOY`. Personer, fravær og varsler er ikke med. Testet i `tests/test_internsok.py`.
 - [ ] En tom søkestreng gir en tydelig beskjed, ikke en feil.
 - [ ] Test mot temp-bygget database: et kjent spørsmål (for eksempel «egenmelding») gir treff med alle feltene,
       og et tull-spørsmål gir en tom liste.

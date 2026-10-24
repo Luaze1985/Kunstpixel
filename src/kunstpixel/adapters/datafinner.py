@@ -43,7 +43,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.kunstpixel.adapters import datafinner_api
-from src.kunstpixel.core import llm
+from src.kunstpixel.core import llm, oppslag
 from src.kunstpixel.core.mcp_server import (
     get_absence_report,
     get_artwork_details,
@@ -59,6 +59,7 @@ from src.kunstpixel.core.mcp_server import (
     get_working_time_limits,
     list_exhibitions_with_economy,
     list_roles,
+    lookup_handbook,
     search_collection,
     search_events,
     search_faq,
@@ -69,6 +70,7 @@ ASSETS = {
     "/": ("index.html", "text/html; charset=utf-8"),
     "/index.html": ("index.html", "text/html; charset=utf-8"),
     "/sok.html": ("sok.html", "text/html; charset=utf-8"),
+    "/oppslag.html": ("oppslag.html", "text/html; charset=utf-8"),
     "/af.css": ("af.css", "text/css; charset=utf-8"),
 }
 
@@ -132,8 +134,23 @@ def les_fil(sti: str) -> dict[str, Any]:
     return {"sti": path.relative_to(PROJECT_ROOT).as_posix(), "tekst": path.read_text(encoding="utf-8", errors="replace")}
 
 
+def sok_internt(query: str, limit: int = 3) -> dict[str, Any]:
+    """Søk på tvers av håndbøker, interne tabeller og interne dokumenter, gruppert per kilde.
+
+    Personer, fravær og varsler er ikke med. Hvert treff har id, tittel, tekst og felt fra kilden.
+
+    Args:
+        query: Spørsmålet eller ordene du leter etter (f.eks. 'hviletid', 'egenmelding', 'avvik strøm').
+        limit: Maks treff per kilde (1-50, standard 3).
+    """
+    filer = oppslag.sok_filer(query, PROJECT_ROOT, MAPPER, FILTYPER, MAKS_FILSTORRELSE, limit=max(limit, 5))
+    return oppslag.sok_internt(query, limit=limit, filer=filer)
+
+
 # Hvitliste: verktøynavn -> (funksjon, tillatte argumenter)
 VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
+    "sok_internt": (sok_internt, {"query", "limit"}),
+    "lookup_handbook": (lookup_handbook, {"query", "handbok", "role", "limit"}),
     "grep_mappe": (grep_mappe, {"query", "mappe", "limit"}),
     "les_fil": (les_fil, {"sti"}),
     "search_collection": (

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Internt oppslag</title>
+<link rel="stylesheet" href="/af.css">
+<style>
+  body { margin: 0; background: #f3f6f8; padding: 24px 16px; }
+  .op-rad { display: flex; gap: var(--space-10); align-items: end; max-width: var(--form-width); }
+  .op-rad .af-input { flex: 1; min-width: 0; }
+  .op-gruppe { margin: 0 0 var(--space-28); max-width: 760px; }
+  .op-gruppe h2 { font-size: 1.05rem; margin: 0 0 8px; }
+  .op-treff { padding: 12px 0; border-top: 1px solid var(--line); }
+  .op-treff h3 { font-size: .95rem; margin: 0 0 2px; overflow-wrap: anywhere; }
+  .op-id { color: var(--muted); font-size: .78rem; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .op-tekst { margin: 6px 0 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+  .op-felt { display: grid; grid-template-columns: max-content 1fr; gap: 2px 12px; margin: 8px 0 0; font-size: .82rem; }
+  .op-felt dt { color: var(--muted); }
+  .op-felt dd { margin: 0; overflow-wrap: anywhere; }
+  @media (max-width: 1050px) {
+    .af-context { display: block; grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<div class="af">
+  <div class="af-shell">
+    <nav class="af-sidebar" aria-label="Meny">
+      <p class="af-side-heading">Internsiden</p>
+      <ol class="af-flow-list">
+        <li><a class="af-flow-link" href="/oppslag.html" aria-current="page"><span class="af-step-dot">1</span><span>Oppslag</span></a></li>
+        <li><a class="af-flow-link" href="/"><span class="af-step-dot">2</span><span>Datafinner</span></a></li>
+      </ol>
+      <hr class="af-side-rule">
+      <p class="af-task-hint">Kun lesing. Kun internt.</p>
+    </nav>
+
+    <main class="af-main">
+      <p class="af-caption">Internsiden</p>
+      <h1 class="af-title">Oppslag</h1>
+      <div class="af-error-summary" id="feil" role="alert" hidden>
+        <h2>Feil</h2>
+        <p id="feil-tekst"></p>
+      </div>
+      <form id="skjema" novalidate>
+        <div class="af-group">
+          <label class="af-label" for="sporsmal">Hva leter du etter?</label>
+          <div class="op-rad">
+            <input class="af-input" id="sporsmal" type="text" autocomplete="off">
+            <button class="af-btn af-btn-primary" type="submit">Søk</button>
+          </div>
+        </div>
+      </form>
+      <p class="af-table-meta" id="antall"></p>
+      <div id="resultat"></div>
+    </main>
+
+    <aside class="af-context">
+      <h2 class="af-context-title">Kilder som søkes</h2>
+      <div class="af-context-card"><p id="kilder">Håndbøker, interne tabeller og interne dokumenter.</p></div>
+      <p><span class="af-source system">Leser museum.db og interne mapper</span></p>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function () {
+  var skjema = document.getElementById("skjema");
+  var felt = document.getElementById("sporsmal");
+  var feil = document.getElementById("feil");
+  var feilTekst = document.getElementById("feil-tekst");
+  var antall = document.getElementById("antall");
+  var resultat = document.getElementById("resultat");
+  var kilder = document.getElementById("kilder");
+
+  function el(tag, klasse, tekst) {
+    var e = document.createElement(tag);
+    if (klasse) e.className = klasse;
+    if (tekst !== undefined && tekst !== null) e.textContent = tekst;
+    return e;
+  }
+  function visFeil(tekst) { feilTekst.textContent = tekst; feil.hidden = false; resultat.textContent = ""; antall.textContent = ""; }
+
+  function tegn(data) {
+    resultat.textContent = "";
+    if (data.kilder && data.kilder.length) kilder.textContent = data.kilder.join(", ") + ".";
+    if (data.status === "tomt_sporsmal") { visFeil("Skriv hva du leter etter, for eksempel egenmelding eller hviletid."); return; }
+    if (data.status === "ingen_kilde") {
+      antall.textContent = "";
+      var tom = el("div", "af-empty");
+      tom.appendChild(el("h3", null, "Fant ingen kilde"));
+      tom.appendChild(el("p", null, "Ingen håndbok, tabell eller dokument nevner dette. Prøv et annet ord."));
+      resultat.appendChild(tom);
+      return;
+    }
+    antall.textContent = data.antall + " treff fra " + data.grupper.length + " kilder.";
+    data.grupper.forEach(function (g) {
+      var seksjon = el("section", "op-gruppe");
+      seksjon.appendChild(el("h2", null, g.navn));
+      g.treff.forEach(function (t) {
+        var boks = el("div", "op-treff");
+        boks.appendChild(el("h3", null, t.tittel));
+        boks.appendChild(el("span", "op-id", t.id));
+        if (t.tekst) boks.appendChild(el("p", "op-tekst", t.tekst));
+        if (t.felt && t.felt.length) {
+          var dl = el("dl", "op-felt");
+          t.felt.forEach(function (f) { dl.appendChild(el("dt", null, f[0])); dl.appendChild(el("dd", null, f[1])); });
+          boks.appendChild(dl);
+        }
+        seksjon.appendChild(boks);
+      });
+      resultat.appendChild(seksjon);
+    });
+  }
+
+  skjema.addEventListener("submit", function (e) {
+    e.preventDefault();
+    feil.hidden = true;
+    var q = felt.value.trim();
+    if (!q) { visFeil("Skriv hva du leter etter, for eksempel egenmelding eller hviletid."); return; }
+    var url = "/api/verktoy?navn=sok_internt&args=" + encodeURIComponent(JSON.stringify({ query: q, limit: 3 }));
+    fetch(url).then(function (r) { return r.json(); }).then(function (svar) {
+      if (svar.error) { visFeil(svar.error); return; }
+      tegn(svar.resultat);
+    }).catch(function () { visFeil("Fikk ikke kontakt med siden. Prøv igjen."); });
+  });
+})();
+</script>
+</body>
+</html>

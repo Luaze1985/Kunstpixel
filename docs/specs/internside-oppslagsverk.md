@@ -5,7 +5,8 @@
 
 ## MVP (besluttet av Lars 2026-10-24)
 **Mål:** En åpen nettside der en LLM gjør tre ting, og der alle tre er AI-forslag som faste regler kontrollerer:
-1. **Oppslag:** Lars spør, og får håndbokpunkter med et kort AI-svar og kildene.
+1. **Oppslag:** Lars spør, og får håndbokpunkter med et kort AI-svar og kildene. Oppslaget finner også alt annet
+   internt (avvik, henvendelser, regler, tariff, roller, ferdigheter og interne dokumenter), se «Internsøk».
 2. **Bemanning:** For en dato foreslår AI-en hvem som skal ta hver vakt i vaktplanen. Kontrollen stopper
    forslag med personer som har sluttet, er borte, mangler kurs, er dobbeltbooket eller har for kort hviletid.
    Et menneske godkjenner forslaget.
@@ -108,6 +109,21 @@ beskytter Claude-nøkkelen.
 - Det kommer en egen oppslagsside (eller oppslagsvisning) med ett søkefelt. Treffene viser punkt-ID, håndbok,
   kapittel, avsnitt og innhold.
 
+**Internsøk (Lars 2026-10-24: «den skal finne alt av data om interne ting»)**
+- Oppslaget søker i håndbøkene og i alle interne kilder som ikke handler om enkeltpersoner. `core/oppslag.py`
+  har `sok()` for håndbøker (kontrakten over) og `sok_internt()` som i tillegg søker i `hms_avvik_tekst`,
+  `avvik_hms_drift`, `interne_henvendelser`, `hms_ergonomi_rotasjon`, `arbeidstid_grenser`, `virke_tariff`,
+  `hr_rules`, `rapport_regler`, `roller` og `org_ferdigheter`. `sok_filer()` søker i de interne mappene (`MAPPER`).
+- Svaret er gruppert per kilde, og hvert treff har id, tittel, tekst og feltene fra kilden. Finnes ingen treff,
+  står det «fant ingen kilde».
+- **Utenfor søket (hardt):** navn, kontaktinfo og andre personopplysninger i `hr_ansatte`, `hr_fravaer`,
+  `org_ansatt_kompetanse` og `hr_vakter`; varsler (CASE-013); saker om sykefravær og tilrettelegging (CASE-012).
+  Henvendelser vises uten ansatt-ID. Personer og vakter hører til bemanning og vurdering (oppgave 07–09).
+- Søket er et nøkkelordsøk uten AI. Kildene ligger i én liste (`KILDER`), så en ny intern kilde legges til der.
+- Datafinner får verktøyet `sok_internt` (argumenter `query` og `limit`) i tillegg til `lookup_handbook`.
+  Oppslagssiden bruker `sok_internt`.
+- AI-svaret i oppgave 04 bygger fortsatt bare på håndbokpunktene, med mindre Lars sier noe annet.
+
 **AI-svar på oppslag**
 - `llm.py` får en egen funksjon for håndboksvar. `forklar()` er laget for rapporter og gjenbrukes ikke.
   Funksjonen får spørsmålet og de N beste punktene (punkt-ID og tekst), og ingenting annet.
@@ -190,8 +206,8 @@ Godkjent av Lars 2026-10-24.
 - Semantisk søk (embeddings). Dagens nøkkelordsøk beholdes, og svake treff på naturlige spørsmål er en
   kjent risiko.
 - En grense for AI-kall som overlever omstart, og grense per bruker.
-- Interne verktøy i Datafinner ut over `lookup_handbook` og bemanningen, for eksempel
-  `search_internal_requests`. Varsler (CASE-013) skjermes fortsatt.
+- Interne verktøy i Datafinner ut over `lookup_handbook`, `sok_internt` og bemanningen, for eksempel
+  `search_internal_requests`. Varsler (CASE-013) skjermes fortsatt, også i `sok_internt`.
 - En fri AI-agent som selv velger verktøy. I MVP-en får AI-en et ferdig grunnlag og foreslår, og
   maskinen kontrollerer.
 - Å lagre eller skrive godkjente vaktplaner til databasen. Godkjenningen er foreløpig at Lars leser forslaget.
