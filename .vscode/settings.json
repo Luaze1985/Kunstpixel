@@ -1,3 +1,17 @@
 {
-  "jupyter.notebookFileRoot": "${workspaceFolder}"
+  "jupyter.notebookFileRoot": "${workspaceFolder}",
+
+  // Lagrer du en datafil i 05_data, bygges databasen til en midlertidig fil og sjekkes i klartekst.
+  // museum.db røres ikke. Svaret kommer i Output-fanen «Run on Save».
+  "emeraldwalk.runonsave": {
+    "autoClearConsole": true,
+    "commands": [
+      {
+        "match": "05_data[\\\\/].*\\.csv$",
+        "cmd": "py -3.13 \"${workspaceFolder}/scripts/db_kvalitet.py\" --fra-data",
+        "message": "Sjekker datafilene dine ...",
+        "showElapsed": true
+      }
+    ]
+  }
 }

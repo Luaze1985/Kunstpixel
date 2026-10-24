@@ -105,3 +105,35 @@ def test_problemlinjer_passer_med_matcheren_i_tasks_json() -> None:
     assert [t.group(1) for t in treff] == ["error", "warning"]
     assert treff[0].group(2) == kvalitet.BYGGESKRIPT and treff[0].group(3) == "1"
     assert "Databasen har versjon 3" in treff[0].group(4) and "Bygg på nytt" in treff[0].group(4)
+
+
+def _les_innstillinger() -> dict:
+    import json
+    import re
+
+    tekst = (ROOT / ".vscode" / "settings.json").read_text(encoding="utf-8")
+    return json.loads(re.sub(r"^\s*//.*$", "", tekst, flags=re.M))  # settings.json tillater kommentarer
+
+
+def test_run_on_save_treffer_csv_i_05_data_og_ingenting_annet() -> None:
+    import re
+
+    kommando = _les_innstillinger()["emeraldwalk.runonsave"]["commands"][0]
+    regel = re.compile(kommando["match"])
+    assert regel.search(r"G:\Min disk\Kunstpixel\05_data\arkiv_hr_fravaer.csv")
+    assert regel.search("G:/Min disk/Kunstpixel/05_data/roller.csv")
+    assert not regel.search(r"G:\Min disk\Kunstpixel\src\kunstpixel\core\db.py")
+    assert not regel.search(r"G:\Min disk\Kunstpixel\docs\ekstern.csv")
+    assert "--fra-data" in kommando["cmd"] and "db_kvalitet.py" in kommando["cmd"]
+
+
+def test_fra_data_bygger_midlertidig_og_rorer_ikke_museum_db(monkeypatch: pytest.MonkeyPatch,
+                                                              capsys: pytest.CaptureFixture[str]) -> None:
+    fil = kvalitet.bygger.OUT_DB
+    for_ = (fil.stat().st_mtime_ns, fil.stat().st_size) if fil.is_file() else None
+    monkeypatch.setattr(sys, "argv", ["db_kvalitet.py", "--fra-data"])
+    assert kvalitet.main() == 0
+    ut = capsys.readouterr().out
+    assert "bygget nå fra datafilene" in ut and "RESULTAT:" in ut
+    etter = (fil.stat().st_mtime_ns, fil.stat().st_size) if fil.is_file() else None
+    assert etter == for_, "museum.db skal ikke endres av --fra-data"

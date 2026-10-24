@@ -189,17 +189,29 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--db", type=Path, default=bygger.OUT_DB)
     ap.add_argument("--uten-bygg", action="store_true")
+    ap.add_argument("--fra-data", action="store_true",
+                    help="bygg til en midlertidig fil fra datafilene nå og sjekk den (museum.db røres ikke)")
     ap.add_argument("--problems", action="store_true", help="skriv også PROBLEM-linjer til Problems-panelet i VS Code")
     args = ap.parse_args()
+    if args.fra_data:
+        # Sjekker det som ville blitt bygget av datafilene slik de ligger nå. Nyttig rett etter at en CSV er endret.
+        with tempfile.TemporaryDirectory(prefix="kunstpixel-fra-data-") as t:
+            midlertidig = Path(t) / "museum.db"
+            bygger.bygg(midlertidig)
+            resultat = kjor(midlertidig, med_bygg=False)
+        return skriv("bygget nå fra datafilene i 05_data (museum.db er ikke endret)", resultat, args.problems)
     if not args.db.is_file():
         print(f"Fant ikke databasen: {args.db}\nBygg den: py -3.13 src/kunstpixel/data/build_museum_db.py")
         return 1
 
-    resultat = kjor(args.db, med_bygg=not args.uten_bygg)
+    return skriv(str(args.db), kjor(args.db, med_bygg=not args.uten_bygg), args.problems)
+
+
+def skriv(hva_sjekket: str, resultat: list[tuple[str, str, str, str]], problems: bool = False) -> int:
     feil = [r for r in resultat if r[1] == FEIL]
     obs = [r for r in resultat if r[1] == ADVARSEL]
 
-    print(f"DATABASEKVALITET  {args.db}")
+    print(f"DATABASEKVALITET  {hva_sjekket}")
     print("=" * 70)
     if feil:
         print(f"RESULTAT: {len(feil)} FEIL må rettes før databasen kan brukes. {len(obs)} ting å se på.")
@@ -214,7 +226,7 @@ def main() -> int:
         if tiltak and niva != OK:
             print(f"         Gjør dette: {tiltak}")
     print()
-    if args.problems:
+    if problems:
         for linje in problemlinjer(resultat):
             print(linje)
     return 1 if feil else 0
