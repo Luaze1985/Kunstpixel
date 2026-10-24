@@ -8,6 +8,8 @@ og sjekker:
   P3  Alle datakilde-kolonner i bygget starter med «syntetisk»
   P4  Tracer: samme verdi via rå SQL og via verktøyene i db.py (vakt, økonomi, sykefravær, kostnad)
   P5  pytest består 100 %
+  P6  Forretningsregler: hver regel teller brudd, fasit 0 (vakt ved fravær, utenfor ansettelse,
+      overlapp, hviletid, kursdatoer, fraværsdatoer). Vakter over døgnmaks er ADVARSEL (overtid eller feil?)
   Hull (G2-G9 fra briefen): åpen/lukket, informerer, blokkerer ikke
 
 Nivåer: FEIL blokkerer sammenslåing (exit 1). ADVARSEL rapporteres, blokkerer ikke.
@@ -125,6 +127,60 @@ def sjekk_tracer(con: sqlite3.Connection, dbsti: Path) -> None:
          + (f", største avvik {storst:.2f} kr (G11 avrunding)" if ulike else ""))
 
 
+# (navn, nivå ved brudd, SQL som gir én nøkkel per brudd). Grenser hentes fra arbeidstid_grenser, ikke fra koden.
+REGLER: list[tuple[str, str, str]] = [
+    ("vakt på dag med eget fravær", FEIL,
+     "SELECT v.vakt_id FROM hr_vakter v JOIN hr_fravaer f ON f.ansatt_id = v.ansatt_id AND v.dato BETWEEN f.fra AND f.til"),
+    ("vakt utenfor ansettelsesperioden", FEIL,
+     "SELECT v.vakt_id FROM hr_vakter v JOIN hr_ansatte a USING(ansatt_id) "
+     "WHERE v.dato < a.ansatt_fra OR (a.ansatt_til IS NOT NULL AND v.dato > a.ansatt_til)"),
+    ("samme person på to vakter samtidig", FEIL,
+     "SELECT a.vakt_id || '/' || b.vakt_id FROM hr_vakter a JOIN hr_vakter b ON a.ansatt_id = b.ansatt_id "
+     "AND a.dato = b.dato AND a.vakt_id < b.vakt_id AND a.start < b.slutt AND b.start < a.slutt"),
+    ("for kort hviletid mellom vakter", FEIL,
+     "WITH v AS (SELECT vakt_id, ansatt_id, julianday(dato || ' ' || start) s, julianday(dato || ' ' || slutt) e FROM hr_vakter), "
+     "p AS (SELECT vakt_id, s, lag(e) OVER (PARTITION BY ansatt_id ORDER BY s) forrige FROM v) "
+     "SELECT vakt_id FROM p WHERE forrige IS NOT NULL AND (s - forrige) * 24 < "
+     "(SELECT verdi FROM arbeidstid_grenser WHERE navn = 'daglig_hvile_timer')"),
+    ("kurs som utløper før det er tatt", FEIL,
+     "SELECT ansatt_id || '/' || skill_code FROM org_ansatt_kompetanse WHERE gyldig_til < sertifisert_dato"),
+    ("fravær som slutter før det begynner", FEIL,
+     "SELECT fravaer_id FROM hr_fravaer WHERE til < fra"),
+    ("vakter over døgnmaks (overtid eller feil?)", ADVARSEL,
+     "SELECT vakt_id FROM hr_vakter WHERE timer > (SELECT verdi FROM arbeidstid_grenser WHERE navn = 'dognmaks_timer')"),
+]
+
+# Kjente brudd som Lars skal ta stilling til. De gir ADVARSEL, mens nye brudd av samme slag gir FEIL.
+# Hviletid: KP-ANS-005, kveldsvakt den 31. til 23:00 og morgenvakt den 1. kl. 07:00 (8 t). Generatoren
+# planlegger måned for måned og ser ikke siste dag i måneden før. Funnet 2026-10-24.
+KJENTE_BRUDD: dict[str, set[str]] = {
+    "for kort hviletid mellom vakter": {
+        "VAKT-0000800", "VAKT-0002698", "VAKT-0016972", "VAKT-0023988",
+        "VAKT-0024526", "VAKT-0028038", "VAKT-0029916",
+    },
+}
+
+
+def regelbrudd(con: sqlite3.Connection) -> list[tuple[str, str, list[str], list[str]]]:
+    """(regel, nivå, nye brudd, kjente brudd). Brukes av porten og av tests/test_db_status_regler.py."""
+    ut = []
+    for navn, niva, sql in REGLER:
+        alle = sorted(str(r[0]) for r in con.execute(sql))
+        kjente = KJENTE_BRUDD.get(navn, set())
+        ut.append((navn, niva, [b for b in alle if b not in kjente], [b for b in alle if b in kjente]))
+    return ut
+
+
+def sjekk_regler(con: sqlite3.Connection) -> None:
+    for navn, niva, nye, kjente in regelbrudd(con):
+        if nye:
+            logg(f"P6 {navn}", niva, f"{len(nye)} brudd, f.eks. {', '.join(nye[:3])}")
+        elif kjente:
+            logg(f"P6 {navn}", ADVARSEL, f"{len(kjente)} kjente brudd, ingen nye")
+        else:
+            logg(f"P6 {navn}", OK, "0 brudd")
+
+
 def sjekk_hull(con: sqlite3.Connection, dbsti: Path) -> None:
     alle = set(tabeller(con))
     utenfor = en(con, "SELECT count(*) FROM hr_vakter v JOIN hr_ansatte a USING(ansatt_id) "
@@ -178,6 +234,7 @@ def main() -> int:
             sjekk_integritet(con)
             sjekk_merking(con)
             sjekk_tracer(con, dbsti)
+            sjekk_regler(con)
             sjekk_hull(con, dbsti)
         finally:
             con.close()
