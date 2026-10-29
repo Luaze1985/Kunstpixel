@@ -1,4 +1,4 @@
-"""Telegram Bridge for Aura Kunstmuseum Museumsvert.
+"""Telegram Bridge for Kunstpixel Museumsvert.
 
 Lar de to gründerne prate med museets agenter og teste verktøykall direkte i en Telegram-chatgruppe!
 Krever kun standard `requests` (ingen tunge bot-biblioteker).
@@ -58,7 +58,7 @@ def main() -> None:
         bot_name = me_res["result"]["first_name"]
         username = me_res["result"].get("username", "")
         print(f"\n✅ Tilkoblet Telegram som @{username} ({bot_name})!")
-        print("🏛️ Aura Museumsvert lytter nå etter meldinger i chatten...\n")
+        print("🏛️ Kunstpixel Museumsvert lytter nå etter meldinger i chatten...\n")
     except Exception as e:
         print(f"❌ Nettverksfeil mot Telegram: {e}")
         return
@@ -91,7 +91,7 @@ def main() -> None:
                 if text in ["/start", "/hjelp", "/help"]:
                     welcome = (
                         f"Hei {user_name}! 🏛️\n\n"
-                        "Jeg er Aura Kunstmuseums AI-vert, koblet direkte til samlingsdatabasen og våre verktøy.\n\n"
+                        "Jeg er Kunstpixels AI-vert, koblet direkte til samlingsdatabasen og våre verktøy.\n\n"
                         "Prøv å spørre meg:\n"
                         "• «Hvor henger Skrik?»\n"
                         "• «Hva koster en billett for student?»\n"

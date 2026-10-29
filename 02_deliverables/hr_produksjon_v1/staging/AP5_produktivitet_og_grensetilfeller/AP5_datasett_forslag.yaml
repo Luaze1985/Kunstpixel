@@ -1,0 +1,325 @@
+# AP5 – schemaforslag, ikke oppdiktede datarader. Kildekontroll 20.10.2026
+- tabell: hr_maalekatalog
+  omraade: 5
+  sektor: &id001
+  - industri
+  - privat
+  - kommune
+  kilde: https://www.ssb.no/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/artikler/produktivitetsberegninger-for-naeringer
+    | https://www.ssb.no/offentlig-sektor/kostra/statistikk/kostra-kommune-stat-rapportering/om-kostra/dokumentasjon-av-kostra
+    | https://www.iso.org/standard/54497.html
+  kolonner:
+  - navn: kpi_id
+    type: tekst
+    unik: true
+  - navn: navn
+    type: tekst
+  - navn: sektor
+    type: tekst
+    tillatte_verdier: *id001
+  - navn: tellerdefinisjon
+    type: tekst
+  - navn: nevnerdefinisjon
+    type: tekst
+  - navn: enhet
+    type: tekst
+  - navn: aggregeringsnivaa
+    type: tekst
+    tillatte_verdier:
+    - utstyr
+    - prosess
+    - team
+    - avdeling
+    - kommune
+    - naering
+  - navn: kvalitetsjustering
+    type: tekst_eller_null
+  - navn: maaleprotokoll_versjon
+    type: tekst
+  - navn: gyldig_fra
+    type: dato
+  - navn: kildetype
+    type: tekst
+    tillatte_verdier:
+    - lov
+    - forskrift
+    - offisiell_statistikk
+    - standard
+    - lokal_definisjon
+    - antakelse
+- tabell: hr_maalestyring_vurdering
+  omraade: 5
+  sektor: *id001
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/ | https://www.datatilsynet.no/personvern-pa-ulike-omrader/personvern-pa-arbeidsplassen/overvaking-av-ansattes-bruk-av-elektronisk-utstyr/
+    | https://www.datatilsynet.no/rettigheter-og-plikter/virksomhetenes-plikter/vurdering-av-personvernkonsekvenser/
+  kolonner:
+  - navn: kontrollvurdering_id
+    type: tekst
+    unik: true
+  - navn: kpi_id
+    type: tekst
+    kobles_til: hr_maalekatalog.kpi_id
+  - navn: kontrolltiltak
+    type: boolsk
+  - navn: saklig_formaal_dokumentert
+    type: boolsk_eller_null
+  - navn: proporsjonalitet_vurdert
+    type: boolsk_eller_null
+  - navn: droftet_tillitsvalgte
+    type: boolsk_eller_null
+  - navn: ansatte_informert
+    type: boolsk_eller_null
+  - navn: periodisk_evaluering_planlagt
+    type: boolsk_eller_null
+  - navn: behandlingsgrunnlag
+    type: tekst_eller_null
+  - navn: elektronisk_bruksovervaking
+    type: boolsk
+  - navn: overvakingsformaal
+    type: tekst_eller_null
+    tillatte_verdier:
+    - nettverksadministrasjon
+    - nettverkssikkerhet
+    - produktivitet
+    - annet
+    - ukjent
+  - navn: personvernrisiko
+    type: tekst
+    tillatte_verdier:
+    - lav
+    - middels
+    - hoy
+    - uavklart
+  - navn: dpia_fullfort
+    type: boolsk_eller_null
+  - navn: identifiseringsrisiko
+    type: tekst
+    tillatte_verdier:
+    - avklart_lav
+    - uavklart
+    - hoy
+  - navn: tilgangsrolle
+    type: tekst
+  - navn: slettefrist_regel
+    type: tekst
+  - navn: status
+    type: tekst
+    tillatte_verdier:
+    - utkast
+    - krever_vurdering
+    - godkjent_av_ansvarlig
+    - stoppet
+  - navn: sist_evaluert
+    type: dato_eller_null
+- tabell: hr_team_kpi_periode
+  omraade: 5
+  sektor: *id001
+  kilde: https://www.ssb.no/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/artikler/produktivitetsberegninger-for-naeringer
+    | https://www.ssb.no/offentlig-sektor/kostra/statistikk/kostra-kommune-stat-rapportering/om-kostra/dokumentasjon-av-kostra
+  kolonner:
+  - navn: kpi_periode_id
+    type: tekst
+    unik: true
+  - navn: kpi_id
+    type: tekst
+    kobles_til: hr_maalekatalog.kpi_id
+  - navn: avdeling_id
+    type: tekst
+    kobles_til: hr_avdelinger.avdeling_id
+    forbehold: Bekreft fysisk nøkkel i museum.db
+  - navn: periode_start
+    type: dato
+  - navn: periode_slutt
+    type: dato
+  - navn: oppgavemiks_kode
+    type: tekst_eller_null
+  - navn: teller
+    type: desimaltall_eller_null
+  - navn: nevner
+    type: desimaltall_eller_null
+  - navn: kpi_verdi
+    type: desimaltall_eller_null
+    fordeling: beregnes kun der nevner > 0 og definisjon er validert
+  - navn: kvalitetsmaal
+    type: desimaltall_eller_null
+  - navn: datakilde
+    type: tekst
+    tillatte_verdier:
+    - syntetisk_scenario
+    - ekstern_aggregat
+  - navn: delingsstatus
+    type: tekst
+    tillatte_verdier:
+    - intern
+    - undertrykt_reidentifisering
+    - godkjent_aggregat
+- tabell: hr_industri_utstyrskjoring
+  omraade: 5
+  sektor:
+  - industri
+  kilde: https://www.iso.org/standard/54497.html
+  kolonner:
+  - navn: kjoring_id
+    type: tekst
+    unik: true
+  - navn: utstyr_id
+    type: tekst
+  - navn: linje_id
+    type: tekst
+  - navn: periode_start
+    type: dato_og_tid
+  - navn: periode_slutt
+    type: dato_og_tid
+  - navn: planlagt_driftstid_min
+    type: desimaltall
+    tillatte_verdier: 0 eller mer
+  - navn: faktisk_driftstid_min
+    type: desimaltall
+    tillatte_verdier: 0 eller mer
+  - navn: teoretisk_kapasitet_enheter
+    type: desimaltall_eller_null
+  - navn: produserte_enheter
+    type: heltall_eller_null
+  - navn: godkjente_enheter
+    type: heltall_eller_null
+  - navn: tilgjengelighetsandel
+    type: desimaltall_eller_null
+    tillatte_verdier: 0-1
+  - navn: ytelsesandel
+    type: desimaltall_eller_null
+    tillatte_verdier: 0-1 ved normert definisjon
+  - navn: kvalitetsandel
+    type: desimaltall_eller_null
+    tillatte_verdier: 0-1
+  - navn: oee
+    type: desimaltall_eller_null
+    fordeling: produkt av validert tilgjengelighet ytelse og kvalitet; 0-1
+  - navn: planlagte_stopp_definisjon
+    type: tekst
+  - navn: maaleprotokoll_versjon
+    type: tekst
+  - navn: datakilde
+    type: tekst
+    tillatte_verdier:
+    - syntetisk_scenario
+- tabell: hr_service_saksflyt
+  omraade: 5
+  sektor:
+  - privat
+  - kommune
+  kilde: https://www.ssb.no/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/artikler/produktivitetsberegninger-for-naeringer
+    | https://www.datatilsynet.no/rettigheter-og-plikter/personvernprinsippene/
+  kolonner:
+  - navn: sak_id
+    type: tekst
+    unik: true
+  - navn: avdeling_id
+    type: tekst
+    kobles_til: hr_avdelinger.avdeling_id
+    forbehold: Bekreft lokal DB-nøkkel
+  - navn: sakstype
+    type: tekst
+  - navn: kompleksitetsklasse
+    type: tekst
+    tillatte_verdier:
+    - enkel
+    - middels
+    - kompleks
+    - ukjent
+  - navn: opprettet_tid
+    type: dato_og_tid
+  - navn: ferdig_tid
+    type: dato_og_tid_eller_null
+  - navn: saksvarighet_min
+    type: desimaltall_eller_null
+    fordeling: avledet fra datoer; ingen dokumentert mikrofordeling
+  - navn: kvalitetsutfall
+    type: tekst
+    tillatte_verdier:
+    - godkjent
+    - omarbeiding
+    - under_arbeid
+    - ukjent
+  - navn: datakilde
+    type: tekst
+    tillatte_verdier:
+    - syntetisk_scenario
+- tabell: hr_kommunal_kostra_referanse
+  omraade: 5
+  sektor:
+  - kommune
+  kilde: https://www.ssb.no/offentlig-sektor/kostra/statistikk/kostra-kommune-stat-rapportering/artikler/nye-kostra-tall
+    | https://www.ssb.no/statbank/table/13502/ | https://www.ssb.no/statbank/table/06804/
+  kolonner:
+  - navn: kostra_referanse_id
+    type: tekst
+    unik: true
+  - navn: tabellnummer
+    type: tekst
+    tillatte_verdier:
+    - '13502'
+    - 06804
+    - annen_verifisert
+  - navn: variabelkode
+    type: tekst
+  - navn: variabelbeskrivelse
+    type: tekst
+  - navn: kommune_nr
+    type: tekst
+  - navn: regnskapsaar
+    type: heltall
+    tillatte_verdier: 2025 eller eksplisitt bekreftet historisk år
+  - navn: verdi
+    type: desimaltall_eller_null
+    fordeling: hentes fra SSB; skal ikke fabrikkeres
+  - navn: enhet
+    type: tekst
+  - navn: kilde_url
+    type: tekst
+  - navn: publisert_dato
+    type: dato
+  - navn: sammenligningsgruppe
+    type: tekst_eller_null
+  - navn: kvalitetsforbehold
+    type: tekst
+- tabell: hr_arbeidsinnsats_aggregat
+  omraade: 5
+  sektor: *id001
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/registrering-av-arbeidstid/ | https://www.ssb.no/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/artikler/produktivitetsberegninger-for-naeringer
+  kolonner:
+  - navn: arbeidsinnsats_aggregat_id
+    type: tekst
+    unik: true
+  - navn: avdeling_id
+    type: tekst
+    kobles_til: hr_avdelinger.avdeling_id
+    forbehold: Bekreft fysisk SQLite-skjema
+  - navn: periode_start
+    type: dato
+  - navn: periode_slutt
+    type: dato
+  - navn: faktisk_timeverk
+    type: desimaltall_eller_null
+    fordeling: sum faktisk registrert arbeidstid fra syntetiske vakter; ikke antatt stillingsprosent
+  - navn: avtalt_timeverk
+    type: desimaltall_eller_null
+  - navn: overtid_timeverk
+    type: desimaltall_eller_null
+  - navn: merarbeid_timeverk
+    type: desimaltall_eller_null
+  - navn: timegrunnlag_status
+    type: tekst
+    tillatte_verdier:
+    - verifisert
+    - uavklart
+    - mangler
+  - navn: datakilde
+    type: tekst
+    tillatte_verdier:
+    - syntetiske_vakter
+    - syntetisk_scenario
+  - navn: personniva_utlevering
+    type: boolsk
+    tillatte_verdier:
+    - false
+    beskrivelse: Kun aggregerte timeverk utleveres

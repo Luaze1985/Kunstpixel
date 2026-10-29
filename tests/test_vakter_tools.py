@@ -203,7 +203,10 @@ def test_bygget_db_rapport_regler_med_fallback(bygget_db: Path) -> None:
 def test_bygget_db_roller_folger_rekkefolge(bygget_db: Path) -> None:
     from src.kunstpixel.core.db import query_roles
     roller = {r["kode"]: r["sporsmal"] for r in query_roles(db_path=bygget_db)}
-    assert roller["K"] == ["vakt-i-dag", "vaktplan", "arbeidstid", "sykefravaer"]
+    assert roller["A"] == ["rapporteringskalender", "myndighetsoversikt"]
+    assert roller["F"] == ["tilsynsrutine"]
+    assert roller["G"] == ["rapportmaler"]
+    assert roller["K"] == ["vakt-i-dag", "vaktplan", "arbeidstid", "sykefravaer", "onboarding"]
     assert roller["L"] == ["utstilling", "vaktkostnad"]
 
 

@@ -1,0 +1,17 @@
+{
+  "id": "SALG-12",
+  "title": "Closing: den evige \"vi må tenke\" (Petter)",
+  "description": "Trening på å hjelpe en uforpliktende kjøper fra \"vi må tenke litt\" til en konkret beslutning eller et committed neste steg.",
+  "duration_minutes": 10,
+  "conversation_type": "Closing",
+  "persona_name": "Petter Lund",
+  "persona_role": "Avdelingsleder",
+  "tags_visible": [],
+  "hidden_tag_count": 0,
+  "source_status": "metadata_complete",
+  "catalog_group": "Salg og kundedialog",
+  "input_notes": "Katalogmetadata fra brukerens innlimte tekst, ikke komplett rollemanus. +N betyr at flere tagger er skjult i kilden, ikke at de er kjent.",
+  "source": "user_supplied_paste_2026-10-20",
+  "scenario_implemented": false,
+  "persona_is_verified_synthetic": false
+}

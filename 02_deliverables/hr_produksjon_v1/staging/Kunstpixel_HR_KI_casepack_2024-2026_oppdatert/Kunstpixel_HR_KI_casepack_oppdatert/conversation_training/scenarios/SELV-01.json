@@ -1,0 +1,17 @@
+{
+  "id": "SELV-01",
+  "title": "Din leder kritiserer deg foran andre",
+  "description": "Du blir tatt for noe i et møte, med kolleger til stede. Hva gjør du med deg selv?",
+  "duration_minutes": 10,
+  "conversation_type": "Motta tilbakemelding",
+  "persona_name": "Marius",
+  "persona_role": "Direktør, din nærmeste leder",
+  "tags_visible": [],
+  "hidden_tag_count": 0,
+  "source_status": "metadata_complete",
+  "catalog_group": "HR og ledersamtaler",
+  "input_notes": "Katalogmetadata fra brukerens innlimte tekst, ikke komplett rollemanus. +N betyr at flere tagger er skjult i kilden, ikke at de er kjent.",
+  "source": "user_supplied_paste_2026-10-20",
+  "scenario_implemented": false,
+  "persona_is_verified_synthetic": false
+}

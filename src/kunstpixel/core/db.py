@@ -1,4 +1,4 @@
-"""Database access layer for Aura Kunstmuseum.
+"""Database access layer for Kunstpixel.
 
 Provides safe, read-only parameterized SQLite queries with Norwegian character handling,
 query normalization, and table/column quoting.
@@ -6,6 +6,8 @@ query normalization, and table/column quoting.
 
 from __future__ import annotations
 
+import json
+import os
 import re
 import sqlite3
 from pathlib import Path
@@ -341,13 +343,17 @@ def query_events(
     """
     params: dict[str, Any] = {}
 
-    sql_upcoming = sql + " AND h.dato >= date('now')"
+    fixed_today = os.environ.get("AURA_TODAY", "").strip()
     if date_from and date_from.strip():
         sql += " AND h.dato >= :date_from"
         params["date_from"] = date_from.strip()
         sql_to_run = sql
+    elif fixed_today:
+        sql += " AND h.dato >= :today"
+        params["today"] = fixed_today
+        sql_to_run = sql
     else:
-        sql_to_run = sql_upcoming
+        sql_to_run = sql + " AND h.dato >= date('now')"
 
     if date_to and date_to.strip():
         sql_to_run += " AND h.dato <= :date_to"
@@ -366,7 +372,7 @@ def query_events(
     params["limit"] = max(1, min(int(limit), 50))
 
     rows = execute_read_query(sql_to_run + order_clause, params, db_path=db_path)
-    if not rows and not date_from:
+    if not rows and not date_from and not fixed_today:
         # Graceful fallback for static demo/test databases when real calendar date drifts past demo dates
         rows = execute_read_query(sql + order_clause, params, db_path=db_path)
     return [dict(r) for r in rows]
@@ -1647,4 +1653,304 @@ def query_internal_requests(
         "antall": len(henvendelser),
         "henvendelser": henvendelser,
         "datakilde": "syntetisk (colab_org_bygger): interne_henvendelser",
+    }
+
+
+# -----------------------------------------------------------------------------
+# H5 & Governance spørringer (mode=ro)
+# -----------------------------------------------------------------------------
+
+def query_myndighetskontakter(
+    query: str | None = None,
+    intern_eier: str | None = None,
+    include_contacts: bool = False,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Søk i myndighetskontakter (h5_myndighetskontakter).
+
+    Kontaktperson, kontakt_epost, intern_eier_navn og intern_eier_epost skjermes
+    med mindre include_contacts=True (kun for intern ledelse / MCP).
+    """
+    db = _db(db_path)
+    if not _har_tabell("h5_myndighetskontakter", db):
+        return {"mangler": "Tabellen h5_myndighetskontakter finnes ikke i databasen."}
+
+    where, params = [], {}
+    if query and query.strip():
+        where.append("(lower(myndighet) LIKE :q OR lower(omrade) LIKE :q OR lower(hva_de_vil) LIKE :q)")
+        params["q"] = f"%{query.strip().lower()}%"
+    if intern_eier and intern_eier.strip():
+        where.append("lower(intern_eier) = :intern_eier")
+        params["intern_eier"] = intern_eier.strip().lower()
+
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    sql = f"""
+    SELECT id, myndighet, omrade, intern_eier, kontaktperson, kontakt_epost,
+           intern_eier_navn, intern_eier_epost, hva_de_vil, utloser, dokumentasjon,
+           merknad, datakilde
+    FROM h5_myndighetskontakter
+    {filter_sql}
+    ORDER BY id
+    """
+    rader = execute_read_query(sql, params, db)
+    ut = []
+    for r in rader:
+        d = dict(r)
+        if not include_contacts:
+            d["kontaktperson"] = "[SKJERMET]"
+            d["kontakt_epost"] = "[SKJERMET]"
+            d["intern_eier_navn"] = "[SKJERMET]"
+            d["intern_eier_epost"] = "[SKJERMET]"
+        ut.append(d)
+
+    return {
+        "antall": len(ut),
+        "myndigheter": ut,
+        "datakilde": "syntetisk (h5_governance_builder): h5_myndighetskontakter",
+    }
+
+
+def query_tilsynsbesok_rutine(
+    ansvarlig: str | None = None,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Oppslag på tilsynsrutinen (h5_tilsynsbesok_rutine)."""
+    db = _db(db_path)
+    if not _har_tabell("h5_tilsynsbesok_rutine", db):
+        return {"mangler": "Tabellen h5_tilsynsbesok_rutine finnes ikke i databasen."}
+
+    where, params = [], {}
+    if ansvarlig and ansvarlig.strip():
+        where.append("lower(ansvarlig) = :ansvarlig")
+        params["ansvarlig"] = ansvarlig.strip().lower()
+
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    sql = f"""
+    SELECT steg_nr, navn, ansvarlig, handling, dokumentasjon, gult_avvik_frist, rodt_avvik_frist, datakilde
+    FROM h5_tilsynsbesok_rutine
+    {filter_sql}
+    ORDER BY steg_nr
+    """
+    rader = [dict(r) for r in execute_read_query(sql, params, db)]
+    return {
+        "antall": len(rader),
+        "steg": rader,
+        "avvik_frister": {
+            "gult_avvik_lukkes_innen": rader[0]["gult_avvik_frist"] if rader else "14 dager",
+            "rodt_avvik_lukkes_innen": rader[0]["rodt_avvik_frist"] if rader else "24 timer",
+        },
+        "datakilde": "syntetisk (h5_governance_builder): h5_tilsynsbesok_rutine",
+    }
+
+
+def query_rapporteringskalender(
+    mottakertype: str | None = None,
+    maned: str | None = None,
+    eier: str | None = None,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Oppslag i rapporteringskalenderen (h5_rapporteringskalender)."""
+    db = _db(db_path)
+    if not _har_tabell("h5_rapporteringskalender", db):
+        return {"mangler": "Tabellen h5_rapporteringskalender finnes ikke i databasen."}
+
+    where, params = [], {}
+    if mottakertype and mottakertype.strip():
+        where.append("lower(mottakertype) = :mottakertype")
+        params["mottakertype"] = mottakertype.strip().lower()
+    if maned and maned.strip():
+        where.append("lower(maned) = :maned")
+        params["maned"] = maned.strip().lower()
+    if eier and eier.strip():
+        where.append("lower(eier) = :eier")
+        params["eier"] = eier.strip().lower()
+
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    sql = f"""
+    SELECT id, rapport, mottaker, mottakertype, frekvens, antall_per_ar, maned, eier,
+           timer_per_gang, timer_per_ar, godkjenning, formal, kilder_json, datakilde
+    FROM h5_rapporteringskalender
+    {filter_sql}
+    ORDER BY id
+    """
+    rader = []
+    for r in execute_read_query(sql, params, db):
+        d = dict(r)
+        d["kilder"] = json.loads(d["kilder_json"])
+        rader.append(d)
+
+    return {
+        "antall": len(rader),
+        "rapporter": rader,
+        "datakilde": "syntetisk (h5_governance_builder): h5_rapporteringskalender",
+    }
+
+
+def query_rapportmaler(
+    mal_id: str | None = None,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Oppslag på rapportmaler med feltstruktur og regler (h5_rapportmaler)."""
+    db = _db(db_path)
+    if not _har_tabell("h5_rapportmaler", db):
+        return {"mangler": "Tabellen h5_rapportmaler finnes ikke i databasen."}
+
+    where, params = [], {}
+    if mal_id and mal_id.strip():
+        where.append("id = :mal_id")
+        params["mal_id"] = mal_id.strip().upper()
+
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    sql = f"""
+    SELECT id, mal_navn, brukes_til_json, godkjenning, status_ved_opprettelse,
+           formal, felt_rekkefolge, felt_navn, felt_beskrivelse, felt_kilder_json,
+           regler_json, datakilde
+    FROM h5_rapportmaler
+    {filter_sql}
+    ORDER BY id, felt_rekkefolge
+    """
+    rows = execute_read_query(sql, params, db)
+    maler_dict: dict[str, dict[str, Any]] = {}
+    for r in rows:
+        mid = r["id"]
+        if mid not in maler_dict:
+            maler_dict[mid] = {
+                "id": mid,
+                "mal_navn": r["mal_navn"],
+                "brukes_til": json.loads(r["brukes_til_json"]),
+                "godkjenning": r["godkjenning"],
+                "status_ved_opprettelse": r["status_ved_opprettelse"],
+                "formal": r["formal"],
+                "felt": [],
+                "regler": json.loads(r["regler_json"]),
+                "datakilde": r["datakilde"],
+            }
+        maler_dict[mid]["felt"].append({
+            "felt_rekkefolge": r["felt_rekkefolge"],
+            "felt_navn": r["felt_navn"],
+            "felt_beskrivelse": r["felt_beskrivelse"],
+            "kilde": json.loads(r["felt_kilder_json"]),
+        })
+
+    return {
+        "antall": len(maler_dict),
+        "maler": list(maler_dict.values()),
+        "datakilde": "syntetisk (h5_governance_builder): h5_rapportmaler",
+    }
+
+
+def query_arbeidsoppgaver_tidsbruk(
+    omrade: str | None = None,
+    rolle: str | None = None,
+    automatiseringspotensial: str | None = None,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Oppslag på gjentakende oppgaver, tidsbruk og automatiseringspotensial (h5_arbeidsoppgaver_tidsbruk).
+
+    Kun for ledelse og ressursstyring.
+    """
+    db = _db(db_path)
+    if not _har_tabell("h5_arbeidsoppgaver_tidsbruk", db):
+        return {"mangler": "Tabellen h5_arbeidsoppgaver_tidsbruk finnes ikke i databasen."}
+
+    where, params = [], {}
+    if omrade and omrade.strip():
+        where.append("lower(omrade) = :omrade")
+        params["omrade"] = omrade.strip().lower()
+    if rolle and rolle.strip():
+        where.append("lower(rolle) = :rolle")
+        params["rolle"] = rolle.strip().lower()
+    if automatiseringspotensial and automatiseringspotensial.strip():
+        where.append("lower(automatiseringspotensial) = :pot")
+        params["pot"] = automatiseringspotensial.strip().lower()
+
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    sql = f"""
+    SELECT id, omrade, oppgave, myndighet, rapport_id, rolle, timer_per_ar,
+           automatiseringspotensial, begrunnelse, datakilde
+    FROM h5_arbeidsoppgaver_tidsbruk
+    {filter_sql}
+    ORDER BY id
+    """
+    rader = [dict(r) for r in execute_read_query(sql, params, db)]
+    total_timer = sum(r["timer_per_ar"] for r in rader)
+
+    return {
+        "antall": len(rader),
+        "total_timer": total_timer,
+        "oppgaver": rader,
+        "datakilde": "syntetisk (h5_governance_builder): h5_arbeidsoppgaver_tidsbruk",
+    }
+
+
+def query_historikk_2010_2026(
+    ar_fra: int | None = None,
+    ar_til: int | None = None,
+    tema: str | None = None,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Oppslag i museets 17-årshistorikk (h5_historikk_2010_2026).
+
+    Kun for ledelse / intern assistent (inneholder aggregert økonomi og sykefravær).
+    """
+    db = _db(db_path)
+    if not _har_tabell("h5_historikk_2010_2026", db):
+        return {"mangler": "Tabellen h5_historikk_2010_2026 finnes ikke i databasen."}
+
+    where, params = [], {}
+    if ar_fra is not None:
+        where.append("ar >= :ar_fra")
+        params["ar_fra"] = int(ar_fra)
+    if ar_til is not None:
+        where.append("ar <= :ar_til")
+        params["ar_til"] = int(ar_til)
+    if tema and tema.strip():
+        where.append("lower(tema) LIKE :tema")
+        params["tema"] = f"%{tema.strip().lower()}%"
+
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    sql = f"""
+    SELECT * FROM h5_historikk_2010_2026
+    {filter_sql}
+    ORDER BY ar
+    """
+    rader = [dict(r) for r in execute_read_query(sql, params, db)]
+    return {
+        "antall": len(rader),
+        "historikk": rader,
+        "datakilde": "syntetisk (h5_governance_builder): h5_historikk_2010_2026",
+    }
+
+
+def query_hr_opplaering_onboarding(
+    kategori: str | None = None,
+    rolle: str | None = None,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Oppslag i onboarding-løp, kompetansekrav og HMS-opplæring (hr_opplaering_onboarding)."""
+    db = _db(db_path)
+    if not _har_tabell("hr_opplaering_onboarding", db):
+        return {"mangler": "Tabellen hr_opplaering_onboarding finnes ikke i databasen."}
+
+    where, params = [], {}
+    if kategori and kategori.strip():
+        where.append("lower(kategori) = :kategori")
+        params["kategori"] = kategori.strip().lower()
+    if rolle and rolle.strip():
+        where.append("lower(rolle) = :rolle")
+        params["rolle"] = rolle.strip().lower()
+
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    sql = f"""
+    SELECT opplaering_id, kategori, rolle, tema_eller_sertifisering, fase_eller_status,
+           aktivitet_eller_beskrivelse, ansvarlig_rolle, datakilde
+    FROM hr_opplaering_onboarding
+    {filter_sql}
+    ORDER BY opplaering_id
+    """
+    rader = [dict(r) for r in execute_read_query(sql, params, db)]
+    return {
+        "antall": len(rader),
+        "opplaering": rader,
+        "datakilde": "syntetisk (h5_governance_builder): hr_opplaering_onboarding",
     }

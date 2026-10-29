@@ -1,42 +1,222 @@
-"""Valgfritt KI-lag oppå de deterministiske rapportene i Datafinner.
+"""LLM-lag for museumsverten, intern assistent og Datafinner.
 
-Prinsipper (se også docs/DATAFINNER_API.md):
-  - Av som standard. Slås på med LLM_PROVIDER i miljøet til serveren. Nøkkelen står aldri i koden eller i git.
-  - KI-en får bare den ferdige rapporten (JSON), aldri databasen, filer eller verktøy.
-  - Personfelt (navn, e-post, telefon, fødselsår, ansatt-ID) fjernes før noe sendes ut.
-  - Svaret er alltid merket «AI-forslag». Et menneske må lese og godta det. Tallene i teksten kontrolleres
-    deterministisk mot rapporten, så et tall KI-en har funnet på blir synlig.
-  - 100 % standardbibliotek (urllib). To leverandørformater dekker det meste:
-      openai     OpenAI og alt som snakker samme språk: Ollama, LM Studio, vLLM, mange skytjenester
-      anthropic  Claude
-
-Miljøvariabler:
-  LLM_PROVIDER      openai | anthropic            (mangler = KI-laget er av)
-  LLM_MODEL         modellnavn, påkrevd
-  LLM_API_KEY       nøkkel (kan mangle for en lokal Ollama)
-  LLM_BASE_URL      overstyrer adressen (f.eks. http://host.docker.internal:11434/v1 for Ollama)
-  LLM_MAX_TOKENS    standard 600
-  LLM_TIMEOUT       sekunder, standard 30
-  LLM_MAKS_PER_TIME maks antall kall per time for hele serveren, standard 30
+Prinsipp: LLM-en tolker og formulerer, verktøyene vet. LLM-en får aldri databasetilgang,
+bare resultatene fra MCP-verktøyene eller den ferdige rapporten. Alt den skriver går gjennom
+faktakontroll (fact_check.verify_facts / tallkontroll) før brukeren ser det.
 """
 
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
+import os
 import re
 import threading
 import time
 import urllib.error
 import urllib.request
 from collections import deque
-from dataclasses import dataclass
-from typing import Any
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Callable, Protocol
+
+DEFAULT_MODEL = "claude-opus-5-5"  # overstyres med KUNSTPIXEL_MODEL, for eksempel claude-haiku-5-5 for lavere pris
+DEFAULT_TIMEOUT_S = 60.0
+DEFAULT_MAX_TOKENS = 4000  # tanketokens teller med, så et lavt tak ville kuttet svaret
+DEFAULT_TOKEN_BUDGET = 150_000  # tak på inn- og uttokens per prosess. Sett KUNSTPIXEL_TOKEN_BUDGET for å endre
+
+STYLE_RULES = (
+    "Du svarer en besøkende på Kunstpixel, på norsk bokmål, ut fra VERKTØYRESULTAT.\n"
+    "Regler som ikke kan brytes:\n"
+    "1. Bruk KUN fakta som står i VERKTØYRESULTAT. Aldri dikt opp verk, kunstnere, årstall, priser eller saler.\n"
+    "2. Skriv alle tall, årstall og beløp med sifre, for eksempel 120 kr. Aldri med bokstaver.\n"
+    "3. Verk med status 'magasin' er ikke utstilt og skal ikke anbefales eller omtales som utstilt.\n"
+    "4. Står svaret ikke i VERKTØYRESULTAT, si at du ikke har opplysningen. Ikke gjett.\n"
+    "5. Hold en varm, kort og tydelig vertstone. Ingen fagsjargong."
+)
+
+
+@dataclass
+class LLMRequest:
+    """Alt LLM-en får se. Bevisst uten databasekobling."""
+
+    system_prompt: str
+    user_message: str
+    tool_results: list[dict[str, Any]]
+    # Regelbasert svar. Kun reserve og testhjelp (FakeLLM). Ekte klienter skal IKKE sende det til
+    # modellen: noen regelbaserte tekster har hardkodede fakta som ikke kommer fra verktøyene,
+    # og modellen ville kopiert dem forbi faktakontrollen.
+    draft: str
+    rules: str = STYLE_RULES  # stilregler som følger med som systemtekst. Intern assistent setter egne.
+    kontekst: list[dict[str, Any]] | None = None  # nummererte funn som modellen kan henvise til med [nr]
+
+
+class LLMClient(Protocol):
+    name: str
+    # "local" = data forlater ikke maskinen. Alt annet regnes som "external" (se datapolicy.py).
+    locality: str
+
+    def complete(self, request: LLMRequest) -> str: ...
+
+
+@dataclass
+class FakeLLM:
+    """Deterministisk LLM for tester. Standard: returnerer utkastet uendret."""
+
+    responder: Callable[[LLMRequest], str] | None = None
+    raises: Exception | None = None
+    name: str = "fake"
+    # Streng standard: en falsk modell later som den er ekstern, slik at policy-feil ikke maskeres.
+    locality: str = "external"
+    calls: list[LLMRequest] = field(default_factory=list)
+
+    def complete(self, request: LLMRequest) -> str:
+        self.calls.append(request)
+        if self.raises is not None:
+            raise self.raises
+        if self.responder is not None:
+            return self.responder(request)
+        return request.draft
+
+
+class RecordingLLM:
+    """Spiller av innspilte svar fra en kassett (JSON-fil), nøkkel = spørsmålet.
+
+    Med `inner` satt og manglende kassettoppføring kalles inner, og svaret lagres.
+    Uten `inner` og uten oppføring kastes KeyError, slik at tester aldri treffer nettverket ved uhell.
+    """
+
+    def __init__(self, path: Path | str, inner: LLMClient | None = None, locality: str | None = None) -> None:
+        self.path = Path(path)
+        self.inner = inner
+        # Ren avspilling sender ingenting ut. Med inner arves modellens plassering.
+        self.locality = locality or (getattr(inner, "locality", "external") if inner is not None else "local")
+        self.name = f"cassette:{getattr(inner, 'name', 'replay')}"
+        self._data: dict[str, dict[str, str]] = (
+            json.loads(self.path.read_text(encoding="utf-8")) if self.path.is_file() else {}
+        )
+
+    @staticmethod
+    def key(user_message: str) -> str:
+        return hashlib.sha256(user_message.strip().lower().encode("utf-8")).hexdigest()[:16]
+
+    def complete(self, request: LLMRequest) -> str:
+        k = self.key(request.user_message)
+        if k in self._data:
+            return self._data[k]["text"]
+        if self.inner is None:
+            raise KeyError(f"Ingen kassett for spørsmålet: {request.user_message!r}")
+        text = self.inner.complete(request)
+        self._data[k] = {"user_message": request.user_message, "text": text, "model": self.inner.name}
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_text(json.dumps(self._data, ensure_ascii=False, indent=2), encoding="utf-8")
+        return text
+
+
+class BudgetExceeded(RuntimeError):
+    """Kostnadstaket er nådd. Agenten faller tilbake til regelbasert svar."""
+
+
+class LLMRefused(RuntimeError):
+    """Modellen avslo av sikkerhetsgrunner (stop_reason = refusal)."""
+
+
+class LLMTruncated(RuntimeError):
+    """Svaret ble kuttet av max_tokens. Et halvt svar skal aldri vises."""
+
+
+# Modeller i disse familiene godtar output_config.effort. Eldre modeller gir 400.
+_EFFORT_FAMILIES = ("claude-opus-5", "claude-sonnet-5", "claude-fable", "claude-mythos", "claude-haiku-5", "claude-opus-4-8", "claude-opus-4-7", "claude-opus-4-6", "claude-sonnet-4-6")
+
+
+class AnthropicLLM:
+    """Ekte modell via Anthropic API. Nøkkel leses kun fra miljøet (ANTHROPIC_API_KEY eller ant-innlogging).
+
+    - Sender aldri temperature, top_p, top_k eller prefill (avvist på nyere modeller).
+    - Tanking står på som standard på Opus 5.5. Dybde styres med `effort`.
+    - Teller tokens og stopper ved `token_budget`.
+    - `client` kan injiseres (tester bruker en falsk klient uten nettverk).
+    """
+
+    locality = "external"  # data sendes til Anthropic. Aldri bruk med klassifisering `ekte`.
+
+    def __init__(
+        self,
+        model: str | None = None,
+        timeout_s: float = DEFAULT_TIMEOUT_S,
+        max_tokens: int = DEFAULT_MAX_TOKENS,
+        effort: str | None = "low",
+        token_budget: int | None = None,
+        client: Any = None,
+    ) -> None:
+        self.model = model or os.environ.get("KUNSTPIXEL_MODEL", DEFAULT_MODEL)
+        self.name = self.model
+        self.max_tokens = max_tokens
+        self.effort = effort if self.model.startswith(_EFFORT_FAMILIES) else None
+        self.token_budget = token_budget if token_budget is not None else int(os.environ.get("KUNSTPIXEL_TOKEN_BUDGET", DEFAULT_TOKEN_BUDGET))
+        self.tokens_in = 0
+        self.tokens_out = 0
+        self.calls = 0
+        if client is not None:
+            self._client = client
+            return
+        try:
+            import importlib
+
+            anthropic = importlib.import_module("anthropic")  # lazy import, valgfri avhengighet
+        except ImportError as exc:  # pragma: no cover
+            raise RuntimeError("Installer valgfri avhengighet: pip install anthropic") from exc
+        self._client = anthropic.Anthropic(timeout=timeout_s)  # henter nøkkel fra miljøet
+
+    @property
+    def tokens_used(self) -> int:
+        return self.tokens_in + self.tokens_out
+
+    def complete(self, request: LLMRequest) -> str:
+        if self.tokens_used >= self.token_budget:
+            raise BudgetExceeded(f"{self.tokens_used} av {self.token_budget} tokens brukt")
+        context = request.kontekst if request.kontekst is not None else request.tool_results
+        label = "KONTEKST" if request.kontekst is not None else "VERKTØYRESULTAT"
+        payload = json.dumps({"SPØRSMÅL": request.user_message, label: context}, ensure_ascii=False)
+        kwargs: dict[str, Any] = {
+            "model": self.model,
+            "max_tokens": self.max_tokens,
+            "system": f"{request.system_prompt}\n\n{request.rules}",
+            "messages": [{"role": "user", "content": payload}],  # slutter med user: ingen prefill
+        }
+        if self.effort:
+            kwargs["output_config"] = {"effort": self.effort}
+        msg = self._client.messages.create(**kwargs)
+        usage = getattr(msg, "usage", None)
+        self.tokens_in += int(getattr(usage, "input_tokens", 0) or 0)
+        self.tokens_out += int(getattr(usage, "output_tokens", 0) or 0)
+        self.calls += 1
+        stop = getattr(msg, "stop_reason", None)
+        if stop == "refusal":
+            raise LLMRefused(str(getattr(getattr(msg, "stop_details", None), "category", None)))
+        if stop == "max_tokens":
+            raise LLMTruncated("svaret ble kuttet")
+        return "".join(b.text for b in msg.content if getattr(b, "type", "") == "text").strip()
+
+
+def build_llm(kind: str | None = None) -> LLMClient | None:
+    """Velg LLM fra KUNSTPIXEL_LLM: off (standard) | fake | anthropic."""
+    kind = (kind if kind is not None else os.environ.get("KUNSTPIXEL_LLM", "off")).strip().lower()
+    if kind in ("", "off", "none"):
+        return None
+    if kind == "fake":
+        return FakeLLM()
+    if kind == "anthropic":
+        return AnthropicLLM()
+    raise ValueError(f"Ukjent KUNSTPIXEL_LLM: {kind!r} (bruk off, fake eller anthropic)")
+
+
+# ---------- Valgfritt KI-lag for Datafinner-rapporter (urllib, 0 ekstra avhengigheter) ----------
 
 STANDARD_URL = {"openai": "https://api.openai.com/v1", "anthropic": "https://api.anthropic.com"}
 LEVERANDORER = tuple(STANDARD_URL)
 ANTHROPIC_VERSJON = "2023-06-01"
-# Felt som aldri sendes til en språkmodell.
 PERSONFELT = frozenset({"navn", "epost", "telefon", "fodselsaar", "ansatt_id", "godkjent_av_navn"})
 MAKS_RADER = 12
 
@@ -95,8 +275,6 @@ def fra_miljo(miljo: dict[str, str]) -> LlmKonfig | None:
     )
 
 
-# ---------- begrensning av kall ----------
-
 class Begrenser:
     """Enkel grense for antall kall per tidsvindu, for hele serverprosessen. Beskytter regningen."""
 
@@ -116,8 +294,6 @@ class Begrenser:
             return True
 
 
-# ---------- grunnlag til språkmodellen ----------
-
 def forenkle_for_llm(rapport: dict[str, Any]) -> dict[str, Any]:
     """Kopi av rapporten uten personfelt og med korte lister. Originalen endres ikke."""
     def rens(x: Any) -> Any:
@@ -132,11 +308,11 @@ def forenkle_for_llm(rapport: dict[str, Any]) -> dict[str, Any]:
     return rens(copy.deepcopy(rapport))
 
 
-_TALL = re.compile(r"\d+(?:[   ]\d{3})*(?:[.,]\d+)?")
+_TALL = re.compile(r"\d+(?:[ \u00a0\u202f]\d{3})*(?:[.,]\d+)?")
 
 
 def _til_tall(tekst: str) -> float:
-    return float(re.sub(r"[   ]", "", tekst).replace(",", "."))
+    return float(re.sub(r"[ \u00a0\u202f]", "", tekst).replace(",", "."))
 
 
 def _tall_i(x: Any, ut: set[float]) -> set[float]:
@@ -172,8 +348,6 @@ def tallkontroll(tekst: str, grunnlag: Any) -> dict[str, Any]:
             ukjente.append(m.group().strip())
     return {"ok": not ukjente, "ukjente_tall": ukjente}
 
-
-# ---------- kall mot leverandør ----------
 
 def bygg_foresporsel(konfig: LlmKonfig, bruker_tekst: str) -> tuple[str, dict[str, str], bytes]:
     """Adresse, hoder og kropp for leverandørens API. Ren funksjon, så formatet kan testes uten nett."""
@@ -215,9 +389,8 @@ def forklar(rapport: dict[str, Any], konfig: LlmKonfig, apne=urllib.request.urlo
         with apne(foresporsel, timeout=konfig.timeout) as res:
             data = json.loads(res.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
-        # Hverken nøkkel eller svartekst sendes videre. Bare statuskoden, så feilsøking er mulig.
         raise LlmFeil("leverandorfeil", f"KI-leverandøren svarte med feil ({exc.code}).") from None
-    except urllib.error.URLError as exc:  # urllib pakker tidsavbrudd og nettfeil inn i URLError
+    except urllib.error.URLError as exc:
         if isinstance(exc.reason, TimeoutError):
             raise LlmFeil("tidsavbrudd", "KI-leverandøren svarte ikke i tide.") from None
         raise LlmFeil("leverandorfeil", "Fikk ikke kontakt med KI-leverandøren.") from None

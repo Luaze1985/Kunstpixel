@@ -1,0 +1,101 @@
+klassifisering: syntetisk
+syntetisk: true
+merknad: Treningsdata, ikke rettesnor. Alle frister, terskler og timer er oppdiktet.
+versjon: 1
+myndigheter:
+- id: MK-01
+  myndighet: Arbeidstilsynet
+  omrade: HMS og arbeidsmiljø
+  intern_eier: Museumsdirektør
+  kontaktperson: Harald Oskar Vinje
+  kontakt_epost: harald.oskar.vinje@arbeidstilsynet.example.test
+  intern_eier_navn: Thorvald Berntsen
+  intern_eier_epost: thorvald.berntsen@kunstpixel.example.test
+  hva_de_vil: Tilsynet krever dokumentasjon på systematisk helse-, miljø- og sikkerhetsarbeid samt oversikt over vernerunder.
+  utloser: Planlagte periodiske kontroller eller meldinger fra ansatte vedrørende arbeidsforhold.
+  dokumentasjon: Prosedyrer for risikovurdering, avvikslogger, møtereferater fra arbeidsmiljøutvalget og handlingsplaner.
+  merknad: treningsdata, ikke rettesnor
+- id: MK-02
+  myndighet: Mattilsynet
+  omrade: Kafé og IK-Mat
+  intern_eier: Kafeansvarlig
+  kontaktperson: Theodor Sæther
+  kontakt_epost: theodor.sather@mattilsynet.example.test
+  intern_eier_navn: Astrid Moe
+  intern_eier_epost: astrid.moe@kunstpixel.example.test
+  hva_de_vil: Tilsynet krever trygg mathåndtering og renhold på kjøkkenet samt god sporbarhet på råvarer.
+  utloser: Rutinemessige hygienekontroller eller bekymringsmeldinger fra gjester angående matsikkerhet.
+  dokumentasjon: Temperaturlogger for kjøleskap, rengjøringsplaner, rutiner for personlig hygiene og skadedyrkontroll.
+  merknad: treningsdata, ikke rettesnor
+- id: MK-03
+  myndighet: Brann- og redningsetaten
+  omrade: Brannsikkerhet og beredskap
+  intern_eier: Driftsansvarlig
+  kontaktperson: Kristian Hovland
+  kontakt_epost: kristian.hovland@brann.example.test
+  intern_eier_navn: Edvard Rønning
+  intern_eier_epost: edvard.ronning@kunstpixel.example.test
+  hva_de_vil: Etaten krever trygge rømningsveier, fungerende slukkeutstyr og dokumentert opplæring i brannvern.
+  utloser: Årlige inspeksjoner eller bekymringsmeldinger angående blokkerte nødutganger i lokalene.
+  dokumentasjon: Rapporter fra øvelser, servicebøker for brannalarmanlegg og oversikt over brannvernledere.
+  merknad: treningsdata, ikke rettesnor
+- id: MK-04
+  myndighet: Kommunen
+  omrade: Skjenke- og serveringsbevilling
+  intern_eier: Kafeansvarlig
+  kontaktperson: Gunnar Eilif Lunde
+  kontakt_epost: gunnar.eilif.lunde@kommunen.example.test
+  intern_eier_navn: Astrid Moe
+  intern_eier_epost: astrid.moe@kunstpixel.example.test
+  hva_de_vil: Kommunen krever forsvarlig drift av serveringen samt overholdelse av vilkår for alkoholservering.
+  utloser: Søknad om fornyelse av bevillinger eller stikkprøver utført av skjenkekontrollen.
+  dokumentasjon: Oversikt over beståtte kunnskapsprøver, opplæringsplaner for ansatte og salgsrapporter.
+  merknad: treningsdata, ikke rettesnor
+- id: MK-05
+  myndighet: Fylkeskommunen
+  omrade: Tilskudd og regionalt kulturarbeid
+  intern_eier: Museumsdirektør
+  kontaktperson: Harriet Dahlen
+  kontakt_epost: harriet.dahlen@fylkeskommunen.example.test
+  intern_eier_navn: Thorvald Berntsen
+  intern_eier_epost: thorvald.berntsen@kunstpixel.example.test
+  hva_de_vil: Fylkeskommunen krever dokumentert regional forankring, samarbeid med skoler og god måloppnåelse for tilskudd.
+  utloser: Årlig rapportering på benyttede midler eller revisjon av regionale formidlingstiltak.
+  dokumentasjon: Årsrapport for pedagogisk virksomhet, deltakeroversikter fra fylket og prosjektregnskap.
+  merknad: treningsdata, ikke rettesnor
+- id: MK-06
+  myndighet: Kulturdirektoratet
+  omrade: Museumsstatistikk, tilskudd og samlingsforvaltning
+  intern_eier: Museumsdirektør
+  kontaktperson: Frits Strømme
+  kontakt_epost: frits.stromme@kulturdirektoratet.example.test
+  intern_eier_navn: Thorvald Berntsen
+  intern_eier_epost: thorvald.berntsen@kunstpixel.example.test
+  hva_de_vil: Kulturdirektoratet krever fullstendig museumsstatistikk, oversikt over samlingsvekst og faglig forsvarlig forvaltning.
+  utloser: Faste årlige statistikkinnleveringer og søknader om statlig drifts- og utviklingstilskudd.
+  dokumentasjon: Statistikkskjema, samlingsgjennomganger, katalogiseringsoversikter og faglige årsberetninger.
+  merknad: treningsdata, ikke rettesnor
+- id: MK-07
+  myndighet: Datatilsynet
+  omrade: Personvern
+  intern_eier: Driftsansvarlig
+  kontaktperson: Oda Marie Skogen
+  kontakt_epost: oda.marie.skogen@datatilsynet.example.test
+  intern_eier_navn: Edvard Rønning
+  intern_eier_epost: edvard.ronning@kunstpixel.example.test
+  hva_de_vil: Datatilsynet krever sikker behandling av personopplysninger og tydelig informasjon til de registrerte.
+  utloser: Meldinger om brudd på datasikkerheten eller klager fra enkeltpersoner angående innsyn.
+  dokumentasjon: Prosedyrer for personvernkonsekvenser, oversikt over databehandlere og logger over tilganger.
+  merknad: treningsdata, ikke rettesnor
+- id: MK-08
+  myndighet: Stiftelsestilsynet
+  omrade: Årsregnskap og tilsyn med stiftelsen
+  intern_eier: Museumsdirektør
+  kontaktperson: Gerhard Nygaard
+  kontakt_epost: gerhard.nygaard@stiftelsestilsynet.example.test
+  intern_eier_navn: Thorvald Berntsen
+  intern_eier_epost: thorvald.berntsen@kunstpixel.example.test
+  hva_de_vil: Stiftelsestilsynet krever etterlevelse av stiftelsens formål, betryggende formuesforvaltning og revisorgodkjent regnskap.
+  utloser: Årlig innsending av årsregnskap og årsberetning eller varsel om endringer i vedtekter.
+  dokumentasjon: Revisjonsberetning, protokoll fra styremøter, årsregnskap og oppdatert stiftelsesdokument.
+  merknad: treningsdata, ikke rettesnor

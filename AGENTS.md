@@ -18,7 +18,7 @@
 - **Python:** 3.13 (`py -3.13` på Windows)
 - **Database:** SQLite i `05_data/museum.db` (kunstnere, verk, saler, utstillinger, hendelser, publikum_faq)
 - **Protokoll:** Model Context Protocol (FastMCP)
-- **Tester:** `pytest` med 206 automatiserte tester
+- **Tester:** `pytest` med automatiserte tester
 
 
 ---
@@ -44,6 +44,9 @@ py -3.13 src/cli.py "Hvor finner jeg Skrik?"
 
 # Start lokal web-chat for gründerne (port 8000)
 py -3.13 src/kunstpixel/adapters/chat_hub.py
+
+# Start intern assistent for HR, HMS og drift (port 8001)
+py -3.13 src/kunstpixel/adapters/intern_hub.py
 
 # Start FastMCP-serveren over stdio
 py -3.13 src/mcp_server.py
@@ -126,6 +129,18 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode man
 28. `lookup_handbook(query, handbok, role, limit)`
     - Søk i museets fire virksomhetshåndbøker (Personal, HMS, Drift, Beredskap).
 
+### Styring, Tilsyn, Rapportering & Arbeidsoppgaver (5 H5-verktøy i `src/mcp_server.py` og `src/hr_mcp_server.py`):
+29. `lookup_authority_contacts(query, myndighet_id)`
+    - Oppslag i myndighetskontakter og tilsynsrutiner (Arbeidstilsynet, Mattilsynet, Brannvesenet, DSB, Datatilsynet, Kulturdirektoratet, Riksantikvaren).
+30. `get_reporting_calendar(query, frekvens)`
+    - Årshjul og frister for lovpålagt og intern rapportering (månedsrapport, tertial, KOSTRA/SSB, Kulturdirektoratet, årsberetning).
+31. `get_report_template(mal_id)`
+    - Strukturerte rapportmaler med obligatoriske seksjoner og datakilder.
+32. `search_work_tasks_and_hours(query, rolle_id, kategori)`
+    - Oversikt over faktiske arbeidsoppgaver, årsverk og tidsbruk per rolle og kategori.
+33. `get_governance_history(query, kategori, periode)`
+    - Kvantitativ og kvalitativ styringshistorikk (publikum, økonomi, HMS, bemanning og hendelser 2021–2025).
+
 
 ---
 
@@ -146,6 +161,21 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode man
 ### Regel 4: Kvalitetssjekk før analyse
 - Før du analyserer data fra `museum.db`: kjør `py -3.13 scripts/db_kvalitet.py` og vis resultatlinjen og eventuelle FEIL/OBS øverst i svaret.
 - Er det FEIL: si fra og stopp analysen. Er det OBS: ta det med som forbehold i svaret.
+
+### Regel 5: LLM tolker og formulerer, verktøyene vet
+- Språkmodellen (`src/kunstpixel/core/llm.py`) får bare fakta fra de åtte verktøyene i `src/mcp_server.py`. Den søker aldri selv og gjetter aldri.
+- Før et LLM-svar vises til brukeren kjører `src/kunstpixel/core/fact_check.py`: hvert 4-sifret årstall, hver pris (`kr`), hvert sal-nummer, hver e-post og hvert telefonnummer i svaret må finnes i verktøysvaret for samme tur, ellers forkastes LLM-svaret og det deterministiske svaret brukes.
+- Hvis LLM er av (`KUNSTPIXEL_LLM=off`, som er standard), feiler eller blir avvist av faktasjekken, svarer `MuseumAgent` deterministisk og setter `fallback_reason`.
+
+### Regel 6: Datapolicy, ekte data bare til lokal modell
+- Hver datakilde og hvert verktøysvar har klassifiseringen `syntetisk` eller `ekte` (`src/kunstpixel/core/datapolicy.py`). Ukjent eller manglende klassifisering behandles som `ekte` (fail-closed).
+- `can_send_to_llm(classification, llm)` tillater kun at `ekte` data sendes til en modell med `locality == "local"`. Ekstern modell (`AnthropicLLM` osv.) nektes teknisk før nettverkskallet og svaret faller tilbake til deterministisk med `fallback_reason="datapolicy: ekte data kan kun behandles av lokal modell"`.
+- **Lokal modell brukes ikke pt.** Det finnes ingen `LocalLLM` i koden; kun `off`, `fake` og `anthropic` støttes av `build_llm`. Ekte data behandles derfor alltid deterministisk inntil lokal modell (H6) tas i bruk.
+
+### Regel 7: Intern assistent (HR, HMS og drift)
+- Den interne assistenten (`src/kunstpixel/core/intern/`, web-chat på port 8001 via `src/kunstpixel/adapters/intern_hub.py`) bruker ni egne read-only verktøy: `search_hms`, `search_ik_mat`, `search_brann_sikring`, `get_tilsyn`, `get_rolle`, `search_tiltak`, `search_myndighet`, `search_rapportering` og `search_arbeidsoppgaver`.
+- Hvert treff skal oppgi `Kilde:` med fil, seksjon og ID. Fakta-sjekken (`src/kunstpixel/core/intern/fact_check.py`) krever at kildereferanser, tall med enhet (timer, dager, uker, måneder, år, minutter, `°C`, `%`, `kr`, lovparagrafer og tilstandsgrader) og rekkefølge i trinnvise rutiner stemmer med verktøysvaret.
+- Spørsmål om enkeltpersoner, lønn, sykefravær eller personalsaker avvises alltid, og tilgang til `LEDELSE`-kilder krever rollen `avdelingsleder`, `hr_hms` eller `direktor`.
 
 ---
 

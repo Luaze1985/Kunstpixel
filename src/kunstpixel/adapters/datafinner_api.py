@@ -3,7 +3,7 @@
 To ting en språkmodell (eller et annet program) trenger for å bruke Datafinner:
 
   1. verktoyskjema(): en maskinlesbar liste over verktøyene med parametere (JSON Schema). Kan oversettes
-     direkte til verktøydefinisjoner for Claude, OpenAI, Ollama m.fl.
+     direkte til verktøydefinisjoner for Claude, OpenAI m.fl.
   2. lag_rapport(): den deterministiske rapporten for ett spørsmål: fakta fra databasen, og vurdering og
      forslag valgt av faste regler. Samme input gir alltid samme svar. Ingen KI er med.
 
@@ -29,6 +29,11 @@ SPORSMAL: dict[str, dict[str, Any]] = {
     "sykefravaer": {"tekst": "Sykefravær i museet", "verktoy": "get_absence_report"},
     "utstilling": {"tekst": "Økonomi per utstilling", "verktoy": "get_exhibition_economy"},
     "vaktkostnad": {"tekst": "Kostnad for vakter", "verktoy": "get_shift_cost_for_period"},
+    "rapporteringskalender": {"tekst": "Rapporteringskalender og frister", "verktoy": "search_rapportering"},
+    "myndighetsoversikt": {"tekst": "Myndighetskrav og tilsynsorganer", "verktoy": "search_myndighet"},
+    "tilsynsrutine": {"tekst": "Rutine ved tilsynsbesøk", "verktoy": "get_inspection_routine"},
+    "rapportmaler": {"tekst": "Offisielle rapportmaler", "verktoy": "search_rapportering"},
+    "onboarding": {"tekst": "Onboarding og HMS-opplæring", "verktoy": "search_hr_onboarding"},
 }
 
 

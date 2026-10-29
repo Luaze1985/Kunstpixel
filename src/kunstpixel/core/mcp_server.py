@@ -1,4 +1,4 @@
-"""FastMCP server for Aura Kunstmuseum exposing 5 collection and visitor tools.
+"""FastMCP server for Kunstpixel exposing 5 collection and visitor tools.
 
 Strictly read-only, SQL-injection safe, and adhering to museum domain terminology.
 """
@@ -45,6 +45,13 @@ from src.kunstpixel.core.db import (
     query_tariff_pay,
     query_working_hours,
     query_working_time_limits,
+    query_myndighetskontakter,
+    query_tilsynsbesok_rutine,
+    query_rapporteringskalender,
+    query_rapportmaler,
+    query_arbeidsoppgaver_tidsbruk,
+    query_historikk_2010_2026,
+    query_hr_opplaering_onboarding,
 )
 from src.kunstpixel.core.hr_eval import evaluate_staffing_proposal
 from src.kunstpixel.core.hrdemo import (
@@ -740,6 +747,124 @@ def search_internal_requests(
         Henvendelser med case_ref, hjemmel og forventet utfall.
     """
     return query_internal_requests(kategori=kategori, ansatt_id=ansatt_id, limit=limit)
+
+
+# -----------------------------------------------------------------------------
+# H5 & Governance MCP-verktøy
+# -----------------------------------------------------------------------------
+
+@mcp.tool()
+def search_myndighet(
+    query: str | None = None,
+    intern_eier: str | None = None,
+    include_contacts: bool = False,
+) -> dict[str, Any]:
+    """Søk i museets myndighetskontakter og krav fra tilsynsorganer (fil A).
+
+    Args:
+        query: Søkeord i myndighet, fagområde eller hva myndigheten ber om.
+        intern_eier: Filtrer på intern eierrolle (f.eks. 'Museumsdirektør', 'Driftsansvarlig').
+        include_contacts: Om kontaktpersoner og e-post skal vises (kun internt).
+
+    Returns:
+        Myndigheter med krav, utløsende faktorer og dokumentasjonskrav.
+    """
+    return query_myndighetskontakter(query=query, intern_eier=intern_eier, include_contacts=include_contacts)
+
+
+@mcp.tool()
+def get_inspection_routine(ansvarlig: str | None = None) -> dict[str, Any]:
+    """Hent museets standardprosedyre for tilsynsbesøk og avvikshåndtering (fil B).
+
+    Args:
+        ansvarlig: Filtrer på ansvarlig rolle for steget (f.eks. 'Driftsansvarlig', 'Museumsdirektør').
+
+    Returns:
+        De 6 kronologiske stegene, dokumentasjonskrav og gjeldende avviksfrister (14 dager / 24 timer).
+    """
+    return query_tilsynsbesok_rutine(ansvarlig=ansvarlig)
+
+
+@mcp.tool()
+def search_rapportering(
+    mottakertype: str | None = None,
+    maned: str | None = None,
+    eier: str | None = None,
+    mal_id: str | None = None,
+) -> dict[str, Any]:
+    """Søk i museets rapporteringskalender (fil C) og standard rapportmaler (fil D).
+
+    Args:
+        mottakertype: 'intern' eller 'ekstern'.
+        maned: Måned for rapportering (f.eks. 'Mars', 'Månedlig', 'Kvartalsvis').
+        eier: Ansvarlig lederrolle for rapporten.
+        mal_id: Spesifikk rapportmal ('ML-01' til 'ML-04') for å få felt og utfyllingsregler.
+
+    Returns:
+        Rapporter eller rapportmaler med felter, kilder og regler.
+    """
+    if mal_id:
+        return query_rapportmaler(mal_id=mal_id)
+    return query_rapporteringskalender(mottakertype=mottakertype, maned=maned, eier=eier)
+
+
+@mcp.tool()
+def search_arbeidsoppgaver(
+    omrade: str | None = None,
+    rolle: str | None = None,
+    automatiseringspotensial: str | None = None,
+) -> dict[str, Any]:
+    """Søk i gjentakende administrative arbeidsoppgaver og tidsbruk (fil E). Kun for ledelse.
+
+    Args:
+        omrade: 'Myndighetskontakt' eller 'Rapportering'.
+        rolle: Intern rolle som utfører oppgaven.
+        automatiseringspotensial: 'Lav', 'Middels' eller 'Høy'.
+
+    Returns:
+        Oppgaver, timer per år, automatiseringspotensial og begrunnelse (totalt 287 timer i 2026).
+    """
+    return query_arbeidsoppgaver_tidsbruk(
+        omrade=omrade,
+        rolle=rolle,
+        automatiseringspotensial=automatiseringspotensial,
+    )
+
+
+@mcp.tool()
+def search_governance_history(
+    ar_fra: int | None = None,
+    ar_til: int | None = None,
+    tema: str | None = None,
+) -> dict[str, Any]:
+    """Hent museets 17-årige virksomhetshistorikk 2010–2026 (fil F & T). Kun for ledelse.
+
+    Args:
+        ar_fra: Fra årstall (2010-2026).
+        ar_til: Til årstall (2010-2026).
+        tema: Søkeord i tema (f.eks. 'pandemi', 'vekst', 'rekordår', 'automatisering').
+
+    Returns:
+        35 nøkkeltall per år koblet med kuratert hendelse og lærdom for museet.
+    """
+    return query_historikk_2010_2026(ar_fra=ar_fra, ar_til=ar_til, tema=tema)
+
+
+@mcp.tool()
+def search_hr_onboarding(
+    kategori: str | None = None,
+    rolle: str | None = None,
+) -> dict[str, Any]:
+    """Søk i onboarding-løp, kompetansekrav og HMS-opplæring per rolle (hr_opplaering_onboarding).
+
+    Args:
+        kategori: 'kompetanse_matrise', 'onboarding_status' eller 'hms_opplaering'.
+        rolle: Rolle (f.eks. 'Museumsvert', 'Kafeansvarlig', 'Konservator', 'Verneombud').
+
+    Returns:
+        Opplæringsmoduler, faser, aktiviteter og ansvarlig rolle.
+    """
+    return query_hr_opplaering_onboarding(kategori=kategori, rolle=rolle)
 
 
 if __name__ == "__main__":

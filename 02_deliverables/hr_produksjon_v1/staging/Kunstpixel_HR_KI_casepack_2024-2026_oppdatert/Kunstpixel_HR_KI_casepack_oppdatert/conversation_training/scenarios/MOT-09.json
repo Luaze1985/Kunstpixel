@@ -1,0 +1,21 @@
+{
+  "id": "MOT-09",
+  "title": "Medarbeider som vurderer å slutte",
+  "description": "Samtale med noen som tenker på å bytte jobb.",
+  "duration_minutes": 10,
+  "conversation_type": "Undersøkende samtale",
+  "persona_name": "Mathias",
+  "persona_role": "Utvikler som vurderer å slutte",
+  "tags_visible": [
+    "turnover",
+    "retensjon",
+    "karriere"
+  ],
+  "hidden_tag_count": 1,
+  "source_status": "metadata_complete",
+  "catalog_group": "HR og ledersamtaler",
+  "input_notes": "Katalogmetadata fra brukerens innlimte tekst, ikke komplett rollemanus. +N betyr at flere tagger er skjult i kilden, ikke at de er kjent.",
+  "source": "user_supplied_paste_2026-10-20",
+  "scenario_implemented": false,
+  "persona_is_verified_synthetic": false
+}

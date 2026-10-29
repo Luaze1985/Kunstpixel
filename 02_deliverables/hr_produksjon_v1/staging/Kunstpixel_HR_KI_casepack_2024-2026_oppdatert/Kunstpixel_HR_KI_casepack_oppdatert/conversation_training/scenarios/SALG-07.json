@@ -1,0 +1,17 @@
+{
+  "id": "SALG-07",
+  "title": "Demo: teknisk skeptiske Mariann",
+  "description": "Trening på å tilpasse demoen til en teknisk fagansvarlig som bryr seg om arbeidsflyt, integrasjon og sikkerhet — ikke om salgsbudskap.",
+  "duration_minutes": 10,
+  "conversation_type": "Demo og løsningspresentasjon",
+  "persona_name": "Mariann Holt",
+  "persona_role": "Fagansvarlig og hovedbruker",
+  "tags_visible": [],
+  "hidden_tag_count": 0,
+  "source_status": "metadata_complete",
+  "catalog_group": "Salg og kundedialog",
+  "input_notes": "Katalogmetadata fra brukerens innlimte tekst, ikke komplett rollemanus. +N betyr at flere tagger er skjult i kilden, ikke at de er kjent.",
+  "source": "user_supplied_paste_2026-10-20",
+  "scenario_implemented": false,
+  "persona_is_verified_synthetic": false
+}

@@ -15,8 +15,6 @@ Dette registeret definerer rollene, ansvarsområdene og verktøytilgangene for K
 | **Museumsvert** | `/museumsvert` | **Førstelinje Host** | FastMCP (`search_faq`, `search_events`, `get_room_artworks`), CLI | Vertskap, FAQ, Ruter |
 | **Driftsansvarlig** | `/drift` | **Drift & Sikkerhet** | `data/governance/` (YAML/JSON) | IK-Mat, HMS, Brann/RVR |
 | **Kvalitetsvokter** | `/qa` | **QA & Compliance** | Pytest, Kildeverifikator, Deterministisk validator | Regelvalidering, Tilsynsberedskap |
-| **HR og bemanning** | `/hr` | **Bemanning & Arbeidstid** | Lesetilgang til HR-data i `museum.db` via MCP: `get_staff_member`, `audit_shift_compliance`, `get_sickness_absence_statistics` (planlagt: pågående vakter, vakter per dato, overtid per periode) | Bemanning, Arbeidstid og hviletid, Fravær |
-| **Økonomi og innkjøp** | `/okonomi` | **Økonomi & Anskaffelser** | Lesetilgang til økonomidata i `museum.db` via MCP: `get_exhibition_economy`, `calculate_shift_cost`, `search_contractors`, `verify_supplier_brreg` (planlagt: vaktkostnad per periode) | Utstillingsøkonomi, Innkjøp og leverandører |
 
 ---
 
@@ -67,25 +65,11 @@ Dette registeret definerer rollene, ansvarsområdene og verktøytilgangene for K
 * **Output:** Godkjentstempel eller spesifikk avviksrapport før noe leveres til `deliverables/`.
 * **Merk:** Denne rollen blander deterministiske sjekker (pytest, ordtelling, DB-oppslag) med faktisk LLM-skjønn (tone, relevans). Bør trolig splittes — se diskusjon i samtaleloggen 2026-09-18. Ikke gjort ennå.
 
-### K. HR og bemanning (`/hr`)
-* **Persona:** Saklig, personvernbevisst, opptatt av at tall kan etterprøves.
-* **Input:** Spørsmål om hvem som er på jobb, vaktplan, overtid og sykefravær.
-* **Control:** Leser kun, aldri skriving. Arbeidstid og hviletid vurderes etter arbeidsmiljøloven kap. 10 (ADR 009). Tall kommer fra faste regler og data, ikke fra gjetting. Personopplysninger vises bare når spørsmålet ber om dem.
-* **Output:** Korte svar og rapporter i Arbeidsflyt-formatet (fakta, vurdering, forslag, kontroll, grunnlag), merket «Utkast» til kontrollert.
-* **Merk:** Trigger og verktøyliste er foreslått av byggeteamet og kan justeres. Verktøyene er beskrevet i ADR 008 i hovedmappen (ennå ikke committet). Verktøy for pågående vakter, vakter per dato og overtid per periode finnes ikke ennå.
-
-### L. Økonomi og innkjøp (`/okonomi`)
-* **Persona:** Nøktern, presis, skeptisk til tall uten kilde.
-* **Input:** Spørsmål om utstillingsøkonomi, vaktkostnad, leverandører og anskaffelser.
-* **Control:** Leser kun, aldri skriving. Lønnskostnad etter Virke-tariff (ADR 007). Priser og økonomiske avtaler er nivå 3 og krever godkjenning fra gründerne. Tall beregnes med faste formler.
-* **Output:** Korte svar og rapporter i Arbeidsflyt-formatet, merket «Utkast» til kontrollert.
-* **Merk:** Trigger og verktøyliste er foreslått av byggeteamet og kan justeres. Verktøy for vaktkostnad per periode finnes ikke ennå.
-
 ---
 
 ## 3. Byggeteam — de som bygger og vedlikeholder systemet
 
-Dette er ikke museets driftsagenter over — det er teamet som bygger og vedlikeholder selve systemet bak Aura Kunstmuseum. Ni fullstendige agent-definisjoner ligger som kjørbare Claude-subagenter i `.claude/agents/` — se den mappen for oppdatert filliste fremfor å stole på navn listet her, siden denne listen selv har vist seg å gå ut av synk før.
+Dette er ikke museets driftsagenter over — det er teamet som bygger og vedlikeholder selve systemet bak Kunstpixel. Ni fullstendige agent-definisjoner ligger som kjørbare Claude-subagenter i `.claude/agents/` — se den mappen for oppdatert filliste fremfor å stole på navn listet her, siden denne listen selv har vist seg å gå ut av synk før.
 
 | Rolle / Agent | Trigger | ICOR-funksjon | Verktøytilganger (MCP / Core) | Eier SOP-er |
 | :--- | :--- | :--- | :--- | :--- |
@@ -113,7 +97,7 @@ Driftsrollene A–F over har også egne subagent-filer i `.claude/agents/` (dire
 * **Control:** Hvert verktøy har nøyaktig det tilgangsomfanget det trenger og ikke mer. Alle verktøy dekkes av tester. Read-only håndheves i kode, ikke bare i dokumentasjon.
 * **Output:** Godkjente verktøydefinisjoner, oppdatert testdekning, avviksrapport ved overeksponering.
 
-**Hvorfor MCP-vokteren og ikke noe annet teknisk:** Aura-prosjektet har allerede streng read-only-regel og en egen QA-rolle (Kvalitetsvokter) som sjekker *innholdet* agentene leverer. Det som manglet var noen som eier *grensesnittet* — hvilke verktøy som eksponeres og hvor mye tilgang hvert av dem faktisk gir. Det overlapper bevisst litt med Kvalitetsvokter og Driftsansvarlig, men vinkelen er annerledes: de sjekker output og drift, MCP-vokteren sjekker overflaten agentene angriper systemet gjennom.
+**Hvorfor MCP-vokteren og ikke noe annet teknisk:** Kunstpixel-prosjektet har allerede streng read-only-regel og en egen QA-rolle (Kvalitetsvokter) som sjekker *innholdet* agentene leverer. Det som manglet var noen som eier *grensesnittet* — hvilke verktøy som eksponeres og hvor mye tilgang hvert av dem faktisk gir. Det overlapper bevisst litt med Kvalitetsvokter og Driftsansvarlig, men vinkelen er annerledes: de sjekker output og drift, MCP-vokteren sjekker overflaten agentene angriper systemet gjennom.
 
 ---
 

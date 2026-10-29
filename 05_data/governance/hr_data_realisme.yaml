@@ -1,0 +1,133 @@
+klassifisering: syntetisk
+syntetisk: true
+merknad: Høydetaljert HR- og kompetansestatus for Kunstpixel, fri for tall i fritekst
+versjon: 1
+kompetanse_matrise:
+- opplaering_id: OPP-001
+  kategori: kompetanse_matrise
+  rolle: Verneombud
+  tema_eller_sertifisering: Grunnkurs i arbeidsmiljø
+  fase_eller_status: Godkjent
+  aktivitet_eller_beskrivelse: Kurset dekker psykososialt arbeidsmiljø og fysisk vernerunde
+  ansvarlig_rolle: Driftsansvarlig
+- opplaering_id: OPP-002
+  kategori: kompetanse_matrise
+  rolle: Kafeansvarlig
+  tema_eller_sertifisering: Etablererprøven og skjenkekontroll
+  fase_eller_status: Godkjent
+  aktivitet_eller_beskrivelse: Nødvendig godkjenning for daglig drift av serveringsstedet
+  ansvarlig_rolle: Museumsdirektør
+- opplaering_id: OPP-003
+  kategori: kompetanse_matrise
+  rolle: Brannvernleder
+  tema_eller_sertifisering: Sertifikat for brannvernledere
+  fase_eller_status: Godkjent
+  aktivitet_eller_beskrivelse: Ansvarlig for dokumentasjon og koordinering av brannøvelser
+  ansvarlig_rolle: Driftsansvarlig
+- opplaering_id: OPP-004
+  kategori: kompetanse_matrise
+  rolle: Museumsvert
+  tema_eller_sertifisering: Førstehjelp og hjertestarter
+  fase_eller_status: Godkjent
+  aktivitet_eller_beskrivelse: Livreddende førstehjelp og håndtering av publikumsakutt
+  ansvarlig_rolle: Driftsansvarlig
+- opplaering_id: OPP-005
+  kategori: kompetanse_matrise
+  rolle: Samlingsforvalter
+  tema_eller_sertifisering: Sikker kunsthåndtering og pakkemetoder
+  fase_eller_status: Godkjent
+  aktivitet_eller_beskrivelse: Teknikker for skånsom flytting og sikring av malerier og skulptur
+  ansvarlig_rolle: Konservator
+- opplaering_id: OPP-006
+  kategori: kompetanse_matrise
+  rolle: Kvalitetsvokter
+  tema_eller_sertifisering: Internrevisjon og avviksmetodikk
+  fase_eller_status: Godkjent
+  aktivitet_eller_beskrivelse: Metodikk for systematisk revisjon av etterlevelse og rutiner
+  ansvarlig_rolle: Museumsdirektør
+onboarding_status:
+- opplaering_id: OPP-007
+  kategori: onboarding_status
+  rolle: Museumsvert
+  tema_eller_sertifisering: Generell introduksjon
+  fase_eller_status: Introduksjon
+  aktivitet_eller_beskrivelse: Gjennomgang av rømningsveier og rutiner ved ulykker
+  ansvarlig_rolle: Driftsansvarlig
+- opplaering_id: OPP-008
+  kategori: onboarding_status
+  rolle: Konservator
+  tema_eller_sertifisering: Laboratorie- og kjemikaliesikkerhet
+  fase_eller_status: Fagopplæring
+  aktivitet_eller_beskrivelse: Sikkerhetskurs for kjemikaliehåndtering og verneutstyr
+  ansvarlig_rolle: Samlingsforvalter
+- opplaering_id: OPP-009
+  kategori: onboarding_status
+  rolle: Kafeansvarlig
+  tema_eller_sertifisering: IK-Mat og rutiner for servering
+  fase_eller_status: Oppstart
+  aktivitet_eller_beskrivelse: Opplæring i temperaturlogging og allergenmerking av mat
+  ansvarlig_rolle: Driftsansvarlig
+- opplaering_id: OPP-010
+  kategori: onboarding_status
+  rolle: Kurator
+  tema_eller_sertifisering: Samlingssystemer og utstillingssikkerhet
+  fase_eller_status: Fagopplæring
+  aktivitet_eller_beskrivelse: Gjennomgang av rutiner for innlån og klimakrav i salene
+  ansvarlig_rolle: Samlingsforvalter
+- opplaering_id: OPP-011
+  kategori: onboarding_status
+  rolle: Formidler
+  tema_eller_sertifisering: Pedagogiske opplegg og publikumsflyt
+  fase_eller_status: Praksis
+  aktivitet_eller_beskrivelse: Observasjon av skoleomvisninger og introduksjon til materiell
+  ansvarlig_rolle: Museumsdirektør
+- opplaering_id: OPP-012
+  kategori: onboarding_status
+  rolle: Driftsansvarlig
+  tema_eller_sertifisering: Nøkkel- og adgangssystemer
+  fase_eller_status: Lederonboarding
+  aktivitet_eller_beskrivelse: Opplæring i overvåking og alarmoverføring til alarmsentral
+  ansvarlig_rolle: Museumsdirektør
+hms_opplaering:
+- opplaering_id: OPP-013
+  kategori: hms_opplaering
+  rolle: Museumsvert
+  tema_eller_sertifisering: Ergonomi ved stående arbeid
+  fase_eller_status: Obligatorisk kurs
+  aktivitet_eller_beskrivelse: Forebyggende opplæring for å unngå belastningsskader under salvakt
+  ansvarlig_rolle: Verneombud
+- opplaering_id: OPP-014
+  kategori: hms_opplaering
+  rolle: Museumsvert
+  tema_eller_sertifisering: Konflikthåndtering og publikumskontakt
+  fase_eller_status: Obligatorisk kurs
+  aktivitet_eller_beskrivelse: Kurs i rolig kommunikasjon og deeskalering av krevende situasjoner
+  ansvarlig_rolle: Driftsansvarlig
+- opplaering_id: OPP-015
+  kategori: hms_opplaering
+  rolle: Driftsansvarlig
+  tema_eller_sertifisering: Arbeid i høyden og stillasbygging
+  fase_eller_status: Sikkerhetssertifisering
+  aktivitet_eller_beskrivelse: Sikker bruk av stige og personløfter ved rigg av belysning
+  ansvarlig_rolle: Verneombud
+- opplaering_id: OPP-016
+  kategori: hms_opplaering
+  rolle: Samlingsforvalter
+  tema_eller_sertifisering: Tunge løft og ergonomiske hjelpemidler
+  fase_eller_status: HMS-modul
+  aktivitet_eller_beskrivelse: Bruk av jekketralle og løftebord under montering av skulptur
+  ansvarlig_rolle: Verneombud
+- opplaering_id: OPP-017
+  kategori: hms_opplaering
+  rolle: Kafeansvarlig
+  tema_eller_sertifisering: Brannvern på storkjøkken
+  fase_eller_status: Obligatorisk kurs
+  aktivitet_eller_beskrivelse: Bruk av slukketeppe og frityrslukker ved branntilløp
+  ansvarlig_rolle: Brannvernleder
+- opplaering_id: OPP-018
+  kategori: hms_opplaering
+  rolle: Museumsdirektør
+  tema_eller_sertifisering: Psykososialt arbeidsmiljø og lederansvar
+  fase_eller_status: Ledermodul
+  aktivitet_eller_beskrivelse: Forebygging av stress og oppfølging av arbeidsmiljøundersøkelser
+  ansvarlig_rolle: Styret

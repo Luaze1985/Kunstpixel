@@ -1,0 +1,105 @@
+klassifisering: syntetisk
+syntetisk: true
+merknad: Treningsdata, ikke rettesnor. Alle frister, terskler og timer er oppdiktet.
+versjon: 1
+maler:
+- id: ML-01
+  navn: Driftsrapport
+  brukes_til:
+  - RP-01
+  godkjenning: ingen
+  status_ved_opprettelse: Utkast
+  formal: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva malen brukes til'
+  felt:
+  - navn: Periode
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Periode'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Gjennomførte arrangementer
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Gjennomførte arrangementer'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Kommende arrangementer
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Kommende arrangementer'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Avvik og tiltak
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Avvik og tiltak'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Vedlikehold
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Vedlikehold'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  regler: 'TODO_FYLL_LISTE (2 eller 3 korte regler, uten tall): regler for utfylling og bruk av malen'
+- id: ML-02
+  navn: Avviksrapport
+  brukes_til:
+  - RP-06
+  godkjenning: ingen
+  status_ved_opprettelse: Utkast
+  formal: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva malen brukes til'
+  felt:
+  - navn: Hva skjedde
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Hva skjedde'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Når og hvor
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Når og hvor'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Alvorlighetsgrad
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Alvorlighetsgrad'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Umiddelbart tiltak
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Umiddelbart tiltak'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Varig tiltak
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Varig tiltak'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Frist for lukking
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Frist for lukking'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  regler: 'TODO_FYLL_LISTE (2 eller 3 korte regler, uten tall): regler for utfylling og bruk av malen'
+- id: ML-03
+  navn: Tilskuddsrapport
+  brukes_til:
+  - RP-02
+  - RP-03
+  godkjenning: eier
+  status_ved_opprettelse: Utkast
+  formal: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva malen brukes til'
+  felt:
+  - navn: Periode
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Periode'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Besøkstall
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Besøkstall'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Gjennomførte aktiviteter
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Gjennomførte aktiviteter'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Utstillinger
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Utstillinger'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Måloppnåelse
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Måloppnåelse'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  regler: 'TODO_FYLL_LISTE (2 eller 3 korte regler, uten tall): regler for utfylling og bruk av malen'
+- id: ML-04
+  navn: Svar til tilsyn
+  brukes_til:
+  - Tilsynsbesøk steg 5
+  godkjenning: eier
+  status_ved_opprettelse: Utkast
+  formal: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva malen brukes til'
+  felt:
+  - navn: Saksreferanse
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Saksreferanse'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Kort oppsummering
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Kort oppsummering'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Funn og vår vurdering
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Funn og vår vurdering'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Tiltak med frist
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Tiltak med frist'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  - navn: Ansvarlig rolle
+    beskrivelse: 'TODO_FYLL (1 setning, norsk, maks 140 tegn, uten tall): hva som skal stå i feltet Ansvarlig rolle'
+    kilde: 'TODO_FYLL_KILDER (1 eller 2 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+  regler: 'TODO_FYLL_LISTE (2 eller 3 korte regler, uten tall): regler for utfylling og bruk av malen'

@@ -1,0 +1,17 @@
+{
+  "id": "SALG-04",
+  "title": "Møtebooking: travle Markus",
+  "description": "Trening på en kald møtebooking-samtale mot en travel, avvisende beslutningstaker som helst vil bli kvitt deg raskt.",
+  "duration_minutes": 8,
+  "conversation_type": "Møtebooking – kald samtale",
+  "persona_name": "Markus Hansen",
+  "persona_role": "Driftssjef i logistikkselskap",
+  "tags_visible": [],
+  "hidden_tag_count": 0,
+  "source_status": "metadata_complete",
+  "catalog_group": "Salg og kundedialog",
+  "input_notes": "Katalogmetadata fra brukerens innlimte tekst, ikke komplett rollemanus. +N betyr at flere tagger er skjult i kilden, ikke at de er kjent.",
+  "source": "user_supplied_paste_2026-10-20",
+  "scenario_implemented": false,
+  "persona_is_verified_synthetic": false
+}

@@ -1,0 +1,341 @@
+# Delvis sammenslått: AP2 + AP3. Mangler AP0 og AP1. Ingen AP2-data endret.
+- tabell: hr_lonnsavtale_versjon
+  omraade: 2
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://www.fellesforbundet.no/lonn-og-tariff/tariffavtaler/industrioverenskomst/ | https://www.virke.no/tariff-og-lonn/finn-tariffavtale/landsoverenskomsten-hk/
+    | https://www.ks.no/hta
+  kolonner:
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: tariff_id
+    type: tekst
+    tillatte_verdier: Spesifikk aktiv tariffavtale-ID; ikke bare sektor
+  - navn: tariff_avtaledel
+    type: tekst
+    tillatte_verdier: Verifisert avtaledel; kan være tom for ikke-tariffbundet
+  - navn: sektor
+    type: tekst
+    tillatte_verdier: industri|privat|kommune
+  - navn: stillingsprosent
+    type: desimaltall
+    kobles_til: hr_ansatte.stillingsprosent
+  - navn: stilling_styrk08
+    type: tekst
+    kobles_til: hr_ansatte.styrk_08
+  - navn: lonnstrinn
+    type: tekst
+    kobles_til: hr_ansatte.lonnstrinn
+  - navn: timelonn_kroner
+    type: desimaltall
+    fordeling: Betinget på STYRK-08 x sektor x heltid; kalibrer Q1/median/Q3 mot SSB 11418 (2025) og tariffgulv (2026)
+  - navn: gyldig_fra
+    type: dato
+  - navn: gyldig_til
+    type: dato_eller_null
+  - navn: kilde_dato
+    type: dato
+- tabell: hr_lonnsarter
+  omraade: 2
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/ | https://www.ks.no/fagomrader/lonn-og-tariff/hovedtariffavtalen/endringer-i-tilleggene-i-hta-kapittel-1--5-fra-forste-oktober/
+    | https://www.virke.no/tariff-og-lonn/finn-tariffavtale/landsoverenskomsten-hk/
+  kolonner:
+  - navn: lonnskode
+    type: tekst
+    tillatte_verdier: grunnlonn|overtid_grunnlonn|overtid_tillegg|kveld|natt|helg|helligdag|bonus|feriepenger|sykepenger|refusjon
+  - navn: tariff_id
+    type: tekst
+  - navn: sektor
+    type: tekst
+    tillatte_verdier: industri|privat|kommune
+  - navn: sats_type
+    type: tekst
+    tillatte_verdier: fast_kroner|prosent|maks_prosent_kronegulv|individuell
+  - navn: sats_verdi
+    type: desimaltall
+    kommentar: Må kobles til riktig avtale og gyldighetsperiode; ikke generell sektorverdi
+  - navn: min_gulv_kr
+    type: desimaltall_eller_null
+  - navn: gyldig_fra
+    type: dato
+  - navn: gyldig_til
+    type: dato_eller_null
+  - navn: primarkilde_url
+    type: url
+- tabell: hr_lonnslinjer
+  omraade: 2
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/lonn/ | https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/overtid/
+    | https://www.arbeidstilsynet.no/arbeidstid-og-organisering/ferie/feriepenger/
+  kolonner:
+  - navn: lonnslinje_id
+    type: tekst
+    unik: true
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: vakt_id
+    type: tekst_eller_null
+    kobles_til: vakter.vakt_id
+  - navn: avdeling
+    type: tekst
+    kobles_til: hr_ansatte.avdeling
+  - navn: utbetalingsdato
+    type: dato
+  - navn: opptjent_fra
+    type: dato
+  - navn: opptjent_til
+    type: dato
+  - navn: lonnskode
+    type: tekst
+    kobles_til: hr_lonnsarter.lonnskode
+  - navn: timer
+    type: desimaltall
+    fordeling: Kobles til faktisk syntetisk vaktlengde og timeklassifikasjon, ikke tilfeldig prosent
+  - navn: sats_kr
+    type: desimaltall
+  - navn: belop_brutto_kr
+    type: desimaltall
+  - navn: skattetrekk_kr
+    type: desimaltall
+  - navn: belop_netto_kr
+    type: desimaltall
+  - navn: datakilde
+    type: tekst
+    tillatte_verdier: syntetisk med tariff- og statistikkforankring
+- tabell: hr_arbeidsgiveravgift_grunnlag
+  omraade: 2
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://www.skatteetaten.no/satser/arbeidsgiveravgift/?year=2026
+  kolonner:
+  - navn: arbeidsgiver_enhet_id
+    type: tekst
+  - navn: avdeling
+    type: tekst
+    kobles_til: hr_ansatte.avdeling
+  - navn: aar_maaned
+    type: tekst
+    eksempel: 2026-10
+  - navn: avgiftssone
+    type: tekst
+    tillatte_verdier: I|Ia|II|III|IV|IVa|V
+  - navn: beregningskode
+    type: tekst
+    kommentar: Må avklares mot Skatteetatens regler
+  - navn: avgiftsgrunnlag_kr
+    type: desimaltall
+  - navn: aga_sats_prosent
+    type: desimaltall
+    fordeling: Lovsats etter sone, næring og år; ikke randomiser
+  - navn: avgift_beregnet_kr
+    type: desimaltall
+  - navn: avgiftsaar
+    type: heltall
+    tillatte_verdier: 2026 ved denne versjonen
+- tabell: hr_arbeidstidsordning
+  omraade: 3
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/ | https://www.ks.no/fagomrader/lonn-og-tariff/hovedtariffavtalen/beregning-av-tilleggslonn/
+    | https://www.fellesforbundet.no/globalassets/lonn-og-tariffsaker/tariffavtaler/overenskomster-20262028/industrioverenskomsten---resultater-og-endringer-i-taroffoppgjoret-2026.pdf
+  kolonner:
+  - navn: arbeidstidsordning_id
+    type: tekst
+    unik: true
+  - navn: sektor
+    type: tekst
+    tillatte_verdier: industri|privat|kommune
+  - navn: tariff_id
+    type: tekst
+    kobles_til: hr_lonnsavtale_versjon.tariff_id
+  - navn: tariff_avtaledel
+    type: tekst_eller_null
+  - navn: ukenorm_timer
+    type: desimaltall
+    tillatte_verdier: 9/40 som lovutgangspunkt; 37.5|36.5|35.5|33.6 bare etter avtale og relevant ordning; annet når dokumentert
+  - navn: ordningstype
+    type: tekst
+    tillatte_verdier: dagtid|fleksi|delt_skift|dognkont_skift|helkont_skift|tredelt_turnus|annen_verifisert
+  - navn: arbeidssted_tidssone
+    type: tekst
+    tillatte_verdier: Europe/Oslo; annet hvis dokumentert
+  - navn: gyldig_fra
+    type: dato
+  - navn: gyldig_til
+    type: dato_eller_null
+  - navn: dokumentasjon_url
+    type: url_eller_null
+- tabell: hr_arbeidstidsavtale
+  omraade: 3
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/ | https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/gjennomsnittsberegning/
+    | https://www.ssb.no/arbeid-og-lonn/sysselsetting/artikler/dette-er-de-vanligste-jobbene-i-norge
+  kolonner:
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: arbeidstidsordning_id
+    type: tekst
+    kobles_til: hr_arbeidstidsordning.arbeidstidsordning_id
+  - navn: stillingsprosent
+    type: desimaltall
+    kobles_til: hr_ansatte.stillingsprosent
+    tillatte_verdier: 0–100 pluss dokumenterte særordninger; ingen tilfeldig yrkesuavhengig sats
+  - navn: arbeidstid_timer_uke
+    type: desimaltall
+    fordeling: stillingsprosent × dokumentert ukenorm; kalibrer yrkesfordeling mot AKU 2025 og tabell 14756/14757
+  - navn: gjennomsnittsavtale_type
+    type: tekst
+    tillatte_verdier: ingen|individuell_skriftlig|tariff_lokal_skriftlig|arbeidstilsynet|sentralt_tariffunntak
+  - navn: gjennomsnitt_periode_uker
+    type: heltall_eller_null
+    tillatte_verdier: 1–52 avhengig av hjemmel
+  - navn: overtid_utvidelse_type
+    type: tekst
+    tillatte_verdier: ingen|lokal_tariff_skriftlig|arbeidstilsynet|sentral_tariff
+  - navn: hvile_unntak_dokumentert
+    type: boolsk
+  - navn: gyldig_fra
+    type: dato
+  - navn: gyldig_til
+    type: dato_eller_null
+  - navn: dokument_ref
+    type: tekst_eller_null
+- tabell: hr_vaktplan_versjon
+  omraade: 3
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/ | https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/arbeidsplan-vaktliste-skift-og-turnus/
+  kolonner:
+  - navn: vaktplan_id
+    type: tekst
+    unik: true
+  - navn: vakt_id
+    type: tekst
+    kobles_til: vakter.vakt_id
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: avdeling
+    type: tekst
+    kobles_til: hr_ansatte.avdeling
+  - navn: plan_start_lokal
+    type: datetime_tz
+  - navn: plan_slutt_lokal
+    type: datetime_tz
+  - navn: planversjon
+    type: heltall
+    tillatte_verdier: '>=1'
+  - navn: plan_publisert_at
+    type: datetime_tz
+  - navn: plan_drøftet_at
+    type: datetime_tz_eller_null
+  - navn: endring_grunn
+    type: tekst
+    tillatte_verdier: ordinær|etter_avtale|uforutsett|overtid_behov|korrigering
+  - navn: status
+    type: tekst
+    tillatte_verdier: utkast|publisert|endret|avlyst
+  - navn: dokumentasjon_unntak
+    type: tekst_eller_null
+- tabell: hr_tidregistrering
+  omraade: 3
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/ | https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/registrering-av-arbeidstid/
+    | https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/overtid/
+  kolonner:
+  - navn: tidregistrering_id
+    type: tekst
+    unik: true
+  - navn: vakt_id
+    type: tekst
+    kobles_til: vakter.vakt_id
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: plan_vakt_id
+    type: tekst_eller_null
+    kobles_til: hr_vaktplan_versjon.vaktplan_id
+  - navn: faktisk_start
+    type: datetime_tz
+  - navn: faktisk_slutt
+    type: datetime_tz
+  - navn: pause_fra
+    type: datetime_tz_eller_null
+  - navn: pause_til
+    type: datetime_tz_eller_null
+  - navn: pause_er_arbeidstid
+    type: boolsk_eller_ukjent
+  - navn: faktiske_arbeidsminutter
+    type: heltall
+    fordeling: utledet fra tidsstempler og betalte pauser; IKKE fra tilfeldig normalfordeling
+  - navn: klassifisering
+    type: tekst
+    tillatte_verdier: ordinær|merarbeid|overtid|uavklart
+  - navn: beregnings_hjemmel
+    type: tekst_eller_null
+  - navn: datakilde
+    type: tekst
+    tillatte_verdier: syntetisk tidslogg – regel- og statistikkforankret
+  - navn: scenario_id
+    type: tekst_eller_null
+- tabell: hr_bemanningsbehov
+  omraade: 3
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/ | https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/
+  kolonner:
+  - navn: behov_id
+    type: tekst
+    unik: true
+  - navn: avdeling
+    type: tekst
+    kobles_til: hr_ansatte.avdeling
+  - navn: stasjon
+    type: tekst_eller_null
+    kobles_til: vakter.stasjon
+  - navn: periode_start
+    type: datetime_tz
+  - navn: periode_slutt
+    type: datetime_tz
+  - navn: min_ansatte
+    type: heltall
+    tillatte_verdier: '>=0; parametervalg fra lokal risikovurdering, ikke nasjonal lovgrense'
+  - navn: krav_kompetansekoder
+    type: liste_tekst
+    kobles_til: kompetanse.sertifikater
+  - navn: planlagte_ansatte
+    type: heltall
+  - navn: dekning_gap
+    type: heltall
+    fordeling: utledet planlagt minus dokumentert behov
+  - navn: bemanningsgrunnlag
+    type: tekst
+    tillatte_verdier: lokal_risikovurdering|apningstid|sikkerhetskrav|produksjonsbehov|syntetisk_scenario
+  - navn: scenario_id
+    type: tekst_eller_null

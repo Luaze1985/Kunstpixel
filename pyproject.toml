@@ -8,10 +8,15 @@ dependencies = [
     "mcp>=1.29.1",
     "fastmcp>=3.4.2",
     "pydantic>=2.12.5",
+    "pyyaml>=6.0",
     "rich>=15.0.0",
 ]
 
+[project.optional-dependencies]
+llm = ["anthropic"]
+
 [tool.pytest.ini_options]
+markers = ["llm_live: kjører mot ekte modell (krever ANTHROPIC_API_KEY), hoppes over som standard"]
 minversion = "8.0"
 testpaths = ["tests"]
 pythonpath = ["."]
@@ -19,12 +24,3 @@ addopts = "-ra -q"
 filterwarnings = [
     "ignore::DeprecationWarning",
 ]
-
-[tool.ruff]
-# Worktrees og arbeidsmapper skal ikke sjekkes (de er kopier eller midlertidige).
-extend-exclude = [".worktrees", ".claude", ".scratch", "arkiv", ".serena", ".playwright-mcp"]
-
-[tool.ruff.lint]
-# Bare virkelige feil, ikke stil: syntaksfeil (E9), pyflakes (F: ubrukt import/variabel) og sannsynlige feil (B).
-# Stilregler (E, W) ga 1944 funn 2026-10-24 og er med vilje utelatt. Utvid regelsettet i små steg.
-select = ["E9", "F", "B"]

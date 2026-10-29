@@ -1,7 +1,12 @@
 rolle_kode,sporsmal_id,rekkefolge
+A,rapporteringskalender,1
+A,myndighetsoversikt,2
+F,tilsynsrutine,1
+G,rapportmaler,1
 K,vakt-i-dag,1
 K,vaktplan,2
 K,arbeidstid,3
 K,sykefravaer,4
+K,onboarding,5
 L,utstilling,1
 L,vaktkostnad,2

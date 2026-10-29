@@ -1,0 +1,21 @@
+{
+  "id": "VANS-20",
+  "title": "Gi skriftlig advarsel",
+  "description": "Formell advarsel som del av oppsigelsesløp.",
+  "duration_minutes": 10,
+  "conversation_type": "Konsekvenssamtale",
+  "persona_name": "Anders",
+  "persona_role": "Servicetekniker med 6 års ansiennitet",
+  "tags_visible": [
+    "advarsel",
+    "dokumentasjon",
+    "formell"
+  ],
+  "hidden_tag_count": 2,
+  "source_status": "metadata_complete",
+  "catalog_group": "HR og ledersamtaler",
+  "input_notes": "Katalogmetadata fra brukerens innlimte tekst, ikke komplett rollemanus. +N betyr at flere tagger er skjult i kilden, ikke at de er kjent.",
+  "source": "user_supplied_paste_2026-10-20",
+  "scenario_implemented": false,
+  "persona_is_verified_synthetic": false
+}

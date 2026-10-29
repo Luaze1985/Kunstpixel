@@ -2,7 +2,7 @@
 
 - **2026-09-13:** Pre-clone forprosjekt opprettet for digital syntetisk KI-bedrift (`digital_bedrift_preclone_v0_3`).
 - **2026-09-14 13:30:** Konseptspesifisering startet via `/grill-with-docs`.
-- **2026-09-14 13:31:** Beslutning: Konseptet defineres som **Aura Kunstmuseum** (mellomstort, stedsuavhengig SMB-museum).
+- **2026-09-14 13:31:** Beslutning: Konseptet defineres som **Kunstpixel** (mellomstort, stedsuavhengig SMB-museum).
 - **2026-09-14 13:32:** Beslutning (ADR-0001): Lean, uavhengig forretningsmodell valgt for å prioritere agenttrening, plugins og undervisning for AI-gründere.
 - **2026-09-14 13:35:** Komplett modulær kontekstarkitektur etablert (`context/core/`, `context/roles/`, `context/operations/`, `context/projects/`).
 - **2026-09-14 13:36:** Første samlingsdatasett opprettet (`data/samling.json`, 12 verk).

@@ -54,7 +54,7 @@ DATA_DIR = PROJECT_ROOT / "05_data"
 BASE_DB = DATA_DIR / "kilde" / "museum_base.db"
 OUT_DB = DATA_DIR / "museum.db"
 SHA_FILE = DATA_DIR / "museum.db.sha256"
-SKJEMAVERSJON = 4
+SKJEMAVERSJON = 5
 
 KLOKKESLETT_CSV = DATA_DIR / "arkiv_hr_vakt_klokkeslett.csv"
 GRENSER_CSV = DATA_DIR / "arbeidstid_grenser.csv"
@@ -69,6 +69,15 @@ ORG_FERDIGHETER_CSV = DATA_DIR / "mock_interne_ferdigheter.csv"
 ORG_KOMPETANSE_CSV = DATA_DIR / "mock_ansatt_kompetanser.csv"
 INTERNE_HENVENDELSER_CSV = DATA_DIR / "mock_interne_henvendelser.csv"
 HMS_AVVIK_TEKST_CSV = DATA_DIR / "mock_avvik_hms_tekst.csv"
+
+# H5 & Governance CSV-er
+H5_MYNDIGHETER_CSV = DATA_DIR / "h5_myndighetskontakter.csv"
+H5_TILSYNSBESOK_CSV = DATA_DIR / "h5_tilsynsbesok_rutine.csv"
+H5_KALENDER_CSV = DATA_DIR / "h5_rapporteringskalender.csv"
+H5_MALER_CSV = DATA_DIR / "h5_rapportmaler.csv"
+H5_TIDSBRUK_CSV = DATA_DIR / "h5_arbeidsoppgaver_tidsbruk.csv"
+H5_HISTORIKK_CSV = DATA_DIR / "h5_historikk_2010_2026.csv"
+HR_OPPLAERING_CSV = DATA_DIR / "hr_opplaering_onboarding.csv"
 
 HR_DEMO_TABLES = ["hr_rules", "hr_availability", "hr_person_skill", "hr_skills", "hr_people"]
 
@@ -201,6 +210,145 @@ CREATE TABLE hms_avvik_tekst (
 )
 """
 
+H5_MYNDIGHETER_SQL = """
+CREATE TABLE h5_myndighetskontakter (
+    id TEXT PRIMARY KEY,
+    myndighet TEXT NOT NULL,
+    omrade TEXT NOT NULL,
+    intern_eier TEXT NOT NULL,
+    kontaktperson TEXT NOT NULL,
+    kontakt_epost TEXT NOT NULL,
+    intern_eier_navn TEXT NOT NULL,
+    intern_eier_epost TEXT NOT NULL,
+    hva_de_vil TEXT NOT NULL,
+    utloser TEXT NOT NULL,
+    dokumentasjon TEXT NOT NULL,
+    merknad TEXT NOT NULL,
+    datakilde TEXT NOT NULL
+)
+"""
+
+H5_TILSYNSBESOK_SQL = """
+CREATE TABLE h5_tilsynsbesok_rutine (
+    steg_nr INTEGER PRIMARY KEY,
+    navn TEXT NOT NULL,
+    ansvarlig TEXT NOT NULL,
+    handling TEXT NOT NULL,
+    dokumentasjon TEXT NOT NULL,
+    gult_avvik_frist TEXT NOT NULL,
+    rodt_avvik_frist TEXT NOT NULL,
+    datakilde TEXT NOT NULL
+)
+"""
+
+H5_KALENDER_SQL = """
+CREATE TABLE h5_rapporteringskalender (
+    id TEXT PRIMARY KEY,
+    rapport TEXT NOT NULL,
+    mottaker TEXT NOT NULL,
+    mottakertype TEXT NOT NULL CHECK(mottakertype IN ('intern', 'ekstern')),
+    frekvens TEXT NOT NULL,
+    antall_per_ar INTEGER NOT NULL,
+    maned TEXT NOT NULL,
+    eier TEXT NOT NULL,
+    timer_per_gang REAL NOT NULL,
+    timer_per_ar INTEGER NOT NULL,
+    godkjenning TEXT NOT NULL,
+    formal TEXT NOT NULL,
+    kilder_json TEXT NOT NULL,
+    datakilde TEXT NOT NULL
+)
+"""
+
+H5_MALER_SQL = """
+CREATE TABLE h5_rapportmaler (
+    id TEXT NOT NULL,
+    mal_navn TEXT NOT NULL,
+    brukes_til_json TEXT NOT NULL,
+    godkjenning TEXT NOT NULL,
+    status_ved_opprettelse TEXT NOT NULL,
+    formal TEXT NOT NULL,
+    felt_rekkefolge INTEGER NOT NULL,
+    felt_navn TEXT NOT NULL,
+    felt_beskrivelse TEXT NOT NULL,
+    felt_kilder_json TEXT NOT NULL,
+    regler_json TEXT NOT NULL,
+    datakilde TEXT NOT NULL,
+    PRIMARY KEY(id, felt_rekkefolge)
+)
+"""
+
+H5_TIDSBRUK_SQL = """
+CREATE TABLE h5_arbeidsoppgaver_tidsbruk (
+    id TEXT PRIMARY KEY,
+    omrade TEXT NOT NULL CHECK(omrade IN ('Myndighetskontakt', 'Rapportering')),
+    oppgave TEXT NOT NULL,
+    myndighet TEXT,
+    rapport_id TEXT REFERENCES h5_rapporteringskalender(id),
+    rolle TEXT NOT NULL,
+    timer_per_ar INTEGER NOT NULL,
+    automatiseringspotensial TEXT NOT NULL CHECK(automatiseringspotensial IN ('Lav', 'Middels', 'Høy')),
+    begrunnelse TEXT NOT NULL,
+    datakilde TEXT NOT NULL
+)
+"""
+
+H5_HISTORIKK_SQL = """
+CREATE TABLE h5_historikk_2010_2026 (
+    ar INTEGER PRIMARY KEY,
+    status_ar TEXT NOT NULL,
+    tema TEXT NOT NULL,
+    besok_totalt INTEGER NOT NULL,
+    betalende_andel_prosent INTEGER NOT NULL,
+    betalende_besokende INTEGER NOT NULL,
+    skoleelever INTEGER NOT NULL,
+    arrangementer_antall INTEGER NOT NULL,
+    utstillinger_antall INTEGER NOT NULL,
+    ansatte_arsverk REAL NOT NULL,
+    snittpris_kr INTEGER NOT NULL,
+    billettinntekter_tkr INTEGER NOT NULL,
+    tilskudd_tkr INTEGER NOT NULL,
+    kafeinntekter_tkr INTEGER NOT NULL,
+    andre_inntekter_tkr INTEGER NOT NULL,
+    inntekter_totalt_tkr INTEGER NOT NULL,
+    kostnader_tkr INTEGER NOT NULL,
+    resultat_tkr INTEGER NOT NULL,
+    tilsyn_antall INTEGER NOT NULL,
+    avvik_funnet INTEGER NOT NULL,
+    avvik_lukket_innen_frist INTEGER NOT NULL,
+    palegg_antall INTEGER NOT NULL,
+    ruh_registrert INTEGER NOT NULL,
+    skader_med_fravaer INTEGER NOT NULL,
+    sykefravaer_prosent REAL NOT NULL,
+    ik_mat_temperaturavvik INTEGER NOT NULL,
+    vernerunder_gjennomfort INTEGER NOT NULL,
+    rapporter_levert INTEGER NOT NULL,
+    rapporter_for_sent INTEGER NOT NULL,
+    tilskuddssoknader INTEGER NOT NULL,
+    tilskudd_innvilget INTEGER NOT NULL,
+    timer_myndighetskontakt INTEGER NOT NULL,
+    timer_rapportering INTEGER NOT NULL,
+    timer_totalt INTEGER NOT NULL,
+    automatiseringsgrad_prosent INTEGER NOT NULL,
+    hendelse TEXT NOT NULL,
+    laerdom TEXT NOT NULL,
+    datakilde TEXT NOT NULL
+)
+"""
+
+HR_OPPLAERING_SQL = """
+CREATE TABLE hr_opplaering_onboarding (
+    opplaering_id TEXT PRIMARY KEY,
+    kategori TEXT NOT NULL CHECK(kategori IN ('kompetanse_matrise', 'onboarding_status', 'hms_opplaering')),
+    rolle TEXT NOT NULL,
+    tema_eller_sertifisering TEXT NOT NULL,
+    fase_eller_status TEXT NOT NULL,
+    aktivitet_eller_beskrivelse TEXT NOT NULL,
+    ansvarlig_rolle TEXT NOT NULL,
+    datakilde TEXT NOT NULL
+)
+"""
+
 INDEXES = [
     "CREATE INDEX IF NOT EXISTS org_kompetanse_skill_idx ON org_ansatt_kompetanse(skill_code, gyldig_til)",
     "CREATE INDEX IF NOT EXISTS interne_henvendelser_kategori_idx ON interne_henvendelser(kategori, dato_tid)",
@@ -210,6 +358,9 @@ INDEXES = [
     "CREATE INDEX IF NOT EXISTS hr_vakter_dato_idx ON hr_vakter(dato, start, slutt)",
     "CREATE INDEX IF NOT EXISTS hr_fravaer_ansatt_idx ON hr_fravaer(ansatt_id, fra, til)",
     "CREATE INDEX IF NOT EXISTS rapport_regler_sporsmal_idx ON rapport_regler(sporsmal_id)",
+    "CREATE INDEX IF NOT EXISTS h5_kalender_eier_idx ON h5_rapporteringskalender(eier, maned)",
+    "CREATE INDEX IF NOT EXISTS h5_tidsbruk_omrade_idx ON h5_arbeidsoppgaver_tidsbruk(omrade, rolle)",
+    "CREATE INDEX IF NOT EXISTS hr_opplaering_rolle_idx ON hr_opplaering_onboarding(rolle, kategori)",
 ]
 
 
@@ -430,6 +581,144 @@ def bygg_hms_avvik_tekst(con: sqlite3.Connection) -> int:
     return len(rader)
 
 
+def bygg_h5_myndighetskontakter(con: sqlite3.Connection) -> int:
+    rader = les_csv(H5_MYNDIGHETER_CSV)
+    con.execute("DROP TABLE IF EXISTS h5_myndighetskontakter")
+    con.execute(H5_MYNDIGHETER_SQL)
+    con.executemany(
+        "INSERT INTO h5_myndighetskontakter VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        [
+            (
+                r["id"], r["myndighet"], r["omrade"], r["intern_eier"], r["kontaktperson"],
+                r["kontakt_epost"], r["intern_eier_navn"], r["intern_eier_epost"], r["hva_de_vil"],
+                r["utloser"], r["dokumentasjon"], r["merknad"], r["datakilde"],
+            )
+            for r in rader
+        ],
+    )
+    return len(rader)
+
+
+def bygg_h5_tilsynsbesok(con: sqlite3.Connection) -> int:
+    rader = les_csv(H5_TILSYNSBESOK_CSV)
+    con.execute("DROP TABLE IF EXISTS h5_tilsynsbesok_rutine")
+    con.execute(H5_TILSYNSBESOK_SQL)
+    con.executemany(
+        "INSERT INTO h5_tilsynsbesok_rutine VALUES (?,?,?,?,?,?,?,?)",
+        [
+            (
+                int(r["steg_nr"]), r["navn"], r["ansvarlig"], r["handling"],
+                r["dokumentasjon"], r["gult_avvik_frist"], r["rodt_avvik_frist"], r["datakilde"],
+            )
+            for r in rader
+        ],
+    )
+    return len(rader)
+
+
+def bygg_h5_rapporteringskalender(con: sqlite3.Connection) -> int:
+    rader = les_csv(H5_KALENDER_CSV)
+    con.execute("DROP TABLE IF EXISTS h5_rapporteringskalender")
+    con.execute(H5_KALENDER_SQL)
+    con.executemany(
+        "INSERT INTO h5_rapporteringskalender VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        [
+            (
+                r["id"], r["rapport"], r["mottaker"], r["mottakertype"], r["frekvens"],
+                int(r["antall_per_ar"]), r["maned"], r["eier"], float(r["timer_per_gang"]),
+                int(r["timer_per_ar"]), r["godkjenning"], r["formal"], r["kilder_json"], r["datakilde"],
+            )
+            for r in rader
+        ],
+    )
+    return len(rader)
+
+
+def bygg_h5_rapportmaler(con: sqlite3.Connection) -> int:
+    rader = les_csv(H5_MALER_CSV)
+    con.execute("DROP TABLE IF EXISTS h5_rapportmaler")
+    con.execute(H5_MALER_SQL)
+    con.executemany(
+        "INSERT INTO h5_rapportmaler VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+        [
+            (
+                r["id"], r["mal_navn"], r["brukes_til_json"], r["godkjenning"],
+                r["status_ved_opprettelse"], r["formal"], int(r["felt_rekkefolge"]),
+                r["felt_navn"], r["felt_beskrivelse"], r["felt_kilder_json"],
+                r["regler_json"], r["datakilde"],
+            )
+            for r in rader
+        ],
+    )
+    return len(rader)
+
+
+def bygg_h5_arbeidsoppgaver_tidsbruk(con: sqlite3.Connection) -> int:
+    rader = les_csv(H5_TIDSBRUK_CSV)
+    con.execute("DROP TABLE IF EXISTS h5_arbeidsoppgaver_tidsbruk")
+    con.execute(H5_TIDSBRUK_SQL)
+    con.executemany(
+        "INSERT INTO h5_arbeidsoppgaver_tidsbruk VALUES (?,?,?,?,?,?,?,?,?,?)",
+        [
+            (
+                r["id"], r["omrade"], r["oppgave"], r["myndighet"] or None,
+                r["rapport_id"] or None, r["rolle"], int(r["timer_per_ar"]),
+                r["automatiseringspotensial"], r["begrunnelse"], r["datakilde"],
+            )
+            for r in rader
+        ],
+    )
+    # Valider at totalsummen er nøyaktig 287 timer
+    total_timer = sum(int(r["timer_per_ar"]) for r in rader)
+    if total_timer != 287:
+        raise ValueError(f"Total tidsbruk i H5 arbeidsoppgaver er {total_timer}, forventet 287 timer")
+    return len(rader)
+
+
+def bygg_h5_historikk(con: sqlite3.Connection) -> int:
+    rader = les_csv(H5_HISTORIKK_CSV)
+    con.execute("DROP TABLE IF EXISTS h5_historikk_2010_2026")
+    con.execute(H5_HISTORIKK_SQL)
+    con.executemany(
+        "INSERT INTO h5_historikk_2010_2026 VALUES (" + ",".join(["?"] * 38) + ")",
+        [
+            (
+                int(r["ar"]), r["status_ar"], r["tema"], int(r["besok_totalt"]),
+                int(r["betalende_andel_prosent"]), int(r["betalende_besokende"]), int(r["skoleelever"]),
+                int(r["arrangementer_antall"]), int(r["utstillinger_antall"]), float(r["ansatte_arsverk"]),
+                int(r["snittpris_kr"]), int(r["billettinntekter_tkr"]), int(r["tilskudd_tkr"]),
+                int(r["kafeinntekter_tkr"]), int(r["andre_inntekter_tkr"]), int(r["inntekter_totalt_tkr"]),
+                int(r["kostnader_tkr"]), int(r["resultat_tkr"]), int(r["tilsyn_antall"]),
+                int(r["avvik_funnet"]), int(r["avvik_lukket_innen_frist"]), int(r["palegg_antall"]),
+                int(r["ruh_registrert"]), int(r["skader_med_fravaer"]), float(r["sykefravaer_prosent"]),
+                int(r["ik_mat_temperaturavvik"]), int(r["vernerunder_gjennomfort"]), int(r["rapporter_levert"]),
+                int(r["rapporter_for_sent"]), int(r["tilskuddssoknader"]), int(r["tilskudd_innvilget"]),
+                int(r["timer_myndighetskontakt"]), int(r["timer_rapportering"]), int(r["timer_totalt"]),
+                int(r["automatiseringsgrad_prosent"]), r["hendelse"], r["laerdom"], r["datakilde"],
+            )
+            for r in rader
+        ],
+    )
+    return len(rader)
+
+
+def bygg_hr_opplaering_onboarding(con: sqlite3.Connection) -> int:
+    rader = les_csv(HR_OPPLAERING_CSV)
+    con.execute("DROP TABLE IF EXISTS hr_opplaering_onboarding")
+    con.execute(HR_OPPLAERING_SQL)
+    con.executemany(
+        "INSERT INTO hr_opplaering_onboarding VALUES (?,?,?,?,?,?,?,?)",
+        [
+            (
+                r["opplaering_id"], r["kategori"], r["rolle"], r["tema_eller_sertifisering"],
+                r["fase_eller_status"], r["aktivitet_eller_beskrivelse"], r["ansvarlig_rolle"], r["datakilde"],
+            )
+            for r in rader
+        ],
+    )
+    return len(rader)
+
+
 def oppgrader_fremmednokler(con: sqlite3.Connection) -> None:
     """Bygg om tabellene i G9 for å legge til eksplisitte FOREIGN KEY constraints."""
     # 1. hr_innleie
@@ -624,6 +913,13 @@ def bygg(til: Path) -> dict:
             antall_org_kompetanse = bygg_org_kompetanse(con)
             antall_henvendelser = bygg_interne_henvendelser(con)
             antall_hms_avvik_tekst = bygg_hms_avvik_tekst(con)
+            antall_h5_myndigheter = bygg_h5_myndighetskontakter(con)
+            antall_h5_tilsyn = bygg_h5_tilsynsbesok(con)
+            antall_h5_kalender = bygg_h5_rapporteringskalender(con)
+            antall_h5_maler = bygg_h5_rapportmaler(con)
+            antall_h5_tidsbruk = bygg_h5_arbeidsoppgaver_tidsbruk(con)
+            antall_h5_historikk = bygg_h5_historikk(con)
+            antall_hr_opplaering = bygg_hr_opplaering_onboarding(con)
             oppgrader_fremmednokler(con)
             koble_ansattregistre(con)
             for sql in INDEXES:
@@ -647,6 +943,13 @@ def bygg(til: Path) -> dict:
             "org_kompetanse": antall_org_kompetanse,
             "interne_henvendelser": antall_henvendelser,
             "hms_avvik_tekst": antall_hms_avvik_tekst,
+            "h5_myndigheter": antall_h5_myndigheter,
+            "h5_tilsyn": antall_h5_tilsyn,
+            "h5_kalender": antall_h5_kalender,
+            "h5_maler": antall_h5_maler,
+            "h5_tidsbruk": antall_h5_tidsbruk,
+            "h5_historikk": antall_h5_historikk,
+            "hr_opplaering": antall_hr_opplaering,
             "user_version": SKJEMAVERSJON,
         }
     finally:

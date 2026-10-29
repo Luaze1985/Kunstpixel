@@ -1,1 +1,1 @@
-"""Aura Kunstmuseum core package."""
+"""Kunstpixel core package."""

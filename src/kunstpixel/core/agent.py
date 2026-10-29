@@ -1,4 +1,4 @@
-"""Museumsvert Agent for Aura Kunstmuseum.
+"""Museumsvert Agent for Kunstpixel.
 
 Connects the masterprompt (prompts/museumsvert.md) with collection and visitor tools
 exposing a dual-engine architecture: deterministic facts engine and conversational host.
@@ -7,6 +7,7 @@ Strictly adheres to read-only security, anti-hallucination, and warm non-academi
 
 from __future__ import annotations
 
+import logging
 import os
 import re
 import sqlite3
@@ -14,9 +15,17 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+
 from src.kunstpixel.core.config import get_db_path
+from src.kunstpixel.core.datapolicy import (
+    SYNTETISK,
+    check_policy,
+    normalize_classification,
+    overall_classification,
+)
+from src.kunstpixel.core.fact_check import Entities, load_entities, verify_facts
+from src.kunstpixel.core.llm import LLMClient, LLMRequest
 from src.kunstpixel.core.db import (
-    VALID_ROOM_IDS,
     execute_read_query,
     get_db_connection,
     normalize_norwegian_text,
@@ -87,6 +96,24 @@ class ReadOnlyConnection:
 
 
 # Forbidden terms to strictly prevent artspeak and commercial / IT jargon
+AUDIT_LOG = logging.getLogger("kunstpixel.audit")
+
+INJECTION_PATTERNS = [
+    r"system\s*override",
+    r"system_pwned",
+    r"du\s+er\s+ikke\s+lenger\s+(museumsvert|assistent)",
+    r"ignore\s+(all\s+)?(previous\s+)?instructions",
+    r"ignorer\s+(alle\s+)?(tidligere\s+)?instruks",
+    r"glem\s+tidligere\s+instrukser",
+    r"gi\s+alle\s+gratis\s+inngang",
+]
+
+
+def looks_like_injection(text: str) -> bool:
+    """Felles for museumsvert og intern assistent."""
+    lower = text.lower()
+    return any(re.search(pat, lower) for pat in INJECTION_PATTERNS)
+
 FORBIDDEN_WORDS = [
     "interrogere",
     "subjektsposisjon",
@@ -111,6 +138,12 @@ class AgentResponse:
     tools_used: list[str] = field(default_factory=list)
     artworks_referenced: list[str] = field(default_factory=list)
     rooms_referenced: list[str] = field(default_factory=list)
+    # LLM-felt. llm_used er True bare når LLM-teksten besto faktakontrollen.
+    llm_used: bool = False
+    klassifisering: str | None = None  # høyeste klassifisering av dataene som ble brukt
+    model: str | None = None
+    fallback_reason: str | None = None
+    tool_results: list[dict[str, Any]] = field(default_factory=list)
 
     def __str__(self) -> str:
         return self.text
@@ -150,7 +183,7 @@ class InProcessMCPClient:
 
 
 class MuseumsvertAgent:
-    """Museumsvert Host Agent for Aura Kunstmuseum.
+    """Museumsvert Host Agent for Kunstpixel.
 
     Operates strictly read-only, answering visitor questions with verified collection facts,
     exhibition details, event schedules, practical FAQ answers, and curated highlights.
@@ -160,7 +193,12 @@ class MuseumsvertAgent:
         self,
         db_path: Path | str | None = None,
         mcp_client: Any = None,
+        llm: LLMClient | None = None,
+        data_classification: str = SYNTETISK,
     ) -> None:
+        # Klassifiseringen settes på alle verktøyresultater fra denne agentens datakilde.
+        # museum.db er syntetisk. Ukjente verdier tolkes som `ekte` (fail-closed).
+        self.data_classification = normalize_classification(data_classification)
         if db_path is not None:
             self.db_path = Path(db_path)
         else:
@@ -170,6 +208,9 @@ class MuseumsvertAgent:
 
         self.mcp_client = mcp_client if mcp_client is not None else InProcessMCPClient()
         self._turn_tools_used: list[str] = []
+        self._turn_tool_results: list[dict[str, Any]] = []
+        self.llm = llm
+        self._entities: Entities | None = None
         self.system_prompt: str = self._load_prompt()
 
         # Strictly read-only connection exposed as db_conn for security audit
@@ -181,9 +222,9 @@ class MuseumsvertAgent:
             self._turn_tools_used.append(tool_name)
 
         if hasattr(self.mcp_client, "call_tool"):
-            return self.mcp_client.call_tool(tool_name, **kwargs)
+            result = self.mcp_client.call_tool(tool_name, **kwargs)
         elif hasattr(self.mcp_client, tool_name):
-            return getattr(self.mcp_client, tool_name)(**kwargs)
+            result = getattr(self.mcp_client, tool_name)(**kwargs)
         else:
             defaults = {
                 "search_collection": search_collection,
@@ -192,7 +233,11 @@ class MuseumsvertAgent:
                 "search_events": search_events,
                 "search_faq": search_faq,
             }
-            return defaults[tool_name](**kwargs)
+            result = defaults[tool_name](**kwargs)
+        self._turn_tool_results.append(
+            {"tool": tool_name, "args": kwargs, "result": result, "klassifisering": self.data_classification}
+        )
+        return result
 
     def _load_prompt(self) -> str:
         """Load masterprompt from prompts/museumsvert.md."""
@@ -210,15 +255,164 @@ class MuseumsvertAgent:
                     return candidate.read_text(encoding="utf-8")
                 except Exception:
                     pass
-        return "Museumsvert for Aura Kunstmuseum."
+        return "Museumsvert for Kunstpixel."
 
     def handle_message(self, user_message: str) -> AgentResponse:
+        """Svar på en melding. Med llm=None er dette ren regelbasert oppførsel."""
+        resp = self._handle_rule_based(user_message)
+        resp.tool_results = list(self._turn_tool_results)
+        resp.klassifisering = overall_classification(resp.tool_results)
+        if self.llm is not None:
+            resp = self._apply_llm(user_message, resp)
+        self._audit(resp)
+        return resp
+
+    @staticmethod
+    def _audit(resp: AgentResponse) -> None:
+        """Revisjonslogg. Aldri spørsmål, svartekst, verktøyresultater eller feildetaljer.
+
+        Bare kategori, verktøy, modell, klassifisering og utfall. Fallback-årsaken kuttes til
+        typen (teksten før første kolon), siden detaljene kan inneholde data.
+        """
+        reason_type = (resp.fallback_reason or "").split(":")[0] or "-"
+        AUDIT_LOG.info(
+            "audit category=%s tools=%s model=%s klassifisering=%s llm_used=%s fallback=%s",
+            resp.category,
+            ",".join(resp.tools_used) or "-",
+            resp.model or "-",
+            resp.klassifisering or "-",
+            resp.llm_used,
+            reason_type,
+        )
+
+    def _read(self, sql: str, params: Any = ()) -> list[Any]:
+        """Skrivebeskyttet direkteoppslag. Logges som kilde slik at faktakontrollen kan grunne svaret.
+
+        Dette er ikke et MCP-verktøy, så tools_used påvirkes ikke.
+        """
+        rows = execute_read_query(sql, params, db_path=self.db_path)
+        self._turn_tool_results.append(
+            {
+                "tool": "db_oppslag",
+                "args": {"sql": sql, "params": dict(params) if isinstance(params, dict) else list(params)},
+                "result": [dict(r) for r in rows],
+                "klassifisering": self.data_classification,
+            }
+        )
+        return rows
+
+    # ---- Hjelpere som henter fakta fra verktøyene (ingen faste fakta i svartekst) ----
+
+    def _other_works_in_room(
+        self,
+        sal_id: str,
+        exclude_ids: set[str] | None = None,
+        exclude_artist: str | None = None,
+        limit: int = 2,
+    ) -> list[dict[str, Any]]:
+        """Andre utstilte verk i samme sal, hentet via get_room_artworks."""
+        raw = self._call_tool("get_room_artworks", room_id=sal_id)
+        if not isinstance(raw, list):
+            return []
+        return [
+            w
+            for w in raw
+            if isinstance(w, dict)
+            and w.get("status") == "utstilt"
+            and w.get("id") not in (exclude_ids or set())
+            and (exclude_artist is None or w.get("kunstner") != exclude_artist)
+        ][:limit]
+
+    @staticmethod
+    def _join_works(works: list[dict[str, Any]]) -> str:
+        items = [f"{w['kunstner']}s *{w['tittel']}* ({w['aar']})" for w in works]
+        return " og ".join(items) if len(items) <= 2 else ", ".join(items[:-1]) + " og " + items[-1]
+
+    def _exhibited_artists(self, exclude: str | None = None, limit: int = 3) -> list[str]:
+        """Navn på kunstnere med utstilte verk, hentet via search_collection."""
+        raw = self._call_tool("search_collection", limit=50)
+        names: list[str] = []
+        if isinstance(raw, list):
+            for w in raw:
+                if isinstance(w, dict) and w.get("status") == "utstilt":
+                    name = w.get("kunstner")
+                    if name and name != exclude and name not in names:
+                        names.append(name)
+        return names[:limit]
+
+    @staticmethod
+    def _join_names(names: list[str]) -> str:
+        return names[0] if len(names) == 1 else ", ".join(names[:-1]) + " og " + names[-1]
+
+    @staticmethod
+    def _bio_excerpt(biografi: str | None, max_chars: int = 300) -> str:
+        """Første delen av biografien fra databasen, kuttet ved siste punktum."""
+        if not biografi:
+            return ""
+        text = biografi.strip()
+        if len(text) <= max_chars:
+            return text
+        cut = text[:max_chars]
+        last = cut.rfind(".")
+        return cut[: last + 1] if last > 80 else cut.rstrip() + "..."
+
+    def _get_entities(self) -> Entities:
+        if self._entities is None:
+            self._entities = load_entities(self.db_path)
+        return self._entities
+
+    def _apply_llm(self, user_message: str, resp: AgentResponse) -> AgentResponse:
+        """La LLM formulere svaret. Bare tekst som består faktakontrollen slipper gjennom.
+
+        Ved alle feil beholdes det regelbaserte svaret og fallback_reason settes.
+        """
+        # Sikkerhetssvar og hilsener har ingen fakta å formulere rundt.
+        if resp.category == "sikkerhet" or not user_message.strip():
+            return resp
+        if not any(tr.get("result") for tr in resp.tool_results):
+            return resp
+
+        # Datapolicy: ekte data kan bare gå til lokal modell. Sjekken kommer før ethvert LLM-kall.
+        blocked = check_policy(getattr(self.llm, "locality", None), resp.tool_results)
+        if blocked:
+            resp.fallback_reason = blocked
+            return resp
+
+        try:
+            text = self.llm.complete(
+                LLMRequest(
+                    system_prompt=self.system_prompt,
+                    user_message=user_message,
+                    tool_results=resp.tool_results,
+                    draft=resp.text,
+                )
+            )
+        except Exception as exc:  # noqa: BLE001 - alle LLM-feil skal gi fallback, aldri krasj
+            resp.fallback_reason = f"llm_feil: {type(exc).__name__}"
+            return resp
+
+        if not isinstance(text, str) or not text.strip():
+            resp.fallback_reason = "llm_tomt_svar"
+            return resp
+
+        violations = verify_facts(text, resp.tool_results, self._get_entities(), FORBIDDEN_WORDS)
+        if violations:
+            resp.fallback_reason = "faktakontroll: " + "; ".join(violations[:3])
+            return resp
+
+        resp.text = text.strip()
+        resp.llm_used = True
+        resp.model = getattr(self.llm, "name", None)
+        return resp
+
+    def _handle_rule_based(self, user_message: str) -> AgentResponse:
         """Process incoming user message and generate a structured AgentResponse."""
         self._turn_tools_used = []
+        self._turn_tool_results = []
         raw = user_message.strip()
         if not raw:
             return AgentResponse(
-                text="Hei og velkommen til Aura Kunstmuseum! Hva kan jeg hjelpe deg med i dag?",
+                text="Hei og velkommen til Kunstpixel! Hva kan jeg hjelpe deg med i dag?",
                 category="praktisk",
                 tools_used=list(self._turn_tools_used),
             )
@@ -227,7 +421,7 @@ class MuseumsvertAgent:
         if self._is_prompt_injection(raw):
             return AgentResponse(
                 text=(
-                    "Som museumsvert ved Aura Kunstmuseum holder jeg meg trygt til rollen min "
+                    "Som museumsvert ved Kunstpixel holder jeg meg trygt til rollen min "
                     "som formidler og vertskap. Jeg kan ikke overstyre museets faste regler eller "
                     "billettpriser, men jeg hjelper deg mer enn gjerne med informasjon om våre fantastiske "
                     "kunstverk, utstillinger eller praktiske opplysninger for besøket!"
@@ -240,7 +434,7 @@ class MuseumsvertAgent:
         if self._is_pure_sql_injection(raw):
             return AgentResponse(
                 text=(
-                    "Velkommen til Aura Kunstmuseum! Jeg er din personlige museumsvert og hjelper deg "
+                    "Velkommen til Kunstpixel! Jeg er din personlige museumsvert og hjelper deg "
                     "gjerne med spørsmål om samlingen vår, utstillingssalene eller praktiske opplysninger. "
                     "Hva ønsker du å oppleve hos oss?"
                 ),
@@ -317,6 +511,14 @@ class MuseumsvertAgent:
                     f"{hb['innhold']}\n\n"
                     f"(Lovhjemmel: {hb['lovhjemmel']} | Målgruppe: {hb['malgruppe']})"
                 )
+                self._turn_tool_results.append(
+                    {
+                        "tool": "lookup_handbook",
+                        "args": {"query": raw, "limit": 2},
+                        "result": hb_results,
+                        "klassifisering": self.data_classification,
+                    }
+                )
                 return self._sanitize_response(AgentResponse(
                     text=text,
                     category="handbok",
@@ -329,18 +531,18 @@ class MuseumsvertAgent:
             resp = self._handle_faq_result(faq_results[0], raw, norm)
             return self._sanitize_response(resp)
 
-        # 13. Fallback: Search collection for general keywords
+        # 14. Fallback: Search collection for general keywords
         collection_results = self._call_tool("search_collection", query=raw)
         if collection_results:
             top_work = collection_results[0]
             resp = self._handle_artwork_details(top_work["id"], raw, norm)
             return self._sanitize_response(resp)
 
-        # 14. Default welcoming host response
+        # 15. Default welcoming host response
         return self._sanitize_response(
             AgentResponse(
                 text=(
-                    "Hei og velkommen til Aura Kunstmuseum! Som museumsvert hjelper jeg deg gjerne med "
+                    "Hei og velkommen til Kunstpixel! Som museumsvert hjelper jeg deg gjerne med "
                     "informasjon om våre kunstverk, utstillinger, åpningstider eller billettpriser. "
                     "Ta gjerne turen inn i Sal A i 1. etasje for stemningsfull natur- og eventyrkunst, "
                     "eller ta trappen opp til Sal D i 2. etasje for å oppleve Edvard Munchs Skrik!"
@@ -353,16 +555,7 @@ class MuseumsvertAgent:
 
     def _is_prompt_injection(self, text: str) -> bool:
         """Detect prompt injection attempts."""
-        lower = text.lower()
-        patterns = [
-            r"system\s*override",
-            r"system_pwned",
-            r"du\s+er\s+ikke\s+lenger\s+museumsvert",
-            r"ignore\s+(all\s+)?(previous\s+)?instructions",
-            r"glem\s+tidligere\s+instrukser",
-            r"gi\s+alle\s+gratis\s+inngang",
-        ]
-        return any(re.search(pat, lower) for pat in patterns)
+        return looks_like_injection(text)
 
     def _is_pure_sql_injection(self, text: str) -> bool:
         """Detect adversarial raw SQL inputs."""
@@ -430,12 +623,12 @@ class MuseumsvertAgent:
         """Handle inquiries about artworks/artists not in the collection."""
         self._call_tool("search_collection", query=raw)
         text = (
-            f"Det verket har vi dessverre ikke i museets samling. Aura Kunstmuseum har en spesialisert "
-            f"samling med fokus på norsk visuell kunst fra 1800- og 1900-tallet, med høydepunkter av "
-            f"blant andre Edvard Munch, Theodor Kittelsen, Harald Sohlberg og Christian Krohg.\n\n"
-            f"Mesterverk som Mona Lisa tilhører andre internasjonale samlinger (Louvre i Paris). "
-            f"Men ta gjerne en tur inn i Sal A eller Sal D her hos oss for å oppleve noen av Norges "
-            f"fremste nasjonalskatter!"
+            "Det verket har vi dessverre ikke i museets samling. Kunstpixel har en spesialisert "
+            "samling med fokus på norsk visuell kunst fra 1800- og 1900-tallet, med høydepunkter av "
+            "blant andre Edvard Munch, Theodor Kittelsen, Harald Sohlberg og Christian Krohg.\n\n"
+            "Mesterverk som Mona Lisa tilhører andre internasjonale samlinger (Louvre i Paris). "
+            "Men ta gjerne en tur inn i Sal A eller Sal D her hos oss for å oppleve noen av Norges "
+            "fremste nasjonalskatter!"
         )
         return AgentResponse(
             text=text,
@@ -458,10 +651,9 @@ class MuseumsvertAgent:
         artworks_raw = self._call_tool("get_room_artworks", room_id=norm_room)
         artworks = artworks_raw if isinstance(artworks_raw, list) else []
 
-        room_info = execute_read_query(
+        room_info = self._read(
             "SELECT navn, etasje, tema FROM saler WHERE id = :id",
             {"id": norm_room},
-            db_path=self.db_path,
         )
         sal_navn = room_info[0]["navn"] if room_info else norm_room
         sal_etasje = room_info[0]["etasje"] if room_info else 1
@@ -483,22 +675,17 @@ class MuseumsvertAgent:
             lines.append(f"{i}. *{a['tittel']}* ({a['aar']}) av {a['kunstner']} – {a['teknikk']}")
         works_list = "\n".join(lines)
 
-        if norm_room == "SAL-D":
-            visual_detail = (
-                "Her møter du blant annet Edvard Munchs verdensberømte *Skrik* med den flammende himmelen, "
-                "det poetiske *Pikene på broen*, og Anna-Eva Bergmans monumentale *N. 7 – Stor blå fjellform* "
-                "utført med metallblad på lerret."
-            )
-            adjacent = "Etter Sal D anbefaler jeg en tur innom Sal C for å se Harriet Backers og Kitty Kiellands vakre interiør- og lysstudier."
-        elif norm_room == "SAL-A":
-            visual_detail = (
-                "Sal A rommer våre mest elskede stemningsmalerier fra norsk folketro og natur, fra Kittelsens "
-                "mystiske *Nøkken* til Sohlbergs lysende *Vinternatt i Rondane* og Nikolai Astrups flammende *Jonsokbål*."
-            )
-            adjacent = "Etter Sal A kan du fortsette rett inn i Sal B for å oppleve Christian Krohgs gripende sosialrealisme."
-        else:
-            visual_detail = f"Salen viser {len(artworks)} utvalgte verk i museets faste samling."
-            adjacent = "Ta gjerne turen videre til Sal D i 2. etasje for å oppleve Edvard Munchs mesterverk."
+        # Tema og nabosal kommer fra saler-tabellen, ikke fra fast tekst.
+        tema = room_info[0]["tema"] if room_info else ""
+        visual_detail = (
+            f"Salens tema er «{tema}»." if tema else f"Salen viser {len(artworks)} utvalgte verk i museets faste samling."
+        )
+        public_rooms = self._read("SELECT id, navn, etasje FROM saler WHERE id LIKE 'SAL-%' ORDER BY id")
+        room_ids = [r["id"] for r in public_rooms]
+        adjacent = ""
+        if norm_room in room_ids and len(room_ids) > 1:
+            nxt = public_rooms[(room_ids.index(norm_room) + 1) % len(room_ids)]
+            adjacent = f"Etter {sal_navn} kan du gå videre til {nxt['navn']} ({nxt['etasje']}. etasje)."
 
         etasje_str = f"{sal_etasje}. etasje"
         direction = (
@@ -511,9 +698,10 @@ class MuseumsvertAgent:
             f"I **{sal_navn}** ({etasje_str}) kan du for tiden oppleve følgende utstilte verk, ordnet etter visningsrekkefølge:\n\n"
             f"{works_list}\n\n"
             f"{visual_detail}\n\n"
-            f"{direction}\n\n"
-            f"{adjacent}"
+            f"{direction}"
         )
+        if adjacent:
+            text += f"\n\n{adjacent}"
 
         ref_works = [a["id"] for a in artworks if "id" in a]
         return AgentResponse(
@@ -526,30 +714,41 @@ class MuseumsvertAgent:
 
     def _handle_exhibitions(self) -> AgentResponse:
         """Provide overview of active exhibitions at the museum."""
-        rows = execute_read_query(
-            "SELECT id, tittel, undertittel, kurator, saler, beskrivelse FROM utstillinger WHERE status = 'aktiv'",
-            db_path=self.db_path,
+        rows = self._read(
+            "SELECT id, tittel, undertittel, kurator, startdato, sluttdato, saler, beskrivelse, status "
+            "FROM utstillinger WHERE status IN ('aktiv', 'planlagt') ORDER BY startdato",
         )
-        parts = []
-        for r in rows:
-            parts.append(f"- **{r['tittel']} – {r['undertittel']}** (vises i {r['saler']}): {r['beskrivelse']}")
-        exhibition_list = "\n\n".join(parts)
+        active = [r for r in rows if r["status"] == "aktiv"]
+        planned = [r for r in rows if r["status"] == "planlagt"]
 
-        text = (
-            "Aura Kunstmuseum viser for tiden to aktive utstillinger:\n\n"
-            f"{exhibition_list}\n\n"
-            "Hovedutstillingen *Stille kraft* spenner over både 1. og 2. etasje (Sal A og Sal D), "
-            "og løfter frem hvordan natur, folketro og eksistens har preget norsk modernisme og malerkunst. "
-            "I Sal C viser vi *Lys innenfra*, som dykker ned i Harriet Backers og Kitty Kiellands intime lysstudier.\n\n"
-            "Sal A ligger i 1. etasje, mens Sal C og Sal D finnes i 2. etasje. "
-            "Til våren åpner vi også utstillingen *Opprørets øye* i Sal B med Christian Krohg og Erik Werenskiold.\n\n"
-            "Inngangsbilletten gir adgang til samtlige saler og utstillinger hele dagen!"
-        )
+        number_words = {1: "én", 2: "to", 3: "tre", 4: "fire"}
+        if active:
+            count = number_words.get(len(active), str(len(active)))
+            plural = "aktiv utstilling" if len(active) == 1 else "aktive utstillinger"
+            text = f"Kunstpixel viser for tiden {count} {plural}:\n\n"
+            text += "\n\n".join(
+                f"- **{r['tittel']} – {r['undertittel']}** (vises i {r['saler']}): {r['beskrivelse']}" for r in active
+            )
+        else:
+            text = "Kunstpixel har for øyeblikket ingen aktive utstillinger."
+
+        if planned:
+            text += "\n\nKommende utstillinger:\n\n" + "\n\n".join(
+                f"- **{r['tittel']} – {r['undertittel']}** (vises i {r['saler']}, {r['startdato']} til {r['sluttdato']}): "
+                f"{r['beskrivelse']}"
+                for r in planned
+            )
+
+        room_refs: list[str] = []
+        for r in active:
+            for room in re.findall(r"(?:SAL|MAG)-[A-Z0-9]+", r["saler"] or ""):
+                if room not in room_refs:
+                    room_refs.append(room)
         return AgentResponse(
             text=text,
             category="utstilling",
             tools_used=list(self._turn_tools_used),
-            rooms_referenced=["SAL-A", "SAL-C", "SAL-D"],
+            rooms_referenced=room_refs,
         )
 
     def _handle_events(self, raw: str, norm: str) -> AgentResponse:
@@ -715,10 +914,11 @@ class MuseumsvertAgent:
         if status == "magasin" or sal_id == "MAG-1":
             text = (
                 f"Verket *{tittel}* ({aar}) av {kunstner} er dessverre for tiden ikke utstilt i museets "
-                f"publikumssaler, da det oppbevares trygt i vårt klimastyrte magasin (MAG-1).\n\n"
-                f"Men i Sal A og Sal D kan du oppleve en rekke andre fantastiske mesterverk fra samme epoke, "
-                f"blant annet verk av Edvard Munch, Theodor Kittelsen og Harald Sohlberg."
+                f"publikumssaler, da det oppbevares trygt i vårt klimastyrte magasin (MAG-1)."
             )
+            others = self._exhibited_artists(exclude=kunstner)
+            if others:
+                text += f"\n\nI publikumssalene kan du i stedet oppleve verk av blant andre {self._join_names(others)}."
             return AgentResponse(
                 text=text,
                 category="samling",
@@ -753,7 +953,7 @@ class MuseumsvertAgent:
         # 4. Spørsmål om barn, audioguide eller proveniens
         barneformidling = details.get("barneformidling", "")
         audioguide = details.get("audioguide_manus", "")
-        
+
         if any(w in norm for w in ["barn", "7-aaring", "7-åring", "7 aaring", "7 åring", "unge", "skole", "forklar for barn"]):
             if barneformidling:
                 suggestion = f"Her er en barnevennlig fortelling om verket:\n\n{barneformidling}"
@@ -767,14 +967,11 @@ class MuseumsvertAgent:
         elif "proveniens" in norm or "historikk" in norm or "opprinnelse" in norm or "eier" in norm:
             suggestion = f"Verkets dokumenterte proveniens er: {proveniens}."
         else:
-            if sal_id == "SAL-D":
-                suggestion = "I samme sal kan du også oppleve hans poetiske *Pikene på broen* (1901) og Anna-Eva Bergmans monumentale *N. 7 – Stor blå fjellform*."
-            elif sal_id == "SAL-A":
-                suggestion = "I samme sal henger også Harald Sohlbergs *Vinternatt i Rondane* og Nikolai Astrups *Jonsokbål*."
-            elif sal_id == "SAL-B":
-                suggestion = "I samme sal kan du også se Christian Krohgs gripende *Albertine i politilægens venteværelse* og Erik Werenskiolds *En bondebegravelse*."
+            others = self._other_works_in_room(sal_id, exclude_ids={details["id"]})
+            if others:
+                suggestion = f"I samme sal henger også {self._join_works(others)}."
             else:
-                suggestion = "Ta gjerne også en titt på de øvrige verkene i salen for å se hvordan lyset behandles i ulike rom og motiver."
+                suggestion = "Ta gjerne også en titt på de øvrige verkene i salen."
 
         text = f"{direct_answer}\n\n{visual_detail}\n\n{direction}\n\n{suggestion}"
         return AgentResponse(
@@ -818,10 +1015,9 @@ class MuseumsvertAgent:
 
     def _handle_artist_inquiry(self, artist_id: int, raw: str, norm: str) -> AgentResponse:
         """Generate response for an artist inquiry."""
-        artist_rows = execute_read_query(
+        artist_rows = self._read(
             "SELECT id, navn, fodt, dod, nasjonalitet, biografi, kunstretning FROM kunstnere WHERE id = :id",
             {"id": artist_id},
-            db_path=self.db_path,
         )
         if not artist_rows:
             return self._handle_unknown_artwork(raw)
@@ -839,9 +1035,11 @@ class MuseumsvertAgent:
         if not exhibited:
             text = (
                 f"{navn} ({lifespan}) er representert i museets samling, men verkene oppbevares for "
-                f"tiden i museets magasin og er ikke utstilt i våre publikumssaler.\n\n"
-                f"Spør gjerne om andre utstilte kunstnere, som Edvard Munch, Theodor Kittelsen eller Harald Sohlberg!"
+                f"tiden i museets magasin og er ikke utstilt i våre publikumssaler."
             )
+            others = self._exhibited_artists(exclude=navn)
+            if others:
+                text += f"\n\nSpør gjerne om andre utstilte kunstnere, som {self._join_names(others)}!"
             return AgentResponse(
                 text=text,
                 category="samling",
@@ -861,42 +1059,20 @@ class MuseumsvertAgent:
             f"Bildene henger utstilt i **{sal_str}**."
         )
 
-        # 2. Visual / biographical detail
-        if artist_id == 1:  # Kittelsen
-            visual_detail = (
-                "I *Nøkken* (1904) ser du de gåtefulle øynene som stirrer opp fra skogstjernet i sommernatten, "
-                "mens *Soria Moria slott* (1900) skildrer Askeladden som speider mot det gylne slottet i det fjerne. "
-                "Kittelsen var en mester i å fange norsk folketro og stemningsfull naturmystikk."
-            )
-            direction = "Sal A – Mytologi og natur finner du i 1. etasje, like inn til høyre fra resepsjonen."
-            suggestion = "I samme sal henger også Harald Sohlbergs berømte *Vinternatt i Rondane* og Nikolai Astrups *Jonsokbål*."
-        elif artist_id == 6:  # Munch
-            visual_detail = (
-                "Her kan du oppleve selve ur-ikonet for menneskelig angst i *Skrik* (1893) med den flammende himmelen, "
-                "samt det rolige og poetiske *Pikene på broen* (1901) fra Åsgårdstrand."
-            )
-            direction = "Sal D – Eksistens og modernisme ligger i 2. etasje. Følg hovedtrappen eller ta heisen ved kafeen."
-            suggestion = "I Sal D finner du også Anna-Eva Bergmans skimrende abstrakte fjellformer."
-        elif artist_id == 4:  # Sohlberg
-            visual_detail = (
-                "Hans mest berømte verk *Vinternatt i Rondane* (1914) fremstiller det mektige Rondane-massivet "
-                "under en dyp, stjernespekket vinternatt, og regnes som et av Norges fremste nasjonalmalerier."
-            )
-            direction = "Sal A ligger i 1. etasje rett ved resepsjonen."
-            suggestion = "I samme sal finner du også Theodor Kittelsens kjente eventyrmotiver."
-        elif artist_id == 2:  # Krohg
-            visual_detail = (
-                "Krohgs monumentale lerreter *Kampen for tilværelsen* (1889) og *Albertine i politilægens venteværelse* (1887) "
-                "gir et rått, ufiltrert innblikk i fattigdommen og urettferdigheten i 1880-tallets Kristiania."
-            )
-            direction = "Sal B – Realisme og samfunn ligger i 1. etasje."
-            suggestion = "I samme sal henger også Erik Werenskiolds *En bondebegravelse*."
-        else:
-            visual_detail = artist["biografi"][:200] + "..." if artist["biografi"] else ""
-            direction = f"Du finner verkene i {sal_str}."
-            suggestion = "Ta gjerne turen innom kafeen i 1. etasje for å lese mer i museets kunstbøker."
+        # 2. Biografi fra databasen (samme logikk for alle kunstnere)
+        visual_detail = self._bio_excerpt(artist["biografi"])
 
-        text = f"{direct_answer}\n\n{visual_detail}\n\n{direction}\n\n{suggestion}"
+        # 3. Etasje for hver sal, fra saler-tabellen
+        floors = {r["id"]: r for r in self._read("SELECT id, navn, etasje FROM saler")}
+        direction = " ".join(
+            f"{floors[s]['navn']} ligger i {floors[s]['etasje']}. etasje." for s in sal_ids if s in floors
+        ) or f"Du finner verkene i {sal_str}."
+
+        # 4. Andre kunstnere i samme sal, fra get_room_artworks
+        others = self._other_works_in_room(sal_ids[0], exclude_artist=navn) if sal_ids else []
+        suggestion = f"I samme sal henger også {self._join_works(others)}." if others else ""
+
+        text = "\n\n".join(p for p in (direct_answer, visual_detail, direction, suggestion) if p)
         return AgentResponse(
             text=text,
             category="samling",

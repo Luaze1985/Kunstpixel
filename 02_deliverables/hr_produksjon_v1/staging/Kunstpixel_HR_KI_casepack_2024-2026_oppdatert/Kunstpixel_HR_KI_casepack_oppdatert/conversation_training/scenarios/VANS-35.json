@@ -1,0 +1,21 @@
+{
+  "id": "VANS-35",
+  "title": "Hjemmekontor og isolasjon (aml § 4-3)",
+  "description": "Medarbeider som viser tegn på isolasjon etter langvarig hjemmearbeid.",
+  "duration_minutes": 10,
+  "conversation_type": "Bekymringssamtale",
+  "persona_name": "Lisa",
+  "persona_role": "Markedskonsulent som har jobbet remote lenge",
+  "tags_visible": [
+    "hjemmekontor",
+    "isolasjon",
+    "psykososialt"
+  ],
+  "hidden_tag_count": 2,
+  "source_status": "metadata_complete",
+  "catalog_group": "HR og ledersamtaler",
+  "input_notes": "Katalogmetadata fra brukerens innlimte tekst, ikke komplett rollemanus. +N betyr at flere tagger er skjult i kilden, ikke at de er kjent.",
+  "source": "user_supplied_paste_2026-10-20",
+  "scenario_implemented": false,
+  "persona_is_verified_synthetic": false
+}

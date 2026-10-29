@@ -1,0 +1,231 @@
+versjon: 1.0.0
+datasett_formal: Standardiserte datakontrakter for AI-native HR-plattform (Kunstmuseum
+  med sammenligningssektorer)
+kjerne_tabeller_museum_db:
+  hr_ansatte:
+    beskrivelse: Hovedregister over ansatte i virksomheten.
+    primaernokkel: ansatt_id
+    format: KP-ANS-XXX
+    felter:
+      ansatt_id:
+        type: string
+        pakrevd: true
+        unik: true
+      navn:
+        type: string
+        pakrevd: true
+      kjonn:
+        type: string
+        tillatte_verdier:
+        - K
+        - M
+      fodselsaar:
+        type: integer
+        min: 1940
+        max: 2010
+      avdeling:
+        type: string
+        tillatte_verdier:
+        - Ledelse
+        - Kuratering
+        - Samling
+        - Formidling
+        - Drift
+        - Marked
+      stilling:
+        type: string
+        pakrevd: true
+      ansatt_fra:
+        type: date_iso8601
+        pakrevd: true
+      ansatt_til:
+        type: date_iso8601
+        nullable: true
+      status:
+        type: string
+        tillatte_verdier:
+        - Fast
+        - Midlertidig
+        - Vikar
+        - Sluttet
+      stillingsprosent:
+        type: float
+        min: 0.05
+        max: 1.0
+      lonnstrinn_virke:
+        type: integer
+        min: 20
+        max: 95
+        alias: lonnstrinn
+      epost:
+        type: email
+        pakrevd: true
+      styrk08_kode:
+        type: string
+        format: XXXX.XX
+        alias: stilling_styrk08
+    sensitivitet: Fortrolig (Internt personalregister)
+  hr_vakter:
+    beskrivelse: Gjennomførte og planlagte vakter og timeregistreringer.
+    primaernokkel: vakt_id
+    format: VAKT-XXXXXXX
+    fremmednokler:
+      ansatt_id: hr_ansatte.ansatt_id
+    felter:
+      vakt_id:
+        type: string
+        pakrevd: true
+        unik: true
+      ansatt_id:
+        type: string
+        pakrevd: true
+      dato:
+        type: date_iso8601
+        pakrevd: true
+      start:
+        type: time_hhmm
+        pakrevd: true
+      slutt:
+        type: time_hhmm
+        pakrevd: true
+      timer:
+        type: float
+        min: 0.5
+        max: 16.0
+      stasjon:
+        type: string
+        nullable: true
+      avdeling:
+        type: string
+        pakrevd: true
+    sensitivitet: Internt (Arbeidstid)
+  hr_fravaer:
+    beskrivelse: Registrert fravær (egenmelding, sykemelding, permisjon).
+    primaernokkel: fravaer_id
+    format: FRAV-XXXXXX
+    fremmednokler:
+      ansatt_id: hr_ansatte.ansatt_id
+    felter:
+      fravaer_id:
+        type: string
+        pakrevd: true
+        unik: true
+      ansatt_id:
+        type: string
+        pakrevd: true
+      fra:
+        type: date_iso8601
+        pakrevd: true
+      til:
+        type: date_iso8601
+        pakrevd: true
+      type:
+        type: string
+        tillatte_verdier:
+        - egenmelding
+        - sykemelding
+        - permisjon
+        - annet
+    sensitivitet: Strengt fortrolig (Helse/GDPR Art. 9) - Diagnoser er strengt FORBUDT
+  virke_tariff:
+    beskrivelse: Lønnstabell basert på Virke Landsoverenskomst for museer.
+    primaernokkel: lonnstrinn
+    felter:
+      lonnstrinn:
+        type: integer
+        pakrevd: true
+        unik: true
+      timesats_ordinar:
+        type: float
+        pakrevd: true
+      timesats_kveld:
+        type: float
+        pakrevd: true
+      timesats_helg:
+        type: float
+        pakrevd: true
+      timesats_helligdag:
+        type: float
+        pakrevd: true
+    sensitivitet: Offentlig / Tariffavtale
+ap9_skjemaer_oversikt:
+  antall_tabeller: 58
+  tabelliste:
+  - hr_lonnsavtale_versjon
+  - hr_lonnsarter
+  - hr_lonnslinjer
+  - hr_arbeidsgiveravgift_grunnlag
+  - hr_arbeidstidsordning
+  - hr_arbeidstidsavtale
+  - hr_vaktplan_versjon
+  - hr_tidregistrering
+  - hr_bemanningsbehov
+  - hr_fravaershendelse
+  - hr_egenmeldingsordning
+  - hr_sykepenger_arbeidsgiverperiode
+  - hr_sykefravaersoppfolging
+  - hr_dialogmote
+  - hr_permisjon_omsorg
+  - hr_maalekatalog
+  - hr_maalestyring_vurdering
+  - hr_team_kpi_periode
+  - hr_industri_utstyrskjoring
+  - hr_service_saksflyt
+  - hr_kommunal_kostra_referanse
+  - hr_arbeidsinnsats_aggregat
+  - hr_innsamling_katalog
+  - hr_undersokelse_aggregering
+  - hr_samtaleoppfolging
+  - hr_hms_avvik
+  - hr_varsling_administrasjon
+  - hr_kompetansekrav
+  - hr_kompetanse_status
+  - hr_svarproveniens
+  - hr_arp_virksomhet
+  - hr_arp_kartlegging
+  - hr_arp_stillingsgrupper
+  - hr_arp_stillingsplassering
+  - hr_arp_lonnsgrunnlag
+  - hr_arp_aggregat
+  - hr_arp_arlig_kjonnsbalanse
+  - hr_arp_ufrivillig_deltid
+  - hr_arp_innsyn
+  - hr_arp_tiltak
+  - hr_rekrutteringsbehov
+  - hr_rekrutteringsprosess
+  - hr_ansettelseskontrakt
+  - hr_onboarding_tiltak
+  - hr_provetid_oppfolging
+  - hr_omstillingssak
+  - hr_oppsigelse_sak
+  - hr_fortrinnsrett_sak
+  - hr_turnover_definisjon
+  - hr_livslope_aggregerte_maal
+  - museum_handbok_rolletema
+  - museum_tariff_tilordning
+  - museum_arrangement_bemanning
+  - museum_fravaer_kompetansedekning
+  - museum_virksomhetskpi
+  - museum_frivillig_hms
+  - museum_stillingsverdi_gruppe
+  - museum_kunstner_oppdrag_status
+  museums_spesifikke_tabeller:
+  - museum_handbok_rolletema
+  - museum_tariff_tilordning
+  - museum_arrangement_bemanning
+  - museum_fravaer_kompetansedekning
+  - museum_virksomhetskpi
+  - museum_frivillig_hms
+  - museum_stillingsverdi_gruppe
+  - museum_kunstner_oppdrag_status
+personverngrenser_og_k_anonymitet:
+  minste_gruppestorrelse_kpi: 5
+  forbudte_felter:
+  - diagnose
+  - helsedetaljer
+  - individuell_overvakingsscore
+  - adgangslogg_ytelse
+  tilgangsnivaaer:
+    ansatt: Kun egne opplysninger, vaktplan, generell personalhåndbok.
+    leder: Egne underordnede, aggregerte teamdata (k>=5), godkjenning av fravær/skift.
+    hr_stab: Full tilgang til personalforvaltning, tariffmatriser, anonymisert ARP-likelønn.

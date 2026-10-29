@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intern assistent</title>
+<link rel="stylesheet" href="/af.css">
+<style nonce="{{NONCE}}">
+  body { margin: 0; padding: 24px 16px; background: var(--canvas); }
+  @media (max-width: 1050px) {
+    .af-context { display: block; grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body class="af">
+<div class="af-shell">
+  <nav class="af-sidebar" aria-label="Steg">
+    <p class="af-side-heading">Intern assistent</p>
+    <ol class="af-flow-list">
+      <li><a class="af-flow-link" href="#rolle" data-nav="rolle" aria-current="step"><span class="af-step-dot">1</span><span>Rolle</span></a></li>
+      <li><a class="af-flow-link" href="#sporsmal" data-nav="sporsmal"><span class="af-step-dot">2</span><span>Spørsmål</span></a></li>
+      <li><a class="af-flow-link" href="#svar" data-nav="svar"><span class="af-step-dot">3</span><span>Svar</span></a></li>
+    </ol>
+    <hr class="af-side-rule">
+    <p class="af-task-hint">Kun lesing. Kun internt.</p>
+  </nav>
+
+  <main class="af-main">
+    <section class="af-view" data-step="rolle" id="rolle">
+      <p class="af-caption">Steg 1 av 3</p>
+      <h1 class="af-title">Rolle</h1>
+      <div class="af-error-summary" id="feil-rolle" role="alert" hidden>
+        <h2>Feil</h2>
+        <p id="feil-rolle-tekst"></p>
+      </div>
+      <div class="af-group">
+        <label class="af-label" for="rolle-valg">Hvilken rolle har du?</label>
+        <select class="af-input" id="rolle-valg"></select>
+      </div>
+      <div class="af-actions">
+        <button class="af-btn af-btn-primary" type="button" id="fortsett">Fortsett</button>
+      </div>
+    </section>
+
+    <section class="af-view" data-step="sporsmal" id="sporsmal" hidden>
+      <p class="af-caption">Steg 2 av 3</p>
+      <h2 class="af-title">Spørsmål</h2>
+      <div class="af-error-summary" id="feil-sporsmal" role="alert" hidden>
+        <h2 id="feil-sporsmal-tittel">Feil</h2>
+        <p id="feil-sporsmal-tekst"></p>
+      </div>
+      <div class="af-group">
+        <label class="af-label" for="sporsmal-felt">Hva vil du vite?</label>
+        <textarea class="af-textarea" id="sporsmal-felt" rows="3" maxlength="1000"></textarea>
+      </div>
+      <div class="af-actions">
+        <button class="af-btn af-btn-primary" type="button" id="spor">Spør</button>
+        <button class="af-btn af-btn-secondary" type="button" id="tilbake">Tilbake</button>
+        <span class="af-save-status" id="status" role="status"></span>
+      </div>
+    </section>
+
+    <section class="af-view" data-step="svar" id="svar" hidden>
+      <p class="af-caption">Steg 3 av 3</p>
+      <h2 class="af-title">Svar</h2>
+      <div id="svar-innhold"></div>
+      <div class="af-actions">
+        <button class="af-btn af-btn-primary" type="button" id="nytt">Still nytt spørsmål</button>
+        <button class="af-btn af-btn-secondary" type="button" id="bytt">Bytt rolle</button>
+      </div>
+    </section>
+  </main>
+
+  <aside class="af-context" aria-label="Kilder">
+    <h2 class="af-context-title">Slik svarte assistenten</h2>
+    <div class="af-context-card">
+      <span class="af-small-label">Rolle</span>
+      <p id="k-rolle"></p>
+    </div>
+    <div class="af-context-card">
+      <span class="af-small-label">Verktøy</span>
+      <p id="k-verktoy"></p>
+    </div>
+    <div class="af-context-card">
+      <span class="af-small-label">Kilder</span>
+      <div id="k-kilder"></div>
+    </div>
+    <div class="af-context-card">
+      <span class="af-small-label">Data</span>
+      <p id="k-data"></p>
+    </div>
+    <div class="af-context-card">
+      <span class="af-small-label">Modell</span>
+      <p id="k-modell"></p>
+    </div>
+  </aside>
+</div>
+
+<script nonce="{{NONCE}}">
+(function () {
+  "use strict";
+
+  // Én kilde til regler og tekst. Servrets kategori avgjør visningen, aldri innholdet i fritekst.
+  var REGLER = {
+    versjon: "1",
+    tekst: {
+      velgRolle: "Velg rolle for å fortsette.",
+      tomtSporsmal: "Skriv et spørsmål for å fortsette.",
+      rollerFeil: "Kunne ikke hente rollene. Last siden på nytt.",
+      nettFeil: "Kunne ikke hente svar. Prøv igjen.",
+      henter: "Henter svar",
+      ingenRolle: "Ikke valgt",
+      ingenSvar: "Ingen spørsmål stilt ennå.",
+      ingenVerktoy: "Ingen verktøy brukt.",
+      ingenKilder: "Ingen kilder.",
+      regelbasert: "Ingen, regelbasert",
+      valgRolle: "Velg rolle",
+      klassifisering: { syntetisk: "Syntetiske data", ekte: "Ekte data" },
+      ingenData: "Ingen data brukt."
+    },
+    utfall: [
+      { id: "R1", funnet: true, vis: "svar", merke: "Fra interne data" },
+      { id: "R2", kategorier: ["ikke_funnet", "utenfor"], vis: "tom", tittel: "Står ikke i dataene" },
+      { id: "R3", kategorier: ["tilgang"], vis: "varsel", tittel: "Ingen tilgang med denne rollen" },
+      { id: "R4", kategorier: ["sikkerhet"], vis: "varsel", tittel: "Kan ikke endre reglene" },
+      { id: "R5", nettfeil: true, vis: "feil", tittel: "Feil" }
+    ],
+    ellers: { id: "R6", vis: "varsel", tittel: "Avklar manuelt" }
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var steg = ["rolle", "sporsmal", "svar"];
+  var roller = {};
+  var harSvar = false;
+
+  function velgUtfall(d) {
+    for (var i = 0; i < REGLER.utfall.length; i++) {
+      var r = REGLER.utfall[i];
+      if (r.funnet === true && d.funnet === true) return r;
+      if (r.kategorier && r.kategorier.indexOf(d.category) !== -1) return r;
+    }
+    return REGLER.ellers;
+  }
+
+  function el(tag, klasse, tekst) {
+    var e = document.createElement(tag);
+    if (klasse) e.className = klasse;
+    if (tekst != null) e.textContent = tekst;
+    return e;
+  }
+
+  function tom(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+
+  function rolleValgt() { return $("rolle-valg").value; }
+
+  function kanTil(id) {
+    if (id === "rolle") return true;
+    if (id === "sporsmal") return rolleValgt() !== "";
+    return harSvar;
+  }
+
+  function visSteg(id) {
+    steg.forEach(function (s) { $(s).hidden = s !== id; });
+    document.querySelectorAll(".af-flow-link").forEach(function (a) {
+      var navn = a.getAttribute("data-nav");
+      if (navn === id) a.setAttribute("aria-current", "step"); else a.removeAttribute("aria-current");
+      var ferdig = (navn === "rolle" && rolleValgt() !== "" && id !== "rolle") ||
+                   (navn === "sporsmal" && harSvar && id === "svar");
+      if (ferdig) a.setAttribute("data-state", "done"); else a.removeAttribute("data-state");
+    });
+  }
+
+  function visFeil(boks, tekstId, tekst) {
+    $(tekstId).textContent = tekst;
+    $(boks).hidden = false;
+  }
+
+  function skjulFeil() {
+    $("feil-rolle").hidden = true;
+    $("feil-sporsmal").hidden = true;
+  }
+
+  function tegnPanel(d) {
+    var t = REGLER.tekst;
+    $("k-rolle").textContent = rolleValgt() ? roller[rolleValgt()] : t.ingenRolle;
+    if (!d) {
+      $("k-verktoy").textContent = t.ingenSvar;
+      tom($("k-kilder"));
+      $("k-kilder").appendChild(el("p", null, t.ingenSvar));
+      $("k-data").textContent = t.ingenSvar;
+      $("k-modell").textContent = t.ingenSvar;
+      return;
+    }
+    $("k-verktoy").textContent = d.tools_used && d.tools_used.length ? d.tools_used.join(", ") : t.ingenVerktoy;
+    tom($("k-kilder"));
+    if (d.kilder && d.kilder.length) {
+      d.kilder.forEach(function (k) { $("k-kilder").appendChild(el("p", null, k)); });
+    } else {
+      $("k-kilder").appendChild(el("p", null, t.ingenKilder));
+    }
+    $("k-data").textContent = t.klassifisering[d.klassifisering] || t.ingenData;
+    $("k-modell").textContent = d.llm_used && d.model ? d.model : t.regelbasert;
+  }
+
+  function tegnSvar(d) {
+    var u = velgUtfall(d);
+    var rot = $("svar-innhold");
+    tom(rot);
+    var linjer = String(d.text || "").split("\n").map(function (l) {
+      return l.replace(/\*\*/g, "").replace(/^\s*-\s+/, "").trim();
+    }).filter(Boolean);
+
+    if (u.vis === "svar") {
+      var merke = el("p");
+      merke.appendChild(el("span", "af-source system", u.merke));
+      rot.appendChild(merke);
+      linjer.forEach(function (l) { rot.appendChild(el("p", null, l)); });
+    } else if (u.vis === "tom") {
+      var boks = el("div", "af-empty");
+      boks.appendChild(el("h3", null, u.tittel));
+      linjer.forEach(function (l) { boks.appendChild(el("p", null, l)); });
+      rot.appendChild(boks);
+    } else {
+      var varsel = el("div", "af-alert warn");
+      varsel.appendChild(el("strong", null, "Varsel"));
+      varsel.appendChild(el("span", null, u.tittel + ". " + linjer.join(" ")));
+      rot.appendChild(varsel);
+    }
+    tegnPanel(d);
+  }
+
+  function fortsett() {
+    skjulFeil();
+    if (!rolleValgt()) { visFeil("feil-rolle", "feil-rolle-tekst", REGLER.tekst.velgRolle); $("rolle-valg").focus(); return; }
+    tegnPanel(null);
+    visSteg("sporsmal");
+    $("sporsmal-felt").focus();
+  }
+
+  function spor() {
+    skjulFeil();
+    var sporsmal = $("sporsmal-felt").value.trim();
+    if (!sporsmal) { visFeil("feil-sporsmal", "feil-sporsmal-tekst", REGLER.tekst.tomtSporsmal); $("sporsmal-felt").focus(); return; }
+    $("spor").disabled = true;
+    $("status").textContent = REGLER.tekst.henter;
+    fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: sporsmal, rolle: rolleValgt() })
+    }).then(function (res) {
+      if (!res.ok) throw new Error("http");
+      return res.json();
+    }).then(function (d) {
+      harSvar = true;
+      tegnSvar(d);
+      visSteg("svar");
+    }).catch(function () {
+      var r5 = REGLER.utfall.filter(function (r) { return r.nettfeil; })[0];
+      $("feil-sporsmal-tittel").textContent = r5.tittel;
+      visFeil("feil-sporsmal", "feil-sporsmal-tekst", REGLER.tekst.nettFeil);
+    }).then(function () {
+      $("spor").disabled = false;
+      $("status").textContent = "";
+    });
+  }
+
+  // Roller fra serveren
+  var valg = $("rolle-valg");
+  var tomOpt = el("option", null, REGLER.tekst.valgRolle);
+  tomOpt.value = "";
+  valg.appendChild(tomOpt);
+  fetch("/api/roller").then(function (res) {
+    if (!res.ok) throw new Error("http");
+    return res.json();
+  }).then(function (liste) {
+    liste.forEach(function (r) {
+      roller[r.id] = r.navn;
+      var o = el("option", null, r.navn);
+      o.value = r.id;
+      valg.appendChild(o);
+    });
+  }).catch(function () {
+    visFeil("feil-rolle", "feil-rolle-tekst", REGLER.tekst.rollerFeil);
+  });
+
+  document.querySelectorAll(".af-flow-link").forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      var id = a.getAttribute("data-nav");
+      if (kanTil(id)) visSteg(id);
+    });
+  });
+
+  $("fortsett").addEventListener("click", fortsett);
+  $("spor").addEventListener("click", spor);
+  $("tilbake").addEventListener("click", function () { skjulFeil(); visSteg("rolle"); });
+  $("nytt").addEventListener("click", function () {
+    skjulFeil();
+    $("sporsmal-felt").value = "";
+    visSteg("sporsmal");
+    $("sporsmal-felt").focus();
+  });
+  $("bytt").addEventListener("click", function () {
+    skjulFeil();
+    harSvar = false;
+    $("sporsmal-felt").value = "";
+    tegnPanel(null);
+    visSteg("rolle");
+    $("rolle-valg").focus();
+  });
+  $("rolle-valg").addEventListener("change", function () { tegnPanel(null); });
+  $("sporsmal-felt").addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); spor(); }
+  });
+
+  tegnPanel(null);
+})();
+</script>
+</body>
+</html>

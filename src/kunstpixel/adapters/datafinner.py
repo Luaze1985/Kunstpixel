@@ -48,6 +48,7 @@ from src.kunstpixel.core.mcp_server import (
     get_absence_report,
     get_artwork_details,
     get_exhibition_economy,
+    get_inspection_routine,
     get_report_assessment,
     get_report_rules,
     get_room_artworks,
@@ -62,6 +63,9 @@ from src.kunstpixel.core.mcp_server import (
     search_collection,
     search_events,
     search_faq,
+    search_hr_onboarding,
+    search_myndighet,
+    search_rapportering,
 )
 
 ASSET_DIR = Path(__file__).resolve().parent / "datafinner"
@@ -158,6 +162,11 @@ VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
     "get_exhibition_economy": (get_exhibition_economy, {"exhibition_id"}),
     "get_shift_cost_for_period": (get_shift_cost_for_period, {"maaned"}),
     "list_exhibitions_with_economy": (list_exhibitions_with_economy, set()),
+    # H5 Governance & Onboarding (åpne rutiner, kalender og maler)
+    "search_myndighet": (search_myndighet, {"query", "intern_eier"}),
+    "get_inspection_routine": (get_inspection_routine, {"ansvarlig"}),
+    "search_rapportering": (search_rapportering, {"mottakertype", "maned", "eier", "mal_id"}),
+    "search_hr_onboarding": (search_hr_onboarding, {"kategori", "rolle"}),
 }
 
 

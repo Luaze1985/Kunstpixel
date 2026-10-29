@@ -1,0 +1,17 @@
+{
+  "id": "SYK-08",
+  "title": "Sykmelding: Nina og lederens rolle",
+  "description": "Nivå 5 — medarbeider som kobler fraværet til lederens egen ledelse. Krever å ta inn tilbakemelding uten å gå i forsvar.",
+  "duration_minutes": 10,
+  "conversation_type": "Oppfølging av sykmeldt medarbeider",
+  "persona_name": "Nina Dahl",
+  "persona_role": "Senior rådgiver",
+  "tags_visible": [],
+  "hidden_tag_count": 0,
+  "source_status": "metadata_complete",
+  "catalog_group": "HR og ledersamtaler",
+  "input_notes": "Katalogmetadata fra brukerens innlimte tekst, ikke komplett rollemanus. +N betyr at flere tagger er skjult i kilden, ikke at de er kjent.",
+  "source": "user_supplied_paste_2026-10-20",
+  "scenario_implemented": false,
+  "persona_is_verified_synthetic": false
+}

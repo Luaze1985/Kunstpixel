@@ -1,0 +1,175 @@
+klassifisering: syntetisk
+syntetisk: true
+merknad: Treningsdata, ikke rettesnor. Alle frister, terskler og timer er oppdiktet.
+versjon: 1
+rapporter:
+- id: RP-01
+  rapport: Månedlig driftsrapport
+  mottaker: Museumsdirektør
+  mottakertype: intern
+  frekvens: månedlig
+  antall_per_ar: 12
+  maned: Månedlig
+  eier: Driftsansvarlig
+  timer_per_gang: 2
+  godkjenning: ingen
+  formal: Gi ledelsen en månedlig status på drift, vedlikehold og gjennomførte aktiviteter.
+  kilder:
+  - driftslogg
+  - avviksregister
+- id: RP-02
+  rapport: Besøkstall og statistikk
+  mottaker: Kulturdirektoratet
+  mottakertype: ekstern
+  frekvens: årlig
+  antall_per_ar: 1
+  maned: Mars
+  eier: Driftsansvarlig
+  timer_per_gang: 14
+  godkjenning: eier
+  formal: Levere pålagte årlige publikumstall og demografisk fordeling til nasjonale myndigheter.
+  kilder:
+  - besøkstall
+  - utstillinger
+- id: RP-03
+  rapport: Tilskuddsrapport
+  mottaker: Kulturdirektoratet
+  mottakertype: ekstern
+  frekvens: årlig
+  antall_per_ar: 1
+  maned: Mars
+  eier: Museumsdirektør
+  timer_per_gang: 36
+  godkjenning: eier
+  formal: Dokumentere oppnådde faglige mål og ressursbruk som grunnlag for statlig støtte.
+  kilder:
+  - regnskap
+  - utstillinger
+  - besøkstall
+- id: RP-04
+  rapport: Årsregnskap og årsberetning
+  mottaker: Stiftelsestilsynet
+  mottakertype: ekstern
+  frekvens: årlig
+  antall_per_ar: 1
+  maned: Juni
+  eier: Museumsdirektør
+  timer_per_gang: 24
+  godkjenning: eier
+  formal: Fremlegge lovpålagt finansiell status og styrets beretning om virksomhetens drift.
+  kilder:
+  - regnskap
+  - styrereferat
+- id: RP-05
+  rapport: HMS-årsrapport
+  mottaker: Styret
+  mottakertype: intern
+  frekvens: årlig
+  antall_per_ar: 1
+  maned: Januar
+  eier: Museumsdirektør
+  timer_per_gang: 10
+  godkjenning: ingen
+  formal: Oppsummere årets systematiske arbeidsmiljøarbeid, sykefravær og vernetiltak for styret.
+  kilder:
+  - avviksregister
+  - vernerunder
+- id: RP-06
+  rapport: Avviksrapport
+  mottaker: Internt arkiv
+  mottakertype: intern
+  frekvens: løpende
+  antall_per_ar: 10
+  maned: Løpende
+  eier: Driftsansvarlig
+  timer_per_gang: 2
+  godkjenning: ingen
+  formal: Loggføre enkelthendelser og uønskede hendelser for kontinuerlig forbedring og læring.
+  kilder:
+  - avviksregister
+  - driftslogg
+- id: RP-07
+  rapport: IK-Mat-sammenstilling
+  mottaker: Internt arkiv
+  mottakertype: intern
+  frekvens: månedlig
+  antall_per_ar: 12
+  maned: Månedlig
+  eier: Kafeansvarlig
+  timer_per_gang: 1.5
+  godkjenning: ingen
+  formal: Dokumentere at kafeen overholder krav til hygiene, temperaturer og matsikkerhet.
+  kilder:
+  - temperaturlogg
+  - avviksregister
+- id: RP-08
+  rapport: Vernerundeprotokoll
+  mottaker: Verneombud
+  mottakertype: intern
+  frekvens: kvartalsvis
+  antall_per_ar: 4
+  maned: Kvartalsvis
+  eier: Driftsansvarlig
+  timer_per_gang: 1
+  godkjenning: ingen
+  formal: Protokollføre fysiske inspeksjonsrunder i publikums- og personalarealer.
+  kilder:
+  - vernerunder
+  - avviksregister
+- id: RP-09
+  rapport: Tilstandsrapport samling
+  mottaker: Museumsdirektør
+  mottakertype: intern
+  frekvens: årlig
+  antall_per_ar: 1
+  maned: November
+  eier: Samlingsforvalter
+  timer_per_gang: 6
+  godkjenning: ingen
+  formal: Gi status på bevaringstilstand og klimatiske forhold for kunstverk i samlingen.
+  kilder:
+  - samlingsdatabase
+  - temperaturlogg
+- id: RP-10
+  rapport: Brannøvelsesrapport
+  mottaker: Internt arkiv
+  mottakertype: intern
+  frekvens: årlig
+  antall_per_ar: 1
+  maned: Mars
+  eier: Driftsansvarlig
+  timer_per_gang: 3
+  godkjenning: ingen
+  formal: Evaluere evakueringstider og funksjon på varslingsanlegg etter øvelser.
+  kilder:
+  - brannøvelser
+  - driftslogg
+- id: RP-11
+  rapport: Innlånsoversikt
+  mottaker: Museumsdirektør
+  mottakertype: intern
+  frekvens: årlig
+  antall_per_ar: 1
+  maned: Desember
+  eier: Samlingsforvalter
+  timer_per_gang: 4
+  godkjenning: ingen
+  formal: Sikre kontroll og forsikringsmessig oversikt over innlånte verk fra andre institusjoner.
+  kilder:
+  - innlån
+  - samlingsdatabase
+- id: RP-12
+  rapport: Styrerapport
+  mottaker: Styret
+  mottakertype: intern
+  frekvens: kvartalsvis
+  antall_per_ar: 4
+  maned: Kvartalsvis
+  eier: Museumsdirektør
+  timer_per_gang: 3
+  godkjenning: ingen
+  formal: Fremlegge kvartalsvis helhetlig orientering om økonomi, drift og kunstnerisk program.
+  kilder:
+  - regnskap
+  - utstillinger
+  - styrereferat

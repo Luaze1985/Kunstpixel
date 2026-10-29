@@ -1,0 +1,141 @@
+{
+  "kjoering_tidspunkt": "2026-10-21T06:18:26.298020",
+  "test_suite": "02_deliverables/hr_produksjon_v1/tests/test_hr_production.py",
+  "status": "PASS",
+  "exit_kode": 0,
+  "totalt_tester": 21,
+  "bestatt": 21,
+  "feilet": 0,
+  "kjorer_detaljer": {
+    "python_versjon": "3.13",
+    "pytest_versjon": "9.0.2",
+    "plattform": "Windows"
+  },
+  "test_klasser": [
+    {
+      "klasse": "TestFileIntegrity",
+      "tester": [
+        {
+          "test": "test_deliverable_files_exist",
+          "status": "PASS"
+        },
+        {
+          "test": "test_valid_yaml_contracts",
+          "status": "PASS"
+        },
+        {
+          "test": "test_valid_yaml_rule_registry",
+          "status": "PASS"
+        },
+        {
+          "test": "test_source_registry_lines",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "klasse": "TestIdUniqueness",
+      "tester": [
+        {
+          "test": "test_question_id_uniqueness",
+          "status": "PASS"
+        },
+        {
+          "test": "test_rule_id_uniqueness",
+          "status": "PASS"
+        },
+        {
+          "test": "test_issue_id_uniqueness",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "klasse": "TestRelationalIntegrity",
+      "tester": [
+        {
+          "test": "test_employee_and_shifts_integrity",
+          "status": "PASS"
+        },
+        {
+          "test": "test_absence_integrity",
+          "status": "PASS"
+        },
+        {
+          "test": "test_tariff_trinn_integrity",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "klasse": "TestTimelineConsistency",
+      "tester": [
+        {
+          "test": "test_shifts_within_employment_dates",
+          "status": "PASS"
+        },
+        {
+          "test": "test_absence_within_employment_dates",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "klasse": "TestRuleEngine",
+      "tester": [
+        {
+          "test": "test_all_five_tiers_represented",
+          "status": "PASS"
+        },
+        {
+          "test": "test_deterministic_operators_logic",
+          "status": "PASS"
+        },
+        {
+          "test": "test_all_rules_have_sources",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "klasse": "TestPrivacyAndRoleBoundaries",
+      "tester": [
+        {
+          "test": "test_forbidden_diagnosis_fields",
+          "status": "PASS"
+        },
+        {
+          "test": "test_k_anonymity_threshold",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "klasse": "TestCasepackIntegration",
+      "tester": [
+        {
+          "test": "test_casepack_offline_integrity",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "klasse": "TestNegativeCases",
+      "tester": [
+        {
+          "test": "test_invalid_date_format_fails",
+          "status": "PASS"
+        },
+        {
+          "test": "test_negative_shift_duration_rejected",
+          "status": "PASS"
+        },
+        {
+          "test": "test_unknown_operator_flagged",
+          "status": "PASS"
+        }
+      ]
+    }
+  ],
+  "stdout": "============================= test session starts =============================\nplatform win32 -- Python 3.13.12, pytest-9.0.2, pluggy-1.6.0\nrootdir: G:\\Min disk\\Kunstpixel\nconfigfile: pyproject.toml\nplugins: logfire-4.35.0, agent-eval-0.2.0, anyio-4.13.0\ncollected 21 items\n\n02_deliverables\\hr_produksjon_v1\\tests\\test_hr_production.py ........... [ 52%]\n..........                                                               [100%]\n\n============================= 21 passed in 0.73s ==============================\n"
+}

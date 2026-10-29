@@ -1,6 +1,6 @@
 # Operasjonelle arbeidsflyter (Workflows)
 
-Aura Kunstmuseum har tre kjerneflyter som er designet spesifikt for å gi praktisk verdi ved agent- og plugin-automatisering:
+Kunstpixel har tre kjerneflyter som er designet spesifikt for å gi praktisk verdi ved agent- og plugin-automatisering:
 
 ---
 

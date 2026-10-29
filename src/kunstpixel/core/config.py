@@ -1,4 +1,4 @@
-"""Configuration and database path resolution for Aura Kunstmuseum."""
+"""Configuration and database path resolution for Kunstpixel."""
 
 import os
 import shutil
@@ -34,7 +34,7 @@ def get_db_path() -> Path:
         return EXTERNAL_FALLBACK_DB_PATH
 
     raise FileNotFoundError(
-        "Aura Kunstmuseum database not found. Checked:\n"
+        "Kunstpixel database not found. Checked:\n"
         f"  1. AURA_DB_PATH env var: {env_path}\n"
         f"  2. Local repo copy: {LOCAL_DB_PATH}\n"
         f"  3. External fallback: {EXTERNAL_FALLBACK_DB_PATH}"
@@ -59,32 +59,8 @@ def ensure_local_db() -> Path:
     )
 
 
-# Arkivert etter ADR 004: museum.db er eneste sannhetskilde. Brukes bare av datagenereringsskript.
-LOCAL_HISTORIKK_DB_PATH = PROJECT_ROOT / "05_data" / "arkiv" / "kunstpixel_historikk.db"
-
-
-def get_historikk_db_path() -> Path:
-    """Resolve the SQLite archive database path."""
-    env_path = os.environ.get("KUNSTPIXEL_HISTORIKK_DB_PATH")
-    if env_path:
-        p = Path(env_path)
-        if p.is_file():
-            return p
-        raise FileNotFoundError(f"KUNSTPIXEL_HISTORIKK_DB_PATH was set to '{env_path}', but file does not exist.")
-
-    if LOCAL_HISTORIKK_DB_PATH.is_file():
-        return LOCAL_HISTORIKK_DB_PATH
-
-    raise FileNotFoundError(f"Historikk database not found at: {LOCAL_HISTORIKK_DB_PATH}")
-
-
 # Export current resolved path
 try:
     DB_PATH = get_db_path()
 except FileNotFoundError:
     DB_PATH = LOCAL_DB_PATH
-
-try:
-    HISTORIKK_DB_PATH = get_historikk_db_path()
-except FileNotFoundError:
-    HISTORIKK_DB_PATH = LOCAL_HISTORIKK_DB_PATH

@@ -1,0 +1,149 @@
+klassifisering: syntetisk
+syntetisk: true
+merknad: Treningsdata, ikke rettesnor. Alle frister, terskler og timer er oppdiktet.
+versjon: 1
+rapporter:
+- id: RP-01
+  rapport: Månedlig driftsrapport
+  mottaker: Museumsdirektør
+  mottakertype: intern
+  frekvens: månedlig
+  antall_per_ar: 12
+  maned: Månedlig
+  eier: Driftsansvarlig
+  timer_per_gang: 2
+  godkjenning: ingen
+  formal: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva rapporten brukes til'
+  kilder: 'TODO_FYLL_KILDER (2 eller 3 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+- id: RP-02
+  rapport: Besøkstall og statistikk
+  mottaker: Kulturdirektoratet
+  mottakertype: ekstern
+  frekvens: årlig
+  antall_per_ar: 1
+  maned: Mars
+  eier: Driftsansvarlig
+  timer_per_gang: 14
+  godkjenning: eier
+  formal: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva rapporten brukes til'
+  kilder: 'TODO_FYLL_KILDER (2 eller 3 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+- id: RP-03
+  rapport: Tilskuddsrapport
+  mottaker: Kulturdirektoratet
+  mottakertype: ekstern
+  frekvens: årlig
+  antall_per_ar: 1
+  maned: Mars
+  eier: Museumsdirektør
+  timer_per_gang: 36
+  godkjenning: eier
+  formal: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva rapporten brukes til'
+  kilder: 'TODO_FYLL_KILDER (2 eller 3 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+- id: RP-04
+  rapport: Årsregnskap og årsberetning
+  mottaker: Stiftelsestilsynet
+  mottakertype: ekstern
+  frekvens: årlig
+  antall_per_ar: 1
+  maned: Juni
+  eier: Museumsdirektør
+  timer_per_gang: 24
+  godkjenning: eier
+  formal: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva rapporten brukes til'
+  kilder: 'TODO_FYLL_KILDER (2 eller 3 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+- id: RP-05
+  rapport: HMS-årsrapport
+  mottaker: Styret
+  mottakertype: intern
+  frekvens: årlig
+  antall_per_ar: 1
+  maned: Januar
+  eier: Museumsdirektør
+  timer_per_gang: 10
+  godkjenning: ingen
+  formal: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva rapporten brukes til'
+  kilder: 'TODO_FYLL_KILDER (2 eller 3 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+- id: RP-06
+  rapport: Avviksrapport
+  mottaker: Internt arkiv
+  mottakertype: intern
+  frekvens: løpende
+  antall_per_ar: 10
+  maned: Løpende
+  eier: Driftsansvarlig
+  timer_per_gang: 2
+  godkjenning: ingen
+  formal: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva rapporten brukes til'
+  kilder: 'TODO_FYLL_KILDER (2 eller 3 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+- id: RP-07
+  rapport: IK-Mat-sammenstilling
+  mottaker: Internt arkiv
+  mottakertype: intern
+  frekvens: månedlig
+  antall_per_ar: 12
+  maned: Månedlig
+  eier: Kafeansvarlig
+  timer_per_gang: 1.5
+  godkjenning: ingen
+  formal: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva rapporten brukes til'
+  kilder: 'TODO_FYLL_KILDER (2 eller 3 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+- id: RP-08
+  rapport: Vernerundeprotokoll
+  mottaker: Verneombud
+  mottakertype: intern
+  frekvens: kvartalsvis
+  antall_per_ar: 4
+  maned: Kvartalsvis
+  eier: Driftsansvarlig
+  timer_per_gang: 1
+  godkjenning: ingen
+  formal: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva rapporten brukes til'
+  kilder: 'TODO_FYLL_KILDER (2 eller 3 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+- id: RP-09
+  rapport: Tilstandsrapport samling
+  mottaker: Museumsdirektør
+  mottakertype: intern
+  frekvens: årlig
+  antall_per_ar: 1
+  maned: November
+  eier: Samlingsforvalter
+  timer_per_gang: 6
+  godkjenning: ingen
+  formal: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva rapporten brukes til'
+  kilder: 'TODO_FYLL_KILDER (2 eller 3 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+- id: RP-10
+  rapport: Brannøvelsesrapport
+  mottaker: Internt arkiv
+  mottakertype: intern
+  frekvens: årlig
+  antall_per_ar: 1
+  maned: Mars
+  eier: Driftsansvarlig
+  timer_per_gang: 3
+  godkjenning: ingen
+  formal: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva rapporten brukes til'
+  kilder: 'TODO_FYLL_KILDER (2 eller 3 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+- id: RP-11
+  rapport: Innlånsoversikt
+  mottaker: Museumsdirektør
+  mottakertype: intern
+  frekvens: årlig
+  antall_per_ar: 1
+  maned: Desember
+  eier: Samlingsforvalter
+  timer_per_gang: 4
+  godkjenning: ingen
+  formal: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva rapporten brukes til'
+  kilder: 'TODO_FYLL_KILDER (2 eller 3 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'
+- id: RP-12
+  rapport: Styrerapport
+  mottaker: Styret
+  mottakertype: intern
+  frekvens: kvartalsvis
+  antall_per_ar: 4
+  maned: Kvartalsvis
+  eier: Museumsdirektør
+  timer_per_gang: 3
+  godkjenning: ingen
+  formal: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva rapporten brukes til'
+  kilder: 'TODO_FYLL_KILDER (2 eller 3 av: besøkstall, utstillinger, regnskap, hendelser, avviksregister, temperaturlogg, vernerunder, samlingsdatabase, brannøvelser, innlån, styrereferat, driftslogg, manuell)'

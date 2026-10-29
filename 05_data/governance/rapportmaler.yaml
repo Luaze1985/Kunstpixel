@@ -1,0 +1,134 @@
+klassifisering: syntetisk
+syntetisk: true
+merknad: Treningsdata, ikke rettesnor. Alle frister, terskler og timer er oppdiktet.
+versjon: 1
+maler:
+- id: ML-01
+  navn: Driftsrapport
+  brukes_til:
+  - RP-01
+  godkjenning: ingen
+  status_ved_opprettelse: Utkast
+  formal: Sikre en ensartet månedlig struktur for rapportering av operativ drift og avvik til ledelsen.
+  felt:
+  - navn: Periode
+    beskrivelse: Angi hvilken måned og tidsramme driftsrapporten omfatter.
+    kilde:
+    - driftslogg
+  - navn: Gjennomførte arrangementer
+    beskrivelse: Kort sammendrag av avholdte omvisninger, foredrag og verksteder i perioden.
+    kilde:
+    - hendelser
+  - navn: Kommende arrangementer
+    beskrivelse: Oversikt over planlagte aktiviteter og publikumsrettede hendelser neste måned.
+    kilde:
+    - hendelser
+  - navn: Avvik og tiltak
+    beskrivelse: Oppsummering av registrerte tekniske og driftsmessige avvik samt iverksatte tiltak.
+    kilde:
+    - avviksregister
+  - navn: Vedlikehold
+    beskrivelse: Status på planlagt bygningsmessig service og utført tilsyn med tekniske anlegg.
+    kilde:
+    - driftslogg
+  regler:
+  - Rapporten ferdigstilles innen utgangen av første uke i påfølgende måned.
+  - Alle avvik av vesentlig art skal ha en navngitt ansvarlig rolle for utbedring.
+- id: ML-02
+  navn: Avviksrapport
+  brukes_til:
+  - RP-06
+  godkjenning: ingen
+  status_ved_opprettelse: Utkast
+  formal: Sikre grundig registrering, umiddelbar sikring og systematisk oppfølging av uønskede hendelser.
+  felt:
+  - navn: Hva skjedde
+    beskrivelse: Nøktern og presis beskrivelse av selve hendelsesforløpet og berørte personer.
+    kilde:
+    - avviksregister
+  - navn: Når og hvor
+    beskrivelse: Tidspunkt for hendelsen samt nøyaktig lokasjon i bygget eller salene.
+    kilde:
+    - driftslogg
+  - navn: Alvorlighetsgrad
+    beskrivelse: Klassifisering av hendelsens alvorlighet i henhold til etablerte risikokriterier.
+    kilde:
+    - avviksregister
+  - navn: Umiddelbart tiltak
+    beskrivelse: Beskrivelse av strakstiltak som ble utført på stedet for å avverge ytterligere skade.
+    kilde:
+    - driftslogg
+  - navn: Varig tiltak
+    beskrivelse: Beskrivelse av langsiktige forbedringer for å forhindre gjentakelse av hendelsen.
+    kilde:
+    - avviksregister
+  - navn: Frist for lukking
+    beskrivelse: Dato for når permanente tiltak skal være gjennomført og kontrollert.
+    kilde:
+    - driftslogg
+  regler:
+  - Kritiske avvik krever umiddelbar varsling av Driftsansvarlig og Verneombud.
+  - Rapporten kan ikke arkiveres før alle tiltak er verifisert og godkjent.
+- id: ML-03
+  navn: Tilskuddsrapport
+  brukes_til:
+  - RP-02
+  - RP-03
+  godkjenning: eier
+  status_ved_opprettelse: Utkast
+  formal: Gi tilskuddsyter en etterprøvbar redegjørelse for aktivitet, måloppnåelse og ressursbruk.
+  felt:
+  - navn: Periode
+    beskrivelse: Angi hvilket tilskuddsår og hvilken avtale rapporteringen gjelder for.
+    kilde:
+    - regnskap
+  - navn: Besøkstall
+    beskrivelse: Samlet publikumsoppslutning fordelt på ordinære gjester, skoler og frikort.
+    kilde:
+    - besøkstall
+  - navn: Gjennomførte aktiviteter
+    beskrivelse: Redegjørelse for formidlingsopplegg og pedagogiske prosjekter støttet av midlene.
+    kilde:
+    - hendelser
+  - navn: Utstillinger
+    beskrivelse: Oversikt over realiserte utstillinger i perioden og deres faglige profil.
+    kilde:
+    - utstillinger
+  - navn: Måloppnåelse
+    beskrivelse: Vurdering av hvordan virksomheten har levert i henhold til tildelingsbrevet.
+    kilde:
+    - styrereferat
+  regler:
+  - Rapporten må godkjennes av Museumsdirektør før oversendelse til myndigheten.
+  - Tall og oppsummeringer skal stemme overens med offisielt revisorgodkjent årsregnskap.
+- id: ML-04
+  navn: Svar til tilsyn
+  brukes_til:
+  - Tilsynsbesøk steg 5
+  godkjenning: eier
+  status_ved_opprettelse: Utkast
+  formal: Fremlegge en formell og forpliktende tilbakemelding på pålegg og merknader etter offentlig tilsyn.
+  felt:
+  - navn: Saksreferanse
+    beskrivelse: Tilsynsmyndighetens saksnummer og dato for mottatt tilsynsrapport.
+    kilde:
+    - driftslogg
+  - navn: Kort oppsummering
+    beskrivelse: Kortfattet sammendrag av tilsynets omfang og hovedfunn under besøket.
+    kilde:
+    - styrereferat
+  - navn: Funn og vår vurdering
+    beskrivelse: Museets faglige kommentarer og vurdering av påpekte avvik.
+    kilde:
+    - avviksregister
+  - navn: Tiltak med frist
+    beskrivelse: Konkret handlingsplan med tidsfrister for retting av hvert enkelt avvik.
+    kilde:
+    - driftslogg
+  - navn: Ansvarlig rolle
+    beskrivelse: Angivelse av hvilken intern lederrolle som har ansvaret for gjennomføringen.
+    kilde:
+    - styrereferat
+  regler:
+  - Svaret skal forankres i ledergruppen og godkjennes skriftlig av Museumsdirektør.
+  - Dokumentasjon på utbedringer skal vedlegges brevet som verifiserbare vedlegg.

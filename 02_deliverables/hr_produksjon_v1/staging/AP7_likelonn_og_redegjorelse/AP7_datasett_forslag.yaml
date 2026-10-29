@@ -1,0 +1,368 @@
+# AP7 maskinlesbare tabellforslag. Ingen faktiske eller oppdiktede personrader.
+- tabell: hr_arp_virksomhet
+  omraade: 7
+  beskrivelse: Juridisk arbeidsgiver og terskelvurdering; antall ansatte verifiseres i et årssnitt.
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://lovdata.no/lov/2017-06-16-51/rdkn/a4
+  kolonner:
+  - navn: virksomhet_id
+    type: tekst
+    unik: true
+  - navn: juridisk_form
+    type: tekst
+    tillatte_verdier:
+    - kommune
+    - offentlig_annet
+    - privat_as
+    - privat_annet
+    - ukjent
+  - navn: sektor
+    type: tekst
+    tillatte_verdier:
+    - industri
+    - privat
+    - kommune
+  - navn: rapportaar
+    type: heltall
+  - navn: ansatte_aarsgjennomsnitt
+    type: desimaltall
+    fordeling: beregnes fra faktisk bemanningsregister; ikke generer fra nasjonalt lønnsgap
+  - navn: parts_krav_utvidet_arp
+    type: boolsk_eller_null
+  - navn: utvidet_arp_status
+    type: tekst
+    tillatte_verdier:
+    - paakrevd
+    - ikke_utlost
+    - ma_avklares
+  - navn: statusbegrunnelse
+    type: tekst_eller_null
+- tabell: hr_arp_kartlegging
+  omraade: 7
+  beskrivelse: Arbeidsflyt, dato, metode og dokumentert medvirkning.
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://www.bufdir.no/fagstotte/produkter/aktivitets__og_redegjorelsesplikt_for_arbeidsgivere/
+  kolonner:
+  - navn: kartlegging_id
+    type: tekst
+    unik: true
+  - navn: virksomhet_id
+    type: tekst
+    kobles_til: hr_arp_virksomhet.virksomhet_id
+  - navn: rapportaar
+    type: heltall
+  - navn: kartleggingstype
+    type: tekst
+    tillatte_verdier:
+    - aarlig_tall
+    - lonn_annet_hvert_aar
+    - ufrivillig_deltid_annet_hvert_aar
+  - navn: sist_kartlagt_dato
+    type: dato_eller_null
+  - navn: tillitsvalgte_medvirket
+    type: boolsk_eller_null
+  - navn: status
+    type: tekst
+    tillatte_verdier:
+    - planlagt
+    - paagar
+    - ferdig
+    - ukjent
+  - navn: ansvarlig_rolle
+    type: tekst
+  - navn: dokumentasjonsreferanse
+    type: tekst_eller_null
+- tabell: hr_arp_stillingsgrupper
+  omraade: 7
+  beskrivelse: Dokumenterte grupper av likt arbeid/arbeid av lik verdi; ikke kun stillingskode.
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://lovdata.no/nav/lov/2017-06-16-51/KAPITTEL_5
+  kolonner:
+  - navn: gruppe_id
+    type: tekst
+    unik: true
+  - navn: virksomhet_id
+    type: tekst
+    kobles_til: hr_arp_virksomhet.virksomhet_id
+  - navn: gruppenavn
+    type: tekst
+  - navn: kompetansekrav
+    type: tekst
+  - navn: ansvar
+    type: tekst
+  - navn: anstrengelse
+    type: tekst
+  - navn: arbeidsforhold
+    type: tekst
+  - navn: begrunnelse_lik_verdi
+    type: tekst
+  - navn: medvirkning_ref
+    type: tekst_eller_null
+  - navn: gyldig_fra
+    type: dato
+  - navn: gyldig_til
+    type: dato_eller_null
+- tabell: hr_arp_stillingsplassering
+  omraade: 7
+  beskrivelse: Kobler et ansattarbeidsforhold til en begrunnet stillingsgruppe per år.
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://ldo.no/bli-betre-pa-likestilling-og-mangfald/aktivitets-og-redegjorelsesplikt/
+  kolonner:
+  - navn: plassering_id
+    type: tekst
+    unik: true
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+    merknad: logisk kobling; kontroller faktisk SQLite-skjema
+  - navn: arbeidsforhold_id
+    type: tekst_eller_null
+  - navn: avdeling_id
+    type: tekst_eller_null
+    kobles_til: hr_avdelinger.avdeling_id
+  - navn: gruppe_id
+    type: tekst
+    kobles_til: hr_arp_stillingsgrupper.gruppe_id
+  - navn: stillingskode
+    type: tekst_eller_null
+  - navn: stillingsprosent
+    type: desimaltall
+    gyldig_intervall: 0-100
+  - navn: gyldig_fra
+    type: dato
+  - navn: gyldig_til
+    type: dato_eller_null
+- tabell: hr_arp_lonnsgrunnlag
+  omraade: 7
+  beskrivelse: Syntetiske lønnskomponenter basert på AP2-lønnsarter; ingen faktisk persondata og ingen konstruert nasjonal kjønnsfordeling.
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://www.bufdir.no/fagstotte/produkter/aktivitets__og_redegjorelsesplikt_for_arbeidsgivere/
+  kolonner:
+  - navn: lonnspost_id
+    type: tekst
+    unik: true
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: plassering_id
+    type: tekst
+    kobles_til: hr_arp_stillingsplassering.plassering_id
+  - navn: dato
+    type: dato
+  - navn: lonnskomponent
+    type: tekst
+    tillatte_verdier:
+    - fastlonn
+    - skifttillegg
+    - kveldstillegg
+    - nattillegg
+    - helgetillegg
+    - overtid
+    - bonus
+    - provisjon
+    - skattepliktig_naturalytelse
+    - annet
+  - navn: belop_kr
+    type: desimaltall
+    fordeling: forankres i AP2/lønnsart og målrettet SSB 11418/11419; verdi ikke utledet nå
+  - navn: stillingsprosent
+    type: desimaltall
+  - navn: fte_justert_belop_kr
+    type: desimaltall_eller_null
+    merknad: avledet beregning med metodedokumentasjon; unngå ukritisk FTE-skalerte overtids- og bonusposter
+  - navn: kildemodell_id
+    type: tekst_eller_null
+- tabell: hr_arp_aggregat
+  omraade: 7
+  beskrivelse: Aggregat per stillingsgruppe, kjønn og år, med særskilt publiseringskontroll.
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://www.bufdir.no/fagstotte/produkter/aktivitets__og_redegjorelsesplikt_for_arbeidsgivere/
+  kolonner:
+  - navn: aggregat_id
+    type: tekst
+    unik: true
+  - navn: kartlegging_id
+    type: tekst
+    kobles_til: hr_arp_kartlegging.kartlegging_id
+  - navn: gruppe_id
+    type: tekst_eller_null
+    kobles_til: hr_arp_stillingsgrupper.gruppe_id
+  - navn: rapportkjonn
+    type: tekst
+    tillatte_verdier:
+    - kvinne
+    - mann
+    - ukjent_annet_uten_offentlig_risiko
+  - navn: antall_arbeidsforhold
+    type: heltall
+  - navn: antall_ansatte_unike
+    type: heltall
+  - navn: snitt_kr_fte
+    type: desimaltall_eller_null
+  - navn: median_kr_fte
+    type: desimaltall_eller_null
+  - navn: kvinners_andel_av_menns_lonn_prosent
+    type: desimaltall_eller_null
+  - navn: inkluderte_lonnskomponenter
+    type: tekst
+  - navn: personvernvurdering_status
+    type: tekst
+    tillatte_verdier:
+    - ikke_vurdert
+    - vurdert_ikke_publiser
+    - vurdert_publiser
+    - ma_avklares
+  - navn: offentlig_publisert
+    type: boolsk
+- tabell: hr_arp_arlig_kjonnsbalanse
+  omraade: 7
+  beskrivelse: Årlig kjønnsfordeling og andeler deltid/midlertidig/foreldrepermisjon.
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://www.bufdir.no/fagstotte/produkter/aktivitets__og_redegjorelsesplikt_for_arbeidsgivere/
+  kolonner:
+  - navn: aarlig_id
+    type: tekst
+    unik: true
+  - navn: virksomhet_id
+    type: tekst
+    kobles_til: hr_arp_virksomhet.virksomhet_id
+  - navn: rapportaar
+    type: heltall
+  - navn: rapportkjonn
+    type: tekst
+    tillatte_verdier:
+    - kvinne
+    - mann
+    - ukjent_annet_uten_offentlig_risiko
+  - navn: antall_ansatte
+    type: heltall
+  - navn: deltid_antall
+    type: heltall
+  - navn: midlertidig_antall
+    type: heltall
+  - navn: foreldrepermisjon_uttak_uker
+    type: desimaltall_eller_null
+  - navn: metode_og_populasjon
+    type: tekst
+- tabell: hr_arp_ufrivillig_deltid
+  omraade: 7
+  beskrivelse: Annenhvertårskartlegging av ufrivillig deltid med arbeidsrettede felt, uten sensitive grunner.
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://www.bufdir.no/fagstotte/produkter/aktivitets__og_redegjorelsesplikt_for_arbeidsgivere/
+  kolonner:
+  - navn: kartlegging_id
+    type: tekst
+    kobles_til: hr_arp_kartlegging.kartlegging_id
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: andel_stilling
+    type: desimaltall
+  - navn: onsker_hoyere_stillingsandel
+    type: boolsk_eller_null
+  - navn: ufrivillig_deltid_avklart
+    type: boolsk_eller_null
+  - navn: registrert_dato
+    type: dato
+  - navn: metode
+    type: tekst
+  - navn: rapporteres_aggregert
+    type: boolsk
+- tabell: hr_arp_innsyn
+  omraade: 7
+  beskrivelse: Logg lovlig innsyn og taushetsplikt uten å kopiere identifiserbare lønnsdetaljer.
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://lovdata.no/nav/lov/2017-06-16-51/KAPITTEL_4
+  kolonner:
+  - navn: innsyn_id
+    type: tekst
+    unik: true
+  - navn: virksomhet_id
+    type: tekst
+    kobles_til: hr_arp_virksomhet.virksomhet_id
+  - navn: grunnlag
+    type: tekst
+    tillatte_verdier:
+    - ldl_26a
+    - ldl_26b
+    - ldl_32
+    - offentleglova_vurderes_separat
+  - navn: mottakerrolle
+    type: tekst
+  - navn: nodvendighet_dokumentert
+    type: boolsk
+  - navn: taushetserklaering_signert
+    type: boolsk_eller_null
+  - navn: berort_informert
+    type: boolsk_eller_null
+  - navn: utlevert_dato
+    type: dato_eller_null
+  - navn: tilgangsvedtak_ref
+    type: tekst_eller_null
+- tabell: hr_arp_tiltak
+  omraade: 7
+  beskrivelse: Dokumentasjon av analyse, tiltak og evaluering uten automatisert diskrimineringsdom.
+  sektor:
+  - industri
+  - privat
+  - kommune
+  kilde: https://ldo.no/bli-betre-pa-likestilling-og-mangfald/aktivitets-og-redegjorelsesplikt/
+  kolonner:
+  - navn: tiltak_id
+    type: tekst
+    unik: true
+  - navn: kartlegging_id
+    type: tekst
+    kobles_til: hr_arp_kartlegging.kartlegging_id
+  - navn: funn_type
+    type: tekst
+    tillatte_verdier:
+    - mulig_lonnsforskjell
+    - ufrivillig_deltid
+    - kjonnsbalanse
+    - annet
+  - navn: utredet_aarsak
+    type: tekst_eller_null
+  - navn: vurdert_saklig_forklaring
+    type: tekst_eller_null
+  - navn: tiltak
+    type: tekst_eller_null
+  - navn: ansvarlig_rolle
+    type: tekst
+  - navn: evaluering_dato
+    type: dato_eller_null
+  - navn: status
+    type: tekst
+    tillatte_verdier:
+    - apen
+    - utredes
+    - tiltak_besluttet
+    - evaluert
+    - avsluttet

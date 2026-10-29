@@ -14,6 +14,8 @@ htmlcov/
 env/
 venv/
 ENV/
+deploy/demo/brukere.caddy
+deploy/demo/.env
 
 # OS generated files
 .DS_Store
@@ -23,18 +25,12 @@ desktop.ini
 
 # Agent traces & temporary scratch
 .agents/
+.scratch/
+.playwright-mcp/
 .runtime/
-# Kvalitetsrapporten skrives av de stille sjekkene (scripts/kvalitetsrapport.py)
-.scratch/kvalitet/
-
-# validated-builder: tilvoksende kjørelogg fra Stop-gaten (konfig og script committes)
+.serena/
+.worktrees/
 gate-log.jsonl
 
-
-
-# Demokopi av museum.db (bygges av build_demo_db.py)
-05_data/demo/
-
-# Hosting: brukerliste (passordhasher) og adresse hører ikke hjemme i git
-deploy/demo/brukere.caddy
-deploy/demo/.env
+# Colab-leveranser som ikke er kontrollert ennå (se 01_inbox/MOTTAK_COLAB_DATA.md)
+05_data/innkommende/

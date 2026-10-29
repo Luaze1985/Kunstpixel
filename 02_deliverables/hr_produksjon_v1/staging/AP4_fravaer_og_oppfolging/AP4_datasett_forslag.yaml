@@ -1,0 +1,290 @@
+# AP4: datadesign, ikke genererte personopplysninger. Kontrollert 2026-10-20
+- tabell: hr_fravaershendelse
+  omraade: 4
+  sektor: &id001
+  - industri
+  - privat
+  - kommune
+  kilde: https://www.nav.no/egenmelding | https://www.nav.no/arbeidsgiver/sykepenger-i-arbeidsgiverperioden | https://www.ssb.no/arbeid-og-lonn/arbeidsmiljo-sykefravaer-og-arbeidskonflikter/statistikk/sykefravaer
+  ikke_lagre:
+  - diagnosekode
+  - journalnotat
+  - fodselsnummer
+  kolonner:
+  - navn: fravaer_id
+    type: tekst
+    unik: true
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: fravaersgruppe_id
+    type: tekst
+    beskrivelse: sammenkobler perioder fra samme sykdomstilfelle uten diagnose
+  - navn: start_dato
+    type: dato
+  - navn: slutt_dato
+    type: dato
+  - navn: fravaerstype
+    type: tekst
+    tillatte_verdier:
+    - egenmelding
+    - sykmelding
+    - omsorg
+    - permisjon
+    - annet
+  - navn: sykmeldingsgrad_prosent
+    type: heltall_eller_null
+    tillatte_verdier: 0–100; bare ved sykmelding
+  - navn: arbeidsdagsverk_tapt
+    type: desimaltall_eller_null
+    fordeling: avledet fra avtalte dagsverk og sykefraværsgrad; ingen oppdiktet pasientsannsynlighet
+  - navn: ansatt_lokaldato
+    type: dato
+  - navn: scenario_id
+    type: tekst
+    tillatte_verdier: syntetisk_testscenario
+  - navn: kildetype
+    type: tekst
+    tillatte_verdier:
+    - syntetisk
+    - ssb_aggregat
+- tabell: hr_egenmeldingsordning
+  omraade: 4
+  sektor: *id001
+  kilde: https://www.nav.no/egenmelding
+  kolonner:
+  - navn: egenmeldingsordning_id
+    type: tekst
+    unik: true
+  - navn: virksomhet_id
+    type: tekst
+  - navn: sektor
+    type: tekst
+    tillatte_verdier: *id001
+  - navn: opptjening_mnd
+    type: heltall
+    tillatte_verdier: minst 2 etter NAVs hovedregel
+  - navn: dager_per_tilfelle
+    type: heltall
+    tillatte_verdier: 3 minimum; utvidet ordning dokumenteres
+  - navn: maks_tilfeller_12m
+    type: heltall_eller_null
+    tillatte_verdier: 4 i minimumsordningen; ellers avtalebasert
+  - navn: maks_dager_12m
+    type: heltall_eller_null
+    tillatte_verdier: 24 kan forekomme ved utvidet ordning
+  - navn: lokal_ordning
+    type: boolsk
+  - navn: gyldig_fra
+    type: dato
+  - navn: gyldig_til
+    type: dato_eller_null
+  - navn: dokument_ref
+    type: tekst_eller_null
+- tabell: hr_sykepenger_arbeidsgiverperiode
+  omraade: 4
+  sektor: *id001
+  kilde: https://www.nav.no/arbeidsgiver/sykepenger-i-arbeidsgiverperioden | https://www.nav.no/arbeidsgiver/sykepenger-etter-arbeidsgiverperioden
+    | https://www.nav.no/arbeidsgiver/sykmeldt-ansatt
+  kolonner:
+  - navn: ag_periode_id
+    type: tekst
+    unik: true
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: fravaersgruppe_id
+    type: tekst
+    kobles_til: hr_fravaershendelse.fravaersgruppe_id
+  - navn: forste_gyldige_fravaersdag
+    type: dato
+  - navn: arbeidsgiverperiode_start
+    type: dato
+  - navn: arbeidsgiverperiode_slutt
+    type: dato_eller_null
+  - navn: kalenderdager_opptjent_i_perioden
+    type: heltall
+    tillatte_verdier: 0–16 som standard; avbrudd/ny periode beregnes
+  - navn: nav_refusjon_status
+    type: tekst
+    tillatte_verdier:
+    - ikke_aktuelt
+    - ikke_sendt
+    - sendt
+    - innvilget
+    - avslatt
+    - uavklart
+  - navn: forskuttering_avtale_id
+    type: tekst_eller_null
+    kobles_til: hr_lonnsavtale_versjon.tariff_id
+  - navn: inntektsmelding_status
+    type: tekst
+    tillatte_verdier:
+    - ikke_aktuelt
+    - mangler
+    - sendt
+    - uavklart
+  - navn: gyldig_vurdert_per
+    type: dato
+  - navn: regelversjon
+    type: tekst
+- tabell: hr_sykefravaersoppfolging
+  omraade: 4
+  sektor: *id001
+  kilde: https://www.nav.no/arbeidsgiver/oppfolgingsplan | https://www.arbeidstilsynet.no/arbeidstid-og-organisering/tilrettelegging/oppfolging-av-sykmeldte/
+  kolonner:
+  - navn: oppfolging_id
+    type: tekst
+    unik: true
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: fravaersgruppe_id
+    type: tekst
+    kobles_til: hr_fravaershendelse.fravaersgruppe_id
+  - navn: sykmeldingsgradkategori
+    type: tekst
+    tillatte_verdier:
+    - helt
+    - delvis
+    - uavklart
+  - navn: plan_frist_dato
+    type: dato_eller_null
+    fordeling: start av relevant sykefravær + 4 uker
+  - navn: plan_status
+    type: tekst
+    tillatte_verdier:
+    - ikke_aktuelt
+    - utkast
+    - ferdig
+    - delt_med_sykmelder
+    - mangler
+    - uavklart
+  - navn: unntak_apenbart_unodvendig
+    type: boolsk_eller_null
+  - navn: unntak_begrunnelse_kategori
+    type: tekst_eller_null
+    tillatte_verdier:
+    - rask_retur
+    - ikke_mulig_med_tiltak
+    - annet_dokumentert
+    - ukjent
+  - navn: tilrettelegging_kategori
+    type: tekst
+    tillatte_verdier:
+    - alternative_oppgaver
+    - gradert_arbeid
+    - tilpasning_arbeidstid
+    - hjelpemiddel
+    - avventer_vurdering
+  - navn: aktivitetsvurdering_navnivå
+    type: tekst
+    tillatte_verdier:
+    - ikke_aktuelt
+    - uavklart
+    - aktiv
+    - unntak_gitt
+    - avventer_NAV
+  - navn: rolle_tilgang
+    type: tekst
+    tillatte_verdier:
+    - ansatt_og_begrenset_personalansvar
+    - aggregert_ledelse
+- tabell: hr_dialogmote
+  omraade: 4
+  sektor: *id001
+  kilde: https://www.nav.no/dialogmote | https://www.arbeidstilsynet.no/arbeidstid-og-organisering/tilrettelegging/oppfolging-av-sykmeldte/
+  kolonner:
+  - navn: mote_id
+    type: tekst
+    unik: true
+  - navn: oppfolging_id
+    type: tekst
+    kobles_til: hr_sykefravaersoppfolging.oppfolging_id
+  - navn: mote_nummer
+    type: heltall
+    tillatte_verdier:
+    - 1
+    - 2
+    - 3
+  - navn: ansvarlig_aktor
+    type: tekst
+    tillatte_verdier:
+    - arbeidsgiver
+    - nav
+  - navn: sykmeldingsgradkategori
+    type: tekst
+    tillatte_verdier:
+    - helt
+    - delvis
+  - navn: behov_dokumentert
+    type: boolsk_eller_null
+  - navn: unntak_apenbart_unodvendig
+    type: boolsk_eller_null
+  - navn: milepael_uke
+    type: heltall_eller_null
+    tillatte_verdier: møte1 normalt uke 7 ved hel sykmelding; NAV møte2 uke 26; ikke universelle domsgrenser
+  - navn: mote_dato
+    type: dato_eller_null
+  - navn: status
+    type: tekst
+    tillatte_verdier:
+    - planlagt
+    - gjennomfort
+    - ikke_nodvendig
+    - uavklart
+  - navn: dokumentref
+    type: tekst_eller_null
+- tabell: hr_permisjon_omsorg
+  omraade: 4
+  sektor: *id001
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/permisjoner/ | https://www.nav.no/arbeidsgiver/omsorgspenger | https://www.arbeidstilsynet.no/lonn-og-ansettelse/permisjoner/foreldrepermisjon/
+  kolonner:
+  - navn: permisjon_id
+    type: tekst
+    unik: true
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: type
+    type: tekst
+    tillatte_verdier:
+    - foreldrepermisjon
+    - omsorgsdager_barn
+    - pleie_av_narstaende
+    - utdanningspermisjon
+    - velferdspermisjon
+    - annet
+  - navn: hjemmelkategori
+    type: tekst
+    tillatte_verdier:
+    - lov
+    - tariff
+    - lokal_avtale
+    - frivillig
+  - navn: kvalifiserende_barn_antall
+    type: heltall_eller_null
+    tillatte_verdier: 0–5 som testscenario; ikke ekte identiteter
+  - navn: aleneomsorg
+    type: boolsk_eller_null
+  - navn: nav_ekstradager_vedtak
+    type: boolsk_eller_null
+  - navn: omsorgsdager_rett_standard
+    type: heltall_eller_null
+    fordeling: 10 ved 1–2 barn; 15 ved minst 3; unntak ved vedtak
+  - navn: start_dato
+    type: dato
+  - navn: slutt_dato
+    type: dato
+  - navn: lonn_under_permisjon_status
+    type: tekst
+    tillatte_verdier:
+    - lovfastsatt
+    - avtalt
+    - uavklart
+    - ulonnet
+  - navn: tariff_avtale_id
+    type: tekst_eller_null
+  - navn: scenario_id
+    type: tekst
+    tillatte_verdier: syntetisk_testscenario

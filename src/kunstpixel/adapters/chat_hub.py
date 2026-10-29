@@ -1,4 +1,4 @@
-"""Aura Kunstmuseum — Gründer Chat Hub.
+"""Kunstpixel — Gründer Chat Hub.
 
 Superenkel lokal web-chat for de to gründerne.
 100 % standardbibliotek (ingen eksterne pakker kreves, null dependencies).
@@ -12,12 +12,10 @@ Kjøres med:
 from __future__ import annotations
 
 import json
-import os
 import sys
 import webbrowser
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs
 
 # Ensure project root in sys.path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
@@ -25,15 +23,17 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.kunstpixel.core.agent import MuseumsvertAgent
+from src.kunstpixel.core.llm import build_llm
 
-agent = MuseumsvertAgent()
+MAX_BODY_BYTES = 100_000
+MAX_MESSAGE_CHARS = 2000
 
 HTML_PAGE = """<!DOCTYPE html>
 <html lang="no">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🏛️ Aura Kunstmuseum — Gründer Chat</title>
+<title>🏛️ Kunstpixel — Gründer Chat</title>
 <style>
   :root {
     --bg: #0b0f19;
@@ -190,7 +190,7 @@ HTML_PAGE = """<!DOCTYPE html>
 
 <header>
   <div class="brand">
-    <h1>🏛️ Aura Kunstmuseum</h1>
+    <h1>🏛️ Kunstpixel</h1>
     <span class="status-badge">● FastMCP Live</span>
   </div>
   <div class="role-indicator">Aktiv Agent: <strong>Museumsvert</strong> (Samlings-MCP tilkoblet)</div>
@@ -198,7 +198,7 @@ HTML_PAGE = """<!DOCTYPE html>
 
 <main id="chatBox">
   <div class="msg agent">
-    <div class="meta-tag">🏛️ Aura Museumsvert</div>
+    <div class="meta-tag">🏛️ Kunstpixel Museumsvert</div>
     <div class="bubble">
       Hei! Jeg er koblet direkte på museets SQLite-samlingsdatabase og verktøy. Hva vil dere utforske eller teste i dag?
     </div>
@@ -246,7 +246,7 @@ HTML_PAGE = """<!DOCTYPE html>
     const agentDiv = document.createElement('div');
     agentDiv.className = 'msg agent';
     agentDiv.innerHTML = `
-      <div class="meta-tag">🏛️ Aura Museumsvert <span class="badge-tool">kaller verktøy...</span></div>
+      <div class="meta-tag">🏛️ Kunstpixel Museumsvert <span class="badge-tool">kaller verktøy...</span></div>
       <div class="bubble">Søker i samlingen og verktøyene...</div>
     `;
     chatBox.appendChild(agentDiv);
@@ -270,7 +270,7 @@ HTML_PAGE = """<!DOCTYPE html>
 
       agentDiv.innerHTML = `
         <div class="meta-tag">
-          🏛️ Museumsvert | Kat: ${data.category} | ${toolsHtml} ${roomsHtml}
+          🏛️ Museumsvert | Kat: ${data.category} | ${toolsHtml} ${roomsHtml} ${data.llm_used ? `<span class="badge-tool">✨ ${data.model}</span>` : ''}
         </div>
         <div class="bubble">${escapeHtml(data.text).replace(/\\n/g, '<br>')}</div>
       `;
@@ -293,7 +293,27 @@ HTML_PAGE = """<!DOCTYPE html>
 """
 
 
+def create_agent() -> MuseumsvertAgent:
+    """Lag agenten. KUNSTPIXEL_LLM=off|fake|anthropic velger LLM. Feil oppsett gir reserve uten LLM."""
+    try:
+        llm = build_llm()
+    except Exception as exc:  # noqa: BLE001 - demoen skal aldri krasje på manglende nøkkel
+        print(f"⚠️  LLM ikke tilgjengelig ({exc}). Kjører regelbasert vert.")
+        llm = None
+    return MuseumsvertAgent(llm=llm)
+
+
 class ChatHubHandler(BaseHTTPRequestHandler):
+    agent: MuseumsvertAgent | None = None
+
+    def _json(self, status: int, payload: dict) -> None:
+        body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
     def do_GET(self) -> None:
         if self.path == "/" or self.path.startswith("/?"):
             self.send_response(200)
@@ -305,32 +325,51 @@ class ChatHubHandler(BaseHTTPRequestHandler):
             self.end_headers()
 
     def do_POST(self) -> None:
-        if self.path == "/api/chat":
+        if self.path != "/api/chat":
+            self.send_response(404)
+            self.end_headers()
+            return
+
+        try:
             content_length = int(self.headers.get("Content-Length", 0))
-            body = self.rfile.read(content_length).decode("utf-8")
+        except ValueError:
+            self._json(400, {"error": "Ugyldig Content-Length"})
+            return
+        if content_length > MAX_BODY_BYTES:
+            self._json(413, {"error": "Meldingen er for stor"})
+            return
+        body = self.rfile.read(content_length).decode("utf-8", errors="replace")
 
-            try:
-                data = json.loads(body)
-                query = data.get("message", "").strip()
-            except Exception:
-                query = ""
+        query = ""
+        try:
+            data = json.loads(body)
+            message = data.get("message", "") if isinstance(data, dict) else ""
+            query = message.strip()[:MAX_MESSAGE_CHARS] if isinstance(message, str) else ""
+        except Exception:
+            query = ""
 
-            resp = agent.handle_message(query)
-            payload = {
+        if type(self).agent is None:
+            type(self).agent = create_agent()
+        try:
+            resp = type(self).agent.handle_message(query)
+        except Exception:  # noqa: BLE001 - aldri vis feilspor til besøkende
+            self._json(500, {"error": "Beklager, noe gikk galt. Prøv igjen."})
+            return
+
+        self._json(
+            200,
+            {
                 "text": resp.text,
                 "category": resp.category,
                 "tools_used": resp.tools_used,
                 "artworks_referenced": resp.artworks_referenced,
                 "rooms_referenced": resp.rooms_referenced,
-            }
-
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.end_headers()
-            self.wfile.write(json.dumps(payload, ensure_ascii=False).encode("utf-8"))
-        else:
-            self.send_response(404)
-            self.end_headers()
+                "llm_used": resp.llm_used,
+                "klassifisering": resp.klassifisering,
+                "model": resp.model,
+                "fallback_reason": resp.fallback_reason,
+            },
+        )
 
     def log_message(self, format: str, *args) -> None:
         # Suppress noisy standard request logs
@@ -340,13 +379,15 @@ class ChatHubHandler(BaseHTTPRequestHandler):
 def main() -> None:
     port = 8000
     server_address = ("", port)
+    ChatHubHandler.agent = create_agent()
     httpd = HTTPServer(server_address, ChatHubHandler)
+    llm = ChatHubHandler.agent.llm
 
     print("=" * 65)
-    print("🏛️  Aura Kunstmuseum — Gründer Chat Hub")
+    print("🏛️  Kunstpixel — Gründer Chat Hub")
     print("=" * 65)
     print(f"👉 Kjører på: http://localhost:{port}")
-    print("✨ Null eksterne pakker kreves. Koblet rett på FastMCP og SQLite.")
+    print(f"🤖 LLM: {getattr(llm, 'name', 'av (regelbasert vert)') if llm else 'av (regelbasert vert)'}")
     print("Trykk Ctrl+C i terminalen for å stoppe.\n")
 
     # Open browser automatically
@@ -360,7 +401,6 @@ def main() -> None:
     except KeyboardInterrupt:
         print("\nAvslutter Gründer Chat Hub...")
         httpd.server_close()
-
 
 if __name__ == "__main__":
     main()

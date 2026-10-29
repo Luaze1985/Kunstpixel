@@ -1,0 +1,17 @@
+{
+  "id": "SYK-02",
+  "title": "Sykmelding: reparere tilliten med Kenneth",
+  "description": "Trening på å bygge tilbake tillit etter en samtale som ikke traff — med en medarbeider som leser kritikk inn i alt lederen sier.",
+  "duration_minutes": 10,
+  "conversation_type": "Oppfølging av sykmeldt medarbeider",
+  "persona_name": "Kenneth Aasheim",
+  "persona_role": "Senioringeniør",
+  "tags_visible": [],
+  "hidden_tag_count": 0,
+  "source_status": "metadata_complete",
+  "catalog_group": "HR og ledersamtaler",
+  "input_notes": "Katalogmetadata fra brukerens innlimte tekst, ikke komplett rollemanus. +N betyr at flere tagger er skjult i kilden, ikke at de er kjent.",
+  "source": "user_supplied_paste_2026-10-20",
+  "scenario_implemented": false,
+  "persona_is_verified_synthetic": false
+}

@@ -1,0 +1,68 @@
+# AP2 – maskinlesbare forslag, ikke syntetiske observasjoner
+# Område 2. Kildedato 2026-10-20.
+- tabell: hr_lonnsavtale_versjon
+  omraade: 2
+  sektor: [industri, privat, kommune]
+  kilde: "https://www.fellesforbundet.no/lonn-og-tariff/tariffavtaler/industrioverenskomst/ | https://www.virke.no/tariff-og-lonn/finn-tariffavtale/landsoverenskomsten-hk/ | https://www.ks.no/hta"
+  kolonner:
+    - {navn: ansatt_id, type: tekst, kobles_til: "hr_ansatte.ansatt_id"}
+    - {navn: tariff_id, type: tekst, tillatte_verdier: "Spesifikk aktiv tariffavtale-ID; ikke bare sektor"}
+    - {navn: tariff_avtaledel, type: tekst, tillatte_verdier: "Verifisert avtaledel; kan være tom for ikke-tariffbundet"}
+    - {navn: sektor, type: tekst, tillatte_verdier: "industri|privat|kommune"}
+    - {navn: stillingsprosent, type: desimaltall, kobles_til: "hr_ansatte.stillingsprosent"}
+    - {navn: stilling_styrk08, type: tekst, kobles_til: "hr_ansatte.styrk_08"}
+    - {navn: lonnstrinn, type: tekst, kobles_til: "hr_ansatte.lonnstrinn"}
+    - {navn: timelonn_kroner, type: desimaltall, fordeling: "Betinget på STYRK-08 x sektor x heltid; kalibrer Q1/median/Q3 mot SSB 11418 (2025) og tariffgulv (2026)"}
+    - {navn: gyldig_fra, type: dato}
+    - {navn: gyldig_til, type: dato_eller_null}
+    - {navn: kilde_dato, type: dato}
+
+- tabell: hr_lonnsarter
+  omraade: 2
+  sektor: [industri, privat, kommune]
+  kilde: "https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/ | https://www.ks.no/fagomrader/lonn-og-tariff/hovedtariffavtalen/endringer-i-tilleggene-i-hta-kapittel-1--5-fra-forste-oktober/ | https://www.virke.no/tariff-og-lonn/finn-tariffavtale/landsoverenskomsten-hk/"
+  kolonner:
+    - {navn: lonnskode, type: tekst, tillatte_verdier: "grunnlonn|overtid_grunnlonn|overtid_tillegg|kveld|natt|helg|helligdag|bonus|feriepenger|sykepenger|refusjon"}
+    - {navn: tariff_id, type: tekst}
+    - {navn: sektor, type: tekst, tillatte_verdier: "industri|privat|kommune"}
+    - {navn: sats_type, type: tekst, tillatte_verdier: "fast_kroner|prosent|maks_prosent_kronegulv|individuell"}
+    - {navn: sats_verdi, type: desimaltall, kommentar: "Må kobles til riktig avtale og gyldighetsperiode; ikke generell sektorverdi"}
+    - {navn: min_gulv_kr, type: desimaltall_eller_null}
+    - {navn: gyldig_fra, type: dato}
+    - {navn: gyldig_til, type: dato_eller_null}
+    - {navn: primarkilde_url, type: url}
+
+- tabell: hr_lonnslinjer
+  omraade: 2
+  sektor: [industri, privat, kommune]
+  kilde: "https://www.arbeidstilsynet.no/lonn-og-ansettelse/lonn/ | https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/overtid/ | https://www.arbeidstilsynet.no/arbeidstid-og-organisering/ferie/feriepenger/"
+  kolonner:
+    - {navn: lonnslinje_id, type: tekst, unik: true}
+    - {navn: ansatt_id, type: tekst, kobles_til: "hr_ansatte.ansatt_id"}
+    - {navn: vakt_id, type: tekst_eller_null, kobles_til: "vakter.vakt_id"}
+    - {navn: avdeling, type: tekst, kobles_til: "hr_ansatte.avdeling"}
+    - {navn: utbetalingsdato, type: dato}
+    - {navn: opptjent_fra, type: dato}
+    - {navn: opptjent_til, type: dato}
+    - {navn: lonnskode, type: tekst, kobles_til: "hr_lonnsarter.lonnskode"}
+    - {navn: timer, type: desimaltall, fordeling: "Kobles til faktisk syntetisk vaktlengde og timeklassifikasjon, ikke tilfeldig prosent"}
+    - {navn: sats_kr, type: desimaltall}
+    - {navn: belop_brutto_kr, type: desimaltall}
+    - {navn: skattetrekk_kr, type: desimaltall}
+    - {navn: belop_netto_kr, type: desimaltall}
+    - {navn: datakilde, type: tekst, tillatte_verdier: "syntetisk med tariff- og statistikkforankring"}
+
+- tabell: hr_arbeidsgiveravgift_grunnlag
+  omraade: 2
+  sektor: [industri, privat, kommune]
+  kilde: "https://www.skatteetaten.no/satser/arbeidsgiveravgift/?year=2026"
+  kolonner:
+    - {navn: arbeidsgiver_enhet_id, type: tekst}
+    - {navn: avdeling, type: tekst, kobles_til: "hr_ansatte.avdeling"}
+    - {navn: aar_maaned, type: tekst, eksempel: "2026-10"}
+    - {navn: avgiftssone, type: tekst, tillatte_verdier: "I|Ia|II|III|IV|IVa|V"}
+    - {navn: beregningskode, type: tekst, kommentar: "Må avklares mot Skatteetatens regler"}
+    - {navn: avgiftsgrunnlag_kr, type: desimaltall}
+    - {navn: aga_sats_prosent, type: desimaltall, fordeling: "Lovsats etter sone, næring og år; ikke randomiser"}
+    - {navn: avgift_beregnet_kr, type: desimaltall}
+    - {navn: avgiftsaar, type: heltall, tillatte_verdier: "2026 ved denne versjonen"}

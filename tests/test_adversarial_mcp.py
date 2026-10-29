@@ -1,4 +1,4 @@
-"""Adversarial stress and boundary tests for Aura Kunstmuseum MCP Server & Data Layer.
+"""Adversarial stress and boundary tests for Kunstpixel MCP Server & Data Layer.
 
 Empirically challenges:
 1. Extreme boundary conditions: empty, whitespace, and very long inputs.

@@ -25,6 +25,11 @@ EKSEMPEL_ARGS = {
     "sykefravaer": {"aar": 2025, "kvartal": 2},
     "utstilling": {"exhibition_id": "KP-EXH-2026-FOKUS-2"},
     "vaktkostnad": {"maaned": "2026-09"},
+    "rapporteringskalender": {"mottakertype": "ekstern"},
+    "myndighetsoversikt": {"intern_eier": "Museumsdirektør"},
+    "tilsynsrutine": {},
+    "rapportmaler": {"mal_id": "ML-01"},
+    "onboarding": {"kategori": "kompetanse_matrise"},
 }
 
 
