@@ -25,6 +25,11 @@ Serveren har ingen innlogging selv. Den skal alltid ligge bak noe som krever det
     GET  /api/rapport          deterministisk rapport: fakta + vurdering/forslag fra faste regler
     GET  /api/status           hva som er slått på (KI-lag)
     POST /api/forklar          valgfritt: KI forklarer rapporten, merket AI-forslag (av som standard)
+
+Arenaen (øvelsescaser, se 04_knowledge/07_arena/caser.yaml):
+    GET  /arena                siden
+    GET  /api/arena/caser      alle casene
+    POST /api/arena/kjor       kjør én case deterministisk og sjekk svaret
 """
 
 from __future__ import annotations
@@ -43,7 +48,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.kunstpixel.adapters import datafinner_api
-from src.kunstpixel.core import llm
+from src.kunstpixel.core import arena, llm
 from src.kunstpixel.core.mcp_server import (
     get_absence_report,
     get_artwork_details,
@@ -73,6 +78,7 @@ ASSETS = {
     "/": ("index.html", "text/html; charset=utf-8"),
     "/index.html": ("index.html", "text/html; charset=utf-8"),
     "/sok.html": ("sok.html", "text/html; charset=utf-8"),
+    "/arena": ("arena.html", "text/html; charset=utf-8"),
     "/af.css": ("af.css", "text/css; charset=utf-8"),
 }
 
@@ -228,6 +234,9 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
                 "verktoy": len(VERKTOY),
             })
             return
+        if url.path == "/api/arena/caser":
+            self._json(200, arena.last_caser())
+            return
         if url.path == "/api/verktoyskjema":
             self._json(200, {"verktoy": datafinner_api.verktoyskjema(VERKTOY), "sporsmal": datafinner_api.SPORSMAL})
             return
@@ -267,29 +276,40 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
             return
         self._json(404, {"error": "Finnes ikke"})
 
-    def do_POST(self) -> None:
-        """Eneste POST: /api/forklar. Koster penger hos KI-leverandøren, så den har flere sperrer."""
-        if urlparse(self.path).path != "/api/forklar":
-            self._json(404, {"error": "Finnes ikke"})
-            return
-        # Nettleseren sender innloggingen din automatisk. Uten disse sperrene kunne en annen nettside
-        # få den til å kalle KI-en på din regning. Samme opprinnelse eller ingen opprinnelse (curl) er greit.
+    def _post_lengde(self) -> int | None:
+        """Sperrene for POST. Returnerer lengden på kroppen, eller None når svaret alt er sendt."""
+        # Uten disse sperrene kunne en annen nettside få nettleseren til å kalle KI-en på din regning.
+        # Samme opprinnelse eller ingen opprinnelse (curl) er greit.
         opprinnelse = self.headers.get("Origin")
         if opprinnelse and urlparse(opprinnelse).netloc != self.headers.get("Host", ""):
             self._json(403, {"error": "Forespørselen kom fra en annen side."})
-            return
+            return None
         if self.headers.get("Sec-Fetch-Site") not in (None, "same-origin", "none"):
             self._json(403, {"error": "Forespørselen kom fra en annen side."})
-            return
+            return None
         if self.headers.get("Content-Type", "").split(";")[0].strip().lower() != "application/json":
             self._json(415, {"error": "Bruk Content-Type: application/json."})
-            return
+            return None
         try:
             lengde = int(self.headers.get("Content-Length") or 0)
         except ValueError:
             lengde = 0
         if lengde <= 0 or lengde > MAKS_POST_BYTES:
             self._json(413, {"error": f"Kroppen må være mellom 1 og {MAKS_POST_BYTES} byte."})
+            return None
+        return lengde
+
+    def do_POST(self) -> None:
+        """To POST-ruter: /api/forklar (koster penger hos KI-leverandøren) og /api/arena/kjor."""
+        sti = urlparse(self.path).path
+        if sti not in ("/api/forklar", "/api/arena/kjor"):
+            self._json(404, {"error": "Finnes ikke"})
+            return
+        lengde = self._post_lengde()
+        if lengde is None:
+            return
+        if sti == "/api/arena/kjor":
+            self._arena_kjor(lengde)
             return
         if LLM_KONFIG is None:
             self._json(503, {"error": "KI-laget er ikke slått på. Rapportene er likevel tilgjengelige uten KI."})
@@ -316,6 +336,21 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
             self._json(504 if exc.kode == "tidsavbrudd" else 502, {"error": str(exc)})
             return
         self._json(200, {**svar, "status": "Utkast", "rapport": rapport})
+
+    def _arena_kjor(self, lengde: int) -> None:
+        try:
+            kropp = json.loads(self.rfile.read(lengde).decode("utf-8"))
+            if not isinstance(kropp, dict):
+                raise ValueError('Send et JSON-objekt: {"id": "T1"}')
+            resultat = arena.kjor(str(kropp.get("id", "")), run_tool)
+        except (ValueError, TypeError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+            self._json(400, {"error": str(exc)})
+            return
+        except Exception as exc:
+            sys.stderr.write(f"[datafinner] FEIL i arena: {exc!r}\n")
+            self._json(500, {"error": "Feil ved kjøring av casen. Prøv igjen, eller si ifra til den som drifter siden."})
+            return
+        self._json(200, resultat)
 
     def log_message(self, format: str, *args: Any) -> None:
         sys.stderr.write("[datafinner] " + (format % args) + "\n")

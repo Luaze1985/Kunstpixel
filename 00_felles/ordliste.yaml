@@ -225,3 +225,32 @@ begreper:
 
 
 
+
+  arena:
+    forklaring: >
+      Siden /arena i Datafinner (port 8010) der gründerne klikker seg gjennom øvelsescaser. Den viser hva dataene
+      kan brukes til, hvor GDPR-grensen går og hva KI vinner. Spor A (spørre og kontrollere KI) først, spor B
+      (bygge med KI) senere. Låst 2026-10-30 (grilling).
+    synonymer: ["intern arena", "øvingsbane"]
+    i_praksis: "Start Datafinner og åpne http://127.0.0.1:8010/arena."
+
+  ovelsescase:
+    forklaring: >
+      Én case i arenaen: oppdrag, kjøring mot ekte verktøy, datamerke, GDPR-forklaring, gevinst og «se etter».
+      Casene ligger i 04_knowledge/07_arena/caser.yaml. En test kjører hver case, så en case som ikke virker,
+      kommer aldri på siden.
+    synonymer: ["case", "øvelse"]
+    i_praksis: "G1 viser at et lønnsspørsmål stoppes av to lag vern: ordsperre og dataminimering."
+
+  ki_gevinst_antakelse:
+    forklaring: >
+      Timene kommer fra dataene. Hvor mye KI sparer, er alltid en antakelse som brukeren skriver selv, merket
+      «Antakelse». Gevinsttall diktes aldri inn i dataene. Låst 2026-10-30.
+    i_praksis: "T2: 36 timer fra dataene × 30 % antakelse = 10,8 timer spart i året (antakelse)."
+
+  datamerke:
+    forklaring: >
+      Merket per tabell, regnet ut live fra kolonnen datakilde: syntetisk, mangler merking (behandles som ekte,
+      fail-closed), ekte offentlig (SSB, helligdager, registre) eller ekte. Bare syntetiske data kan sendes til
+      ekstern KI.
+    i_praksis: "G4: hr_ansatte mangler merking, så hele pakken stoppes for ekstern KI."
