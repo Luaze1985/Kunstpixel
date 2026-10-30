@@ -24,8 +24,10 @@ dette skriptet. Hvert bygg starter fra grunnlaget og gjør de samme stegene:
     Navn og avdeling hentes ved oppslag fra hr_ansatte, de lagres ikke på nytt.
     NB: org_ferdigheter overlapper de 7 første kodene i hr_skills (HR-demoen) med litt andre navn.
     Dette er to kilder for samme ferdigheter, og må samkjøres av Lars før de brukes sammen.
-11. Indekser for vaktoppslag og interne tabeller.
-12. PRAGMA user_version = SKJEMAVERSJON, VACUUM, integrity_check og foreign_key_check.
+11. Publikumsdata (publikum_builder, syntetisk) lastes fra fire CSV-er: kafe_meny, kafe_varesalg,
+    besok_tilfredshet og anmeldelser. CSV-ene lages av `src/kunstpixel/data/publikum_builder.py`.
+12. Indekser for vaktoppslag og interne tabeller.
+13. PRAGMA user_version = SKJEMAVERSJON, VACUUM, integrity_check og foreign_key_check.
 
 Kjøres med:
     py -3.13 src/kunstpixel/data/build_museum_db.py          # bygg og erstatt
@@ -54,7 +56,7 @@ DATA_DIR = PROJECT_ROOT / "05_data"
 BASE_DB = DATA_DIR / "kilde" / "museum_base.db"
 OUT_DB = DATA_DIR / "museum.db"
 SHA_FILE = DATA_DIR / "museum.db.sha256"
-SKJEMAVERSJON = 5
+SKJEMAVERSJON = 6
 
 KLOKKESLETT_CSV = DATA_DIR / "arkiv_hr_vakt_klokkeslett.csv"
 GRENSER_CSV = DATA_DIR / "arbeidstid_grenser.csv"
@@ -78,6 +80,10 @@ H5_MALER_CSV = DATA_DIR / "h5_rapportmaler.csv"
 H5_TIDSBRUK_CSV = DATA_DIR / "h5_arbeidsoppgaver_tidsbruk.csv"
 H5_HISTORIKK_CSV = DATA_DIR / "h5_historikk_2010_2026.csv"
 HR_OPPLAERING_CSV = DATA_DIR / "hr_opplaering_onboarding.csv"
+KAFE_MENY_CSV = DATA_DIR / "kafe_meny.csv"
+KAFE_VARESALG_CSV = DATA_DIR / "kafe_varesalg.csv"
+BESOK_TILFREDSHET_CSV = DATA_DIR / "besok_tilfredshet.csv"
+ANMELDELSER_CSV = DATA_DIR / "anmeldelser.csv"
 
 HR_DEMO_TABLES = ["hr_rules", "hr_availability", "hr_person_skill", "hr_skills", "hr_people"]
 
@@ -349,6 +355,61 @@ CREATE TABLE hr_opplaering_onboarding (
 )
 """
 
+PUBLIKUM_SQL = [
+    """
+CREATE TABLE kafe_meny (
+    produkt_id TEXT PRIMARY KEY,
+    navn TEXT NOT NULL,
+    kategori TEXT NOT NULL,
+    pris_nok REAL NOT NULL,
+    varekost_nok REAL NOT NULL,
+    allergener TEXT NOT NULL,
+    datakilde TEXT NOT NULL
+)""",
+    """
+CREATE TABLE kafe_varesalg (
+    dato TEXT NOT NULL,
+    produkt_id TEXT NOT NULL REFERENCES kafe_meny(produkt_id),
+    antall INTEGER NOT NULL,
+    omsetning_nok REAL NOT NULL,
+    datakilde TEXT NOT NULL,
+    PRIMARY KEY (dato, produkt_id)
+)""",
+    """
+CREATE TABLE besok_tilfredshet (
+    dato TEXT PRIMARY KEY,
+    antall_svar INTEGER NOT NULL,
+    score_utstilling REAL NOT NULL,
+    score_kafe REAL NOT NULL,
+    score_service REAL NOT NULL,
+    score_totalt REAL NOT NULL,
+    publikumsvakter INTEGER NOT NULL,
+    kafe_vakter INTEGER NOT NULL,
+    datakilde TEXT NOT NULL
+)""",
+    """
+CREATE TABLE anmeldelser (
+    anmeldelse_id TEXT PRIMARY KEY,
+    dato TEXT NOT NULL,
+    kanal TEXT NOT NULL CHECK(kanal IN ('google', 'tripadvisor', 'egen_undersokelse')),
+    stjerner INTEGER NOT NULL CHECK(stjerner BETWEEN 1 AND 5),
+    tema TEXT NOT NULL CHECK(tema IN ('utstilling', 'kafe', 'service', 'fasiliteter')),
+    utstilling_id TEXT,
+    produkt_id TEXT REFERENCES kafe_meny(produkt_id),
+    tekst TEXT NOT NULL,
+    allergen_pastand TEXT,
+    allergen_stemmer_med_meny INTEGER,
+    inneholder_persondata INTEGER NOT NULL,
+    ansvarlig_rolle TEXT NOT NULL,
+    status TEXT NOT NULL CHECK(status IN ('besvart', 'ubesvart', 'eskalert')),
+    besvart_dato TEXT,
+    svartid_dager INTEGER,
+    svartekst TEXT,
+    tiltak TEXT,
+    datakilde TEXT NOT NULL
+)""",
+]
+
 INDEXES = [
     "CREATE INDEX IF NOT EXISTS org_kompetanse_skill_idx ON org_ansatt_kompetanse(skill_code, gyldig_til)",
     "CREATE INDEX IF NOT EXISTS interne_henvendelser_kategori_idx ON interne_henvendelser(kategori, dato_tid)",
@@ -361,6 +422,8 @@ INDEXES = [
     "CREATE INDEX IF NOT EXISTS h5_kalender_eier_idx ON h5_rapporteringskalender(eier, maned)",
     "CREATE INDEX IF NOT EXISTS h5_tidsbruk_omrade_idx ON h5_arbeidsoppgaver_tidsbruk(omrade, rolle)",
     "CREATE INDEX IF NOT EXISTS hr_opplaering_rolle_idx ON hr_opplaering_onboarding(rolle, kategori)",
+    "CREATE INDEX IF NOT EXISTS anmeldelser_tema_idx ON anmeldelser(tema, dato)",
+    "CREATE INDEX IF NOT EXISTS anmeldelser_status_idx ON anmeldelser(status, ansvarlig_rolle)",
 ]
 
 
@@ -719,6 +782,52 @@ def bygg_hr_opplaering_onboarding(con: sqlite3.Connection) -> int:
     return len(rader)
 
 
+def _tom_til_null(verdi: str, typ=str):
+    return typ(verdi) if verdi != "" else None
+
+
+def bygg_publikum(con: sqlite3.Connection) -> int:
+    """Kafémeny, kafésalg, fornøydhet per dag og anmeldelser (publikum_builder)."""
+    for t in ("anmeldelser", "besok_tilfredshet", "kafe_varesalg", "kafe_meny"):
+        con.execute(f"DROP TABLE IF EXISTS {t}")
+    for sql in PUBLIKUM_SQL:
+        con.execute(sql)
+    meny = les_csv(KAFE_MENY_CSV)
+    con.executemany(
+        "INSERT INTO kafe_meny VALUES (?,?,?,?,?,?,?)",
+        [(r["produkt_id"], r["navn"], r["kategori"], float(r["pris_nok"]), float(r["varekost_nok"]), r["allergener"], r["datakilde"]) for r in meny],
+    )
+    salg = les_csv(KAFE_VARESALG_CSV)
+    con.executemany(
+        "INSERT INTO kafe_varesalg VALUES (?,?,?,?,?)",
+        [(r["dato"], r["produkt_id"], int(r["antall"]), float(r["omsetning_nok"]), r["datakilde"]) for r in salg],
+    )
+    tilfreds = les_csv(BESOK_TILFREDSHET_CSV)
+    con.executemany(
+        "INSERT INTO besok_tilfredshet VALUES (?,?,?,?,?,?,?,?,?)",
+        [
+            (r["dato"], int(r["antall_svar"]), float(r["score_utstilling"]), float(r["score_kafe"]), float(r["score_service"]),
+             float(r["score_totalt"]), int(r["publikumsvakter"]), int(r["kafe_vakter"]), r["datakilde"])
+            for r in tilfreds
+        ],
+    )
+    anm = les_csv(ANMELDELSER_CSV)
+    con.executemany(
+        "INSERT INTO anmeldelser VALUES (" + ",".join(["?"] * 18) + ")",
+        [
+            (
+                r["anmeldelse_id"], r["dato"], r["kanal"], int(r["stjerner"]), r["tema"],
+                _tom_til_null(r["utstilling_id"]), _tom_til_null(r["produkt_id"]), r["tekst"],
+                _tom_til_null(r["allergen_pastand"]), _tom_til_null(r["allergen_stemmer_med_meny"], int),
+                int(r["inneholder_persondata"]), r["ansvarlig_rolle"], r["status"], _tom_til_null(r["besvart_dato"]),
+                _tom_til_null(r["svartid_dager"], int), _tom_til_null(r["svartekst"]), _tom_til_null(r["tiltak"]), r["datakilde"],
+            )
+            for r in anm
+        ],
+    )
+    return len(meny) + len(salg) + len(tilfreds) + len(anm)
+
+
 def oppgrader_fremmednokler(con: sqlite3.Connection) -> None:
     """Bygg om tabellene i G9 for å legge til eksplisitte FOREIGN KEY constraints."""
     # 1. hr_innleie
@@ -920,6 +1029,7 @@ def bygg(til: Path) -> dict:
             antall_h5_tidsbruk = bygg_h5_arbeidsoppgaver_tidsbruk(con)
             antall_h5_historikk = bygg_h5_historikk(con)
             antall_hr_opplaering = bygg_hr_opplaering_onboarding(con)
+            antall_publikum = bygg_publikum(con)
             oppgrader_fremmednokler(con)
             koble_ansattregistre(con)
             for sql in INDEXES:
@@ -950,6 +1060,7 @@ def bygg(til: Path) -> dict:
             "h5_tidsbruk": antall_h5_tidsbruk,
             "h5_historikk": antall_h5_historikk,
             "hr_opplaering": antall_hr_opplaering,
+            "publikum": antall_publikum,
             "user_version": SKJEMAVERSJON,
         }
     finally:

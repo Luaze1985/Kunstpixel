@@ -7,11 +7,18 @@
 - Hver case viser svaret, kontrollen mot fasit, datamerket (kan dataene sendes til ekstern KI?), GDPR og gevinst, med et eget felt for antakelser.
 - **Grønt:** full testpakke og statusporten (KLAR). Siden består Arbeidsflyt-validatoren.
 
+- **Publikumsdata (syntetisk), laget lokalt uten Colab:**
+  - 2 045 Google-lignende anmeldelser med ledelsens håndtering (ansvarlig, svar, svartid, tiltak)
+  - fornøydhet per dag
+  - kafémeny med 12 varer og salg per vare per dag
+  - Skriptet er `src/kunstpixel/data/publikum_builder.py`, og skjemaversjonen er nå 6.
+
 ## 2. Hvor vi slapp
 - Grenen `arena`. Bølge 1 er ferdig.
 - Bølge 2 er neste: leverandørsjekk, helgevakt på helligdag, hviletid, 17 års nøkkeltall og besøk mot vakter.
 
 ## 3. Første oppgave neste gang du setter deg ned
+- **Bygg databasen** (du gjør dette, agenten gjør det ikke): `py -3.13 src/kunstpixel/data/build_museum_db.py`. Først da kommer publikumsdataene inn i `museum.db`.
 - **Test arenaen selv:** `py -3.13 src/kunstpixel/adapters/datafinner.py` og åpne http://127.0.0.1:8010/arena. Klikk deg gjennom casene og noter det som skurrer.
 - Bølge 3 (bemanningsmotoren) krever at du bygger `museum.db` etter oppgave 07. Kravlisten per stasjon er allerede godkjent.
 

@@ -1,5 +1,7 @@
 # Bestilling: tilfredshet, kafésalg og besøkskommentarer (Colab)
 
+> **Erstattet 2026-10-30.** Dataene lages nå lokalt av `src/kunstpixel/data/publikum_builder.py`, og Colab trengs ikke. Det gir samme resultat hver gang, ligger i git og testes av `tests/test_publikum_data.py`. Kommentarene er utvidet til Google-lignende anmeldelser med ledelsens håndtering, og det er lagt til kafémeny og salg per vare. Fila beholdes som historikk.
+
 *Bestilt 2026-10-30. Gjelder arenaen, bølgen «drift og bunnlinje». Følger [`BESTILLING_COLAB_DATAFANGST.md`](BESTILLING_COLAB_DATAFANGST.md).*
 
 ## Hvorfor

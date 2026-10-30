@@ -1,0 +1,13 @@
+produkt_id,navn,kategori,pris_nok,varekost_nok,allergener,datakilde
+KAFE-001,Kanelbolle (hjemmebakt),Bakverk,48,14.4,gluten;melk;egg,syntetisk (publikum_builder)
+KAFE-002,Skagen-sandwich pa surdeig,Lunsj,145,55.1,gluten;egg;fisk;skalldyr;sennep,syntetisk (publikum_builder)
+KAFE-003,Vegansk rotgronnsakssuppe med urter,Varmmat,125,40.0,selleri,syntetisk (publikum_builder)
+KAFE-004,Mork sjokoladekake med bringebaer,Kake,68,20.4,gluten;melk;egg;notter;soya,syntetisk (publikum_builder)
+KAFE-005,Caffe Latte / Cappuccino,Drikke,48,8.64,melk,syntetisk (publikum_builder)
+KAFE-006,Vaffel med brunost og syltetøy,Bakverk,65,19.5,gluten;melk;egg,syntetisk (publikum_builder)
+KAFE-007,Dagens suppe med brød,Varmmat,135,43.2,gluten;melk;selleri,syntetisk (publikum_builder)
+KAFE-008,Kyllingsalat med sennepsdressing,Lunsj,159,60.42,egg;sennep,syntetisk (publikum_builder)
+KAFE-009,Gulrotkake med valnøtter,Kake,72,21.6,gluten;melk;egg;notter,syntetisk (publikum_builder)
+KAFE-010,Filterkaffe,Drikke,38,6.84,,syntetisk (publikum_builder)
+KAFE-011,Eplemost,Drikke,45,8.1,,syntetisk (publikum_builder)
+KAFE-012,Barnemeny: pølse i lompe,Barn,69,24.15,melk;sennep,syntetisk (publikum_builder)
