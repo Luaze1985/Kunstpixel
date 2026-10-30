@@ -128,6 +128,27 @@ caser:
       tekst: Vaktkostnad per avdeling uten regneark. Tallene er regnet ut fra Virke-tariffen.
     se_etter: Formidling står for over halvparten av kostnaden.
 
+  - id: K1
+    omrade: okonomi
+    tittel: To kilder, to svar
+    oppdrag: >
+      Hvor mange besøkte museet i 2025, og hvor mye tok vi inn i billetter? Finn svaret i to kilder og
+      avgjør hvilken du stoler på.
+    kjoring:
+      type: lesecase
+    gdpr: >
+      Ingen persondata. Dette er et datakvalitetsproblem, ikke et personvernproblem. En KI som får begge
+      kildene, kan selvsikkert gi ett av to svar, og begge er «riktige» ut fra hver sin kilde.
+    gevinst:
+      tekst: >
+        Tallet bestemmer budsjett, bemanning og søknader. Å oppdage uenigheten før en KI summerer opp,
+        er mer verdt enn noe svar den gir.
+    se_etter: >
+      Arkivet (dagsbesok, utstillinger og utstillingsøkonomi) sier 135 906 besøkende og 10 938 680 kr i
+      billetter for 2025. Årsstatistikken (h5_historikk_2010_2026) sier 39 800 besøkende og 2 273 000 kr.
+      Arkivet henger sammen internt (tre tabeller), mens årsstatistikken står alene. Begge er syntetiske,
+      og uenigheten er ikke rettet ennå. Beslutning 2026-10-30: la begge stå og bruk den som case.
+
   - id: P2
     omrade: publikum
     tittel: Billettpris og åpningstid

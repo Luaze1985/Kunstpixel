@@ -3,19 +3,19 @@
 
 ## 1. Hva vi gjorde sist
 - **Grillet planen for arenaen** (plan: `C:\Users\larse\.claude\plans\les-siste-handoff-og-stateful-ripple.md`). Arenaen skal ha 5 områder: bemanning, tidsbruk, GDPR, økonomi og publikum. Den har 21 caser fordelt på 3 bølger.
-- **Bygget bølge 1:** siden `/arena` i Datafinner med 13 caser som virker i dag (T1–T3, Ø1, Ø2, P2, P3, S1, G1–G5).
+- **Bygget bølge 1:** siden `/arena` i Datafinner med 14 caser (13 live og 1 lesecase) i dag (T1–T3, Ø1, Ø2, P2, P3, S1, G1–G5).
 - Hver case viser svaret, kontrollen mot fasit, datamerket (kan dataene sendes til ekstern KI?), GDPR og gevinst, med et eget felt for antakelser.
 - **Grønt:** full testpakke og statusporten (KLAR). Siden består Arbeidsflyt-validatoren.
 
 - **Publikumsdata (syntetisk), laget lokalt uten Colab:**
-  - 2 045 Google-lignende anmeldelser med ledelsens håndtering (ansvarlig, svar, svartid, tiltak)
+  - 2 040 Google-lignende anmeldelser med ledelsens håndtering (ansvarlig, svar, svartid, tiltak)
   - fornøydhet per dag
-  - kafémeny med 12 varer og salg per vare per dag
+  - kafémeny med 16 varer og salg per vare per dag
   - Skriptet er `src/kunstpixel/data/publikum_builder.py`, og skjemaversjonen er nå 6.
 
 ## 2. Hvor vi slapp
 - Grenen `arena`. Bølge 1 er ferdig.
-- Bølge 2 er neste: leverandørsjekk, helgevakt på helligdag, hviletid, 17 års nøkkeltall og besøk mot vakter.
+- Neste er «Drift og bunnlinje»: hvem er på jobb, resultat, besøk mot vakter, kafé og anmeldelser. Deretter leverandørsjekk, helgevakt og hviletid.
 
 ## 3. Første oppgave neste gang du setter deg ned
 - **Bygg databasen** (du gjør dette, agenten gjør det ikke): `py -3.13 src/kunstpixel/data/build_museum_db.py`. Først da kommer publikumsdataene inn i `museum.db`.

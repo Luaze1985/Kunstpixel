@@ -1,7 +1,7 @@
 """Publikumsdata for Kunstpixel: anmeldelser, fornøydhet og kafésalg (syntetisk).
 
 Lager fire CSV-filer i 05_data/ som byggeskriptet laster inn i museum.db:
-  kafe_meny.csv          12 varer med pris, varekost og allergener (de 5 første fra
+  kafe_meny.csv          16 varer med pris, varekost og allergener (de 5 første fra
                          05_data/governance/kafe_meny_allergener.json)
   kafe_varesalg.csv      salg per vare per åpen dag
   besok_tilfredshet.csv  fornøydhet per åpen dag (snitt 1–5 for utstilling, kafé og service)
@@ -12,7 +12,8 @@ Grunnlaget leses fra museum.db (mode=ro): åpne dager og besøk (dagsbesok), vak
 
 Sammenhengene er lagt inn med vilje, slik at arenaen har noe å finne igjen:
   1. Service faller når det er mange besøkende per publikumsvakt samme dag.
-  2. Kafé-score og kafésalg faller på travle dager med 0–1 kafévakt.
+  2. Kafé-score og kafésalg faller på travle dager (øverste 30 % av besøkene). Kaféen har bare én vakt
+     hver dag i hr_vakter, så dette viser en kafé som er underbemannet når det er mye folk.
   3. Hver utstilling har sitt eget nivå. «Algoritmisk skjønnhet» (2025) er svakest.
   4. Fra september 2026 blir dårlige anmeldelser liggende ubesvart lenger (et etterslep).
   5. Noen kaféklager gjelder allergener. Halvparten stemmer med menyen, halvparten ikke.
@@ -60,7 +61,11 @@ NYE_VARER = [
     ("KAFE-009", "Gulrotkake med valnøtter", "Kake", 72, ["gluten", "melk", "egg", "notter"], 8),
     ("KAFE-010", "Filterkaffe", "Drikke", 38, [], 22),
     ("KAFE-011", "Eplemost", "Drikke", 45, [], 9),
-    ("KAFE-012", "Barnemeny: pølse i lompe", "Barn", 69, ["melk", "sennep"], 6),
+    ("KAFE-012", "Barnemeny: pølse i lompe", "Barn", 69, ["gluten", "melk", "sennep"], 6),
+    ("KAFE-013", "Te på kanne", "Drikke", 42, [], 6),
+    ("KAFE-014", "Mineralvann", "Drikke", 39, [], 8),
+    ("KAFE-015", "Brus", "Drikke", 42, [], 6),
+    ("KAFE-016", "Focaccia med grillede grønnsaker og pesto", "Lunsj", 139, ["gluten", "melk"], 5),
 ]
 VEKT_EKSISTERENDE = {"KAFE-001": 14, "KAFE-002": 8, "KAFE-003": 6, "KAFE-004": 9, "KAFE-005": 25}
 

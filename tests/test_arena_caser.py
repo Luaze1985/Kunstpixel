@@ -125,3 +125,22 @@ def test_api_avviser_ukjent_case(server: str) -> None:
 def test_arenasiden_serveres(server: str) -> None:
     with urllib.request.urlopen(f"{server}/arena") as res:
         assert res.status == 200 and b"class=\"af\"" in res.read()
+
+
+def test_k1_tallene_stemmer_med_databasen() -> None:
+    """K1 påstår at to kilder er uenige. Da må tallene i casen være de som står i databasen i dag."""
+    from src.kunstpixel.core import db
+
+    with db.get_db_connection() as con:
+        arkiv_besok = con.execute("SELECT SUM(besok_totalt) FROM dagsbesok WHERE aar = 2025").fetchone()[0]
+        arkiv_inntekt = con.execute("SELECT SUM(inntekt_nok) FROM dagsbesok WHERE aar = 2025").fetchone()[0]
+        utst_besok = con.execute("SELECT SUM(besokstall_total) FROM utstillinger_historikk WHERE aar = 2025").fetchone()[0]
+        h5_besok, h5_tkr = con.execute("SELECT besok_totalt, billettinntekter_tkr FROM h5_historikk_2010_2026 WHERE ar = 2025").fetchone()
+    assert arkiv_besok == utst_besok, "arkivet skal henge sammen internt"
+
+    def tall(n: int) -> str:
+        return f"{n:,}".replace(",", " ")
+
+    tekst = next(c for c in CASER["caser"] if c["id"] == "K1")["se_etter"]
+    for n in (arkiv_besok, arkiv_inntekt, h5_besok, h5_tkr * 1000):
+        assert tall(n) in tekst, f"{tall(n)} står ikke i K1. Tallene har endret seg, og casen må oppdateres"
