@@ -95,7 +95,7 @@ def test_every_role_and_owner_is_in_the_allowed_vocabulary():
         assert s[2] in L.ROLLER_TILLATT
     for o in L.MYNDIGHETSOPPGAVER:
         assert o[3] in L.ROLLER_TILLATT
-    assert {n.lower().replace("ø", "o") for n in L.ROLLER_TILLATT[:7]} == set(ROLLER)
+    assert {n.lower().replace("ø", "o") for n in L.ROLLER_TILLATT[:9]} == set(ROLLER)
 
 
 def test_time_use_rows_match_the_report_calendar_exactly():

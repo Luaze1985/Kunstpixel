@@ -30,6 +30,8 @@ ROLLER: tuple[str, ...] = (
     "museumsvert",
     "driftsansvarlig",
     "kvalitetsvokter",
+    "kafeansvarlig",
+    "kommunikasjon",
 )
 ALLE: frozenset[str] = frozenset(ROLLER)
 LEDELSE: frozenset[str] = frozenset({"museumsdirektor", "driftsansvarlig", "kvalitetsvokter"})

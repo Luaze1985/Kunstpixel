@@ -254,3 +254,20 @@ begreper:
       fail-closed), ekte offentlig (SSB, helligdager, registre) eller ekte. Bare syntetiske data kan sendes til
       ekstern KI.
     i_praksis: "G4: hr_ansatte mangler merking, så hele pakken stoppes for ekstern KI."
+
+  anmeldelseshandtering:
+    forklaring: >
+      Hvem i museet som eier svaret på publikums anmeldelser (Google, Tripadvisor og egen undersøkelse).
+      Kommunikasjon svarer på omtale av utstillinger og generell omtale. Kafeansvarlig svarer på kritikk av mat
+      og drikke. Driftsansvarlig tar service og fasiliteter. Museumsdirektør tar allergenklager og alt som
+      eskaleres. Svar utad publiseres ikke uten godkjenning, og KI lager bare utkast. Låst 2026-10-30 (grilling).
+    synonymer: ["ledelsens håndtering", "omtale"]
+    i_praksis: "En allergenklage er eskalert til museumsdirektør, mens en klage på kø i kaféen går til Kafeansvarlig."
+
+  kafeansvarlig_og_kommunikasjon:
+    forklaring: >
+      To roller som ble innført 2026-10-30, i tillegg til de sju første (roller.csv A–N, intern assistent og
+      team_roster). Kafeansvarlig eier kafédrift, IK-Mat og allergenmerking. Kommunikasjon eier svar på omtale
+      og pressehenvendelser. Ingen av dem er ledelse, så de ser ikke tiltak, tidsbruk eller historikk.
+    synonymer: ["kafeleder", "kommunikasjonsansvarlig"]
+    i_praksis: "Velg rollen Kommunikasjon i den interne assistenten for å se hva en kommunikasjonsmedarbeider får lov til."

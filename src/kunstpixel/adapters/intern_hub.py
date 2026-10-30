@@ -43,6 +43,8 @@ ROLLE_NAVN = {
     "museumsvert": "Museumsvert",
     "driftsansvarlig": "Driftsansvarlig",
     "kvalitetsvokter": "Kvalitetsvokter",
+    "kafeansvarlig": "Kafeansvarlig",
+    "kommunikasjon": "Kommunikasjon",
 }
 assert set(ROLLE_NAVN) == set(ROLLER)
 

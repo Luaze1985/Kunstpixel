@@ -179,12 +179,12 @@ def test_bygget_db_eget_fravaer_uten_kollisjon_og_innenfor_ssb(bygget_db: Path) 
 
 
 def test_bygget_db_roller_og_sporsmal_tabeller(bygget_db: Path) -> None:
-    """T3 (G5): roller og rolle_sporsmal finnes og list_roles() returnerer rollene A-L."""
+    """T3 (G5): roller og rolle_sporsmal finnes og list_roles() returnerer rollene A-N."""
     from src.kunstpixel.core.db import query_roles
     roles = query_roles(db_path=bygget_db)
-    assert len(roles) == 12
+    assert len(roles) == 14
     codes = {r["kode"] for r in roles}
-    assert "K" in codes and "L" in codes
+    assert {"K", "L", "M", "N"} <= codes
     hr_role = next(r for r in roles if r["kode"] == "K")
     assert hr_role["trigger"] == "/hr"
     assert len(hr_role["sporsmal"]) >= 4

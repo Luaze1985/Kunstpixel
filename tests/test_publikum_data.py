@@ -103,3 +103,14 @@ def test_byggeskriptet_laster_tabellene(tmp_path: Path) -> None:
         assert con.execute("PRAGMA user_version").fetchone()[0] == bygger.SKJEMAVERSJON
     finally:
         con.close()
+
+
+def test_ansvarlig_rolle_er_en_kjent_intern_rolle() -> None:
+    """Ledelsens håndtering av anmeldelser skal peke på rollene i den interne assistenten og roller.csv."""
+    from src.kunstpixel.core.intern.data import ROLLER, fold
+
+    fra_roller_csv = {fold(r["navn"]) for r in csv.DictReader((DATA / "roller.csv").open(encoding="utf-8", newline=""))}
+    brukt = {r["ansvarlig_rolle"] for r in _les("anmeldelser.csv")}
+    assert brukt <= set(ROLLER), brukt - set(ROLLER)
+    assert {fold(r) for r in brukt} <= fra_roller_csv
+    assert {"kommunikasjon", "kafeansvarlig"} <= brukt

@@ -70,7 +70,7 @@ HEADER: dict[str, Any] = {
 
 ROLLER_TILLATT = (
     "Museumsdirektør", "Samlingsforvalter", "Kurator", "Formidler", "Museumsvert", "Driftsansvarlig",
-    "Kvalitetsvokter", "Kafeansvarlig", "Verneombud", "Brannvernleder", "Konservator", "Styret",
+    "Kvalitetsvokter", "Kafeansvarlig", "Kommunikasjon", "Verneombud", "Brannvernleder", "Konservator", "Styret",
 )  # fmt: skip
 KILDER_TILLATT = (
     "besøkstall", "utstillinger", "regnskap", "hendelser", "avviksregister", "temperaturlogg", "vernerunder",
