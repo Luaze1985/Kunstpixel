@@ -6,7 +6,8 @@ ansettelse fra hr_ansatte, timepris fra virke_tariff og hviletid fra arbeidstid_
 
 Datafinner kjører uten sperrer på syntetiske data (spec vaktrom-uten-sperrer, 2026-10-31):
 fraværstype vises, og KI får hele kandidatgrunnlaget med navn og kontaktinfo.
-Innleide har ingen registrerte kurs eller vakter i våre data. De vises med det merket, og ledelsen vurderer selv.
+Innleide filtreres på kurs fra hr_innleide_kompetanse. Vakter for innleide er ikke registrert, så hviletid og
+overlapp kan ikke kontrolleres for dem.
 
 Dette er ikke oppgave 08 (bemanningsmotoren i bemanning.py). Vaktrommet rangerer ikke folk, det sorterer på
 pris uten tillegg innenfor hver gruppe og lar et menneske velge.
@@ -22,7 +23,7 @@ from src.kunstpixel.core import bemanning, db
 
 MERKNAD_KONTROLL = "Kontrollen bygger bare på registrerte vakter og fravær i museum.db."
 MERKNAD_PRIS = "Timepris er ordinær sats uten tillegg (Virke for egne ansatte, avtalt pris for innleide). Det er ikke vaktkostnaden."
-MERKNAD_INNLEID = "Kompetanse ikke registrert i våre data. Ledelsen må vurdere selv."
+MERKNAD_INNLEID = "Kurs fra registeret for innleide. Vakter hos oss er ikke registrert, så hviletid kan ikke kontrolleres."
 
 
 def _dato(tekst: str) -> date:
@@ -93,9 +94,10 @@ def get_weekend_shift_history(
     }
 
 
-def _gyldige_kurs(con: Any, dag: str) -> dict[str, set[str]]:
+def _gyldige_kurs(con: Any, dag: str, tabell: str = "org_ansatt_kompetanse", id_kolonne: str = "ansatt_id") -> dict[str, set[str]]:
+    """id -> kurs som er gyldige på datoen. Samme regel for egne ansatte og innleide."""
     rader = con.execute(
-        "SELECT ansatt_id, skill_code FROM org_ansatt_kompetanse "
+        f"SELECT {id_kolonne}, skill_code FROM {tabell} "
         "WHERE sertifisert_dato <= :d AND (gyldig_til IS NULL OR gyldig_til >= :d) "
         "AND NOT (status = 'utlopt' AND gyldig_til IS NULL)",
         {"d": dag},
@@ -161,6 +163,8 @@ def get_staffing_candidates(
             "SELECT orgnr, kontaktperson_ekstern FROM hr_innleie WHERE kontaktperson_ekstern IS NOT NULL "
             "AND kontaktperson_ekstern != '' ORDER BY aar"
         ).fetchall())
+        # Innleide filtreres på samme måte som egne: alle kravene må være gyldige på datoen.
+        innleid_kurs = _gyldige_kurs(con, dag, "hr_innleide_kompetanse", "innleid_id")
         innleide = [
             {
                 "id": r["innleid_id"], "type": "innleid", "navn": r["navn"], "stilling": r["stilling"],
@@ -169,13 +173,14 @@ def get_staffing_candidates(
                 "prisgrunnlag": "Avtalt timepris" if r["timepris_nok"] is not None else "Ukjent",
                 "avtale": f"{r['avtale_fra']} til {r['avtale_til']}",
                 "kontaktperson_firma": kontakter.get(r["orgnr"]),
-                "kompetanse": [], "merknad": MERKNAD_INNLEID,
+                "kompetanse": sorted(kravkoder), "merknad": MERKNAD_INNLEID,
                 "epost": r["epost"], "telefon": r["telefon"],
             }
             for r in con.execute(
                 "SELECT * FROM hr_innleide_personer WHERE status = 'Aktiv' AND avtale_fra <= :d AND avtale_til >= :d",
                 {"d": dag},
             )
+            if kravkoder <= innleid_kurs.get(r["innleid_id"], set())
         ]
 
     def nokkel(r: dict[str, Any]) -> tuple[int, float, str]:
@@ -214,10 +219,14 @@ def check_staffing_selection(
         kurs = _gyldige_kurs(con, dag)
         borte = _fravaerende(con, dag)
         innleide = {r[0] for r in con.execute("SELECT innleid_id FROM hr_innleide_personer")}
+        innleid_kurs = _gyldige_kurs(con, dag, "hr_innleide_kompetanse", "innleid_id")
         for pid in ids[:50]:
             if pid in innleide:
-                resultater.append({"id": pid, "status": "kan_ikke_kontrolleres", "funn": [
-                    "Innleid: ingen registrerte kurs eller vakter i våre data. Ledelsen må vurdere selv."]})
+                # Kurs kan kontrolleres. Vakter, overlapp og hviletid kan ikke: de er ikke registrert hos oss.
+                mangler = sorted(kravkoder - innleid_kurs.get(pid, set()))
+                funn = ["Mangler gyldig kurs på datoen: " + ", ".join(mangler)] if mangler else ["Kurs ok."]
+                funn.append("Innleid: vakter er ikke registrert hos oss, så overlapp og hviletid kan ikke kontrolleres.")
+                resultater.append({"id": pid, "status": "avvik" if mangler else "delvis", "funn": funn})
                 continue
             funn: list[str] = []
             mangler = sorted(kravkoder - kurs.get(pid, set()))

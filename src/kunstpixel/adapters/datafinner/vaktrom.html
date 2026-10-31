@@ -319,7 +319,7 @@
       k.resultater.forEach(function (r) {
         var p = valgt[r.id], kort = el("div", "vr-kort");
         var h = el("h3", null, p.nr + ". " + p.navn + " ");
-        h.appendChild(el("span", "af-badge" + (r.status === "ok" ? " active" : ""), r.status === "ok" ? "Ingen funn" : r.status === "avvik" ? "Avvik" : "Kan ikke kontrolleres"));
+        h.appendChild(el("span", "af-badge" + (r.status === "ok" ? " active" : ""), r.status === "ok" ? "Ingen funn" : r.status === "avvik" ? "Avvik" : "Kurs ok, vakter ukjent"));
         kort.appendChild(h);
         var ul = el("ul"); r.funn.forEach(function (f) { ul.appendChild(el("li", null, f)); }); kort.appendChild(ul);
         l.appendChild(kort);

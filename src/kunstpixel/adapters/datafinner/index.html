@@ -272,6 +272,7 @@
   // Alle roller ser vaktrommet (spec vaktrom-uten-sperrer). null betyr alle.
   var VAKTROLLER = null;
   var ARBEIDSFLATER = [
+    { tekst: "Chat", beskrivelse: "Spør med vanlige ord. KI-en henter data med verktøyene og svarer i tekst.", url: "/chat", medRolle: true, roller: null },
     { tekst: "Vaktrom", beskrivelse: "Finn folk til én vakt: helgehistorikk, kandidater, kontroll og kontaktutkast.", url: "/vaktrom", medRolle: true, roller: VAKTROLLER },
     { tekst: "Mine kontaktutkast", beskrivelse: "Utkast lagret i denne nettleseren.", url: "/vaktrom#utkast", roller: VAKTROLLER },
     { tekst: "Søk", beskrivelse: "Samling, arrangementer, publikumsinformasjon og interne dokumenter.", url: "/sok.html", roller: null },

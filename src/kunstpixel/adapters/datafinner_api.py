@@ -120,6 +120,11 @@ def verktoyskjema(verktoy: dict[str, tuple[Callable[..., Any], set[str]]]) -> li
         pakrevd: list[str] = []
         for p in sorted(tillatt):
             egenskap: dict[str, Any] = {"type": _json_type(hint.get(p, str))}
+            if egenskap["type"] == "array":
+                # OpenAI avviser lister uten «items». Typen hentes fra list[...] når den finnes.
+                indre = [a for a in typing.get_args(hint.get(p, list)) if a is not type(None)]
+                indre = [b for a in indre for b in (typing.get_args(a) or (a,)) if b is not type(None) and b is not list]
+                egenskap["items"] = {"type": _json_type(indre[0]) if indre else "string"}
             if p in param_tekst:
                 egenskap["description"] = param_tekst[p]
             egenskaper[p] = egenskap

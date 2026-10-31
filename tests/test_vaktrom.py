@@ -104,10 +104,28 @@ def test_kontroll_finner_overlapp_med_registrert_vakt() -> None:
     assert res["hviletid_krav_timer"] == 11.0
 
 
-def test_kontroll_sier_fra_om_innleide() -> None:
+def test_kontroll_av_innleide_sjekker_kurs_men_ikke_vakter() -> None:
     k = vaktrom.get_staffing_candidates(**VAKT)
     res = vaktrom.check_staffing_selection(**VAKT, ids=[k["innleide"][0]["id"]])
-    assert res["resultater"][0]["status"] == "kan_ikke_kontrolleres"
+    assert res["resultater"][0]["status"] == "delvis"
+    assert res["resultater"][0]["funn"][0] == "Kurs ok."
+
+
+def test_innleide_filtreres_pa_kurs_gyldig_pa_datoen() -> None:
+    """Vaktrommet krever vekter og førstehjelp. Trond Bakken (P08) har utløpt førstehjelp og faller ut."""
+    k = vaktrom.get_staffing_candidates(**VAKT)
+    assert {r["id"] for r in k["innleide"]} == {"KP-INN-P03", "KP-INN-P04"}
+    res = vaktrom.check_staffing_selection(**VAKT, ids=["KP-INN-P08"])
+    assert res["resultater"][0]["status"] == "avvik"
+    assert "forstehjelp" in res["resultater"][0]["funn"][0]
+
+
+def test_innleide_til_sal_er_de_med_kundebehandling_og_aktiv_avtale() -> None:
+    """Sal A krever kundebehandling. P08 har kurset, men avtalen starter 2026-04-01 og teller ikke i mars."""
+    mars = vaktrom.get_staffing_candidates("Sal A (Mytologi og natur)", "2026-03-14", "10:00", "17:00")
+    assert {r["id"] for r in mars["innleide"]} == {"KP-INN-P03", "KP-INN-P06"}
+    mai = vaktrom.get_staffing_candidates("Sal A (Mytologi og natur)", "2026-05-09", "10:00", "17:00")
+    assert {r["id"] for r in mai["innleide"]} == {"KP-INN-P03", "KP-INN-P06", "KP-INN-P08"}
 
 
 def test_verktoyene_er_hvitelistet_i_datafinner(server: str) -> None:

@@ -89,6 +89,7 @@ BESOK_TILFREDSHET_CSV = DATA_DIR / "besok_tilfredshet.csv"
 ANMELDELSER_CSV = DATA_DIR / "anmeldelser.csv"
 PERSONAS_JSON = DATA_DIR / "arkiv_cv_personas.json"
 INNLEIDE_PERSONER_CSV = DATA_DIR / "arkiv_hr_innleide_personer.csv"
+INNLEIDE_KOMPETANSE_CSV = DATA_DIR / "arkiv_hr_innleide_kompetanse.csv"
 PERSONALMAPPER_CSV = DATA_DIR / "arkiv_hr_personalmapper.csv"
 
 HR_DEMO_TABLES = ["hr_rules", "hr_availability", "hr_person_skill", "hr_skills", "hr_people"]
@@ -291,6 +292,18 @@ CREATE TABLE hr_innleide_personer (
     oppdragsbeskrivelse TEXT,
     cv_sammendrag TEXT,
     datakilde TEXT NOT NULL
+)
+"""
+
+INNLEIDE_KOMPETANSE_SQL = """
+CREATE TABLE hr_innleide_kompetanse (
+    innleid_id TEXT NOT NULL REFERENCES hr_innleide_personer(innleid_id),
+    skill_code TEXT NOT NULL REFERENCES org_ferdigheter(skill_code),
+    sertifisert_dato TEXT NOT NULL,
+    gyldig_til TEXT,
+    status TEXT NOT NULL,
+    datakilde TEXT NOT NULL,
+    PRIMARY KEY (innleid_id, skill_code)
 )
 """
 
@@ -944,6 +957,19 @@ def bygg_innleide_personer(con: sqlite3.Connection) -> int:
     return len(rader)
 
 
+def bygg_innleide_kompetanse(con: sqlite3.Connection) -> int:
+    """Kurs for innleide, samme form som org_ansatt_kompetanse. Kjøres etter innleide og org_ferdigheter."""
+    con.execute("DROP TABLE IF EXISTS hr_innleide_kompetanse")
+    con.execute(INNLEIDE_KOMPETANSE_SQL)
+    rader = les_csv(INNLEIDE_KOMPETANSE_CSV)
+    con.executemany(
+        "INSERT INTO hr_innleide_kompetanse VALUES (?,?,?,?,?,?)",
+        [(r["innleid_id"], r["skill_code"], r["sertifisert_dato"], r.get("gyldig_til") or None, r["status"], r["datakilde"])
+         for r in rader],
+    )
+    return len(rader)
+
+
 def bygg_personalmapper(con: sqlite3.Connection) -> int:
     con.execute("DROP TABLE IF EXISTS hr_personalmapper")
     con.execute(PERSONALMAPPER_SQL)
@@ -1167,6 +1193,7 @@ def bygg(til: Path) -> dict:
             antall_publikum = bygg_publikum(con)
             antall_personas = bygg_personas(con)
             antall_innleide = bygg_innleide_personer(con)
+            antall_innleide_kompetanse = bygg_innleide_kompetanse(con)
             antall_personalmapper = bygg_personalmapper(con)
             oppgrader_fremmednokler(con)
             koble_ansattregistre(con)

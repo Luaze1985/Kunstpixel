@@ -395,13 +395,14 @@ def forklar(rapport: dict[str, Any], konfig: LlmKonfig, apne=urllib.request.urlo
     return utfor(bruker_tekst, grunnlag, konfig, SYSTEMPROMPT, apne)
 
 
-def utfor(bruker_tekst: str, grunnlag: Any, konfig: LlmKonfig, system: str, apne=urllib.request.urlopen) -> dict[str, Any]:
-    """Send én oppgave til språkmodellen. Tallene i svaret kontrolleres mot grunnlaget. Svaret er alltid AI-forslag."""
-    adresse, hoder, kropp = bygg_foresporsel(konfig, bruker_tekst, system)
+
+
+def _post_json(konfig: LlmKonfig, adresse: str, hoder: dict[str, str], kropp: bytes, apne=urllib.request.urlopen) -> dict[str, Any]:
+    """Send én forespørsel til leverandøren og les JSON-svaret. Feil blir LlmFeil med trygg melding."""
     foresporsel = urllib.request.Request(adresse, data=kropp, headers=hoder, method="POST")
     try:
         with apne(foresporsel, timeout=konfig.timeout) as res:
-            data = json.loads(res.read().decode("utf-8"))
+            return json.loads(res.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         raise LlmFeil("leverandorfeil", f"KI-leverandøren svarte med feil ({exc.code}).") from None
     except urllib.error.URLError as exc:
@@ -414,6 +415,12 @@ def utfor(bruker_tekst: str, grunnlag: Any, konfig: LlmKonfig, system: str, apne
         raise LlmFeil("leverandorfeil", "Fikk ikke kontakt med KI-leverandøren.") from None
     except json.JSONDecodeError:
         raise LlmFeil("leverandorfeil", "Svaret fra KI-leverandøren var ikke gyldig JSON.") from None
+
+
+def utfor(bruker_tekst: str, grunnlag: Any, konfig: LlmKonfig, system: str, apne=urllib.request.urlopen) -> dict[str, Any]:
+    """Send én oppgave til språkmodellen. Tallene i svaret kontrolleres mot grunnlaget. Svaret er alltid AI-forslag."""
+    adresse, hoder, kropp = bygg_foresporsel(konfig, bruker_tekst, system)
+    data = _post_json(konfig, adresse, hoder, kropp, apne)
     tekst = les_svar(konfig.leverandor, data)
     if not tekst:
         raise LlmFeil("leverandorfeil", "KI-leverandøren ga et tomt svar.")
@@ -422,5 +429,141 @@ def utfor(bruker_tekst: str, grunnlag: Any, konfig: LlmKonfig, system: str, apne
         "merke": "AI-forslag",
         "modell": konfig.modell,
         "leverandor": konfig.leverandor,
+        "tallkontroll": tallkontroll(tekst, grunnlag),
+    }
+
+
+# ---------- Chat med verktøy (Datafinner /api/chat) ----------
+
+CHAT_MAKS_RUNDER = 6
+CHAT_MAKS_RADER = 60
+CHAT_MAKS_BYTE_PER_RESULTAT = 16_000
+
+
+def _kortet_resultat(resultat: Any) -> str:
+    """Verktøysvaret som JSON-tekst. Lange lister kortes med en markør, og teksten har et tak i byte."""
+    def kort(x: Any) -> Any:
+        if isinstance(x, dict):
+            return {k: kort(v) for k, v in x.items()}
+        if isinstance(x, list):
+            rader = [kort(v) for v in x[:CHAT_MAKS_RADER]]
+            if len(x) > CHAT_MAKS_RADER:
+                rader.append({"_utelatt_rader": len(x) - CHAT_MAKS_RADER})
+            return rader
+        return x
+    tekst = json.dumps(kort(resultat), ensure_ascii=False, separators=(",", ":"), default=str)
+    if len(tekst.encode("utf-8")) > CHAT_MAKS_BYTE_PER_RESULTAT:
+        tekst = tekst.encode("utf-8")[:CHAT_MAKS_BYTE_PER_RESULTAT].decode("utf-8", "ignore") + " …[kuttet, be om færre rader]"
+    return tekst
+
+
+def _kjor_verktoy(kjor: Any, navn: str, args: Any) -> tuple[str, bool]:
+    """Kjør ett verktøy via serverens hviteliste. Feil går tilbake til modellen som tekst, så den kan rette seg."""
+    try:
+        if not isinstance(args, dict):
+            raise ValueError("Argumentene må være et JSON-objekt.")
+        return _kortet_resultat(kjor(navn, args)), True
+    except Exception as exc:  # modellen skal få se feilen og prøve igjen
+        return json.dumps({"feil": str(exc)}, ensure_ascii=False), False
+
+
+def chat_med_verktoy(
+    meldinger: list[dict[str, str]],
+    verktoy: list[dict[str, Any]],
+    kjor: Any,
+    konfig: LlmKonfig,
+    system: str,
+    begrenser: Begrenser | None = None,
+    apne=urllib.request.urlopen,
+    maks_runder: int = CHAT_MAKS_RUNDER,
+) -> dict[str, Any]:
+    """Én chattur: modellen kan kalle verktøy flere ganger før den svarer med tekst.
+
+    meldinger: [{"rolle": "bruker"|"assistent", "tekst": "..."}], eldste først.
+    verktoy:   [{"navn", "beskrivelse", "parametre"}] fra Datafinners verktøyskjema.
+    kjor:      serverens run_tool (hvitelistet). Hver runde teller mot `begrenser`.
+    """
+    kall: list[dict[str, Any]] = []
+    resultater: list[str] = []
+    if konfig.leverandor == "openai":
+        hoder = {"Content-Type": "application/json"}
+        if konfig.api_key:
+            hoder["Authorization"] = f"Bearer {konfig.api_key}"
+        adresse = konfig.adresse() + "/chat/completions"
+        msgs: list[dict[str, Any]] = [{"role": "system", "content": system}] + [
+            {"role": "user" if m["rolle"] == "bruker" else "assistant", "content": m["tekst"]} for m in meldinger
+        ]
+        tools = [{"type": "function", "function": {"name": v["navn"], "description": v["beskrivelse"], "parameters": v["parametre"]}}
+                 for v in verktoy]
+    else:
+        hoder = {"Content-Type": "application/json", "anthropic-version": ANTHROPIC_VERSJON}
+        if konfig.api_key:
+            hoder["x-api-key"] = konfig.api_key
+        adresse = konfig.adresse() + "/v1/messages"
+        msgs = [{"role": "user" if m["rolle"] == "bruker" else "assistant", "content": m["tekst"]} for m in meldinger]
+        tools = [{"name": v["navn"], "description": v["beskrivelse"], "input_schema": v["parametre"]} for v in verktoy]
+
+    for _ in range(maks_runder):
+        if begrenser is not None and not begrenser.tillat():
+            raise LlmFeil("tak", "For mange KI-kall den siste timen. Prøv igjen senere.")
+        if konfig.leverandor == "openai":
+            kropp = {"model": konfig.modell, "max_tokens": konfig.max_tokens, "temperature": 0, "messages": msgs, "tools": tools}
+        else:
+            kropp = {"model": konfig.modell, "max_tokens": konfig.max_tokens, "temperature": 0, "system": system,
+                     "messages": msgs, "tools": tools}
+        data = _post_json(konfig, adresse, hoder, json.dumps(kropp).encode("utf-8"), apne)
+        try:
+            if konfig.leverandor == "openai":
+                melding = data["choices"][0]["message"]
+                verktoykall = melding.get("tool_calls") or []
+                if not verktoykall:
+                    tekst = str(melding.get("content") or "").strip()
+                    break
+                msgs.append({"role": "assistant", "content": melding.get("content"), "tool_calls": verktoykall})
+                for tc in verktoykall:
+                    navn = tc["function"]["name"]
+                    try:
+                        args = json.loads(tc["function"].get("arguments") or "{}")
+                    except json.JSONDecodeError:
+                        args = None
+                    svar, ok = _kjor_verktoy(kjor, navn, args)
+                    kall.append({"navn": navn, "args": args, "ok": ok})
+                    resultater.append(svar)
+                    msgs.append({"role": "tool", "tool_call_id": tc["id"], "content": svar})
+            else:
+                innhold = data["content"]
+                bruk = [b for b in innhold if b.get("type") == "tool_use"]
+                if data.get("stop_reason") != "tool_use" or not bruk:
+                    tekst = "".join(b.get("text", "") for b in innhold if b.get("type") == "text").strip()
+                    break
+                msgs.append({"role": "assistant", "content": innhold})
+                svar_blokker = []
+                for b in bruk:
+                    svar, ok = _kjor_verktoy(kjor, b["name"], b.get("input"))
+                    kall.append({"navn": b["name"], "args": b.get("input"), "ok": ok})
+                    resultater.append(svar)
+                    svar_blokker.append({"type": "tool_result", "tool_use_id": b["id"], "content": svar, "is_error": not ok})
+                msgs.append({"role": "user", "content": svar_blokker})
+        except (KeyError, IndexError, TypeError, AttributeError) as exc:
+            raise LlmFeil("leverandorfeil", "Svaret fra KI-leverandøren hadde et uventet format.") from exc
+    else:
+        raise LlmFeil("for_mange_runder", f"KI-en brukte mer enn {maks_runder} runder med verktøy uten å svare.")
+
+    if not tekst:
+        raise LlmFeil("leverandorfeil", "KI-leverandøren ga et tomt svar.")
+    # Tallkontrollen får svarene som data (så identitetsfelt som telefon hoppes over) og brukerens egne tall.
+    grunnlag: list[Any] = []
+    for r in resultater:
+        try:
+            grunnlag.append(json.loads(r))
+        except json.JSONDecodeError:  # kuttet svar er ikke gyldig JSON, bruk teksten
+            grunnlag.append(r)
+    grunnlag += [m["tekst"] for m in meldinger if m["rolle"] == "bruker"]
+    return {
+        "tekst": tekst,
+        "merke": "AI-forslag",
+        "modell": konfig.modell,
+        "leverandor": konfig.leverandor,
+        "verktoykall": kall,
         "tallkontroll": tallkontroll(tekst, grunnlag),
     }

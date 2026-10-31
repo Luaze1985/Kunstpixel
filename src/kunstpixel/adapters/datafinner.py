@@ -42,6 +42,7 @@ import json
 import os
 import sys
 from collections.abc import Callable
+from datetime import date
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -97,6 +98,7 @@ ASSETS = {
     "/sok.html": ("sok.html", "text/html; charset=utf-8"),
     "/arena": ("arena.html", "text/html; charset=utf-8"),
     "/vaktrom": ("vaktrom.html", "text/html; charset=utf-8"),
+    "/chat": ("chat.html", "text/html; charset=utf-8"),
     "/af.css": ("af.css", "text/css; charset=utf-8"),
 }
 
@@ -211,6 +213,14 @@ VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
     "lookup_handbook": (lookup_handbook, {"query", "handbok", "role", "limit"}),
 }
 
+UKEDAGER = ["mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag", "søndag"]
+SYSTEM_CHAT = (
+    "Du er Kunstpixel-assistenten i Datafinner for et norsk kunstmuseum. I dag er {ukedag} {dato}. "
+    "Brukeren har rollen {rolle}.\n"
+    "Bruk verktøyene for å hente fakta før du svarer, og ikke dikt opp tall, navn eller datoer. "
+    "Svar på norsk bokmål, kort og direkte, i vanlig tekst uten tabeller. Alle data er syntetiske."
+)
+
 GRENSEFIL = PROJECT_ROOT / "04_knowledge" / "07_arena" / "grensecaser.yaml"
 SYSTEM_GRENSE = (
     "Du er en KI-assistent for ledelsen i et norsk kunstmuseum. Svar på forespørselen på norsk bokmål, "
@@ -227,6 +237,8 @@ def last_grensecaser() -> dict[str, Any]:
 LLM_KONFIG = llm.fra_miljo(os.environ)
 LLM_BEGRENSER = llm.Begrenser(LLM_KONFIG.maks_per_time) if LLM_KONFIG else None
 MAKS_POST_BYTES = 4096
+MAKS_CHAT_BYTES = 32_768  # chatten sender samtalehistorikken, så den får større tak
+MAKS_CHAT_TURER = 20
 
 # Siden bruker bare egne filer, ett skript og stilark i samme side. Alt annet er stengt.
 SIKKERHETSHODER = {
@@ -326,7 +338,7 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
             return
         self._json(404, {"error": "Finnes ikke"})
 
-    def _post_lengde(self) -> int | None:
+    def _post_lengde(self, maks: int = MAKS_POST_BYTES) -> int | None:
         """Sperrene for POST. Returnerer lengden på kroppen, eller None når svaret alt er sendt."""
         # Uten disse sperrene kunne en annen nettside få nettleseren til å kalle KI-en på din regning.
         # Samme opprinnelse eller ingen opprinnelse (curl) er greit.
@@ -344,19 +356,22 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
             lengde = int(self.headers.get("Content-Length") or 0)
         except ValueError:
             lengde = 0
-        if lengde <= 0 or lengde > MAKS_POST_BYTES:
-            self._json(413, {"error": f"Kroppen må være mellom 1 og {MAKS_POST_BYTES} byte."})
+        if lengde <= 0 or lengde > maks:
+            self._json(413, {"error": f"Kroppen må være mellom 1 og {maks} byte."})
             return None
         return lengde
 
     def do_POST(self) -> None:
         """POST-rutene. /api/forklar, /api/vaktrom/ki og /api/grense/kjor koster penger hos KI-leverandøren."""
         sti = urlparse(self.path).path
-        if sti not in ("/api/forklar", "/api/arena/kjor", "/api/vaktrom/ki", "/api/grense/kjor"):
+        if sti not in ("/api/forklar", "/api/arena/kjor", "/api/vaktrom/ki", "/api/grense/kjor", "/api/chat"):
             self._json(404, {"error": "Finnes ikke"})
             return
-        lengde = self._post_lengde()
+        lengde = self._post_lengde(MAKS_CHAT_BYTES if sti == "/api/chat" else MAKS_POST_BYTES)
         if lengde is None:
+            return
+        if sti == "/api/chat":
+            self._chat(lengde)
             return
         if sti == "/api/arena/kjor":
             self._arena_kjor(lengde)
@@ -486,6 +501,37 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
         if svar is not None:
             self._json(200, {"id": case["id"], "tekst": svar["tekst"], "merke": svar["merke"], "modell": svar["modell"],
                              "data_sendt": list(data)})
+
+    def _chat(self, lengde: int) -> None:
+        """Chat: KI-en bruker verktøyene på hvitelisten selv og svarer i tekst. Uten sperrer, syntetiske data."""
+        try:
+            kropp = json.loads(self.rfile.read(lengde).decode("utf-8"))
+            meldinger = kropp.get("meldinger") if isinstance(kropp, dict) else None
+            if not isinstance(meldinger, list) or not meldinger:
+                raise ValueError('Send {"meldinger": [{"rolle": "bruker", "tekst": "..."}], "rolle": "..."}')
+            rene = [{"rolle": str(m.get("rolle")), "tekst": str(m.get("tekst", ""))} for m in meldinger if isinstance(m, dict)]
+            if any(m["rolle"] not in ("bruker", "assistent") for m in rene) or rene[-1]["rolle"] != "bruker":
+                raise ValueError("Hver melding må ha rolle bruker eller assistent, og den siste må være fra bruker.")
+            rene = rene[-MAKS_CHAT_TURER:]
+            while rene and rene[0]["rolle"] != "bruker":  # leverandørene vil ha brukeren først
+                rene.pop(0)
+            rolle = str(kropp.get("rolle") or "ukjent rolle")[:80]
+        except (ValueError, TypeError, AttributeError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+            self._json(400, {"error": str(exc)})
+            return
+        if LLM_KONFIG is None:
+            self._json(503, {"error": "KI-laget er ikke slått på. Sett LLM_PROVIDER og LLM_MODEL (og LLM_API_KEY) og start serveren på nytt."})
+            return
+        system = SYSTEM_CHAT.format(dato=date.today().isoformat(), ukedag=UKEDAGER[date.today().weekday()], rolle=rolle)
+        try:
+            svar = llm.chat_med_verktoy(rene, datafinner_api.verktoyskjema(VERKTOY), run_tool, LLM_KONFIG, system,
+                                        begrenser=LLM_BEGRENSER)
+        except llm.LlmFeil as exc:
+            sys.stderr.write(f"[datafinner] KI-feil i chat ({exc.kode}): {exc}\n")
+            status = {"tidsavbrudd": 504, "tak": 429, "for_mange_runder": 502}.get(exc.kode, 502)
+            self._json(status, {"error": str(exc)})
+            return
+        self._json(200, {**svar, "status": "Utkast"})
 
     def log_message(self, format: str, *args: Any) -> None:
         sys.stderr.write("[datafinner] " + (format % args) + "\n")
