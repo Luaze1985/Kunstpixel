@@ -31,6 +31,7 @@
       <ol class="af-flow-list">
         <li><a class="af-flow-link" href="#caser" id="lenke-caser" aria-current="step"><span class="af-step-dot">1</span><span>Caser</span></a></li>
         <li><a class="af-flow-link" href="#case" id="lenke-case"><span class="af-step-dot">2</span><span>Case</span></a></li>
+        <li><a class="af-flow-link" href="#grense" id="lenke-grense"><span class="af-step-dot">!</span><span>Grensemodus</span></a></li>
       </ol>
       <hr class="af-side-rule">
       <p class="af-task-hint">Kun lesing. Alle personer er syntetiske.</p>
@@ -110,6 +111,18 @@
           <output id="spart" for="andel"></output>
         </div>
       </section>
+
+      <section class="af-view" id="grense" hidden>
+        <p class="af-caption">Grensemodus</p>
+        <h2 class="af-title">Grensemodus</h2>
+        <div class="af-alert error" role="note"><strong id="grense-fast">Ulovlig i dag. Kun syntetiske data. Ingenting lagres.</strong><span>Modellen får bare forespørselen, aldri data fra museum.db.</span></div>
+        <p id="grense-ki"></p>
+        <div class="af-error-summary" id="grense-feil" role="alert" hidden>
+          <h2>Feil</h2>
+          <p id="grense-feil-tekst"></p>
+        </div>
+        <div id="grense-liste"></div>
+      </section>
     </main>
 
     <aside class="af-context">
@@ -170,13 +183,61 @@
   }
 
   function visSteg(id) {
-    $("caser").hidden = id !== "caser";
-    $("case").hidden = id !== "case";
-    $("lenke-caser").toggleAttribute("aria-current", id === "caser");
-    $("lenke-case").toggleAttribute("aria-current", id === "case");
-    if (id === "caser") $("lenke-caser").setAttribute("aria-current", "step");
-    else $("lenke-case").setAttribute("aria-current", "step");
+    ["caser", "case", "grense"].forEach(function (s) {
+      $(s).hidden = id !== s;
+      if (id === s) $("lenke-" + s).setAttribute("aria-current", "step");
+      else $("lenke-" + s).removeAttribute("aria-current");
+    });
     window.scrollTo(0, 0);
+  }
+
+  // Grensemodus: forespørsel, faktisk modellrespons og regel side om side. Ingenting lagres.
+  var grense = null;
+  function grenseKort(c) {
+    var kort = el("div", null, "af-report");
+    kort.appendChild(el("p", c.id + " " + c.tittel + " (" + c.case + ")", "ar-saksnavn"));
+    var blokk = function (navn, innhold, merke, klasse) {
+      var b = el("div", null, "af-report-block"), d = el("div");
+      b.appendChild(el("span", navn, "af-report-kind"));
+      d.appendChild(innhold);
+      if (merke) d.appendChild(el("span", merke, "af-source " + klasse));
+      b.appendChild(d); return b;
+    };
+    kort.appendChild(blokk("Forespørsel", el("p", c.foresporsel), "Sendes til modellen uten data", "system"));
+    var svar = el("p", grense.llm ? "Ikke kjørt ennå." : "KI er av. Les forespørselen og regelen, og diskuter hva en modell ville svart.");
+    svar.style.whiteSpace = "pre-wrap";
+    var svarBlokk = blokk("Modellens svar", svar, grense.llm ? "AI-forslag" : null, "suggested");
+    kort.appendChild(svarBlokk);
+    kort.appendChild(blokk("Regel", el("p", c.regel), "Fra " + c.case, "system"));
+    kort.appendChild(el("p", "Se etter: " + c.se_etter));
+    if (grense.llm) {
+      var akt = el("div", null, "af-actions");
+      var b = el("button", "Send til modellen", "af-btn af-btn-primary"); b.type = "button";
+      b.addEventListener("click", function () {
+        b.disabled = true; svar.textContent = "Venter på modellen …";
+        fetch("/api/grense/kjor", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: c.id }) })
+          .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || "Ukjent feil"); return j; }); })
+          .then(function (j) { svar.textContent = j.tekst + "\n\n(" + j.modell + ")"; })
+          .catch(function (e) { svar.textContent = "Ingen modellrespons: " + e.message; })
+          .then(function () { b.disabled = false; });
+      });
+      akt.appendChild(b); kort.appendChild(akt);
+    }
+    return kort;
+  }
+  function visGrense() {
+    visSteg("grense");
+    if (grense) return;
+    fetch("/api/grense/caser")
+      .then(function (r) { if (!r.ok) throw new Error("Fikk ikke hentet grensecasene."); return r.json(); })
+      .then(function (j) {
+        grense = j;
+        $("grense-fast").textContent = j.tekst_fast;
+        $("grense-ki").textContent = j.llm ? "KI er på. Hvert svar er den faktiske modellresponsen." : "KI er av. Ingen ferdigskrevne svar vises.";
+        var l = $("grense-liste"); l.textContent = "";
+        j.caser.forEach(function (c) { l.appendChild(grenseKort(c)); });
+      })
+      .catch(function (e) { feil("grense-feil", "grense-feil-tekst", e.message); });
   }
 
   function feil(boks, tekstId, melding) {
@@ -305,6 +366,8 @@
   $("lenke-caser").addEventListener("click", function (e) { e.preventDefault(); visSteg("caser"); });
   $("lenke-case").addEventListener("click", function (e) { e.preventDefault(); if (valgt) visSteg("case"); });
   $("andel").addEventListener("input", regnGevinst);
+  $("lenke-grense").addEventListener("click", function (e) { e.preventDefault(); visGrense(); });
+  if (location.hash === "#grense") visGrense();
 
   tegnRegler();
   fetch("/api/arena/caser")

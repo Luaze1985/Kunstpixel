@@ -25,12 +25,16 @@
       <section class="af-view" data-step="tom" id="tom">
         <h1 class="af-title" id="start-tittel" tabindex="-1">Datafinner</h1>
         <ul class="af-task-board" id="roller"><li><p>Henter roller …</p></li></ul>
+        <h2 class="af-caption">Arbeidsflater</h2>
+        <ul class="af-task-board" id="flater"></ul>
       </section>
 
       <section class="af-view" data-step="rolle" id="rolle" hidden>
         <p class="af-caption">Rolle</p>
         <h1 class="af-title" id="rolle-tittel" tabindex="-1"></h1>
         <ul class="af-task-board" id="rolle-sporsmal"></ul>
+        <h2 class="af-caption">Arbeidsflater</h2>
+        <ul class="af-task-board" id="rolle-flater"></ul>
         <div class="af-actions">
           <button class="af-btn af-btn-secondary" type="button" id="alle-roller">Alle roller</button>
         </div>
@@ -222,8 +226,33 @@
     ]
   };
 
+  // Arbeidsflatene som henger sammen med startsiden. roller: null betyr alle roller.
+  // Rollenavnene kommer fra tabellen roller. Vaktrommet er for rollene som bemanner vakter.
+  var VAKTROLLER = ["Museumsdirektør", "Driftsansvarlig", "HR og bemanning", "Kafeansvarlig"];
+  var ARBEIDSFLATER = [
+    { tekst: "Vaktrom", beskrivelse: "Finn folk til én vakt: helgehistorikk, kandidater, kontroll og kontaktutkast.", url: "/vaktrom", medRolle: true, roller: VAKTROLLER },
+    { tekst: "Mine kontaktutkast", beskrivelse: "Utkast lagret i denne nettleseren.", url: "/vaktrom#utkast", roller: VAKTROLLER },
+    { tekst: "Søk", beskrivelse: "Samling, arrangementer, publikumsinformasjon og interne dokumenter.", url: "/sok.html", roller: null },
+    { tekst: "Arena", beskrivelse: "Øvelsescaser, bunnlinje D1–D5 og grensemodus.", url: "/arena", roller: null }
+  ];
+
   var $ = function (id) { return document.getElementById(id); };
   var alle = SPORSMAL.sporsmal;
+
+  function tegnFlater(ul, rolle) {
+    ul.textContent = "";
+    ARBEIDSFLATER.forEach(function (f) {
+      if (rolle && f.roller && f.roller.indexOf(rolle) < 0) return;
+      var li = document.createElement("li");
+      var a = document.createElement("a"); a.className = "af-task-card";
+      a.href = f.url + (f.medRolle && rolle ? "?rolle=" + encodeURIComponent(rolle) : "");
+      var t = document.createElement("span");
+      var s = document.createElement("strong"); s.textContent = f.tekst; t.appendChild(s);
+      var sm = document.createElement("small"); sm.textContent = f.beskrivelse; t.appendChild(sm);
+      a.appendChild(t); li.appendChild(a); ul.appendChild(li);
+    });
+  }
+  tegnFlater($("flater"), null);
   var regel = { status: "venter" };  // venter | system | mangler: hva Vurdering og Forslag viser nå
   var gjeldendeRolle = null, sisteSvar = null, sisteFiltre = null, sisteArgs = null;
 
@@ -305,13 +334,15 @@
     });
   }
 
-  // Rollekortene kommer fra museum.db. Bare roller med spørsmål som siden kan vise, tas med.
+  // Rollekortene kommer fra museum.db. Roller med spørsmål tas med, og brukerrollene i museet tas alltid med,
+  // også når de bare har arbeidsflater (Kafeansvarlig, Kommunikasjon, Museumsvert har ingen spørsmål ennå).
+  var BRUKERROLLER = ["Museumsdirektør", "Driftsansvarlig", "HR og bemanning", "Kafeansvarlig", "Kommunikasjon", "Museumsvert"];
   function lastRoller() {
     return hent("list_roles", {}).then(function (rader) {
       SPORSMAL.roller = rader.map(function (r) {
         return { navn: r.navn, merknad: r.trigger, beskrivelse: r.beskrivelse,
           sporsmal: r.sporsmal.map(finnSporsmal).filter(Boolean) };
-      }).filter(function (r) { return r.sporsmal.length > 0; });
+      }).filter(function (r) { return r.sporsmal.length > 0 || BRUKERROLLER.indexOf(r.navn) >= 0; });
       SPORSMAL.roller.forEach(function (r) { r.sporsmal.forEach(function (s) { if (!s.rolle) s.rolle = r; }); });
       tegnForside(SPORSMAL.roller.length ? null : "Mangler: roller med spørsmål finnes ikke i museum.db (tabellene roller og rolle_sporsmal).");
       byggMeny();
@@ -337,6 +368,7 @@
       b.addEventListener("click", function () { velg(q.id); });
       li.appendChild(b); ul.appendChild(li);
     });
+    tegnFlater($("rolle-flater"), gjeldendeRolle.navn);
     byggMeny(); merkMeny("");
     $("verktoy").textContent = "Velg et spørsmål.";
     gaaTil($("rolle"), $("rolle-tittel"));

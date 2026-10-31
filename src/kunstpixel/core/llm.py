@@ -17,9 +17,10 @@ import time
 import urllib.error
 import urllib.request
 from collections import deque
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Protocol
+from typing import Any, Protocol
 
 DEFAULT_MODEL = "claude-opus-5-5"  # overstyres med KUNSTPIXEL_MODEL, for eksempel claude-haiku-5-5 for lavere pris
 DEFAULT_TIMEOUT_S = 60.0
@@ -349,7 +350,7 @@ def tallkontroll(tekst: str, grunnlag: Any) -> dict[str, Any]:
     return {"ok": not ukjente, "ukjente_tall": ukjente}
 
 
-def bygg_foresporsel(konfig: LlmKonfig, bruker_tekst: str) -> tuple[str, dict[str, str], bytes]:
+def bygg_foresporsel(konfig: LlmKonfig, bruker_tekst: str, system: str = SYSTEMPROMPT) -> tuple[str, dict[str, str], bytes]:
     """Adresse, hoder og kropp for leverandørens API. Ren funksjon, så formatet kan testes uten nett."""
     if konfig.leverandor == "openai":
         hoder = {"Content-Type": "application/json"}
@@ -357,14 +358,14 @@ def bygg_foresporsel(konfig: LlmKonfig, bruker_tekst: str) -> tuple[str, dict[st
             hoder["Authorization"] = f"Bearer {konfig.api_key}"
         kropp = {
             "model": konfig.modell, "max_tokens": konfig.max_tokens, "temperature": 0,
-            "messages": [{"role": "system", "content": SYSTEMPROMPT}, {"role": "user", "content": bruker_tekst}],
+            "messages": [{"role": "system", "content": system}, {"role": "user", "content": bruker_tekst}],
         }
         return konfig.adresse() + "/chat/completions", hoder, json.dumps(kropp).encode("utf-8")
     hoder = {"Content-Type": "application/json", "anthropic-version": ANTHROPIC_VERSJON}
     if konfig.api_key:
         hoder["x-api-key"] = konfig.api_key
     kropp = {
-        "model": konfig.modell, "max_tokens": konfig.max_tokens, "temperature": 0, "system": SYSTEMPROMPT,
+        "model": konfig.modell, "max_tokens": konfig.max_tokens, "temperature": 0, "system": system,
         "messages": [{"role": "user", "content": bruker_tekst}],
     }
     return konfig.adresse() + "/v1/messages", hoder, json.dumps(kropp).encode("utf-8")
@@ -383,7 +384,12 @@ def forklar(rapport: dict[str, Any], konfig: LlmKonfig, apne=urllib.request.urlo
     """Be språkmodellen forklare rapporten. Returnerer tekst, merke og tallkontroll. `apne` kan byttes i tester."""
     grunnlag = forenkle_for_llm(rapport)
     bruker_tekst = "Rapport (JSON):\n" + json.dumps(grunnlag, ensure_ascii=False, separators=(",", ":"))
-    adresse, hoder, kropp = bygg_foresporsel(konfig, bruker_tekst)
+    return utfor(bruker_tekst, grunnlag, konfig, SYSTEMPROMPT, apne)
+
+
+def utfor(bruker_tekst: str, grunnlag: Any, konfig: LlmKonfig, system: str, apne=urllib.request.urlopen) -> dict[str, Any]:
+    """Send én oppgave til språkmodellen. Tallene i svaret kontrolleres mot grunnlaget. Svaret er alltid AI-forslag."""
+    adresse, hoder, kropp = bygg_foresporsel(konfig, bruker_tekst, system)
     foresporsel = urllib.request.Request(adresse, data=kropp, headers=hoder, method="POST")
     try:
         with apne(foresporsel, timeout=konfig.timeout) as res:

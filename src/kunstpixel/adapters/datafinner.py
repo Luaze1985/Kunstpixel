@@ -30,6 +30,10 @@ Arenaen (øvelsescaser, se 04_knowledge/07_arena/caser.yaml):
     GET  /arena                siden
     GET  /api/arena/caser      alle casene
     POST /api/arena/kjor       kjør én case deterministisk og sjekk svaret
+    GET  /api/grense/caser     grensecasene (forespørsel, regel), og om KI er på
+    POST /api/grense/kjor      send én grenseforespørsel til modellen, uten data. Ingenting lagres
+    GET  /vaktrom              vaktrommet: én vakt, historikk, kandidater, kontroll og kontaktutkast
+    POST /api/vaktrom/ki       KI sammenligner kandidater eller skriver kontaktutkast (datapolicy sjekkes først)
 """
 
 from __future__ import annotations
@@ -47,8 +51,10 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+import yaml
+
 from src.kunstpixel.adapters import datafinner_api
-from src.kunstpixel.core import arena, llm
+from src.kunstpixel.core import arena, datapolicy, llm, vaktrom
 from src.kunstpixel.core.bunnlinje import (
     get_day_overview,
     get_exhibition_ranking,
@@ -86,6 +92,7 @@ ASSETS = {
     "/index.html": ("index.html", "text/html; charset=utf-8"),
     "/sok.html": ("sok.html", "text/html; charset=utf-8"),
     "/arena": ("arena.html", "text/html; charset=utf-8"),
+    "/vaktrom": ("vaktrom.html", "text/html; charset=utf-8"),
     "/af.css": ("af.css", "text/css; charset=utf-8"),
 }
 
@@ -186,7 +193,23 @@ VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
     "get_inspection_routine": (get_inspection_routine, {"ansvarlig"}),
     "search_rapportering": (search_rapportering, {"mottakertype", "maned", "eier", "mal_id"}),
     "search_hr_onboarding": (search_hr_onboarding, {"kategori", "rolle"}),
+    # Vaktrom: én vakt på én stasjon. Kandidater sorteres på pris uten tillegg, et menneske velger.
+    "list_stations": (vaktrom.list_stations, set()),
+    "get_weekend_shift_history": (vaktrom.get_weekend_shift_history, {"fra", "til", "stasjon"}),
+    "get_staffing_candidates": (vaktrom.get_staffing_candidates, {"stasjon", "dato", "start", "slutt"}),
+    "check_staffing_selection": (vaktrom.check_staffing_selection, {"stasjon", "dato", "start", "slutt", "ids"}),
 }
+
+GRENSEFIL = PROJECT_ROOT / "04_knowledge" / "07_arena" / "grensecaser.yaml"
+SYSTEM_GRENSE = (
+    "Du er en KI-assistent for ledelsen i et norsk kunstmuseum. Svar på forespørselen på norsk bokmål, "
+    "maks 150 ord."
+)
+
+
+def last_grensecaser() -> dict[str, Any]:
+    """Grensecasene for arenaen. Modellen får bare forespørselsteksten, aldri data."""
+    return yaml.safe_load(GRENSEFIL.read_text(encoding="utf-8"))
 
 
 # KI-laget er av med mindre LLM_PROVIDER er satt. Feil innstilling stopper oppstarten med en tydelig melding.
@@ -249,6 +272,9 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
             return
         if url.path == "/api/arena/caser":
             self._json(200, arena.last_caser())
+            return
+        if url.path == "/api/grense/caser":
+            self._json(200, {**last_grensecaser(), "llm": LLM_KONFIG is not None})
             return
         if url.path == "/api/verktoyskjema":
             self._json(200, {"verktoy": datafinner_api.verktoyskjema(VERKTOY), "sporsmal": datafinner_api.SPORSMAL})
@@ -313,9 +339,9 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
         return lengde
 
     def do_POST(self) -> None:
-        """To POST-ruter: /api/forklar (koster penger hos KI-leverandøren) og /api/arena/kjor."""
+        """POST-rutene. /api/forklar, /api/vaktrom/ki og /api/grense/kjor koster penger hos KI-leverandøren."""
         sti = urlparse(self.path).path
-        if sti not in ("/api/forklar", "/api/arena/kjor"):
+        if sti not in ("/api/forklar", "/api/arena/kjor", "/api/vaktrom/ki", "/api/grense/kjor"):
             self._json(404, {"error": "Finnes ikke"})
             return
         lengde = self._post_lengde()
@@ -323,6 +349,12 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
             return
         if sti == "/api/arena/kjor":
             self._arena_kjor(lengde)
+            return
+        if sti == "/api/vaktrom/ki":
+            self._vaktrom_ki(lengde)
+            return
+        if sti == "/api/grense/kjor":
+            self._grense_kjor(lengde)
             return
         if LLM_KONFIG is None:
             self._json(503, {"error": "KI-laget er ikke slått på. Rapportene er likevel tilgjengelige uten KI."})
@@ -364,6 +396,78 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
             self._json(500, {"error": "Feil ved kjøring av casen. Prøv igjen, eller si ifra til den som drifter siden."})
             return
         self._json(200, resultat)
+
+    def _ki_kall(self, bruker_tekst: str, grunnlag: Any, system: str) -> dict[str, Any] | None:
+        """Felles for KI-rutene: av, tak per time og leverandørfeil. None betyr at svaret alt er sendt."""
+        if LLM_KONFIG is None:
+            self._json(503, {"error": "KI-laget er ikke slått på. Rapportene og den manuelle flyten virker uten KI."})
+            return None
+        if LLM_BEGRENSER is not None and not LLM_BEGRENSER.tillat():
+            self._json(429, {"error": "For mange KI-kall den siste timen. Prøv igjen senere."})
+            return None
+        try:
+            return llm.utfor(bruker_tekst, grunnlag, LLM_KONFIG, system)
+        except llm.LlmFeil as exc:
+            sys.stderr.write(f"[datafinner] KI-feil ({exc.kode}): {exc}\n")
+            self._json(504 if exc.kode == "tidsavbrudd" else 502, {"error": str(exc)})
+            return None
+
+    def _vaktrom_ki(self, lengde: int) -> None:
+        """KI på toppen av vaktrommet. Serveren regner kandidatene på nytt og stoler ikke på nettleseren.
+
+        Datapolicyen sjekkes per kildetabell før noe sendes: umerket data regnes som ekte og stoppes.
+        """
+        try:
+            kropp = json.loads(self.rfile.read(lengde).decode("utf-8"))
+            if not isinstance(kropp, dict):
+                raise ValueError("Send et JSON-objekt.")
+            oppgave = kropp.get("oppgave")
+            kandidater = vaktrom.get_staffing_candidates(
+                str(kropp.get("stasjon", "")), str(kropp.get("dato", "")),
+                str(kropp.get("start", "")), str(kropp.get("slutt", "")),
+            )
+            if oppgave == "sammenlign":
+                ids = kropp.get("ids")
+                if not isinstance(ids, list) or not ids:
+                    raise ValueError("Velg minst én kandidat.")
+                grunnlag, kilder = vaktrom.grunnlag_sammenligning(kandidater, [str(i) for i in ids])
+                system, tekst = vaktrom.SYSTEM_SAMMENLIGN, "Kandidater (JSON):\n"
+            elif oppgave == "kontaktutkast":
+                grunnlag, kilder = vaktrom.grunnlag_kontakt(kandidater, str(kropp.get("id", "")))
+                system, tekst = vaktrom.SYSTEM_KONTAKT, "Vakt (JSON):\n"
+            else:
+                raise ValueError("oppgave må være sammenlign eller kontaktutkast.")
+            merker = arena.datamerke(kilder)
+        except (ValueError, TypeError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+            self._json(400, {"error": str(exc)})
+            return
+        except Exception as exc:
+            sys.stderr.write(f"[datafinner] FEIL i vaktrom/ki: {exc!r}\n")
+            self._json(500, {"error": "Feil ved oppslag. Prøv igjen, eller si ifra til den som drifter siden."})
+            return
+        grunn = datapolicy.check_policy(datapolicy.EXTERNAL, merker)
+        if grunn:
+            self._json(200, {"status": "stoppet_av_datapolicy", "grunn": grunn, "datamerke": merker})
+            return
+        svar = self._ki_kall(tekst + json.dumps(grunnlag, ensure_ascii=False, separators=(",", ":")), grunnlag, system)
+        if svar is not None:
+            self._json(200, {**svar, "status": "Utkast", "datamerke": merker})
+
+    def _grense_kjor(self, lengde: int) -> None:
+        """Grensemodus: send bare forespørselsteksten til modellen. Ingen data, ingenting lagres."""
+        try:
+            kropp = json.loads(self.rfile.read(lengde).decode("utf-8"))
+            if not isinstance(kropp, dict):
+                raise ValueError('Send et JSON-objekt: {"id": "GR1"}')
+            case = next((c for c in last_grensecaser()["caser"] if c["id"] == kropp.get("id")), None)
+            if case is None:
+                raise ValueError("Ukjent grensecase.")
+        except (ValueError, TypeError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+            self._json(400, {"error": str(exc)})
+            return
+        svar = self._ki_kall(case["foresporsel"], {}, SYSTEM_GRENSE)
+        if svar is not None:
+            self._json(200, {"id": case["id"], "tekst": svar["tekst"], "merke": svar["merke"], "modell": svar["modell"]})
 
     def log_message(self, format: str, *args: Any) -> None:
         sys.stderr.write("[datafinner] " + (format % args) + "\n")
