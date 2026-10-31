@@ -26,8 +26,10 @@ dette skriptet. Hvert bygg starter fra grunnlaget og gjør de samme stegene:
     Dette er to kilder for samme ferdigheter, og må samkjøres av Lars før de brukes sammen.
 11. Publikumsdata (publikum_builder, syntetisk) lastes fra fire CSV-er: kafe_meny, kafe_varesalg,
     besok_tilfredshet og anmeldelser. CSV-ene lages av `src/kunstpixel/data/publikum_builder.py`.
-12. Indekser for vaktoppslag og interne tabeller.
-13. PRAGMA user_version = SKJEMAVERSJON, VACUUM, integrity_check og foreign_key_check.
+12. stasjon_krav (kurs som kreves per stasjon, syntetisk) lastes fra `05_data/stasjon_krav.csv`,
+    med fremmednøkkel til org_ferdigheter. Brukes av core/bemanning.py.
+13. Indekser for vaktoppslag og interne tabeller.
+14. PRAGMA user_version = SKJEMAVERSJON, VACUUM, integrity_check og foreign_key_check.
 
 Kjøres med:
     py -3.13 src/kunstpixel/data/build_museum_db.py          # bygg og erstatt
@@ -56,7 +58,7 @@ DATA_DIR = PROJECT_ROOT / "05_data"
 BASE_DB = DATA_DIR / "kilde" / "museum_base.db"
 OUT_DB = DATA_DIR / "museum.db"
 SHA_FILE = DATA_DIR / "museum.db.sha256"
-SKJEMAVERSJON = 6
+SKJEMAVERSJON = 7
 
 KLOKKESLETT_CSV = DATA_DIR / "arkiv_hr_vakt_klokkeslett.csv"
 GRENSER_CSV = DATA_DIR / "arbeidstid_grenser.csv"
@@ -71,6 +73,7 @@ ORG_FERDIGHETER_CSV = DATA_DIR / "mock_interne_ferdigheter.csv"
 ORG_KOMPETANSE_CSV = DATA_DIR / "mock_ansatt_kompetanser.csv"
 INTERNE_HENVENDELSER_CSV = DATA_DIR / "mock_interne_henvendelser.csv"
 HMS_AVVIK_TEKST_CSV = DATA_DIR / "mock_avvik_hms_tekst.csv"
+STASJON_KRAV_CSV = DATA_DIR / "stasjon_krav.csv"
 
 # H5 & Governance CSV-er
 H5_MYNDIGHETER_CSV = DATA_DIR / "h5_myndighetskontakter.csv"
@@ -170,6 +173,15 @@ CREATE TABLE org_ferdigheter (
     utloper INTEGER NOT NULL CHECK(utloper IN (0, 1)),
     kategori TEXT NOT NULL,
     datakilde TEXT NOT NULL
+)
+"""
+
+STASJON_KRAV_SQL = """
+CREATE TABLE stasjon_krav (
+    stasjon TEXT NOT NULL,
+    skill_code TEXT NOT NULL REFERENCES org_ferdigheter(skill_code),
+    datakilde TEXT NOT NULL,
+    PRIMARY KEY(stasjon, skill_code)
 )
 """
 
@@ -610,6 +622,18 @@ def bygg_org_kompetanse(con: sqlite3.Connection) -> int:
     return len(rader)
 
 
+def bygg_stasjon_krav(con: sqlite3.Connection) -> int:
+    """Bygg stasjon_krav. Må kjøres etter bygg_org_ferdigheter."""
+    rader = les_csv(STASJON_KRAV_CSV)
+    con.execute("DROP TABLE IF EXISTS stasjon_krav")
+    con.execute(STASJON_KRAV_SQL)
+    con.executemany(
+        "INSERT INTO stasjon_krav VALUES (?,?,?)",
+        [(r["stasjon"], r["skill_code"], r["datakilde"]) for r in rader],
+    )
+    return len(rader)
+
+
 def bygg_interne_henvendelser(con: sqlite3.Connection) -> int:
     rader = les_csv(INTERNE_HENVENDELSER_CSV)
     con.execute("DROP TABLE IF EXISTS interne_henvendelser")
@@ -1020,6 +1044,7 @@ def bygg(til: Path) -> dict:
             antall_nye_hendelser = bygg_hendelser(con)
             antall_org_ferdigheter = bygg_org_ferdigheter(con)
             antall_org_kompetanse = bygg_org_kompetanse(con)
+            antall_stasjon_krav = bygg_stasjon_krav(con)
             antall_henvendelser = bygg_interne_henvendelser(con)
             antall_hms_avvik_tekst = bygg_hms_avvik_tekst(con)
             antall_h5_myndigheter = bygg_h5_myndighetskontakter(con)
@@ -1051,6 +1076,7 @@ def bygg(til: Path) -> dict:
             "nye_hendelser": antall_nye_hendelser,
             "org_ferdigheter": antall_org_ferdigheter,
             "org_kompetanse": antall_org_kompetanse,
+            "stasjon_krav": antall_stasjon_krav,
             "interne_henvendelser": antall_henvendelser,
             "hms_avvik_tekst": antall_hms_avvik_tekst,
             "h5_myndigheter": antall_h5_myndigheter,

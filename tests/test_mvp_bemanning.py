@@ -126,7 +126,6 @@ def _grunner(kontroll: dict, stasjon: str) -> set[str]:
 
 # ---------- B1 Krav per stasjon finnes ----------
 
-@VENTER_PA_07
 def test_b1_alle_stasjoner_i_vaktplanen_har_krav_som_finnes(bygget_db: Path) -> None:
     kjente = {r[0] for r in _sql(bygget_db, "SELECT skill_code FROM org_ferdigheter")}
     stasjoner = [r[0] for r in _sql(bygget_db, "SELECT DISTINCT stasjon FROM hr_vakter WHERE aar = '2026'")]
