@@ -182,7 +182,7 @@ def test_bygget_db_roller_og_sporsmal_tabeller(bygget_db: Path) -> None:
     """T3 (G5): roller og rolle_sporsmal finnes og list_roles() returnerer rollene A-N."""
     from src.kunstpixel.core.db import query_roles
     roles = query_roles(db_path=bygget_db)
-    assert len(roles) == 14
+    assert len(roles) == 15  # A–N og O Avdelingsleder (spec vaktrom-uten-sperrer)
     codes = {r["kode"] for r in roles}
     assert {"K", "L", "M", "N"} <= codes
     hr_role = next(r for r in roles if r["kode"] == "K")
@@ -203,11 +203,12 @@ def test_bygget_db_rapport_regler_med_fallback(bygget_db: Path) -> None:
 def test_bygget_db_roller_folger_rekkefolge(bygget_db: Path) -> None:
     from src.kunstpixel.core.db import query_roles
     roller = {r["kode"]: r["sporsmal"] for r in query_roles(db_path=bygget_db)}
-    assert roller["A"] == ["rapporteringskalender", "myndighetsoversikt"]
-    assert roller["F"] == ["tilsynsrutine"]
+    assert roller["A"] == ["rapporteringskalender", "myndighetsoversikt", "cv", "innleide", "personalmappe"]
+    assert roller["F"] == ["tilsynsrutine", "innleide", "hms", "handbok"]
     assert roller["G"] == ["rapportmaler"]
-    assert roller["K"] == ["vakt-i-dag", "vaktplan", "arbeidstid", "sykefravaer", "onboarding"]
+    assert roller["K"] == ["vakt-i-dag", "vaktplan", "arbeidstid", "sykefravaer", "onboarding", "cv", "personalmappe", "hms"]
     assert roller["L"] == ["utstilling", "vaktkostnad"]
+    assert roller["O"] == ["vakt-i-dag", "vaktplan", "cv", "personalmappe", "handbok"]
 
 
 @pytest.mark.parametrize("sporsmal_id,verdier,forventet", [

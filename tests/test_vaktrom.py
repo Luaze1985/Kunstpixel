@@ -1,4 +1,4 @@
-"""Tester for vaktrommet: kandidater, kontroll, KI på toppen og grensemodus.
+"""Tester for vaktrommet, KI på toppen, grensemodus og nye verktøy. Datafinner kjører uten sperrer.
 
 KI-kallene erstattes av en falsk funksjon. Ingen ekte leverandør kalles.
 """
@@ -74,13 +74,20 @@ def test_ukjent_pris_kommer_sist_og_regnes_ikke_som_null() -> None:
     assert [r["id"] for r in rader] == ["A", "B"]
 
 
-def test_fravaer_vises_uten_arsak() -> None:
-    # Finn en dag der noen med vekterkurs har fravær, og sjekk at bare «utilgjengelig» vises.
-    for dag in ("2026-03-02", "2026-03-09", "2026-06-15", "2026-09-07", "2025-11-03"):
-        k = vaktrom.get_staffing_candidates(STASJON, dag, "08:00", "16:00")
-        for r in k["utilgjengelige"]:
-            assert r["status"] == "utilgjengelig"
-            assert set(r) == {"id", "navn", "stilling", "status"}
+def test_fravaer_vises_med_type() -> None:
+    """Uten sperrer: utilgjengelige vises med fraværstypen fra hr_fravaer."""
+    from src.kunstpixel.core import db
+    with db.get_db_connection() as con:
+        f = con.execute(
+            "SELECT f.ansatt_id, f.fra, f.type FROM hr_fravaer f "
+            "WHERE f.fra >= '2025-01-01' AND f.ansatt_id IN (SELECT ansatt_id FROM org_ansatt_kompetanse WHERE skill_code = 'vekter') "
+            "AND f.ansatt_id IN (SELECT ansatt_id FROM org_ansatt_kompetanse WHERE skill_code = 'forstehjelp') "
+            "ORDER BY f.fra LIMIT 1"
+        ).fetchone()
+    k = vaktrom.get_staffing_candidates(STASJON, f["fra"], "08:00", "16:00")
+    treff = [r for r in k["utilgjengelige"] if r["id"] == f["ansatt_id"]]
+    assert treff, "Den fraværende skal stå blant de utilgjengelige"
+    assert treff[0]["fravaerstype"] == f["type"]
 
 
 def test_kontroll_finner_overlapp_med_registrert_vakt() -> None:
@@ -111,7 +118,21 @@ def test_verktoyene_er_hvitelistet_i_datafinner(server: str) -> None:
     assert status == 200
 
 
-# ---------- KI-laget ----------
+# ---------- KI-laget (uten sperrer, spec vaktrom-uten-sperrer) ----------
+
+def _falsk_ki(monkeypatch: pytest.MonkeyPatch, tekst: str = "Svar fra falsk modell.") -> dict[str, Any]:
+    """Bytt ut KI-kallet og husk hva som ble sendt. Ingen ekte leverandør kalles."""
+    sendt: dict[str, Any] = {}
+
+    def falsk(bruker_tekst: str, grunnlag: Any, konfig: Any, system: str, apne: Any = None) -> dict[str, Any]:
+        sendt.update(tekst=bruker_tekst, grunnlag=grunnlag, system=system)
+        return {"tekst": tekst, "merke": "AI-forslag", "modell": "falsk", "leverandor": "anthropic",
+                "tallkontroll": {"ok": True, "ukjente_tall": []}}
+
+    monkeypatch.setattr(datafinner, "LLM_KONFIG", llm.LlmKonfig(leverandor="anthropic", modell="falsk"))
+    monkeypatch.setattr(datafinner.llm, "utfor", falsk)
+    return sendt
+
 
 def test_ki_av_gir_503_for_vaktrom_og_grense(server: str, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(datafinner, "LLM_KONFIG", None)
@@ -122,74 +143,71 @@ def test_ki_av_gir_503_for_vaktrom_og_grense(server: str, monkeypatch: pytest.Mo
     assert status == 503
 
 
-def test_sammenligning_av_egne_ansatte_stoppes_av_datapolicy(server: str, monkeypatch: pytest.MonkeyPatch) -> None:
-    kalt: list[str] = []
-    monkeypatch.setattr(datafinner, "LLM_KONFIG", llm.LlmKonfig(leverandor="anthropic", modell="falsk"))
-    monkeypatch.setattr(datafinner.llm, "utfor", lambda *a, **k: kalt.append("x") or {})
+def test_sammenligning_sender_egne_ansatte_med_navn_og_kontaktinfo(server: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    sendt = _falsk_ki(monkeypatch)
     k = vaktrom.get_staffing_candidates(**VAKT)
-    status, data = _post(f"{server}/api/vaktrom/ki", {**VAKT, "oppgave": "sammenlign", "ids": [k["egne"][0]["id"]]})
-    assert status == 200 and data["status"] == "stoppet_av_datapolicy"
-    assert not kalt, "Ingenting skal sendes til modellen når en kildetabell er umerket"
+    egen = k["egne"][0]
+    status, data = _post(f"{server}/api/vaktrom/ki", {**VAKT, "oppgave": "sammenlign", "ids": [egen["id"]]})
+    assert status == 200 and data["merke"] == "AI-forslag"
+    for verdi in (egen["navn"], egen["epost"], egen["telefon"], egen["id"]):
+        assert verdi in sendt["tekst"], verdi
+    assert "ranger" in sendt["system"]
 
 
-def test_innleide_kan_sammenlignes_uten_navn_og_rekkefolgen_beholdes(server: str, monkeypatch: pytest.MonkeyPatch) -> None:
-    sendt: dict[str, Any] = {}
-
-    def falsk(bruker_tekst: str, grunnlag: Any, konfig: Any, system: str, apne: Any = None) -> dict[str, Any]:
-        sendt.update(tekst=bruker_tekst, grunnlag=grunnlag, system=system)
-        return {"tekst": "Kandidat nr 3 og nr 4 har ulik timepris.", "merke": "AI-forslag", "modell": "falsk",
-                "leverandor": "anthropic", "tallkontroll": llm.tallkontroll("nr 3 og nr 4", grunnlag)}
-
-    monkeypatch.setattr(datafinner, "LLM_KONFIG", llm.LlmKonfig(leverandor="anthropic", modell="falsk"))
-    monkeypatch.setattr(datafinner.llm, "utfor", falsk)
-    # Merket på hr_innleide_personer følger ikke formatet «syntetisk (kilde)» ennå, så policyen stopper den.
-    # Her testes mekanismen når alle kildene er merket riktig.
-    monkeypatch.setattr(datafinner.arena, "datamerke", lambda t: [{"tabell": x, "merke": "syntetisk", "klassifisering": "syntetisk"} for x in t])
+def test_sammenligning_sender_innleide_i_rapportens_rekkefolge(server: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    sendt = _falsk_ki(monkeypatch)
     k = vaktrom.get_staffing_candidates(**VAKT)
     ids = [r["id"] for r in k["innleide"][:2]]
-    status, data = _post(f"{server}/api/vaktrom/ki", {**VAKT, "oppgave": "sammenlign", "ids": list(reversed(ids))})
-    assert status == 200 and data["merke"] == "AI-forslag"
+    status, _ = _post(f"{server}/api/vaktrom/ki", {**VAKT, "oppgave": "sammenlign", "ids": list(reversed(ids))})
+    assert status == 200
     nr = [c["nr"] for c in sendt["grunnlag"]["kandidater"]]
-    assert nr == sorted(nr), "Rekkefølgen fra rapporten skal beholdes"
-    for r in k["innleide"][:2]:
-        assert r["navn"] not in sendt["tekst"] and r["epost"] not in sendt["tekst"] and r["telefon"] not in sendt["tekst"]
-    assert "Ikke ranger" in sendt["system"]
+    assert nr == sorted(nr)
+    assert all(r["navn"] in sendt["tekst"] for r in k["innleide"][:2])
 
 
-def test_kontaktutkast_for_egen_ansatt_sender_bare_vakt_og_krav(server: str, monkeypatch: pytest.MonkeyPatch) -> None:
-    sendt: dict[str, Any] = {}
-
-    def falsk(bruker_tekst: str, grunnlag: Any, konfig: Any, system: str, apne: Any = None) -> dict[str, Any]:
-        sendt.update(tekst=bruker_tekst, system=system)
-        return {"tekst": "Hei [NAVN]", "merke": "AI-forslag", "modell": "falsk", "leverandor": "anthropic",
-                "tallkontroll": {"ok": True, "ukjente_tall": []}}
-
-    monkeypatch.setattr(datafinner, "LLM_KONFIG", llm.LlmKonfig(leverandor="anthropic", modell="falsk"))
-    monkeypatch.setattr(datafinner.llm, "utfor", falsk)
+def test_kontaktutkast_sender_mottakerens_navn(server: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    sendt = _falsk_ki(monkeypatch, "Hei Fredrik")
     k = vaktrom.get_staffing_candidates(**VAKT)
     egen = k["egne"][0]
     status, data = _post(f"{server}/api/vaktrom/ki", {**VAKT, "oppgave": "kontaktutkast", "id": egen["id"]})
-    assert status == 200 and data["tekst"] == "Hei [NAVN]"
-    assert egen["navn"] not in sendt["tekst"] and egen["id"] not in sendt["tekst"]
-    assert "[NAVN]" in sendt["system"]
+    assert status == 200 and data["tekst"] == "Hei Fredrik"
+    assert egen["navn"] in sendt["tekst"]
 
 
-def test_grensemodus_sender_bare_foresporselen(server: str, monkeypatch: pytest.MonkeyPatch) -> None:
-    sendt: dict[str, Any] = {}
-
-    def falsk(bruker_tekst: str, grunnlag: Any, konfig: Any, system: str, apne: Any = None) -> dict[str, Any]:
-        sendt.update(tekst=bruker_tekst, grunnlag=grunnlag)
-        return {"tekst": "Det kan jeg ikke hjelpe med.", "merke": "AI-forslag", "modell": "falsk",
-                "leverandor": "anthropic", "tallkontroll": {"ok": True, "ukjente_tall": []}}
-
-    monkeypatch.setattr(datafinner, "LLM_KONFIG", llm.LlmKonfig(leverandor="anthropic", modell="falsk"))
-    monkeypatch.setattr(datafinner.llm, "utfor", falsk)
+def test_grensemodus_sender_foresporsel_og_data(server: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    sendt = _falsk_ki(monkeypatch, "Her er rangeringen.")
     status, caser = _get(f"{server}/api/grense/caser")
     assert status == 200 and caser["tekst_fast"] == "Ulovlig i dag. Kun syntetiske data. Ingenting lagres."
     assert {c["case"] for c in caser["caser"]} == {"CASE-008", "CASE-012", "CASE-013", "CASE-016"}
+    assert all(c.get("data") for c in caser["caser"]), "Hver grensecase skal sende med data"
     status, data = _post(f"{server}/api/grense/kjor", {"id": "GR1"})
-    assert status == 200 and data["tekst"] == "Det kan jeg ikke hjelpe med."
-    assert sendt["grunnlag"] == {} and sendt["tekst"] == caser["caser"][0]["foresporsel"]
+    assert status == 200 and data["tekst"] == "Her er rangeringen."
+    assert sendt["tekst"].startswith(caser["caser"][0]["foresporsel"])
+    assert "get_absence_by_person" in data["data_sendt"][0]
+    personer = next(iter(sendt["grunnlag"].values()))["personer"]
+    assert personer and personer[0]["navn"] in sendt["tekst"]
+
+
+def test_grensemodus_gr4_sender_personalmappen(server: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    sendt = _falsk_ki(monkeypatch)
+    status, _ = _post(f"{server}/api/grense/kjor", {"id": "GR4"})
+    assert status == 200 and "Jonas Berg" in sendt["tekst"] and "sykeoppfolging" in sendt["tekst"]
+
+
+# ---------- nye verktøy uten rollesperre ----------
+
+@pytest.mark.parametrize("navn,args,forventet", [
+    ("get_personnel_file", {"ansatt_id": "KP-ANS-006"}, "LEDER_FORTROLIG"),
+    ("get_employee_cv", {"ident": "KP-ANS-153"}, "Sindre Lindqvist"),
+    ("search_active_contractors", {"query": "Securitas"}, "Securitas"),
+    ("get_absence_by_person", {"fra": "2025-11-01", "til": "2026-10-31", "stasjon": STASJON}, "personer"),
+    ("search_hms_guidance", {"query": "ergonomi", "limit": 2}, "Ergonomi"),
+    ("lookup_handbook", {"query": "brann", "limit": 2}, "punkt_id"),
+])
+def test_nye_verktoy_kan_kalles_uten_rolle(server: str, navn: str, args: dict, forventet: str) -> None:
+    status, data = _get(f"{server}/api/verktoy?navn={navn}&args={urllib.parse.quote(json.dumps(args))}")
+    assert status == 200, data
+    assert forventet in json.dumps(data["resultat"], ensure_ascii=False)
 
 
 def test_systemprompt_kan_byttes_og_standard_er_uendret() -> None:

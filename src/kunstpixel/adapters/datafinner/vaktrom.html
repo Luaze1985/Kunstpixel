@@ -150,9 +150,7 @@
   // Én kilde til tekst og regler på siden.
   var TEKST = {
     lagringsnokkel: "kunstpixel.vaktrom.v1",
-    // Roller som bemanner vakter. Navnene kommer fra tabellen roller (list_roles).
-    vaktroller: ["Museumsdirektør", "Driftsansvarlig", "HR og bemanning", "Kafeansvarlig"],
-    ingenTilgang: "Vaktrommet er for roller som bemanner vakter. Bytt rolle eller gå til startsiden.",
+    ingenTilgang: "",
     kiAv: "KI er av. Rapportene og den manuelle kontaktflyten virker likevel.",
     kiPa: "KI er på: ",
     ukjentPris: "Ukjent pris"
@@ -182,6 +180,14 @@
   // Lokal lagring i nettleseren. Kan mangle (privat vindu), så alt er pakket inn.
   function lesLager() { try { return JSON.parse(localStorage.getItem(TEKST.lagringsnokkel)) || { utkast: [] }; } catch (e) { return { utkast: [] }; } }
   function skrivLager(d) { try { localStorage.setItem(TEKST.lagringsnokkel, JSON.stringify(d)); return true; } catch (e) { return false; } }
+
+  // Avkrysninger per vakt, så de overlever omlasting.
+  function vaktNokkel() { return [vakt.stasjon, vakt.dato, vakt.start, vakt.slutt].join("|"); }
+  function lagreValg() {
+    var d = lesLager(); d.valg = d.valg || {};
+    d.valg[vaktNokkel()] = Object.keys(valgt);
+    skrivLager(d);
+  }
 
   // Navigasjon
   function byggSteg() {
@@ -214,7 +220,8 @@
     var s = stasjoner.filter(function (x) { return x.stasjon === $("stasjon").value; })[0];
     $("krav").textContent = s ? "Krav på stasjonen: " + s.krav.map(function (k) { return k.navn; }).join(", ") + "." : "";
   }
-  function harTilgang() { return TEKST.vaktroller.indexOf($("rolle").value) >= 0; }
+  // Uten sperrer (spec vaktrom-uten-sperrer): alle roller slipper inn.
+  function harTilgang() { return true; }
   function sjekkRolle() {
     var ok = harTilgang();
     $("ingen-tilgang").hidden = ok; $("ingen-tilgang").textContent = ok ? "" : TEKST.ingenTilgang;
@@ -260,13 +267,13 @@
     var rad = el("div", "vr-velg");
     if (kanVelges) {
       var cb = el("input"); cb.type = "checkbox"; cb.id = "v-" + r.id; cb.checked = !!valgt[r.id];
-      cb.addEventListener("change", function () { if (cb.checked) valgt[r.id] = r; else delete valgt[r.id]; });
+      cb.addEventListener("change", function () { if (cb.checked) valgt[r.id] = r; else delete valgt[r.id]; lagreValg(); });
       rad.appendChild(cb);
     }
     var tekst = el("div");
     var h = el("h3"); var lab = el("label", null, (r.nr ? r.nr + ". " : "") + r.navn); if (kanVelges) lab.htmlFor = "v-" + r.id; h.appendChild(lab); tekst.appendChild(h);
     tekst.appendChild(el("p", null, r.stilling + (r.firma ? " · " + r.firma : r.avdeling ? " · " + r.avdeling : "")));
-    if (r.status === "utilgjengelig") { tekst.appendChild(el("p", null, "Utilgjengelig på datoen.")); rad.appendChild(tekst); kort.appendChild(rad); return kort; }
+    if (r.status === "utilgjengelig") { tekst.appendChild(el("p", null, "Utilgjengelig på datoen (" + (r.fravaerstype || "ukjent") + ")."));rad.appendChild(tekst); kort.appendChild(rad); return kort; }
     tekst.appendChild(el("p", null, "Timepris uten tillegg: " + kr(r.timepris_uten_tillegg) + " (" + r.prisgrunnlag + ")"));
     if (r.type === "egen") {
       tekst.appendChild(el("p", null, "Kompetanse: " + r.kompetanse.join(", ") + " · Vakter på stasjonen siste 12 mnd: " + r.vakter_paa_stasjonen_siste_12_mnd));
@@ -281,6 +288,10 @@
     feil("");
     return hent("get_staffing_candidates", { stasjon: vakt.stasjon, dato: vakt.dato, start: vakt.start, slutt: vakt.slutt }).then(function (k) {
       kand = k;
+      // Hent tidligere avkrysninger for samme vakt fra nettleseren.
+      var lagretValg = (lesLager().valg || {})[vaktNokkel()] || [];
+      valgt = {};
+      k.egne.concat(k.innleide).forEach(function (r) { if (lagretValg.indexOf(r.id) >= 0) valgt[r.id] = r; });
       $("sortering").textContent = k.sortering + " " + k.merknad_pris;
       var l = $("kand-liste"); l.textContent = "";
       l.appendChild(el("h3", "vr-gruppe", "Egne ansatte (" + k.antall_egne + ")"));
@@ -319,7 +330,6 @@
     }).catch(function (e) { feil(e.message); });
   }
   function kiSvarTekst(s) {
-    if (s.status === "stoppet_av_datapolicy") return "Stoppet av datapolicy: " + s.grunn + " Rapporten over gjelder fortsatt.";
     var t = s.tekst;
     if (s.tallkontroll && !s.tallkontroll.ok) t += "\n\nAdvarsel: tall som ikke står i grunnlaget: " + s.tallkontroll.ukjente_tall.join(", ");
     return t;
@@ -328,7 +338,7 @@
     var ids = valgteIds(); if (!ids.length) return;
     $("sammenlign").disabled = true; $("sml-tekst").textContent = "Spør KI …";
     post("/api/vaktrom/ki", { oppgave: "sammenlign", stasjon: vakt.stasjon, dato: vakt.dato, start: vakt.start, slutt: vakt.slutt, ids: ids })
-      .then(function (s) { $("sml-tekst").textContent = kiSvarTekst(s); $("sml-merke").hidden = s.status === "stoppet_av_datapolicy"; })
+      .then(function (s) { $("sml-tekst").textContent = kiSvarTekst(s); $("sml-merke").hidden = false; })
       .catch(function (e) { $("sml-tekst").textContent = e.message; })
       .then(function () { $("sammenlign").disabled = false; });
   }
@@ -363,7 +373,6 @@
         ki.disabled = true; status.textContent = "Spør KI …";
         post("/api/vaktrom/ki", { oppgave: "kontaktutkast", stasjon: vakt.stasjon, dato: vakt.dato, start: vakt.start, slutt: vakt.slutt, id: p.id })
           .then(function (s) {
-            if (s.status === "stoppet_av_datapolicy") { status.textContent = kiSvarTekst(s); return; }
             meld.value = s.tekst.split("[NAVN]").join(fornavn(p.navn)); merke.hidden = false;
             status.textContent = s.tallkontroll && !s.tallkontroll.ok ? "AI-forslag. Sjekk tallene: " + s.tallkontroll.ukjente_tall.join(", ") : "AI-forslag satt inn. Les og rediger før du sender.";
             lenker(kort, p, meld);
@@ -454,7 +463,7 @@
     stasjoner.forEach(function (s) { var o = el("option", null, s.stasjon); o.value = s.stasjon; $("stasjon").appendChild(o); });
     roller.forEach(function (n) { var o = el("option", null, n); o.value = n; $("rolle").appendChild(o); });
     if (param.get("rolle") && roller.indexOf(param.get("rolle")) >= 0) $("rolle").value = param.get("rolle");
-    else $("rolle").value = TEKST.vaktroller[0];
+    else $("rolle").value = roller[0] || "";
     if (param.get("stasjon")) $("stasjon").value = param.get("stasjon");
     tegnKrav(); sjekkRolle();
     if (location.hash === "#utkast") { gaa("kontakt"); $("utkast").focus(); } else gaa("vakt");

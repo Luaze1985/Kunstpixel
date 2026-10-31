@@ -34,6 +34,12 @@ SPORSMAL: dict[str, dict[str, Any]] = {
     "tilsynsrutine": {"tekst": "Rutine ved tilsynsbesøk", "verktoy": "get_inspection_routine"},
     "rapportmaler": {"tekst": "Offisielle rapportmaler", "verktoy": "search_rapportering"},
     "onboarding": {"tekst": "Onboarding og HMS-opplæring", "verktoy": "search_hr_onboarding"},
+    # Personal og kompetanse, innleide, HMS og håndbøker. Uten rollesperre (spec vaktrom-uten-sperrer).
+    "cv": {"tekst": "CV og kompetanse for en person", "verktoy": "get_employee_cv"},
+    "innleide": {"tekst": "Aktive innleide", "verktoy": "search_active_contractors"},
+    "personalmappe": {"tekst": "Personalmappe", "verktoy": "get_personnel_file"},
+    "hms": {"tekst": "HMS-veiledning", "verktoy": "search_hms_guidance"},
+    "handbok": {"tekst": "Virksomhetshåndbøkene", "verktoy": "lookup_handbook"},
 }
 
 

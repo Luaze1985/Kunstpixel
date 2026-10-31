@@ -13,3 +13,4 @@ K,HR og bemanning,/hr,Bemanning og arbeidstid etter arbeidsmiljøloven,syntetisk
 L,Økonomi og innkjøp,/okonomi,Økonomi og anskaffelser etter Virke-tariff,syntetisk (team_roster)
 M,Kafeansvarlig,/kafe,Kafédrift og IK-Mat og allergener og svar på kafékritikk,syntetisk (team_roster)
 N,Kommunikasjon,/kommunikasjon,Svar på anmeldelser og omtale og pressehenvendelser,syntetisk (team_roster)
+O,Avdelingsleder,/avdelingsleder,Leder for en avdeling med personal- og vaktansvar,syntetisk (team_roster)

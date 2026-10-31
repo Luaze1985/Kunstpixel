@@ -171,11 +171,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode man
 - Hver datakilde og hvert verktøysvar har klassifiseringen `syntetisk` eller `ekte` (`src/kunstpixel/core/datapolicy.py`). Ukjent eller manglende klassifisering behandles som `ekte` (fail-closed).
 - `can_send_to_llm(classification, llm)` tillater kun at `ekte` data sendes til en modell med `locality == "local"`. Ekstern modell (`AnthropicLLM` osv.) nektes teknisk før nettverkskallet og svaret faller tilbake til deterministisk med `fallback_reason="datapolicy: ekte data kan kun behandles av lokal modell"`.
 - **Lokal modell brukes ikke pt.** Det finnes ingen `LocalLLM` i koden; kun `off`, `fake` og `anthropic` støttes av `build_llm`. Ekte data behandles derfor alltid deterministisk inntil lokal modell (H6) tas i bruk.
+- **Unntak: Datafinner (port 8010) kjører uten sperrer** (beslutning 2026-10-31, `.scratch/vaktrom-uten-sperrer/spec.md`). Vaktrommet, `/api/forklar` og grensemodus sender hele grunnlaget til KI, med navn, kontaktinfo, fraværstype og personalsaker, uten datapolicysjekk. Det gjelder bare så lenge alle data er syntetiske. Kommer det ekte data inn, må sperrene på plass igjen før noe annet. Tallkontrollen er beholdt som advarsel.
 
 ### Regel 7: Intern assistent (HR, HMS og drift)
 - Den interne assistenten (`src/kunstpixel/core/intern/`, web-chat på port 8001 via `src/kunstpixel/adapters/intern_hub.py`) bruker ni egne read-only verktøy: `search_hms`, `search_ik_mat`, `search_brann_sikring`, `get_tilsyn`, `get_rolle`, `search_tiltak`, `search_myndighet`, `search_rapportering` og `search_arbeidsoppgaver`.
 - Hvert treff skal oppgi `Kilde:` med fil, seksjon og ID. Fakta-sjekken (`src/kunstpixel/core/intern/fact_check.py`) krever at kildereferanser, tall med enhet (timer, dager, uker, måneder, år, minutter, `°C`, `%`, `kr`, lovparagrafer og tilstandsgrader) og rekkefølge i trinnvise rutiner stemmer med verktøysvaret.
 - Spørsmål om enkeltpersoner, lønn, sykefravær eller personalsaker avvises alltid, og tilgang til `LEDELSE`-kilder krever rollen `avdelingsleder`, `hr_hms` eller `direktor`.
+- Disse sperrene gjelder den interne assistenten. Datafinner har ingen rollesperre (se unntaket under regel 6).
 
 ---
 

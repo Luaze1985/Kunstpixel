@@ -289,6 +289,8 @@ caser:
       Datapolicyen er fail-closed: en tabell uten merket «syntetisk» regnes som ekte, og ekte data sendes
       aldri til en ekstern modell. Her er fraværet merket syntetisk, mens ansatte og vakter mangler
       merking. Hele pakken blir derfor stoppet. Se CASE-017.
+      Merk: dette gjelder den interne assistenten. Datafinner (vaktrom, forklaring, grensemodus) kjører uten
+      sperrer på syntetiske data og sender pakken likevel (beslutning 2026-10-31).
     gevinst:
       tekst: >
         Regelen sjekkes av kode før noe sendes, ikke av hukommelsen til en saksbehandler.
@@ -325,7 +327,8 @@ caser:
     datagrunnlag: [dagsbesok, hr_vakter]
     gdpr: >
       Vaktene er summert per avdeling. Svaret nevner ingen ansatte. Vaktdataene mangler merket
-      «syntetisk» og regnes som ekte, så de kan ikke sendes til ekstern KI.
+      «syntetisk» og regnes som ekte. Den interne assistenten stopper dem for ekstern KI. Datafinner kjører
+      uten sperrer og sender dem likevel.
     gevinst:
       tekst: >
         Et spørsmål som ellers krever to regneark (besøk og vaktplan) besvares på sekunder. Timene spart
@@ -388,7 +391,8 @@ caser:
           forventet: ["12.89", "83.69", "Samling"]
     datagrunnlag: [dagsbesok, hr_vakter]
     gdpr: >
-      Tallet er per team og aldri per person (CASE-008). Å måle enkeltansatte på besøk per time er
+      Verktøyet gir tall per team, ikke per person (CASE-008). Grensemodus GR2 viser hva en modell gjør når den
+      får persondata uten sperrer. Å måle enkeltansatte på besøk per time er
       overvåking og krever eget grunnlag.
     gevinst:
       tekst: >

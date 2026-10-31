@@ -93,11 +93,12 @@ def test_innstillinger_leses_med_standardverdier() -> None:
 
 # ---------- grunnlaget som sendes ----------
 
-def test_personfelt_fjernes_og_lange_lister_kortes() -> None:
+def test_personfelt_sendes_med_og_lange_lister_kortes() -> None:
+    """Datafinner kjører uten sperrer: navn og kontaktinfo sendes med. Bare lengden kortes (kostnad)."""
     ren = llm.forenkle_for_llm(RAPPORT)
     tekst = json.dumps(ren, ensure_ascii=False)
-    for forbudt in ("Ola Nordmann", "ola@eksempel.no", "+47 12345678", "KP-ANS-001"):
-        assert forbudt not in tekst
+    for felt in ("Ola Nordmann", "ola@eksempel.no", "+47 12345678", "KP-ANS-001"):
+        assert felt in tekst
     assert len(ren["fakta"]) == llm.MAKS_RADER + 1 and ren["fakta"][-1] == {"_utelatt_rader": 19 - llm.MAKS_RADER}
     assert RAPPORT["fakta"][0]["navn"] == "Ola Nordmann", "Originalen skal ikke endres"
 
@@ -112,7 +113,7 @@ def test_openai_formatet_og_svaret_leses(openai_ki: FalskKi) -> None:
     assert sendt["hoder"]["authorization"] == "Bearer nokkel-123"
     assert sendt["kropp"]["model"] == "min-modell" and sendt["kropp"]["temperature"] == 0
     assert sendt["kropp"]["messages"][0]["role"] == "system" and "Bruk bare tall" in sendt["kropp"]["messages"][0]["content"]
-    assert "Ola Nordmann" not in json.dumps(sendt["kropp"]), "Personnavn skal aldri sendes"
+    assert "Ola Nordmann" in json.dumps(sendt["kropp"], ensure_ascii=False), "Uten sperrer: navn sendes med"
     assert svar["merke"] == "AI-forslag" and svar["tekst"].startswith("Vaktplanen viser 19 vakter")
 
 
@@ -241,7 +242,7 @@ def test_forklar_gir_ai_forslag_og_avslorer_funnet_pa_tall(server_med_ki: tuple[
     assert faktisk != 19
     assert data["tallkontroll"] == {"ok": False, "ukjente_tall": ["19"]}
     sendt = json.dumps(ki.sett[0]["kropp"], ensure_ascii=False)
-    assert "epost" not in sendt and "telefon" not in sendt
+    assert "epost" in sendt and "telefon" in sendt, "Uten sperrer: kontaktinfo sendes med"
 
 
 def test_forklar_godkjenner_tall_som_stemmer_med_rapporten(server_med_ki: tuple[str, FalskKi]) -> None:
@@ -291,11 +292,9 @@ def test_leverandorfeil_gir_502_uten_detaljer(monkeypatch: pytest.MonkeyPatch) -
     assert status == 502 and "nokkel-hemmelig" not in json.dumps(data)
 
 
-def test_alle_spor_smalene_kan_forklares_uten_personfelt() -> None:
-    """Hver rapport som API-et lager er trygg å sende ut: ingen personfelt gjenstår etter rensing."""
+def test_alle_sporsmalene_kan_forklares() -> None:
+    """Hver rapport som API-et lager kan gjøres om til grunnlag for KI uten feil."""
     from tests.test_datafinner_api import EKSEMPEL_ARGS
     for sporsmal, args in EKSEMPEL_ARGS.items():
         rapport = datafinner_api.lag_rapport(sporsmal, args, datafinner.run_tool)
-        ren = json.dumps(llm.forenkle_for_llm(rapport), ensure_ascii=False)
-        for felt in llm.PERSONFELT:
-            assert f'"{felt}"' not in ren, (sporsmal, felt)
+        assert json.dumps(llm.forenkle_for_llm(rapport), ensure_ascii=False)

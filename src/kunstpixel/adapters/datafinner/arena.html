@@ -115,7 +115,7 @@
       <section class="af-view" id="grense" hidden>
         <p class="af-caption">Grensemodus</p>
         <h2 class="af-title">Grensemodus</h2>
-        <div class="af-alert error" role="note"><strong id="grense-fast">Ulovlig i dag. Kun syntetiske data. Ingenting lagres.</strong><span>Modellen får bare forespørselen, aldri data fra museum.db.</span></div>
+        <div class="af-alert error" role="note"><strong id="grense-fast">Ulovlig i dag. Kun syntetiske data. Ingenting lagres.</strong><span>Modellen får forespørselen og de syntetiske dataene casen gjelder. Ingen sperrer.</span></div>
         <p id="grense-ki"></p>
         <div class="af-error-summary" id="grense-feil" role="alert" hidden>
           <h2>Feil</h2>
@@ -203,7 +203,8 @@
       if (merke) d.appendChild(el("span", merke, "af-source " + klasse));
       b.appendChild(d); return b;
     };
-    kort.appendChild(blokk("Forespørsel", el("p", c.foresporsel), "Sendes til modellen uten data", "system"));
+    var data = (c.data || []).map(function (d) { return d.verktoy + " " + JSON.stringify(d.args || {}); }).join("; ");
+    kort.appendChild(blokk("Forespørsel", el("p", c.foresporsel), data ? "Data som sendes med: " + data : "Ingen data sendes med", "system"));
     var svar = el("p", grense.llm ? "Ikke kjørt ennå." : "KI er av. Les forespørselen og regelen, og diskuter hva en modell ville svart.");
     svar.style.whiteSpace = "pre-wrap";
     var svarBlokk = blokk("Modellens svar", svar, grense.llm ? "AI-forslag" : null, "suggested");

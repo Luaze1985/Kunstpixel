@@ -222,13 +222,55 @@
           nokkeltall: function (d) { return [["Punkter", d.antall]]; },
           rader: function (d) { return d.opplaering || []; },
           kolonner: [["opplaering_id", "ID"], ["rolle", "Rolle"], ["tema_eller_sertifisering", "Tema / sertifisering"], ["fase_eller_status", "Fase / status"], ["aktivitet_eller_beskrivelse", "Beskrivelse"], ["ansvarlig_rolle", "Ansvarlig"]],
-          periode: function (d, f) { return f.kategori; } }
+          periode: function (d, f) { return f.kategori; } },
+        // Personal og kompetanse, innleide, HMS og håndbøker. Uten rollesperre (spec vaktrom-uten-sperrer).
+        { id: "cv", tekst: "CV og kompetanse for en person", kort: "CV",
+          filtre: [{ id: "ident", label: "Ansatt-ID eller navn", type: "text" }],
+          verktoy: "get_employee_cv", args: function (f) { return { ident: f.ident }; },
+          svar: function (d) { return d ? d.navn + ", " + d.stilling + " (" + d.avdeling + ")" : "Fant ingen CV"; },
+          nokkeltall: function (d) { return d ? [["Avdeling", d.avdeling], ["Stilling", d.stilling], ["Utdanninger", ((d.cv_detaljer || {}).utdanning || []).length]] : []; },
+          rader: function (d) { return d ? ((d.cv_detaljer || {}).utdanning || []) : []; },
+          kolonner: [["grad", "Grad"], ["institusjon", "Institusjon"], ["aar", "År"]],
+          periode: function (d, f) { return f.ident; } },
+        { id: "innleide", tekst: "Aktive innleide", kort: "Innleide",
+          filtre: [{ id: "query", label: "Søk (navn, firma, stilling)", type: "text" }],
+          verktoy: "search_active_contractors", args: function (f) { return { query: f.query, limit: 20 }; },
+          svar: function (d) { return d.length + " aktive innleide"; },
+          nokkeltall: function (d) { return [["Innleide", d.length]]; },
+          rader: function (d) { return d; },
+          kolonner: [["navn", "Navn"], ["firma", "Firma"], ["stilling", "Stilling"], ["timepris_nok", "Timepris kr"], ["avtale_til", "Avtale til"], ["telefon", "Telefon"], ["epost", "E-post"]],
+          periode: function (d, f) { return f.query; } },
+        { id: "personalmappe", tekst: "Personalmappe", kort: "Personalmappe",
+          filtre: [{ id: "ansatt", label: "Ansatt-ID eller navn", type: "text" }],
+          verktoy: "get_personnel_file", args: function (f) { return { ansatt_id: f.ansatt }; },
+          svar: function (d) { return d.antall_saker + " saker i personalmappen"; },
+          nokkeltall: function (d) { return [["Saker", d.antall_saker]]; },
+          rader: function (d) { return d.saker; },
+          kolonner: [["saksnr", "Sak"], ["navn", "Navn"], ["opprettet_dato", "Dato"], ["kategori", "Kategori"], ["tittel", "Tittel"], ["innhold_fortrolig", "Innhold"]],
+          periode: function (d, f) { return f.ansatt; } },
+        { id: "hms", tekst: "HMS-veiledning", kort: "HMS",
+          filtre: [{ id: "hmsq", label: "Søk (f.eks. ergonomi)", type: "text" }],
+          verktoy: "search_hms_guidance", args: function (f) { return { query: f.hmsq, limit: 10 }; },
+          svar: function (d) { return d.length + " veiledningspunkter"; },
+          nokkeltall: function (d) { return [["Treff", d.length]]; },
+          rader: function (d) { return d; },
+          kolonner: [["id", "ID"], ["tema", "Tema"], ["sporsmal", "Spørsmål"], ["kort_svar", "Kort svar"]],
+          periode: function (d, f) { return f.hmsq; } },
+        { id: "handbok", tekst: "Virksomhetshåndbøkene", kort: "Håndbøker",
+          filtre: [{ id: "hbq", label: "Søk (f.eks. brann)", type: "text" }],
+          verktoy: "lookup_handbook", args: function (f) { return { query: f.hbq, limit: 10 }; },
+          svar: function (d) { return d.length + " avsnitt i håndbøkene"; },
+          nokkeltall: function (d) { return [["Treff", d.length]]; },
+          rader: function (d) { return d; },
+          kolonner: [["punkt_id", "Punkt"], ["handbok_navn", "Håndbok"], ["kapittel_tittel", "Kapittel"], ["avsnitt_tittel", "Avsnitt"], ["malgruppe", "Målgruppe"]],
+          periode: function (d, f) { return f.hbq; } }
     ]
   };
 
   // Arbeidsflatene som henger sammen med startsiden. roller: null betyr alle roller.
-  // Rollenavnene kommer fra tabellen roller. Vaktrommet er for rollene som bemanner vakter.
-  var VAKTROLLER = ["Museumsdirektør", "Driftsansvarlig", "HR og bemanning", "Kafeansvarlig"];
+  // Rollenavnene kommer fra tabellen roller.
+  // Alle roller ser vaktrommet (spec vaktrom-uten-sperrer). null betyr alle.
+  var VAKTROLLER = null;
   var ARBEIDSFLATER = [
     { tekst: "Vaktrom", beskrivelse: "Finn folk til én vakt: helgehistorikk, kandidater, kontroll og kontaktutkast.", url: "/vaktrom", medRolle: true, roller: VAKTROLLER },
     { tekst: "Mine kontaktutkast", beskrivelse: "Utkast lagret i denne nettleseren.", url: "/vaktrom#utkast", roller: VAKTROLLER },
@@ -336,7 +378,7 @@
 
   // Rollekortene kommer fra museum.db. Roller med spørsmål tas med, og brukerrollene i museet tas alltid med,
   // også når de bare har arbeidsflater (Kafeansvarlig, Kommunikasjon, Museumsvert har ingen spørsmål ennå).
-  var BRUKERROLLER = ["Museumsdirektør", "Driftsansvarlig", "HR og bemanning", "Kafeansvarlig", "Kommunikasjon", "Museumsvert"];
+  var BRUKERROLLER = ["Museumsdirektør", "Driftsansvarlig", "HR og bemanning", "Kafeansvarlig", "Kommunikasjon", "Museumsvert", "Avdelingsleder"];
   function lastRoller() {
     return hent("list_roles", {}).then(function (rader) {
       SPORSMAL.roller = rader.map(function (r) {

@@ -104,8 +104,8 @@ def test_1_egenmelding_gir_treff_i_personalhandboken(bygget_db: Path) -> None:
         assert {"punkt_id", "handbok_kode", "avsnitt_tittel", "innhold"} <= t.keys()
 
 
-@VENTER_PA_03
 def test_1_datafinner_kan_sla_opp_i_handbokene() -> None:
+    # Ferdig: lookup_handbook ble lagt på hvitelisten i spec vaktrom-uten-sperrer (2026-10-31).
     assert "lookup_handbook" in datafinner.VERKTOY
 
 

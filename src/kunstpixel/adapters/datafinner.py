@@ -54,7 +54,7 @@ if str(PROJECT_ROOT) not in sys.path:
 import yaml
 
 from src.kunstpixel.adapters import datafinner_api
-from src.kunstpixel.core import arena, datapolicy, llm, vaktrom
+from src.kunstpixel.core import arena, llm, vaktrom
 from src.kunstpixel.core.bunnlinje import (
     get_day_overview,
     get_exhibition_ranking,
@@ -65,6 +65,7 @@ from src.kunstpixel.core.bunnlinje import (
 from src.kunstpixel.core.mcp_server import (
     get_absence_report,
     get_artwork_details,
+    get_employee_cv,
     get_exhibition_economy,
     get_inspection_routine,
     get_report_assessment,
@@ -78,9 +79,12 @@ from src.kunstpixel.core.mcp_server import (
     get_working_time_limits,
     list_exhibitions_with_economy,
     list_roles,
+    lookup_handbook,
+    search_active_contractors,
     search_collection,
     search_events,
     search_faq,
+    search_hms_guidance,
     search_hr_onboarding,
     search_myndighet,
     search_rapportering,
@@ -198,6 +202,13 @@ VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
     "get_weekend_shift_history": (vaktrom.get_weekend_shift_history, {"fra", "til", "stasjon"}),
     "get_staffing_candidates": (vaktrom.get_staffing_candidates, {"stasjon", "dato", "start", "slutt"}),
     "check_staffing_selection": (vaktrom.check_staffing_selection, {"stasjon", "dato", "start", "slutt", "ids"}),
+    # Personal, innleide, HMS og håndbøker. Uten rollesperre (spec vaktrom-uten-sperrer, 2026-10-31).
+    "get_employee_cv": (get_employee_cv, {"ident"}),
+    "search_active_contractors": (search_active_contractors, {"query", "kategori", "limit"}),
+    "get_personnel_file": (vaktrom.get_personnel_file, {"ansatt_id"}),
+    "get_absence_by_person": (vaktrom.get_absence_by_person, {"fra", "til", "stasjon"}),
+    "search_hms_guidance": (search_hms_guidance, {"query", "topic", "limit"}),
+    "lookup_handbook": (lookup_handbook, {"query", "handbok", "role", "limit"}),
 }
 
 GRENSEFIL = PROJECT_ROOT / "04_knowledge" / "07_arena" / "grensecaser.yaml"
@@ -415,7 +426,7 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
     def _vaktrom_ki(self, lengde: int) -> None:
         """KI på toppen av vaktrommet. Serveren regner kandidatene på nytt og stoler ikke på nettleseren.
 
-        Datapolicyen sjekkes per kildetabell før noe sendes: umerket data regnes som ekte og stoppes.
+        Uten sperrer: hele kandidatgrunnlaget sendes. Datamerket sendes tilbake for visning.
         """
         try:
             kropp = json.loads(self.rfile.read(lengde).decode("utf-8"))
@@ -445,16 +456,14 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
             sys.stderr.write(f"[datafinner] FEIL i vaktrom/ki: {exc!r}\n")
             self._json(500, {"error": "Feil ved oppslag. Prøv igjen, eller si ifra til den som drifter siden."})
             return
-        grunn = datapolicy.check_policy(datapolicy.EXTERNAL, merker)
-        if grunn:
-            self._json(200, {"status": "stoppet_av_datapolicy", "grunn": grunn, "datamerke": merker})
-            return
+        # Ingen datapolicysjekk her: Datafinner kjører uten sperrer på syntetiske data (spec vaktrom-uten-sperrer).
+        # Datamerket sendes likevel tilbake, så siden kan vise hva som gikk ut.
         svar = self._ki_kall(tekst + json.dumps(grunnlag, ensure_ascii=False, separators=(",", ":")), grunnlag, system)
         if svar is not None:
             self._json(200, {**svar, "status": "Utkast", "datamerke": merker})
 
     def _grense_kjor(self, lengde: int) -> None:
-        """Grensemodus: send bare forespørselsteksten til modellen. Ingen data, ingenting lagres."""
+        """Grensemodus: send forespørselen og de syntetiske dataene casen gjelder til modellen. Ingenting lagres."""
         try:
             kropp = json.loads(self.rfile.read(lengde).decode("utf-8"))
             if not isinstance(kropp, dict):
@@ -462,12 +471,21 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
             case = next((c for c in last_grensecaser()["caser"] if c["id"] == kropp.get("id")), None)
             if case is None:
                 raise ValueError("Ukjent grensecase.")
+            data = {f"{d['verktoy']}({json.dumps(d.get('args', {}), ensure_ascii=False)})": run_tool(d["verktoy"], d.get("args", {}))
+                    for d in case.get("data", [])}
         except (ValueError, TypeError, json.JSONDecodeError, UnicodeDecodeError) as exc:
             self._json(400, {"error": str(exc)})
             return
-        svar = self._ki_kall(case["foresporsel"], {}, SYSTEM_GRENSE)
+        except Exception as exc:
+            sys.stderr.write(f"[datafinner] FEIL i grense/data: {exc!r}\n")
+            self._json(500, {"error": "Feil ved oppslag. Prøv igjen, eller si ifra til den som drifter siden."})
+            return
+        grunnlag = llm.forenkle_for_llm(data)
+        tekst = case["foresporsel"] + ("\n\nData (JSON):\n" + json.dumps(grunnlag, ensure_ascii=False, separators=(",", ":")) if data else "")
+        svar = self._ki_kall(tekst, grunnlag, SYSTEM_GRENSE)
         if svar is not None:
-            self._json(200, {"id": case["id"], "tekst": svar["tekst"], "merke": svar["merke"], "modell": svar["modell"]})
+            self._json(200, {"id": case["id"], "tekst": svar["tekst"], "merke": svar["merke"], "modell": svar["modell"],
+                             "data_sendt": list(data)})
 
     def log_message(self, format: str, *args: Any) -> None:
         sys.stderr.write("[datafinner] " + (format % args) + "\n")
