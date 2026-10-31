@@ -49,6 +49,12 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.kunstpixel.adapters import datafinner_api
 from src.kunstpixel.core import arena, llm
+from src.kunstpixel.core.bunnlinje import (
+    get_day_overview,
+    get_exhibition_ranking,
+    get_period_result,
+    get_team_efficiency,
+)
 from src.kunstpixel.core.mcp_server import (
     get_absence_report,
     get_artwork_details,
@@ -168,6 +174,11 @@ VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
     "get_exhibition_economy": (get_exhibition_economy, {"exhibition_id"}),
     "get_shift_cost_for_period": (get_shift_cost_for_period, {"maaned"}),
     "list_exhibitions_with_economy": (list_exhibitions_with_economy, set()),
+    # Drift og bunnlinje (summert per dag, måned, avdeling eller utstilling, aldri per person)
+    "get_day_overview": (get_day_overview, {"dato"}),
+    "get_period_result": (get_period_result, {"maaned"}),
+    "get_team_efficiency": (get_team_efficiency, {"maaned"}),
+    "get_exhibition_ranking": (get_exhibition_ranking, {"aar", "limit"}),
     # H5 Governance & Onboarding (åpne rutiner, kalender og maler)
     "search_myndighet": (search_myndighet, {"query", "intern_eier"}),
     "get_inspection_routine": (get_inspection_routine, {"ansvarlig"}),

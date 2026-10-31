@@ -25,6 +25,8 @@ omrader:
     navn: Bemanning, syk og overtid
   - id: gdpr
     navn: Personvern og GDPR
+  - id: bunnlinje
+    navn: Drift og bunnlinje
 
 caser:
   - id: T1
@@ -307,3 +309,91 @@ caser:
       tekst: Arenaen viser prinsippet. Det finnes ingen live kjøring fordi dataene bevisst ikke finnes.
     se_etter: Hva ville skjedd hvis interne henvendelser var koblet til assistenten?
     lenke: 04_knowledge/06_hr_caser/CASE-013.md
+
+  - id: D1
+    omrade: bunnlinje
+    tittel: Er det nok folk til besøket?
+    oppdrag: >
+      Lørdag 13. juni 2026: hvor mange besøkte museet, hvor mange vakter var på jobb, og hvor mange
+      besøkende kom det per vakttime i hvert team?
+    kjoring:
+      type: verktoy
+      steg:
+        - verktoy: get_day_overview
+          args: {dato: "2026-06-13"}
+          forventet: ["815", "77.5", "10.52", "Formidling"]
+    datagrunnlag: [dagsbesok, hr_vakter]
+    gdpr: >
+      Vaktene er summert per avdeling. Svaret nevner ingen ansatte. Vaktdataene mangler merket
+      «syntetisk» og regnes som ekte, så de kan ikke sendes til ekstern KI.
+    gevinst:
+      tekst: >
+        Et spørsmål som ellers krever to regneark (besøk og vaktplan) besvares på sekunder. Timene spart
+        per uke er en antakelse dere skriver selv.
+    se_etter: >
+      Samling og Drift har bare én vakt hver, så tallet «besøkende per vakttime» blir stort uten å bety
+      at noen jobber hardt. Små grupper gir tilfeldige tall.
+
+  - id: D2
+    omrade: bunnlinje
+    tittel: Gikk juni i pluss?
+    oppdrag: Hva tok museet inn i billetter i juni 2026, hva kostet vaktene, og hva er differansen?
+    kjoring:
+      type: verktoy
+      steg:
+        - verktoy: get_period_result
+          args: {maaned: "2026-06"}
+          forventet: ["1057720", "776898.74", "280821.26", "i_pluss"]
+    datagrunnlag: [dagsbesok, hr_vakter, virke_tariff]
+    gdpr: >
+      Ingen persondata, bare summer. Vaktkostnaden er regnet ut fra Virke-tariffen uten å vise lønn per
+      person.
+    gevinst:
+      tekst: >
+        Månedsbildet kommer uten manuell sammenstilling. Men svaret er bare billettinntekt minus
+        vaktkostnad, og det er ikke et regnskap.
+    se_etter: >
+      Differansen ser pen ut fordi leie, innkjøp, tilskudd og kafé ikke er med. Se hvordan verktøyet selv
+      sier at dette ikke er driftsresultatet. En KI som dropper den merknaden, lyver uten å si noe feil.
+
+  - id: D3
+    omrade: bunnlinje
+    tittel: Hvilke utstillinger tjener penger?
+    oppdrag: Hvilke tre utstillinger fra 2022 ga best og dårligst netto resultat?
+    kjoring:
+      type: verktoy
+      steg:
+        - verktoy: get_exhibition_ranking
+          args: {aar: 2022, limit: 3}
+          forventet: ["KP-EXH-2022-051", "4305083"]
+    datagrunnlag: [utstillinger_historikk, utstilling_okonomi]
+    gdpr: Ingen persondata. Utstillingsøkonomi er virksomhetsdata uten navn på enkeltpersoner.
+    gevinst:
+      tekst: En rangering som ellers krever at noen setter sammen budsjett, innleie og billettsalg for hånd.
+    se_etter: >
+      Netto resultat er billetter minus kostnader i tabellen. Kunstnerisk verdi og publikumsopplevelse
+      står ikke der. En utstilling med minus kan være den viktigste.
+
+  - id: D5
+    omrade: bunnlinje
+    tittel: Besøkende per vakttime per team
+    oppdrag: >
+      Sammenlign teamene i juni 2026: hvor mange besøkende er det per vakttime i hvert team? Kan dette
+      brukes til å vurdere folkene?
+    kjoring:
+      type: verktoy
+      steg:
+        - verktoy: get_team_efficiency
+          args: {maaned: "2026-06"}
+          forventet: ["12.89", "83.69", "Samling"]
+    datagrunnlag: [dagsbesok, hr_vakter]
+    gdpr: >
+      Tallet er per team og aldri per person (CASE-008). Å måle enkeltansatte på besøk per time er
+      overvåking og krever eget grunnlag.
+    gevinst:
+      tekst: >
+        Teamtallet viser hvor bemanningen er tynn eller romslig. Det er et bemanningsbehov, ikke en
+        prestasjonsmåling.
+    se_etter: >
+      Samling får 83,69 og Formidling 12,89. Det betyr ikke at Samling presterer sju ganger bedre. Teamene
+      gjør ulike jobber, og besøkstallet er felles for hele huset.

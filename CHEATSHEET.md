@@ -1,5 +1,5 @@
 # HUSKELAPP FOR LARS (CHEATSHEET)
-*Prosjekt: Kunstpixel | Sist oppdatert: 2026-10-30*
+*Prosjekt: Kunstpixel | Sist oppdatert: 2026-10-31*
 
 ## 1. Hva vi gjorde sist
 - **Grillet planen for arenaen** (plan: `C:\Users\larse\.claude\plans\les-siste-handoff-og-stateful-ripple.md`). Arenaen skal ha 5 områder: bemanning, tidsbruk, GDPR, økonomi og publikum. Den har 21 caser fordelt på 3 bølger.
@@ -13,12 +13,18 @@
   - kafémeny med 16 varer og salg per vare per dag
   - Skriptet er `src/kunstpixel/data/publikum_builder.py`, og skjemaversjonen er nå 6.
 
+- **2026-10-31:** Oppgave 07 er ferdig: `05_data/stasjon_krav.csv` (13 rader), tabellen `stasjon_krav`, `core/bemanning.krav()`. Skjemaversjonen er nå **7**.
+- **Drift og bunnlinje:** fire nye lesverktøy i `core/bunnlinje.py` og fire nye caser (D1 besøk mot vakter, D2 juni i pluss, D3 beste og dårligste utstillinger, D5 besøk per vakttime per team). Arenaen har nå 18 caser.
+
 ## 2. Hvor vi slapp
 - Grenen `arena`. Bølge 1 er ferdig.
-- Neste er «Drift og bunnlinje»: hvem er på jobb, resultat, besøk mot vakter, kafé og anmeldelser. Deretter leverandørsjekk, helgevakt og hviletid.
+- Mangler i bølgen: **D4** (resultat 2010–2026). H5-historikken er bevisst skjermet fra åpne Datafinner (`tests/test_h5_governance.py`), så du må velge om den skal åpnes eller hentes via en rollestyrt vei.
+- Kafé- og anmeldelsescasene venter på at du bygger databasen (tabellene finnes ikke i `museum.db` ennå).
+- Deretter leverandørsjekk, helgevakt og hviletid.
+- Merking av `datakilde` på HR-tabellene er **ikke** gjort: det ville ødelegge G4 (som viser at umerket data blokkeres). Tas sammen med oppgave 09.
 
 ## 3. Første oppgave neste gang du setter deg ned
-- **Bygg databasen** (du gjør dette, agenten gjør det ikke): `py -3.13 src/kunstpixel/data/build_museum_db.py`. Først da kommer publikumsdataene inn i `museum.db`.
+- **Bygg databasen** (du gjør dette, agenten gjør det ikke): `py -3.13 src/kunstpixel/data/build_museum_db.py`. Først da kommer publikumsdataene, de nye rollene og `stasjon_krav` inn i `museum.db`.
 - **Test arenaen selv:** `py -3.13 src/kunstpixel/adapters/datafinner.py` og åpne http://127.0.0.1:8010/arena. Klikk deg gjennom casene og noter det som skurrer.
 - Bølge 3 (bemanningsmotoren) krever at du bygger `museum.db` etter oppgave 07. Kravlisten per stasjon er allerede godkjent.
 
