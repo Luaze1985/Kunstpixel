@@ -48,3 +48,12 @@ def test_rangeringen_er_sortert_og_begrenset() -> None:
     svakest = [x["netto_resultat_nok"] for x in r["svakest"]]
     assert best == sorted(best, reverse=True) and len(best) == len(svakest) == 2
     assert min(best) >= max(svakest)
+
+
+def test_resultatutviklingen_har_bare_okonomiske_kolonner() -> None:
+    r = bunnlinje.get_result_trend(2018, 2022)
+    assert [x["aar"] for x in r["aar"]] == [2018, 2019, 2020, 2021, 2022]
+    assert set(r["aar"][0]) == {"aar", "besok_totalt", "billettinntekter_tkr", "kafeinntekter_tkr",
+                                "inntekter_totalt_tkr", "kostnader_tkr", "resultat_tkr"}
+    with pytest.raises(ValueError):
+        bunnlinje.get_result_trend(2022, 2018)

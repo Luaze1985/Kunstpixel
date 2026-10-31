@@ -131,3 +131,29 @@ def get_exhibition_ranking(aar: int, limit: int = 3) -> dict[str, Any]:
         "best": alle[:limit], "svakest": list(reversed(alle[-limit:])) if alle else [],
         "datakilde": "utstillinger_historikk og utstilling_okonomi",
     }
+
+
+def get_result_trend(fra_aar: int = 2010, til_aar: int = 2026) -> dict[str, Any]:
+    """Besøk, inntekter, kostnader og resultat per år. Bare økonomiske nøkkeltall fra H5-historikken.
+
+    Args:
+        fra_aar: Første år (2010 eller senere).
+        til_aar: Siste år (2026 eller tidligere).
+    """
+    fra_aar, til_aar = int(fra_aar), int(til_aar)
+    if fra_aar > til_aar:
+        raise ValueError("fra_aar kan ikke være etter til_aar")
+    with db.get_db_connection() as con:
+        rader = con.execute(
+            "SELECT ar AS aar, besok_totalt, billettinntekter_tkr, kafeinntekter_tkr, inntekter_totalt_tkr, "
+            "kostnader_tkr, resultat_tkr FROM h5_historikk_2010_2026 WHERE ar BETWEEN ? AND ? ORDER BY ar",
+            (fra_aar, til_aar),
+        ).fetchall()
+    aar = [dict(r) for r in rader]
+    return {
+        "fra_aar": fra_aar, "til_aar": til_aar, "aar": aar,
+        "svakeste_aar": min(aar, key=lambda x: x["resultat_tkr"])["aar"] if aar else None,
+        "merknad": "Bare økonomiske nøkkeltall. HMS, tidsbruk og personal er ikke med. Tallene kommer fra "
+                   "H5-historikken og er ikke samkjørt med arkivets besøkstall (se K1).",
+        "datakilde": "h5_historikk_2010_2026",
+    }

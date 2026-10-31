@@ -397,3 +397,25 @@ caser:
     se_etter: >
       Samling får 83,69 og Formidling 12,89. Det betyr ikke at Samling presterer sju ganger bedre. Teamene
       gjør ulike jobber, og besøkstallet er felles for hele huset.
+
+  - id: D4
+    omrade: bunnlinje
+    tittel: Utviklingen i resultatet 2010–2026
+    oppdrag: Hvordan har besøk, inntekter, kostnader og resultat utviklet seg siden 2010, og hvilket år var svakest?
+    kjoring:
+      type: verktoy
+      steg:
+        - verktoy: get_result_trend
+          args: {fra_aar: 2010, til_aar: 2026}
+          forventet: ["-420", "svakeste_aar", "2020"]
+    datagrunnlag: [h5_historikk_2010_2026]
+    gdpr: >
+      Ingen persondata. Verktøyet gir bare økonomiske nøkkeltall. HMS-, tidsbruk- og personaltall i samme
+      tabell holdes utenfor, fordi de er ledelsesinformasjon.
+    gevinst:
+      tekst: >
+        Et langt tidsbilde uten at noen setter sammen 17 årsrapporter. Hva som skjedde i et dårlig år,
+        står i H5-historikken som tekst.
+    se_etter: >
+      2020 er svakeste år. Tallene bygger på H5 og er ikke samkjørt med arkivets besøkstall (K1), så
+      sammenlign aldri de to kildene uten å si fra.

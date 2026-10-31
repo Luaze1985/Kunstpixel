@@ -18,7 +18,7 @@
 
 ## 2. Hvor vi slapp
 - Grenen `arena`. Bølge 1 er ferdig.
-- Mangler i bølgen: **D4** (resultat 2010–2026). H5-historikken er bevisst skjermet fra åpne Datafinner (`tests/test_h5_governance.py`), så du må velge om den skal åpnes eller hentes via en rollestyrt vei.
+- D4 er bygget med et smalt verktøy (`get_result_trend`, bare økonomiske tall). Arenaen har nå 19 caser.
 - Kafé- og anmeldelsescasene venter på at du bygger databasen (tabellene finnes ikke i `museum.db` ennå).
 - Deretter leverandørsjekk, helgevakt og hviletid.
 - Merking av `datakilde` på HR-tabellene er **ikke** gjort: det ville ødelegge G4 (som viser at umerket data blokkeres). Tas sammen med oppgave 09.
