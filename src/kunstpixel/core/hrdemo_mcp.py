@@ -13,6 +13,7 @@ from src.kunstpixel.core.hrdemo import (
     search_hms_guidance as find_hms_guidance,
 )
 from src.kunstpixel.core.hr_eval import evaluate_staffing_proposal
+from src.kunstpixel.core.db import query_active_contractors, query_personnel_file
 
 mcp = FastMCP('Kunstpixel HR demo')
 
@@ -55,6 +56,16 @@ def evaluate_kiosk_proposal(suggested_ids: list[str], work_date: str = '2026-11-
 def search_hms_guidance(query: str | None = None, topic: str | None = None, limit: int = 5) -> list[dict]:
     """Search authoritative national HMS and occupational health guidance (344 topics)."""
     return find_hms_guidance(query=query, topic=topic, limit=limit)
+
+@mcp.tool()
+def list_active_contractors(query: str = '', category: str | None = None, limit: int = 10) -> list[dict]:
+    """List active hired contractor persons, guards and specialists for 2026."""
+    return query_active_contractors(query=query, kategori=category)[:limit]
+
+@mcp.tool()
+def get_personnel_dossier(ansatt_id: str, requester_role: str) -> dict:
+    """Retrieve confidential personnel file. Requires authorized role (CASE-016)."""
+    return query_personnel_file(ansatt_id=ansatt_id, requester_role=requester_role)
 
 if __name__ == '__main__':
     mcp.run()

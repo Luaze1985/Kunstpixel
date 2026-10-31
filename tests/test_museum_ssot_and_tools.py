@@ -53,7 +53,7 @@ class TestConsolidatedDatabaseSSOT:
         assert cur.execute("SELECT count(*) FROM utstillinger_historikk").fetchone()[0] == 102
         assert cur.execute("SELECT count(*) FROM hr_innleie").fetchone()[0] == 318
         assert cur.execute("SELECT count(*) FROM hr_vakter").fetchone()[0] == 54994
-        assert cur.execute("SELECT count(*) FROM personas").fetchone()[0] == 28
+        assert cur.execute("SELECT count(*) FROM personas").fetchone()[0] == 168
 
     def test_new_operational_tables_exist(self, ssot_conn: sqlite3.Connection):
         """All new operational tables from ADR 005-007 must exist."""
@@ -66,6 +66,8 @@ class TestConsolidatedDatabaseSSOT:
             "avvik_hms_drift",
             "tilstandsrapporter",
             "utstillingsinnlan",
+            "hr_innleide_personer",
+            "hr_personalmapper",
         ]:
             assert expected in tables, f"Missing new operational table: {expected}"
 

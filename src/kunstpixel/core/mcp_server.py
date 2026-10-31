@@ -21,6 +21,8 @@ from src.kunstpixel.core.db import (
     query_condition_report,
     query_contractors,
     query_employee_cv,
+    query_active_contractors,
+    query_personnel_file,
     query_employee_skills,
     query_events,
     query_exhibition_economy,
@@ -261,6 +263,47 @@ def get_employee_cv(
     if not res:
         return {"error": f"Ingen persona eller CV funnet for '{ident}'", "code": "NOT_FOUND"}
     return res
+
+
+@mcp.tool()
+def search_active_contractors(
+    query: str = "",
+    kategori: str | None = None,
+    limit: int = 10,
+) -> list[dict[str, Any]]:
+    """Søk i aktive innleide fagpersoner, vektere og konsulenter for driftsåret 2026.
+
+    Args:
+        query: Fritekstsøk i navn, leverandør/firma, stilling eller kategori.
+        kategori: Valgfri filtrering på kategori (f.eks. 'Tilstandsvurdering & Konservering', 'Eksternt vakthold / Vernissasje', 'AV & Multimedieteknikk').
+        limit: Maksimalt antall treff som returneres (standard 10).
+
+    Returns:
+        Liste over aktive innleide konsulenter med firma, stilling, kontaktinfo, timepris og oppdrag.
+    """
+    res = query_active_contractors(query=query, kategori=kategori)
+    return res[:limit]
+
+
+@mcp.tool()
+def get_personnel_dossier(
+    ansatt_id: str,
+    requester_role: str,
+) -> dict[str, Any]:
+    """Hent konfidensiell personalmappe med streng rollebasert tilgangskontroll (RBAC).
+
+    Sikkerhetsregel (CASE-016):
+    Kun autoriserte roller ('museumsdirektor', 'driftsansvarlig', 'kvalitetsvokter', 'hr_hms')
+    har tilgang. Uautoriserte forespørsler avvises med FORBIDDEN.
+
+    Args:
+        ansatt_id: Ansatt-ID for personen (f.eks. 'KP-ANS-006').
+        requester_role: Rollen til den som ber om innsyn (f.eks. 'museumsdirektor' eller 'museumsvert').
+
+    Returns:
+        Fortrolig personalsaksjournal dersom autorisert, ellers tilgangsnektelse.
+    """
+    return query_personnel_file(ansatt_id=ansatt_id, requester_role=requester_role)
 
 
 @mcp.tool()

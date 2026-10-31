@@ -17,6 +17,7 @@ from src.kunstpixel.core.hrdemo import (
     search_hms_guidance,
 )
 from src.kunstpixel.core.hr_eval import evaluate_staffing_proposal
+from src.kunstpixel.core.db import query_active_contractors, query_personnel_file, query_employee_cv
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -61,6 +62,26 @@ class Handler(BaseHTTPRequestHandler):
                 result = search_hms_guidance(query=arg('q', None), topic=arg('topic', None), limit=int(arg('limit', '5')))
             elif parsed.path == '/api/v1/rules':
                 result = find_rules(arg('domain',None),arg('topic',None),arg('date','2026-11-07'))
+            elif parsed.path == '/api/v1/hr/contractors/active':
+                result = query_active_contractors(query=arg('q', ''), kategori=arg('kategori', None))
+            elif parsed.path == '/api/v1/hr/cv':
+                pid = arg('id')
+                if not pid:
+                    return self.respond(400, {'error': 'MISSING_ID'})
+                res = query_employee_cv(pid)
+                if not res:
+                    return self.respond(404, {'error': 'CV_NOT_FOUND', 'id': pid})
+                result = res
+            elif parsed.path == '/api/v1/hr/personalmapper':
+                pid = arg('id')
+                if not pid:
+                    return self.respond(400, {'error': 'MISSING_ID'})
+                # Check authorization header or query param
+                role = self.headers.get('X-Role') or self.headers.get('Role') or arg('role', '')
+                res = query_personnel_file(ansatt_id=pid, requester_role=role)
+                if res.get('status') == 403 or 'error' in res:
+                    return self.respond(403, res)
+                result = res
             else:
                 return self.respond(404,{'error':'NOT_FOUND'})
             self.respond(200,result)

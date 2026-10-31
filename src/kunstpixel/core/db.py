@@ -597,7 +597,7 @@ def query_employee_cv(
     ident: str,
     db_path: Path | str | None = None,
 ) -> dict | None:
-    """Retrieve detailed persona and CV data for key personnel from museum.db (ADR 004)."""
+    """Retrieve detailed persona and CV data for key personnel or hired contractors (ADR 004)."""
     if not ident or not ident.strip():
         return None
 
@@ -616,16 +616,202 @@ def query_employee_cv(
         "ident_like": f"%{ident_clean}%",
     }
     rows = execute_read_query(sql, params, db_path=db_path)
-    if not rows:
-        return None
+    if rows:
+        row = dict(rows[0])
+        try:
+            import json
+            row["cv_detaljer"] = json.loads(row["cv_json"])
+        except Exception:
+            row["cv_detaljer"] = {}
+        return row
 
-    row = dict(rows[0])
+    # Fallback to expanded arkiv_cv_personas.json (covers all 168 employees)
     try:
         import json
-        row["cv_detaljer"] = json.loads(row["cv_json"])
+        json_path = Path(db_path).parent / "arkiv_cv_personas.json" if db_path else Path("05_data/arkiv_cv_personas.json")
+        if json_path.is_file():
+            personas = json.loads(json_path.read_text(encoding="utf-8"))
+            for p in personas:
+                if p["id"].upper() == ident_clean.upper() or ident_clean.lower() in p["navn"].lower():
+                    return {
+                        "id": p["id"],
+                        "navn": p["navn"],
+                        "avdeling": p.get("avdeling", ""),
+                        "stilling": p.get("stilling", ""),
+                        "icor_rolle": p.get("icor_rolle", ""),
+                        "cv_json": json.dumps(p, ensure_ascii=False),
+                        "cv_detaljer": p,
+                    }
     except Exception:
-        row["cv_detaljer"] = {}
-    return row
+        pass
+
+    # Check active contractors (arkiv_hr_innleide_personer.csv)
+    try:
+        import csv
+        csv_path = Path(db_path).parent / "arkiv_hr_innleide_personer.csv" if db_path else Path("05_data/arkiv_hr_innleide_personer.csv")
+        if csv_path.is_file():
+            with csv_path.open(encoding="utf-8") as f:
+                for r in csv.DictReader(f):
+                    if r["innleid_id"].upper() == ident_clean.upper() or ident_clean.lower() in r["navn"].lower():
+                        return {
+                            "id": r["innleid_id"],
+                            "navn": r["navn"],
+                            "avdeling": f"Innleid: {r['firma']}",
+                            "stilling": r["stilling"],
+                            "icor_rolle": f"{r['stilling']} (Innleid / {r['kategori']})",
+                            "cv_json": json.dumps(r, ensure_ascii=False),
+                            "cv_detaljer": {
+                                "firma": r["firma"],
+                                "orgnr": r["orgnr"],
+                                "kategori": r["kategori"],
+                                "timepris_nok": float(r["timepris_nok"]),
+                                "avtale_periode": f"{r['avtale_fra']} til {r['avtale_til']}",
+                                "oppdragsbeskrivelse": r["oppdragsbeskrivelse"],
+                                "cv_sammendrag": r["cv_sammendrag"],
+                                "status": r["status"],
+                            },
+                        }
+    except Exception:
+        pass
+
+    return None
+
+
+def _resolve_data_file(filename: str, db_path: Path | str | None = None) -> Path:
+    """Safely resolve data file in 05_data/ relative to database or project root."""
+    if db_path:
+        candidate = Path(db_path).parent / filename
+        if candidate.is_file():
+            return candidate
+    return Path("05_data") / filename
+
+
+def query_active_contractors(
+    query: str = "",
+    kategori: str | None = None,
+    db_path: Path | str | None = None,
+) -> list[dict]:
+    """Retrieve active hired contractors (innleide personer 2026) directly from museum.db."""
+    if db_path is None:
+        db_path = get_db_path()
+
+    # 1. Execute SQL against SQLite table hr_innleide_personer
+    try:
+        sql = """
+        SELECT innleid_id, navn, firma, orgnr, kategori, stilling, epost, telefon,
+               timepris_nok, avtale_fra, avtale_til, status, oppdragsbeskrivelse,
+               cv_sammendrag, datakilde
+        FROM hr_innleide_personer
+        WHERE status = 'Aktiv'
+        """
+        params: dict[str, Any] = {}
+        if kategori and kategori.strip():
+            sql += " AND LOWER(kategori) LIKE LOWER(:kategori)"
+            params["kategori"] = f"%{kategori.strip()}%"
+        if query and query.strip():
+            sql += " AND (LOWER(navn) LIKE LOWER(:q) OR LOWER(firma) LIKE LOWER(:q) OR LOWER(stilling) LIKE LOWER(:q) OR LOWER(kategori) LIKE LOWER(:q))"
+            params["q"] = f"%{query.strip()}%"
+        sql += " ORDER BY innleid_id"
+        rows = execute_read_query(sql, params, db_path=db_path)
+        if rows:
+            return [dict(r) for r in rows]
+    except Exception:
+        pass
+
+    # 2. Fallback to CSV
+    import csv
+    csv_path = _resolve_data_file("arkiv_hr_innleide_personer.csv", db_path)
+    if not csv_path.is_file():
+        return []
+
+    results = []
+    q = query.lower().strip() if query else ""
+    kat = kategori.lower().strip() if kategori else None
+
+    with csv_path.open(encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            if r["status"] != "Aktiv":
+                continue
+            if kat and kat not in r["kategori"].lower():
+                continue
+            if q and not (
+                q in r["navn"].lower()
+                or q in r["firma"].lower()
+                or q in r["stilling"].lower()
+                or q in r["kategori"].lower()
+            ):
+                continue
+            results.append(dict(r))
+    return results
+
+
+AUTHORIZED_HR_ROLES: frozenset[str] = frozenset({
+    "museumsdirektor", "driftsansvarlig", "kvalitetsvokter",
+    "hr_hms", "avdelingsleder", "direktor", "hr"
+})
+
+
+def query_personnel_file(
+    ansatt_id: str,
+    requester_role: str,
+    db_path: Path | str | None = None,
+) -> dict:
+    """Retrieve confidential personnel dossier directly from museum.db with strict RBAC gate (CASE-016)."""
+    if not requester_role or requester_role.strip().lower() not in AUTHORIZED_HR_ROLES:
+        return {
+            "error": "FORBIDDEN: Adgang nektet. Konfidensiell personalmappe krever autorisert leder- eller HR-tilgang (CASE-016).",
+            "code": "ACCESS_DENIED",
+            "status": 403,
+            "ansatt_id": ansatt_id,
+            "saker": [],
+        }
+
+    if db_path is None:
+        db_path = get_db_path()
+
+    clean_id = ansatt_id.strip()
+
+    # 1. Execute SQL against SQLite table hr_personalmapper
+    try:
+        sql = """
+        SELECT saksnr, ansatt_id, navn, opprettet_dato, kategori, tittel,
+               innhold_fortrolig, gradering, saksbehandler_rolle, datakilde
+        FROM hr_personalmapper
+        WHERE UPPER(ansatt_id) = UPPER(:id) OR LOWER(navn) LIKE LOWER(:navn)
+        ORDER BY opprettet_dato DESC
+        """
+        rows = execute_read_query(sql, {"id": clean_id, "navn": f"%{clean_id}%"}, db_path=db_path)
+        if rows:
+            saker = [dict(r) for r in rows]
+            return {
+                "ansatt_id": ansatt_id,
+                "antall_saker": len(saker),
+                "gradering": "LEDER_FORTROLIG",
+                "saker": saker,
+                "merknad": "Konfidensiell personalsak. Kun for autorisert ledelse. Må ikke deles videre.",
+            }
+    except Exception:
+        pass
+
+    # 2. Fallback to CSV
+    import csv
+    csv_path = _resolve_data_file("arkiv_hr_personalmapper.csv", db_path)
+    if not csv_path.is_file():
+        return {"ansatt_id": ansatt_id, "antall_saker": 0, "saker": []}
+
+    saker = []
+    with csv_path.open(encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            if r["ansatt_id"].upper() == clean_id.upper() or clean_id.lower() in r["navn"].lower():
+                saker.append(dict(r))
+
+    return {
+        "ansatt_id": ansatt_id,
+        "antall_saker": len(saker),
+        "gradering": "LEDER_FORTROLIG",
+        "saker": saker,
+        "merknad": "Konfidensiell personalsak. Kun for autorisert ledelse. Må ikke deles videre.",
+    }
 
 
 def query_condition_report(

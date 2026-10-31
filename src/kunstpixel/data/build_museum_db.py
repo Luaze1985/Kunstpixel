@@ -87,6 +87,9 @@ KAFE_MENY_CSV = DATA_DIR / "kafe_meny.csv"
 KAFE_VARESALG_CSV = DATA_DIR / "kafe_varesalg.csv"
 BESOK_TILFREDSHET_CSV = DATA_DIR / "besok_tilfredshet.csv"
 ANMELDELSER_CSV = DATA_DIR / "anmeldelser.csv"
+PERSONAS_JSON = DATA_DIR / "arkiv_cv_personas.json"
+INNLEIDE_PERSONER_CSV = DATA_DIR / "arkiv_hr_innleide_personer.csv"
+PERSONALMAPPER_CSV = DATA_DIR / "arkiv_hr_personalmapper.csv"
 
 HR_DEMO_TABLES = ["hr_rules", "hr_availability", "hr_person_skill", "hr_skills", "hr_people"]
 
@@ -255,6 +258,53 @@ CREATE TABLE h5_tilsynsbesok_rutine (
     dokumentasjon TEXT NOT NULL,
     gult_avvik_frist TEXT NOT NULL,
     rodt_avvik_frist TEXT NOT NULL,
+    datakilde TEXT NOT NULL
+)
+"""
+
+PERSONAS_SQL = """
+CREATE TABLE personas (
+    id TEXT PRIMARY KEY,
+    navn TEXT NOT NULL,
+    avdeling TEXT,
+    stilling TEXT,
+    icor_rolle TEXT,
+    cv_json TEXT,
+    datakilde TEXT NOT NULL
+)
+"""
+
+INNLEIDE_SQL = """
+CREATE TABLE hr_innleide_personer (
+    innleid_id TEXT PRIMARY KEY,
+    navn TEXT NOT NULL,
+    firma TEXT NOT NULL,
+    orgnr TEXT,
+    kategori TEXT NOT NULL,
+    stilling TEXT NOT NULL,
+    epost TEXT,
+    telefon TEXT,
+    timepris_nok REAL NOT NULL,
+    avtale_fra TEXT NOT NULL,
+    avtale_til TEXT NOT NULL,
+    status TEXT NOT NULL,
+    oppdragsbeskrivelse TEXT,
+    cv_sammendrag TEXT,
+    datakilde TEXT NOT NULL
+)
+"""
+
+PERSONALMAPPER_SQL = """
+CREATE TABLE hr_personalmapper (
+    saksnr TEXT PRIMARY KEY,
+    ansatt_id TEXT NOT NULL REFERENCES hr_ansatte(ansatt_id),
+    navn TEXT NOT NULL,
+    opprettet_dato TEXT NOT NULL,
+    kategori TEXT NOT NULL,
+    tittel TEXT NOT NULL,
+    innhold_fortrolig TEXT NOT NULL,
+    gradering TEXT NOT NULL,
+    saksbehandler_rolle TEXT NOT NULL,
     datakilde TEXT NOT NULL
 )
 """
@@ -852,6 +902,66 @@ def bygg_publikum(con: sqlite3.Connection) -> int:
     return len(meny) + len(salg) + len(tilfreds) + len(anm)
 
 
+def bygg_personas(con: sqlite3.Connection) -> int:
+    con.execute("DROP TABLE IF EXISTS personas")
+    con.execute(PERSONAS_SQL)
+    with PERSONAS_JSON.open(encoding="utf-8") as f:
+        data = json.load(f)
+    con.executemany(
+        "INSERT INTO personas VALUES (?, ?, ?, ?, ?, ?, ?)",
+        [
+            (
+                p["id"],
+                p["navn"],
+                p.get("avdeling"),
+                p.get("stilling"),
+                p.get("icor_rolle"),
+                json.dumps(p, ensure_ascii=False),
+                "syntetisk: arkiv personas CV 2010-2026",
+            )
+            for p in data
+        ],
+    )
+    return len(data)
+
+
+def bygg_innleide_personer(con: sqlite3.Connection) -> int:
+    con.execute("DROP TABLE IF EXISTS hr_innleide_personer")
+    con.execute(INNLEIDE_SQL)
+    rader = les_csv(INNLEIDE_PERSONER_CSV)
+    con.executemany(
+        "INSERT INTO hr_innleide_personer VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        [
+            (
+                r["innleid_id"], r["navn"], r["firma"], r.get("orgnr"), r["kategori"],
+                r["stilling"], r.get("epost"), r.get("telefon"), float(r["timepris_nok"]),
+                r["avtale_fra"], r["avtale_til"], r["status"], r.get("oppdragsbeskrivelse"),
+                r.get("cv_sammendrag"), r["datakilde"],
+            )
+            for r in rader
+        ],
+    )
+    return len(rader)
+
+
+def bygg_personalmapper(con: sqlite3.Connection) -> int:
+    con.execute("DROP TABLE IF EXISTS hr_personalmapper")
+    con.execute(PERSONALMAPPER_SQL)
+    rader = les_csv(PERSONALMAPPER_CSV)
+    con.executemany(
+        "INSERT INTO hr_personalmapper VALUES (?,?,?,?,?,?,?,?,?,?)",
+        [
+            (
+                r["saksnr"], r["ansatt_id"], r["navn"], r["opprettet_dato"], r["kategori"],
+                r["tittel"], r["innhold_fortrolig"], r["gradering"], r["saksbehandler_rolle"],
+                r["datakilde"],
+            )
+            for r in rader
+        ],
+    )
+    return len(rader)
+
+
 def oppgrader_fremmednokler(con: sqlite3.Connection) -> None:
     """Bygg om tabellene i G9 for å legge til eksplisitte FOREIGN KEY constraints."""
     # 1. hr_innleie
@@ -1055,6 +1165,9 @@ def bygg(til: Path) -> dict:
             antall_h5_historikk = bygg_h5_historikk(con)
             antall_hr_opplaering = bygg_hr_opplaering_onboarding(con)
             antall_publikum = bygg_publikum(con)
+            antall_personas = bygg_personas(con)
+            antall_innleide = bygg_innleide_personer(con)
+            antall_personalmapper = bygg_personalmapper(con)
             oppgrader_fremmednokler(con)
             koble_ansattregistre(con)
             for sql in INDEXES:
