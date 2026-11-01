@@ -96,10 +96,16 @@ def bygget_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
 
 # ---------- 1 Søk gir håndbokpunkter ----------
 
-@VENTER_PA_03
 def test_1_egenmelding_gir_treff_i_personalhandboken(bygget_db: Path) -> None:
     treff = _oppslag().sok("egenmelding", db_path=bygget_db)
     assert any(t["handbok_kode"] == "PERSONAL" for t in treff)
+    for t in treff:
+        assert {"punkt_id", "handbok_kode", "avsnitt_tittel", "innhold"} <= t.keys()
+
+
+def test_1_kvalitetshandbok_gir_treff_i_drift_og_kvalitet(bygget_db: Path) -> None:
+    treff = _oppslag().sok("haccp", db_path=bygget_db)
+    assert any(t["handbok_kode"] == "DRIFT_KVALITET" for t in treff)
     for t in treff:
         assert {"punkt_id", "handbok_kode", "avsnitt_tittel", "innhold"} <= t.keys()
 
