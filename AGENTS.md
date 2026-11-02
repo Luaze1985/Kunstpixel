@@ -62,6 +62,7 @@ py -3.13 src/hr_api.py                           # Start lokalt HTTP API (http:/
 py -3.13 src/hr_mcp_server.py                    # Start HR FastMCP-serveren over stdio
 py -3.13 -m src.kunstpixel.persondata.generer --fra-csv  # Bygg kundedata fra CSV-ene (første gang og etter justering)
 py -3.13 src/persondata_mcp.py                   # Start åpen MCP for kundedata over stdio
+py -3.13 scripts/meld_feil.py                    # Meld feil i dataene (nettside på 127.0.0.1:8770, uten KI)
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode manual # Deterministisk verifisering
 ```
 
@@ -153,6 +154,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode man
 - Databasen `museum.db` åpnes alltid med `mode=ro`.
 - Agenter må ALDRI kjøre eller generere `INSERT`, `UPDATE`, `DELETE`, `DROP`, `ALTER` eller `CREATE`-spørringer mot databasen. Alle datauttrekk skal skje via `src.kunstpixel.core.db` eller MCP-verktøyene.
 - Det samme gjelder `persondata.db`. Den skrives bare av generatorskriptet, aldri av agenter. Justeringer gjøres i `innstillinger.yaml` eller i CSV-filene, og deretter bygges databasen på nytt.
+
+### Regel 1b: Feilmeldinger går via registeret, og originalen er fasit
+- Feil i dataene meldes i `05_data/feilmeldinger/feilmeldinger.csv`, enten via `py -3.13 scripts/meld_feil.py` (nettside, uten KI) eller av en agent på vegne av en bruker.
+- Når noen sier at noe er feil, eller ber deg se på originalen: slå opp raden i kilden (kolonnen `kilde`, eller CSV-fila eller databasen direkte) og sammenlign med feltet `original` i meldingen. Svar aldri fra hukommelsen eller fra et tidligere svar.
+- Agenter retter i kilden (CSV eller generator), aldri i databasen, og setter status med `scripts/meld_feil.py --sett-status`.
 
 ### Regel 2: Norsk fagspråk og anti-hallusinasjon
 - Bruk alltid norsk bokmål for beskrivelser, tekster og meldinger.

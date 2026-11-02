@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meld en feil – Kunstpixel</title>
+<style>
+  :root { --bg:#f7f6f3; --kort:#fff; --tekst:#1f2328; --dempet:#5b616b; --linje:#d9dce1; --aksent:#2f5d8a; --valgt:#e6eef7; --ok:#1f7a4a; --feil:#a4262c; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--tekst); font:16px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  .ingress { color: var(--dempet); margin: 0 0 24px; }
+  section { background: var(--kort); border:1px solid var(--linje); border-radius:10px; padding:18px; margin-bottom:16px; }
+  h2 { font-size:1.05rem; margin:0 0 12px; } h2 span { color:var(--aksent); margin-right:6px; }
+  label { display:block; font-weight:600; margin:10px 0 4px; }
+  select, input, textarea { width:100%; font:inherit; padding:9px 10px; border:1px solid var(--linje); border-radius:6px; background:#fff; }
+  textarea { min-height:80px; }
+  .typer { display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap:8px; }
+  .gruppe { grid-column: 1 / -1; font-size:.85rem; color:var(--dempet); margin-top:6px; text-transform:uppercase; letter-spacing:.04em; }
+  button { font:inherit; cursor:pointer; border:1px solid var(--linje); background:#fff; border-radius:6px; padding:9px 10px; text-align:left; }
+  button:hover { border-color: var(--aksent); }
+  button.valgt, tr.valgt td { background: var(--valgt); border-color: var(--aksent); }
+  button:disabled { opacity:.45; cursor:not-allowed; }
+  .liste { max-height:260px; overflow:auto; border:1px solid var(--linje); border-radius:6px; margin-top:8px; }
+  .liste button { display:block; width:100%; border:0; border-bottom:1px solid var(--linje); border-radius:0; }
+  .liste small { color:var(--dempet); margin-left:6px; }
+  table { width:100%; border-collapse:collapse; font-size:.93rem; }
+  td { border-bottom:1px solid var(--linje); padding:6px 8px; vertical-align:top; word-break:break-word; }
+  td:first-child { color:var(--dempet); width:34%; }
+  tbody tr { cursor:pointer; } tbody tr:hover td { background:#f2f4f7; }
+  .kilde { font-size:.88rem; color:var(--dempet); margin-top:8px; }
+  .send { background:var(--aksent); color:#fff; border-color:var(--aksent); text-align:center; width:100%; margin-top:14px; padding:12px; }
+  .melding { padding:10px 12px; border-radius:6px; margin-top:12px; } .melding.ok { background:#e7f4ec; color:var(--ok); } .melding.feil { background:#fbeaea; color:var(--feil); }
+  .skjult { display:none; }
+  .status { font-size:.8rem; padding:2px 8px; border-radius:999px; background:#eef0f3; margin-left:6px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Meld en feil</h1>
+  <p class="ingress">Fant du noe som ikke stemmer? Velg hva det gjelder, se på originalen og meld fra. Meldingen går til systemansvarlig (byggeteamet) og lagres i <code>05_data/feilmeldinger/feilmeldinger.csv</code>.</p>
+
+  <section>
+    <h2><span>1</span>Hvem er du, og hva holdt du på med?</h2>
+    <label for="melder">Ansatt (bare de som er i jobb i dag)</label>
+    <select id="melder"><option value="">Velg deg selv …</option></select>
+    <label for="oppgave">Hva holdt du på med da du fant feilen?</label>
+    <input id="oppgave" placeholder="F.eks. sjekket saldo på et gavekort i skranken">
+  </section>
+
+  <section>
+    <h2><span>2</span>Hva gjelder feilen?</h2>
+    <div class="typer" id="typer"></div>
+  </section>
+
+  <section id="steg3" class="skjult">
+    <h2><span>3</span>Finn objektet</h2>
+    <input id="sok" placeholder="Søk på ID eller navn …" autocomplete="off">
+    <div class="liste" id="treff"></div>
+  </section>
+
+  <section id="steg4" class="skjult">
+    <h2><span>4</span>Originalen – klikk på feltet som er feil</h2>
+    <table><tbody id="original"></tbody></table>
+    <div class="kilde" id="kilde"></div>
+  </section>
+
+  <section id="steg5" class="skjult">
+    <h2><span>5</span>Hva er feil?</h2>
+    <div>Valgt felt: <strong id="valgtfelt">–</strong></div>
+    <label for="beskrivelse">Beskriv feilen</label>
+    <textarea id="beskrivelse" placeholder="Hva stemmer ikke, og hvordan oppdaget du det?"></textarea>
+    <label for="forslag">Hva tror du er riktig? (valgfritt)</label>
+    <input id="forslag">
+    <button class="send" id="send">Send til systemansvarlig</button>
+    <div id="svar"></div>
+  </section>
+
+  <section>
+    <h2>Meldte feil</h2>
+    <div id="meldinger">Ingen ennå.</div>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const el = (tag, tekst, klasse) => { const e = document.createElement(tag); if (tekst !== undefined) e.textContent = tekst; if (klasse) e.className = klasse; return e; };
+const valg = { type: null, id: null, felt: null };
+const hent = async (url) => { const r = await fetch(url); const d = await r.json(); if (!r.ok) throw new Error(d.feil || "Feil"); return d; };
+
+async function lastAnsatte() {
+  for (const a of await hent("/api/ansatte")) {
+    const o = el("option", `${a.navn} – ${a.stilling}`); o.value = a.ansatt_id; $("melder").append(o);
+  }
+}
+
+async function lastTyper() {
+  let gruppe = null;
+  for (const t of await hent("/api/objekttyper")) {
+    if (t.gruppe !== gruppe) { gruppe = t.gruppe; $("typer").append(el("div", gruppe, "gruppe")); }
+    const b = el("button", t.navn); b.disabled = !t.tilgjengelig;
+    if (!t.tilgjengelig) b.title = "Databasen er ikke bygget ennå";
+    b.onclick = () => { document.querySelectorAll("#typer button").forEach(x => x.classList.remove("valgt")); b.classList.add("valgt"); velgType(t.type); };
+    $("typer").append(b);
+  }
+}
+
+function velgType(type) {
+  Object.assign(valg, { type, id: null, felt: null });
+  $("steg3").classList.remove("skjult"); $("steg4").classList.add("skjult"); $("steg5").classList.add("skjult");
+  $("sok").value = ""; sok(); $("sok").focus();
+}
+
+let tidsur;
+$("sok").oninput = () => { clearTimeout(tidsur); tidsur = setTimeout(sok, 200); };
+async function sok() {
+  const treff = await hent(`/api/objekter?type=${encodeURIComponent(valg.type)}&sok=${encodeURIComponent($("sok").value)}`);
+  $("treff").replaceChildren();
+  if (!treff.length) $("treff").append(el("div", "Ingen treff.", "kilde"));
+  for (const o of treff) {
+    const b = el("button", o.id); b.append(el("small", o.visning));
+    b.onclick = () => { document.querySelectorAll("#treff button").forEach(x => x.classList.remove("valgt")); b.classList.add("valgt"); visOriginal(o.id); };
+    $("treff").append(b);
+  }
+}
+
+async function visOriginal(id) {
+  const o = await hent(`/api/objekt?type=${encodeURIComponent(valg.type)}&id=${encodeURIComponent(id)}`);
+  valg.id = id; valg.felt = null; $("valgtfelt").textContent = "–";
+  $("original").replaceChildren();
+  for (const [k, v] of Object.entries(o.felt)) {
+    const tr = el("tr"); tr.append(el("td", k), el("td", v === null ? "(tom)" : String(v)));
+    tr.onclick = () => { document.querySelectorAll("#original tr").forEach(x => x.classList.remove("valgt")); tr.classList.add("valgt"); valg.felt = k; $("valgtfelt").textContent = k; };
+    $("original").append(tr);
+  }
+  $("kilde").textContent = `Kilde: ${o.kilde}`;
+  $("steg4").classList.remove("skjult"); $("steg5").classList.remove("skjult");
+}
+
+$("send").onclick = async () => {
+  $("svar").replaceChildren();
+  const melding = { melder_ansatt_id: $("melder").value, oppgave: $("oppgave").value, objekttype: valg.type, objekt_id: valg.id,
+                    felt: valg.felt, beskrivelse: $("beskrivelse").value, forslag: $("forslag").value };
+  if (!melding.melder_ansatt_id) return $("svar").append(el("div", "Velg hvem du er (steg 1).", "melding feil"));
+  if (!melding.felt) return $("svar").append(el("div", "Klikk på feltet som er feil i originalen (steg 4).", "melding feil"));
+  const r = await fetch("/api/meld", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(melding) });
+  const d = await r.json();
+  if (r.ok) { $("svar").append(el("div", `Takk! Feilen er meldt som ${d.melding_id}.`, "melding ok")); $("beskrivelse").value = ""; $("forslag").value = ""; lastMeldinger(); }
+  else $("svar").append(el("div", d.feil, "melding feil"));
+};
+
+async function lastMeldinger() {
+  const m = await hent("/api/meldinger");
+  if (!m.length) return;
+  $("meldinger").replaceChildren();
+  for (const x of m.slice(0, 20)) {
+    const d = el("div"); d.style.margin = "8px 0";
+    d.append(el("strong", `${x.melding_id} `), el("span", `${x.objekt_visning} → ${x.felt}`), el("span", x.status, "status"));
+    d.append(el("div", `${x.melder_navn}, ${x.meldt.replace("T", " ")}: ${x.beskrivelse}`, "kilde"));
+    $("meldinger").append(d);
+  }
+}
+
+lastAnsatte(); lastTyper(); lastMeldinger();
+</script>
+</body>
+</html>
