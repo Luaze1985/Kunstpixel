@@ -1,0 +1,4 @@
+{
+  "testCommand": "py -3.13 -m pytest -q",
+  "buildCommand": "py -3.13 scripts/db_status_gate.py --uten-pytest"
+}

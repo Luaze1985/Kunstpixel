@@ -69,7 +69,7 @@ Dette registeret definerer rollene, ansvarsområdene og verktøytilgangene for K
 
 ## 3. Byggeteam — de som bygger og vedlikeholder systemet
 
-Dette er ikke museets driftsagenter over — det er teamet som bygger og vedlikeholder selve systemet bak Aura Kunstmuseum. Ni fullstendige agent-definisjoner ligger som kjørbare Claude-subagenter i `.claude/agents/` — se den mappen for oppdatert filliste fremfor å stole på navn listet her, siden denne listen selv har vist seg å gå ut av synk før.
+Dette er ikke museets driftsagenter over — det er teamet som bygger og vedlikeholder selve systemet bak Kunstpixel. Ni fullstendige agent-definisjoner ligger som kjørbare Claude-subagenter i `.claude/agents/` — se den mappen for oppdatert filliste fremfor å stole på navn listet her, siden denne listen selv har vist seg å gå ut av synk før.
 
 | Rolle / Agent | Trigger | ICOR-funksjon | Verktøytilganger (MCP / Core) | Eier SOP-er |
 | :--- | :--- | :--- | :--- | :--- |
@@ -97,7 +97,7 @@ Driftsrollene A–F over har også egne subagent-filer i `.claude/agents/` (dire
 * **Control:** Hvert verktøy har nøyaktig det tilgangsomfanget det trenger og ikke mer. Alle verktøy dekkes av tester. Read-only håndheves i kode, ikke bare i dokumentasjon.
 * **Output:** Godkjente verktøydefinisjoner, oppdatert testdekning, avviksrapport ved overeksponering.
 
-**Hvorfor MCP-vokteren og ikke noe annet teknisk:** Aura-prosjektet har allerede streng read-only-regel og en egen QA-rolle (Kvalitetsvokter) som sjekker *innholdet* agentene leverer. Det som manglet var noen som eier *grensesnittet* — hvilke verktøy som eksponeres og hvor mye tilgang hvert av dem faktisk gir. Det overlapper bevisst litt med Kvalitetsvokter og Driftsansvarlig, men vinkelen er annerledes: de sjekker output og drift, MCP-vokteren sjekker overflaten agentene angriper systemet gjennom.
+**Hvorfor MCP-vokteren og ikke noe annet teknisk:** Kunstpixel-prosjektet har allerede streng read-only-regel og en egen QA-rolle (Kvalitetsvokter) som sjekker *innholdet* agentene leverer. Det som manglet var noen som eier *grensesnittet* — hvilke verktøy som eksponeres og hvor mye tilgang hvert av dem faktisk gir. Det overlapper bevisst litt med Kvalitetsvokter og Driftsansvarlig, men vinkelen er annerledes: de sjekker output og drift, MCP-vokteren sjekker overflaten agentene angriper systemet gjennom.
 
 ---
 

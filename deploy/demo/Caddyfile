@@ -1,0 +1,18 @@
+# Caddy foran Datafinner: HTTPS (hengelås) og innlogging per person.
+# DEMO_DOMAIN settes i .env, f.eks. demo.mittnavn.no. Lokalt kan den være http://localhost:8080.
+
+{$DEMO_DOMAIN} {
+	encode zstd gzip
+
+	# Ett brukernavn per person. Linjene (navn + bcrypt-hash) ligger i brukere.caddy og lages med ./bruker.sh.
+	basic_auth bcrypt "Kunstpixel demo" {
+		import /etc/caddy/brukere.caddy
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		-Server
+	}
+
+	reverse_proxy datafinner:8010
+}

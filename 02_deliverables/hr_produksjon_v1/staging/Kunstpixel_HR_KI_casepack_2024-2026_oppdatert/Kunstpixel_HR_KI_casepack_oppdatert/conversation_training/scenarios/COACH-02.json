@@ -1,0 +1,17 @@
+{
+  "id": "COACH-02",
+  "title": "Bare si hva jeg skal gjøre: Kristian vil ha et svar",
+  "description": "Kristian har to alternativer og vil at du skal velge. Han har en mening selv, men sier den ikke før noen spør. Øvelsen er å holde ut i utforsking uten å ta over — og uten å miste ham på veien.",
+  "duration_minutes": 10,
+  "conversation_type": "Coachende samtale",
+  "persona_name": "Kristian Moe",
+  "persona_role": "Prosjektleder",
+  "tags_visible": [],
+  "hidden_tag_count": 0,
+  "source_status": "metadata_complete",
+  "catalog_group": "HR og ledersamtaler",
+  "input_notes": "Katalogmetadata fra brukerens innlimte tekst, ikke komplett rollemanus. +N betyr at flere tagger er skjult i kilden, ikke at de er kjent.",
+  "source": "user_supplied_paste_2026-10-20",
+  "scenario_implemented": false,
+  "persona_is_verified_synthetic": false
+}

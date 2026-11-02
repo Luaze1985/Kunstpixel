@@ -1,0 +1,2928 @@
+versjon: 1.0.0
+opprettet_dato: '2026-10-21'
+beskrivelse: Kanonisk regelregister for AI-native HR-plattform. Kartlegger alle 212
+  regler og 26 operatorer over 5 lag.
+operator_taksonomi:
+  min_ge:
+    canonical: min_ge
+    aliases:
+    - gte
+    - greater_or_equal
+    tier: 'Tier 1: Deterministisk beregningsregel'
+    input_type: numeric
+    output_type: boolean
+    description: Tester om feltets verdi er større enn eller lik terskelverdien.
+    execution: automated
+    error_handling: Returnerer FALSE og feilflagg hvis felt er NULL eller ikke-numerisk.
+  max_le:
+    canonical: max_le
+    aliases:
+    - lte
+    - less_or_equal
+    tier: 'Tier 1: Deterministisk beregningsregel'
+    input_type: numeric
+    output_type: boolean
+    description: Tester om feltets verdi er mindre enn eller lik terskelverdien (f.eks.
+      maks 9t per døgn).
+    execution: automated
+    error_handling: Returnerer FALSE hvis felt overstiger terskel eller er ugyldig.
+  eq:
+    canonical: eq
+    aliases:
+    - equals
+    tier: 'Tier 2: Juridisk vilkårsregel'
+    input_type: any
+    output_type: boolean
+    description: Tester eksakt likhet mot forventet verdi eller kode.
+    execution: automated
+    error_handling: Trim og case-insensitiv sammenligning for strenger; type-match
+      for tall.
+  not_eq:
+    canonical: not_eq
+    aliases:
+    - ne
+    - different_from
+    tier: 'Tier 2: Juridisk vilkårsregel'
+    input_type: any
+    output_type: boolean
+    description: Tester at feltets verdi er ulik terskel.
+    execution: automated
+    error_handling: True hvis ulik, False hvis lik.
+  gt:
+    canonical: gt
+    aliases:
+    - greater_than
+    tier: 'Tier 1: Deterministisk beregningsregel'
+    input_type: numeric
+    output_type: boolean
+    description: Tester om verdi er strengt større enn terskel.
+    execution: automated
+    error_handling: Sikker konvertering til float.
+  lt:
+    canonical: lt
+    aliases:
+    - less_than
+    tier: 'Tier 1: Deterministisk beregningsregel'
+    input_type: numeric
+    output_type: boolean
+    description: Tester om verdi er strengt mindre enn terskel.
+    execution: automated
+    error_handling: Sikker konvertering til float.
+  required:
+    canonical: required
+    aliases:
+    - not_null
+    tier: 'Tier 2: Juridisk vilkårsregel'
+    input_type: any
+    output_type: boolean
+    description: Krav om at feltet ikke er tomt, NULL eller bare whitespace.
+    execution: automated
+    error_handling: False hvis None, '', eller NaN.
+  is_null:
+    canonical: is_null
+    aliases:
+    - missing
+    tier: 'Tier 2: Juridisk vilkårsregel'
+    input_type: any
+    output_type: boolean
+    description: Tester om feltet mangler verdi.
+    execution: automated
+    error_handling: True hvis None eller tomt.
+  in:
+    canonical: in
+    aliases:
+    - member_of
+    tier: 'Tier 2: Juridisk vilkårsregel'
+    input_type: text
+    output_type: boolean
+    description: Tester om feltets verdi finnes i en tillatt mengde/liste.
+    execution: automated
+    error_handling: Sjekker medlemskap i liste.
+  not_in:
+    canonical: not_in
+    aliases:
+    - not_member_of
+    tier: 'Tier 2: Juridisk vilkårsregel'
+    input_type: text
+    output_type: boolean
+    description: Tester at feltets verdi IKKE finnes i listen over forbudte verdier.
+    execution: automated
+    error_handling: False hvis verdien er i listen.
+  requires:
+    canonical: requires
+    aliases:
+    - depends_on
+    tier: 'Tier 2: Juridisk vilkårsregel'
+    input_type: boolean / expression
+    output_type: boolean
+    description: 'Kondisjonelt vilkår: Dersom A er oppfylt, må B også foreligge (f.eks.
+      sykdom krever legeerklæring).'
+    execution: automated
+    error_handling: Feiler dersom forutsetning inntreffer uten at påkrevd dokumentasjon
+      foreligger.
+  requires_true:
+    canonical: requires_true
+    aliases:
+    - must_be_true
+    tier: 'Tier 2: Juridisk vilkårsregel'
+    input_type: boolean
+    output_type: boolean
+    description: Strengt vilkår som må evaluere til TRUE for at handlingen er lovlig
+      (f.eks. saklig formål for kontrolltiltak).
+    execution: automated
+    error_handling: Blokkerer operasjonen dersom verdien er FALSE.
+  not_true:
+    canonical: not_true
+    aliases:
+    - is_false
+    tier: 'Tier 2: Juridisk vilkårsregel'
+    input_type: boolean
+    output_type: boolean
+    description: Tester om et flagg er usant.
+    execution: automated
+    error_handling: True hvis false eller null.
+  days_since_gt:
+    canonical: days_since_gt
+    aliases:
+    - older_than_days
+    tier: 'Tier 1: Deterministisk beregningsregel'
+    input_type: date
+    output_type: boolean
+    description: Beregner dager mellom hendelsesdato og referansedato (f.eks. frist
+      for kartlegging).
+    execution: automated
+    error_handling: Krever ISO 8601 YYYY-MM-DD format.
+  on_or_before:
+    canonical: on_or_before
+    aliases:
+    - deadline_met
+    tier: 'Tier 1: Deterministisk beregningsregel'
+    input_type: date
+    output_type: boolean
+    description: Sjekker at en rapporteringsdato inntreffer senest på fristdatoen
+      (f.eks. a-melding den 5.).
+    execution: automated
+    error_handling: True hvis dato <= frist.
+  min_ge_expr:
+    canonical: min_ge_expr
+    aliases:
+    - formula_ge
+    tier: 'Tier 3: Tariffavhengig regel'
+    input_type: expression
+    output_type: numeric / boolean
+    description: Tariffberegning med formel/uttrykk (f.eks. min(max(sats, min_kr),
+      max_kr) for kveldstillegg).
+    execution: automated
+    error_handling: Deterministisk formelmotor med tariffparametre.
+  all_in_range:
+    canonical: all_in_range
+    aliases:
+    - bounds_check
+    tier: 'Tier 4: Faglig vurderingsregel'
+    input_type: array / dict
+    output_type: boolean
+    description: Kontrollerer at alle underkomponenter ligger innenfor akseptable
+      grenseverdier (f.eks. OEE 0.0-1.0).
+    execution: automated
+    error_handling: Validerer hvert delelement.
+  and:
+    canonical: and
+    aliases:
+    - conjunction
+    tier: 'Tier 2: Juridisk vilkårsregel'
+    input_type: array[boolean]
+    output_type: boolean
+    description: Logisk OG mellom flere delvilkår.
+    execution: automated
+    error_handling: Krever at alle delvilkår er sanne.
+  flag_if:
+    canonical: flag_if
+    aliases:
+    - warning_threshold
+    tier: 'Tier 4: Faglig vurderingsregel'
+    input_type: condition
+    output_type: warning_flag
+    description: Varsler leder eller HR om at et oppfølgingstrinn nærmer seg (f.eks.
+      8 ukers oppfølgingsplan).
+    execution: automated
+    error_handling: Genererer varsel til kø.
+  forbidden:
+    canonical: forbidden
+    aliases:
+    - disallowed
+    tier: 'Tier 2: Juridisk vilkårsregel'
+    input_type: any
+    output_type: boolean
+    description: Absolutt forbud mot at feltet inneholder data (f.eks. diagnosefelt
+      i HR-database jf. GDPR art. 9).
+    execution: automated
+    error_handling: Blokkerer lagring og reiser sikkerhetsavvik dersom feltet ikke
+      er tomt.
+  incompatible_with_person:
+    canonical: incompatible_with_person
+    aliases:
+    - no_individual_tracking
+    tier: 'Tier 2: Juridisk vilkårsregel'
+    input_type: metadata
+    output_type: boolean
+    description: Sperrer for at et nøkkeltall eller måleparameter knyttes til person-ID
+      (f.eks. OEE eller besøkstall).
+    execution: automated
+    error_handling: Validerer at granularitet er på team/stasjon/virksomhetsnivå,
+      aldri individnivå.
+  exists_in:
+    canonical: exists_in
+    aliases:
+    - fk_check
+    tier: 'Tier 1: Deterministisk beregningsregel'
+    input_type: key
+    output_type: boolean
+    description: Fremmednøkkelkontroll mot autoritativ tabell.
+    execution: automated
+    error_handling: False hvis nøkkel ikke finnes.
+  lookup:
+    canonical: lookup
+    aliases:
+    - table_lookup
+    tier: 'Tier 1: Deterministisk beregningsregel'
+    input_type: key
+    output_type: value
+    description: Deterministisk oppslag i autoritativ tabell (f.eks. antall omsorgsdager
+      etter antall barn).
+    execution: automated
+    error_handling: Kaster feil hvis oppslagsnøkkel mangler.
+  manual_review:
+    canonical: manual_review
+    aliases:
+    - requires_human
+    tier: 'Tier 5: Regler som krever menneskelig beslutning'
+    input_type: context
+    output_type: review_case
+    description: Klassifiserer saken som juridisk eller faglig skjønnsmessig og ruter
+      den til saksbehandler.
+    execution: manual
+    error_handling: Må aldri automatiseres av en KI-agent uten saksbehandlergodkjenning.
+  fallback:
+    canonical: fallback
+    aliases:
+    - safe_escalation
+    tier: 'Tier 5: Regler som krever menneskelig beslutning'
+    input_type: question_context
+    output_type: safe_response
+    description: Sikker eskalering til fagansvarlig dersom lokal prosedyre, tariffbinding
+      eller kontekst mangler.
+    execution: automated_safeguard
+    error_handling: Returnerer forsiktig kildehenvisning og anbefaler avklaring.
+regler:
+- regel_id: R-1-01
+  omraade: 1
+  felt: Q-1-01:manglende_lokal_prosedyre_eller_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kan ikke besvares sikkert uten rolle, lokal prosedyre og/eller tariffbinding
+  forslag: Vis relevant lokal håndbokside og eskaler til HR/HMS/kuratoransvarlig
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/nattarbeid/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-1-02
+  omraade: 1
+  felt: Q-1-02:manglende_lokal_prosedyre_eller_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kan ikke besvares sikkert uten rolle, lokal prosedyre og/eller tariffbinding
+  forslag: Vis relevant lokal håndbokside og eskaler til HR/HMS/kuratoransvarlig
+  kilde: https://www.virke.no/tariff-og-lonn/finn-tariffavtale/landsoverenskomst-for-museer-og-andre-kulturinstitusjoner/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-1-03
+  omraade: 1
+  felt: Q-1-03:manglende_lokal_prosedyre_eller_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kan ikke besvares sikkert uten rolle, lokal prosedyre og/eller tariffbinding
+  forslag: Vis relevant lokal håndbokside og eskaler til HR/HMS/kuratoransvarlig
+  kilde: https://www.kulturdirektoratet.no/fag/museum-og-kulturarv/museumsutvikling/samlingsforvaltning
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-1-04
+  omraade: 1
+  felt: Q-1-04:manglende_lokal_prosedyre_eller_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kan ikke besvares sikkert uten rolle, lokal prosedyre og/eller tariffbinding
+  forslag: Vis relevant lokal håndbokside og eskaler til HR/HMS/kuratoransvarlig
+  kilde: https://www.arbeidstilsynet.no/hms/roller-i-hms-arbeidet/arbeidsgiver/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-1-05
+  omraade: 1
+  felt: Q-1-05:manglende_lokal_prosedyre_eller_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kan ikke besvares sikkert uten rolle, lokal prosedyre og/eller tariffbinding
+  forslag: Vis relevant lokal håndbokside og eskaler til HR/HMS/kuratoransvarlig
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/sondagsarbeid/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-1-06
+  omraade: 1
+  felt: Q-1-06:manglende_lokal_prosedyre_eller_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kan ikke besvares sikkert uten rolle, lokal prosedyre og/eller tariffbinding
+  forslag: Vis relevant lokal håndbokside og eskaler til HR/HMS/kuratoransvarlig
+  kilde: https://kopinor.no/om-opphavsrett/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-1-07
+  omraade: 1
+  felt: Q-1-07:manglende_lokal_prosedyre_eller_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kan ikke besvares sikkert uten rolle, lokal prosedyre og/eller tariffbinding
+  forslag: Vis relevant lokal håndbokside og eskaler til HR/HMS/kuratoransvarlig
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/ansettelse/frivillig-arbeid/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-1-08
+  omraade: 1
+  felt: Q-1-08:manglende_lokal_prosedyre_eller_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kan ikke besvares sikkert uten rolle, lokal prosedyre og/eller tariffbinding
+  forslag: Vis relevant lokal håndbokside og eskaler til HR/HMS/kuratoransvarlig
+  kilde: https://www.kulturdirektoratet.no/fag/museum-og-kulturarv/museumsutvikling/samlingsforvaltning
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-1-09
+  omraade: 1
+  felt: Q-1-09:manglende_lokal_prosedyre_eller_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kan ikke besvares sikkert uten rolle, lokal prosedyre og/eller tariffbinding
+  forslag: Vis relevant lokal håndbokside og eskaler til HR/HMS/kuratoransvarlig
+  kilde: https://www.datatilsynet.no/rettigheter-og-plikter/personvernprinsippene/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-1-10
+  omraade: 1
+  felt: Q-1-10:manglende_lokal_prosedyre_eller_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kan ikke besvares sikkert uten rolle, lokal prosedyre og/eller tariffbinding
+  forslag: Vis relevant lokal håndbokside og eskaler til HR/HMS/kuratoransvarlig
+  kilde: https://www.arbeidstilsynet.no/hms/roller-i-hms-arbeidet/arbeidsgiver/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-2-01
+  omraade: 2
+  felt: lovlig_overtid_ja_og_tillegg_prosent
+  operator: min_ge
+  original_operator: min_ge
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '40'
+  vurdering: Lovkrav til overtidstillegg må oppfylles
+  forslag: Betal minst 40 %; valider tarifforhøyelse og timeklassifikasjon
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/overtid/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-2-02
+  omraade: 2
+  felt: tariff_id_og_tariffperiode
+  operator: required
+  original_operator: required
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: ikke_tom
+  vurdering: Tariffgrunnlag mangler
+  forslag: Stans beregning av tariffspesifikke satser til avtale og virkningsperiode
+    er satt
+  kilde: https://www.fellesforbundet.no/lonn-og-tariff/tariffavtaler/industrioverenskomst/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-2-03
+  omraade: 2
+  felt: ks_helg_ordinart_arbeid_etter_2026_10_01
+  operator: min_ge_expr
+  original_operator: min_ge_expr
+  tier: 'Tier 3: Tariffavhengig regel'
+  terskel: max(timelonn*0.23;73)
+  vurdering: Mulig underbetaling av helgetillegg
+  forslag: Kontroller KS HTA 5.2 og lokale satser
+  kilde: https://www.ks.no/fagomrader/lonn-og-tariff/hovedtariffavtalen/endringer-i-tilleggene-i-hta-kapittel-1--5-fra-forste-oktober/
+  sektor: kommune
+  eksekverbar: automated
+- regel_id: R-2-04
+  omraade: 2
+  felt: ks_kveld_turnus_17_21_etter_2026_10_01
+  operator: min_ge_expr
+  original_operator: min_ge_expr
+  tier: 'Tier 3: Tariffavhengig regel'
+  terskel: max(timelonn*0.20;60)
+  vurdering: Mulig underbetaling av kveldstillegg
+  forslag: Kontroller om § 5.4.1 gjelder og betal korrekt minimum
+  kilde: https://www.ks.no/fagomrader/lonn-og-tariff/hovedtariffavtalen/endringer-i-tilleggene-i-hta-kapittel-1--5-fra-forste-oktober/
+  sektor: kommune
+  eksekverbar: automated
+- regel_id: R-2-05
+  omraade: 2
+  felt: ks_natt_turnus_21_06_etter_2026_10_01
+  operator: min_ge_expr
+  original_operator: min_ge_expr
+  tier: 'Tier 3: Tariffavhengig regel'
+  terskel: max(timelonn*0.25;70)
+  vurdering: Mulig underbetaling av nattillegg
+  forslag: Kontroller riktig nattvaktdefinisjon og § 5.4.1
+  kilde: https://www.ks.no/fagomrader/lonn-og-tariff/hovedtariffavtalen/endringer-i-tilleggene-i-hta-kapittel-1--5-fra-forste-oktober/
+  sektor: kommune
+  eksekverbar: automated
+- regel_id: R-2-06
+  omraade: 2
+  felt: ks_kveld_annet_17_06_etter_2026_10_01
+  operator: min_ge_expr
+  original_operator: min_ge_expr
+  tier: 'Tier 3: Tariffavhengig regel'
+  terskel: max(timelonn*0.20;56)
+  vurdering: Mulig underbetaling av kvelds-/nattillegg
+  forslag: Kontroller § 5.4.2 og unntak for lærling/ung arbeidstaker
+  kilde: https://www.ks.no/fagomrader/lonn-og-tariff/hovedtariffavtalen/endringer-i-tilleggene-i-hta-kapittel-1--5-fra-forste-oktober/
+  sektor: kommune
+  eksekverbar: automated
+- regel_id: R-2-07
+  omraade: 2
+  felt: feriepengeprosent_med_kun_lovens_ferie
+  operator: min_ge
+  original_operator: min_ge
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '10.2'
+  vurdering: Feriepengesats under lovens hovedregel
+  forslag: Kontroller feriepengegrunnlag og sats med alder og tariff
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/ferie/feriepenger/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-2-08
+  omraade: 2
+  felt: ag_sone_i_prosent_2026
+  operator: eq
+  original_operator: equals
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: '14.1'
+  vurdering: Arbeidsgiveravgift for sone I
+  forslag: Bekreft arbeidsgivers geografiske sone og beregningskode
+  kilde: https://www.skatteetaten.no/satser/arbeidsgiveravgift/?year=2026
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-2-09
+  omraade: 2
+  felt: a_melding_levert_frist
+  operator: on_or_before
+  original_operator: on_or_before
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: 5_i_paafolgende_maaned_forskjovet_hverdag
+  vurdering: Rapportering kan være forsinket
+  forslag: Kontroller levering og Skatteetatens mottakskvittering
+  kilde: https://www.skatteetaten.no/skjema/direkte-levering-av-a-meldingen/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-2-10
+  omraade: 2
+  felt: forskuddstrekk_innbetalt_dato
+  operator: on_or_before
+  original_operator: on_or_before
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: foerste_virkedag_etter_lonn_2026
+  vurdering: Mulig fristbrudd på forskuddstrekk
+  forslag: Kontroller utbetalingsdato og skatteinnbetaling
+  kilde: https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/skattekort-og-skattetrekk/skattetrekkskonto/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-2-11
+  omraade: 2
+  felt: virke_hk_trinn1_timelonn_fra_2026_04_01
+  operator: min_ge
+  original_operator: min_ge
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '195.04'
+  vurdering: Mulig underbetaling på HK trinn 1
+  forslag: Gjelder kun dokumentert avtaletilhørighet og riktig lønnsgruppe
+  kilde: https://www.virke.no/tariff-og-lonn/finn-tariffavtale/landsoverenskomsten-hk/
+  sektor: privat
+  eksekverbar: automated
+- regel_id: R-2-90
+  omraade: 2
+  felt: sporsmal_id=Q-2-01
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: ingen_sikker_match
+  vurdering: Ingen sikker automatisk lønnsvurdering
+  forslag: Hent gjeldende primærkilde, tariff-/lokalavtale og virkningsdato; eskaler
+    uavklart tolkning til HR/lønn
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-2-91
+  omraade: 2
+  felt: sporsmal_id=Q-2-02
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: ingen_sikker_match
+  vurdering: Ingen sikker automatisk lønnsvurdering
+  forslag: Hent gjeldende primærkilde, tariff-/lokalavtale og virkningsdato; eskaler
+    uavklart tolkning til HR/lønn
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-2-92
+  omraade: 2
+  felt: sporsmal_id=Q-2-03
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: ingen_sikker_match
+  vurdering: Ingen sikker automatisk lønnsvurdering
+  forslag: Hent gjeldende primærkilde, tariff-/lokalavtale og virkningsdato; eskaler
+    uavklart tolkning til HR/lønn
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-2-93
+  omraade: 2
+  felt: sporsmal_id=Q-2-04
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: ingen_sikker_match
+  vurdering: Ingen sikker automatisk lønnsvurdering
+  forslag: Hent gjeldende primærkilde, tariff-/lokalavtale og virkningsdato; eskaler
+    uavklart tolkning til HR/lønn
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-2-94
+  omraade: 2
+  felt: sporsmal_id=Q-2-05
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: ingen_sikker_match
+  vurdering: Ingen sikker automatisk lønnsvurdering
+  forslag: Hent gjeldende primærkilde, tariff-/lokalavtale og virkningsdato; eskaler
+    uavklart tolkning til HR/lønn
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-2-95
+  omraade: 2
+  felt: sporsmal_id=Q-2-06
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: ingen_sikker_match
+  vurdering: Ingen sikker automatisk lønnsvurdering
+  forslag: Hent gjeldende primærkilde, tariff-/lokalavtale og virkningsdato; eskaler
+    uavklart tolkning til HR/lønn
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-2-96
+  omraade: 2
+  felt: sporsmal_id=Q-2-07
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: ingen_sikker_match
+  vurdering: Ingen sikker automatisk lønnsvurdering
+  forslag: Hent gjeldende primærkilde, tariff-/lokalavtale og virkningsdato; eskaler
+    uavklart tolkning til HR/lønn
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-2-97
+  omraade: 2
+  felt: sporsmal_id=Q-2-08
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: ingen_sikker_match
+  vurdering: Ingen sikker automatisk lønnsvurdering
+  forslag: Hent gjeldende primærkilde, tariff-/lokalavtale og virkningsdato; eskaler
+    uavklart tolkning til HR/lønn
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-2-98
+  omraade: 2
+  felt: sporsmal_id=Q-2-09
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: ingen_sikker_match
+  vurdering: Ingen sikker automatisk lønnsvurdering
+  forslag: Hent gjeldende primærkilde, tariff-/lokalavtale og virkningsdato; eskaler
+    uavklart tolkning til HR/lønn
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-2-99
+  omraade: 2
+  felt: sporsmal_id=Q-2-10
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: ingen_sikker_match
+  vurdering: Ingen sikker automatisk lønnsvurdering
+  forslag: Hent gjeldende primærkilde, tariff-/lokalavtale og virkningsdato; eskaler
+    uavklart tolkning til HR/lønn
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-2-100
+  omraade: 2
+  felt: Q-2-11:mangler_tariff_rolle_aktivitet_lokalt_grunnlag
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kontekst mangler – ikke automatisk juridisk/HR-konklusjon
+  forslag: Slå opp faktisk tariff, arbeidsavtale, rolle og lokal rutine før svar
+  kilde: https://www.virke.no/tariff-og-lonn/finn-tariffavtale/landsoverenskomst-for-museer-og-andre-kulturinstitusjoner/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-2-101
+  omraade: 2
+  felt: Q-2-12:mangler_tariff_rolle_aktivitet_lokalt_grunnlag
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kontekst mangler – ikke automatisk juridisk/HR-konklusjon
+  forslag: Slå opp faktisk tariff, arbeidsavtale, rolle og lokal rutine før svar
+  kilde: https://www.virke.no/tariff-og-lonn/finn-tariffavtale/landsoverenskomst-for-museer-og-andre-kulturinstitusjoner/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-3-01
+  omraade: 3
+  felt: grunnlag_tariff_og_ordning
+  operator: required
+  original_operator: required
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: ikke_tom
+  vurdering: Uavklart arbeidstidsklassifisering
+  forslag: Krev aktiv ordning, avtaledel, dato, dokumentref før normsammenligning
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-3-02
+  omraade: 3
+  felt: plan_drøftet_dager_for_oppstart_uten_tariffunntak
+  operator: min_ge
+  original_operator: min_ge
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '14'
+  vurdering: Mulig brudd på arbeidsplanfrist
+  forslag: Kontroller gyldig tariffunntak og drøftingslogg
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/arbeidsplan-vaktliste-skift-og-turnus/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-3-03
+  omraade: 3
+  felt: arbeidstimer_24t_standard_uten_gjennomsnitt_og_uten_overtid
+  operator: max_le
+  original_operator: max_le
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '9'
+  vurdering: Mulig brudd på alminnelig arbeidstid
+  forslag: Avklar avtale om gjennomsnittsberegning eller lovlig overtid før juridisk
+    konklusjon
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-3-04
+  omraade: 3
+  felt: arbeidstimer_7d_standard_lovnorm_40
+  operator: max_le
+  original_operator: max_le
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '40'
+  vurdering: Mulig overskridelse av alminnelig uketid
+  forslag: Kontroller skift- og tariffbestemt kortere norm; lovlig merarbeid/overtid
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-3-05
+  omraade: 3
+  felt: overtid_timer_fast_7d_uten_utvidelse
+  operator: max_le
+  original_operator: max_le
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '10'
+  vurdering: Mulig overskridelse av normal overtidsramme
+  forslag: Kontroller særlig tidsavgrenset behov og avtale/tillatelse
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/overtid/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-3-06
+  omraade: 3
+  felt: overtid_timer_rullerende_4uker_uten_utvidelse
+  operator: max_le
+  original_operator: max_le
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '25'
+  vurdering: Mulig overskridelse av normal fireukersramme
+  forslag: Kontroller rullerende fireukerstelling og evt unntak
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/overtid/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-3-07
+  omraade: 3
+  felt: overtid_timer_fast_52uker_uten_utvidelse
+  operator: max_le
+  original_operator: max_le
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '200'
+  vurdering: Mulig overskridelse av normal årsramme
+  forslag: Kontroller 52-ukersperiode og tillatelse eller avtale
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/overtid/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-3-08
+  omraade: 3
+  felt: samlet_tid_timer_rullerende_24t_uten_unntak
+  operator: max_le
+  original_operator: max_le
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '13'
+  vurdering: Mulig overskridelse av grensen for samlet arbeidstid
+  forslag: Kontroller hjemmel for utvidelse og kompenserende hvile
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/overtid/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-3-09
+  omraade: 3
+  felt: samlet_tid_timer_snitts_8uker_uten_unntak
+  operator: max_le
+  original_operator: max_le
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '48'
+  vurdering: Mulig overskridelse av samlet arbeidstid i snitt
+  forslag: Kontroller alle vakter og tariff/dispensasjon
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/overtid/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-3-10
+  omraade: 3
+  felt: sammenhengende_hvile_timer_24t_uten_unntak
+  operator: min_ge
+  original_operator: min_ge
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '11'
+  vurdering: Mulig brudd på daglig hvile
+  forslag: Avklar gyldig avtalebasert unntak og kompensasjon
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-3-11
+  omraade: 3
+  felt: sammenhengende_hvile_timer_7d_uten_unntak
+  operator: min_ge
+  original_operator: min_ge
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '35'
+  vurdering: Mulig brudd på ukentlig hvile
+  forslag: Avklar gyldig avtalebasert unntak
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-3-12
+  omraade: 3
+  felt: pause_minutter_arbeid_8timer_eller_mer
+  operator: min_ge
+  original_operator: min_ge
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '30'
+  vurdering: Mulig manglende pause
+  forslag: Kontroller om pause må regnes som arbeidstid
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-3-13
+  omraade: 3
+  felt: tidregistrering_start_slutt_pause_faktisk
+  operator: required
+  original_operator: required
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: ikke_tom
+  vurdering: Faktisk arbeidstid kan ikke dokumenteres
+  forslag: Innhent faktisk start/slutt og pause; plan er ikke tilstrekkelig
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/registrering-av-arbeidstid/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-3-14
+  omraade: 3
+  felt: deltid_merarbeid_overtid_betaling_rettslig_status
+  operator: manual_review
+  original_operator: manual_review
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: rettslig_uavklart_2026_10
+  vurdering: Rett til overtidstillegg ved merarbeid må vurderes
+  forslag: Sjekk nyeste dommer og tariff; ingen automatisk betalingsregel
+  kilde: https://www.regjeringen.no/no/aktuelt/arbeidsgruppe-om-overtid-for-deltidsansatte-ikke-omforent-om-losning/id3172625/
+  sektor: alle
+  eksekverbar: manual
+- regel_id: R-3-90
+  omraade: 3
+  felt: Q-3-01:manglende_lov_tariff_eller_faktiske_tider
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: 'NULL'
+  vurdering: Kan ikke gi sikker fasit på opplysningene
+  forslag: Svar med dokumentkrav og riktig hjemmel; ikke anta gyldig unntak eller
+    betalingsrett
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/ |
+    https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/gjennomsnittsberegning/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-3-91
+  omraade: 3
+  felt: Q-3-02:manglende_lov_tariff_eller_faktiske_tider
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: 'NULL'
+  vurdering: Kan ikke gi sikker fasit på opplysningene
+  forslag: Svar med dokumentkrav og riktig hjemmel; ikke anta gyldig unntak eller
+    betalingsrett
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/arbeidsplan-vaktliste-skift-og-turnus/
+    | https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-3-92
+  omraade: 3
+  felt: Q-3-03:manglende_lov_tariff_eller_faktiske_tider
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: 'NULL'
+  vurdering: Kan ikke gi sikker fasit på opplysningene
+  forslag: Svar med dokumentkrav og riktig hjemmel; ikke anta gyldig unntak eller
+    betalingsrett
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/ |
+    https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-3-93
+  omraade: 3
+  felt: Q-3-04:manglende_lov_tariff_eller_faktiske_tider
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: 'NULL'
+  vurdering: Kan ikke gi sikker fasit på opplysningene
+  forslag: Svar med dokumentkrav og riktig hjemmel; ikke anta gyldig unntak eller
+    betalingsrett
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/overtid/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-3-94
+  omraade: 3
+  felt: Q-3-05:manglende_lov_tariff_eller_faktiske_tider
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: 'NULL'
+  vurdering: Kan ikke gi sikker fasit på opplysningene
+  forslag: Svar med dokumentkrav og riktig hjemmel; ikke anta gyldig unntak eller
+    betalingsrett
+  kilde: https://www.fellesforbundet.no/globalassets/lonn-og-tariffsaker/tariffavtaler/overenskomster-20262028/industrioverenskomsten---resultater-og-endringer-i-taroffoppgjoret-2026.pdf
+  sektor: industri
+  eksekverbar: automated_safeguard
+- regel_id: R-3-95
+  omraade: 3
+  felt: Q-3-06:manglende_lov_tariff_eller_faktiske_tider
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: 'NULL'
+  vurdering: Kan ikke gi sikker fasit på opplysningene
+  forslag: Svar med dokumentkrav og riktig hjemmel; ikke anta gyldig unntak eller
+    betalingsrett
+  kilde: https://www.ks.no/fagomrader/lonn-og-tariff/hovedtariffavtalen/beregning-av-tilleggslonn/
+    | https://www.ks.no/fagomrader/lonn-og-tariff/hovedtariffavtalen/hovedtariffavtalen-01.05.2026-30
+  sektor: kommune
+  eksekverbar: automated_safeguard
+- regel_id: R-3-96
+  omraade: 3
+  felt: Q-3-07:manglende_lov_tariff_eller_faktiske_tider
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: 'NULL'
+  vurdering: Kan ikke gi sikker fasit på opplysningene
+  forslag: Svar med dokumentkrav og riktig hjemmel; ikke anta gyldig unntak eller
+    betalingsrett
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/registrering-av-arbeidstid/
+    | https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: privat
+  eksekverbar: automated_safeguard
+- regel_id: R-3-97
+  omraade: 3
+  felt: Q-3-08:manglende_lov_tariff_eller_faktiske_tider
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: 'NULL'
+  vurdering: Kan ikke gi sikker fasit på opplysningene
+  forslag: Svar med dokumentkrav og riktig hjemmel; ikke anta gyldig unntak eller
+    betalingsrett
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/nattarbeid/
+    | https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-3-98
+  omraade: 3
+  felt: Q-3-09:manglende_lov_tariff_eller_faktiske_tider
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: 'NULL'
+  vurdering: Kan ikke gi sikker fasit på opplysningene
+  forslag: Svar med dokumentkrav og riktig hjemmel; ikke anta gyldig unntak eller
+    betalingsrett
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/ | https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-3-99
+  omraade: 3
+  felt: Q-3-10:manglende_lov_tariff_eller_faktiske_tider
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: 'NULL'
+  vurdering: Kan ikke gi sikker fasit på opplysningene
+  forslag: Svar med dokumentkrav og riktig hjemmel; ikke anta gyldig unntak eller
+    betalingsrett
+  kilde: https://www.regjeringen.no/no/aktuelt/arbeidsgruppe-om-overtid-for-deltidsansatte-ikke-omforent-om-losning/id3172625/
+    | https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-3-100
+  omraade: 3
+  felt: Q-3-11:mangler_tariff_rolle_aktivitet_lokalt_grunnlag
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kontekst mangler – ikke automatisk juridisk/HR-konklusjon
+  forslag: Slå opp faktisk tariff, arbeidsavtale, rolle og lokal rutine før svar
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/nattarbeid/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-3-101
+  omraade: 3
+  felt: Q-3-12:mangler_tariff_rolle_aktivitet_lokalt_grunnlag
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kontekst mangler – ikke automatisk juridisk/HR-konklusjon
+  forslag: Slå opp faktisk tariff, arbeidsavtale, rolle og lokal rutine før svar
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/sondagsarbeid/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-4-01
+  omraade: 4
+  felt: ansettelsestid_mnd_ved_fravaer
+  operator: min_ge
+  original_operator: min_ge
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '2'
+  vurdering: Manglende egenmeldingsopptjening etter normalregelen
+  forslag: Sjekk avbrudd og dokumentasjonsform; vurder sykmelding
+  kilde: https://www.nav.no/egenmelding
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-4-02
+  omraade: 4
+  felt: egenmelding_per_tilfelle_dager_standard_uten_utvidelse
+  operator: max_le
+  original_operator: max_le
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '3'
+  vurdering: Kan overskride dokumentasjonsfri egenmeldingsperiode i minimumsordningen
+  forslag: Kontroller lokal egenmeldingsordning før fristavvik
+  kilde: https://www.nav.no/egenmelding
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-4-03
+  omraade: 4
+  felt: egenmelding_tilfeller_siste_12m_standard_uten_utvidelse
+  operator: max_le
+  original_operator: max_le
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '4'
+  vurdering: Kan ha brukt opp tilfeller i minimumsordningen
+  forslag: Sjekk lokal 8/24- eller annen ordning og avbrudd
+  kilde: https://www.nav.no/egenmelding
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-4-04
+  omraade: 4
+  felt: sykepenger_opptjening_uker
+  operator: min_ge
+  original_operator: min_ge
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '4'
+  vurdering: Mulig mangel på opptjent rett i arbeidsgiverperioden
+  forslag: Avklar lovlig fravær og alternative NAV-rettigheter
+  kilde: https://www.nav.no/arbeidsgiver/sykepenger-i-arbeidsgiverperioden
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-4-05
+  omraade: 4
+  felt: arbeidsgiverperiode_sammenhengende_kalenderdager
+  operator: max_le
+  original_operator: max_le
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '16'
+  vurdering: Mulig feil klassifisering av dager som arbeidsgiverbetalt sykepengeperiode
+  forslag: Kjør kalenderbasert logikk med korrekt start, opphold og ferie
+  kilde: https://www.nav.no/arbeidsgiver/sykepenger-i-arbeidsgiverperioden
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-4-06
+  omraade: 4
+  felt: oppfolging_planstatus_etter_28d_uten_dokumentert_unntak
+  operator: required
+  original_operator: required
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: delt_med_sykmelder
+  vurdering: Oppfølgingsplan kan mangle ved lovens fireukersfrist
+  forslag: Etterspør plan eller begrunn åpenbart unødvendig, varsle ansvarlig leder
+  kilde: https://www.nav.no/arbeidsgiver/oppfolgingsplan | https://www.arbeidstilsynet.no/arbeidstid-og-organisering/tilrettelegging/oppfolging-av-sykmeldte/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-4-07
+  omraade: 4
+  felt: dialog1_status_helt_fravaer_etter_49d_uten_unntak
+  operator: required
+  original_operator: required
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: gjennomfort
+  vurdering: Mulig fristavvik ved helt sykefravær
+  forslag: Kontroller åpenbart unødvendig-unntak, kalenderdato og møtedokumentasjon
+  kilde: https://www.nav.no/dialogmote | https://www.arbeidstilsynet.no/arbeidstid-og-organisering/tilrettelegging/oppfolging-av-sykmeldte/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-4-08
+  omraade: 4
+  felt: dialog1_delvis_fravaer_behovsvurdert
+  operator: required
+  original_operator: required
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: behovsvurdert
+  vurdering: Behov for dialogmøte 1 ved gradert sykefravær er ikke vurdert
+  forslag: Avklar om arbeidsgiver, ansatt eller sykmelder anser møte hensiktsmessig;
+    ingen automatisk 7-ukersdom
+  kilde: https://www.nav.no/dialogmote
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-4-09
+  omraade: 4
+  felt: aktivitet_etter_56d_nav_status
+  operator: flag_if
+  original_operator: flag_if
+  tier: 'Tier 4: Faglig vurderingsregel'
+  terskel: ikke_avklart
+  vurdering: NAVs aktivitetsvurdering kan være uavklart
+  forslag: Varsle om dokumentasjon av mulig aktivitet/tilrettelegging; NAV avgjør
+    ytelse
+  kilde: https://www.nav.no/arbeidsgiver/oppfolging-sykmeldte
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-4-10
+  omraade: 4
+  felt: dialog2_nav_status_etter_182d
+  operator: flag_if
+  original_operator: flag_if
+  tier: 'Tier 4: Faglig vurderingsregel'
+  terskel: ingen_mote_og_ikke_dokumentert_unntak
+  vurdering: Status for NAV-eid dialogmøte 2 er ukjent
+  forslag: Etterspør NAV-møte eller åpenbart-unødvendig-unntak; ikke registrer automatisk
+    arbeidsgiverbrudd
+  kilde: https://www.nav.no/dialogmote
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-4-11
+  omraade: 4
+  felt: tariff_syke_ytelse_versjon
+  operator: required
+  original_operator: required
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: aktiv_dokumentert_avtale_og_avtaledel
+  vurdering: Ytelse/forskuttering kan ikke verifiseres
+  forslag: Hent gjeldende tarifftekst og tilknyttet arbeidsforhold før vurdering
+  kilde: https://www.ks.no/fagomrader/lonn-og-tariff/hovedtariffavtalen/hovedtariffavtalen-01.05.2026-30
+    | https://www.fellesforbundet.no/lonn-og-tariff/lonnsoppgjorene/hovedoppgjoret-2026/uravstemming/industrioverenskomsten-virke/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-4-12
+  omraade: 4
+  felt: omsorgsdager_standard_antall_barn_kvalifisert
+  operator: lookup
+  original_operator: lookup
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: 1–2=10;3+=15
+  vurdering: Omsorgsdager må beregnes fra husholdning og vedtak
+  forslag: Kontroller barn under 12, aleneomsorg og eventuelle NAV-vedtak
+  kilde: https://www.nav.no/arbeidsgiver/omsorgspenger
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-4-13
+  omraade: 4
+  felt: ferieutsatt_pa_grunn_av_sykdom
+  operator: requires
+  original_operator: requires
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: helt_arbeidsufor_og_legeerklaering_og_rettidig_krav
+  vurdering: Mulig ubegrunnet utsatt ferie
+  forslag: Kontroller hel arbeidsuførhet samt dokumentasjon og når kravet ble levert
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/ferieloven--feriel/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-4-14
+  omraade: 4
+  felt: personopplysninger_helse_diagnosefelt
+  operator: forbidden
+  original_operator: forbidden
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: diagnose
+  vurdering: Unødvendig sensitiv helseinformasjon i foreslått HR-modell
+  forslag: Fjern felt; bruk tilgangsstyrt funksjonsbeskrivelse og tiltak uten diagnose
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/tilrettelegging/oppfolging-av-sykmeldte/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-4-15
+  omraade: 4
+  felt: sykefravaersprosent_aggregering
+  operator: requires
+  original_operator: requires
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: fravaersdagsverk_dividert_med_avtalte_dagsverk
+  vurdering: Sykefravær beregnes på feil nevner eller periode
+  forslag: Bruk faktiske dagsverk, næringskode og samme kvartal/justering; ikke personandel
+  kilde: https://www.ssb.no/arbeid-og-lonn/arbeidsmiljo-sykefravaer-og-arbeidskonflikter/statistikk/sykefravaer
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-4-90
+  omraade: 4
+  felt: Q-4-01_mangler_nodvendig_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_grunnlag
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: 'Gi ikke konklusjon. Be om konkret dokumentasjon; eskaler for manuell vurdering.
+    Fasit: Som hovedregel nei; NAV oppgir to måneders ansettelse før rett til egenmelding.
+    Undersøk også avbrudd i arbeidsforholdet.'
+  kilde: https://www.nav.no/egenmelding
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-4-91
+  omraade: 4
+  felt: Q-4-02_mangler_nodvendig_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_grunnlag
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: 'Gi ikke konklusjon. Be om konkret dokumentasjon; eskaler for manuell vurdering.
+    Fasit: Nei. Minimumsordningen er tre kalenderdager per gang og fire ganger i løpet
+    av 12 måneder; lokal utvidelse kan gi mer.'
+  kilde: https://www.nav.no/egenmelding
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-4-92
+  omraade: 4
+  felt: Q-4-03_mangler_nodvendig_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_grunnlag
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: 'Gi ikke konklusjon. Be om konkret dokumentasjon; eskaler for manuell vurdering.
+    Fasit: Nei. Som hovedregel 16 kalenderdager, med betaling for planlagte arbeidsdager;
+    start og avbrudd har egne regler.'
+  kilde: https://www.nav.no/arbeidsgiver/sykepenger-i-arbeidsgiverperioden
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-4-93
+  omraade: 4
+  felt: Q-4-04_mangler_nodvendig_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_grunnlag
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: 'Gi ikke konklusjon. Be om konkret dokumentasjon; eskaler for manuell vurdering.
+    Fasit: Innen fire uker ved helt eller delvis sykefravær, med mindre planen er
+    åpenbart unødvendig; arbeidsgiver sender også til sykmelder.'
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/tilrettelegging/oppfolging-av-sykmeldte/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-4-94
+  omraade: 4
+  felt: Q-4-05_mangler_nodvendig_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_grunnlag
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: 'Gi ikke konklusjon. Be om konkret dokumentasjon; eskaler for manuell vurdering.
+    Fasit: Ikke automatisk. Ved gradert sykmelding holdes møte når arbeidsgiver, arbeidstaker
+    eller sykmelder mener det er hensiktsmessig.'
+  kilde: https://www.nav.no/dialogmote
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-4-95
+  omraade: 4
+  felt: Q-4-06_mangler_nodvendig_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_grunnlag
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: 'Gi ikke konklusjon. Be om konkret dokumentasjon; eskaler for manuell vurdering.
+    Fasit: NAV vurderer aktivitetskravet etter åtte uker og har ansvar for dialogmøte
+    2 innen 26 uker med unntak; arbeidsgiver medvirker.'
+  kilde: https://www.nav.no/arbeidsgiver/oppfolging-sykmeldte
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-4-96
+  omraade: 4
+  felt: Q-4-07_mangler_nodvendig_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_grunnlag
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: 'Gi ikke konklusjon. Be om konkret dokumentasjon; eskaler for manuell vurdering.
+    Fasit: Ikke gi universell fasit. KS HTA 2026–2028 og eventuelle særregler må vurderes
+    mot ansettelsesvilkår; lovens og tariffens ytelser er ulike.'
+  kilde: https://www.ks.no/fagomrader/lonn-og-tariff/hovedtariffavtalen/hovedtariffavtalen-01.05.2026-30
+  sektor: kommune
+  eksekverbar: automated_safeguard
+- regel_id: R-4-97
+  omraade: 4
+  felt: Q-4-08_mangler_nodvendig_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_grunnlag
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: 'Gi ikke konklusjon. Be om konkret dokumentasjon; eskaler for manuell vurdering.
+    Fasit: Nei. Virke Industrioverenskomsten 2026 oppgir forskuttering inntil fire
+    måneder med vilkår, men andre avtaler må undersøkes.'
+  kilde: https://www.fellesforbundet.no/lonn-og-tariff/lonnsoppgjorene/hovedoppgjoret-2026/uravstemming/industrioverenskomsten-virke/
+  sektor: industri
+  eksekverbar: automated_safeguard
+- regel_id: R-4-98
+  omraade: 4
+  felt: Q-4-09_mangler_nodvendig_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_grunnlag
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: 'Gi ikke konklusjon. Be om konkret dokumentasjon; eskaler for manuell vurdering.
+    Fasit: NAVs hovedregel er ti dager ved ett/to barn og femten ved tre eller flere
+    per kalenderår; særregler for bl.a. aleneomsorg og sykt/funksjonshemmet barn.'
+  kilde: https://www.nav.no/arbeidsgiver/omsorgspenger
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-4-99
+  omraade: 4
+  felt: Q-4-10_mangler_nodvendig_kontekst
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_grunnlag
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: 'Gi ikke konklusjon. Be om konkret dokumentasjon; eskaler for manuell vurdering.
+    Fasit: Arbeidsgiver kan kreve relevante opplysninger om arbeidsfunksjon og tilrettelegging,
+    men har ikke en generell rett til diagnose eller private helseopplysninger.'
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/tilrettelegging/oppfolging-av-sykmeldte/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-4-100
+  omraade: 4
+  felt: Q-4-11:mangler_tariff_rolle_aktivitet_lokalt_grunnlag
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kontekst mangler – ikke automatisk juridisk/HR-konklusjon
+  forslag: Slå opp faktisk tariff, arbeidsavtale, rolle og lokal rutine før svar
+  kilde: https://www.arbeidstilsynet.no/hms/roller-i-hms-arbeidet/arbeidsgiver/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-4-101
+  omraade: 4
+  felt: Q-4-12:mangler_tariff_rolle_aktivitet_lokalt_grunnlag
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kontekst mangler – ikke automatisk juridisk/HR-konklusjon
+  forslag: Slå opp faktisk tariff, arbeidsavtale, rolle og lokal rutine før svar
+  kilde: https://www.kulturdirektoratet.no/publikasjoner/det-nasjonale-museumsnettverket-i-2024
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-5-01
+  omraade: 5
+  felt: kontrolltiltak_og_saklig_formaal
+  operator: requires_true
+  original_operator: requires_true
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: saklig_formaal_dokumentert
+  vurdering: Mangler dokumentert saklig formål for kontrolltiltak
+  forslag: Stopp oppstart og foreta konkret formåls-/forholdsmessighetsvurdering
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-5-02
+  omraade: 5
+  felt: kontrolltiltak_og_drofting
+  operator: requires_true
+  original_operator: requires_true
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: droftet_tillitsvalgte
+  vurdering: Manglende prosessdokumentasjon om drøfting
+  forslag: Gjennomfør og dokumenter drøfting; dette er ikke automatisk dom om lovlighet
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-5-03
+  omraade: 5
+  felt: kontrolltiltak_og_informasjon
+  operator: requires_true
+  original_operator: requires_true
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: ansatte_informert
+  vurdering: Opplysninger om forutgående informasjon mangler
+  forslag: Informer berørte om formål gjennomføring konsekvenser og varighet
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-5-04
+  omraade: 5
+  felt: kontrolltiltak_og_evaluering
+  operator: requires_true
+  original_operator: requires_true
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: periodisk_evaluering_planlagt
+  vurdering: Behov for evaluering ikke dokumentert
+  forslag: Planlegg periodisk evaluering med tillitsvalgte
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-5-05
+  omraade: 5
+  felt: elektronisk_bruksovervaking_og_formaal
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: produktivitet
+  vurdering: Digitale aktivitetslogger foreslås til produktivitetskontroll
+  forslag: Stopp utforming og kontroller e-postforskriften § 2 andre ledd; ingen automatisk
+    aktivering
+  kilde: https://www.datatilsynet.no/personvern-pa-ulike-omrader/personvern-pa-arbeidsplassen/overvaking-av-ansattes-bruk-av-elektronisk-utstyr/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-5-06
+  omraade: 5
+  felt: persondata_behandlingsgrunnlag
+  operator: required
+  original_operator: not_null
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: behandlingsgrunnlag
+  vurdering: Manglende behandlingsgrunnlag for persondata
+  forslag: Stopp behandling inntil grunnlag og formål er dokumentert
+  kilde: https://www.datatilsynet.no/rettigheter-og-plikter/personvernprinsippene/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-5-07
+  omraade: 5
+  felt: hoy_risiko_og_dpia
+  operator: requires_true
+  original_operator: requires_true
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: dpia_fullfort
+  vurdering: Høy risiko uten nødvendig gjennomført DPIA
+  forslag: Stopp behandling før rettslig og personvernfaglig godkjenning
+  kilde: https://www.datatilsynet.no/rettigheter-og-plikter/virksomhetenes-plikter/vurdering-av-personvernkonsekvenser/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-5-08
+  omraade: 5
+  felt: kpi_nivaa
+  operator: incompatible_with_person
+  original_operator: incompatible_with_person
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: maskin_oee_kostra
+  vurdering: Teknisk/kommunal indikator brukt som direkte personscore
+  forslag: Bruk indikator på riktig aggregeringsnivå; slett personkarakter
+  kilde: https://www.ssb.no/offentlig-sektor/kostra/statistikk/kostra-kommune-stat-rapportering/om-kostra/dokumentasjon-av-kostra
+    | https://www.iso.org/standard/54497.html
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-5-09
+  omraade: 5
+  felt: kpi_nevner
+  operator: gt
+  original_operator: gt
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '0'
+  vurdering: KPI kan ikke beregnes uten positiv definert nevner
+  forslag: Vis ikke beregnbar i stedet for null
+  kilde: https://www.ssb.no/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/artikler/produktivitetsberegninger-for-naeringer
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-5-10
+  omraade: 5
+  felt: sammenlignbarhet
+  operator: requires_true
+  original_operator: requires_true
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: samme_periode_miks_kvalitet
+  vurdering: Sammenligning med uensartet målgrunnlag
+  forslag: Stopp rangering og gjennomgå perioder kompleksitet og kvalitet
+  kilde: https://www.ssb.no/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/artikler/produktivitetsberegninger-for-naeringer
+    | https://www.ssb.no/offentlig-sektor/kostra/statistikk/kostra-kommune-stat-rapportering/om-kostra/dokumentasjon-av-kostra
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-5-11
+  omraade: 5
+  felt: identifiseringsrisiko
+  operator: not_eq
+  original_operator: not_eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: uavklart
+  vurdering: Re-identifiseringsrisiko ikke avklart
+  forslag: Undertrykk rapport og gjennomfør vurdering per gruppe
+  kilde: https://www.datatilsynet.no/rettigheter-og-plikter/personvernprinsippene/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-5-12
+  omraade: 5
+  felt: oee_komponenter
+  operator: all_in_range
+  original_operator: all_in_range
+  tier: 'Tier 4: Faglig vurderingsregel'
+  terskel: 0..1
+  vurdering: Komponent utenfor matematiske rammer eller mangler
+  forslag: Revider definisjoner/stoppkoder og beregn OEE på nytt
+  kilde: https://www.iso.org/standard/54497.html
+  sektor: industri
+  eksekverbar: automated
+- regel_id: R-5-13
+  omraade: 5
+  felt: sikkerhetslogg_sekundaerbruk
+  operator: requires_true
+  original_operator: requires_true
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: formaal_og_grunnlag_verifisert
+  vurdering: Sekundærbruk av sikkerhetsdata er ikke vurdert
+  forslag: Stopp sekundær bruk inntil e-postforskrift GDPR og formål er vurdert
+  kilde: https://www.datatilsynet.no/personvern-pa-ulike-omrader/personvern-pa-arbeidsplassen/overvaking-av-ansattes-bruk-av-elektronisk-utstyr/
+    | https://www.datatilsynet.no/rettigheter-og-plikter/personvernprinsippene/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-5-14
+  omraade: 5
+  felt: sykenaervaer_automatisk_avledet
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'true'
+  vurdering: Forsøk på å utlede helsetilstand fra aktivitetsmål
+  forslag: Ikke opprett helseprofil og slett slik indikator
+  kilde: https://stami.no/hva-er-sykenaervaer-og-hvorfor-er-det-viktig/ | https://www.datatilsynet.no/rettigheter-og-plikter/personvernprinsippene/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-5-15
+  omraade: 5
+  felt: fast_hjemmekontor_og_avtale
+  operator: requires_true
+  original_operator: requires_true
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: skriftlig_hjemmearbeidsavtale
+  vurdering: Mulig dokumentasjonsmangel for fast hjemmearbeid
+  forslag: Vurder forskriftens virkeområde og avtalekrav manuelt
+  kilde: https://www.arbeidstilsynet.no/regelverk/forskrifter/hjemmekontorforskriften/
+  sektor: privat|kommune
+  eksekverbar: automated
+- regel_id: R-5-16
+  omraade: 5
+  felt: eksternt_benchmark_grunnlag
+  operator: requires_true
+  original_operator: requires_true
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: kilde_aar_variabel_populasjon
+  vurdering: Eksternt tall uten verifiserbar kilde eller definisjon
+  forslag: Ikke vis sammenligningen før kildepopulasjon og versjon finnes
+  kilde: https://www.ssb.no/statbank/table/09174/ | https://www.ssb.no/offentlig-sektor/kostra/statistikk/kostra-kommune-stat-rapportering/artikler/nye-kostra-tall
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-5-90
+  omraade: 5
+  felt: Q-5-01
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_fakta_eller_rettslig_avklaring
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: Svar med bekreftet generell ramme og be om nødvendig faktisk formål datadefinisjon
+    eller avtale; ikke avgjør individlovlighet automatisk
+  kilde: https://www.datatilsynet.no/personvern-pa-ulike-omrader/personvern-pa-arbeidsplassen/overvaking-av-ansattes-bruk-av-elektronisk-utstyr/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-5-91
+  omraade: 5
+  felt: Q-5-02
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_fakta_eller_rettslig_avklaring
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: Svar med bekreftet generell ramme og be om nødvendig faktisk formål datadefinisjon
+    eller avtale; ikke avgjør individlovlighet automatisk
+  kilde: https://www.iso.org/standard/54497.html
+  sektor: industri
+  eksekverbar: automated_safeguard
+- regel_id: R-5-92
+  omraade: 5
+  felt: Q-5-03
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_fakta_eller_rettslig_avklaring
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: Svar med bekreftet generell ramme og be om nødvendig faktisk formål datadefinisjon
+    eller avtale; ikke avgjør individlovlighet automatisk
+  kilde: https://www.ssb.no/offentlig-sektor/kostra/statistikk/kostra-kommune-stat-rapportering/om-kostra/dokumentasjon-av-kostra
+  sektor: kommune
+  eksekverbar: automated_safeguard
+- regel_id: R-5-93
+  omraade: 5
+  felt: Q-5-04
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_fakta_eller_rettslig_avklaring
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: Svar med bekreftet generell ramme og be om nødvendig faktisk formål datadefinisjon
+    eller avtale; ikke avgjør individlovlighet automatisk
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-5-94
+  omraade: 5
+  felt: Q-5-05
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_fakta_eller_rettslig_avklaring
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: Svar med bekreftet generell ramme og be om nødvendig faktisk formål datadefinisjon
+    eller avtale; ikke avgjør individlovlighet automatisk
+  kilde: https://www.datatilsynet.no/personvern-pa-ulike-omrader/personvern-pa-arbeidsplassen/overvaking-av-ansattes-bruk-av-elektronisk-utstyr/
+    | https://www.datatilsynet.no/rettigheter-og-plikter/personvernprinsippene/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-5-95
+  omraade: 5
+  felt: Q-5-06
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_fakta_eller_rettslig_avklaring
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: Svar med bekreftet generell ramme og be om nødvendig faktisk formål datadefinisjon
+    eller avtale; ikke avgjør individlovlighet automatisk
+  kilde: https://www.ssb.no/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/artikler/produktivitetsberegninger-for-naeringer
+    | https://www.arbeidstilsynet.no/arbeidstid-og-organisering/arbeidstid/registrering-av-arbeidstid/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-5-96
+  omraade: 5
+  felt: Q-5-07
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_fakta_eller_rettslig_avklaring
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: Svar med bekreftet generell ramme og be om nødvendig faktisk formål datadefinisjon
+    eller avtale; ikke avgjør individlovlighet automatisk
+  kilde: https://www.arbeidstilsynet.no/regelverk/forskrifter/hjemmekontorforskriften/
+    | https://www.datatilsynet.no/personvern-pa-ulike-omrader/personvern-pa-arbeidsplassen/overvaking-av-ansattes-bruk-av-elektronisk-utstyr/
+  sektor: privat
+  eksekverbar: automated_safeguard
+- regel_id: R-5-97
+  omraade: 5
+  felt: Q-5-08
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_fakta_eller_rettslig_avklaring
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: Svar med bekreftet generell ramme og be om nødvendig faktisk formål datadefinisjon
+    eller avtale; ikke avgjør individlovlighet automatisk
+  kilde: https://stami.no/hva-er-sykenaervaer-og-hvorfor-er-det-viktig/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-5-98
+  omraade: 5
+  felt: Q-5-09
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_fakta_eller_rettslig_avklaring
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: Svar med bekreftet generell ramme og be om nødvendig faktisk formål datadefinisjon
+    eller avtale; ikke avgjør individlovlighet automatisk
+  kilde: https://www.ssb.no/offentlig-sektor/kostra/statistikk/kostra-kommune-stat-rapportering/om-kostra/dokumentasjon-av-kostra
+    | https://www.ssb.no/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/artikler/produktivitetsberegninger-for-naeringer
+  sektor: kommune
+  eksekverbar: automated_safeguard
+- regel_id: R-5-99
+  omraade: 5
+  felt: Q-5-10
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_fakta_eller_rettslig_avklaring
+  vurdering: UTILSTREKKELIG_GRUNNLAG
+  forslag: Svar med bekreftet generell ramme og be om nødvendig faktisk formål datadefinisjon
+    eller avtale; ikke avgjør individlovlighet automatisk
+  kilde: https://www.datatilsynet.no/rettigheter-og-plikter/personvernprinsippene/
+    | https://www.datatilsynet.no/personvern-pa-ulike-omrader/personvern-pa-arbeidsplassen/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-5-100
+  omraade: 5
+  felt: Q-5-11:mangler_tariff_rolle_aktivitet_lokalt_grunnlag
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kontekst mangler – ikke automatisk juridisk/HR-konklusjon
+  forslag: Slå opp faktisk tariff, arbeidsavtale, rolle og lokal rutine før svar
+  kilde: https://www.kulturdirektoratet.no/publikasjoner/det-nasjonale-museumsnettverket-i-2024
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-5-101
+  omraade: 5
+  felt: Q-5-12:mangler_tariff_rolle_aktivitet_lokalt_grunnlag
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kontekst mangler – ikke automatisk juridisk/HR-konklusjon
+  forslag: Slå opp faktisk tariff, arbeidsavtale, rolle og lokal rutine før svar
+  kilde: https://www.kulturdirektoratet.no/fag/museum-og-kulturarv/museumsutvikling/samlingsforvaltning
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-6-01
+  omraade: 6
+  felt: behandlingsgrunnlag_art6
+  operator: is_null
+  original_operator: missing
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: gyldig_og_dokumentert
+  vurdering: Ingen dokumentert behandlingsgrunnlag for identifiserbare svar
+  forslag: Ikke start innsamling eller publisering før rettslig grunnlag er vurdert
+  kilde: https://lovdata.no/dokument/NL/lov/2018-06-15-38
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-02
+  omraade: 6
+  felt: personverninfo_gitt
+  operator: not_true
+  original_operator: not_true
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'true'
+  vurdering: Manglende dokumentert forhåndsinformasjon
+  forslag: Gi forståelig informasjon om formål, tilgang, lagring, rettigheter
+  kilde: https://lovdata.no/dokument/NL/lov/2018-06-15-38
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-03
+  omraade: 6
+  felt: saerlig_kategori_art9
+  operator: eq
+  original_operator: equals
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: true_and_art9_unntak_mangler
+  vurdering: Særlige kategorier uten dokumentert unntak
+  forslag: Stopp den aktuelle behandlingen og vurder lovlig grunnlag/unntak særskilt
+  kilde: https://lovdata.no/dokument/NL/lov/2018-06-15-38
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-04
+  omraade: 6
+  felt: databehandleravtale_status
+  operator: eq
+  original_operator: equals
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: mangler_ved_ekstern_databehandler
+  vurdering: Ingen dokumentert avtale med ekstern databehandler
+  forslag: Etabler avtale etter art. 28 eller endre leveranseoppsett
+  kilde: https://lovdata.no/dokument/NL/lov/2018-06-15-38
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-05
+  omraade: 6
+  felt: dpia_kreves
+  operator: eq
+  original_operator: equals
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: true_and_dpia_vurdert_not_true
+  vurdering: Høy risiko eller pliktig DPIA ikke avklart
+  forslag: Stopp før produksjonsbruk; gjennomfør DPIA og håndter risiko
+  kilde: https://www.datatilsynet.no/rettigheter-og-plikter/virksomhetenes-plikter/vurdering-av-personvernkonsekvenser/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-06
+  omraade: 6
+  felt: publiseringsstatus
+  operator: requires
+  original_operator: requires
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: reidentifikasjonstest_bestatt
+  vurdering: Kan ikke frigi rapport uten risikokontroll
+  forslag: Kjør kontroll på små grupper, roller, flere filtre og differanseangrep
+  kilde: https://www.datatilsynet.no/globalassets/global/dokumenter-pdfer-skjema-ol/regelverk/veiledere/anonymisering-veileder-041115.pdf
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-07
+  omraade: 6
+  felt: antall_svar
+  operator: lt
+  original_operator: less_than
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: konfigurert_minimum_svar_per_verktøy
+  vurdering: Teknisk leverandørgrense ikke nådd
+  forslag: Undertrykk rapport; parameter må stamme fra dokumentert gjeldende avtale
+  kilde: https://www.datatilsynet.no/globalassets/global/dokumenter-pdfer-skjema-ol/regelverk/veiledere/anonymisering-veileder-041115.pdf
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-08
+  omraade: 6
+  felt: antall_svar
+  operator: lt
+  original_operator: less_than
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: konfigurert_grense_for_kategorifordeling
+  vurdering: Detaljert fordeling ikke tillatt etter aktiv verktøyregel
+  forslag: Undertrykk fordelinger; vurder om bare gjennomsnitt kan publiseres etter
+    risikotest
+  kilde: https://www.datatilsynet.no/globalassets/global/dokumenter-pdfer-skjema-ol/regelverk/veiledere/anonymisering-veileder-041115.pdf
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-09
+  omraade: 6
+  felt: verktøyregel_versjon
+  operator: is_null
+  original_operator: missing
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: gjeldende_dokumentert_verktøyregel
+  vurdering: Tekniske anonymitetsgrenser ikke verifisert
+  forslag: Sperr frislipp; innhent vilkår, eventuelt illustrasjon fra MUST versjon
+    2024 uten å anvende denne på kommune/museum
+  kilde: https://static.stami.no/files/MUST/NO_MUST_Vilkaar_150124.pdf
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-10
+  omraade: 6
+  felt: verktøy_og_minimum_svar_lokalt
+  operator: is_null
+  original_operator: missing
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: verktøyregel_versjon
+  vurdering: Grense for 10-FAKTOR/lokal puls mangler
+  forslag: Ingen automatisk rapportering; konfigurer verktøyets gjeldende regler og
+    vurder identifisering
+  kilde: https://www.ks.no/fagomrader/arbeidsgiverpolitikk/ledelse-og-organisering/et-vellykket-10-faktor-arbeid/om-10-faktor/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-11
+  omraade: 6
+  felt: identifiseringsrisiko
+  operator: in
+  original_operator: in
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: hoy|uavklart
+  vurdering: Indirekte identifisering ikke avkreftet
+  forslag: Sperr gruppetall selv om n overstiger teknisk terskel
+  kilde: https://www.datatilsynet.no/globalassets/global/dokumenter-pdfer-skjema-ol/regelverk/veiledere/anonymisering-veileder-041115.pdf
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-12
+  omraade: 6
+  felt: sekundaerbruk_tillatt
+  operator: not_true
+  original_operator: not_true
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'true'
+  vurdering: Nytt formål ikke vurdert
+  forslag: Ikke bruk medarbeidersvar til individuell ytelsesrangering, lønn eller
+    personalsak
+  kilde: https://www.datatilsynet.no/rettigheter-og-plikter/personvernprinsippene/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-13
+  omraade: 6
+  felt: tilgangsrolle
+  operator: not_in
+  original_operator: not_in
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: autoriserte_roller_per_formaal
+  vurdering: Tilgang overstiger tjenstlig behov
+  forslag: Blokker bruker og dokumenter rolle-tilgangsmatrise
+  kilde: https://lovdata.no/dokument/NL/lov/2018-06-15-38
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-14
+  omraade: 6
+  felt: varsling_ansatte_jevnlig
+  operator: min_ge
+  original_operator: greater_or_equal
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '5'
+  vurdering: Skriftlig varslingsrutine er påkrevd
+  forslag: Kontroller skriftlighet, innhold, tilgjengelighet og samarbeid med ansatte
+  kilde: https://www.arbeidstilsynet.no/arbeidsmiljo/varsling/virksomheten-skal-ha-rutiner-for-intern-varsling/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-15
+  omraade: 6
+  felt: varsling_saksbehandling
+  operator: eq
+  original_operator: equals
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: mottatt_uten_ansvarlig_rolle
+  vurdering: Varsling mangler definert ansvarlig
+  forslag: Tildel dedikert mottak og undersøk innen rimelig tid, ikke en oppdiktet
+    dagfrist
+  kilde: https://www.arbeidstilsynet.no/arbeidsmiljo/varsling/ansvar-rettigheter-og-roller/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-16
+  omraade: 6
+  felt: varslingssak_id
+  operator: exists_in
+  original_operator: exists_in
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: generell_hr_kpi_rapport
+  vurdering: Varslingssak koblet mot generell prestasjonsrapport
+  forslag: Sperr kobling og sikre separat saksbehandling
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-17
+  omraade: 6
+  felt: hms_hendelse_og_tiltak
+  operator: eq
+  original_operator: equals
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: uavklart_alvorlighet_eller_uten_vurdering
+  vurdering: HMS-hendelse ikke tilstrekkelig vurdert
+  forslag: Rute til HMS-ansvarlig, vurder registrerings- og meldingsplikt
+  kilde: https://www.arbeidstilsynet.no/regelverk/forskrifter/internkontrollforskriften
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-18
+  omraade: 6
+  felt: kompetansekrav_id
+  operator: requires
+  original_operator: requires
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: dokumentert_krav_kilde
+  vurdering: Kompetansekrav uten dokumentert grunnlag
+  forslag: Ikke påstå lovpålagt krav/utløpsdato før kilde og versjon bekreftes
+  kilde: https://www.arbeidstilsynet.no/regelverk/forskrifter/internkontrollforskriften
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-19
+  omraade: 6
+  felt: kompetanse_status
+  operator: eq
+  original_operator: equals
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: utlopt
+  vurdering: Dokumentert kompetansebevis utløpt
+  forslag: Varsle rett rolle om kontroll og opplæringsbehov; ikke konkluder automatisk
+    om oppsigelse
+  kilde: https://www.arbeidstilsynet.no/regelverk/forskrifter/internkontrollforskriften
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-20
+  omraade: 6
+  felt: psykososial_risikovurdering
+  operator: eq
+  original_operator: equals
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: mangler_ved_identifisert_risiko
+  vurdering: Ufullstendig vurdering av psykososiale faktorer
+  forslag: Kartlegg relevante forhold og dokumenter tiltak, i samarbeid med berørte
+  kilde: https://www.arbeidstilsynet.no/regelverk/forskrifter/forskrift-om-utforelse-av-arbeid/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-6-90
+  omraade: 6
+  felt: Q-6-01
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke avgjøres automatisk med tilgjengelige data
+  forslag: Be om dokumentert behandlingsgrunnlag, lokal regel/avtale og tilgangsvurdering;
+    gi veiledning uten juridisk konklusjon
+  kilde: https://lovdata.no/dokument/NL/lov/2018-06-15-38
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-6-91
+  omraade: 6
+  felt: Q-6-02
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke avgjøres automatisk med tilgjengelige data
+  forslag: Be om dokumentert behandlingsgrunnlag, lokal regel/avtale og tilgangsvurdering;
+    gi veiledning uten juridisk konklusjon
+  kilde: https://lovdata.no/dokument/NL/lov/2018-06-15-38
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-6-92
+  omraade: 6
+  felt: Q-6-03
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke avgjøres automatisk med tilgjengelige data
+  forslag: Be om dokumentert behandlingsgrunnlag, lokal regel/avtale og tilgangsvurdering;
+    gi veiledning uten juridisk konklusjon
+  kilde: https://www.datatilsynet.no/globalassets/global/dokumenter-pdfer-skjema-ol/regelverk/veiledere/anonymisering-veileder-041115.pdf
+  sektor: kommune
+  eksekverbar: automated_safeguard
+- regel_id: R-6-93
+  omraade: 6
+  felt: Q-6-04
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke avgjøres automatisk med tilgjengelige data
+  forslag: Be om dokumentert behandlingsgrunnlag, lokal regel/avtale og tilgangsvurdering;
+    gi veiledning uten juridisk konklusjon
+  kilde: https://www.arbeidstilsynet.no/hms/avvik-og-avvikshandtering/
+  sektor: industri
+  eksekverbar: automated_safeguard
+- regel_id: R-6-94
+  omraade: 6
+  felt: Q-6-05
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke avgjøres automatisk med tilgjengelige data
+  forslag: Be om dokumentert behandlingsgrunnlag, lokal regel/avtale og tilgangsvurdering;
+    gi veiledning uten juridisk konklusjon
+  kilde: https://www.arbeidstilsynet.no/arbeidsmiljo/varsling/virksomheten-skal-ha-rutiner-for-intern-varsling/
+  sektor: privat
+  eksekverbar: automated_safeguard
+- regel_id: R-6-95
+  omraade: 6
+  felt: Q-6-06
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke avgjøres automatisk med tilgjengelige data
+  forslag: Be om dokumentert behandlingsgrunnlag, lokal regel/avtale og tilgangsvurdering;
+    gi veiledning uten juridisk konklusjon
+  kilde: https://www.arbeidstilsynet.no/arbeidsmiljo/varsling/slik-bor-arbeidsgiver-handtere-varsling/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-6-96
+  omraade: 6
+  felt: Q-6-07
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke avgjøres automatisk med tilgjengelige data
+  forslag: Be om dokumentert behandlingsgrunnlag, lokal regel/avtale og tilgangsvurdering;
+    gi veiledning uten juridisk konklusjon
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: kommune
+  eksekverbar: automated_safeguard
+- regel_id: R-6-97
+  omraade: 6
+  felt: Q-6-08
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke avgjøres automatisk med tilgjengelige data
+  forslag: Be om dokumentert behandlingsgrunnlag, lokal regel/avtale og tilgangsvurdering;
+    gi veiledning uten juridisk konklusjon
+  kilde: https://lovdata.no/dokument/NL/lov/2018-06-15-38
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-6-98
+  omraade: 6
+  felt: Q-6-09
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke avgjøres automatisk med tilgjengelige data
+  forslag: Be om dokumentert behandlingsgrunnlag, lokal regel/avtale og tilgangsvurdering;
+    gi veiledning uten juridisk konklusjon
+  kilde: https://www.ks.no/fagomrader/arbeidsgiverpolitikk/ledelse-og-organisering/et-vellykket-10-faktor-arbeid/om-10-faktor/
+  sektor: kommune
+  eksekverbar: automated_safeguard
+- regel_id: R-6-99
+  omraade: 6
+  felt: Q-6-10
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke avgjøres automatisk med tilgjengelige data
+  forslag: Be om dokumentert behandlingsgrunnlag, lokal regel/avtale og tilgangsvurdering;
+    gi veiledning uten juridisk konklusjon
+  kilde: https://lovdata.no/dokument/NL/lov/2018-06-15-38
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-6-100
+  omraade: 6
+  felt: Q-6-11:mangler_tariff_rolle_aktivitet_lokalt_grunnlag
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kontekst mangler – ikke automatisk juridisk/HR-konklusjon
+  forslag: Slå opp faktisk tariff, arbeidsavtale, rolle og lokal rutine før svar
+  kilde: https://www.datatilsynet.no/rettigheter-og-plikter/personvernprinsippene/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-6-101
+  omraade: 6
+  felt: Q-6-12:mangler_tariff_rolle_aktivitet_lokalt_grunnlag
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kontekst mangler – ikke automatisk juridisk/HR-konklusjon
+  forslag: Slå opp faktisk tariff, arbeidsavtale, rolle og lokal rutine før svar
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/ansettelse/frivillig-arbeid/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-7-01
+  omraade: 7
+  felt: sektor
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: kommune_eller_offentlig
+  vurdering: Offentlig arbeidsgiver omfattes av spesifisert aktivitets- og redegjørelsesplikt
+  forslag: Opprett kartlegging og dokumentert årsredegjørelse
+  kilde: https://lovdata.no/lov/2017-06-16-51/rdkn/a4
+  sektor: kommune
+  eksekverbar: automated
+- regel_id: R-7-02
+  omraade: 7
+  felt: ansatte_aarsgjennomsnitt
+  operator: gt
+  original_operator: gt
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: 50_and_private
+  vurdering: Privat arbeidsgiver med mer enn 50 ansatte omfattes av utvidet plikt
+  forslag: Planlegg årlig rapport og annethvertårs lønnskartlegging
+  kilde: https://lovdata.no/lov/2017-06-16-51/rdkn/a4
+  sektor: industri;privat
+  eksekverbar: automated
+- regel_id: R-7-03
+  omraade: 7
+  felt: ansatte_aarsgjennomsnitt
+  operator: and
+  original_operator: and
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: private_20_til_50_and_parts_krav_true
+  vurdering: Partskrav utløser utvidet plikt for privat virksomhet med 20–50 ansatte
+  forslag: Registrer dokumentert krav og kartlegging
+  kilde: https://lovdata.no/lov/2017-06-16-51/rdkn/a4
+  sektor: industri;privat
+  eksekverbar: automated
+- regel_id: R-7-04
+  omraade: 7
+  felt: utvidet_arp_status
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: paakrevd_and_arsredegjorelse_mangler
+  vurdering: Påkrevd redegjørelse ser ut til å mangle
+  forslag: Etterspør offentliggjort redegjørelse og vurder avviket med HR
+  kilde: https://lovdata.no/nav/lov/2017-06-16-51/KAPITTEL_4
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-05
+  omraade: 7
+  felt: kartleggingstype
+  operator: days_since_gt
+  original_operator: days_since_gt
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: lonn_annet_hvert_aar_og_sist_kartlagt_over_2_aar
+  vurdering: Siste lønnskartlegging kan være for gammel
+  forslag: Planlegg ny lønnskartlegging og dokumenter referanseår
+  kilde: https://lovdata.no/lov/2017-06-16-51/rdkn/a4
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-06
+  omraade: 7
+  felt: kartleggingstype
+  operator: days_since_gt
+  original_operator: days_since_gt
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: ufrivillig_deltid_og_sist_kartlagt_over_2_aar
+  vurdering: Kartlegging av ufrivillig deltid kan være for gammel
+  forslag: Planlegg kontrollert kartlegging
+  kilde: https://lovdata.no/lov/2017-06-16-51/rdkn/a4
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-07
+  omraade: 7
+  felt: tillitsvalgte_medvirket
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: false_and_arp_paakrevd
+  vurdering: Medvirkning ved lønnskartlegging er ikke dokumentert
+  forslag: Involver de ansattes representanter og lag sporbar prosess
+  kilde: https://www.bufdir.no/fagstotte/produkter/aktivitets__og_redegjorelsesplikt_for_arbeidsgivere/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-08
+  omraade: 7
+  felt: stillingsgrupper_dokumentert
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'false'
+  vurdering: Manglende dokumentert gruppering av likt arbeid og arbeid av lik verdi
+  forslag: Krev arbeidsvurdering før sammenligning
+  kilde: https://lovdata.no/nav/lov/2017-06-16-51/KAPITTEL_5
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-09
+  omraade: 7
+  felt: lonnskomponent_dekning
+  operator: is_null
+  original_operator: missing
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: fastlonn_tillegg_bonus_overtid_naturalytelser
+  vurdering: Mulig ufullstendig lønnsgrunnlag
+  forslag: Sjekk alle relevante lønnsarter og metode
+  kilde: https://www.bufdir.no/fagstotte/produkter/aktivitets__og_redegjorelsesplikt_for_arbeidsgivere/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-10
+  omraade: 7
+  felt: fte_metode_dokumentert
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'false'
+  vurdering: Lønnsgrunnlag kan være usammenlignbart ved forskjellig stillingsandel
+  forslag: Standardiser relevante lønnsarter og dokumenter forbehold
+  kilde: https://ldo.no/bli-betre-pa-likestilling-og-mangfald/aktivitets-og-redegjorelsesplikt/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-11
+  omraade: 7
+  felt: offentlig_publisert
+  operator: and
+  original_operator: and
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: true_and_inneholder_identifiserbar_lonn
+  vurdering: Publisering kan røpe individlønn
+  forslag: Stans offentlig publisering; personvernkontroll
+  kilde: https://lovdata.no/nav/lov/2017-06-16-51/KAPITTEL_4
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-12
+  omraade: 7
+  felt: antall_kjonn_i_gruppe
+  operator: lt
+  original_operator: lt
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: 5_and_kronetall_foreslatt_offentlig
+  vurdering: Kronetall i liten kjønnsgruppe krever sperre
+  forslag: Ikke automatpubliser kronebeløp; gjør manuell vurdering
+  kilde: https://www.bufdir.no/fagstotte/produkter/aktivitets__og_redegjorelsesplikt_for_arbeidsgivere/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-13
+  omraade: 7
+  felt: antall_kjonn_i_gruppe
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 1_and_prosent_publiseres
+  vurdering: Prosentpublisering kan identifisere én person
+  forslag: Stans autopublisering og vurder kun generell tekst
+  kilde: https://www.bufdir.no/fagstotte/produkter/aktivitets__og_redegjorelsesplikt_for_arbeidsgivere/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-14
+  omraade: 7
+  felt: personvernvurdering_status
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: ikke_vurdert_and_offentlig_publisering
+  vurdering: Publiseringsgrunnlag ikke avklart
+  forslag: Krev dokumentert anonymitetsvurdering
+  kilde: https://lovdata.no/dokument/NL/lov/2018-06-15-38
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-15
+  omraade: 7
+  felt: innsyn_grunnlag
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: ldl_26a_and_nodvendighet_false
+  vurdering: Forespørsel om utvidet innsyn mangler nødvendighetsvurdering
+  forslag: Begrens informasjon til det som er nødvendig
+  kilde: https://lovdata.no/nav/lov/2017-06-16-51/KAPITTEL_4
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-16
+  omraade: 7
+  felt: taushetserklaering_signert
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: false_and_ikke_offentlig_innsyn
+  vurdering: Lovfestet taushetsvilkår kan være uoppfylt
+  forslag: Utlever ikke før rettsgrunnlag/taushet er avklart
+  kilde: https://lovdata.no/nav/lov/2017-06-16-51/KAPITTEL_4
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-17
+  omraade: 7
+  felt: ldl32_berort_informert
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: false_after_utlevering
+  vurdering: Manglende orientering til den hvis lønn er utlevert etter § 32
+  forslag: Varsle ansvarlig HR om informasjonsplikten
+  kilde: https://lovdata.no/nav/lov/2017-06-16-51/KAPITTEL_5
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-18
+  omraade: 7
+  felt: lonnsforskjell_observert
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: true_and_aarsaksanalyse_mangler
+  vurdering: Forskjell funnet uten tilstrekkelig oppfølging
+  forslag: Krev årsaksanalyse og vurder tiltak; ingen automatisk diskrimineringsdom
+  kilde: https://ldo.no/bli-betre-pa-likestilling-og-mangfald/aktivitets-og-redegjorelsesplikt/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-19
+  omraade: 7
+  felt: virksomhetsform
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: ukjent
+  vurdering: Riktig pliktnivå kan ikke fastsettes uten juridisk arbeidsgiverstatus
+  forslag: Verifiser organisasjonsform og rapporteringsenhet
+  kilde: https://www.bufdir.no/fagstotte/produkter/aktivitets__og_redegjorelsesplikt_for_arbeidsgivere/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-20
+  omraade: 7
+  felt: regelkilde
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: eu_2023_970_som_norsk_gjeldende
+  vurdering: EU-direktivet feilaktig behandlet som gjeldende norsk rett
+  forslag: Sperr regelen inntil norsk implementering er dokumentert
+  kilde: https://www.efta.int/eea-lex/32023l0970
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-7-90
+  omraade: 7
+  felt: Q-7-01
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke konkludere automatisk
+  forslag: Vis konkret manglende lovgrunnlag, juridisk arbeidsgiver, stillingsgruppe,
+    lønnsarter, personvern eller periode; send til HR og evt. tillitsvalgte
+  kilde: https://lovdata.no/lov/2017-06-16-51/rdkn/a4
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-7-91
+  omraade: 7
+  felt: Q-7-02
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke konkludere automatisk
+  forslag: Vis konkret manglende lovgrunnlag, juridisk arbeidsgiver, stillingsgruppe,
+    lønnsarter, personvern eller periode; send til HR og evt. tillitsvalgte
+  kilde: https://lovdata.no/lov/2017-06-16-51/rdkn/a4
+  sektor: privat
+  eksekverbar: automated_safeguard
+- regel_id: R-7-92
+  omraade: 7
+  felt: Q-7-03
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke konkludere automatisk
+  forslag: Vis konkret manglende lovgrunnlag, juridisk arbeidsgiver, stillingsgruppe,
+    lønnsarter, personvern eller periode; send til HR og evt. tillitsvalgte
+  kilde: https://www.bufdir.no/fagstotte/produkter/aktivitets__og_redegjorelsesplikt_for_arbeidsgivere/
+  sektor: kommune
+  eksekverbar: automated_safeguard
+- regel_id: R-7-93
+  omraade: 7
+  felt: Q-7-04
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke konkludere automatisk
+  forslag: Vis konkret manglende lovgrunnlag, juridisk arbeidsgiver, stillingsgruppe,
+    lønnsarter, personvern eller periode; send til HR og evt. tillitsvalgte
+  kilde: https://www.bufdir.no/fagstotte/produkter/aktivitets__og_redegjorelsesplikt_for_arbeidsgivere/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-7-94
+  omraade: 7
+  felt: Q-7-05
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke konkludere automatisk
+  forslag: Vis konkret manglende lovgrunnlag, juridisk arbeidsgiver, stillingsgruppe,
+    lønnsarter, personvern eller periode; send til HR og evt. tillitsvalgte
+  kilde: https://lovdata.no/nav/lov/2017-06-16-51/KAPITTEL_5
+  sektor: industri
+  eksekverbar: automated_safeguard
+- regel_id: R-7-95
+  omraade: 7
+  felt: Q-7-06
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke konkludere automatisk
+  forslag: Vis konkret manglende lovgrunnlag, juridisk arbeidsgiver, stillingsgruppe,
+    lønnsarter, personvern eller periode; send til HR og evt. tillitsvalgte
+  kilde: https://ldo.no/bli-betre-pa-likestilling-og-mangfald/aktivitets-og-redegjorelsesplikt/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-7-96
+  omraade: 7
+  felt: Q-7-07
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke konkludere automatisk
+  forslag: Vis konkret manglende lovgrunnlag, juridisk arbeidsgiver, stillingsgruppe,
+    lønnsarter, personvern eller periode; send til HR og evt. tillitsvalgte
+  kilde: https://www.bufdir.no/fagstotte/produkter/aktivitets__og_redegjorelsesplikt_for_arbeidsgivere/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-7-97
+  omraade: 7
+  felt: Q-7-08
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke konkludere automatisk
+  forslag: Vis konkret manglende lovgrunnlag, juridisk arbeidsgiver, stillingsgruppe,
+    lønnsarter, personvern eller periode; send til HR og evt. tillitsvalgte
+  kilde: https://lovdata.no/nav/lov/2017-06-16-51/KAPITTEL_5
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-7-98
+  omraade: 7
+  felt: Q-7-09
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke konkludere automatisk
+  forslag: Vis konkret manglende lovgrunnlag, juridisk arbeidsgiver, stillingsgruppe,
+    lønnsarter, personvern eller periode; send til HR og evt. tillitsvalgte
+  kilde: https://ldo.no/bli-betre-pa-likestilling-og-mangfald/aktivitets-og-redegjorelsesplikt/
+  sektor: kommune
+  eksekverbar: automated_safeguard
+- regel_id: R-7-99
+  omraade: 7
+  felt: Q-7-10
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: manglende_eller_motstridende_fakta
+  vurdering: Kan ikke konkludere automatisk
+  forslag: Vis konkret manglende lovgrunnlag, juridisk arbeidsgiver, stillingsgruppe,
+    lønnsarter, personvern eller periode; send til HR og evt. tillitsvalgte
+  kilde: https://www.efta.int/eea-lex/32023l0970
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-7-100
+  omraade: 7
+  felt: Q-7-11:mangler_tariff_rolle_aktivitet_lokalt_grunnlag
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kontekst mangler – ikke automatisk juridisk/HR-konklusjon
+  forslag: Slå opp faktisk tariff, arbeidsavtale, rolle og lokal rutine før svar
+  kilde: https://lovdata.no/lov/2017-06-16-51/rdkn/a4
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-7-101
+  omraade: 7
+  felt: Q-7-12:mangler_tariff_rolle_aktivitet_lokalt_grunnlag
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kontekst mangler – ikke automatisk juridisk/HR-konklusjon
+  forslag: Slå opp faktisk tariff, arbeidsavtale, rolle og lokal rutine før svar
+  kilde: https://lovdata.no/lov/2017-06-16-51/rdkn/a4
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-8-01
+  omraade: 8
+  felt: avtale_signert_dato
+  operator: is_null
+  original_operator: is_null
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'true'
+  vurdering: Skriftlig arbeidsavtale ikke dokumentert
+  forslag: Opprett eller registrer signert arbeidsavtale
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/arbeidsavtale/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-02
+  omraade: 8
+  felt: avtale_forfalt_over_1_mnd
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'true'
+  vurdering: Avtalen er mer enn sju dager etter oppstart / mangler
+  forslag: Sjekk varighet >1 måned og § 14-5-frist
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/arbeidsavtale/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-03
+  omraade: 8
+  felt: avtale_forfalt_inntil_1_mnd
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'true'
+  vurdering: Kort ansettelse/utleie mangler umiddelbar avtale
+  forslag: Sjekk signaturdato mot startdato
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/arbeidsavtale/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-04
+  omraade: 8
+  felt: provetid_varighet_mnd
+  operator: gt
+  original_operator: gt
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '6'
+  vurdering: Prøvetid kan overstige lovens maksimum
+  forslag: Stans automatisk godkjenning og kontroller kontrakten
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/ansettelse/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-05
+  omraade: 8
+  felt: provetid_over_halvparten_midlertidig
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'true'
+  vurdering: Prøvetid overstiger halvparten av tidsbestemt arbeidsforhold
+  forslag: Avkort/sjekk avtale og arbeidsforhold
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/ansettelse/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-06
+  omraade: 8
+  felt: provetid_gjentatt_samme_stilling
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'true'
+  vurdering: Ny prøvetid ved sammenhengende ansettelser krever særskilt vurdering
+  forslag: Kontroller tidligere arbeidsperiode og arbeidsoppgaver
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/ansettelse/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-07
+  omraade: 8
+  felt: midlertidighet_grunnlag_registrert
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'false'
+  vurdering: Midlertidig kontrakt mangler dokumentert grunnlag
+  forslag: Stans auto-godkjenning og dokumenter § 14-9-vilkår
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/ansettelse/midlertidig-ansettelse/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-08
+  omraade: 8
+  felt: deltid_behov_dokumentert
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'false'
+  vurdering: Rekruttering i deltid mangler behovsdokumentasjon
+  forslag: Dokumenter og drøft deltid før ansettelse
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/ansettelse/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-09
+  omraade: 8
+  felt: fortrinnsrett_vurdert
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'false'
+  vurdering: Fortrinnsrett ikke vurdert før nyansettelse
+  forslag: Send til HR for vurdering av §14-2 og §14-3
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-10
+  omraade: 8
+  felt: offentlig_kvalifikasjon_dokumentert
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'false'
+  vurdering: Kommunal ansettelse mangler dokumentert kvalifikasjonsvurdering
+  forslag: Kontroller offentlig kvalifikasjonsprinsipp
+  kilde: https://www.regjeringen.no/no/dokumenter/prop.-94-l-20162017/id2547960/?ch=2
+  sektor: kommune
+  eksekverbar: automated
+- regel_id: R-8-11
+  omraade: 8
+  felt: intervju_forbudte_opplysninger_registrert
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'true'
+  vurdering: Mulig innhenting av forbudt informasjon
+  forslag: Stans innsamling og vurder sletting / rettslig grunnlag
+  kilde: https://lovdata.no/lov/2017-06-16-51/%C2%A730
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-12
+  omraade: 8
+  felt: onboarding_sikkerhet_krevd_og_ikke_ferdig
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'true'
+  vurdering: Nødvendig opplæring mangler før risikofylt oppgave
+  forslag: Ikke frigi oppgaven før opplæring er dokumentert
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/generelle-krav-til-opplaring/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-13
+  omraade: 8
+  felt: oppsigelse_manuell_vurdering
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'false'
+  vurdering: Oppsigelsesgrunn og saklighet ikke menneskelig vurdert
+  forslag: Lås juridisk konklusjon; eskaler HR/juridisk
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-14
+  omraade: 8
+  felt: oppsigelse_arbeidsgiver_drofting_mangler
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'true'
+  vurdering: Drøfting før oppsigelse er ikke dokumentert
+  forslag: Kontroller §15-1 og om særtilfeller gjør gjennomføring upraktisk
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/oppsigelse/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-15
+  omraade: 8
+  felt: oppsigelse_formkrav_mangler
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'true'
+  vurdering: Arbeidsgivers oppsigelse har mulig formmangel
+  forslag: Kontroller skriftlighet/innhold/overlevering etter §15-4
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/oppsigelse/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-16
+  omraade: 8
+  felt: alternativt_arbeid_vurdert
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'false'
+  vurdering: Annet passende arbeid ikke vurdert ved nedbemanning
+  forslag: Dokumenter alternativt arbeid/konsernvurdering
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-17
+  omraade: 8
+  felt: oppsigelser_virksomhetsgrunn_30d
+  operator: min_ge
+  original_operator: gte
+  tier: 'Tier 1: Deterministisk beregningsregel'
+  terskel: '10'
+  vurdering: Mulig masseoppsigelse
+  forslag: Utløs prosess for drøfting og NAV-melding
+  kilde: https://www.nav.no/arbeidsgiver/nedbemanne
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-18
+  omraade: 8
+  felt: drøfting_ved_omlegging_mangler
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'true'
+  vurdering: Informasjon og drøfting kan mangle
+  forslag: Kontroller rettslig og tariffmessig partsdekning
+  kilde: https://www.ks.no/fagomrader/lonn-og-tariff/hovedavtalen/hovedavtalen-1.1.2026--31.12.2029
+  sektor: kommune
+  eksekverbar: automated
+- regel_id: R-8-19
+  omraade: 8
+  felt: ansatt_sokerdata_oppbevaring_begrunnet
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'false'
+  vurdering: Søkerdata mangler dokumentert lagringsgrunn
+  forslag: Vurder formål/lagringstid/sletting etter GDPR
+  kilde: https://www.datatilsynet.no/rettigheter-og-plikter/personvernprinsippene/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-20
+  omraade: 8
+  felt: turnover_beregning_uten_definisjon
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'true'
+  vurdering: Turnoverberegning kan ikke tolkes
+  forslag: Krev teller/nevner populasjon periode og bevegelsetype
+  kilde: https://www.ks.no/fagomrader/statistikk-og-analyse/turnover/kommuner-og-fylkeskommuner/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-21
+  omraade: 8
+  felt: ks_sektor_turnover_brukt_som_museum_benchmark
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'true'
+  vurdering: Kommunalt sektortall kan være feil sammenligningsgrunnlag
+  forslag: Fjern direkte prosent-overføring og klassifiser som scenario
+  kilde: https://www.ks.no/fagomrader/statistikk-og-analyse/turnover/kommuner-og-fylkeskommuner/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-22
+  omraade: 8
+  felt: avslutningsgrunn_uavklart
+  operator: eq
+  original_operator: eq
+  tier: 'Tier 2: Juridisk vilkårsregel'
+  terskel: 'true'
+  vurdering: Opphørsgrunn er ikke dokumentert
+  forslag: Unngå automatisk frivillig/ufrivillig klassifisering
+  kilde: https://www.ssb.no/arbeid-og-lonn/sysselsetting/statistikk/antall-arbeidsforhold-og-lonn/
+  sektor: alle
+  eksekverbar: automated
+- regel_id: R-8-23
+  omraade: 8
+  felt: Q-8-01
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler_detaljer
+  vurdering: Kan ikke avgjøres sikkert uten relevante fakta og riktig kildeversjon
+  forslag: Vis kilden og etterspør manglende forhold; la HR/ansvarlig foreta konkret
+    vurdering
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/arbeidsavtale/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-8-24
+  omraade: 8
+  felt: Q-8-02
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler_detaljer
+  vurdering: Kan ikke avgjøres sikkert uten relevante fakta og riktig kildeversjon
+  forslag: Vis kilden og etterspør manglende forhold; la HR/ansvarlig foreta konkret
+    vurdering
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/ansettelse/midlertidig-ansettelse/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-8-25
+  omraade: 8
+  felt: Q-8-03
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler_detaljer
+  vurdering: Kan ikke avgjøres sikkert uten relevante fakta og riktig kildeversjon
+  forslag: Vis kilden og etterspør manglende forhold; la HR/ansvarlig foreta konkret
+    vurdering
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/ansettelse/
+  sektor: privat
+  eksekverbar: automated_safeguard
+- regel_id: R-8-26
+  omraade: 8
+  felt: Q-8-04
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler_detaljer
+  vurdering: Kan ikke avgjøres sikkert uten relevante fakta og riktig kildeversjon
+  forslag: Vis kilden og etterspør manglende forhold; la HR/ansvarlig foreta konkret
+    vurdering
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/ansettelse/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-8-27
+  omraade: 8
+  felt: Q-8-05
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler_detaljer
+  vurdering: Kan ikke avgjøres sikkert uten relevante fakta og riktig kildeversjon
+  forslag: Vis kilden og etterspør manglende forhold; la HR/ansvarlig foreta konkret
+    vurdering
+  kilde: https://lovdata.no/lov/2017-06-16-51/%C2%A730
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-8-28
+  omraade: 8
+  felt: Q-8-06
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler_detaljer
+  vurdering: Kan ikke avgjøres sikkert uten relevante fakta og riktig kildeversjon
+  forslag: Vis kilden og etterspør manglende forhold; la HR/ansvarlig foreta konkret
+    vurdering
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/generelle-krav-til-opplaring/
+  sektor: industri
+  eksekverbar: automated_safeguard
+- regel_id: R-8-29
+  omraade: 8
+  felt: Q-8-07
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler_detaljer
+  vurdering: Kan ikke avgjøres sikkert uten relevante fakta og riktig kildeversjon
+  forslag: Vis kilden og etterspør manglende forhold; la HR/ansvarlig foreta konkret
+    vurdering
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/oppsigelse/endringsoppsigelse/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-8-30
+  omraade: 8
+  felt: Q-8-08
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler_detaljer
+  vurdering: Kan ikke avgjøres sikkert uten relevante fakta og riktig kildeversjon
+  forslag: Vis kilden og etterspør manglende forhold; la HR/ansvarlig foreta konkret
+    vurdering
+  kilde: https://www.nav.no/arbeidsgiver/nedbemanne
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-8-31
+  omraade: 8
+  felt: Q-8-09
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler_detaljer
+  vurdering: Kan ikke avgjøres sikkert uten relevante fakta og riktig kildeversjon
+  forslag: Vis kilden og etterspør manglende forhold; la HR/ansvarlig foreta konkret
+    vurdering
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/oppsigelse/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-8-32
+  omraade: 8
+  felt: Q-8-10
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler_detaljer
+  vurdering: Kan ikke avgjøres sikkert uten relevante fakta og riktig kildeversjon
+  forslag: Vis kilden og etterspør manglende forhold; la HR/ansvarlig foreta konkret
+    vurdering
+  kilde: https://www.ks.no/fagomrader/statistikk-og-analyse/turnover/kommuner-og-fylkeskommuner/
+  sektor: kommune
+  eksekverbar: automated_safeguard
+- regel_id: R-8-33
+  omraade: 8
+  felt: Q-8-11:mangler_tariff_rolle_aktivitet_lokalt_grunnlag
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kontekst mangler – ikke automatisk juridisk/HR-konklusjon
+  forslag: Slå opp faktisk tariff, arbeidsavtale, rolle og lokal rutine før svar
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  sektor: alle
+  eksekverbar: automated_safeguard
+- regel_id: R-8-34
+  omraade: 8
+  felt: Q-8-12:mangler_tariff_rolle_aktivitet_lokalt_grunnlag
+  operator: fallback
+  original_operator: fallback
+  tier: 'Tier 5: Regler som krever menneskelig beslutning'
+  terskel: mangler
+  vurdering: Kontekst mangler – ikke automatisk juridisk/HR-konklusjon
+  forslag: Slå opp faktisk tariff, arbeidsavtale, rolle og lokal rutine før svar
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/ansettelse/frivillig-arbeid/
+  sektor: alle
+  eksekverbar: automated_safeguard

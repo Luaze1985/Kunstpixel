@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datafinner</title>
+<link rel="stylesheet" href="af.css">
+</head>
+<body class="af" style="margin:0;padding:24px 16px;background:var(--canvas)">
+<div class="af">
+  <div class="af-shell">
+    <nav class="af-sidebar" aria-label="Meny">
+      <p class="af-side-heading">Datafinner</p>
+      <div id="meny"></div>
+      <hr class="af-side-rule">
+      <p class="af-task-hint">Kun lesing. Kun internt.</p>
+    </nav>
+
+    <main class="af-main">
+      <div class="af-mobile-nav">
+        <label for="mobilvalg">Meny</label>
+        <select id="mobilvalg"></select>
+      </div>
+
+      <section class="af-view" data-step="tom" id="tom">
+        <h1 class="af-title" id="start-tittel" tabindex="-1">Datafinner</h1>
+        <ul class="af-task-board" id="roller"></ul>
+      </section>
+
+      <section class="af-view" data-step="rolle" id="rolle" hidden>
+        <p class="af-caption">Rolle</p>
+        <h1 class="af-title" id="rolle-tittel" tabindex="-1"></h1>
+        <ul class="af-task-board" id="rolle-sporsmal"></ul>
+        <div class="af-actions">
+          <button class="af-btn af-btn-secondary" type="button" id="alle-roller">Alle roller</button>
+        </div>
+      </section>
+
+      <section class="af-view" data-step="sporsmal" id="sporsmal" hidden>
+        <p class="af-caption" id="omrade"></p>
+        <h1 class="af-title" id="tittel" tabindex="-1"></h1>
+        <div class="af-error-summary" id="feil" role="alert" hidden>
+          <h2>Feil</h2>
+          <p id="feil-tekst"></p>
+        </div>
+        <div class="af-filters" id="filtre"></div>
+        <div class="af-actions">
+          <button class="af-btn af-btn-primary" type="button" id="finn">Finn svar</button>
+          <button class="af-btn af-btn-secondary" type="button" id="tilbake-rolle">Tilbake til rollen</button>
+        </div>
+        <div id="kort" aria-live="polite" hidden>
+          <div class="af-outcome">
+            <p class="af-outcome-label" id="kort-label"></p>
+            <p class="af-outcome-value" id="kort-verdi" tabindex="-1"></p>
+          </div>
+          <div class="af-actions">
+            <button class="af-btn af-btn-secondary" type="button" id="lag">Lag rapport</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="af-view" data-step="rapport" id="rapport" hidden>
+        <div class="af-report" id="rapport-innhold">
+          <p class="af-caption">Rapport <span class="af-badge active" id="status">Utkast</span></p>
+          <p class="af-table-meta">Utkast så lenge noe mangler eller er AI-forslag.</p>
+          <h2 class="af-title" id="rapport-tittel" tabindex="-1"></h2>
+          <p id="rapport-formal"></p>
+          <div class="af-report-block">
+            <span class="af-report-kind">Fakta</span>
+            <div><ul id="fakta"></ul><span class="af-source missing">Mangler</span></div>
+          </div>
+          <div class="af-report-block">
+            <span class="af-report-kind">Vurdering</span>
+            <div><p>Ingen vurdering før data er koblet på.</p><span class="af-source missing">Mangler</span></div>
+          </div>
+          <div class="af-report-block">
+            <span class="af-report-kind">Forslag</span>
+            <div><p>Ingen forslag før data er koblet på.</p><span class="af-source suggested">AI-forslag</span></div>
+          </div>
+          <div class="af-report-block">
+            <span class="af-report-kind">Kontroll</span>
+            <div><div id="kontroll"></div><span class="af-source verify" id="kontroll-merke">Bør verifiseres</span></div>
+          </div>
+          <div class="af-report-block">
+            <span class="af-report-kind">Grunnlag</span>
+            <div><p id="grunnlag"></p><span class="af-source system">Regelversjon</span></div>
+          </div>
+          <div class="af-actions">
+            <button class="af-btn af-btn-primary" type="button" id="last">Last ned rapport</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="af-context" aria-label="Kilde">
+      <h2 class="af-context-title">Slik spør LLM-en</h2>
+      <div class="af-context-card">
+        <span class="af-small-label">Verktøy</span>
+        <p id="verktoy">Velg et spørsmål.</p>
+      </div>
+      <div class="af-context-card">
+        <span class="af-small-label">Kilde</span>
+        <p id="kilde">Ingen data er koblet på.</p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function () {
+  // Én kilde til roller og spørsmål. Forside, meny, filtre, kort svar, rapport og verktøypanel leser herfra.
+  var SPORSMAL = {
+    versjon: "3",
+    roller: [
+      { navn: "HR og bemanning", merknad: "/hr", sporsmal: [
+        { id: "pa-jobb", tekst: "Hvem er på jobb nå?", kort: "På jobb nå", filtre: [],
+          verktoy: "Mangler: oppslag på pågående vakter", finnes: false,
+          dekker: ["Navn", "Rolle", "Stasjon", "Avdeling", "Telefon", "E-post", "Kontor"] },
+        { id: "vaktplan", tekst: "Vaktplan for en dag", kort: "Vaktplan",
+          filtre: [{ id: "dato", label: "Dato", type: "date" }],
+          verktoy: "Mangler: vakter per dato", finnes: false,
+          dekker: ["Navn", "Rolle", "Stasjon", "Avdeling", "Timer"] },
+        { id: "overtid", tekst: "Overtidsbruk i perioden", kort: "Overtid",
+          filtre: [{ id: "maaned", label: "Måned", type: "month" }],
+          verktoy: "Mangler: overtid per ansatt i periode", finnes: false,
+          dekker: ["Ansatt", "Avdeling", "Timer over normal", "Antall vakter", "Avvik mot arbeidsmiljøloven"] },
+        { id: "sykefravaer", tekst: "Sykefravær per kvartal", kort: "Sykefravær",
+          filtre: [{ id: "aar", label: "År", type: "number" }, { id: "kvartal", label: "Kvartal", type: "select", valg: ["1", "2", "3", "4"] }],
+          verktoy: "get_sickness_absence_statistics", finnes: true,
+          dekker: ["Sykefravær", "Egenmeldt", "Legemeldt", "Vikarbuffer", "SSB-sammenligning"] }
+      ] },
+      { navn: "Økonomi og innkjøp", merknad: "/okonomi", sporsmal: [
+        { id: "utstilling", tekst: "Økonomi per utstilling", kort: "Utstillingsøkonomi",
+          filtre: [{ id: "utstilling", label: "Utstilling", type: "text" }],
+          verktoy: "get_exhibition_economy", finnes: true,
+          dekker: ["Budsjett", "Innleie", "Totalkostnad", "Billettinntekter", "Katalogsalg", "Sponsorstøtte", "Netto resultat", "Avvik"] },
+        { id: "vaktkostnad", tekst: "Kostnad for vakter", kort: "Vaktkostnad",
+          filtre: [{ id: "maaned2", label: "Måned", type: "month" }],
+          verktoy: "Mangler: vaktkostnad per periode", finnes: false,
+          dekker: ["Avdeling", "Timer", "Kostnad etter Virke-tariff"] }
+      ] }
+    ]
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var alle = [];
+  SPORSMAL.roller.forEach(function (r) { r.sporsmal.forEach(function (s) { s.rolle = r; alle.push(s); }); });
+  var gjeldendeRolle = null;
+
+  function el(tag, cls, tekst) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (tekst) e.textContent = tekst;
+    return e;
+  }
+  function verktoyStatus(s) { return s.finnes ? "Verktøy finnes" : "Verktøy mangler"; }
+  function antallFinnes(r) { return r.sporsmal.filter(function (s) { return s.finnes; }).length; }
+  function finnSporsmal(id) { return alle.filter(function (s) { return s.id === id; })[0]; }
+  function finnRolle(navn) { return SPORSMAL.roller.filter(function (r) { return r.navn === navn; })[0]; }
+
+  var rolig = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function gaaTil(seksjon, maal) {
+    seksjon.scrollIntoView({ behavior: rolig ? "auto" : "smooth", block: "start" });
+    maal.focus({ preventScroll: true });
+  }
+  function vis(steg) {
+    ["tom", "rolle", "sporsmal", "rapport"].forEach(function (id) { $(id).hidden = id !== steg; });
+  }
+  function skjulSvar() { $("kort").hidden = true; $("rapport").hidden = true; }
+
+  // Meny (venstre) og mobilvalg bygges om etter hvor man er: forside viser roller, rolle viser spørsmål.
+  var mobil = $("mobilvalg");
+  function byggMeny() {
+    var meny = $("meny"); meny.textContent = ""; mobil.textContent = "";
+    var tom = el("option", null, "Velg"); tom.value = ""; mobil.appendChild(tom);
+    var ol = el("ol", "af-flow-list");
+    function punkt(tekst, status, id, klikk) {
+      var li = el("li");
+      var b = el("button", "af-flow-link"); b.type = "button"; b.dataset.id = id;
+      var t = el("span", null, tekst);
+      if (status) t.appendChild(el("span", "af-step-status", status));
+      b.appendChild(t); b.addEventListener("click", klikk);
+      li.appendChild(b); ol.appendChild(li);
+      var op = el("option", null, tekst); op.value = id; mobil.appendChild(op);
+    }
+    if (!gjeldendeRolle) {
+      meny.appendChild(el("p", "af-side-heading", "Roller"));
+      SPORSMAL.roller.forEach(function (r) {
+        punkt(r.navn, r.sporsmal.length + " spørsmål", "rolle:" + r.navn, function () { velgRolle(r.navn); });
+      });
+    } else {
+      meny.appendChild(el("p", "af-side-heading", gjeldendeRolle.navn));
+      punkt("Alle roller", null, "forside", visForside);
+      gjeldendeRolle.sporsmal.forEach(function (s) {
+        punkt(s.tekst, verktoyStatus(s), s.id, function () { velg(s.id); });
+      });
+    }
+    meny.appendChild(ol);
+  }
+  mobil.addEventListener("change", function () {
+    var v = mobil.value;
+    if (!v) return;
+    if (v === "forside") visForside();
+    else if (v.indexOf("rolle:") === 0) velgRolle(v.slice(6));
+    else velg(v);
+  });
+  function merkMeny(id) {
+    document.querySelectorAll(".af-flow-link").forEach(function (b) {
+      if (b.dataset.id === id) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+    });
+    mobil.value = id || "";
+  }
+
+  // Forside: ett kort per rolle
+  SPORSMAL.roller.forEach(function (r) {
+    var li = el("li");
+    var b = el("button", "af-task-card"); b.type = "button";
+    var t = el("span"); t.appendChild(el("strong", null, r.navn));
+    t.appendChild(el("small", null, r.merknad + " · " + r.sporsmal.length + " spørsmål"));
+    b.appendChild(t);
+    b.appendChild(el("span", "af-badge" + (antallFinnes(r) === r.sporsmal.length ? " done" : ""),
+      antallFinnes(r) + " av " + r.sporsmal.length + " verktøy finnes"));
+    b.addEventListener("click", function () { velgRolle(r.navn); });
+    li.appendChild(b); $("roller").appendChild(li);
+  });
+
+  function visForside() {
+    gjeldendeRolle = null; skjulSvar(); vis("tom");
+    byggMeny(); merkMeny("");
+    $("verktoy").textContent = "Velg et spørsmål.";
+    gaaTil($("tom"), $("start-tittel"));
+  }
+
+  function velgRolle(navn) {
+    gjeldendeRolle = finnRolle(navn); skjulSvar(); vis("rolle");
+    $("rolle-tittel").textContent = gjeldendeRolle.navn;
+    var ul = $("rolle-sporsmal"); ul.textContent = "";
+    gjeldendeRolle.sporsmal.forEach(function (q) {
+      var li = el("li");
+      var b = el("button", "af-task-card"); b.type = "button";
+      var t = el("span"); t.appendChild(el("strong", null, q.tekst));
+      b.appendChild(t);
+      b.appendChild(el("span", "af-badge" + (q.finnes ? " done" : ""), verktoyStatus(q)));
+      b.addEventListener("click", function () { velg(q.id); });
+      li.appendChild(b); ul.appendChild(li);
+    });
+    byggMeny(); merkMeny("");
+    $("verktoy").textContent = "Velg et spørsmål.";
+    gaaTil($("rolle"), $("rolle-tittel"));
+  }
+
+  function velg(id) {
+    var s = finnSporsmal(id);
+    if (!gjeldendeRolle || gjeldendeRolle !== s.rolle) { gjeldendeRolle = s.rolle; byggMeny(); }
+    skjulSvar(); vis("sporsmal");
+    $("omrade").textContent = s.rolle.navn;
+    $("tittel").textContent = s.kort;
+    $("verktoy").textContent = s.verktoy;
+    $("kilde").textContent = "Ingen data er koblet på.";
+    var f = $("filtre"); f.textContent = "";
+    s.filtre.forEach(function (fl) {
+      var lbl = el("label", null, fl.label); lbl.htmlFor = "f-" + fl.id;
+      var inp;
+      if (fl.type === "select") {
+        inp = document.createElement("select");
+        fl.valg.forEach(function (v) { var o = el("option", null, v); o.value = v; inp.appendChild(o); });
+      } else { inp = document.createElement("input"); inp.type = fl.type; }
+      inp.id = "f-" + fl.id;
+      lbl.appendChild(inp); f.appendChild(lbl);
+    });
+    $("finn").dataset.id = id; $("lag").dataset.id = id;
+    merkMeny(id);
+    $("feil").hidden = true;
+    gaaTil($("sporsmal"), $("tittel"));
+  }
+
+  $("alle-roller").addEventListener("click", visForside);
+  $("tilbake-rolle").addEventListener("click", function () { velgRolle(gjeldendeRolle.navn); });
+
+  $("finn").addEventListener("click", function () {
+    var s = finnSporsmal($("finn").dataset.id);
+    var mangler = s.filtre.filter(function (fl) { return !$("f-" + fl.id).value.trim(); });
+    s.filtre.forEach(function (fl) { $("f-" + fl.id).removeAttribute("aria-invalid"); });
+    if (mangler.length) {
+      mangler.forEach(function (fl) { $("f-" + fl.id).setAttribute("aria-invalid", "true"); });
+      $("feil-tekst").textContent = "Fyll inn " + mangler.map(function (fl) { return fl.label.toLowerCase(); }).join(" og ") + " for å fortsette.";
+      $("feil").hidden = false; $("kort").hidden = true; $("rapport").hidden = true;
+      $("f-" + mangler[0].id).focus();
+      return;
+    }
+    $("feil").hidden = true;
+    $("kort-label").textContent = s.tekst;
+    $("kort-verdi").textContent = "Svar kommer når data er koblet på";
+    $("kort").hidden = false; $("rapport").hidden = true;
+    $("kort-verdi").focus({ preventScroll: true });
+  });
+
+  function oppdaterStatus() {
+    var bokser = document.querySelectorAll("#kontroll input");
+    var avkrysset = bokser.length > 0 && [].every.call(bokser, function (c) { return c.checked; });
+    var merke = $("kontroll-merke");
+    merke.className = "af-source " + (avkrysset ? "confirmed" : "verify");
+    merke.textContent = avkrysset ? "Bekreftet" : "Bør verifiseres";
+    var ubekreftet = document.querySelectorAll("#rapport-innhold .af-source.missing, #rapport-innhold .af-source.suggested, #rapport-innhold .af-source.verify").length > 0;
+    var ok = avkrysset && !ubekreftet;
+    $("status").textContent = ok ? "Bekreftet" : "Utkast";
+    $("status").className = "af-badge " + (ok ? "done" : "active");
+  }
+
+  $("last").addEventListener("click", function () {
+    var tekst = $("rapport-innhold").innerText.replace(/\n{3,}/g, "\n\n");
+    var blob = new Blob([tekst], { type: "text/plain;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "rapport-" + ($("lag").dataset.id || "datafinner") + ".txt";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  $("lag").addEventListener("click", function () {
+    var s = finnSporsmal($("lag").dataset.id);
+    $("rapport-tittel").textContent = s.kort;
+    $("rapport-formal").textContent = "Viser " + s.tekst.charAt(0).toLowerCase() + s.tekst.slice(1).replace(/\?$/, "") + " for internt bruk.";
+    var fakta = $("fakta"); fakta.textContent = "";
+    s.dekker.forEach(function (d) { fakta.appendChild(el("li", null, d)); });
+    var k = $("kontroll"); k.textContent = "";
+    ["Kilden er koblet på", "Tallene stemmer med kilden"].forEach(function (t, i) {
+      var l = el("label", "af-radio");
+      var c = document.createElement("input"); c.type = "checkbox"; c.name = "kontroll" + i;
+      c.addEventListener("change", oppdaterStatus);
+      l.appendChild(c); l.appendChild(document.createTextNode(t)); k.appendChild(l);
+    });
+    oppdaterStatus();
+    $("grunnlag").textContent = "Kilde: ikke koblet på. Regelversjon " + SPORSMAL.versjon + ".";
+    $("rapport").hidden = false;
+    gaaTil($("rapport"), $("rapport-tittel"));
+  });
+
+  byggMeny();
+})();
+</script>
+</body>
+</html>

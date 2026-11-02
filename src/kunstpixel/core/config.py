@@ -1,4 +1,4 @@
-"""Configuration and database path resolution for Aura Kunstmuseum."""
+"""Configuration and database path resolution for Kunstpixel."""
 
 import os
 import shutil
@@ -34,7 +34,7 @@ def get_db_path() -> Path:
         return EXTERNAL_FALLBACK_DB_PATH
 
     raise FileNotFoundError(
-        "Aura Kunstmuseum database not found. Checked:\n"
+        "Kunstpixel database not found. Checked:\n"
         f"  1. AURA_DB_PATH env var: {env_path}\n"
         f"  2. Local repo copy: {LOCAL_DB_PATH}\n"
         f"  3. External fallback: {EXTERNAL_FALLBACK_DB_PATH}"

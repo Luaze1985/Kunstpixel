@@ -1,0 +1,17 @@
+{
+  "id": "SALG-14",
+  "title": "Flertråding: få tilgang til kjøpsgruppen (Wenche)",
+  "description": "Trening på å utvide fra én kontakt til flere i kjøpsgruppen — uten å gå over hodet på en kontakt som beskytter sine interne relasjoner.",
+  "duration_minutes": 10,
+  "conversation_type": "Flertråding og interessenter",
+  "persona_name": "Wenche Dahl",
+  "persona_role": "Kontaktperson hos prospekt",
+  "tags_visible": [],
+  "hidden_tag_count": 0,
+  "source_status": "metadata_complete",
+  "catalog_group": "Salg og kundedialog",
+  "input_notes": "Katalogmetadata fra brukerens innlimte tekst, ikke komplett rollemanus. +N betyr at flere tagger er skjult i kilden, ikke at de er kjent.",
+  "source": "user_supplied_paste_2026-10-20",
+  "scenario_implemented": false,
+  "persona_is_verified_synthetic": false
+}

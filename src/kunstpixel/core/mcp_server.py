@@ -1,4 +1,4 @@
-"""FastMCP server for Aura Kunstmuseum exposing 5 collection and visitor tools.
+"""FastMCP server for Kunstpixel exposing 5 collection and visitor tools.
 
 Strictly read-only, SQL-injection safe, and adhering to museum domain terminology.
 """
@@ -11,16 +11,63 @@ from mcp.server.fastmcp import FastMCP
 
 from src.kunstpixel.core.db import (
     VALID_ROOM_IDS,
+    audit_shift_aml_compliance,
     normalize_room_identifier,
+    query_absence_report,
+    query_archive_exhibitions,
     query_artwork_details,
+    query_cleaning_registry,
     query_collection,
+    query_condition_report,
+    query_contractors,
+    query_employee_cv,
+    query_employee_skills,
     query_events,
+    query_exhibition_economy,
+    query_exhibitions_with_economy,
     query_faq,
+    query_handbook,
+    query_holidays,
+    query_incidents,
+    query_internal_requests,
+    query_loans,
+    query_quarterly_absence,
+    query_report_assessment,
+    query_report_rules,
+    query_roles,
     query_room_artworks,
+    query_shift_cost,
+    query_shifts_on_date,
+    query_staff_on_shift,
+    query_station_ergonomics,
+    query_styrk_job_code,
+    query_supplier_brreg,
+    query_tariff_pay,
+    query_working_hours,
+    query_working_time_limits,
+    query_myndighetskontakter,
+    query_tilsynsbesok_rutine,
+    query_rapporteringskalender,
+    query_rapportmaler,
+    query_arbeidsoppgaver_tidsbruk,
+    query_historikk_2010_2026,
+    query_hr_opplaering_onboarding,
+)
+from src.kunstpixel.core.hr_eval import evaluate_staffing_proposal
+from src.kunstpixel.core.hrdemo import (
+    candidates,
+    count_skill,
+    find_rules,
+    get_person,
+    list_skills,
+)
+from src.kunstpixel.core.hrdemo import (
+    search_hms_guidance as find_hms_guidance,
 )
 
 # Initialize FastMCP application
 mcp = FastMCP("Kunstpixel")
+
 
 
 @mcp.tool()
@@ -143,5 +190,684 @@ def search_faq(
     return query_faq(query=query, category=category)
 
 
+@mcp.tool()
+def search_archive_exhibitions(
+    query: str | None = None,
+    year_from: int | None = None,
+    year_to: int | None = None,
+    curator: str | None = None,
+    limit: int = 10,
+) -> list[dict[str, Any]]:
+    """Søk i Kunstpixels 16-årige utstillingsarkiv (2010–2026) etter temaer, kuratorer, saler og budsjett.
+
+    Args:
+        query: Fritekstsøk i tittel eller saler (f.eks. 'modernisme', 'Bergman', 'Sal D').
+        year_from: Fra og med årstall (f.eks. 2015).
+        year_to: Til og med årstall (f.eks. 2024).
+        curator: Filtrer på ansvarlig kurator (f.eks. 'Silje Lindqvist').
+        limit: Maksimalt antall utstillinger som returneres (standard 10).
+
+    Returns:
+        Liste over historiske utstillinger med sesong, saler, kurator, publikumstall, budsjett og status.
+    """
+    return query_archive_exhibitions(
+        query=query,
+        year_from=year_from,
+        year_to=year_to,
+        curator=curator,
+        limit=limit,
+    )
+
+
+@mcp.tool()
+def search_contractors(
+    kategori: str | None = None,
+    leverandor: str | None = None,
+    aar: int | None = None,
+    limit: int = 10,
+) -> list[dict[str, Any]]:
+    """Søk i museets innleie- og konsulentregister for drift, scenografi, sikkerhet og konservering.
+
+    Args:
+        kategori: Type innleie (f.eks. 'Montering & Scenografi', 'Eksternt vakthold / Vernissasje', 'Gjestekurator', 'AV & Multimedieteknikk', 'Tilstandsvurdering & Konservering', 'Spesialtransport & Lånehåndtering').
+        leverandor: Navn på leverandør (f.eks. 'Securitas AS', 'Avarn Security AS', 'Norsk Utstillingsmontasje AS', 'Atelier Konservering DA').
+        aar: Spesifikt årstall for oppdraget (2010–2026).
+        limit: Maksimalt antall kontrakter som returneres (standard 10).
+
+    Returns:
+        Liste over innleieavtaler med fakturerte timer, timepris, totalbeløp, oppdragsbeskrivelse og intern godkjenner.
+    """
+    return query_contractors(
+        kategori=kategori,
+        leverandor=leverandor,
+        aar=aar,
+        limit=limit,
+    )
+
+
+@mcp.tool()
+def get_employee_cv(
+    ident: str,
+) -> dict[str, Any] | None:
+    """Hent detaljert CV, personas, utdanning og publikasjonsliste for en ansatt eller fagperson.
+
+    Args:
+        ident: Ansatt-ID (f.eks. 'KP-ANS-001') eller fullt/delvis navn (f.eks. 'Henrik Faye-Lund', 'Silje Lindqvist', 'Gunnar Viken').
+
+    Returns:
+        Strukturert personas-objekt med grad, utdanningsinstitusjon, tidligere arbeidsgivere og fagpublikasjoner.
+    """
+    res = query_employee_cv(ident=ident)
+    if not res:
+        return {"error": f"Ingen persona eller CV funnet for '{ident}'", "code": "NOT_FOUND"}
+    return res
+
+
+@mcp.tool()
+def get_condition_report(artwork_id: str) -> dict[str, Any]:
+    """Hent verkskonservering og tilstandsrapport med luks-krav, fuktighetskrav og forsikringsverdi (for samlingsforvalter/kurator).
+
+    Args:
+        artwork_id: Kunstverkets ID (f.eks. 'AURA-2026-009') eller tittel ('Skrik').
+
+    Returns:
+        Tilstandsrapport med tilstandsgrad (1-4), maks lux, klimakrav, konserveringslogg og forsikringsverdi i NOK.
+    """
+    res = query_condition_report(artwork_id=artwork_id)
+    if not res:
+        return {"error": f"Ingen tilstandsrapport funnet for '{artwork_id}'", "code": "NOT_FOUND"}
+    return res
+
+
+@mcp.tool()
+def search_loans(
+    exhibition_id: str | None = None,
+    query: str | None = None,
+    limit: int = 10,
+) -> list[dict[str, Any]]:
+    """Søk i historiske og aktive kunstlån fra eksterne museer (Nasjonalmuseet, KODE, Lillehammer m.fl.).
+
+    Args:
+        exhibition_id: Valgfri utstillings-ID (f.eks. 'KP-EXH-2024-001').
+        query: Fritekst i tittel, kunstner eller utlånsinstitusjon.
+        limit: Maksimalt antall utlån som returneres (standard 10).
+
+    Returns:
+        Liste over innlånte mesterverk med 3-lags formidlingstekst, forsikringsverdi og kurertransportkrav.
+    """
+    return query_loans(exhibition_id=exhibition_id, query=query, limit=limit)
+
+
+@mcp.tool()
+def get_exhibition_economy(exhibition_id: str) -> dict[str, Any]:
+    """Hent fullstendig prosjektøkonomi og regnskap for en utstilling (budsjett, innleie, billettinntekter, netto resultat).
+
+    Args:
+        exhibition_id: Utstillings-ID (f.eks. 'KP-EXH-2024-001') eller tittel.
+
+    Returns:
+        Økonomisk sammendrag med budsjett, faktiske kostnader, billettinntekter, sponsorstøtte og avviksforklaring.
+    """
+    res = query_exhibition_economy(exhibition_id=exhibition_id)
+    if not res:
+        return {"error": f"Ingen økonomirapport funnet for '{exhibition_id}'", "code": "NOT_FOUND"}
+    return res
+
+
+@mcp.tool()
+def search_incidents(
+    kategori: str | None = None,
+    alvorlighetsgrad: str | None = None,
+    sal_id: str | None = None,
+    limit: int = 10,
+) -> list[dict[str, Any]]:
+    """Søk i museets operative avvikslogg (HMS, sikkerhetshendelser, klimasvingninger, teknisk feil og publikum).
+
+    Args:
+        kategori: Valgfri kategori ('HMS', 'SIKKERHET', 'KLIMA', 'TEKNISK', 'PUBLIKUM').
+        alvorlighetsgrad: Valgfri alvorlighetsgrad ('GRØNN', 'GUL', 'RØD').
+        sal_id: Filtrer på berørt sal (f.eks. 'SAL-A', 'MAG-1').
+        limit: Maksimalt antall hendelser som returneres (standard 10).
+
+    Returns:
+        Liste over avvikshendelser med strakstiltak, ansvarlig leder og oppfølgingsstatus.
+    """
+    return query_incidents(kategori=kategori, alvorlighetsgrad=alvorlighetsgrad, sal_id=sal_id, limit=limit)
+
+
+@mcp.tool()
+def verify_supplier_brreg(orgnr_or_name: str) -> dict[str, Any]:
+    """Verifiser en leverandør mot autoritative Enhetsregister-data fra Brønnøysundregistrene (Brreg).
+
+    Args:
+        orgnr_or_name: Organisasjonsnummer (f.eks. '912876543') eller firmanavn (f.eks. 'Securitas AS').
+
+    Returns:
+        Fullt selskapsregister med org.form, MVA-status, konkursstatus, antall ansatte og aksjekapital.
+    """
+    res = query_supplier_brreg(orgnr_or_name=orgnr_or_name)
+    if not res:
+        return {"error": f"Ingen registrert enhet funnet i Brreg for '{orgnr_or_name}'", "code": "NOT_FOUND"}
+    return res
+
+
+@mcp.tool()
+def calculate_shift_cost(
+    lonnstrinn: int,
+    timer: float = 7.5,
+    er_kveld: bool = False,
+    er_helg: bool = False,
+    er_helligdag: bool = False,
+) -> dict[str, Any]:
+    """Beregn lønnskostnad for et skift basert på Virke Landsoverenskomst for museer (lønnstrinn 20–65).
+
+    Args:
+        lonnstrinn: Virke lønnstrinn (20 til 65).
+        timer: Antall arbeidstimer for skiftet (standard 7.5).
+        er_kveld: Sann hvis skiftet avvikles etter kl. 17:00 (kveldstillegg).
+        er_helg: Sann hvis skiftet er lagt til lørdag eller søndag (helgetillegg).
+        er_helligdag: Sann hvis skiftet er på en rød dag (133% helligdagstillegg).
+
+    Returns:
+        Strukturert lønnsberegning med ordinær timesats, tillegg og total personalkostnad.
+    """
+    tariff = query_tariff_pay(lonnstrinn=lonnstrinn)
+    if not tariff:
+        return {"error": f"Ugyldig Virke-lønnstrinn: {lonnstrinn} (må være mellom 20 og 65)", "code": "INVALID_STEP"}
+
+    if er_helligdag:
+        effective_rate = tariff["timesats_helligdag"]
+        applied_type = "Helligdag (133% overtid)"
+    elif er_helg:
+        effective_rate = tariff["timesats_helg"]
+        applied_type = "Helgetillegg (+75 kr/t)"
+    elif er_kveld:
+        effective_rate = tariff["timesats_kveld"]
+        applied_type = "Kveldstillegg (+56 kr/t etter kl 17)"
+    else:
+        effective_rate = tariff["timesats_ordinar"]
+        applied_type = "Ordinær dagtid"
+
+    total_cost = round(effective_rate * timer, 2)
+    return {
+        "lonnstrinn": lonnstrinn,
+        "rolle": tariff["tittel_eksempel"],
+        "timer": timer,
+        "sats_anvendt": effective_rate,
+        "tilleggstype": applied_type,
+        "total_kostnad_nok": total_cost,
+        "tariff_kilde": "Virke Landsoverenskomst for museer",
+    }
+
+
+@mcp.tool()
+def list_exhibitions_with_economy() -> list[dict[str, Any]]:
+    """List alle utstillinger som har økonomirapport (id, tittel, år), nyeste først."""
+    return query_exhibitions_with_economy()
+
+
+@mcp.tool()
+def get_staff_on_shift(dato: str | None = None, klokkeslett: str | None = None) -> dict[str, Any]:
+    """Finn hvem som har vakt på en dato, og hvem som er på jobb på et klokkeslett.
+
+    Args:
+        dato: Dato i ISO-format 'YYYY-MM-DD'. Standard er i dag.
+        klokkeslett: 'HH:MM'. Standard er nå når datoen er i dag.
+
+    Returns:
+        Vaktene slik de står i hr_vakter. Klokkeslett er syntetiske data (klokkeslett_datakilde);
+        mangler de i databasen, sier svaret fra.
+    """
+    return query_staff_on_shift(dato, klokkeslett)
+
+
+@mcp.tool()
+def get_working_time_limits() -> dict[str, Any]:
+    """Arbeidstidsgrensene i databasen (ukenorm, døgnmaks, hvile, lunsj, kveldstillegg) med kilde."""
+    return query_working_time_limits()
+
+
+@mcp.tool()
+def get_shifts_for_date(dato: str) -> list[dict[str, Any]]:
+    """Hent vaktplanen for én dato slik den står i hr_vakter (dato, timer, rolle, stasjon, ansatt).
+
+    Args:
+        dato: Dato i ISO-format 'YYYY-MM-DD'.
+    """
+    return query_shifts_on_date(dato)
+
+
+@mcp.tool()
+def get_working_hours_report(maaned: str) -> dict[str, Any]:
+    """Arbeidstid per ansatt for en måned: sum timer, antall vakter, høyeste uke- og døgnsum.
+
+    Args:
+        maaned: Måned i formatet 'YYYY-MM'.
+
+    Returns:
+        Tallene fra hr_vakter. Overtid beregnes mot arbeidstid_grenser når tabellen finnes.
+    """
+    return query_working_hours(maaned)
+
+
+@mcp.tool()
+def get_shift_cost_for_period(maaned: str) -> dict[str, Any]:
+    """Lønnskostnad for alle vakter i en måned per avdeling: timer x sats fra virke_tariff.
+
+    Args:
+        maaned: Måned i formatet 'YYYY-MM'.
+
+    Returns:
+        Kostnad per avdeling og totalt, og antall vakter uten tariffsats (ikke kostnadsberegnet).
+    """
+    return query_shift_cost(maaned)
+
+
+# --- HR, HMS & Kvalitetsverktøy (integrert) ---
+@mcp.tool()
+def count_documented_skill(code: str, as_of: str = "2026-11-07") -> dict:
+    """Fortell nøyaktig hvor mange aktive ansatte som har dokumentert og gyldig kompetansebevis."""
+    return count_skill(code, as_of)
+
+
+@mcp.tool()
+def propose_kiosk_staffing(
+    work_date: str = "2026-11-07",
+    start: str = "10:00",
+    end: str = "16:00",
+    need: int = 5,
+) -> dict:
+    """Få eksplisitte harde krav, reproduserbar relevansscore og full evidens for bemanningskandidater."""
+    return candidates(work_date, start, end, need)
+
+
+@mcp.tool()
+def lookup_hr_hms_quality_rules(
+    domain: str | None = None,
+    topic: str | None = None,
+    as_of: str = "2026-11-07",
+) -> list[dict]:
+    """Søk i strukturerte museumsprosedyrer på tvers av HR, HMS og KVALITET."""
+    return find_rules(domain, topic, as_of)
+
+
+@mcp.tool()
+def get_competence_catalog() -> list[dict]:
+    """Vis komplett katalog over alle definerte ferdigheter, krav og utløpsregler."""
+    return list_skills()
+
+
+@mcp.tool()
+def get_staff_member(person_id: str, as_of: str = "2026-11-07") -> dict:
+    """Hent komplett ansattkort med dokumenterte kompetanser og tilgjengelighet."""
+    res = get_person(person_id, as_of=as_of)
+    if res is None:
+        return {"error": "PERSON_NOT_FOUND", "person_id": person_id}
+    return res
+
+
+@mcp.tool()
+def evaluate_kiosk_proposal(
+    suggested_ids: list[str],
+    work_date: str = "2026-11-07",
+    need: int = 5,
+) -> dict:
+    """Evaluer et foreslått bemanningsforslag deterministisk mot sikkerhetskrav og kognitive KI-feller (L01-L03)."""
+    return evaluate_staffing_proposal(suggested_ids, work_date=work_date, need=need)
+
+
+# --- Kategori C: HR, HMS, Arbeidsmiljø & Arbeidstid ---
+@mcp.tool()
+def audit_shift_compliance(
+    ansatt_id: str,
+    dato: str,
+    start: str = "08:00",
+    end: str = "16:00",
+) -> dict[str, Any]:
+    """Evaluer et planlagt skift deterministisk mot Arbeidsmiljøloven kap. 10 (§ 10-8 hviletid og § 10-4 arbeidstid).
+
+    Args:
+        ansatt_id: Ansatt-ID (f.eks. 'KP-ANS-001' eller 'E101').
+        dato: Dato for skiftet (ISO-format YYYY-MM-DD).
+        start: Starttidspunkt (f.eks. '08:00' eller '15:30').
+        end: Sluttidspunkt (f.eks. '16:00' eller '23:00').
+
+    Returns:
+        Strukturert revisjonsrapport med status (APPROVED_AML / REJECTED_AML_VIOLATION), hviletimer og eventuelle lovbrudd.
+    """
+    return audit_shift_aml_compliance(ansatt_id=ansatt_id, dato=dato, start=start, end=end)
+
+
+@mcp.tool()
+def check_cleaning_supplier_approval(orgnr: str) -> dict[str, Any]:
+    """Sjekk om en renholdsleverandør er offentlig godkjent i Arbeidstilsynets Renholdsregister.
+
+    Args:
+        orgnr: Organisasjonsnummer eller navn (f.eks. '982345678' for ISS Facility Services AS).
+
+    Returns:
+        Godkjenningsstatus, utløpsdato og krav om gyldige HMS-kort.
+    """
+    res = query_cleaning_registry(orgnr=orgnr)
+    if not res:
+        return {"error": f"Ingen renholdsleverandør funnet med orgnr/navn '{orgnr}'", "code": "NOT_FOUND"}
+    return res
+
+
+@mcp.tool()
+def get_job_profile_styrk(kode_or_stilling: str) -> dict[str, Any]:
+    """Slå opp offisiell SSB STYRK-08 yrkeskode, utdanningskrav og minste Virke-lønnstrinn for en stilling.
+
+    Args:
+        kode_or_stilling: 4- eller 6-sifret STYRK-kode (f.eks. '2651.01') eller stillingstittel (f.eks. 'Kurator', 'Salvert', 'Konservator').
+
+    Returns:
+        Yrkesprofil med STYRK-kode, formelle utdanningskrav, ansvarsbeskrivelse og minste lønnstrinn.
+    """
+    res = query_styrk_job_code(code_or_title=kode_or_stilling)
+    if not res:
+        return {"error": f"Ingen STYRK-08 yrkeskode funnet for '{kode_or_stilling}'", "code": "NOT_FOUND"}
+    return res
+
+
+@mcp.tool()
+def get_calendar_holiday_info(dato: str) -> dict[str, Any]:
+    """Sjekk om en gitt dato er offentlig høytidsdag (med 133% helligdagstillegg) eller skoleferie.
+
+    Args:
+        dato: Dato i ISO-format (YYYY-MM-DD), f.eks. '2024-05-17' eller '2025-04-18'.
+
+    Returns:
+        Kalenderinformasjon med høytidsnavn, overtidssatsfaktor (f.eks. 2.33) og ferieukestatus.
+    """
+    rows = query_holidays(date_str=dato, limit=1)
+    if not rows:
+        return {
+            "dato": dato,
+            "er_offentlig_hoytid": False,
+            "navn": "Ordinær virkedag",
+            "tillegg_faktor": 1.0,
+            "skoleferie_type": None,
+        }
+    return rows[0]
+
+
+@mcp.tool()
+def get_ergonomic_rotation_rules(sal_or_station_id: str) -> dict[str, Any]:
+    """Hent STAMI ergonomiske retningslinjer, maksimal ståtid og påbudt rotasjonsstasjon for et salareal.
+
+    Args:
+        sal_or_station_id: Stasjons-ID (f.eks. 'STASJON-SAL-D') eller salbetegnelse ('SAL-D', 'SAL-A', 'SKRANKE').
+
+    Returns:
+        Ergonomiske grenser med underlagstype, maksimal sammenhengende ståtid og anbefalt rotasjonsrekkefølge.
+    """
+    res = query_station_ergonomics(station_id=sal_or_station_id)
+    if not res:
+        return {"error": f"Ingen ergonomiske data funnet for '{sal_or_station_id}'", "code": "NOT_FOUND"}
+    return res
+
+
+@mcp.tool()
+def get_sickness_absence_statistics(year: int, quarter: int) -> dict[str, Any]:
+    """Hent offisiell SSB sykefraværsstatistikk (tabell 12441) og anbefalt vikarbuffer for kultursektoren.
+
+    Args:
+        year: Årstall (2010–2026).
+        quarter: Kvartal (1, 2, 3 eller 4).
+
+    Returns:
+        Sykefraværsrate i prosent (egenmeldt/legemeldt) og anbefalt vikarreservefaktor for vaktplanlegging.
+    """
+    res = query_quarterly_absence(year=year, quarter=quarter)
+    if not res:
+        return {"error": f"Ingen sykefraværsstatistikk funnet for {year}-Q{quarter}", "code": "NOT_FOUND"}
+    return res
+
+
+@mcp.tool()
+def lookup_handbook(
+    query: str | None = None,
+    handbok: str | None = None,
+    role: str | None = None,
+    limit: int = 5,
+) -> list[dict[str, Any]]:
+    """Søk og slå opp autoritative regler i museets fire virksomhetshåndbøker (Personal, HMS, Drift, Ledelse).
+
+    Args:
+        query: Søkeord eller problemstilling (f.eks. 'egenmelding', 'hviletid', 'brann', 'løft', 'haccp', 'varsling').
+        handbok: Valgfri håndbok ('PERSONAL', 'HMS_SIKKERHET', 'DRIFT_KVALITET', 'LEDER_BEREDSKAP').
+        role: Målgruppe eller rollefilter (f.eks. 'vert', 'leder', 'kafé', 'montør').
+        limit: Maksimalt antall oppslagspunkter som returneres (1–20, standard 5).
+
+    Returns:
+        Relevante håndbokpunkter med kapittel, tittel, juridisk hjemmel, innhold og målgruppe.
+    """
+    return query_handbook(query=query, handbok=handbok, role=role, limit=limit)
+
+
+@mcp.tool()
+def search_hms_guidance(
+    query: str | None = None,
+    topic: str | None = None,
+    limit: int = 5,
+) -> list[dict[str, Any]]:
+    """Søk i 344 autoritative nasjonale HMS- og arbeidsmiljøveiledningspunkter (Arbeidstilsynet/BHT).
+
+    Args:
+        query: Fritekst-søkeord (f.eks. 'ergonomi', 'vernerunde', 'ulykke', 'psykososialt', 'støy').
+        topic: Tema- eller kategorifilter (f.eks. 'Lederansvar', 'Risikovurdering', 'Lovverk').
+        limit: Maksimalt antall veiledningspunkter som returneres (1–50, standard 5).
+
+    Returns:
+        Liste med strukturerte oppslag som inneholder id, tema, sporsmal, kort_svar og detaljert_veiledning.
+    """
+    return find_hms_guidance(query=query, topic=topic, limit=limit)
+
+
+@mcp.tool()
+def get_absence_report(aar: int, kvartal: int) -> dict[str, Any]:
+    """Hent museets eget sykefravær for et kvartal, sammenlignet med SSB-tall.
+
+    Args:
+        aar: Årstall (f.eks. 2025).
+        kvartal: Kvartal (1-4).
+
+    Returns:
+        Sykefraværsrapport for kvartalet med museets egen fraværsprosent, dagsverk og SSB-sammenligning.
+    """
+    return query_absence_report(aar=aar, kvartal=kvartal)
+
+
+@mcp.tool()
+def list_roles() -> list[dict[str, Any]]:
+    """Hent alle teamroller og tilknyttede spørsmål fra databasen.
+
+    Returns:
+        Liste over roller med kode, navn, trigger, beskrivelse og spørsmål.
+    """
+    return query_roles()
+
+
+@mcp.tool()
+def get_report_rules(sporsmal_id: str) -> list[dict[str, Any]]:
+    """Hent deterministiske rapportregler, vurderinger og forslag for et spørsmål.
+
+    Args:
+        sporsmal_id: Identifikator for spørsmålet (f.eks. 'vakt-i-dag', 'vaktplan', 'arbeidstid', 'sykefravaer', 'utstilling', 'vaktkostnad').
+
+    Returns:
+        Liste over regelrader med felt, operator, terskel, vurdering og forslag.
+    """
+    return query_report_rules(sporsmal_id=sporsmal_id)
+
+
+@mcp.tool()
+def get_report_assessment(sporsmal_id: str, verdier: dict[str, Any]) -> dict[str, Any]:
+    """Velg vurdering og forslag fra rapport_regler for et konkret svar (deterministisk, ingen fritekst).
+
+    Args:
+        sporsmal_id: Identifikator for spørsmålet (f.eks. 'vakt-i-dag').
+        verdier: Tallfeltene i svaret, f.eks. {"antall_med_vakt": 9}.
+
+    Returns:
+        Regelen som gjelder (regel_id, vurdering, forslag, kilde, versjon, datakilde), eller mangler.
+    """
+    return query_report_assessment(sporsmal_id=sporsmal_id, verdier=verdier)
+
+
+@mcp.tool()
+def get_employee_skills(ansatt_id: str, as_of: str = "2026-11-07") -> dict[str, Any]:
+    """Hent en ansatts fulle kompetansekort (interne ferdigheter og sertifiseringer) vurdert mot en dato.
+
+    Args:
+        ansatt_id: Ansatt-ID (f.eks. 'KP-ANS-001').
+        as_of: Dato (YYYY-MM-DD) som gyldighet vurderes mot.
+
+    Returns:
+        Navn, avdeling og stilling, med hver kompetanse (gyldig_na, gyldig_til, lagret_status), eller mangler.
+    """
+    return query_employee_skills(ansatt_id=ansatt_id, as_of=as_of)
+
+
+@mcp.tool()
+def search_internal_requests(
+    kategori: str | None = None,
+    ansatt_id: str | None = None,
+    limit: int = 20,
+) -> dict[str, Any]:
+    """Søk i interne henvendelser fra ansatte, nyeste først. Varsler skjermes alltid (ingen identitet eller fritekst).
+
+    Args:
+        kategori: vaktbytte, permisjon, sykefraver, arbeidsmiljo, varsling eller tilrettelegging.
+        ansatt_id: Begrens til én ansatt (varsler tas aldri med i et ansatt-oppslag).
+        limit: Maks antall treff (1-100).
+
+    Returns:
+        Henvendelser med case_ref, hjemmel og forventet utfall.
+    """
+    return query_internal_requests(kategori=kategori, ansatt_id=ansatt_id, limit=limit)
+
+
+# -----------------------------------------------------------------------------
+# H5 & Governance MCP-verktøy
+# -----------------------------------------------------------------------------
+
+@mcp.tool()
+def search_myndighet(
+    query: str | None = None,
+    intern_eier: str | None = None,
+    include_contacts: bool = False,
+) -> dict[str, Any]:
+    """Søk i museets myndighetskontakter og krav fra tilsynsorganer (fil A).
+
+    Args:
+        query: Søkeord i myndighet, fagområde eller hva myndigheten ber om.
+        intern_eier: Filtrer på intern eierrolle (f.eks. 'Museumsdirektør', 'Driftsansvarlig').
+        include_contacts: Om kontaktpersoner og e-post skal vises (kun internt).
+
+    Returns:
+        Myndigheter med krav, utløsende faktorer og dokumentasjonskrav.
+    """
+    return query_myndighetskontakter(query=query, intern_eier=intern_eier, include_contacts=include_contacts)
+
+
+@mcp.tool()
+def get_inspection_routine(ansvarlig: str | None = None) -> dict[str, Any]:
+    """Hent museets standardprosedyre for tilsynsbesøk og avvikshåndtering (fil B).
+
+    Args:
+        ansvarlig: Filtrer på ansvarlig rolle for steget (f.eks. 'Driftsansvarlig', 'Museumsdirektør').
+
+    Returns:
+        De 6 kronologiske stegene, dokumentasjonskrav og gjeldende avviksfrister (14 dager / 24 timer).
+    """
+    return query_tilsynsbesok_rutine(ansvarlig=ansvarlig)
+
+
+@mcp.tool()
+def search_rapportering(
+    mottakertype: str | None = None,
+    maned: str | None = None,
+    eier: str | None = None,
+    mal_id: str | None = None,
+) -> dict[str, Any]:
+    """Søk i museets rapporteringskalender (fil C) og standard rapportmaler (fil D).
+
+    Args:
+        mottakertype: 'intern' eller 'ekstern'.
+        maned: Måned for rapportering (f.eks. 'Mars', 'Månedlig', 'Kvartalsvis').
+        eier: Ansvarlig lederrolle for rapporten.
+        mal_id: Spesifikk rapportmal ('ML-01' til 'ML-04') for å få felt og utfyllingsregler.
+
+    Returns:
+        Rapporter eller rapportmaler med felter, kilder og regler.
+    """
+    if mal_id:
+        return query_rapportmaler(mal_id=mal_id)
+    return query_rapporteringskalender(mottakertype=mottakertype, maned=maned, eier=eier)
+
+
+@mcp.tool()
+def search_arbeidsoppgaver(
+    omrade: str | None = None,
+    rolle: str | None = None,
+    automatiseringspotensial: str | None = None,
+) -> dict[str, Any]:
+    """Søk i gjentakende administrative arbeidsoppgaver og tidsbruk (fil E). Kun for ledelse.
+
+    Args:
+        omrade: 'Myndighetskontakt' eller 'Rapportering'.
+        rolle: Intern rolle som utfører oppgaven.
+        automatiseringspotensial: 'Lav', 'Middels' eller 'Høy'.
+
+    Returns:
+        Oppgaver, timer per år, automatiseringspotensial og begrunnelse (totalt 287 timer i 2026).
+    """
+    return query_arbeidsoppgaver_tidsbruk(
+        omrade=omrade,
+        rolle=rolle,
+        automatiseringspotensial=automatiseringspotensial,
+    )
+
+
+@mcp.tool()
+def search_governance_history(
+    ar_fra: int | None = None,
+    ar_til: int | None = None,
+    tema: str | None = None,
+) -> dict[str, Any]:
+    """Hent museets 17-årige virksomhetshistorikk 2010–2026 (fil F & T). Kun for ledelse.
+
+    Args:
+        ar_fra: Fra årstall (2010-2026).
+        ar_til: Til årstall (2010-2026).
+        tema: Søkeord i tema (f.eks. 'pandemi', 'vekst', 'rekordår', 'automatisering').
+
+    Returns:
+        35 nøkkeltall per år koblet med kuratert hendelse og lærdom for museet.
+    """
+    return query_historikk_2010_2026(ar_fra=ar_fra, ar_til=ar_til, tema=tema)
+
+
+@mcp.tool()
+def search_hr_onboarding(
+    kategori: str | None = None,
+    rolle: str | None = None,
+) -> dict[str, Any]:
+    """Søk i onboarding-løp, kompetansekrav og HMS-opplæring per rolle (hr_opplaering_onboarding).
+
+    Args:
+        kategori: 'kompetanse_matrise', 'onboarding_status' eller 'hms_opplaering'.
+        rolle: Rolle (f.eks. 'Museumsvert', 'Kafeansvarlig', 'Konservator', 'Verneombud').
+
+    Returns:
+        Opplæringsmoduler, faser, aktiviteter og ansvarlig rolle.
+    """
+    return query_hr_opplaering_onboarding(kategori=kategori, rolle=rolle)
+
+
 if __name__ == "__main__":
     mcp.run()
+
+

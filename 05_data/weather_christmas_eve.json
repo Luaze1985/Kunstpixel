@@ -1,0 +1,47 @@
+[
+  {
+    "dato": "2020-12-24",
+    "aar": "2020",
+    "besok": 125,
+    "temp": -2.4,
+    "nedbor_mm": 0.0,
+    "sno_cm": 0.0,
+    "nedbor_timer": 0.0
+  },
+  {
+    "dato": "2021-12-24",
+    "aar": "2021",
+    "besok": 184,
+    "temp": -6.7,
+    "nedbor_mm": 0.3,
+    "sno_cm": 0.21,
+    "nedbor_timer": 3.0
+  },
+  {
+    "dato": "2022-12-24",
+    "aar": "2022",
+    "besok": 556,
+    "temp": -10.9,
+    "nedbor_mm": 0.0,
+    "sno_cm": 0.0,
+    "nedbor_timer": 0.0
+  },
+  {
+    "dato": "2023-12-24",
+    "aar": "2023",
+    "besok": 551,
+    "temp": -8.9,
+    "nedbor_mm": 1.8,
+    "sno_cm": 1.33,
+    "nedbor_timer": 8.0
+  },
+  {
+    "dato": "2024-12-24",
+    "aar": "2024",
+    "besok": 254,
+    "temp": -0.0,
+    "nedbor_mm": 1.4,
+    "sno_cm": 0.07,
+    "nedbor_timer": 4.0
+  }
+]

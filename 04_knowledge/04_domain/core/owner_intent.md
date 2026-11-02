@@ -1,7 +1,7 @@
 # Eiers hensikt (Owner Intent)
 
 ## Hovedmål
-Aura Kunstmuseum eksisterer som en arena der AI-gründere kan:
+Kunstpixel eksisterer som en arena der AI-gründere kan:
 1. Øve på å bygge, integrere og teste spesialiserte **plugins og MCP-verktøy**.
 2. Etablere robuste, feilfrie **arbeidsflyt-automatiseringer** for kunnskapsintensive oppgaver.
 3. Utvikle og teste **undervisningsmoduler** som kan formidles til kursdeltakere og kunder.

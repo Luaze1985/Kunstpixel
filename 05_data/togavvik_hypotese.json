@@ -1,0 +1,247 @@
+{
+  "entur_sample": {
+    "errors": [
+      {
+        "message": "Validation error (SubselectionNotAllowed@[stopPlace/name]) : Subselection not allowed on leaf type 'String!' of field 'name'",
+        "locations": [
+          {
+            "line": 5,
+            "column": 5
+          }
+        ],
+        "extensions": {
+          "classification": "ValidationError"
+        }
+      }
+    ]
+  },
+  "analyserte_hendelser": [
+    {
+      "hendelse": {
+        "periode": "2023-08-07 til 2023-08-11",
+        "arsak": "Ekstremværet Hans / Oslotunnelen stengt / Togkanselleringer",
+        "type": "totalstans"
+      },
+      "dager": [
+        [
+          "2023-08-07",
+          "Mandag",
+          0
+        ],
+        [
+          "2023-08-08",
+          "Tirsdag",
+          441
+        ],
+        [
+          "2023-08-09",
+          "Onsdag",
+          449
+        ],
+        [
+          "2023-08-10",
+          "Torsdag",
+          532
+        ],
+        [
+          "2023-08-11",
+          "Fredag",
+          625
+        ]
+      ]
+    },
+    {
+      "hendelse": {
+        "periode": "2022-10-17 til 2022-10-21",
+        "arsak": "Gjentatte signalfeil Oslo S og Nationaltheatret (ettermiddager)",
+        "type": "forsinkelser_pendler"
+      },
+      "dager": [
+        [
+          "2022-10-17",
+          "Mandag",
+          0
+        ],
+        [
+          "2022-10-18",
+          "Tirsdag",
+          296
+        ],
+        [
+          "2022-10-19",
+          "Onsdag",
+          314
+        ],
+        [
+          "2022-10-20",
+          "Torsdag",
+          343
+        ],
+        [
+          "2022-10-21",
+          "Fredag",
+          409
+        ]
+      ]
+    },
+    {
+      "hendelse": {
+        "periode": "2024-01-03 til 2024-01-05",
+        "arsak": "Ekstremt snøkaos Oslo S, alle tog innstilt eller kraftig forsinket",
+        "type": "snokaos"
+      },
+      "dager": [
+        [
+          "2024-01-03",
+          "Onsdag",
+          205
+        ],
+        [
+          "2024-01-04",
+          "Torsdag",
+          248
+        ],
+        [
+          "2024-01-05",
+          "Fredag",
+          296
+        ]
+      ]
+    },
+    {
+      "hendelse": {
+        "periode": "2022-06-11",
+        "arsak": "Lørdagsstans Oslotunnelen pga jordfeil",
+        "type": "helgestans"
+      },
+      "dager": [
+        [
+          "2022-06-11",
+          "Lørdag",
+          933
+        ]
+      ]
+    },
+    {
+      "hendelse": {
+        "periode": "2023-11-18",
+        "arsak": "Lørdagsstans sporfeil Bryn/Lillestrøm",
+        "type": "helgestans"
+      },
+      "dager": [
+        [
+          "2023-11-18",
+          "Lørdag",
+          519
+        ]
+      ]
+    }
+  ],
+  "top_avvik_dager": [
+    {
+      "dato": "2024-07-26",
+      "ukedag": "Fredag",
+      "besok": 738,
+      "forventet": 431.7,
+      "avvik_pct": 71.0
+    },
+    {
+      "dato": "2024-07-16",
+      "ukedag": "Tirsdag",
+      "besok": 532,
+      "forventet": 314.4,
+      "avvik_pct": 69.2
+    },
+    {
+      "dato": "2022-07-10",
+      "ukedag": "Søndag",
+      "besok": 1063,
+      "forventet": 630.1,
+      "avvik_pct": 68.7
+    },
+    {
+      "dato": "2024-07-06",
+      "ukedag": "Lørdag",
+      "besok": 1183,
+      "forventet": 701.9,
+      "avvik_pct": 68.5
+    },
+    {
+      "dato": "2024-07-20",
+      "ukedag": "Lørdag",
+      "besok": 1183,
+      "forventet": 701.9,
+      "avvik_pct": 68.5
+    },
+    {
+      "dato": "2024-07-28",
+      "ukedag": "Søndag",
+      "besok": 1045,
+      "forventet": 620.6,
+      "avvik_pct": 68.4
+    },
+    {
+      "dato": "2020-07-08",
+      "ukedag": "Onsdag",
+      "besok": 216,
+      "forventet": 128.5,
+      "avvik_pct": 68.1
+    },
+    {
+      "dato": "2020-07-15",
+      "ukedag": "Onsdag",
+      "besok": 215,
+      "forventet": 128.5,
+      "avvik_pct": 67.3
+    },
+    {
+      "dato": "2024-07-05",
+      "ukedag": "Fredag",
+      "besok": 721,
+      "forventet": 431.7,
+      "avvik_pct": 67.0
+    },
+    {
+      "dato": "2022-07-29",
+      "ukedag": "Fredag",
+      "besok": 744,
+      "forventet": 446.2,
+      "avvik_pct": 66.7
+    },
+    {
+      "dato": "2023-07-06",
+      "ukedag": "Torsdag",
+      "besok": 626,
+      "forventet": 375.8,
+      "avvik_pct": 66.6
+    },
+    {
+      "dato": "2020-07-22",
+      "ukedag": "Onsdag",
+      "besok": 214,
+      "forventet": 128.5,
+      "avvik_pct": 66.5
+    },
+    {
+      "dato": "2023-07-28",
+      "ukedag": "Fredag",
+      "besok": 726,
+      "forventet": 437.0,
+      "avvik_pct": 66.1
+    },
+    {
+      "dato": "2020-07-24",
+      "ukedag": "Fredag",
+      "besok": 277,
+      "forventet": 167.3,
+      "avvik_pct": 65.6
+    },
+    {
+      "dato": "2023-07-08",
+      "ukedag": "Lørdag",
+      "besok": 1148,
+      "forventet": 694.3,
+      "avvik_pct": 65.3
+    }
+  ]
+}

@@ -130,7 +130,7 @@ def main() -> None:
         console.print(
             Panel(
                 resp.text,
-                title="🏛️ Aura Museumsvert",
+                title="🏛️ Kunstpixel Museumsvert",
                 subtitle=f"Kategori: {resp.category} | Verktøy: {', '.join(resp.tools_used) or 'ingen'}",
                 border_style="green",
             )

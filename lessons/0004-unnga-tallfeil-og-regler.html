@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leksjon 4: Hvordan unngå at KI-en driter seg ut på tall</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .case-box {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .badge-danger { background: #ffe3e3; color: #da1e28; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: bold; }
+    .badge-success { background: #defbe6; color: #198038; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="meta-tag">Leksjon 0004 • Kunstpixel & KI i drift</div>
+    <h1>Hvordan unngå at KI-en driter seg ut på tall og regler</h1>
+    
+    <p style="font-size: 1.15rem;">
+      Språkmodeller elsker å virke selvsikre. Hvis du ber en standard ChatGPT om å sette opp en vaktliste for kiosken på museet, vil den levere et svar som ser kjempeproft ut.
+      <br><br>
+      <strong>Problemet?</strong> Den overser lett at en ansatt mangler gyldig matkurs, at noen har fri, eller at den har foreslått 4 personer når du trengte 5.
+    </p>
+
+    <div style="text-align: center; margin: 1.5rem 0;">
+      <img src="../assets/fasit_skjonn_balanse.png" alt="Balanse mellom Fasit og Skjønn" style="max-width: 80%; border-radius: 6px;">
+    </div>
+
+    <h2>De 3 fellene KI går i (og hvordan Kunstpixel stopper dem)</h2>
+
+    <!-- FELLE 1 -->
+    <div class="case-box">
+      <span class="badge-danger">Felle 1: "Kikket bare på fornavnet"</span>
+      <h3 style="margin-top: 0.5rem;">KI-en glemmer utløpsdatoer på kurs og godkjenninger</h3>
+      <p>
+        I Kunstpixel har vi strenge krav til kiosksalg: Den som står i kassa må ha <strong>godkjent allergenkurs</strong>.
+      </p>
+      <ul>
+        <li><strong>Det KI-en gjør galt:</strong> Den ser at ansatt E105 har "Allergenkurs" i CV-en og setter personen på vakt. Men kurset gikk ut i 2024!</li>
+        <li><strong>Slik løser Kunstpixel det:</strong> KI-en får ikke lov til å vurdere datoen selv. Den må kalle verktøyet vårt <code>count_documented_skill</code>, som sjekker gyldighet matematisk mot dagens dato.</li>
+      </ul>
+    </div>
+
+    <!-- FELLE 2 -->
+    <div class="case-box">
+      <span class="badge-danger">Felle 2: "Tellefeilen"</span>
+      <h3 style="margin-top: 0.5rem;">KI-er kan ikke telle pålitelig</h3>
+      <p>
+        Språkmodeller tenker i ord og sannsynligheter, ikke i tall. Hvis du ber om 5 personer, hender det ofte at den leverer 4 eller 6 fordi teksten høres bra ut.
+      </p>
+      <ul>
+        <li><strong>Slik løser Kunstpixel det:</strong> Vi har bygget et "orakel" (et fast regnestykke i Python). Når KI-en foreslår en liste, kjøres en automatisk test: <em>Er det nøyaktig 5? Har alle gyldig bevis? Hvis nei → AVVIS svaret umiddelbart.</em></li>
+      </ul>
+    </div>
+
+    <!-- FELLE 3 -->
+    <div class="case-box">
+      <span class="badge-danger">Felle 3: "Fri diktning"</span>
+      <h3 style="margin-top: 0.5rem;">KI-en finner på fakta for å være hyggelig</h3>
+      <p>
+        Hvis en gjest spør: <em>"Hva spiser Nøkken til frokost?"</em>, vil en uregulert KI kanskje dikte opp et koselig eventyr om at han spiser vannliljer.
+      </p>
+      <ul>
+        <li><strong>Slik løser Kunstpixel det:</strong> I <code>AGENTS.md</code> har vi en urokkelig regel: <em>"Du skal kun uttale deg basert på verkskortet i databasen."</em> KI-en svarer i stedet basert på Kittelsens faktiske beskrivelse: Nøkken er en skummel naturvætt fra norsk folketro.</li>
+      </ul>
+    </div>
+
+    <h2>Den gylne regelen for data i KI:</h2>
+    <div class="box box-fasit">
+      <p style="margin: 0; font-size: 1.15rem; font-weight: bold;">
+        La databasen ta seg av reglene, datoene og tellingen.<br>
+        La KI-en ta seg av formidlingen, språket og varmen overfor menneskene.
+      </p>
+    </div>
+
+    <div class="interactive-quiz">
+      <h3 style="margin-top:0;">Test deg selv: Hva er den største faren hvis du lar en KI styre vaktlistene helt alene uten en databaseregel i bunn?</h3>
+      
+      <div class="quiz-option" onclick="checkAnswer(1)">
+        <strong>A:</strong> Den vil bruke altfor lang tid på å svare.
+      </div>
+      <div class="quiz-option" onclick="checkAnswer(2)">
+        <strong>B:</strong> Den vil sette opp folk som mangler lovpålagt HMS-kurs eller som har ferie, fordi den gjetter basert på hvem som høres passende ut i teksten.
+      </div>
+
+      <div id="quiz-feedback" class="feedback-area"></div>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 2rem 0;">
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      <a href="0003-helt-enkelt-api-vs-mcp.html">← Gå til Leksjon 3 (Enkelt forklart)</a> | 
+      <a href="0001-sqlite-vs-rag-samlingsdata.html">Leksjon 1 (Fasit vs Skjønn)</a>
+    </p>
+  </div>
+
+  <script>
+    function checkAnswer(choice) {
+      const fb = document.getElementById('quiz-feedback');
+      fb.style.display = 'block';
+      if (choice === 2) {
+        fb.className = 'feedback-area box-fasit';
+        fb.innerHTML = '<strong>Helt i blinken!</strong> Det er nøyaktig dette som skjer hvis man stoler blindt på en språkmodell til HR eller drift. Derfor har vi i Kunstpixel bygget egne regel-sjekker som stopper forslag som bryter HMS-regler.';
+      } else {
+        fb.className = 'feedback-area box-info';
+        fb.innerHTML = 'Nei, KI er lynrask. Problemet er at den gjør alvorlige feil på regler og datoer.';
+      }
+    }
+  </script>
+</body>
+</html>

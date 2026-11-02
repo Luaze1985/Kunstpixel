@@ -1,4 +1,4 @@
-# Råintervjulogg: Oppstart Aura Kunstmuseum
+# Råintervjulogg: Oppstart Kunstpixel
 
 - **Dato:** 2026-09-14
 - **Deltakere:** Menneskelig eier (AI-gründer) og Kontekstbygger-agent

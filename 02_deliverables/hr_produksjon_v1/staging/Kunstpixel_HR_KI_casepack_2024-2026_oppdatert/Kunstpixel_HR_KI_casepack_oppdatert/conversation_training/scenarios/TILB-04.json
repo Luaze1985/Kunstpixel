@@ -1,0 +1,21 @@
+{
+  "id": "TILB-04",
+  "title": "Løpende feedback (in-the-moment)",
+  "description": "Gi feedback i øyeblikket når noe skjer.",
+  "duration_minutes": 10,
+  "conversation_type": "Endringssamtale",
+  "persona_name": "Adrian",
+  "persona_role": "Teammedlem som nettopp avbrøt en kollega",
+  "tags_visible": [
+    "timing",
+    "umiddelbar",
+    "effektiv"
+  ],
+  "hidden_tag_count": 1,
+  "source_status": "metadata_complete",
+  "catalog_group": "HR og ledersamtaler",
+  "input_notes": "Katalogmetadata fra brukerens innlimte tekst, ikke komplett rollemanus. +N betyr at flere tagger er skjult i kilden, ikke at de er kjent.",
+  "source": "user_supplied_paste_2026-10-20",
+  "scenario_implemented": false,
+  "persona_is_verified_synthetic": false
+}

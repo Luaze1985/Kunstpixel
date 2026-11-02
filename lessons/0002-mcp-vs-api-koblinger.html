@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leksjon 2: MCP vs. API — Hvordan KI kobles til systemer</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="meta-tag">Leksjon 0002 • Kunstpixel & KI i drift</div>
+    <h1>MCP vs. API: Hvordan KI kobles til interne fagsystemer</h1>
+    
+    <p>
+      Et av de vanligste spørsmålene fra ledere og utviklere er: 
+      <em>"Vi har jo allerede REST API-er. Hvorfor trenger vi MCP (Model Context Protocol)?"</em>
+    </p>
+    <p>
+      I Kunstpixel har vi faktisk <strong>begge deler bygget opp side om side</strong>:
+    </p>
+    <ul>
+      <li>Ett lokalt REST API på port <code>8765</code> (i <code>src/hr_api.py</code>).</li>
+      <li>To FastMCP-servere som kjører over stdio (<code>src/mcp_server.py</code> og <code>src/hr_mcp_server.py</code>).</li>
+    </ul>
+
+    <div class="box box-info">
+      <strong>Kjernen i hva du lærer bort:</strong><br>
+      <em>"Et API er bygget for at en menneskelig programmerer skal skrive kode mot det. En MCP-server er bygget for at en KI-agent skal oppdage, forstå og kalle verktøy helt autonomt uten manuell koding."</em>
+    </div>
+
+    <h2>1. Visuell sammenligning: Hvorfor MCP revolusjonerer KI-drift</h2>
+
+    <div style="text-align: center; margin: 1.5rem 0;">
+      <img src="../assets/mcp_vs_api.png" alt="MCP vs Tradisjonell REST API" style="max-width: 100%; border: 1px solid var(--border); border-radius: 6px;">
+      <p style="font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem;">Figur 1: Egenskaper vurdert for KI-agenter i operativ drift (MCP vs. REST API).</p>
+    </div>
+
+    <h2>2. Hva er forskjellen under panseret?</h2>
+    
+    <div class="grid-2">
+      <div class="box" style="background: #f4f5f7; border-left: 4px solid #5e6c84;">
+        <h3 style="margin-top:0;">Tradisjonell REST API (f.eks. `src/hr_api.py`)</h3>
+        <p><strong>URL-basert over HTTP</strong></p>
+        <pre style="font-size: 0.8rem;"><code>GET /api/v1/hr/candidates?date=2026-11-07&need=5
+Host: 127.0.0.1:8765</code></pre>
+        <ul>
+          <li><strong>Ulempe for KI:</strong> Modellen må vite URL-strukturen, query-parametere, HTTP-metoder (GET/POST) og feilkoder.</li>
+          <li><strong>Passer best for:</strong> Web-grensesnitt, apper, dashboards og maskin-til-maskin-integrasjon mellom tradisjonelle systemer.</li>
+        </ul>
+      </div>
+
+      <div class="box box-fasit">
+        <h3 style="margin-top:0; color: var(--success);">Model Context Protocol (FastMCP)</h3>
+        <p><strong>Protokoll for direkte KI-verktøykall</strong></p>
+        <pre style="font-size: 0.8rem;"><code>@mcp.tool()
+def search_collection(room_id: str, limit: int = 10):
+    """Søk i samlingen filtrert på sal."""
+    ...</code></pre>
+        <ul>
+          <li><strong>Styrke for KI:</strong> Protokollen oversetter Python-docstrings og type hints automatisk til et <em>JSON Schema</em> som modellen forstår direkte.</li>
+          <li><strong>Passer best for:</strong> KI-assistenter, Codex, Claude Code, museumsverter og agenter som må handle i sanntid.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>3. Kode-eksempel fra Kunstpixel: Hvordan FastMCP beskytter databasen</h2>
+    <p>
+      Se hvordan verktøyet er definert i <code>src/kunstpixel/core/mcp_server.py</code>:
+    </p>
+    <pre><code class="language-python">@mcp.tool()
+def get_artwork_details(artwork_id: str) -> dict[str, Any]:
+    """Hent komplette og autoritative metadata for et spesifikt kunstverk.
+    
+    Args:
+        artwork_id: Unikt inventarnummer (f.eks. 'AURA-2026-009') eller tittel.
+    """
+    return query_artwork_details(artwork_id)</code></pre>
+
+    <p>
+      Hva skjer bak kulissene her?
+    </p>
+    <ol>
+      <li><strong>Ingen SQL-injeksjon:</strong> Modellen kan aldri sende rå SQL som <code>DROP TABLE verk;</code>. Den kan bare sende en streng for <code>artwork_id</code>.</li>
+      <li><strong>Skrivebeskyttelse (`mode=ro`):</strong> Databasen åpnes alltid read-only. Selv om verktøykoden hadde hatt en feil, blokkerer SQLite-motoren all modifikasjon.</li>
+      <li><strong>Type-sikkerhet:</strong> Hvis modellen prøver å sende ugyldig input, avviser FastMCP kallet umiddelbart med en strukturert feilmelding.</li>
+    </ol>
+
+    <h2>4. Test din forståelse (Aktiv gjenhenting)</h2>
+    <div class="interactive-quiz">
+      <h3 style="margin-top:0;">Spørsmål: Hvorfor bør ikke en KI-agent kobles direkte til en database via rå SQL-spørringer i produksjon?</h3>
+      
+      <div class="quiz-option" onclick="checkAnswer(1)">
+        <strong>A:</strong> Fordi språkmodeller ikke forstår SQL-syntaks og derfor aldri klarer å skrive gyldige spørringer.
+      </div>
+      <div class="quiz-option" onclick="checkAnswer(2)">
+        <strong>B:</strong> Fordi rå SQL gir risiko for datakorrupsjon, SQL-injeksjon og manglende sporbarhet. Ved å pakke oppslag inn i MCP-verktøy sikrer vi forhåndsgodkjente spørringer, typesjekk og read-only tilgang.
+      </div>
+      <div class="quiz-option" onclick="checkAnswer(3)">
+        <strong>C:</strong> Fordi MCP er raskere enn SQL over nettverket.
+      </div>
+
+      <div id="quiz-feedback" class="feedback-area"></div>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 2.5rem 0;">
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      <strong>Navigasjon:</strong> <a href="0001-sqlite-vs-rag-samlingsdata.html">← Gå til Leksjon 1 (SQLite vs RAG)</a> | 
+      <strong>Primærkilde:</strong> <code>src/kunstpixel/core/mcp_server.py</code> og <code>src/kunstpixel/core/hrdemo_api.py</code>.<br>
+      <em>Still gjerne oppfølgingsspørsmål direkte til agenten i chatten!</em>
+    </p>
+  </div>
+
+  <script>
+    function checkAnswer(choice) {
+      const fb = document.getElementById('quiz-feedback');
+      fb.style.display = 'block';
+      if (choice === 2) {
+        fb.className = 'feedback-area box-fasit';
+        fb.innerHTML = '<strong>Helt korrekt!</strong> Å gi en LLM fri SQL-tilgang er en stor sikkerhetsrisiko og fører ofte til uforutsigbare spørringer som henger databasen. MCP fungerer som en type-trygg kontrakt (kontrollert grensesnitt) mellom KI-en og databasen.';
+      } else {
+        fb.className = 'feedback-area box-info';
+        fb.style.borderLeftColor = 'var(--danger)';
+        fb.style.background = '#fff1f1';
+        fb.innerHTML = '<strong>Prøv igjen:</strong> Språkmodeller kan faktisk skrive utmerket SQL, men problemet er sikkerhet, utilsiktede endringer og mangel på grensekontroll. Se på alternativ B.';
+      }
+    }
+  </script>
+</body>
+</html>

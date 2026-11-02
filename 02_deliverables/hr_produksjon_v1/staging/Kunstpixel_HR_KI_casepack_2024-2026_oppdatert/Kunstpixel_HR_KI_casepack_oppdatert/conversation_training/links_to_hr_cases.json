@@ -1,0 +1,189 @@
+{
+  "version": "0.2",
+  "note": "14 redaksjonelle koblinger mellom originale KI-HR-case og samtalemetadatabasen. Kobling er forslag, ikke implisitt treningsmanus.",
+  "links": [
+    {
+      "hr_case_id": "HR-004",
+      "hr_case_title": "Skiftpress: leveranse eller hviletid?",
+      "conversation_ids": [
+        "VANS-36",
+        "VANS-22",
+        "MOT-05",
+        "SELV-04"
+      ],
+      "pedagogical_link": "Den ansatte tar opp belastning; modellen får press om å fylle vakt uten nødvendige rettslige og faktiske kontroller.",
+      "integration_status": "conceptual_link_not_implemented",
+      "human_assessment_required": true
+    },
+    {
+      "hr_case_id": "HR-005",
+      "hr_case_title": "Produksjonsdata blir personovervåking",
+      "conversation_ids": [
+        "ENDR-07",
+        "PRES-02",
+        "VANS-01",
+        "TILB-01"
+      ],
+      "pedagogical_link": "Leder forklarer nye KPI-er; modellen må avvise ubegrunnet personrangering.",
+      "integration_status": "conceptual_link_not_implemented",
+      "human_assessment_required": true
+    },
+    {
+      "hr_case_id": "HR-006",
+      "hr_case_title": "Kompetansegap og kandidatprofilering",
+      "conversation_ids": [
+        "ONB-01",
+        "ONB-02",
+        "VANS-19",
+        "KONF-01"
+      ],
+      "pedagogical_link": "Kompetansevurdering og forfremmelse krever dokumenterte, saklige kriterier.",
+      "integration_status": "conceptual_link_not_implemented",
+      "human_assessment_required": true
+    },
+    {
+      "hr_case_id": "HR-007",
+      "hr_case_title": "Kutt i bemanningen: hvem skal ut?",
+      "conversation_ids": [
+        "VANS-13",
+        "VANS-14",
+        "VANS-20",
+        "VANS-16"
+      ],
+      "pedagogical_link": "Inkluder drøftelse, saklighet, kontradiksjon og menneskelig beslutning; ikke lag automatisk utvelgelsesliste.",
+      "integration_status": "conceptual_link_not_implemented",
+      "human_assessment_required": true
+    },
+    {
+      "hr_case_id": "HR-008",
+      "hr_case_title": "Teams-aktivitet som prestasjonsmål",
+      "conversation_ids": [
+        "ENDR-07",
+        "PRES-02",
+        "VANS-10",
+        "VANS-28"
+      ],
+      "pedagogical_link": "Samtale om prestasjoner og konfidensialitet, uten å behandle metadata som direkte bevis på produktivitet.",
+      "integration_status": "conceptual_link_not_implemented",
+      "human_assessment_required": true
+    },
+    {
+      "hr_case_id": "HR-009",
+      "hr_case_title": "Lønnsgap i et team på fire",
+      "conversation_ids": [
+        "VANS-27",
+        "VANS-11",
+        "VANS-12",
+        "VANS-26"
+      ],
+      "pedagogical_link": "Øv på likelønn og lønnskommunikasjon uten uautorisert individinnsyn.",
+      "integration_status": "conceptual_link_not_implemented",
+      "human_assessment_required": true
+    },
+    {
+      "hr_case_id": "HR-010",
+      "hr_case_title": "AI-CV-screening: den skjulte skjevheten",
+      "conversation_ids": [
+        "ONB-01",
+        "PRES-01",
+        "KONF-02",
+        "VANS-18"
+      ],
+      "pedagogical_link": "Bruk lederdialoger om vurderinger og rettferdighet; disse er ikke i seg selv rekrutteringscase.",
+      "integration_status": "conceptual_link_not_implemented",
+      "human_assessment_required": true
+    },
+    {
+      "hr_case_id": "HR-011",
+      "hr_case_title": "Slutterisiko basert på digitale spor",
+      "conversation_ids": [
+        "MOT-09",
+        "VANS-24",
+        "VANS-15",
+        "COACH-05"
+      ],
+      "pedagogical_link": "Diskuter retensjon uten å utlede en identifisert ansatts private intensjoner fra kommunikasjon.",
+      "integration_status": "conceptual_link_not_implemented",
+      "human_assessment_required": true
+    },
+    {
+      "hr_case_id": "HR-012",
+      "hr_case_title": "Sykefraværsradar: bemanning eller diagnose?",
+      "conversation_ids": [
+        "SYK-03",
+        "SYK-05",
+        "SYK-01",
+        "SYK-08",
+        "VANS-09",
+        "VANS-32"
+      ],
+      "pedagogical_link": "Øv på funksjon, arbeidstilrettelegging og personalsamtale uten diagnoseutledning eller individuell helseprognose.",
+      "integration_status": "conceptual_link_not_implemented",
+      "human_assessment_required": true
+    },
+    {
+      "hr_case_id": "HR-013",
+      "hr_case_title": "Varsleren avsløres av den hjelpsomme KI-en",
+      "conversation_ids": [
+        "KRIS-06",
+        "KONF-03",
+        "VANS-10",
+        "ENDR-01"
+      ],
+      "pedagogical_link": "Mottak av varsel, konflikt og fortrolighet; ikke avslør direkte/indirekte identifikatorer.",
+      "integration_status": "conceptual_link_not_implemented",
+      "human_assessment_required": true
+    },
+    {
+      "hr_case_id": "HR-014",
+      "hr_case_title": "Arbeidsmiljøundersøkelse med tre svar",
+      "conversation_ids": [
+        "TILB-02",
+        "ENDR-01",
+        "SELV-02",
+        "VANS-29"
+      ],
+      "pedagogical_link": "Øv på tilbakemeldinger og psykososialt arbeidsmiljø uten å identifisere enkeltrespondenter.",
+      "integration_status": "conceptual_link_not_implemented",
+      "human_assessment_required": true
+    },
+    {
+      "hr_case_id": "HR-015",
+      "hr_case_title": "Turnusoptimalisering eller forskjellsbehandling?",
+      "conversation_ids": [
+        "KONF-04",
+        "KONF-03",
+        "VANS-36",
+        "VANS-35"
+      ],
+      "pedagogical_link": "Øv på rettferdig arbeidsfordeling og medbestemmelse uten å bruke private antakelser.",
+      "integration_status": "conceptual_link_not_implemented",
+      "human_assessment_required": true
+    },
+    {
+      "hr_case_id": "HR-016",
+      "hr_case_title": "Prompt injection i konfidensiell personalmappe",
+      "conversation_ids": [
+        "VANS-10",
+        "KRIS-06",
+        "VANS-20"
+      ],
+      "pedagogical_link": "Sikkerhetsøvelse: instruksjon inne i personalsaksdokument må ikke overstyre autorisasjon.",
+      "integration_status": "conceptual_link_not_implemented",
+      "human_assessment_required": true
+    },
+    {
+      "hr_case_id": "HR-017",
+      "hr_case_title": "HR-eksport til ekstern KI-leverandør",
+      "conversation_ids": [
+        "VANS-10",
+        "ENDR-05",
+        "KRIS-06",
+        "VANS-27"
+      ],
+      "pedagogical_link": "Sikkerhetsøvelse: sperr dataeksport og bruk minst mulig opplysninger for legitimt formål.",
+      "integration_status": "conceptual_link_not_implemented",
+      "human_assessment_required": true
+    }
+  ]
+}

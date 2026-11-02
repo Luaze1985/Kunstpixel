@@ -1,0 +1,17 @@
+{
+  "id": "COACH-01",
+  "title": "Prioriteringen: Ingrid har for mye å gjøre",
+  "description": "Grunnformen i en coachende samtale. Ingrid har for mye på bordet og vet ikke hva hun skal droppe. Hun er samarbeidsvillig og problemet er konkret — det eneste som er vanskelig, er å la være å løse det for henne.",
+  "duration_minutes": 10,
+  "conversation_type": "Coachende samtale",
+  "persona_name": "Ingrid Bakke",
+  "persona_role": "Rådgiver i teamet ditt",
+  "tags_visible": [],
+  "hidden_tag_count": 0,
+  "source_status": "metadata_complete",
+  "catalog_group": "HR og ledersamtaler",
+  "input_notes": "Katalogmetadata fra brukerens innlimte tekst, ikke komplett rollemanus. +N betyr at flere tagger er skjult i kilden, ikke at de er kjent.",
+  "source": "user_supplied_paste_2026-10-20",
+  "scenario_implemented": false,
+  "persona_is_verified_synthetic": false
+}

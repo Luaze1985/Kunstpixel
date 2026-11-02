@@ -1,0 +1,71 @@
+<link rel="stylesheet" href="af.css">
+<div class="af">
+  <div class="af-shell" style="grid-template-columns: minmax(0, 1fr);">
+    <main class="af-main">
+      <p class="af-caption">Kunstpixel</p>
+      <h1 class="af-title">Finn frem</h1>
+      <p class="af-lead">Slik finner LLM og Claude veien til interne sider, interne data og designsystemet.</p>
+
+      <section class="af-view" data-step="sider" id="sider">
+        <h2 class="af-title">Interne sider</h2>
+        <ol class="af-branch-map">
+          <li class="af-branch-step active"><span class="af-step-dot">1</span><p><strong>KUNNSKAPSKART.md</strong><small>Rotfilen peker på hvor ting ligger og hvilke kjøreregler som gjelder.</small></p></li>
+          <li class="af-branch-step"><span class="af-step-dot">2</span><p><strong>00_felles/FORMAAL.md</strong><small>De fire formålspunktene for de to gründerne.</small></p></li>
+          <li class="af-branch-step"><span class="af-step-dot">3</span><p><strong>Riktig mappe</strong><small>04_knowledge for rutiner, 03_team for roller, 02_deliverables for leveranser, 01_inbox for råmateriale.</small></p></li>
+          <li class="af-branch-step"><span class="af-step-dot">4</span><p><strong>00_felles/ordliste.yaml</strong><small>Slå opp begreper her før noe formuleres.</small></p></li>
+        </ol>
+      </section>
+
+      <section class="af-view" data-step="data" id="data">
+        <h2 class="af-title">Interne data</h2>
+        <ol class="af-branch-map">
+          <li class="af-branch-step active"><span class="af-step-dot">1</span><p><strong>Spørsmålet</strong><small>Hvilket verk, hvilken kunstner, sal, arrangement eller vanlig spørsmål?</small></p></li>
+          <li class="af-branch-step"><span class="af-step-dot">2</span><p><strong>Riktig MCP-verktøy</strong><small>Fem verktøy dekker alt: se tabellen under.</small></p></li>
+          <li class="af-branch-step"><span class="af-step-dot">3</span><p><strong>museum.db i 05_data</strong><small>Åpnes alltid skrivebeskyttet. Aldri INSERT, UPDATE eller DELETE.</small></p></li>
+          <li class="af-branch-step"><span class="af-step-dot">4</span><p><strong>Svar på norsk</strong><small>Bare det databasen inneholder. Ingen dikting.</small></p></li>
+        </ol>
+        <div class="af-table-wrap">
+          <table class="af-table">
+            <caption class="af-table-meta">Spør om, bruk verktøy</caption>
+            <thead><tr><th>Spør om</th><th>Verktøy</th></tr></thead>
+            <tbody>
+              <tr><td>Finne verk etter tittel, kunstner, teknikk, tema eller sal</td><td>search_collection</td></tr>
+              <tr><td>Hele verkskortet med tekst og proveniens</td><td>get_artwork_details</td></tr>
+              <tr><td>Verk i en sal, i visningsrekkefølge</td><td>get_room_artworks</td></tr>
+              <tr><td>Omvisninger, foredrag og verksteder</td><td>search_events</td></tr>
+              <tr><td>Åpningstider, priser og fasiliteter</td><td>search_faq</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="af-table-meta"><span class="af-source confirmed">AGENTS.md</span></p>
+      </section>
+
+      <section class="af-view" data-step="design" id="design">
+        <h2 class="af-title">Designsystemet</h2>
+        <ol class="af-branch-map">
+          <li class="af-branch-step active"><span class="af-step-dot">1</span><p><strong>Pre-kode gate</strong><small>Låst fagsystem? Over grensene? Spec-tabell og din OK.</small></p></li>
+          <li class="af-branch-step"><span class="af-step-dot">2</span><p><strong>Slå opp i kilden</strong><small>Les riktig fil under, ikke gjett.</small></p></li>
+          <li class="af-branch-step"><span class="af-step-dot">3</span><p><strong>Bygg med tokens og klasser</strong><small>tokens.css og bundle.css gir alle .af-klasser.</small></p></li>
+          <li class="af-branch-step"><span class="af-step-dot">4</span><p><strong>Validator</strong><small>verify_arbeidsflyt.py må gi exit code 0.</small></p></li>
+        </ol>
+        <div class="af-table-wrap">
+          <table class="af-table">
+            <caption class="af-table-meta">Trenger, les</caption>
+            <thead><tr><th>Trenger</th><th>Les</th></tr></thead>
+            <tbody>
+              <tr><td>Prinsipper, farger, komponenter</td><td>README.md</td></tr>
+              <tr><td>Flytmønster</td><td>01-flytmonstre.md</td></tr>
+              <tr><td>Tekstgrenser og feltregler</td><td>02-skjemaregler.md</td></tr>
+              <tr><td>Kvalitetssjekkliste</td><td>03-sjekkliste-og-prompt.md</td></tr>
+              <tr><td>Avklaringer og kompleksitet</td><td>05-avklaringer.md</td></tr>
+              <tr><td>Rapport og kildemerker</td><td>06-rapporter-og-innsikt.md</td></tr>
+              <tr><td>Farger og avstander</td><td>tokens.css</td></tr>
+              <tr><td>Komponentklasser</td><td>bundle.css</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="af-table-meta"><span class="af-source confirmed">Skillen arbeidsflyt</span></p>
+      </section>
+    </main>
+  </div>
+</div>

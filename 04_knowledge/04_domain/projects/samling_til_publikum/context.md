@@ -1,7 +1,7 @@
 # Prosjektkontekst: Fra samling til publikum
 
 ## Konseptuell ramme
-Prosjektet er det første vertikale snittet i Aura Kunstmuseum. Det tester hvordan en liten kulturbedrift kan oppnå betydelig effektivisering og kvalitetsløft ved hjelp av enkle, robuste verktøy fremfor tunge IT-systemer.
+Prosjektet er det første vertikale snittet i Kunstpixel. Det tester hvordan en liten kulturbedrift kan oppnå betydelig effektivisering og kvalitetsløft ved hjelp av enkle, robuste verktøy fremfor tunge IT-systemer.
 
 ## Målgrupper for prosjektet
 1. **AI-gründere / studenter:** Skal lære MCP-arkitektur, funksjonskall og strukturert innholdsgenerering.

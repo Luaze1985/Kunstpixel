@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leksjon 1: Hvorfor SQLite slår RAG på samlingsdata</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="meta-tag">Leksjon 0001 • Kunstpixel & KI i drift</div>
+    <h1>Hvorfor SQLite og FastMCP slår RAG på samlingsdata</h1>
+    
+    <p>
+      Når bedrifter skal sette KI i drift på egne data, gjør 90 % den samme feilen: De dumper alle data inn i en 
+      <strong>vektordatabase (RAG)</strong> og forventer at språkmodellen skal kunne regne, telle og svare presist. 
+      I Kunstpixel har vi valgt en fundamentalt annerledes, profesjonell arkitektur: <strong>Relasjonell Sannhetskilde (SQLite) + FastMCP + Persona</strong>.
+    </p>
+
+    <div class="box box-info">
+      <strong>Kjernen i hva du lærer bort:</strong><br>
+      <em>"RAG finner tekst som ligner semantisk. Databaser finner eksakte relasjoner og gjør presise aggregeringer. Blander du disse, får du feil svar og KI-hallusinasjon i produksjon."</em>
+    </div>
+
+    <h2>1. De faktiske tallene i Kunstpixel i dag</h2>
+    <p>
+      La oss se på den autoritative sannhetskilden i <code>05_data/museum.db</code>. Vår samling består per nå av:
+    </p>
+
+    <div style="text-align: center; margin: 1.5rem 0;">
+      <img src="../assets/samling_saler.png" alt="Kunstpixel Samling Fordeling per sal" style="max-width: 100%; border: 1px solid var(--border); border-radius: 6px;">
+      <p style="font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem;">Figur 1: Ekte fordeling av verk i Kunstpixels saler hentet direkte via SQLite og ECharts.</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Lokasjon (Sal ID)</th>
+          <th>Navn og tema</th>
+          <th>Antall verk</th>
+          <th>Hvorfor RAG feiler her</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>SAL-A</code></td>
+          <td>Mytologi og natur (Kittelsen m.fl.)</td>
+          <td><strong>4</strong></td>
+          <td>Hvis du spør en vektorbase: <em>"Hvor mange verk har vi i Sal A?"</em>, vil den hente ut chunker basert på likhet, ikke utføre en deterministisk <code>COUNT(*)</code>. Modellen gjetter.</td>
+        </tr>
+        <tr>
+          <td><code>SAL-B</code></td>
+          <td>Realisme og samfunn (Krohg m.fl.)</td>
+          <td><strong>3</strong></td>
+          <td>Vektorsøk kan miste et verk fordi teksten i verkskortet lignet mindre på prompten enn de andre.</td>
+        </tr>
+        <tr>
+          <td><code>SAL-C</code></td>
+          <td>Lys, farge og interiør (Backer m.fl.)</td>
+          <td><strong>4</strong></td>
+          <td>Eksakt telling krever relasjonsintegritet, ikke kosinuslikhet.</td>
+        </tr>
+        <tr>
+          <td><code>SAL-D</code></td>
+          <td>Eksistens og modernisme (Munch m.fl.)</td>
+          <td><strong>3</strong></td>
+          <td>Her henger "Skrik" og "Madonna". Publikum krever 100 % korrekt rom-angivelse.</td>
+        </tr>
+        <tr>
+          <td><code>MAG-1</code></td>
+          <td>Magasin 1 (Klimastyrt lager)</td>
+          <td><strong>2</strong></td>
+          <td>Verk som ikke er utstilt. Skal verten henvise folk hit? Nei!</td>
+        </tr>
+        <tr>
+          <td><code>SAL-E</code></td>
+          <td>Temporær utstilling</td>
+          <td><strong>0</strong></td>
+          <td>En vektorbase "vet" ikke at et tomt rom har 0 verk — den prøver å finne noe som matcher.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>2. Fasit vs. Skjønn — Den 2-delte modellen</h2>
+    <p>
+      Når du skal designe et KI-system eller forklare det til andre, deler vi problemet i to:
+    </p>
+
+    <div class="grid-2">
+      <div class="box box-fasit">
+        <h3 style="margin-top:0; color: var(--success);">1. FASIT (Databasen & Verktøy)</h3>
+        <p><strong>Domenet til databasen og koden.</strong></p>
+        <ul>
+          <li>Hvor henger "Skrik"? <code>SAL-D</code>.</li>
+          <li>Hvor mange verk finnes totalt? <code>16</code>.</li>
+          <li>Hva koster en billett for student? <code>100 kr</code>.</li>
+          <li>Er ansatt E101 godkjent for kassa? <code>Ja/Nei</code>.</li>
+        </ul>
+        <p><em>Regel: KI-en har ALDRI lov til å gjette på fasit. Den MÅ kalle et FastMCP-verktøy.</em></p>
+      </div>
+
+      <div class="box box-skjonn">
+        <h3 style="margin-top:0; color: #ba4e9b;">2. SKJØNN (Språkmodellen)</h3>
+        <p><strong>Domenet til språkmodellen og personaen.</strong></p>
+        <ul>
+          <li>Hvordan forklare stemningen i "Nøkken" til et 7 år gammelt barn?</li>
+          <li>Hvordan svare høflig og imøtekommende på en klage?</li>
+          <li>Koble sammen temaene ensomhet og byliv på tvers av to epoker.</li>
+        </ul>
+        <p><em>Regel: KI-en bruker sin språklige intelligens til å formidle fasiten vakkert og pedagogisk.</em></p>
+      </div>
+    </div>
+
+    <h2>3. Arkitekturen i drift: FastMCP som bro</h2>
+    <p>
+      I Kunstpixel har vi koblet dette sammen med FastMCP (Model Context Protocol). Agenten har ikke rå SQL-tilgang (det ville vært en sikkerhetsrisiko og skapt ustabilitet). I stedet har den spesialiserte verktøy:
+    </p>
+
+    <pre><code># Fra src/mcp_server.py
+@mcp.tool()
+def search_collection(query: str = "", room_id: str = ""):
+    """Søker autoritativt i samlingen med ferdig indekserte filtre."""
+    ...
+
+@mcp.tool()
+def get_room_artworks(room_id: str):
+    """Returnerer verk i kuratert rekkefølge for en spesifikk sal."""
+    ...</code></pre>
+
+    <p>
+      Når en bruker spør: <em>"Hva kan jeg se i Sal C?"</em> skjer følgende:
+    </p>
+    <ol>
+      <li>KI-en forstår intensjonen (sal-oppslag).</li>
+      <li>KI-en kaller <code>get_room_artworks(room_id="SAL-C")</code> deterministisk over FastMCP.</li>
+      <li>Databasen returnerer nøyaktig de 4 verkene (Harriet Backer m.fl.) i <code>mode=ro</code>.</li>
+      <li>KI-en tar de 4 faktaene og formulerer et varmt, kunnskapsrikt svar som museumsvert.</li>
+    </ol>
+
+    <h2>4. Test din forståelse (Aktiv gjenhenting)</h2>
+    <div class="interactive-quiz">
+      <h3 style="margin-top:0;">Spørsmål: En museumsleder spør deg: "Kan vi ikke bare laste opp alle verkskatalogene i en vanlig Chat-med-PDF/RAG-løsning?"</h3>
+      <p>Hva er det mest presise faglige svaret du gir?</p>
+      
+      <div class="quiz-option" onclick="checkAnswer(1)">
+        <strong>A:</strong> "Jo, det fungerer helt fint og er mye raskere å sette opp enn en database."
+      </div>
+      <div class="quiz-option" onclick="checkAnswer(2)">
+        <strong>B:</strong> "Nei, fordi RAG baserer seg på tekstlikhet og vil feile grovt på aggregering (telling), åpningstider, romplassering og relasjoner. Samlingsdata krever en strukturert database med verktøyoppslag for fasit, og KI for formidling."
+      </div>
+      <div class="quiz-option" onclick="checkAnswer(3)">
+        <strong>C:</strong> "Nei, fordi PDF-er er for store filer for moderne språkmodeller å lese."
+      </div>
+
+      <div id="quiz-feedback" class="feedback-area"></div>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 2.5rem 0;">
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      <strong>Primærkilde for fordypning:</strong> Les <code>00_felles/FORMAAL.md</code> og <code>src/mcp_server.py</code> i Kunstpixel-katalogen.<br>
+      <em>Still gjerne oppfølgingsspørsmål direkte til agenten i chatten!</em>
+    </p>
+  </div>
+
+  <script>
+    function checkAnswer(choice) {
+      const fb = document.getElementById('quiz-feedback');
+      fb.style.display = 'block';
+      if (choice === 2) {
+        fb.className = 'feedback-area box-fasit';
+        fb.innerHTML = '<strong>Helt korrekt!</strong> Du spikrer skillet mellom fasit og semantisk søk. Vektorbaser kan ikke garantere relasjonsintegritet eller deterministisk telling. Når du forklarer dette til andre, er det nettopp dette skillet som etablerer deg som en trygg rådgiver.';
+      } else {
+        fb.className = 'feedback-area box-info';
+        fb.style.borderLeftColor = 'var(--danger)';
+        fb.style.background = '#fff1f1';
+        fb.innerHTML = '<strong>Ikke helt:</strong> Se på tabellen over. Tenk på hva som skjer hvis noen spør "hvor mange verk er i Sal E?". Alternativ B er det presise svaret som skiller amatører fra produksjonsarkitektur.';
+      }
+    }
+  </script>
+</body>
+</html>

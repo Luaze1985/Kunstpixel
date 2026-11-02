@@ -1,0 +1,8 @@
+# Bare det Dockerfile trenger kommer med i byggekonteksten (tillatelsesliste).
+*
+!src
+!05_data/museum.db
+!deploy/demo/requirements.txt
+**/__pycache__
+**/*.pyc
+**/desktop.ini

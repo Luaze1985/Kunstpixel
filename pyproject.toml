@@ -8,10 +8,15 @@ dependencies = [
     "mcp>=1.29.1",
     "fastmcp>=3.4.2",
     "pydantic>=2.12.5",
+    "pyyaml>=6.0",
     "rich>=15.0.0",
 ]
 
+[project.optional-dependencies]
+llm = ["anthropic"]
+
 [tool.pytest.ini_options]
+markers = ["llm_live: kjører mot ekte modell (krever ANTHROPIC_API_KEY), hoppes over som standard"]
 minversion = "8.0"
 testpaths = ["tests"]
 pythonpath = ["."]

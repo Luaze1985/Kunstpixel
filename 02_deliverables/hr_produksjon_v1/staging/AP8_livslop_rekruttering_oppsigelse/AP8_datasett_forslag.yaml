@@ -1,0 +1,425 @@
+- tabell: hr_rekrutteringsbehov
+  beskrivelse: Én dokumentert ledig stilling eller behov per rekrutteringssak.
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  kolonner:
+  - navn: behov_id
+    type: tekst
+    unik: true
+  - navn: avdeling_id
+    type: tekst
+    kobles_til: hr_ansatte.avdeling
+  - navn: styrk08
+    type: tekst
+    kobles_til: hr_ansatte.styrk08
+  - navn: stilling_prosent
+    type: heltall
+    tillatte_verdier: 1–100; ingen kildestøttet fordeling for museum
+  - navn: ansettelsesform
+    type: kategori
+    tillatte_verdier:
+    - fast
+    - midlertidig
+  - navn: midlertidighetsgrunnlag
+    type: kategori_eller_null
+    tillatte_verdier:
+    - vikariat
+    - midlertidig_karakter
+    - annet_lovlig_grunnlag
+    - må_vurderes
+  - navn: stillingsutlysning_dato
+    type: dato_eller_null
+  - navn: fortrinnsrett_vurdert
+    type: boolsk_eller_null
+  - navn: behov_for_deltid_dokumentert
+    type: boolsk_eller_null
+  - navn: kildeklasse
+    type: tekst
+    standard: syntetisk scenario
+  omraade: 8
+  sektor:
+  - industri
+  - privat
+  - kommune
+- tabell: hr_rekrutteringsprosess
+  beskrivelse: Kun prosessflyt og aggregert søkerantall. Ikke lag personidentifiserende søkerdata.
+  kilde: https://www.datatilsynet.no/rettigheter-og-plikter/personvernprinsippene/
+  kolonner:
+  - navn: prosess_id
+    type: tekst
+    unik: true
+  - navn: behov_id
+    type: tekst
+    kobles_til: hr_rekrutteringsbehov.behov_id
+  - navn: prosess_status
+    type: kategori
+    tillatte_verdier:
+    - utlysning
+    - søknadsbehandling
+    - intervju
+    - tilbud
+    - lukket
+  - navn: dato_start
+    type: dato
+  - navn: dato_lukket
+    type: dato_eller_null
+  - navn: sokere_antall
+    type: heltall_eller_null
+    fordeling: ikke funnet; krever scenario eller egnet administrativ statistikk
+  - navn: kvalifikasjonsvurdering_dokumentert
+    type: boolsk_eller_null
+  - navn: data_slettestatus
+    type: kategori
+    tillatte_verdier:
+    - ikke_aktuelt
+    - vurderes
+    - slettet
+    - oppbevaring_begrunnet
+  - navn: datakilde
+    type: tekst
+    standard: syntetisk scenario
+  omraade: 8
+  sektor:
+  - industri
+  - privat
+  - kommune
+- tabell: hr_ansettelseskontrakt
+  beskrivelse: Kontroll av arbeidsavtalens dokumentasjon og frister.
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/arbeidsavtale/
+  kolonner:
+  - navn: kontrakt_id
+    type: tekst
+    unik: true
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: ansettelse_start
+    type: dato
+    kobles_til: hr_ansatte.ansatt_fra
+  - navn: planlagt_slutt
+    type: dato_eller_null
+    kobles_til: hr_ansatte.ansatt_til
+  - navn: avtale_signert_dato
+    type: dato_eller_null
+  - navn: midlertidig
+    type: boolsk
+  - navn: lovgrunnlag_midlertidig
+    type: tekst_eller_null
+  - navn: provetid_start
+    type: dato_eller_null
+  - navn: provetid_slutt
+    type: dato_eller_null
+  - navn: tidligere_sammenhengende_ansettelse
+    type: boolsk_eller_null
+  - navn: tariff_part
+    type: tekst_eller_null
+  - navn: kildeklasse
+    type: tekst
+    standard: syntetisk scenario
+  omraade: 8
+  sektor:
+  - industri
+  - privat
+  - kommune
+- tabell: hr_onboarding_tiltak
+  beskrivelse: Risikobasert opplæringsprosess – ikke universelle 30-60-90-dagers lovfrister.
+  kilde: https://www.arbeidstilsynet.no/arbeidstid-og-organisering/generelle-krav-til-opplaring/
+  kolonner:
+  - navn: tiltak_id
+    type: tekst
+    unik: true
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: kompetanse_id
+    type: tekst_eller_null
+    kobles_til: hr_kompetanse.kompetanse_id hvis felt finnes
+  - navn: risikoniva
+    type: kategori
+    tillatte_verdier:
+    - lav
+    - middels
+    - høy
+    - ikke_vurdert
+  - navn: krevd_for_arbeidsoppgave
+    type: boolsk
+  - navn: opplaering_type
+    type: kategori
+    tillatte_verdier:
+    - HMS
+    - maskin
+    - datasystem
+    - arbeidsoppgave
+    - annet
+  - navn: status
+    type: kategori
+    tillatte_verdier:
+    - planlagt
+    - paagar
+    - gjennomfort
+    - mangler
+  - navn: gjennomfort_dato
+    type: dato_eller_null
+  - navn: sikkerhetsgodkjenning
+    type: boolsk_eller_null
+  - navn: kildeklasse
+    type: tekst
+    standard: syntetisk scenario
+  omraade: 8
+  sektor:
+  - industri
+  - privat
+  - kommune
+- tabell: hr_provetid_oppfolging
+  beskrivelse: Dokumenterte møtedatoer og tilbakemelding, ikke automatisk avslutningsgrunn.
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/ansettelse/
+  kolonner:
+  - navn: hendelse_id
+    type: tekst
+    unik: true
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: kontrakt_id
+    type: tekst
+    kobles_til: hr_ansettelseskontrakt.kontrakt_id
+  - navn: hendelse_dato
+    type: dato
+  - navn: hendelsestype
+    type: kategori
+    tillatte_verdier:
+    - oppstart
+    - oppfolging
+    - tilbakemelding
+    - forlengelsesvarsel
+    - manuell_vurdering
+  - navn: dokumentert
+    type: boolsk
+  - navn: ansvarlig_rolle
+    type: tekst
+  - navn: manuell_rettslig_vurdering
+    type: boolsk_eller_null
+  omraade: 8
+  sektor:
+  - industri
+  - privat
+  - kommune
+- tabell: hr_omstillingssak
+  beskrivelse: En sak kan omfatte mange ansatte, uten å avgjøre rettslig saklighet.
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/
+  kolonner:
+  - navn: sak_id
+    type: tekst
+    unik: true
+  - navn: start_dato
+    type: dato
+  - navn: avdeling_id
+    type: tekst_eller_null
+    kobles_til: hr_ansatte.avdeling
+  - navn: prosess_type
+    type: kategori
+    tillatte_verdier:
+    - omorganisering
+    - nedbemanning
+    - endringsoppsigelse
+    - mulig_virksomhetsoverdragelse
+  - navn: berorte_ansatte_antall
+    type: heltall_eller_null
+  - navn: drøfting_gjennomfort
+    type: boolsk_eller_null
+  - navn: annet_passende_arbeid_vurdert
+    type: boolsk_eller_null
+  - navn: hovedavtale
+    type: kategori
+    tillatte_verdier:
+    - KS
+    - NHO_LO
+    - Virke_LO
+    - ingen
+    - uavklart
+  - navn: dokumentasjon_referanse
+    type: tekst_eller_null
+  - navn: manuell_vurdering_status
+    type: kategori
+    tillatte_verdier:
+    - mangler
+    - paagar
+    - ferdig
+  omraade: 8
+  sektor:
+  - industri
+  - privat
+  - kommune
+- tabell: hr_oppsigelse_sak
+  beskrivelse: Arbeidsgiver-/arbeidstakerinitierte hendelser og formalia; saklighet avgjøres aldri maskinelt.
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/oppsigelse/
+  kolonner:
+  - navn: oppsigelse_id
+    type: tekst
+    unik: true
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: sak_id
+    type: tekst_eller_null
+    kobles_til: hr_omstillingssak.sak_id
+  - navn: initiativ
+    type: kategori
+    tillatte_verdier:
+    - ansatt
+    - arbeidsgiver
+    - utløp_midlertidig
+    - annet
+  - navn: grov_grunnkode
+    type: kategori
+    tillatte_verdier:
+    - frivillig
+    - virksomhet
+    - individ
+    - pensjon
+    - midlertidig_slutt
+    - uavklart
+  - navn: oppsigelse_mottatt_dato
+    type: dato_eller_null
+  - navn: siste_arbeidsdag
+    type: dato_eller_null
+    kobles_til: hr_ansatte.ansatt_til
+  - navn: drofting_for_beslutning
+    type: boolsk_eller_null
+  - navn: formkrav_kontroll
+    type: kategori
+    tillatte_verdier:
+    - mangler
+    - paagar
+    - komplett
+    - ikke_aktuelt
+  - navn: manuell_rettslig_vurdering
+    type: boolsk_eller_null
+  - navn: datakilde
+    type: tekst
+    standard: syntetisk scenario
+  omraade: 8
+  sektor:
+  - industri
+  - privat
+  - kommune
+- tabell: hr_fortrinnsrett_sak
+  beskrivelse: Saksflyt for §14-2 / §14-3, kvalifikasjoner krever manuell vurdering.
+  kilde: https://www.arbeidstilsynet.no/lonn-og-ansettelse/ansettelse/fortrinnsrett-til-utvidet-stilling-for-deltidsansatte/
+  kolonner:
+  - navn: rett_id
+    type: tekst
+    unik: true
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: behov_id
+    type: tekst_eller_null
+    kobles_til: hr_rekrutteringsbehov.behov_id
+  - navn: rettstype
+    type: kategori
+    tillatte_verdier:
+    - nedbemanning
+    - utvidet_deltid
+    - ekstravakter
+    - uavklart
+  - navn: ansiennitet_mnd_siste_24
+    type: heltall_eller_null
+  - navn: oppsigelsesfrist_utloper
+    type: dato_eller_null
+  - navn: vurdert_av
+    type: tekst_rolle_eller_null
+  - navn: kvalifikasjon_vurdert
+    type: boolsk_eller_null
+  - navn: status
+    type: kategori
+    tillatte_verdier:
+    - ny
+    - under_vurdering
+    - tilbud
+    - avsluttet
+  omraade: 8
+  sektor:
+  - industri
+  - privat
+  - kommune
+- tabell: hr_turnover_definisjon
+  beskrivelse: Følger tellemetode og versjon for ulike turnover- og avgangsindikatorer.
+  kilde: https://www.ks.no/fagomrader/statistikk-og-analyse/turnover/kommuner-og-fylkeskommuner/
+  kolonner:
+  - navn: definisjon_id
+    type: tekst
+    unik: true
+  - navn: enhet
+    type: kategori
+    tillatte_verdier:
+    - virksomhet
+    - kommune
+    - kommunesektor
+    - naering
+  - navn: bevegelsetype
+    type: kategori
+    tillatte_verdier:
+    - ut_av_arbeidsgiver
+    - ut_av_sektor
+    - intern_byttet
+    - frivillig
+    - uavklart
+  - navn: inkluder_timelonte
+    type: boolsk_eller_null
+  - navn: inkluder_vikarer
+    type: boolsk_eller_null
+  - navn: referansetidspunkt_start
+    type: dato
+  - navn: referansetidspunkt_slutt
+    type: dato
+  - navn: nevnerbeskrivelse
+    type: tekst
+  - navn: tellerbeskrivelse
+    type: tekst
+  - navn: kilde_id
+    type: tekst
+  - navn: kildeklasse
+    type: tekst
+    standard: offisiell statistikk eller syntetisk scenario
+  omraade: 8
+  sektor:
+  - industri
+  - privat
+  - kommune
+- tabell: hr_livslope_aggregerte_maal
+  beskrivelse: Bare publiserte eller dokumentert syntetiske aggregater med egen kildedefinisjon.
+  kilde: https://www.ks.no/fagomrader/statistikk-og-analyse/turnover/kommuner-og-fylkeskommuner/
+  kolonner:
+  - navn: serie_id
+    type: tekst
+    unik: true
+  - navn: definisjon_id
+    type: tekst
+    kobles_til: hr_turnover_definisjon.definisjon_id
+  - navn: aar
+    type: heltall
+  - navn: naering_sn2007
+    type: tekst_eller_null
+  - navn: styrk08
+    type: tekst_eller_null
+    kobles_til: hr_ansatte.styrk08
+  - navn: aldersgruppe
+    type: tekst_eller_null
+  - navn: teller
+    type: heltall_eller_null
+    fordeling: hentes fra kvalifisert kilde; ikke oppdiktet
+  - navn: nevner
+    type: heltall_eller_null
+    fordeling: hentes fra kvalifisert kilde; ikke oppdiktet
+  - navn: rate_prosent
+    type: tall_eller_null
+    fordeling: beregnes som teller/nevner eller offentlig kilde; aldri som ukildet sektorstandard
+  - navn: kilde_id
+    type: tekst
+  - navn: samplingsusikkerhet
+    type: tekst_eller_null
+  omraade: 8
+  sektor:
+  - industri
+  - privat
+  - kommune

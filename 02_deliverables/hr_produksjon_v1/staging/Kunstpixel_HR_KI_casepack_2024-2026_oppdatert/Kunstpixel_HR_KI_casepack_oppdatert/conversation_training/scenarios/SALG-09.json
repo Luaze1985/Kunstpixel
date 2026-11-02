@@ -1,0 +1,17 @@
+{
+  "id": "SALG-09",
+  "title": "Closing: konsensus i kjøpsgruppen (Ingrid)",
+  "description": "Trening på å hjelpe en positiv kjøper gjennom intern konsensus, der beslutningen henger på andre interessenter.",
+  "duration_minutes": 10,
+  "conversation_type": "Closing",
+  "persona_name": "Ingrid Moe",
+  "persona_role": "Prosjektleder (champion)",
+  "tags_visible": [],
+  "hidden_tag_count": 0,
+  "source_status": "metadata_complete",
+  "catalog_group": "Salg og kundedialog",
+  "input_notes": "Katalogmetadata fra brukerens innlimte tekst, ikke komplett rollemanus. +N betyr at flere tagger er skjult i kilden, ikke at de er kjent.",
+  "source": "user_supplied_paste_2026-10-20",
+  "scenario_implemented": false,
+  "persona_is_verified_synthetic": false
+}
