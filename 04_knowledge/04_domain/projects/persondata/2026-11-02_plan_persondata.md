@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Et Python-skript som genererer en stor, deterministisk og syntetisk kundedatabase for Kunstpixel, med medlemmer og medlemsfordeler, gavekort, påmeldinger, skole, utleie og henvendelser fra 2021-11-02 til 2026-11-02. Alle koblinger til ansatte bruker de eksisterende ansatte i `museum.db` (`hr_ansatte`, 168 personer, 2010–2026). Planen har også en behandlingsprotokoll, en slettesjekk og en skrivebeskyttet MCP-server.
+**Goal:** Et Python-skript som genererer en stor, deterministisk og syntetisk kundedatabase for Kunstpixel, med medlemmer og medlemsfordeler, gavekort, påmeldinger, skole, utleie og henvendelser fra 2021-11-02 til 2026-11-02. Alle koblinger til ansatte bruker de eksisterende ansatte i `museum.db` (`hr_ansatte`, 168 personer, 2010–2026). Dataene gjøres tilgjengelige for Claude og agentene gjennom en åpen MCP-server uten tilgangssperrer (fase 1).
 
 **Architecture:**
 - Grunnlaget er greina `hr-konsolidering`. Den har `05_data/museum.db` med `hr_ansatte`, `hr_vakter`, `hr_fravaer`, `dagsbesok` og `hendelser`, og datapolicyen `src/kunstpixel/core/datapolicy.py`.
@@ -20,7 +20,9 @@
   - ansatte 2010–2026;
   - tilgang via MCP;
   - navnene skal matche de eksisterende ansatte;
-  - kunder omfatter medlemmer med fordeler og gavekort.
+  - kunder omfatter medlemmer med fordeler og gavekort;
+  - bygg på `hr-konsolidering` (godkjent);
+  - **fase 1: ingen tilgangssperrer, bare mye data.** Data på flere steder med sperrer mellom dem kommer i fase 2.
 
 ### Funn som styrer planen (kontrollert 2026-11-02)
 - `hr-konsolidering:05_data/museum.db` har 168 ansatte i `hr_ansatte` (72 aktive per 2026-11-02, 94 sluttet). Alle har `datakilde` merket syntetisk via `archive_generator`. Telefonnumrene har 7 siffer etter +47, så de er ugyldige og kan ikke tilhøre noen. E-postene bruker `@kunstpixel.no`.
@@ -55,8 +57,8 @@
 1. **Generatoren kjøres to ganger:** uten `--overskriv` skal den feile med en tydelig melding, og fila skal stå urørt. → Task 4.
 2. **Navnematch mot ansatte med dobbelt etternavn** («Henrik Faye-Lund»): splitting og sammensetting gir eksakt originalnavnet. → Task 2.
 3. **Gavekort brukt mer enn saldo eller etter utløp:** summen av innløsninger skal aldri overstige beløpet, og ingen innløsning skal skje etter `gyldig_til`. → Task 3.
-4. **MCP-oppslag med ukjent eller ondsinnet ID/kode** (`"GK' OR '1'='1"`): skal gi `{"funnet": False}` og verken unntak eller andres data. → Task 6.
-5. **Tabell uten regel i protokollen:** skal rapporteres som «mangler regel», ikke hoppes over. → Task 5.
+4. **MCP-spørring som prøver å endre data** (`DELETE FROM kontakter`, `SELECT 1; DROP TABLE x`): skal avvises. Lesing er åpen, men dataene skal ikke kunne ødelegges. → Task 5.
+5. **Medlemsbesøk på dager museet var stengt** (`dagsbesok.er_aapent = 0`): skal ikke forekomme. → Task 3.
 
 ---
 
@@ -69,14 +71,13 @@
 | `src/kunstpixel/persondata/ansattkilde.py` | Leser `hr_ansatte` og `dagsbesok` skrivebeskyttet, og slår opp hvem som var aktiv |
 | `src/kunstpixel/persondata/kunder.py` | Genererer alle kundetabeller |
 | `src/kunstpixel/persondata/generer.py` | CLI som bygger `persondata.db` |
-| `src/kunstpixel/persondata/slettesjekk.py` | Lagringstid mot protokollen, for både `persondata.db` og HR-tabellene i `museum.db` |
-| `src/kunstpixel/persondata/mcp_server.py` + `src/persondata_mcp.py` | Skrivebeskyttet MCP |
-| `05_data/persondata/behandlingsprotokoll.yaml`, `README.md`, `ovelser.md` | Dokumentasjon |
+| `src/kunstpixel/persondata/mcp_server.py` + `src/persondata_mcp.py` | Åpen MCP med lesetilgang til alt i `persondata.db` |
+| `05_data/persondata/README.md` | Dokumentasjon |
 | `tests/test_persondata_*.py` | Én fil per task |
 
 ---
 
-### Task 0: Grunnlag (krever brukerens ja)
+### Task 0: Grunnlag (godkjent av eier 2026-11-02)
 
 - [ ] **Step 1:** `git merge origin/hr-konsolidering` inn i `claude/affectionate-einstein-1g8q56`. Prøvesammenslåing 2026-11-02 viste ingen konflikter. Ingen force-push.
 - [ ] **Step 2:** Endre basen til PR Luaze1985/Kunstpixel#6 fra `main` til `hr-konsolidering`, slik at PR-en bare viser endringene i denne planen.
@@ -219,93 +220,60 @@
 
 ---
 
-### Task 5: Behandlingsprotokoll og slettesjekk
-
-**Files:** Create `05_data/persondata/behandlingsprotokoll.yaml` og `src/kunstpixel/persondata/slettesjekk.py`. Test: `tests/test_persondata_slettesjekk.py`.
-
-**Interfaces — Produces:**
-- `last_protokoll(sti: Path | None = None) -> dict`
-- `Brudd = NamedTuple(database: str, tabell: str, antall: int, regel: str)`
-- `finn_brudd(databaser: dict[str, sqlite3.Connection], protokoll: dict, referansedato: date) -> list[Brudd]`. Nøklene er `"persondata"` og `"museum"`.
-- CLI: `py -3.13 -m src.kunstpixel.persondata.slettesjekk`
-
-**Protokollformat:**
-- Øverst: `organisasjon: Kunstpixel` og en merknad om at lagringstidene må verifiseres.
-- Under `behandlinger:` er nøkkelen `<database>.<tabell>`. Hver behandling har `formaal`, `rettslig_grunnlag`, `kategorier`, `saerlig_kategori`, `tilgang`, `lagringsregler` (liste av `{felt, dager, betingelse}`) og `verifisert: false`.
-- Dekker alle tabeller i `persondata.db` med persondata, og `museum.hr_ansatte`, `museum.hr_vakter`, `museum.hr_fravaer` og `museum.personas`.
-
-**Forslag til regler (må verifiseres):**
-
-| Behandling | Regel |
-| :--- | :--- |
-| `museum.hr_ansatte` | `ansatt_til` + 1 096 dager |
-| `museum.hr_vakter` | `dato` + 731 dager |
-| `museum.hr_fravaer` | `til` + 365 dager. `saerlig_kategori: true` (helse) |
-| `persondata.kontakter` | `trukket_dato` + 30 dager, ellers `siste_aktivitet` + 1 096 dager |
-| `persondata.medlemskap` | `sluttdato` + 1 096 dager |
-| `persondata.medlemsbesok` / `fordel_bruk` | `dato` + 731 dager |
-| `persondata.gavekort` / `gavekort_bruk` | `gyldig_til` + 1 827 dager (bokføring) |
-| `persondata.pameldinger` | `registrert` + 1 827 dager |
-| `persondata.henvendelser` | `tidspunkt` + 365 dager |
-| `persondata.skolebestillinger` / `utleie` | `dato` + 1 096 dager / 1 827 dager |
-| Katalogtabeller og `arrangementer` | `persondata: false` |
-
-**Tester og steg:**
-- [ ] **Step 1: Skriv feilende tester:**
-  - `test_protokoll_dekker_alle_tabeller`: tabeller uten persondata er eksplisitt merket `persondata: false`.
-  - `test_finner_sluttede_ansatte`: `museum.hr_ansatte` har antall > 0, fordi flere sluttet før 2023-11-02.
-  - `test_finner_plantede_kundebrudd`: gjelder `kontakter` og `medlemskap`.
-  - `test_mangler_regel_rapporteres`: gir `antall == -1` og `regel == "mangler regel"`.
-  - `test_tom_database`: ingen unntak.
-  - `test_museum_db_uendret`.
-- [ ] **Step 2:** FAIL.
-- [ ] **Step 3:** Implementer. Grensedatoen sendes som `?`-parameter. Tabell- og kolonnenavn valideres mot `PRAGMA table_info`.
-- [ ] **Step 4:** PASS.
-- [ ] **Step 5:** Commit `feat(persondata): behandlingsprotokoll og slettesjekk`.
-
----
-
-### Task 6: Skrivebeskyttet MCP-server
+### Task 5: Åpen MCP-server (ingen sperrer i fase 1)
 
 **Files:** Create `src/kunstpixel/persondata/mcp_server.py` og `src/persondata_mcp.py`. Test: `tests/test_persondata_mcp.py`.
 
-**Interfaces — Produces:**
-- `FastMCP("Kunstpixel-persondata")` med nøyaktig disse verktøyene. Hvert svar har `"klassifisering": "syntetisk"`, samme konvensjon som `datapolicy`.
-  - `tell_poster(tabell: str) -> dict`
-  - `medlemsstatistikk(dato: str) -> dict`: aktive per type. Ingen navn.
-  - `innsyn_kontakt(kontakt_id: str) -> dict`: innsyn etter art. 15. Gir kontakten, medlemskap, fordelsbruk, gavekort, påmeldinger og henvendelser, eller `{"funnet": False}`.
-  - `gavekort_saldo(kode: str) -> dict`: `{funnet, belop, brukt, saldo, gyldig_til}`. Ingen navn.
-  - `slettesjekk() -> list[dict]`
-- DB-sti kan overstyres med `KUNSTPIXEL_PERSONDATA_DB`.
+**Interfaces:**
+- Consumes: `validate_read_only_query(sql: str) -> None` fra `src/kunstpixel/core/db.py`, som avviser alt som ikke er SELECT/WITH.
+- Produces `FastMCP("Kunstpixel-persondata")` med nøyaktig disse verktøyene. Hvert svar har `"klassifisering": "syntetisk"`.
+  - `list_tabeller() -> list[dict]`: navn og antall rader for hver tabell.
+  - `beskriv_tabell(tabell: str) -> dict`: kolonner og 3 eksempelrader. Tabellnavnet valideres mot `sqlite_master`.
+  - `sporring(sql: str, limit: int = 200) -> dict`: fri SELECT mot hele `persondata.db`. `limit` er maks 5 000. Gir `{kolonner, rader, avkortet}`.
+  - `innsyn_kontakt(kontakt_id: str) -> dict`: alt om én kontakt (medlemskap, fordelsbruk, gavekort, påmeldinger og henvendelser), eller `{"funnet": False}`.
+  - `gavekort_saldo(kode: str) -> dict`: `{funnet, belop, brukt, saldo, gyldig_til, kjoper}`.
+- Tilkoblingen bruker `mode=ro`. `museum.db` kobles på skrivebeskyttet som `museum` med `ATTACH ... ?mode=ro`, slik at spørringer kan slå sammen kundedata og `museum.hr_ansatte`.
+- DB-stiene kan overstyres med `KUNSTPIXEL_PERSONDATA_DB` og `KUNSTPIXEL_DB_PATH`.
 
 **Tester og steg:**
-- [ ] **Step 1: Skriv feilende tester:**
+- [ ] **Step 1: Skriv feilende tester.** Databasen bygges fra `bygg_database(skala="test")` i `tmp_path`.
   - `test_verktoyliste`: nøyaktig de fem verktøyene.
   - `test_alle_svar_er_merket_syntetisk`.
-  - `test_innsyn_ukjent_og_injeksjon`: gir `{"funnet": False}`.
-  - `test_gavekort_injeksjon`: `"GK' OR '1'='1"` gir `{"funnet": False}`.
-  - `test_innsyn_kjent_id_kun_egne_data`.
+  - `test_sporring_kan_joine_ansatte`: `SELECT k.fornavn, a.navn FROM kontakter k JOIN museum.hr_ansatte a ON k.ansatt_id = a.ansatt_id LIMIT 5` gir 5 rader der navnene matcher.
+  - `test_sporring_avviser_skriving`: `DELETE FROM kontakter` og `SELECT 1; DROP TABLE kontakter` gir `PermissionError`.
+  - `test_sporring_limit`: med `limit=10` kommer det maks 10 rader og `avkortet: True`.
+  - `test_innsyn_ukjent_og_injeksjon`: `"K999999"` og `"K1' OR '1'='1"` gir begge `{"funnet": False}`.
   - `test_gavekort_saldo_stemmer`: saldo = beløp minus summen av innløsninger.
-  - `test_ingen_skriving`: gir `sqlite3.OperationalError`.
-  - `test_tell_poster_avviser_ukjent_tabell`.
-- [ ] **Step 2:** FAIL. **Step 3:** Implementer. **Step 4:** PASS.
-- [ ] **Step 5:** Commit `feat(persondata): skrivebeskyttet MCP-server`.
+  - `test_ingen_skriving_mulig`: et `INSERT` direkte på serverens tilkobling gir `sqlite3.OperationalError`.
+- [ ] **Step 2:** `py -3.13 -m pytest tests/test_persondata_mcp.py -v`. Forventet: FAIL.
+- [ ] **Step 3:** Implementer. `src/persondata_mcp.py` gjør bare `from src.kunstpixel.persondata.mcp_server import mcp; mcp.run()`.
+- [ ] **Step 4:** PASS. Start `py -3.13 src/persondata_mcp.py` manuelt. Forventet: prosessen venter på stdio.
+- [ ] **Step 5:** Commit `feat(persondata): åpen MCP-server for kundedata`.
 
 ---
 
-### Task 7: Dokumentasjon og full verifisering
+### Task 6: Dokumentasjon og full verifisering
 
 - [ ] **Step 1:** Oppdater disse filene:
-  - `AGENTS.md`: persondata.db, kommandoer, og at Regel 1 gjelder museum.db.
-  - `04_knowledge/04_domain/operations/tool_access.md`: tilgangstabell for persondata.
-  - `05_data/persondata/README.md`: volumer og kobling til Claude Desktop.
-  - `01_inbox/2026-11-02_forslag_persondata_ansatte_kunder.md`: status «Besluttet».
-- [ ] **Step 2:** Lag `05_data/persondata/ovelser.md` med 6 scenarioer:
-  1. Innsyn for et medlem.
-  2. Sletting etter trukket samtykke.
-  3. En ansatt som sluttet i 2012 ber om innsyn, og hva som burde vært slettet.
-  4. Avvik: en medlemsliste ble sendt til feil mottaker (72 timer).
-  5. Utløpt gavekort og kundens rettigheter.
-  6. Vasking av `henvendelser` før bruk som treningsdata.
-- [ ] **Step 3:** `py -3.13 -m pytest -v`. Forventet: samme baseline som i Task 0, og alle nye tester består.
-- [ ] **Step 4:** `git status`: ingen `.db` under `persondata/`. Commit `docs(persondata): AGENTS, tilgang, øvelser`.
+  - `AGENTS.md`:
+    - `persondata.db` (syntetisk, generert, ikke i git) under §2;
+    - kommandoene for generering og MCP under §3;
+    - en presisering under Regel 1 om at skrivebeskyttelsen gjelder `museum.db`, og at `persondata.db` bare skrives av generatorskriptet.
+  - `05_data/persondata/README.md`:
+    - faktiske volumer fra Task 4;
+    - oppføringen i `claude_desktop_config.json` for persondata-MCP med `py -3.13` og full sti;
+    - tre eksempelspørringer.
+  - `01_inbox/2026-11-02_forslag_persondata_ansatte_kunder.md`: status «Fase 1 besluttet 2026-11-02, se plan».
+- [ ] **Step 2:** `py -3.13 -m pytest -v`. Forventet: samme baseline som i Task 0, og alle nye tester består.
+- [ ] **Step 3:** `git status`. Forventet: ingen `.db` under `persondata/`.
+- [ ] **Step 4:** Commit `docs(persondata): AGENTS og README for fase 1`.
+
+---
+
+## Fase 2 (ikke en del av denne planen)
+
+Disse tingene er utsatt med vilje til fase 1 er i bruk:
+
+- **Data på flere steder.** Eksempler: medlemsregister i en egen database (eventuelt Supabase), gavekort i et «kassesystem» og HR i `museum.db`.
+- **Tilgangssperrer mellom stedene.** Hver rolle får sin egen MCP-server eller sitt eget verktøysett.
+- **Behandlingsprotokoll (art. 30), slettesjekk og GDPR-øvelser.** Brudd på lagringstid er alt plantet i dataene i Task 3, slik at slettesjekken har noe å finne.
