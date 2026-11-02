@@ -40,3 +40,6 @@ gate-log.jsonl
 
 # Arbeidsfiler for planutførelse
 .superpowers/
+
+# Python-pakking (pip install -e)
+*.egg-info/
