@@ -68,7 +68,7 @@ CREATE TABLE fordel_bruk (
 CREATE TABLE gavekort (
     gavekort_id INTEGER PRIMARY KEY,
     kode TEXT NOT NULL UNIQUE,
-    belop INTEGER NOT NULL CHECK (belop IN (200, 300, 500, 1000)),
+    belop INTEGER NOT NULL CHECK (belop > 0),
     kjoper_kontakt_id TEXT NOT NULL REFERENCES kontakter(kontakt_id),
     mottaker_kontakt_id TEXT REFERENCES kontakter(kontakt_id),
     utstedt TEXT NOT NULL,

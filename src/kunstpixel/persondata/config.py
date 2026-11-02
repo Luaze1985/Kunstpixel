@@ -34,7 +34,36 @@ def last_innstillinger(sti: Path = INNSTILLINGER_STI) -> dict:
         return yaml.safe_load(f)
 
 
+def valider_innstillinger(inn: dict) -> None:
+    """Stopp med en lesbar melding hvis innstillingsfila mangler noe koden trenger."""
+    for nokkel in ("periode", "seed", "volum", "andeler", "medlemskapstyper", "fordeler", "gavekort"):
+        if nokkel not in inn:
+            raise ValueError(f"innstillinger.yaml mangler seksjonen '{nokkel}'")
+    typer = inn["medlemskapstyper"]
+    if "ansatt" not in typer:
+        raise ValueError("innstillinger.yaml: medlemskapstypen 'ansatt' må finnes (brukes for personalmedlemskap)")
+    for navn, t in typer.items():
+        if not isinstance(t, dict) or "aarspris" not in t or "andel" not in t:
+            raise ValueError(f"innstillinger.yaml: medlemskapstypen '{navn}' må ha aarspris og andel")
+    if not any(t["andel"] > 0 for t in typer.values()):
+        raise ValueError("innstillinger.yaml: minst én medlemskapstype må ha andel over 0")
+    if "fri_inngang" not in inn["fordeler"]:
+        raise ValueError("innstillinger.yaml: fordelen 'fri_inngang' må finnes")
+    for navn, f in inn["fordeler"].items():
+        for t in f.get("typer", []):
+            if t not in typer:
+                raise ValueError(f"innstillinger.yaml: fordelen '{navn}' viser til ukjent medlemstype '{t}'")
+        verdi = f.get("verdi", 0)
+        if not isinstance(verdi, (int, float)) and not (
+            isinstance(verdi, dict) and "prosent" in verdi and len(verdi.get("grunnlag", [])) == 2
+        ):
+            raise ValueError(f"innstillinger.yaml: fordelen '{navn}' har ugyldig verdi {verdi!r}")
+    if not inn["gavekort"].get("belop"):
+        raise ValueError("innstillinger.yaml: gavekort.belop må ha minst ett beløp")
+
+
 INNSTILLINGER = last_innstillinger()
+valider_innstillinger(INNSTILLINGER)
 KUNDER_START = date.fromisoformat(INNSTILLINGER["periode"]["fra"])
 REFERANSEDATO = date.fromisoformat(INNSTILLINGER["periode"]["til"])
 STANDARD_SEED: int = INNSTILLINGER["seed"]

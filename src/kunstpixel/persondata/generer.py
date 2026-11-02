@@ -15,7 +15,9 @@ from __future__ import annotations
 
 import argparse
 import csv
+import os
 import random
+import re
 import sqlite3
 from contextlib import closing
 from pathlib import Path
@@ -36,6 +38,19 @@ TABELLREKKEFOLGE = [
 ]
 
 
+DATOKOLONNER = {
+    "opprettet", "samtykke_dato", "trukket_dato", "siste_aktivitet", "startdato", "sluttdato",
+    "dato", "utstedt", "gyldig_til", "registrert",
+}
+_ISO_DATO = re.compile(r"\d{4}-\d{2}-\d{2}")
+_ISO_TID = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}")
+_TELEFON = re.compile(r"0\d{7}")
+
+
+class CsvFeil(ValueError):
+    """En verdi i en CSV-fil har feil format. Meldingen sier fil, rad og kolonne."""
+
+
 def _katalog() -> dict[str, list[dict]]:
     dk = config.DATAKILDE
     return {
@@ -52,20 +67,44 @@ def _katalog() -> dict[str, list[dict]]:
 
 
 def _sjekk_overskriving(sti: Path, csv_dir: Path | None, overskriv: bool) -> None:
-    finnes = [p for p in [sti] if p.exists()]
-    if csv_dir is not None and csv_dir.is_dir():
-        finnes += sorted(csv_dir.glob("*.csv"))
-    if finnes and not overskriv:
+    if overskriv:
+        return
+    csv_finnes = csv_dir is not None and csv_dir.is_dir() and any(csv_dir.glob("*.csv"))
+    if csv_finnes and not sti.exists():
         raise FileExistsError(
-            f"{finnes[0]} finnes fra før. Kjør med --overskriv hvis du vil erstatte den "
-            "(manuelle endringer i CSV-filene går da tapt, bruk --fra-csv for å beholde dem)."
+            f"CSV-filene i {csv_dir} finnes allerede, men databasen mangler. "
+            "Bygg databasen fra dem med --fra-csv. "
+            "(Bruk --overskriv bare hvis du vil lage alle data på nytt; endringer i CSV-ene går da tapt.)"
         )
+    if sti.exists():
+        hint = (
+            "Kjør med --overskriv for å lage alle data på nytt (endringer i CSV-ene går da tapt), "
+            "eller --fra-csv --overskriv for å bygge databasen fra CSV-ene."
+            if csv_dir is not None
+            else "Kjør med --overskriv for å erstatte den."
+        )
+        raise FileExistsError(f"{sti} finnes fra før. {hint}")
+    if csv_finnes:
+        raise FileExistsError(f"CSV-filene i {csv_dir} finnes fra før. Kjør med --overskriv for å erstatte dem.")
 
 
 def _skriv_database(sti: Path, tabeller: dict[str, list[dict]]) -> dict[str, int]:
+    """Bygg i en midlertidig fil og bytt den inn først når alt har gått bra."""
     sti.parent.mkdir(parents=True, exist_ok=True)
-    if sti.exists():
-        sti.unlink()
+    tmp = sti.with_name(sti.name + ".tmp")
+    if tmp.exists():
+        tmp.unlink()
+    try:
+        _fyll(tmp, tabeller)
+    except BaseException:
+        if tmp.exists():
+            tmp.unlink()
+        raise
+    os.replace(tmp, sti)
+    return {navn: len(tabeller[navn]) for navn in TABELLREKKEFOLGE}
+
+
+def _fyll(sti: Path, tabeller: dict[str, list[dict]]) -> None:
     with closing(sqlite3.connect(sti)) as conn:
         conn.execute("PRAGMA foreign_keys = ON")
         conn.executescript(config.SCHEMA_STI.read_text(encoding="utf-8"))
@@ -78,7 +117,6 @@ def _skriv_database(sti: Path, tabeller: dict[str, list[dict]]) -> dict[str, int
                     f'INSERT INTO "{navn}" ({", ".join(kolonner)}) VALUES ({plass})',
                     ([r.get(k) for k in kolonner] for r in rader),
                 )
-    return {navn: len(tabeller[navn]) for navn in TABELLREKKEFOLGE}
 
 
 def _skriv_csv(csv_dir: Path, sti: Path) -> None:
@@ -92,14 +130,66 @@ def _skriv_csv(csv_dir: Path, sti: Path) -> None:
                 w.writerows(["" if v is None else v for v in rad] for rad in cur)
 
 
+def _kolonnetyper() -> dict[str, dict[str, tuple[str, bool]]]:
+    """tabell -> kolonne -> (deklarert type, NOT NULL)."""
+    with closing(sqlite3.connect(":memory:")) as conn:
+        conn.executescript(config.SCHEMA_STI.read_text(encoding="utf-8"))
+        return {
+            t: {r[1]: (r[2].upper(), bool(r[3]) or bool(r[5])) for r in conn.execute(f'PRAGMA table_info("{t}")')}
+            for t in TABELLREKKEFOLGE
+        }
+
+
+def _konverter(fil: str, radnr: int, kolonne: str, verdi: str | None, type_: str, paakrevd: bool):
+    def feil(hva: str) -> CsvFeil:
+        return CsvFeil(f"{fil}, rad {radnr}, kolonne '{kolonne}': {hva} (verdi: {verdi!r})")
+
+    if verdi is None or verdi.strip() == "":
+        if paakrevd:
+            raise feil("mangler verdi")
+        return None
+    verdi = verdi.strip()
+    if type_ == "INTEGER":
+        try:
+            return int(verdi)
+        except ValueError:
+            raise feil("må være et heltall") from None
+    if type_ == "REAL":
+        try:
+            return float(verdi.replace(",", "."))
+        except ValueError:
+            raise feil("må være et tall") from None
+    if kolonne == "tidspunkt" and not _ISO_TID.fullmatch(verdi):
+        raise feil("må ha formen ÅÅÅÅ-MM-DDTtt:mm (Excel kan ha endret datoformatet)")
+    if kolonne in DATOKOLONNER and not _ISO_DATO.fullmatch(verdi):
+        raise feil("må ha formen ÅÅÅÅ-MM-DD (Excel kan ha endret datoformatet)")
+    if kolonne == "telefon" and not _TELEFON.fullmatch(verdi):
+        raise feil("må være 8 siffer som starter med 0 (Excel kan ha fjernet nullen)")
+    return verdi
+
+
 def _les_csv(csv_dir: Path) -> dict[str, list[dict]]:
+    typer = _kolonnetyper()
     tabeller = {}
     for navn in TABELLREKKEFOLGE:
-        with open(csv_dir / f"{navn}.csv", encoding=CSV_KODING, newline="") as f:
-            tabeller[navn] = [
-                {k: (None if v == "" else v) for k, v in rad.items()}
-                for rad in csv.DictReader(f, delimiter=CSV_SKILLETEGN)
-            ]
+        fil = f"{navn}.csv"
+        try:
+            with open(csv_dir / fil, encoding=CSV_KODING, newline="") as f:
+                rader = list(csv.DictReader(f, delimiter=CSV_SKILLETEGN))
+        except UnicodeDecodeError:
+            raise CsvFeil(f"{fil} er ikke lagret som UTF-8. Lagre den i Excel som «CSV UTF-8 (semikolondelt)».") from None
+        ut = []
+        for radnr, rad in enumerate(rader, start=2):
+            ekstra = [v for v in (rad.pop(None, None) or []) if (v or "").strip()]
+            if ekstra:
+                raise CsvFeil(f"{fil}, rad {radnr}: flere felt enn kolonner ({ekstra!r}). Står det et semikolon i en tekst?")
+            if all((v or "").strip() == "" for v in rad.values()):
+                continue  # tom rad, typisk fra Excel
+            ut.append({
+                k: _konverter(fil, radnr, k, rad.get(k), *typer[navn][k])
+                for k in typer[navn]
+            })
+        tabeller[navn] = ut
     return tabeller
 
 
@@ -156,8 +246,10 @@ def main(argv: list[str] | None = None) -> None:
             antall = bygg_fra_csv(a.sti, a.csv_dir, a.overskriv)
         else:
             antall = bygg_database(a.sti, seed=a.seed, skala=a.skala, overskriv=a.overskriv, csv_dir=a.csv_dir)
-    except FileExistsError as e:
+    except (FileExistsError, CsvFeil, ValueError) as e:
         raise SystemExit(f"Avbrutt: {e}") from None
+    except sqlite3.IntegrityError as e:
+        raise SystemExit(f"Avbrutt: dataene bryter en regel i databasen ({e}). Den gamle databasen er urørt.") from None
     for navn, n in antall.items():
         print(f"{navn:<24}{n:>8}")
     print(f"{'totalt':<24}{sum(antall.values()):>8}")

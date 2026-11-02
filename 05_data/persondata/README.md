@@ -22,28 +22,31 @@ Koden ligger i `src/kunstpixel/persondata/`, og tabelloppsettet i `schema.sql`.
 | `medlemskapstyper` | 6 | student, enkelt, senior, familie, venn, ansatt, med årspris |
 | `fordeler` | 8 | fri inngang, butikk- og kaférabatt, forhåndsvisning, åpninger, gratis omvisning, gjest |
 | `medlemskapstype_fordel` | 26 | hvilke typer som har hvilke fordeler |
-| `medlemskap` | 4 091 | ett år per rad. Fornyelser peker på forrige rad (`fornyelse_av`). Ca. 780 aktive per 2026-11-02 |
-| `medlemsbesok` | 14 376 | besøk per medlem, bare på åpne dager og innenfor `dagsbesok` |
-| `fordel_bruk` | 6 000 | bruk av rabatter og fordeler, med rabattbeløp |
+| `medlemskap` | 4 118 | ett år per rad. Fornyelser peker på forrige rad (`fornyelse_av`). Ca. 790 aktive per 2026-11-02 |
+| `medlemsbesok` | 14 465 | besøk per medlem, bare på åpne dager og innenfor `dagsbesok` |
+| `fordel_bruk` | 5 999 | bruk av rabatter og fordeler, med rabattbeløp |
 | `gavekort` | 1 501 | kode `GK-XXXX-XXXX`, beløp, kjøper, eventuell mottaker, gyldig i 3 år |
-| `gavekort_bruk` | 2 554 | innløsninger. Summen er aldri høyere enn beløpet |
+| `gavekort_bruk` | 2 510 | innløsninger. Summen er aldri høyere enn beløpet |
 | `arrangementer` | 315 | 300 genererte og 15 fra `hendelser` i museum.db |
-| `pameldinger` | 2 182 | aldri over kapasiteten. Betalt med kort, Vipps, gavekort eller medlemsfordel |
+| `pameldinger` | 2 234 | aldri over kapasiteten. Betalt med kort, Vipps, gavekort eller medlemsfordel |
 | `skolebestillinger` | 500 | skole, kontaktlærer og klassetrinn, ingen elevnavn |
 | `utleie` | 100 | privat eller bedrift |
 | `henvendelser` | 3 000 | spørsmål fra publikum. 5 % inneholder persondata (`inneholder_persondata = 1`) |
-| **Totalt** | **39 757** | Bygges på under ett sekund. Databasen er 3,5 MB og CSV-ene 3,3 MB |
+| **Totalt** | **39 880** | Bygges på under ett sekund. Databasen er 3,5 MB og CSV-ene 3,3 MB |
 
 Alle ansatt-ID-er (`solgt_av_ansatt_id`, `ansvarlig_ansatt_id`, `besvart_av_ansatt_id`) peker på en ansatt som var i jobb den datoen. Noen poster er med vilje lagret for lenge, som øvingsmateriale for en slettesjekk i fase 2.
 
 ## Kom i gang (Windows/PowerShell)
 
+Kjør fra rotmappa i repoet (der `pyproject.toml` ligger):
+
 ```powershell
+cd C:\sti\til\Kunstpixel
 py -3.13 -m pip install -e .
-py -3.13 -m src.kunstpixel.persondata.generer
+py -3.13 -m src.kunstpixel.persondata.generer --fra-csv
 ```
 
-Hvis databasen eller CSV-ene finnes fra før, stopper kommandoen med en melding i stedet for å overskrive dem.
+CSV-filene ligger i git, mens databasen ikke gjør det. Første gang bygger du derfor databasen **fra CSV-ene**. Kommandoene overskriver aldri noe uten `--overskriv`, og databasen byttes først inn når hele bygget har gått bra.
 
 ## Justere data senere
 
@@ -63,7 +66,11 @@ py -3.13 -m src.kunstpixel.persondata.generer --fra-csv --overskriv
 
 Da bygges databasen fra CSV-ene, så endringene dine blir med.
 
-> Pass på i Excel: telefonnumre som `01234567` mister den første nullen hvis kolonnen tolkes som tall. Datoer kan også bli omformatert. Formater kolonnene som tekst før du lagrer.
+Hver verdi blir sjekket før noe skrives. Er noe feil, stopper kommandoen med fil, rad og kolonne, og den gamle databasen står urørt. Desimalkomma (`75,5`) godtas, og tomme rader fra Excel hoppes over.
+
+> Pass på i Excel:
+> - Lagre som **«CSV UTF-8 (semikolondelt)»**. Vanlig CSV gir feil på æøå.
+> - Excel gjør ofte datoer om til `13.03.2024` og fjerner første null i telefonnumre. Begge deler blir stoppet med en melding. Formater kolonnene som tekst før du lagrer, så slipper du det.
 
 ## MCP-tilgang (fase 1, ingen tilgangssperrer)
 

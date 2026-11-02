@@ -42,7 +42,8 @@ def _koble() -> Iterator[sqlite3.Connection]:
     sti = _persondata_sti()
     if not sti.is_file():
         raise FileNotFoundError(
-            f"Fant ikke {sti}. Kjør først: py -3.13 -m src.kunstpixel.persondata.generer"
+            f"Fant ikke {sti}. Bygg den fra CSV-filene i repoet med: "
+            "py -3.13 -m src.kunstpixel.persondata.generer --fra-csv"
         )
     with closing(sqlite3.connect(_uri(sti), uri=True)) as conn:
         conn.row_factory = sqlite3.Row

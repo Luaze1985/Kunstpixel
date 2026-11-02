@@ -60,7 +60,7 @@ py -3.13 src/hr_cli.py person E101               # Inspiser verifiserte kompetan
 py -3.13 src/hr_cli.py eval E101,E102,E106       # Evaluer bemanningsforslag mot KI-feller (L01-L03)
 py -3.13 src/hr_api.py                           # Start lokalt HTTP API (http://127.0.0.1:8765)
 py -3.13 src/hr_mcp_server.py                    # Start HR FastMCP-serveren over stdio
-py -3.13 -m src.kunstpixel.persondata.generer    # Bygg kundedata (legg til --overskriv eller --fra-csv)
+py -3.13 -m src.kunstpixel.persondata.generer --fra-csv  # Bygg kundedata fra CSV-ene (første gang og etter justering)
 py -3.13 src/persondata_mcp.py                   # Start åpen MCP for kundedata over stdio
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode manual # Deterministisk verifisering
 ```

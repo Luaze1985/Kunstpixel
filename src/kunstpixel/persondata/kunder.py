@@ -120,7 +120,8 @@ def generer_kunder(
     faktor: float = 1.0,
 ) -> dict[str, list[dict]]:
     """Generer alle kundetabeller (unntatt katalogtabellene) som lister av rader."""
-    aapne_dager = sorted(d for d, (_, aapen) in dagsbesok.items() if aapen and START <= d <= REF)
+    aapne_dager = sorted(d for d, (_, er_aapen) in dagsbesok.items() if er_aapen and START <= d <= REF)
+    aapen = set(aapne_dager)
 
     def ansatt_paa(dato: date, avdelinger: set[str] | None = None) -> str | None:
         kandidater = aktive_paa(ansatte, dato, avdelinger)
@@ -218,7 +219,8 @@ def generer_kunder(
             "medlemskap_id": len(medlemskap) + 1, "kontakt_id": kontakt["kontakt_id"], "type": type_,
             "startdato": start, "sluttdato": start + timedelta(days=364),
             "betalt_belop": config.MEDLEMSKAPSTYPER[type_]["aarspris"], "fornyelse_av": forrige,
-            "solgt_av_ansatt_id": ansatt_paa(start, {"Formidling", "Drift"}), "datakilde": DK,
+            "solgt_av_ansatt_id": ansatt_paa(start, {"Formidling", "Drift"}) if start in aapen else None,
+            "datakilde": DK,
         }
         medlemskap.append(m)
         return m
@@ -253,7 +255,7 @@ def generer_kunder(
     tak = {d: int(config.ANDELER["maks_medlemsandel_av_dagsbesok"] * b) for d, (b, _) in dagsbesok.items()}
     brukt_tak: dict[date, int] = defaultdict(int)
     medlemsbesok: list[dict] = []
-    gjestetyper = set(config.FORDELER["medbring_gjest"]["typer"])
+    gjestetyper = set(config.FORDELER.get("medbring_gjest", {}).get("typer", []))
     for m in medlemskap:
         if m["type"] == "ansatt" or m["startdato"] > REF:
             continue
@@ -274,15 +276,13 @@ def generer_kunder(
                     break
 
     # --- Bruk av fordeler ------------------------------------------------
-    verdi = {
-        "rabatt_butikk_10": lambda: round(rng.uniform(50, 800) * 0.10, 2),
-        "rabatt_butikk_20": lambda: round(rng.uniform(50, 800) * 0.20, 2),
-        "rabatt_kafe_10": lambda: round(rng.uniform(40, 300) * 0.10, 2),
-        "gratis_omvisning": lambda: 75.0,
-        "medbring_gjest": lambda: 150.0,
-        "forhandsvisning": lambda: 0.0,
-        "invitasjon_aapning": lambda: 0.0,
-    }
+    def fordelverdi(fordel: str) -> float:
+        v = config.FORDELER[fordel].get("verdi", 0)
+        if isinstance(v, dict):
+            lav, hoy = v["grunnlag"]
+            return round(rng.uniform(lav, hoy) * v["prosent"] / 100, 2)
+        return float(v)
+
     brukbare = [m for m in medlemskap if m["startdato"] <= REF]
     fordel_bruk: list[dict] = []
     for _ in range(_antall("fordel_bruk", faktor)):
@@ -291,10 +291,12 @@ def generer_kunder(
         if not mulige:
             continue
         fordel = rng.choice(mulige)
+        dag = aapen_dag_mellom(m["startdato"], min(REF, m["sluttdato"]))
+        if dag is None:
+            continue
         fordel_bruk.append({
             "bruk_id": len(fordel_bruk) + 1, "medlemskap_id": m["medlemskap_id"], "fordel": fordel,
-            "dato": _dato_mellom(rng, m["startdato"], min(REF, m["sluttdato"])),
-            "rabatt_belop": verdi[fordel](), "datakilde": DK,
+            "dato": dag, "rabatt_belop": fordelverdi(fordel), "datakilde": DK,
         })
 
     # --- Gavekort --------------------------------------------------------
@@ -305,7 +307,8 @@ def generer_kunder(
     gyldighet = timedelta(days=config.GAVEKORT["gyldighet_dager"])
     aar = (REF - START).days / 365
     for _ in range(max(1, round(config.VOLUM["gavekort_per_aar"] * faktor * aar))):
-        utstedt = _dato_mellom(rng, START, REF)
+        kanal = rng.choice(["butikk", "nettbutikk", "skranke"])
+        utstedt = _dato_mellom(rng, START, REF) if kanal == "nettbutikk" else aapen_dag_mellom(START, REF)
         while True:
             kode = "GK-" + "".join(rng.choices(tegn, k=4)) + "-" + "".join(rng.choices(tegn, k=4))
             if kode not in koder:
@@ -313,7 +316,6 @@ def generer_kunder(
                 break
         kjoper = rng.choice(aktive_kunder)
         mottaker = rng.choice(aktive_kunder) if rng.random() < andel["gavekort_med_mottaker"] else None
-        kanal = rng.choice(["butikk", "nettbutikk", "skranke"])
         g = {
             "gavekort_id": len(gavekort) + 1, "kode": kode, "belop": rng.choice(config.GAVEKORT["belop"]),
             "kjoper_kontakt_id": kjoper["kontakt_id"],
@@ -328,7 +330,9 @@ def generer_kunder(
         if rng.random() < andel["gavekort_aldri_brukt"]:
             continue
         rest = float(g["belop"])
-        datoer = sorted(_dato_mellom(rng, utstedt, min(REF, g["gyldig_til"])) for _ in range(rng.randint(1, 3)))
+        datoer = sorted(
+            d for d in (aapen_dag_mellom(utstedt, min(REF, g["gyldig_til"])) for _ in range(rng.randint(1, 3))) if d
+        )
         for nr, dato in enumerate(datoer):
             belop = rest if nr == len(datoer) - 1 and rng.random() < 0.6 else round(rest * rng.uniform(0.2, 0.9), 2)
             if belop <= 0:
@@ -383,7 +387,7 @@ def generer_kunder(
         n = bisect.bisect_right(opprettet_liste, dato)
         return etter_opprettet[rng.randrange(n)] if n else None
 
-    omvisningsmedlem = set(config.FORDELER["gratis_omvisning"]["typer"])
+    omvisningsmedlem = set(config.FORDELER.get("gratis_omvisning", {}).get("typer", []))
     pameldinger: list[dict] = []
     for a in arrangementer:
         plasser = int(a["maks_deltakere"] * rng.uniform(0.4, 1.0))
@@ -422,9 +426,9 @@ def generer_kunder(
     # --- Skolebestillinger og utleie -------------------------------------
     skolebestillinger: list[dict] = []
     for i in range(1, _antall("skolebestillinger", faktor) + 1):
-        dag = _dato_mellom(rng, START, REF)
+        dag = aapen_dag_mellom(START, REF)
         while dag.weekday() >= 5 or dag.month == 7:
-            dag = _dato_mellom(rng, START, REF)
+            dag = aapen_dag_mellom(START, REF)
         fornavn, etternavn = fake.first_name(), fake.last_name()
         skolebestillinger.append({
             "bestilling_id": i, "skole": f"{fake.city()} skole", "kontaktlaerer": f"{fornavn} {etternavn}",
