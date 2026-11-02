@@ -16,8 +16,9 @@ from tests.test_leveranse import Teller, dump, fyll
 ROOT = Path(__file__).resolve().parent.parent
 
 # Fingeravtrykk av tallfilen. Endres tallene med vilje, oppdater disse to linjene og si fra hvorfor.
-FINGERAVTRYKK_TALL = "0a1938c5f4059bf7ad4064203122e519f326b6db97067b5b79a36bb8fa05eee7"
-FINGERAVTRYKK_TEKST_SKJELETT = "78825771a3a0566349b1f4ab06b33e833a40b7edacf0f506750876e9a65caa7f"
+# 2026-11-02: endret med vilje. Besøk og billettinntekter er avstemt mot dagsbesok (eiers beslutning).
+FINGERAVTRYKK_TALL = "6e3531f61858d50a907783853fa7e4b9fdc59158e082ff6b867dea737b437e35"
+FINGERAVTRYKK_TEKST_SKJELETT = "5bdf32bc3f877fbba3a93d99ea5f974b9d312e1240f6b1cae4b9260e59136f74"  # 2026-11-02: bare besok_totalt endret (avstemt mot dagsbesok)
 
 
 @pytest.fixture(scope="module")
@@ -147,7 +148,7 @@ def test_generation_is_deterministic_and_has_no_hidden_state():
     assert L.historikk_rader() == L.historikk_rader()
     a = L.historikk_rader()
     a[0]["besok_totalt"] = 1  # å endre en kopi skal ikke påvirke neste generering
-    assert L.historikk_rader()[0]["besok_totalt"] == 21400
+    assert L.historikk_rader()[0]["besok_totalt"] == 133104
 
 
 # ---------- Tallfilen (T) lages av koden og kan ikke endres ----------
@@ -248,7 +249,7 @@ def test_number_file_is_optional_in_a_delivery_but_must_be_exact_when_present(tm
     L.skriv_historikk_tall(tmp_path)
     assert L.kontroller_mappe(tmp_path).ok and L.kontroller_mappe(tmp_path).filer["T"] is True
     p = tmp_path / L.GENERERT_FIL["T"]
-    p.write_text(p.read_text(encoding="utf-8").replace("besok_totalt: 21400", "besok_totalt: 21401"), encoding="utf-8")
+    p.write_text(p.read_text(encoding="utf-8").replace("besok_totalt: 133104", "besok_totalt: 133105"), encoding="utf-8")
     r = L.kontroller_mappe(tmp_path)
     assert not r.ok and r.filer["T"] is False
 
@@ -262,7 +263,7 @@ def test_install_of_the_number_file_works_without_a_delivery_but_refuses_an_alte
     assert ok2 == [] and "finnes allerede" in avvist2[0]
     L.skriv_historikk_tall(lev)
     f = lev / "historikk_tall.yaml"
-    f.write_text(f.read_text(encoding="utf-8").replace("skoleelever: 3100", "skoleelever: 9999"), encoding="utf-8")
+    f.write_text(f.read_text(encoding="utf-8").replace("skoleelever: 19300", "skoleelever: 9999"), encoding="utf-8")
     ok3, avvist3 = L.installer(lev, ["T"], tmp_path / "data2")
     assert ok3 == [] and "består ikke kontrollen" in avvist3[0] and not (tmp_path / "data2").exists()
 
@@ -293,3 +294,27 @@ def test_data_layer_reads_the_history_with_the_year_in_the_path_and_keeps_it_for
     assert d.search("pandemi stengt besøk", "museumsvert", ("historikk",), bred=True) == []
     treff = d.search("pandemi stengt besøk", "museumsdirektor", ("historikk",), bred=True)
     assert treff and "2020" in treff[0][1].sti or any("2020" in f.sti for _, f in treff)
+
+
+# ---------- Stemmer med dagsbesok og hr_ansatte (eiers beslutning 2026-11-02: dagsbesok er riktig) ----------
+
+
+def _museum():
+    return sqlite3.connect(f"file:{(ROOT / '05_data' / 'museum.db').as_posix()}?mode=ro", uri=True)
+
+
+def test_visitors_and_ticket_income_match_daily_visits(rader):
+    c = _museum()
+    dag = {a: (b, i) for a, b, i in c.execute("SELECT aar, SUM(besok_totalt), SUM(inntekt_nok) FROM dagsbesok GROUP BY aar")}
+    c.close()
+    for r in rader:
+        besok, inntekt = dag[r["ar"]]
+        assert r["besok_totalt"] == besok, r["ar"]
+        assert abs(r["billettinntekter_tkr"] - inntekt / 1000) <= 0.02 * inntekt / 1000, r["ar"]
+
+
+def test_school_share_and_events_scale_with_visitors(rader):
+    for r in rader:
+        assert 0.08 <= r["skoleelever"] / r["besok_totalt"] <= 0.16, r["ar"]
+    for a in range(2022, 2026):
+        assert 120 <= by(rader, a)["arrangementer_antall"] <= 180, a
