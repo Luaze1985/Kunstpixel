@@ -1,6 +1,6 @@
 # Forslag: Fiktive persondata om ansatte og kunder (GDPR-øving)
 
-**Status:** Utkast til beslutning, ingenting er laget ennå
+**Status:** Fase 1 besluttet og bygget 2026-11-02. Se `04_knowledge/04_domain/projects/persondata/2026-11-02_plan_persondata.md` og `05_data/persondata/README.md`. Ansatte genereres ikke, men hentes fra `hr_ansatte`.
 **Dato:** 2026-11-02
 **Gjelder:** Kunstpixel / Aura Kunstmuseum (syntetisk virksomhet)
 

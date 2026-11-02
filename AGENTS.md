@@ -17,6 +17,7 @@
 ## 2. Teknisk Miljø og Kjøretid
 - **Python:** 3.13 (`py -3.13` på Windows)
 - **Database:** SQLite i `05_data/museum.db` (kunstnere, verk, saler, utstillinger, hendelser, publikum_faq)
+- **Kundedata (syntetisk):** `05_data/persondata/persondata.db`, med medlemmer, gavekort, påmeldinger og henvendelser for 2021-11-02 til 2026-11-02. Fila genereres og ligger ikke i git. Kilden er `05_data/persondata/innstillinger.yaml` og `05_data/persondata/csv/`. Se `05_data/persondata/README.md`.
 - **Protokoll:** Model Context Protocol (FastMCP)
 - **Tester:** `pytest` med automatiserte tester
 
@@ -59,6 +60,8 @@ py -3.13 src/hr_cli.py person E101               # Inspiser verifiserte kompetan
 py -3.13 src/hr_cli.py eval E101,E102,E106       # Evaluer bemanningsforslag mot KI-feller (L01-L03)
 py -3.13 src/hr_api.py                           # Start lokalt HTTP API (http://127.0.0.1:8765)
 py -3.13 src/hr_mcp_server.py                    # Start HR FastMCP-serveren over stdio
+py -3.13 -m src.kunstpixel.persondata.generer    # Bygg kundedata (legg til --overskriv eller --fra-csv)
+py -3.13 src/persondata_mcp.py                   # Start åpen MCP for kundedata over stdio
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode manual # Deterministisk verifisering
 ```
 
@@ -149,6 +152,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode man
 ### Regel 1: Strikt Skrivebeskyttelse mot Databasen (Read-Only)
 - Databasen `museum.db` åpnes alltid med `mode=ro`.
 - Agenter må ALDRI kjøre eller generere `INSERT`, `UPDATE`, `DELETE`, `DROP`, `ALTER` eller `CREATE`-spørringer mot databasen. Alle datauttrekk skal skje via `src.kunstpixel.core.db` eller MCP-verktøyene.
+- Det samme gjelder `persondata.db`. Den skrives bare av generatorskriptet, aldri av agenter. Justeringer gjøres i `innstillinger.yaml` eller i CSV-filene, og deretter bygges databasen på nytt.
 
 ### Regel 2: Norsk fagspråk og anti-hallusinasjon
 - Bruk alltid norsk bokmål for beskrivelser, tekster og meldinger.
@@ -199,4 +203,5 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode man
 - `museum.db` bygges av datafiler (`05_data/*.csv`) via `build_museum_db.py`. Rediger datafilene, aldri databasen. Bare Lars kjører bygget uten `--check`. Bruk `python scripts/db_status_gate.py`.
 - Alle nye data har `datakilde` som starter med «syntetisk». `tests/test_data_csv.py` vokter CSV-filene (komma i tekst må stå i anførselstegn).
 - Åpent API og valgfritt KI-lag (av som standard, alltid merket AI-forslag): `docs/DATAFINNER_API.md`. Hosting på VPS: `deploy/demo/README.md`.
-- Bruk `mcp==1.29.1`. Versjon 2.x brøt Datafinner.
+- Bruk `mcp==1.29.1`. Versjon 2.x brøt Datafinner (pyproject pinner `mcp<2`).
+- **Kundedata** følger samme mønster. Rediger `05_data/persondata/innstillinger.yaml` (volum, priser, typer, fordeler) eller `05_data/persondata/csv/*.csv`, aldri `persondata.db`. Fase 1 har ingen tilgangssperrer i `src/persondata_mcp.py`, bare skrivebeskyttelse.
