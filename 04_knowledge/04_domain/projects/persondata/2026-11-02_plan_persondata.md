@@ -33,7 +33,7 @@
 
 ### Valgt bort (kort)
 - **Generere ansatte på nytt** (forrige planversjon): de finnes allerede, og nye ansatte ville ikke matchet dem.
-- **Legge kundetabellene inn i `museum.db`:** fila er 16 MB binær i git allerede. 200 000 nye rader per regenerering ville gjort historikken tung. Museumsverten leser også den fila.
+- **Legge kundetabellene inn i `museum.db`:** fila er 16 MB binær i git allerede. 40 000 nye rader per regenerering ville gjort historikken tung. Museumsverten leser også den fila.
 - **Eksterne generatortjenester (Mockaroo, Gretel) og Supabase:** krever API-nøkkel eller skykonto og gir ingenting Faker ikke gjør lokalt. Supabase kan bli fase 2 for en delt database.
 
 ## Global Constraints
@@ -163,20 +163,20 @@
 - Consumes: `Ansatt`, `aktive_paa`, `del_navn`, dagsbesøk-dicten og config.
 - Produces: `generer_kunder(rng: random.Random, fake: Faker, ansatte: list[Ansatt], dagsbesok: dict[date, tuple[int, bool]], hendelser: list[dict], faktor: float = 1.0) -> dict[str, list[dict]]`. Nøklene er lik tabellnavnene i Task 1, unntatt katalogtabellene.
 
-**Volumer og regler ved `faktor=1.0`:**
+**Volumer og regler ved `faktor=1.0`** (nedskalert 2026-11-02 etter ønske fra eier; perioden er fortsatt de siste 5 årene, og `--skala` kan økes senere):
 
 | Tabell | Antall | Regler |
 | :--- | :--- | :--- |
-| `kontakter` | 25 000 + én per ansatt som var aktiv i perioden | 40 % samtykker til nyhetsbrev. 10 % av dem trekker samtykket. **Planter brudd:** 2 % av dem som trakk samtykket har fortsatt e-post og `siste_aktivitet` mer enn 3 år tilbake. |
-| `medlemskap` | ca. 3 000 aktive til enhver tid, 1 års varighet, 65 % fornyer (`fornyelse_av`) | Fordeling: enkelt 40 %, familie 20 %, senior 15 %, student 15 %, venn 10 %. `ansatt`-medlemskap for alle ansatte som var aktive i perioden, med varighet = ansettelsen avgrenset til perioden. `solgt_av_ansatt_id` er en aktiv ansatt i Formidling eller Drift. **Planter brudd:** medlemskap som sluttet før 2023-11-02 og fortsatt har full kontaktinfo. |
+| `kontakter` | 5 000 + én per ansatt som var aktiv i perioden | 40 % samtykker til nyhetsbrev. 10 % av dem trekker samtykket. **Planter brudd:** 2 % av dem som trakk samtykket har fortsatt e-post og `siste_aktivitet` mer enn 3 år tilbake. |
+| `medlemskap` | ca. 800 aktive til enhver tid, 1 års varighet, 65 % fornyer (`fornyelse_av`) | Fordeling: enkelt 40 %, familie 20 %, senior 15 %, student 15 %, venn 10 %. `ansatt`-medlemskap for alle ansatte som var aktive i perioden, med varighet = ansettelsen avgrenset til perioden. `solgt_av_ansatt_id` er en aktiv ansatt i Formidling eller Drift. **Planter brudd:** medlemskap som sluttet før 2023-11-02 og fortsatt har full kontaktinfo. |
 | `medlemsbesok` | ca. 4 per medlemskap per år | Bare på åpne dager. Per dag er medlemsbesøk ≤ 25 % av `besok_totalt`. `antall_gjester` er større enn 0 bare for typer med `medbring_gjest`. |
-| `fordel_bruk` | ca. 30 000 | Kun fordeler typen har. Datoen er innenfor medlemskapet. |
-| `gavekort` | ca. 1 500 per år | `gyldig_til = utstedt + timedelta(days=1096)` (3 år, foreldelsesloven, må verifiseres). Koden er unik. 40 % har `mottaker_kontakt_id`. `solgt_av_ansatt_id` er aktiv på `utstedt` når kanalen ikke er `nettbutikk`. |
+| `fordel_bruk` | ca. 6 000 | Kun fordeler typen har. Datoen er innenfor medlemskapet. |
+| `gavekort` | ca. 300 per år | `gyldig_til = utstedt + timedelta(days=1096)` (3 år, foreldelsesloven, må verifiseres). Koden er unik. 40 % har `mottaker_kontakt_id`. `solgt_av_ansatt_id` er aktiv på `utstedt` når kanalen ikke er `nettbutikk`. |
 | `gavekort_bruk` | 1–3 innløsninger per kort, 15 % brukes aldri | Summen ≤ `belop`. Datoen er mellom `utstedt` og `gyldig_til` og ≤ REFERANSEDATO. |
-| `arrangementer` | 1 000 genererte (2021-11-02 til 2026-08-31) + `hendelser` fra museum.db med `dato <= 2026-11-02` (`kilde='museum.db'`, `arrangement_id = 'MDB-' + id`) | `ansvarlig_ansatt_id` er en aktiv ansatt i Formidling. Typer og priser som i `hendelser`. |
+| `arrangementer` | 300 genererte (2021-11-02 til 2026-08-31) + `hendelser` fra museum.db med `dato <= 2026-11-02` (`kilde='museum.db'`, `arrangement_id = 'MDB-' + id`) | `ansvarlig_ansatt_id` er en aktiv ansatt i Formidling. Typer og priser som i `hendelser`. |
 | `pameldinger` | 40–100 % av kapasiteten | 1–4 voksne og 0–3 barn (barn bare på barnearrangement og verksted). `belop = voksne*pris_voksen + barn*pris_barn`. Bare kontakter med `opprettet <= dato`. `betalt_med='medlemsfordel'` bare når kontakten har aktivt medlemskap med `gratis_omvisning` og typen er omvisning. `'gavekort'` gir også en rad i `gavekort_bruk` med `sted='arrangement'`. |
-| `skolebestillinger` / `utleie` | 1 500 / 300 | Skole = `f"{fake.city()} skole"`, trinn 1–13, 15–30 elever, hverdager utenom juli. Utleie: 60 % bedrift (`firmanavn = fake.company()`), 40 % privat. `ansvarlig_ansatt_id` er aktiv i Formidling (skole) eller i Ledelse/Marked (utleie). |
-| `henvendelser` | 20 000 | Kategorier er FAQ-kategoriene i `publikum_faq` pluss `medlemskap` og `gavekort`, med minst 10 maler per kategori. 5 % har `inneholder_persondata = 1`, med navn, fiktiv telefon eller e-post flettet inn (f.eks. «Jeg heter {navn}, gavekortet mitt virker ikke, ring {tlf}»). Tekster med 0 skal aldri inneholde `@` eller matche `0\d{7}`. `besvart_av_ansatt_id` er en aktiv ansatt. 30 % har `kontakt_id`. |
+| `skolebestillinger` / `utleie` | 500 / 100 | Skole = `f"{fake.city()} skole"`, trinn 1–13, 15–30 elever, hverdager utenom juli. Utleie: 60 % bedrift (`firmanavn = fake.company()`), 40 % privat. `ansvarlig_ansatt_id` er aktiv i Formidling (skole) eller i Ledelse/Marked (utleie). |
+| `henvendelser` | 3 000 | Kategorier er FAQ-kategoriene i `publikum_faq` pluss `medlemskap` og `gavekort`, med minst 10 maler per kategori. 5 % har `inneholder_persondata = 1`, med navn, fiktiv telefon eller e-post flettet inn (f.eks. «Jeg heter {navn}, gavekortet mitt virker ikke, ring {tlf}»). Tekster med 0 skal aldri inneholde `@` eller matche `0\d{7}`. `besvart_av_ansatt_id` er en aktiv ansatt. 30 % har `kontakt_id`. |
 
 - [ ] **Step 1: Skriv feilende tester.** Fixture med `faktor=SKALAER["test"]` og de ekte ansatte og dagsbesøkene. Én test er merket `@pytest.mark.slow` og kjører full skala.
   - `test_ansattkontakter_matcher_hr_navn`: for hver kontakt med `ansatt_id` er `f"{fornavn} {etternavn}" == hr_ansatte.navn` og `epost == hr_ansatte.epost`.
@@ -190,7 +190,7 @@
   - `test_pameldinger_overstiger_aldri_kapasitet`.
   - `test_plantede_brudd_finnes`: for både kontakter og medlemskap.
   - `test_henvendelser_persondata_andel`: mellom 0,03 og 0,07.
-  - `test_full_skala_volum` (slow): 25 000 kontakter uten ansatte, 20 000 henvendelser, og mellom 2 500 og 3 500 aktive medlemskap på 2026-11-02.
+  - `test_full_skala_volum` (slow): 5 000 kontakter uten ansatte, 3 000 henvendelser, og mellom 650 og 950 aktive medlemskap på 2026-11-02.
 - [ ] **Step 2:** FAIL. **Step 3:** Implementer. **Step 4:** PASS.
 - [ ] **Step 5:** Commit `feat(persondata): generator for medlemmer, gavekort og kunder`.
 
@@ -215,7 +215,7 @@
   - `test_fremmednokler_gyldige`: `PRAGMA foreign_key_check` er tom.
 - [ ] **Step 2:** FAIL.
 - [ ] **Step 3:** Implementer med én transaksjon og `executemany`. Faker får `seed_instance(seed)`, og generatoren bruker `random.Random(seed)`.
-- [ ] **Step 4:** PASS. Kjør full generering og noter antall rader, kjøretid og filstørrelse i `05_data/persondata/README.md`. Forventet: ca. 200 000 rader og under 3 minutter.
+- [ ] **Step 4:** PASS. Kjør full generering og noter antall rader, kjøretid og filstørrelse i `05_data/persondata/README.md`. Forventet: ca. 40 000 rader og under 1 minutt.
 - [ ] **Step 5:** Sjekk at `git status` ikke viser `.db`. Commit `feat(persondata): CLI for persondata.db`.
 
 ---
