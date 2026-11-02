@@ -5,8 +5,9 @@ description = "Kunstpixel (kunstpixel.com) MCP Server and Demo-Prototype"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "mcp>=1.29.1",
+    "mcp>=1.29.1,<2",
     "fastmcp>=3.4.2",
+    "faker>=40.44",
     "pydantic>=2.12.5",
     "pyyaml>=6.0",
     "rich>=15.0.0",
@@ -16,7 +17,7 @@ dependencies = [
 llm = ["anthropic"]
 
 [tool.pytest.ini_options]
-markers = ["llm_live: kjører mot ekte modell (krever ANTHROPIC_API_KEY), hoppes over som standard"]
+markers = ["slow: tregere tester med full datamengde", "llm_live: kjører mot ekte modell (krever ANTHROPIC_API_KEY), hoppes over som standard"]
 minversion = "8.0"
 testpaths = ["tests"]
 pythonpath = ["."]

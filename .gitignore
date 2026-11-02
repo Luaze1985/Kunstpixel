@@ -34,3 +34,9 @@ gate-log.jsonl
 
 # Colab-leveranser som ikke er kontrollert ennå (se 01_inbox/MOTTAK_COLAB_DATA.md)
 05_data/innkommende/
+
+# Syntetiske kundedata: databasen genereres, CSV-ene committes
+05_data/persondata/*.db
+
+# Arbeidsfiler for planutførelse
+.superpowers/
