@@ -2,7 +2,9 @@
 
 **Dato:** 2026-11-02
 **Gjelder:** `05_data/persondata/persondata.db` (39 880 rader) mot `05_data/museum.db` (greina `hr-konsolidering`)
-**Konklusjon:** Kundedataene er **klare til bruk ved siden av `museum.db`**: de kan kobles på, slås sammen i spørringer, og MCP fungerer. De er **ikke klare til å bygges inn i `museum.db`**. Det stopper på én motsetning i `museum.db` selv, fire kalibreringsfeil i kundedataene og ett sikkerhetspunkt.
+**Oppdatert 2026-11-02:** Eier har bestemt at `dagsbesok` er riktig. K1–K5 er rettet mot `dagsbesok`. K1 gikk motsatt vei: med `dagsbesok` som fasit var det for **få** arrangementer, ikke for mange, og nå er det ca. 13 per måned som i `hendelser`. Skoleelever er 14 % av dagsbesøket (ca. 20 000 i året). Medlemsmassen er stabil på ca. 800 fra første dag. Gavekort på billett følger billettprisen. Henvendelsene er vektet etter FAQ-en. Det som gjenstår: `h5_historikk` i museum.db er fortsatt uenig med `dagsbesok` (må rettes der), og sikkerhetspunktet i avsnitt 5.
+
+**Opprinnelig konklusjon:** Kundedataene er **klare til bruk ved siden av `museum.db`**: de kan kobles på, slås sammen i spørringer, og MCP fungerer. De er **ikke klare til å bygges inn i `museum.db`**. Det stopper på én motsetning i `museum.db` selv, fire kalibreringsfeil i kundedataene og ett sikkerhetspunkt.
 
 ---
 

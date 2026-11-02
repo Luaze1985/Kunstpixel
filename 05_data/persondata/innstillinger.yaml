@@ -22,8 +22,8 @@ volum:
   medlemsbesok_per_aar: 4
   fordel_bruk: 6000
   gavekort_per_aar: 300
-  arrangementer: 300           # i tillegg kommer hendelser fra museum.db
-  skolebestillinger: 500
+  arrangementer_per_maaned: 13 # som hendelser i museum.db okt–des 2026; justeres etter årets dagsbesøk
+  skoleelever_andel_av_besok: 0.14  # andel av dagsbesøket (samme andel som i h5_historikk)
   utleie: 100
   henvendelser: 3000
 
@@ -35,6 +35,13 @@ andeler:
   gavekort_med_mottaker: 0.40
   gavekort_aldri_brukt: 0.15
   maks_medlemsandel_av_dagsbesok: 0.25
+  maks_skoleandel_av_dagsbesok: 0.40
+
+# Henvendelser fordeles etter publikum_faq.hyppighet i museum.db.
+# Kategorier som ikke finnes i FAQ-en, får vekten her.
+henvendelser_ekstra_kategorier:
+  medlemskap: 20
+  gavekort: 20
 
 # Medlemstyper: årspris i kr og andel av nye medlemskap (ansatt fordeles ikke tilfeldig).
 medlemskapstyper:

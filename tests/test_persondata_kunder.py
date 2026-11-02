@@ -3,7 +3,7 @@
 import random
 import re
 from collections import defaultdict
-from datetime import date
+from datetime import date, timedelta
 
 import pytest
 from faker import Faker
@@ -81,12 +81,18 @@ def test_alle_har_datakilde(data):
         assert all(r["datakilde"] == config.DATAKILDE for r in rader), tabell
 
 
+# Medlemmer som allerede var aktive ved periodestart kan ha startet (og blitt registrert) inntil ett år før.
+FOR_PERIODEN_TILLATT = {("kontakter", "opprettet"), ("medlemskap", "startdato")}
+
+
 def test_alle_datoer_i_kundeperioden(data):
+    tidligst = START - timedelta(days=365)
     for tabell, felt in HENDELSESDATOER.items():
         for r in data[tabell]:
             for f in felt:
                 if r[f] is not None:
-                    assert START <= _d(r[f]) <= REF, (tabell, f, r[f])
+                    fra = tidligst if (tabell, f) in FOR_PERIODEN_TILLATT else START
+                    assert fra <= _d(r[f]) <= REF, (tabell, f, r[f])
 
 
 def test_ansattkontakter_matcher_hr_navn(data, ansatte):

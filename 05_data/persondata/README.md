@@ -2,7 +2,7 @@
 
 > **FIKTIVE DATA.** Alle kunder, medlemmer og gavekortkjøpere er oppdiktet. E-postene ender på `@eksempel.invalid`, og telefonnumrene starter med 0, så ingen av dem kan tilhøre noen. Ansatte er hentet fra `hr_ansatte` i `05_data/museum.db`, som også er syntetisk. Navnene på ansatte er like i begge databasene.
 
-Periode: **2021-11-02 til 2026-11-02** (5 år).
+Periode: **2021-11-02 til 2026-11-02** (5 år). Tallene er kalibrert mot `dagsbesok` i museum.db, som eier har bestemt er riktig (2026-11-02).
 
 ## Hvor ligger hva
 
@@ -22,17 +22,17 @@ Koden ligger i `src/kunstpixel/persondata/`, og tabelloppsettet i `schema.sql`.
 | `medlemskapstyper` | 6 | student, enkelt, senior, familie, venn, ansatt, med årspris |
 | `fordeler` | 8 | fri inngang, butikk- og kaférabatt, forhåndsvisning, åpninger, gratis omvisning, gjest |
 | `medlemskapstype_fordel` | 26 | hvilke typer som har hvilke fordeler |
-| `medlemskap` | 4 118 | ett år per rad. Fornyelser peker på forrige rad (`fornyelse_av`). Ca. 790 aktive per 2026-11-02 |
-| `medlemsbesok` | 14 465 | besøk per medlem, bare på åpne dager og innenfor `dagsbesok` |
-| `fordel_bruk` | 5 999 | bruk av rabatter og fordeler, med rabattbeløp |
+| `medlemskap` | 4 920 | ett år per rad. Fornyelser peker på forrige rad (`fornyelse_av`). Stabilt ca. 800 aktive fra første dag. De som allerede var medlemmer i november 2021, startet inntil ett år før |
+| `medlemsbesok` | 16 060 | besøk per medlem, bare på åpne dager og innenfor `dagsbesok` |
+| `fordel_bruk` | 5 997 | bruk av rabatter og fordeler, med rabattbeløp |
 | `gavekort` | 1 501 | kode `GK-XXXX-XXXX`, beløp, kjøper, eventuell mottaker, gyldig i 3 år |
-| `gavekort_bruk` | 2 510 | innløsninger. Summen er aldri høyere enn beløpet |
-| `arrangementer` | 315 | 300 genererte og 15 fra `hendelser` i museum.db |
-| `pameldinger` | 2 234 | aldri over kapasiteten. Betalt med kort, Vipps, gavekort eller medlemsfordel |
-| `skolebestillinger` | 500 | skole, kontaktlærer og klassetrinn, ingen elevnavn |
+| `gavekort_bruk` | 2 329 | innløsninger. Summen er aldri høyere enn beløpet. På billett følger beløpet billettprisen (1–4 billetter) |
+| `arrangementer` | 760 | ca. 13 per måned som i `hendelser`, justert etter månedens dagsbesøk, pluss 15 fra `hendelser` i museum.db |
+| `pameldinger` | 5 430 | aldri over kapasiteten. Betalt med kort, Vipps, gavekort eller medlemsfordel |
+| `skolebestillinger` | 4 278 | 14 % av dagsbesøket er skoleelever (ca. 20 000 i året). Aldri over 40 % av dagens besøk. Ingen elevnavn |
 | `utleie` | 100 | privat eller bedrift |
-| `henvendelser` | 3 000 | spørsmål fra publikum. 5 % inneholder persondata (`inneholder_persondata = 1`) |
-| **Totalt** | **39 880** | Bygges på under ett sekund. Databasen er 3,5 MB og CSV-ene 3,3 MB |
+| `henvendelser` | 3 000 | spørsmål fra publikum, fordelt etter `publikum_faq.hyppighet`. 5 % inneholder persondata (`inneholder_persondata = 1`) |
+| **Totalt** | **49 513** | Bygges på under ett sekund. Databasen er 3,5 MB og CSV-ene 3,3 MB |
 
 Alle ansatt-ID-er (`solgt_av_ansatt_id`, `ansvarlig_ansatt_id`, `besvart_av_ansatt_id`) peker på en ansatt som var i jobb den datoen. Noen poster er med vilje lagret for lenge, som øvingsmateriale for en slettesjekk i fase 2.
 

@@ -20,6 +20,7 @@ import random
 import re
 import sqlite3
 from contextlib import closing
+from datetime import timedelta
 from pathlib import Path
 
 from faker import Faker
@@ -212,9 +213,11 @@ def bygg_database(
         random.Random(seed),
         fake,
         ansattkilde.hent_ansatte(museum_db),
-        ansattkilde.hent_dagsbesok(museum_db, config.KUNDER_START, config.REFERANSEDATO),
+        ansattkilde.hent_dagsbesok(museum_db, config.KUNDER_START - timedelta(days=365), config.REFERANSEDATO),
         ansattkilde.hent_hendelser(museum_db),
         faktor=config.SKALAER[skala],
+        billettpriser=ansattkilde.hent_billettpriser(museum_db, config.KUNDER_START, config.REFERANSEDATO),
+        faq_vekter=ansattkilde.hent_faq_vekter(museum_db),
     )
     tabeller.update(_katalog())
     antall = _skriv_database(sti, tabeller)

@@ -118,14 +118,25 @@ def generer_kunder(
     dagsbesok: dict[date, tuple[int, bool]],
     hendelser: list[dict],
     faktor: float = 1.0,
+    billettpriser: dict[date, int] | None = None,
+    faq_vekter: dict[str, int] | None = None,
 ) -> dict[str, list[dict]]:
-    """Generer alle kundetabeller (unntatt katalogtabellene) som lister av rader."""
+    """Generer alle kundetabeller (unntatt katalogtabellene) som lister av rader.
+
+    `dagsbesok` bør dekke ett år før periodestart, slik at medlemskap som startet
+    før perioden (og fortsatt er aktive i den) får riktig selger.
+    """
+    billettpriser = billettpriser or {}
+    faq_vekter = faq_vekter or {}
     aapne_dager = sorted(d for d, (_, er_aapen) in dagsbesok.items() if er_aapen and START <= d <= REF)
     aapen = set(aapne_dager)
 
     def ansatt_paa(dato: date, avdelinger: set[str] | None = None) -> str | None:
         kandidater = aktive_paa(ansatte, dato, avdelinger)
         return rng.choice(kandidater).ansatt_id if kandidater else None
+
+    def antall_av(forventet: float) -> int:
+        return int(forventet) + (1 if rng.random() < forventet - int(forventet) else 0)
 
     def aapen_dag_mellom(fra: date, til: date) -> date | None:
         i, j = bisect.bisect_left(aapne_dager, fra), bisect.bisect_right(aapne_dager, til)
@@ -206,8 +217,9 @@ def generer_kunder(
     fornyelse = config.VOLUM["fornyelsesandel"]
     innmelding_per_aar = max(1, round(n_aktive * (1 - fornyelse)))
 
-    startdatoer = [_dato_mellom(rng, START, START + timedelta(days=364)) for _ in range(n_aktive)]
-    aar_start = START + timedelta(days=365)
+    # Medlemmer som allerede var aktive ved periodestart (startet siste år før perioden).
+    startdatoer = [START - timedelta(days=rng.randint(0, 364)) for _ in range(n_aktive)]
+    aar_start = START
     while aar_start <= REF:
         aar_slutt = min(REF, aar_start + timedelta(days=364))
         andel_av_aar = ((aar_slutt - aar_start).days + 1) / 365
@@ -219,7 +231,7 @@ def generer_kunder(
             "medlemskap_id": len(medlemskap) + 1, "kontakt_id": kontakt["kontakt_id"], "type": type_,
             "startdato": start, "sluttdato": start + timedelta(days=364),
             "betalt_belop": config.MEDLEMSKAPSTYPER[type_]["aarspris"], "fornyelse_av": forrige,
-            "solgt_av_ansatt_id": ansatt_paa(start, {"Formidling", "Drift"}) if start in aapen else None,
+            "solgt_av_ansatt_id": ansatt_paa(start, {"Formidling", "Drift"}) if dagsbesok.get(start, (0, False))[1] else None,
             "datakilde": DK,
         }
         medlemskap.append(m)
@@ -257,10 +269,10 @@ def generer_kunder(
     medlemsbesok: list[dict] = []
     gjestetyper = set(config.FORDELER.get("medbring_gjest", {}).get("typer", []))
     for m in medlemskap:
-        if m["type"] == "ansatt" or m["startdato"] > REF:
+        if m["type"] == "ansatt" or m["startdato"] > REF or m["sluttdato"] < START:
             continue
         slutt = min(REF, m["sluttdato"])
-        forventet = config.VOLUM["medlemsbesok_per_aar"] * ((slutt - m["startdato"]).days + 1) / 365
+        forventet = config.VOLUM["medlemsbesok_per_aar"] * ((slutt - max(START, m["startdato"])).days + 1) / 365
         antall = int(forventet) + (1 if rng.random() < forventet - int(forventet) else 0)
         for _ in range(antall):
             for _forsok in range(5):
@@ -334,13 +346,17 @@ def generer_kunder(
             d for d in (aapen_dag_mellom(utstedt, min(REF, g["gyldig_til"])) for _ in range(rng.randint(1, 3))) if d
         )
         for nr, dato in enumerate(datoer):
-            belop = rest if nr == len(datoer) - 1 and rng.random() < 0.6 else round(rest * rng.uniform(0.2, 0.9), 2)
+            sted = rng.choice(["billett", "butikk", "kafe"])
+            if sted == "billett":
+                belop = min(rest, float(billettpriser.get(dato, 120) * rng.randint(1, 4)))
+            else:
+                belop = rest if nr == len(datoer) - 1 and rng.random() < 0.6 else round(rest * rng.uniform(0.2, 0.9), 2)
             if belop <= 0:
                 break
             rest = round(rest - belop, 2)
             gavekort_bruk.append({
                 "bruk_id": len(gavekort_bruk) + 1, "gavekort_id": g["gavekort_id"], "dato": dato, "belop": belop,
-                "sted": rng.choice(["billett", "butikk", "kafe"]), "datakilde": DK,
+                "sted": sted, "datakilde": DK,
             })
     saldo = {g["gavekort_id"]: float(g["belop"]) for g in gavekort}
     for b in gavekort_bruk:
@@ -358,8 +374,20 @@ def generer_kunder(
     arr_typer = sorted(per_type)
     arr_vekter = [len(per_type[t]) for t in arr_typer]
     arrangementer: list[dict] = []
-    for i in range(1, _antall("arrangementer", faktor) + 1):
-        dag = aapen_dag_mellom(START, GENERERTE_ARRANGEMENTER_TIL)
+    besok_per_mnd: dict[tuple[int, int], int] = defaultdict(int)
+    for d, (b, _) in dagsbesok.items():
+        if START <= d <= GENERERTE_ARRANGEMENTER_TIL:
+            besok_per_mnd[(d.year, d.month)] += b
+    hele = [v for (y, m), v in besok_per_mnd.items() if (y, m) != (START.year, START.month)]
+    snitt_mnd = sum(hele) / len(hele) if hele else 1
+    arrangementdager: list[date] = []
+    for (y, m), b in sorted(besok_per_mnd.items()):
+        forste = max(START, date(y, m, 1))
+        siste = min(GENERERTE_ARRANGEMENTER_TIL, (date(y, m, 28) + timedelta(days=4)).replace(day=1) - timedelta(days=1))
+        # Besøkssummen for en delvis måned dekker bare dagene i perioden, så den skalerer av seg selv.
+        n = antall_av(config.VOLUM["arrangementer_per_maaned"] * faktor * b / snitt_mnd)
+        arrangementdager += [d for d in (aapen_dag_mellom(forste, siste) for _ in range(n)) if d]
+    for i, dag in enumerate(sorted(arrangementdager), start=1):
         type_ = rng.choices(arr_typer, arr_vekter)[0]
         maks, pv, pb = rng.choice(per_type[type_])
         arrangementer.append({
@@ -425,15 +453,34 @@ def generer_kunder(
 
     # --- Skolebestillinger og utleie -------------------------------------
     skolebestillinger: list[dict] = []
-    for i in range(1, _antall("skolebestillinger", faktor) + 1):
-        dag = aapen_dag_mellom(START, REF)
-        while dag.weekday() >= 5 or dag.month == 7:
-            dag = aapen_dag_mellom(START, REF)
+    skoledager = [d for d in aapne_dager if d.weekday() < 5 and d.month != 7]
+    elevtak = {d: int(config.ANDELER["maks_skoleandel_av_dagsbesok"] * dagsbesok[d][0]) for d in skoledager}
+    elever_brukt: dict[date, int] = defaultdict(int)
+    besok_per_aar: dict[int, int] = defaultdict(int)
+    for d, (b, _) in dagsbesok.items():
+        if START <= d <= REF:
+            besok_per_aar[d.year] += b
+    planlagt: list[tuple[date, int]] = []
+    for aar, besok in sorted(besok_per_aar.items()):
+        maal = round(config.VOLUM["skoleelever_andel_av_besok"] * besok * faktor)
+        aarets = [d for d in skoledager if d.year == aar]
+        while maal > 0 and aarets:
+            elever = min(maal, rng.randint(15, 30))
+            for _forsok in range(20):
+                dag = rng.choice(aarets)
+                if elever_brukt[dag] + elever <= elevtak[dag]:
+                    elever_brukt[dag] += elever
+                    planlagt.append((dag, elever))
+                    break
+            else:
+                break  # ingen ledig kapasitet igjen i året
+            maal -= elever
+    for i, (dag, elever) in enumerate(sorted(planlagt), start=1):
         fornavn, etternavn = fake.first_name(), fake.last_name()
         skolebestillinger.append({
             "bestilling_id": i, "skole": f"{fake.city()} skole", "kontaktlaerer": f"{fornavn} {etternavn}",
             "jobb_epost": config.lag_epost(fornavn, etternavn, 900000 + i), "klassetrinn": rng.randint(1, 13),
-            "antall_elever": rng.randint(15, 30), "dato": dag,
+            "antall_elever": elever, "dato": dag,
             "ansvarlig_ansatt_id": ansatt_paa(dag, {"Formidling"}), "datakilde": DK,
         })
 
@@ -454,10 +501,12 @@ def generer_kunder(
     n_henv = _antall("henvendelser", faktor)
     med_persondata = set(rng.sample(range(n_henv), round(n_henv * andel["henvendelser_med_persondata"])))
     kategorier = sorted(HENVENDELSESMALER)
+    ekstra = config.INNSTILLINGER.get("henvendelser_ekstra_kategorier", {})
+    kategorivekter = [faq_vekter.get(k, ekstra.get(k, 1)) for k in kategorier]
     henvendelser: list[dict] = []
     for i in range(n_henv):
         dag = _dato_mellom(rng, START, REF)
-        kategori = rng.choice(kategorier)
+        kategori = rng.choices(kategorier, kategorivekter)[0]
         tekst = rng.choice(HENVENDELSESMALER[kategori])
         kontakt = kunde_opprettet_for(dag) if rng.random() < andel["henvendelser_med_kontakt"] else None
         if i in med_persondata:

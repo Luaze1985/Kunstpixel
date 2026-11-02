@@ -79,3 +79,21 @@ def hent_hendelser(museum_db: Path) -> list[dict]:
     """Alle hendelser (arrangementer) i museum.db."""
     with closing(_koble_ro(museum_db)) as conn:
         return [dict(r) for r in conn.execute("SELECT * FROM hendelser ORDER BY dato, id")]
+
+
+def hent_billettpriser(museum_db: Path, fra: date, til: date) -> dict[date, int]:
+    """Voksenpris for billett per dag (fra dagsbesok)."""
+    with closing(_koble_ro(museum_db)) as conn:
+        rader = conn.execute(
+            "SELECT dato, pris_voksen FROM dagsbesok WHERE dato BETWEEN ? AND ?", (fra.isoformat(), til.isoformat())
+        ).fetchall()
+    return {date.fromisoformat(r["dato"]): int(r["pris_voksen"]) for r in rader}
+
+
+def hent_faq_vekter(museum_db: Path) -> dict[str, int]:
+    """Hvor ofte hver kategori spørres om (sum av publikum_faq.hyppighet per kategori)."""
+    with closing(_koble_ro(museum_db)) as conn:
+        return {
+            r["kategori"]: int(r["n"])
+            for r in conn.execute("SELECT kategori, SUM(hyppighet) AS n FROM publikum_faq GROUP BY kategori")
+        }
