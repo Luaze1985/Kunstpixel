@@ -1,0 +1,9 @@
+﻿fordel;beskrivelse;datakilde
+fri_inngang;Fri inngang hele året;syntetisk (persondata_generator)
+rabatt_butikk_10;10 % rabatt i museumsbutikken;syntetisk (persondata_generator)
+rabatt_butikk_20;20 % rabatt i museumsbutikken;syntetisk (persondata_generator)
+rabatt_kafe_10;10 % rabatt i kaféen;syntetisk (persondata_generator)
+forhandsvisning;Forhåndsvisning av nye utstillinger;syntetisk (persondata_generator)
+invitasjon_aapning;Invitasjon til utstillingsåpninger;syntetisk (persondata_generator)
+gratis_omvisning;Gratis guidet omvisning;syntetisk (persondata_generator)
+medbring_gjest;Ta med én gjest gratis;syntetisk (persondata_generator)

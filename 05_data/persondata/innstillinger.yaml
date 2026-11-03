@@ -1,0 +1,95 @@
+# Innstillinger for syntetiske kundedata i Kunstpixel.
+# Her endrer du volum, priser, medlemstyper og fordeler uten å røre koden.
+# Etter en endring: py -3.13 -m src.kunstpixel.persondata.generer --overskriv
+#
+# Alle personer i kundedataene er oppdiktet (datakilde: syntetisk).
+#
+# Må finnes: medlemstypen `ansatt` og fordelen `fri_inngang`.
+# Alle typer som står under en fordel, må finnes under medlemskapstyper.
+# Feil her gir en tydelig melding før noe blir skrevet.
+
+periode:
+  fra: "2021-11-02"   # 5 år tilbake
+  til: "2026-11-02"   # referansedato
+
+seed: 2026            # samme seed gir nøyaktig samme data
+
+# Antall ved skala "full". Skala "test" ganger alt med 0,02.
+volum:
+  kontakter: 5000              # i tillegg kommer én kontakt per ansatt
+  aktive_medlemskap: 800       # omtrent antall aktive på en gitt dag
+  fornyelsesandel: 0.65
+  medlemsbesok_per_aar: 4
+  fordel_bruk: 6000
+  gavekort_per_aar: 300
+  arrangementer_per_maaned: 13 # som hendelser i museum.db okt–des 2026; justeres etter årets dagsbesøk
+  skoleelever_andel_av_besok: 0.14  # andel av dagsbesøket (samme andel som i h5_historikk)
+  utleie: 100
+  henvendelser: 3000
+
+andeler:
+  nyhetsbrev_samtykke: 0.40
+  trekker_samtykke: 0.10
+  henvendelser_med_persondata: 0.05
+  henvendelser_med_kontakt: 0.30
+  gavekort_med_mottaker: 0.40
+  gavekort_aldri_brukt: 0.15
+  maks_medlemsandel_av_dagsbesok: 0.25
+  maks_skoleandel_av_dagsbesok: 0.40
+
+# Henvendelser fordeles etter publikum_faq.hyppighet i museum.db.
+# Kategorier som ikke finnes i FAQ-en, får vekten her.
+henvendelser_ekstra_kategorier:
+  medlemskap: 20
+  gavekort: 20
+
+# Medlemstyper: årspris i kr og andel av nye medlemskap (ansatt fordeles ikke tilfeldig).
+medlemskapstyper:
+  enkelt:  {aarspris: 450,  andel: 0.40}
+  familie: {aarspris: 750,  andel: 0.20}
+  senior:  {aarspris: 350,  andel: 0.15}
+  student: {aarspris: 250,  andel: 0.15}
+  venn:    {aarspris: 2500, andel: 0.10}
+  ansatt:  {aarspris: 0,    andel: 0.0}
+
+# Fordeler: beskrivelse, hvilke medlemstyper som har dem, og verdi per gang de brukes.
+# verdi: et fast beløp i kr (f.eks. 75), eller {prosent: 10, grunnlag: [50, 800]}
+#        (rabatt i prosent av et kjøp mellom 50 og 800 kr). Mangler verdi, blir den 0.
+# Nye fordeler kan legges til fritt.
+fordeler:
+  fri_inngang:
+    beskrivelse: "Fri inngang hele året"
+    typer: [enkelt, familie, senior, student, venn, ansatt]
+    verdi: 0
+  rabatt_butikk_10:
+    beskrivelse: "10 % rabatt i museumsbutikken"
+    typer: [enkelt, familie, senior, student]
+    verdi: {prosent: 10, grunnlag: [50, 800]}
+  rabatt_butikk_20:
+    beskrivelse: "20 % rabatt i museumsbutikken"
+    typer: [venn, ansatt]
+    verdi: {prosent: 20, grunnlag: [50, 800]}
+  rabatt_kafe_10:
+    beskrivelse: "10 % rabatt i kaféen"
+    typer: [enkelt, familie, senior, student, venn, ansatt]
+    verdi: {prosent: 10, grunnlag: [40, 300]}
+  forhandsvisning:
+    beskrivelse: "Forhåndsvisning av nye utstillinger"
+    typer: [venn, familie]
+    verdi: 0
+  invitasjon_aapning:
+    beskrivelse: "Invitasjon til utstillingsåpninger"
+    typer: [venn, ansatt]
+    verdi: 0
+  gratis_omvisning:
+    beskrivelse: "Gratis guidet omvisning"
+    typer: [venn, senior]
+    verdi: 75
+  medbring_gjest:
+    beskrivelse: "Ta med én gjest gratis"
+    typer: [venn, familie]
+    verdi: 150
+
+gavekort:
+  belop: [200, 300, 500, 1000]   # kan endres fritt
+  gyldighet_dager: 1096        # 3 år (foreldelsesloven) – må verifiseres

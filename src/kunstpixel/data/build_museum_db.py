@@ -24,8 +24,11 @@ dette skriptet. Hvert bygg starter fra grunnlaget og gjør de samme stegene:
     Navn og avdeling hentes ved oppslag fra hr_ansatte, de lagres ikke på nytt.
     NB: org_ferdigheter overlapper de 7 første kodene i hr_skills (HR-demoen) med litt andre navn.
     Dette er to kilder for samme ferdigheter, og må samkjøres av Lars før de brukes sammen.
-11. Indekser for vaktoppslag og interne tabeller.
-12. PRAGMA user_version = SKJEMAVERSJON, VACUUM, integrity_check og foreign_key_check.
+11. Rett avvik mellom tabellene (rett_koblingsavvik, B18–B25 i koblingssjekken): hendelser på stengte dager,
+    arkivets høst 2026 mot det kuraterte programmet, publikumsvakter på stengte dager, vaktenes utstilling,
+    og godkjenner/ansvarlig som ikke var i jobb.
+12. Indekser for vaktoppslag og interne tabeller.
+13. PRAGMA user_version = SKJEMAVERSJON, VACUUM, integrity_check og foreign_key_check.
 
 Kjøres med:
     py -3.13 src/kunstpixel/data/build_museum_db.py          # bygg og erstatt
@@ -847,22 +850,25 @@ def oppgrader_fremmednokler(con: sqlite3.Connection) -> None:
 
 
 def koble_ansattregistre(con: sqlite3.Connection) -> None:
-    """Koble hr_people (E101..E112) til hr_ansatte (KP-ANS-...) for én felles sannhet (G10)."""
+    """Koble hr_people (E101..E112) til hr_ansatte (KP-ANS-...) for én felles sannhet (G10).
+
+    Navnene i 05_data/hr_demo/seed.json er de samme som i hr_ansatte (koblingssjekk B23).
+    """
     # Kartlegging mellom kiosk-roller og representative ansatte i hr_ansatte
     # E101..E112 er 12 verter/kafémedarbeidere
     mapping = {
-        "E101": "KP-ANS-006",  # Ada Nord -> Jonas Berg (Seniorvert)
-        "E102": "KP-ANS-139",  # Birk Lund -> Synnøve Myhre (Kafémedarbeider)
-        "E103": "KP-ANS-156",  # Celia Vik -> Vegard Haugen (Butikk/Kafé)
-        "E104": "KP-ANS-153",  # Dag Foss -> Sindre Lindqvist (Museumsvert)
-        "E105": "KP-ANS-163",  # Eva Blom -> Liv Pettersen (Museumsvert)
-        "E106": "KP-ANS-073",  # Finn Mo -> Henrik Pettersen (Vekter/vert)
-        "E107": "KP-ANS-091",  # Gina Dal -> Sunniva Bratt (Vekter/vert)
-        "E108": "KP-ANS-096",  # Hugo Vik -> Magnus Hansen (Vekter/vert)
-        "E109": "KP-ANS-119",  # Iris Sol -> Sindre Pedersen (Formidling/vert)
-        "E110": "KP-ANS-142",  # Jan Hage -> Kirsti Johansen (Formidling/vert)
-        "E111": "KP-ANS-158",  # Kaja Lien -> Trond Hansen (Formidling/vert)
-        "E112": "KP-ANS-168",  # Leo Vang -> Fredrik Ruud (Vekter/vert)
+        "E101": "KP-ANS-006",  # Jonas Berg (Seniorvert / Skrankeleder)
+        "E102": "KP-ANS-139",  # Synnøve Myhre (Kafémedarbeider (Deltid))
+        "E103": "KP-ANS-156",  # Vegard Haugen (Butikkmedarbeider (Deltid))
+        "E104": "KP-ANS-153",  # Sindre Lindqvist (Museumsvert og omviser (Deltid))
+        "E105": "KP-ANS-163",  # Liv Pettersen (Museumsvert og omviser (Deltid))
+        "E106": "KP-ANS-073",  # Henrik Pettersen (Vekter og sikkerhetsvakt)
+        "E107": "KP-ANS-091",  # Sunniva Bratt (Vekter og sikkerhetsvakt)
+        "E108": "KP-ANS-096",  # Magnus Hansen (Vekter og sikkerhetsvakt)
+        "E109": "KP-ANS-119",  # Sindre Pedersen (Audioguide- og innholdsprodusent)
+        "E110": "KP-ANS-142",  # Kirsti Johansen (Audioguide- og innholdsprodusent)
+        "E111": "KP-ANS-158",  # Trond Hansen (Audioguide- og innholdsprodusent)
+        "E112": "KP-ANS-168",  # Fredrik Ruud (Vekter og sikkerhetsvakt)
     }
 
     # Legg til koblingskolonne ansatt_id REFERENCES hr_ansatte(ansatt_id)
@@ -883,6 +889,101 @@ def koble_ansattregistre(con: sqlite3.Connection) -> None:
     )
     con.execute("DROP TABLE hr_people")
     con.execute("ALTER TABLE hr_people_ny RENAME TO hr_people")
+
+
+def _i_jobb_med(con: sqlite3.Connection, dato: str, stilling: str, avdeling: str) -> tuple[str, str, str] | None:
+    """Lengst ansatte med samme stilling i jobb på datoen, ellers lengst ansatte i samme avdeling."""
+    for felt, verdi in (("stilling", stilling), ("avdeling", avdeling)):
+        rad = con.execute(
+            f"SELECT ansatt_id, navn, stilling FROM hr_ansatte WHERE {felt} = ? AND ansatt_fra <= ? "
+            "AND (ansatt_til IS NULL OR ansatt_til >= ?) ORDER BY ansatt_fra, ansatt_id LIMIT 1",
+            (verdi, dato, dato),
+        ).fetchone()
+        if rad:
+            return rad
+    return None
+
+
+def rett_koblingsavvik(con: sqlite3.Connection) -> dict[str, int]:
+    """Rett avvik mellom tabellene som koblingssjekken (src/kunstpixel/data/koblinger.py, B18–B25) fant.
+
+    Grunnlaget (museum_base.db) endres ikke. Rettingene gjøres her, deterministisk, etter eiers beslutninger
+    2026-11-03: dagsbesok er sannheten for åpne dager, hr_ansatte for ansatte, og det kuraterte programmet
+    i `utstillinger` for hvilke utstillinger som går nå.
+    """
+    ut: dict[str, int] = {}
+
+    # B25: hendelser på dager museet er stengt (mandager) flyttes til neste åpne dag.
+    flytt = con.execute(
+        "SELECT h.id, h.dato FROM hendelser h JOIN dagsbesok d ON d.dato = h.dato WHERE d.er_aapent = 0 ORDER BY h.id"
+    ).fetchall()
+    for hid, dato in flytt:
+        ny = con.execute("SELECT min(dato) FROM dagsbesok WHERE dato > ? AND er_aapent = 1", (dato,)).fetchone()[0]
+        con.execute("UPDATE hendelser SET dato = ? WHERE id = ?", (ny, hid))
+    ut["hendelser_flyttet"] = len(flytt)
+
+    # B24: arkivet (utstillinger_historikk) høsten 2026 skal vise det kuraterte programmet i `utstillinger`.
+    # KP-EXH-2026-068 blir «Stille kraft», og «Lys innenfra» legges til. Besøket deles 2/3 og 1/3 etter salsantall,
+    # så årssummen (som skal være lik dagsbesok) er uendret.
+    gammel = con.execute(
+        "SELECT besokstall_total, aar, sesong FROM utstillinger_historikk WHERE utstilling_id = 'KP-EXH-2026-068'"
+    ).fetchone()
+    if gammel:
+        besok, aar, sesong = gammel
+        kol = [r[1] for r in con.execute("PRAGMA table_info(utstillinger_historikk)")]
+        mal = dict(zip(kol, con.execute("SELECT * FROM utstillinger_historikk WHERE utstilling_id = 'KP-EXH-2026-068'").fetchone()))
+        budsjett = mal.get("budsjett_nok") or 0
+        for uid, kilde_id, saler, besok_del, budsjett_del, isbn in (
+            ("KP-EXH-2026-068", "UTST-2026-H", "Sal A, Sal D", besok - besok // 3, budsjett - budsjett // 3, mal.get("katalog_isbn")),
+            ("KP-EXH-2026-069", "UTST-2026-S", "Sal C", besok // 3, budsjett // 3, None),
+        ):
+            u = con.execute("SELECT tittel, startdato, sluttdato FROM utstillinger WHERE id = ?", (kilde_id,)).fetchone()
+            rad = {**mal, "utstilling_id": uid, "tittel": f"{u[0]} ({aar})", "saler": saler, "periode_start": u[1],
+                   "periode_slutt": u[2], "besokstall_total": besok_del, "budsjett_nok": budsjett_del, "katalog_isbn": isbn}
+            con.execute("DELETE FROM utstillinger_historikk WHERE utstilling_id = ?", (uid,))
+            con.execute(
+                f"INSERT INTO utstillinger_historikk ({', '.join(kol)}) VALUES ({', '.join('?' * len(kol))})",
+                [rad[k] for k in kol],
+            )
+        ut["utstillinger_avstemt"] = 2
+
+    # B18: publikumsvakter (sal, kafé, butikk, resepsjon) på dager dagsbesok sier stengt fjernes.
+    # På stengte dager er det bare magasin og vaktrom som bemannes, slik det allerede er på mandager.
+    cur = con.execute(
+        "DELETE FROM hr_vakter WHERE dato IN (SELECT dato FROM dagsbesok WHERE er_aapent = 0) "
+        "AND stasjon NOT LIKE 'Magasin%' AND stasjon NOT LIKE 'Vaktrom%'"
+    )
+    ut["vakter_fjernet"] = cur.rowcount
+
+    # B19: vaktens utstilling_id er utstillingen som gikk den dagen: hovedutstilling foran fokusrom, ellers tom
+    # (mellom to utstillinger, f.eks. monteringsuker).
+    con.execute("""
+        UPDATE hr_vakter SET utstilling_id = (
+            SELECT u.utstilling_id FROM utstillinger_historikk u
+            WHERE hr_vakter.dato BETWEEN u.periode_start AND u.periode_slutt
+            ORDER BY u.utstilling_id LIKE '%FOKUS%', u.periode_start, u.utstilling_id LIMIT 1)
+    """)
+    ut["vakter_uten_utstilling"] = con.execute("SELECT count(*) FROM hr_vakter WHERE utstilling_id IS NULL").fetchone()[0]
+
+    # B21 og B22: godkjenner/ansvarlig som ikke var i jobb byttes med den lengst ansatte i samme stilling
+    # (ellers samme avdeling) som var i jobb på datoen.
+    for tabell, id_kol, ans_kol, dato_kol, navn_kol in (
+        ("hr_innleie", "innleie_id", "godkjent_av_ansatt_id", "periode_fra", "godkjent_av_navn"),
+        ("avvik_hms_drift", "avvik_id", "oppfolging_ansvarlig_id", "dato", None),
+    ):
+        feil = con.execute(
+            f"SELECT t.{id_kol}, t.{dato_kol}, a.stilling, a.avdeling FROM {tabell} t JOIN hr_ansatte a ON a.ansatt_id = t.{ans_kol} "
+            f"WHERE a.ansatt_fra > t.{dato_kol} OR (a.ansatt_til IS NOT NULL AND a.ansatt_til < t.{dato_kol})"
+        ).fetchall()
+        for rid, dato, stilling, avdeling in feil:
+            ny = _i_jobb_med(con, dato, stilling, avdeling)
+            if ny is None:
+                raise ValueError(f"Fant ingen i jobb i {avdeling} {dato} for {tabell} {rid}")
+            con.execute(f"UPDATE {tabell} SET {ans_kol} = ? WHERE {id_kol} = ?", (ny[0], rid))
+            if navn_kol:
+                con.execute(f"UPDATE {tabell} SET {navn_kol} = ? WHERE {id_kol} = ?", (f"{ny[1]} ({ny[2]})", rid))
+        ut[f"{tabell}_ansvarlig_byttet"] = len(feil)
+    return ut
 
 
 def bygg(til: Path) -> dict:
@@ -922,6 +1023,8 @@ def bygg(til: Path) -> dict:
             antall_hr_opplaering = bygg_hr_opplaering_onboarding(con)
             oppgrader_fremmednokler(con)
             koble_ansattregistre(con)
+            rettinger = rett_koblingsavvik(con)
+            antall_vakter -= rettinger["vakter_fjernet"]
             for sql in INDEXES:
                 con.execute(sql)
             con.execute(f"PRAGMA user_version = {SKJEMAVERSJON}")
@@ -950,6 +1053,7 @@ def bygg(til: Path) -> dict:
             "h5_tidsbruk": antall_h5_tidsbruk,
             "h5_historikk": antall_h5_historikk,
             "hr_opplaering": antall_hr_opplaering,
+            "koblingsrettinger": rettinger,
             "user_version": SKJEMAVERSJON,
         }
     finally:

@@ -76,8 +76,8 @@ myndigheter:
   intern_eier: Museumsdirektør
   kontaktperson: Harald Oskar Vinje
   kontakt_epost: harald.oskar.vinje@arbeidstilsynet.example.test
-  intern_eier_navn: Thorvald Berntsen
-  intern_eier_epost: thorvald.berntsen@kunstpixel.example.test
+  intern_eier_navn: Henrik Faye-Lund
+  intern_eier_epost: henrik.fayelund@kunstpixel.example.test
   hva_de_vil: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva myndigheten ber om fra oss'
   utloser: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som utløser kontakt'
   dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon de vanligvis ber om'
@@ -88,8 +88,8 @@ myndigheter:
   intern_eier: Kafeansvarlig
   kontaktperson: Theodor Sæther
   kontakt_epost: theodor.sather@mattilsynet.example.test
-  intern_eier_navn: Astrid Moe
-  intern_eier_epost: astrid.moe@kunstpixel.example.test
+  intern_eier_navn: Hilde Viken
+  intern_eier_epost: hilde.viken@kunstpixel.example.test
   hva_de_vil: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva myndigheten ber om fra oss'
   utloser: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som utløser kontakt'
   dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon de vanligvis ber om'
@@ -100,8 +100,8 @@ myndigheter:
   intern_eier: Driftsansvarlig
   kontaktperson: Kristian Hovland
   kontakt_epost: kristian.hovland@brann.example.test
-  intern_eier_navn: Edvard Rønning
-  intern_eier_epost: edvard.ronning@kunstpixel.example.test
+  intern_eier_navn: Terje Bratt
+  intern_eier_epost: terje.bratt@kunstpixel.example.test
   hva_de_vil: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva myndigheten ber om fra oss'
   utloser: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som utløser kontakt'
   dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon de vanligvis ber om'
@@ -112,8 +112,8 @@ myndigheter:
   intern_eier: Kafeansvarlig
   kontaktperson: Gunnar Eilif Lunde
   kontakt_epost: gunnar.eilif.lunde@kommunen.example.test
-  intern_eier_navn: Astrid Moe
-  intern_eier_epost: astrid.moe@kunstpixel.example.test
+  intern_eier_navn: Hilde Viken
+  intern_eier_epost: hilde.viken@kunstpixel.example.test
   hva_de_vil: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva myndigheten ber om fra oss'
   utloser: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som utløser kontakt'
   dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon de vanligvis ber om'
@@ -124,8 +124,8 @@ myndigheter:
   intern_eier: Museumsdirektør
   kontaktperson: Harriet Dahlen
   kontakt_epost: harriet.dahlen@fylkeskommunen.example.test
-  intern_eier_navn: Thorvald Berntsen
-  intern_eier_epost: thorvald.berntsen@kunstpixel.example.test
+  intern_eier_navn: Henrik Faye-Lund
+  intern_eier_epost: henrik.fayelund@kunstpixel.example.test
   hva_de_vil: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva myndigheten ber om fra oss'
   utloser: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som utløser kontakt'
   dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon de vanligvis ber om'
@@ -136,8 +136,8 @@ myndigheter:
   intern_eier: Museumsdirektør
   kontaktperson: Frits Strømme
   kontakt_epost: frits.stromme@kulturdirektoratet.example.test
-  intern_eier_navn: Thorvald Berntsen
-  intern_eier_epost: thorvald.berntsen@kunstpixel.example.test
+  intern_eier_navn: Henrik Faye-Lund
+  intern_eier_epost: henrik.fayelund@kunstpixel.example.test
   hva_de_vil: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva myndigheten ber om fra oss'
   utloser: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som utløser kontakt'
   dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon de vanligvis ber om'
@@ -148,8 +148,8 @@ myndigheter:
   intern_eier: Driftsansvarlig
   kontaktperson: Oda Marie Skogen
   kontakt_epost: oda.marie.skogen@datatilsynet.example.test
-  intern_eier_navn: Edvard Rønning
-  intern_eier_epost: edvard.ronning@kunstpixel.example.test
+  intern_eier_navn: Terje Bratt
+  intern_eier_epost: terje.bratt@kunstpixel.example.test
   hva_de_vil: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva myndigheten ber om fra oss'
   utloser: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som utløser kontakt'
   dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon de vanligvis ber om'
@@ -160,8 +160,8 @@ myndigheter:
   intern_eier: Museumsdirektør
   kontaktperson: Gerhard Nygaard
   kontakt_epost: gerhard.nygaard@stiftelsestilsynet.example.test
-  intern_eier_navn: Thorvald Berntsen
-  intern_eier_epost: thorvald.berntsen@kunstpixel.example.test
+  intern_eier_navn: Henrik Faye-Lund
+  intern_eier_epost: henrik.fayelund@kunstpixel.example.test
   hva_de_vil: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva myndigheten ber om fra oss'
   utloser: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som utløser kontakt'
   dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon de vanligvis ber om'
@@ -648,7 +648,7 @@ historikk:
   status_ar: endelig
   tema: oppstart
   nokkeltall:
-    besok_totalt: 21400
+    besok_totalt: 133104
     resultat_tkr: 120
     tilsyn_antall: 2
     avvik_funnet: 5
@@ -660,7 +660,7 @@ historikk:
   status_ar: endelig
   tema: vekst
   nokkeltall:
-    besok_totalt: 23100
+    besok_totalt: 132863
     resultat_tkr: 150
     tilsyn_antall: 2
     avvik_funnet: 6
@@ -672,7 +672,7 @@ historikk:
   status_ar: endelig
   tema: vekst
   nokkeltall:
-    besok_totalt: 24800
+    besok_totalt: 125953
     resultat_tkr: 90
     tilsyn_antall: 3
     avvik_funnet: 7
@@ -684,7 +684,7 @@ historikk:
   status_ar: endelig
   tema: vekst
   nokkeltall:
-    besok_totalt: 26200
+    besok_totalt: 129023
     resultat_tkr: 160
     tilsyn_antall: 3
     avvik_funnet: 6
@@ -696,7 +696,7 @@ historikk:
   status_ar: endelig
   tema: digital samlingsdatabase
   nokkeltall:
-    besok_totalt: 28900
+    besok_totalt: 134910
     resultat_tkr: 140
     tilsyn_antall: 3
     avvik_funnet: 6
@@ -708,7 +708,7 @@ historikk:
   status_ar: endelig
   tema: vekst
   nokkeltall:
-    besok_totalt: 30500
+    besok_totalt: 142871
     resultat_tkr: 210
     tilsyn_antall: 4
     avvik_funnet: 5
@@ -720,7 +720,7 @@ historikk:
   status_ar: endelig
   tema: ombygging
   nokkeltall:
-    besok_totalt: 29800
+    besok_totalt: 129774
     resultat_tkr: -60
     tilsyn_antall: 3
     avvik_funnet: 5
@@ -732,7 +732,7 @@ historikk:
   status_ar: endelig
   tema: ny kafé
   nokkeltall:
-    besok_totalt: 33600
+    besok_totalt: 128626
     resultat_tkr: 180
     tilsyn_antall: 4
     avvik_funnet: 4
@@ -744,7 +744,7 @@ historikk:
   status_ar: endelig
   tema: vekst
   nokkeltall:
-    besok_totalt: 36200
+    besok_totalt: 137019
     resultat_tkr: 230
     tilsyn_antall: 4
     avvik_funnet: 4
@@ -756,7 +756,7 @@ historikk:
   status_ar: endelig
   tema: rekordår
   nokkeltall:
-    besok_totalt: 38400
+    besok_totalt: 142984
     resultat_tkr: 310
     tilsyn_antall: 5
     avvik_funnet: 3
@@ -768,7 +768,7 @@ historikk:
   status_ar: endelig
   tema: pandemi og stengt
   nokkeltall:
-    besok_totalt: 11200
+    besok_totalt: 45847
     resultat_tkr: -420
     tilsyn_antall: 2
     avvik_funnet: 2
@@ -780,7 +780,7 @@ historikk:
   status_ar: endelig
   tema: pandemi og gjenåpning
   nokkeltall:
-    besok_totalt: 15900
+    besok_totalt: 64491
     resultat_tkr: -180
     tilsyn_antall: 3
     avvik_funnet: 3
@@ -792,7 +792,7 @@ historikk:
   status_ar: endelig
   tema: gjenoppbygging
   nokkeltall:
-    besok_totalt: 31200
+    besok_totalt: 147507
     resultat_tkr: 60
     tilsyn_antall: 4
     avvik_funnet: 4
@@ -804,7 +804,7 @@ historikk:
   status_ar: endelig
   tema: digital satsing
   nokkeltall:
-    besok_totalt: 35400
+    besok_totalt: 145217
     resultat_tkr: 140
     tilsyn_antall: 5
     avvik_funnet: 3
@@ -816,7 +816,7 @@ historikk:
   status_ar: endelig
   tema: nye rapporteringsrutiner
   nokkeltall:
-    besok_totalt: 37900
+    besok_totalt: 145156
     resultat_tkr: 220
     tilsyn_antall: 5
     avvik_funnet: 3
@@ -828,7 +828,7 @@ historikk:
   status_ar: endelig
   tema: første automatisering
   nokkeltall:
-    besok_totalt: 39800
+    besok_totalt: 135906
     resultat_tkr: 260
     tilsyn_antall: 6
     avvik_funnet: 2
@@ -840,7 +840,7 @@ historikk:
   status_ar: foreløpig
   tema: KI-pilot
   nokkeltall:
-    besok_totalt: 41200
+    besok_totalt: 120586
     resultat_tkr: 190
     tilsyn_antall: 6
     avvik_funnet: 2

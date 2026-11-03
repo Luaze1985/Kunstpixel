@@ -102,10 +102,10 @@ KONTAKTPERSONER = {
     "MK-07": ("Oda Marie Skogen", "oda.marie.skogen@datatilsynet.example.test"),
     "MK-08": ("Gerhard Nygaard", "gerhard.nygaard@stiftelsestilsynet.example.test"),
 }
-INTERNE_PERSONER = {
-    "Museumsdirektør": ("Thorvald Berntsen", "thorvald.berntsen@kunstpixel.example.test"),
-    "Kafeansvarlig": ("Astrid Moe", "astrid.moe@kunstpixel.example.test"),
-    "Driftsansvarlig": ("Edvard Rønning", "edvard.ronning@kunstpixel.example.test"),
+INTERNE_PERSONER = {  # samme personer som i hr_ansatte (KP-ANS-001, KP-ANS-143, KP-ANS-005)
+    "Museumsdirektør": ("Henrik Faye-Lund", "henrik.fayelund@kunstpixel.example.test"),
+    "Kafeansvarlig": ("Hilde Viken", "hilde.viken@kunstpixel.example.test"),
+    "Driftsansvarlig": ("Terje Bratt", "terje.bratt@kunstpixel.example.test"),
 }
 
 AVVIK_FRISTER = {"gult_avvik_lukkes_innen": "14 dager", "rodt_avvik_lukkes_innen": "24 timer"}  # samme som hms_arbeidsmiljo.yaml
@@ -170,6 +170,10 @@ def summer() -> dict[str, int]:
 
 # ---------------------------------------------------------------- historikk 2010 til 2026
 # Tallene lages her, ikke av en modell. Seriene er skrevet ut og avledede tall regnes ut, så alt henger sammen.
+# 2026-11-02: besøk, betalende andel og snittpris er avstemt mot dagsbesok (eiers beslutning: dagsbesok er riktig).
+# Skoleelever, arrangementer, kafé- og andre inntekter er skalert med samme faktor, slik at andelene er uendret.
+# 2026-11-03: årsverk er summen av stillingsprosent i hr_ansatte ved årsslutt (samme register som HR/HMS-pakken).
+# Resultatserien er uendret, kostnadene regnes ut.
 
 HISTORIKK_AAR = list(range(2010, 2027))
 HISTORIKK_TEMA = [
@@ -178,16 +182,16 @@ HISTORIKK_TEMA = [
     "nye rapporteringsrutiner", "første automatisering", "KI-pilot",
 ]  # fmt: skip
 _H: dict[str, list[Any]] = {
-    "besok_totalt": [21400, 23100, 24800, 26200, 28900, 30500, 29800, 33600, 36200, 38400, 11200, 15900, 31200, 35400, 37900, 39800, 41200],
-    "betalende_andel_prosent": [72, 72, 71, 71, 70, 70, 69, 69, 68, 68, 66, 66, 67, 67, 68, 68, 69],
-    "skoleelever": [3100, 3300, 3600, 3900, 4200, 4600, 4400, 4900, 5200, 5600, 900, 1500, 4300, 5000, 5400, 5700, 5900],
-    "arrangementer_antall": [14, 16, 18, 21, 24, 27, 25, 29, 32, 35, 8, 14, 31, 36, 39, 41, 43],
+    "besok_totalt": [133104, 132863, 125953, 129023, 134910, 142871, 129774, 128626, 137019, 142984, 45847, 64491, 147507, 145217, 145156, 135906, 120586],
+    "betalende_andel_prosent": [75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75],
+    "skoleelever": [19300, 19000, 18300, 19200, 19600, 21500, 19200, 18800, 19700, 20900, 3700, 6100, 20300, 20500, 20700, 19500, 17300],
+    "arrangementer_antall": [87, 92, 91, 103, 112, 126, 109, 111, 121, 130, 33, 57, 147, 148, 149, 140, 126],
     "utstillinger_antall": [2, 2, 3, 3, 3, 3, 2, 3, 3, 3, 1, 2, 3, 3, 3, 3, 2],
-    "ansatte_arsverk": [6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.0, 9.5, 10.0, 10.5, 10.0, 9.5, 10.0, 10.5, 11.0, 11.0, 11.5],
-    "snittpris_kr": [48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 66, 68, 72, 76, 80, 84, 88],
+    "ansatte_arsverk": [39.3, 44.4, 51.6, 48.3, 53.8, 58.9, 53.5, 57.1, 55.2, 58.2, 48.5, 52.8, 56.5, 59.8, 59.8, 61.8, 63.2],
+    "snittpris_kr": [62, 62, 62, 62, 62, 81, 81, 81, 81, 81, 91, 91, 91, 108, 108, 108, 108],
     "tilskudd_tkr": [4100, 4300, 4600, 4900, 5200, 5400, 5500, 5800, 6100, 6400, 6900, 7200, 7000, 7300, 7600, 7900, 8100],
-    "kafeinntekter_tkr": [820, 900, 980, 1040, 1130, 1200, 1150, 1290, 1400, 1480, 380, 560, 1250, 1420, 1560, 1650, 1720],
-    "andre_inntekter_tkr": [260, 280, 310, 340, 380, 410, 390, 450, 500, 540, 140, 210, 480, 560, 610, 650, 690],
+    "kafeinntekter_tkr": [5100, 5180, 4980, 5120, 5280, 5620, 5010, 4940, 5300, 5510, 1560, 2270, 5910, 5830, 5970, 5630, 5030],
+    "andre_inntekter_tkr": [1620, 1610, 1570, 1670, 1770, 1920, 1700, 1720, 1890, 2010, 570, 850, 2270, 2300, 2340, 2220, 2020],
     "resultat_tkr": [120, 150, 90, 160, 140, 210, -60, 180, 230, 310, -420, -180, 60, 140, 220, 260, 190],
     "tilsyn_antall": [2, 2, 3, 3, 3, 4, 3, 4, 4, 5, 2, 3, 4, 5, 5, 6, 6],
     "avvik_funnet": [5, 6, 7, 6, 6, 5, 5, 4, 4, 3, 2, 3, 4, 3, 3, 2, 2],

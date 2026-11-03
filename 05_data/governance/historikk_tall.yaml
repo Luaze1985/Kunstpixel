@@ -16,20 +16,20 @@ aar:
 - ar: 2010
   status_ar: endelig
   tema: oppstart
-  besok_totalt: 21400
-  betalende_andel_prosent: 72
-  betalende_besokende: 15408
-  skoleelever: 3100
-  arrangementer_antall: 14
+  besok_totalt: 133104
+  betalende_andel_prosent: 75
+  betalende_besokende: 99828
+  skoleelever: 19300
+  arrangementer_antall: 87
   utstillinger_antall: 2
-  ansatte_arsverk: 6.5
-  snittpris_kr: 48
-  billettinntekter_tkr: 739
+  ansatte_arsverk: 39.3
+  snittpris_kr: 62
+  billettinntekter_tkr: 6189
   tilskudd_tkr: 4100
-  kafeinntekter_tkr: 820
-  andre_inntekter_tkr: 260
-  inntekter_totalt_tkr: 5919
-  kostnader_tkr: 5799
+  kafeinntekter_tkr: 5100
+  andre_inntekter_tkr: 1620
+  inntekter_totalt_tkr: 17009
+  kostnader_tkr: 16889
   resultat_tkr: 120
   tilsyn_antall: 2
   avvik_funnet: 5
@@ -51,20 +51,20 @@ aar:
 - ar: 2011
   status_ar: endelig
   tema: vekst
-  besok_totalt: 23100
-  betalende_andel_prosent: 72
-  betalende_besokende: 16632
-  skoleelever: 3300
-  arrangementer_antall: 16
+  besok_totalt: 132863
+  betalende_andel_prosent: 75
+  betalende_besokende: 99647
+  skoleelever: 19000
+  arrangementer_antall: 92
   utstillinger_antall: 2
-  ansatte_arsverk: 7.0
-  snittpris_kr: 50
-  billettinntekter_tkr: 831
+  ansatte_arsverk: 44.4
+  snittpris_kr: 62
+  billettinntekter_tkr: 6178
   tilskudd_tkr: 4300
-  kafeinntekter_tkr: 900
-  andre_inntekter_tkr: 280
-  inntekter_totalt_tkr: 6311
-  kostnader_tkr: 6161
+  kafeinntekter_tkr: 5180
+  andre_inntekter_tkr: 1610
+  inntekter_totalt_tkr: 17268
+  kostnader_tkr: 17118
   resultat_tkr: 150
   tilsyn_antall: 2
   avvik_funnet: 6
@@ -86,20 +86,20 @@ aar:
 - ar: 2012
   status_ar: endelig
   tema: vekst
-  besok_totalt: 24800
-  betalende_andel_prosent: 71
-  betalende_besokende: 17608
-  skoleelever: 3600
-  arrangementer_antall: 18
+  besok_totalt: 125953
+  betalende_andel_prosent: 75
+  betalende_besokende: 94464
+  skoleelever: 18300
+  arrangementer_antall: 91
   utstillinger_antall: 3
-  ansatte_arsverk: 7.5
-  snittpris_kr: 52
-  billettinntekter_tkr: 915
+  ansatte_arsverk: 51.6
+  snittpris_kr: 62
+  billettinntekter_tkr: 5856
   tilskudd_tkr: 4600
-  kafeinntekter_tkr: 980
-  andre_inntekter_tkr: 310
-  inntekter_totalt_tkr: 6805
-  kostnader_tkr: 6715
+  kafeinntekter_tkr: 4980
+  andre_inntekter_tkr: 1570
+  inntekter_totalt_tkr: 17006
+  kostnader_tkr: 16916
   resultat_tkr: 90
   tilsyn_antall: 3
   avvik_funnet: 7
@@ -121,20 +121,20 @@ aar:
 - ar: 2013
   status_ar: endelig
   tema: vekst
-  besok_totalt: 26200
-  betalende_andel_prosent: 71
-  betalende_besokende: 18602
-  skoleelever: 3900
-  arrangementer_antall: 21
+  besok_totalt: 129023
+  betalende_andel_prosent: 75
+  betalende_besokende: 96767
+  skoleelever: 19200
+  arrangementer_antall: 103
   utstillinger_antall: 3
-  ansatte_arsverk: 8.0
-  snittpris_kr: 54
-  billettinntekter_tkr: 1004
+  ansatte_arsverk: 48.3
+  snittpris_kr: 62
+  billettinntekter_tkr: 5999
   tilskudd_tkr: 4900
-  kafeinntekter_tkr: 1040
-  andre_inntekter_tkr: 340
-  inntekter_totalt_tkr: 7284
-  kostnader_tkr: 7124
+  kafeinntekter_tkr: 5120
+  andre_inntekter_tkr: 1670
+  inntekter_totalt_tkr: 17689
+  kostnader_tkr: 17529
   resultat_tkr: 160
   tilsyn_antall: 3
   avvik_funnet: 6
@@ -156,20 +156,20 @@ aar:
 - ar: 2014
   status_ar: endelig
   tema: digital samlingsdatabase
-  besok_totalt: 28900
-  betalende_andel_prosent: 70
-  betalende_besokende: 20230
-  skoleelever: 4200
-  arrangementer_antall: 24
+  besok_totalt: 134910
+  betalende_andel_prosent: 75
+  betalende_besokende: 101182
+  skoleelever: 19600
+  arrangementer_antall: 112
   utstillinger_antall: 3
-  ansatte_arsverk: 8.5
-  snittpris_kr: 56
-  billettinntekter_tkr: 1132
+  ansatte_arsverk: 53.8
+  snittpris_kr: 62
+  billettinntekter_tkr: 6273
   tilskudd_tkr: 5200
-  kafeinntekter_tkr: 1130
-  andre_inntekter_tkr: 380
-  inntekter_totalt_tkr: 7842
-  kostnader_tkr: 7702
+  kafeinntekter_tkr: 5280
+  andre_inntekter_tkr: 1770
+  inntekter_totalt_tkr: 18523
+  kostnader_tkr: 18383
   resultat_tkr: 140
   tilsyn_antall: 3
   avvik_funnet: 6
@@ -191,20 +191,20 @@ aar:
 - ar: 2015
   status_ar: endelig
   tema: vekst
-  besok_totalt: 30500
-  betalende_andel_prosent: 70
-  betalende_besokende: 21350
-  skoleelever: 4600
-  arrangementer_antall: 27
+  besok_totalt: 142871
+  betalende_andel_prosent: 75
+  betalende_besokende: 107153
+  skoleelever: 21500
+  arrangementer_antall: 126
   utstillinger_antall: 3
-  ansatte_arsverk: 9.0
-  snittpris_kr: 58
-  billettinntekter_tkr: 1238
+  ansatte_arsverk: 58.9
+  snittpris_kr: 81
+  billettinntekter_tkr: 8679
   tilskudd_tkr: 5400
-  kafeinntekter_tkr: 1200
-  andre_inntekter_tkr: 410
-  inntekter_totalt_tkr: 8248
-  kostnader_tkr: 8038
+  kafeinntekter_tkr: 5620
+  andre_inntekter_tkr: 1920
+  inntekter_totalt_tkr: 21619
+  kostnader_tkr: 21409
   resultat_tkr: 210
   tilsyn_antall: 4
   avvik_funnet: 5
@@ -226,20 +226,20 @@ aar:
 - ar: 2016
   status_ar: endelig
   tema: ombygging
-  besok_totalt: 29800
-  betalende_andel_prosent: 69
-  betalende_besokende: 20562
-  skoleelever: 4400
-  arrangementer_antall: 25
+  besok_totalt: 129774
+  betalende_andel_prosent: 75
+  betalende_besokende: 97330
+  skoleelever: 19200
+  arrangementer_antall: 109
   utstillinger_antall: 2
-  ansatte_arsverk: 9.0
-  snittpris_kr: 60
-  billettinntekter_tkr: 1233
+  ansatte_arsverk: 53.5
+  snittpris_kr: 81
+  billettinntekter_tkr: 7883
   tilskudd_tkr: 5500
-  kafeinntekter_tkr: 1150
-  andre_inntekter_tkr: 390
-  inntekter_totalt_tkr: 8273
-  kostnader_tkr: 8333
+  kafeinntekter_tkr: 5010
+  andre_inntekter_tkr: 1700
+  inntekter_totalt_tkr: 20093
+  kostnader_tkr: 20153
   resultat_tkr: -60
   tilsyn_antall: 3
   avvik_funnet: 5
@@ -261,20 +261,20 @@ aar:
 - ar: 2017
   status_ar: endelig
   tema: ny kafé
-  besok_totalt: 33600
-  betalende_andel_prosent: 69
-  betalende_besokende: 23184
-  skoleelever: 4900
-  arrangementer_antall: 29
+  besok_totalt: 128626
+  betalende_andel_prosent: 75
+  betalende_besokende: 96469
+  skoleelever: 18800
+  arrangementer_antall: 111
   utstillinger_antall: 3
-  ansatte_arsverk: 9.5
-  snittpris_kr: 62
-  billettinntekter_tkr: 1437
+  ansatte_arsverk: 57.1
+  snittpris_kr: 81
+  billettinntekter_tkr: 7813
   tilskudd_tkr: 5800
-  kafeinntekter_tkr: 1290
-  andre_inntekter_tkr: 450
-  inntekter_totalt_tkr: 8977
-  kostnader_tkr: 8797
+  kafeinntekter_tkr: 4940
+  andre_inntekter_tkr: 1720
+  inntekter_totalt_tkr: 20273
+  kostnader_tkr: 20093
   resultat_tkr: 180
   tilsyn_antall: 4
   avvik_funnet: 4
@@ -296,20 +296,20 @@ aar:
 - ar: 2018
   status_ar: endelig
   tema: vekst
-  besok_totalt: 36200
-  betalende_andel_prosent: 68
-  betalende_besokende: 24616
-  skoleelever: 5200
-  arrangementer_antall: 32
+  besok_totalt: 137019
+  betalende_andel_prosent: 75
+  betalende_besokende: 102764
+  skoleelever: 19700
+  arrangementer_antall: 121
   utstillinger_antall: 3
-  ansatte_arsverk: 10.0
-  snittpris_kr: 64
-  billettinntekter_tkr: 1575
+  ansatte_arsverk: 55.2
+  snittpris_kr: 81
+  billettinntekter_tkr: 8323
   tilskudd_tkr: 6100
-  kafeinntekter_tkr: 1400
-  andre_inntekter_tkr: 500
-  inntekter_totalt_tkr: 9575
-  kostnader_tkr: 9345
+  kafeinntekter_tkr: 5300
+  andre_inntekter_tkr: 1890
+  inntekter_totalt_tkr: 21613
+  kostnader_tkr: 21383
   resultat_tkr: 230
   tilsyn_antall: 4
   avvik_funnet: 4
@@ -331,20 +331,20 @@ aar:
 - ar: 2019
   status_ar: endelig
   tema: rekordår
-  besok_totalt: 38400
-  betalende_andel_prosent: 68
-  betalende_besokende: 26112
-  skoleelever: 5600
-  arrangementer_antall: 35
+  besok_totalt: 142984
+  betalende_andel_prosent: 75
+  betalende_besokende: 107238
+  skoleelever: 20900
+  arrangementer_antall: 130
   utstillinger_antall: 3
-  ansatte_arsverk: 10.5
-  snittpris_kr: 66
-  billettinntekter_tkr: 1723
+  ansatte_arsverk: 58.2
+  snittpris_kr: 81
+  billettinntekter_tkr: 8686
   tilskudd_tkr: 6400
-  kafeinntekter_tkr: 1480
-  andre_inntekter_tkr: 540
-  inntekter_totalt_tkr: 10143
-  kostnader_tkr: 9833
+  kafeinntekter_tkr: 5510
+  andre_inntekter_tkr: 2010
+  inntekter_totalt_tkr: 22606
+  kostnader_tkr: 22296
   resultat_tkr: 310
   tilsyn_antall: 5
   avvik_funnet: 3
@@ -366,20 +366,20 @@ aar:
 - ar: 2020
   status_ar: endelig
   tema: pandemi og stengt
-  besok_totalt: 11200
-  betalende_andel_prosent: 66
-  betalende_besokende: 7392
-  skoleelever: 900
-  arrangementer_antall: 8
+  besok_totalt: 45847
+  betalende_andel_prosent: 75
+  betalende_besokende: 34385
+  skoleelever: 3700
+  arrangementer_antall: 33
   utstillinger_antall: 1
-  ansatte_arsverk: 10.0
-  snittpris_kr: 66
-  billettinntekter_tkr: 487
+  ansatte_arsverk: 48.5
+  snittpris_kr: 91
+  billettinntekter_tkr: 3129
   tilskudd_tkr: 6900
-  kafeinntekter_tkr: 380
-  andre_inntekter_tkr: 140
-  inntekter_totalt_tkr: 7907
-  kostnader_tkr: 8327
+  kafeinntekter_tkr: 1560
+  andre_inntekter_tkr: 570
+  inntekter_totalt_tkr: 12159
+  kostnader_tkr: 12579
   resultat_tkr: -420
   tilsyn_antall: 2
   avvik_funnet: 2
@@ -401,20 +401,20 @@ aar:
 - ar: 2021
   status_ar: endelig
   tema: pandemi og gjenåpning
-  besok_totalt: 15900
-  betalende_andel_prosent: 66
-  betalende_besokende: 10494
-  skoleelever: 1500
-  arrangementer_antall: 14
+  besok_totalt: 64491
+  betalende_andel_prosent: 75
+  betalende_besokende: 48368
+  skoleelever: 6100
+  arrangementer_antall: 57
   utstillinger_antall: 2
-  ansatte_arsverk: 9.5
-  snittpris_kr: 68
-  billettinntekter_tkr: 713
+  ansatte_arsverk: 52.8
+  snittpris_kr: 91
+  billettinntekter_tkr: 4401
   tilskudd_tkr: 7200
-  kafeinntekter_tkr: 560
-  andre_inntekter_tkr: 210
-  inntekter_totalt_tkr: 8683
-  kostnader_tkr: 8863
+  kafeinntekter_tkr: 2270
+  andre_inntekter_tkr: 850
+  inntekter_totalt_tkr: 14721
+  kostnader_tkr: 14901
   resultat_tkr: -180
   tilsyn_antall: 3
   avvik_funnet: 3
@@ -436,20 +436,20 @@ aar:
 - ar: 2022
   status_ar: endelig
   tema: gjenoppbygging
-  besok_totalt: 31200
-  betalende_andel_prosent: 67
-  betalende_besokende: 20904
-  skoleelever: 4300
-  arrangementer_antall: 31
+  besok_totalt: 147507
+  betalende_andel_prosent: 75
+  betalende_besokende: 110630
+  skoleelever: 20300
+  arrangementer_antall: 147
   utstillinger_antall: 3
-  ansatte_arsverk: 10.0
-  snittpris_kr: 72
-  billettinntekter_tkr: 1505
+  ansatte_arsverk: 56.5
+  snittpris_kr: 91
+  billettinntekter_tkr: 10067
   tilskudd_tkr: 7000
-  kafeinntekter_tkr: 1250
-  andre_inntekter_tkr: 480
-  inntekter_totalt_tkr: 10235
-  kostnader_tkr: 10175
+  kafeinntekter_tkr: 5910
+  andre_inntekter_tkr: 2270
+  inntekter_totalt_tkr: 25247
+  kostnader_tkr: 25187
   resultat_tkr: 60
   tilsyn_antall: 4
   avvik_funnet: 4
@@ -471,20 +471,20 @@ aar:
 - ar: 2023
   status_ar: endelig
   tema: digital satsing
-  besok_totalt: 35400
-  betalende_andel_prosent: 67
-  betalende_besokende: 23718
-  skoleelever: 5000
-  arrangementer_antall: 36
+  besok_totalt: 145217
+  betalende_andel_prosent: 75
+  betalende_besokende: 108912
+  skoleelever: 20500
+  arrangementer_antall: 148
   utstillinger_antall: 3
-  ansatte_arsverk: 10.5
-  snittpris_kr: 76
-  billettinntekter_tkr: 1802
+  ansatte_arsverk: 59.8
+  snittpris_kr: 108
+  billettinntekter_tkr: 11762
   tilskudd_tkr: 7300
-  kafeinntekter_tkr: 1420
-  andre_inntekter_tkr: 560
-  inntekter_totalt_tkr: 11082
-  kostnader_tkr: 10942
+  kafeinntekter_tkr: 5830
+  andre_inntekter_tkr: 2300
+  inntekter_totalt_tkr: 27192
+  kostnader_tkr: 27052
   resultat_tkr: 140
   tilsyn_antall: 5
   avvik_funnet: 3
@@ -506,20 +506,20 @@ aar:
 - ar: 2024
   status_ar: endelig
   tema: nye rapporteringsrutiner
-  besok_totalt: 37900
-  betalende_andel_prosent: 68
-  betalende_besokende: 25772
-  skoleelever: 5400
-  arrangementer_antall: 39
+  besok_totalt: 145156
+  betalende_andel_prosent: 75
+  betalende_besokende: 108867
+  skoleelever: 20700
+  arrangementer_antall: 149
   utstillinger_antall: 3
-  ansatte_arsverk: 11.0
-  snittpris_kr: 80
-  billettinntekter_tkr: 2061
+  ansatte_arsverk: 59.8
+  snittpris_kr: 108
+  billettinntekter_tkr: 11757
   tilskudd_tkr: 7600
-  kafeinntekter_tkr: 1560
-  andre_inntekter_tkr: 610
-  inntekter_totalt_tkr: 11831
-  kostnader_tkr: 11611
+  kafeinntekter_tkr: 5970
+  andre_inntekter_tkr: 2340
+  inntekter_totalt_tkr: 27667
+  kostnader_tkr: 27447
   resultat_tkr: 220
   tilsyn_antall: 5
   avvik_funnet: 3
@@ -541,20 +541,20 @@ aar:
 - ar: 2025
   status_ar: endelig
   tema: første automatisering
-  besok_totalt: 39800
-  betalende_andel_prosent: 68
-  betalende_besokende: 27064
-  skoleelever: 5700
-  arrangementer_antall: 41
+  besok_totalt: 135906
+  betalende_andel_prosent: 75
+  betalende_besokende: 101929
+  skoleelever: 19500
+  arrangementer_antall: 140
   utstillinger_antall: 3
-  ansatte_arsverk: 11.0
-  snittpris_kr: 84
-  billettinntekter_tkr: 2273
+  ansatte_arsverk: 61.8
+  snittpris_kr: 108
+  billettinntekter_tkr: 11008
   tilskudd_tkr: 7900
-  kafeinntekter_tkr: 1650
-  andre_inntekter_tkr: 650
-  inntekter_totalt_tkr: 12473
-  kostnader_tkr: 12213
+  kafeinntekter_tkr: 5630
+  andre_inntekter_tkr: 2220
+  inntekter_totalt_tkr: 26758
+  kostnader_tkr: 26498
   resultat_tkr: 260
   tilsyn_antall: 6
   avvik_funnet: 2
@@ -576,20 +576,20 @@ aar:
 - ar: 2026
   status_ar: foreløpig
   tema: KI-pilot
-  besok_totalt: 41200
-  betalende_andel_prosent: 69
-  betalende_besokende: 28428
-  skoleelever: 5900
-  arrangementer_antall: 43
+  besok_totalt: 120586
+  betalende_andel_prosent: 75
+  betalende_besokende: 90439
+  skoleelever: 17300
+  arrangementer_antall: 126
   utstillinger_antall: 2
-  ansatte_arsverk: 11.5
-  snittpris_kr: 88
-  billettinntekter_tkr: 2501
+  ansatte_arsverk: 63.2
+  snittpris_kr: 108
+  billettinntekter_tkr: 9767
   tilskudd_tkr: 8100
-  kafeinntekter_tkr: 1720
-  andre_inntekter_tkr: 690
-  inntekter_totalt_tkr: 13011
-  kostnader_tkr: 12821
+  kafeinntekter_tkr: 5030
+  andre_inntekter_tkr: 2020
+  inntekter_totalt_tkr: 24917
+  kostnader_tkr: 24727
   resultat_tkr: 190
   tilsyn_antall: 6
   avvik_funnet: 2

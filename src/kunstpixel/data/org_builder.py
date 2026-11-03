@@ -528,6 +528,7 @@ def generate_internal_requests(
     """Genererer realistiske interne henvendelser forankret i de 14 HR-casene.
 
     Krav:
+    0. Den som melder, er i jobb på datoen (ansatt_fra <= dato <= ansatt_til).
     1. Ingen henvendelse datert etter 2026-10-23.
     2. sak_id nummereres i streng datorekkefølge.
     3. Behold kolonner, antall rader (60) og case_ref-fordeling.
@@ -537,10 +538,15 @@ def generate_internal_requests(
     max_days = (MAX_DATE - START_DATE).days  # Antall dager fram til 2026-10-23
 
     for _ in range(count):
-        emp = rng.choice(employees)
-        tpl = rng.choice(HENVELDELSER_TEMPLATES)
         offset = rng.randint(0, max_days)
         d = START_DATE + timedelta(days=offset)
+        # Bare ansatte som var i jobb på datoen kan melde en sak (koblingssjekk B20).
+        i_jobb = [
+            e for e in employees
+            if (e.get("ansatt_fra") or "0000") <= d.isoformat() and (not e.get("ansatt_til") or e["ansatt_til"] >= d.isoformat())
+        ] or employees
+        emp = rng.choice(i_jobb)
+        tpl = rng.choice(HENVELDELSER_TEMPLATES)
         hour = rng.randint(8, 16)
         minute = rng.choice([0, 15, 30, 45])
         timestamp = f"{d.isoformat()} {hour:02d}:{minute:02d}"
