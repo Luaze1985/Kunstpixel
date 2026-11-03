@@ -66,6 +66,8 @@ def _kopier(tmp_path, pd_db):
         ("m", "UPDATE h5_historikk_2010_2026 SET besok_totalt = besok_totalt + 1 WHERE ar = 2024", "B01"),
         ("p", "UPDATE medlemsbesok SET dato = (SELECT min(dato) FROM dagsbesok_kopi WHERE er_aapent = 0 AND dato >= '2022-01-01') WHERE besok_id = 1", "B17"),
         ("m", "UPDATE hendelser SET ansvarlig_rolle = 'vaktmester' WHERE id = 1", "A15"),
+        ("m", "UPDATE utstillinger SET saler = 'SAL-C', startdato = '2026-10-01' WHERE id = 'UTST-2027-V'", "B27"),
+        ("m", "UPDATE utstillinger_historikk SET saler = 'Sal C, Sal D' WHERE utstilling_id = 'KP-EXH-2026-069'", "B26"),
     ],
 )
 def test_innlagt_feil_blir_fanget(tmp_path, pd_db, db, sql, fanget_av):

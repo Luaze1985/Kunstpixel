@@ -79,7 +79,7 @@ Kjør alt fra rotmappa i repoet.
 | K4 | Datakvalitet | `py -3.13 scripts/db_kvalitet.py` | 0 FEIL. Kjent OBS: 1 287 vakter over 9 timer er ikke merket som overtid |
 | K5 | Hele testpakken | `py -3.13 -m pytest` | 1726 bestått. Bare de 2 `anthropic`-testene kan feile |
 | K6 | Kundedata bygges | `py -3.13 -m src.kunstpixel.persondata.generer --fra-csv` | 49 513 rader |
-| K8 | Alle koblinger mellom datalagene (A: nøkler, B: samsvar) | `py -3.13 scripts/koblingssjekk.py --vis-kjente` | 41 OK, 0 FEIL. Kontrollene står i `src/kunstpixel/data/koblinger.py` |
+| K8 | Alle koblinger mellom datalagene (A: nøkler, B: samsvar) | `py -3.13 scripts/koblingssjekk.py --vis-kjente` | 42 OK, 1 KJENT AVVIK (B26: 64 saloverlapp med fokusrom i arkivet), 0 FEIL. Kontrollene står i `src/kunstpixel/data/koblinger.py` |
 | K7 | Kryssjekker | SQL under, mot `persondata.db` med `museum.db` koblet på som `museum` | alle gir 0 rader eller angitt verdi |
 
 ```sql
@@ -166,3 +166,5 @@ SELECT kontakt_id FROM kontakter WHERE ansatt_id IS NULL AND epost NOT LIKE '%@e
 | B23 | Navnene i HR-demoen er de samme som i `hr_ansatte` (E101 Ada Nord → Jonas Berg osv.) | `05_data/hr_demo/seed.json` |
 
 Fasiten (`tests/golden/regelbasert/golden.json`) er laget på nytt med `tests/make_golden.py`. Bare datoene til de flyttede hendelsene er endret.
+
+**B26 (lagt til 2026-11-03, ikke rettet):** arkivet har 64 tilfeller av to utstillinger i samme sal samtidig. Alle involverer et fokusrom (`KP-EXH-*-FOKUS-*`) i sal D eller E. Ett av dem gjelder høsten 2026: «Stille kraft» og Fokusrom 2026.1 i sal D. Lars må avklare om fokusrom er en egen sal eller deler sal før dette rettes. B27 (det kuraterte programmet) har 0 overlapp.

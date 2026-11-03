@@ -67,6 +67,19 @@ def _mangler_ansatt(tabell: str, kolonne: str, skjema: str = "main") -> str:
     )
 
 
+def _sal_overlapp(tabell: str, id_kol: str, start: str, slutt: str, sal_uttrykk: str) -> str:
+    """Par av utstillinger som står i samme sal i overlappende perioder (saler er en kommaliste)."""
+    return (
+        "WITH RECURSIVE del(id, fra, til, rest, sal) AS ("
+        f" SELECT {id_kol}, {start}, {slutt}, saler || ',', '' FROM main.{tabell}"
+        " UNION ALL SELECT id, fra, til, substr(rest, instr(rest, ',') + 1), trim(substr(rest, 1, instr(rest, ',') - 1))"
+        " FROM del WHERE rest <> ''),"
+        f" s AS (SELECT id, fra, til, {sal_uttrykk} AS sal FROM del WHERE sal <> '')"
+        " SELECT a.sal, a.id, b.id, max(a.fra, b.fra), min(a.til, b.til) FROM s a JOIN s b"
+        " ON a.sal = b.sal AND a.id < b.id AND a.fra <= b.til AND b.fra <= a.til"
+    )
+
+
 _PD_ANSATTREF = [
     ("kontakter", "ansatt_id", None),
     ("medlemskap", "solgt_av_ansatt_id", "startdato"),
@@ -202,6 +215,17 @@ KONTROLLER: list[Kontroll] = [
     Kontroll(
         "B25", "B", "hendelser bare på dager dagsbesok sier åpent",
         "SELECT h.id FROM main.hendelser h JOIN main.dagsbesok d ON d.dato = h.dato WHERE d.er_aapent = 0",
+    ),
+    Kontroll(
+        "B26", "B", "utstillinger_historikk: ingen to utstillinger i samme sal samtidig",
+        _sal_overlapp("utstillinger_historikk", "utstilling_id", "periode_start", "periode_slutt", "'SAL-' || upper(substr(sal, 5))"),
+        forventet=64,
+        forklaring="Arkivgeneratoren legger fokusrommene (KP-EXH-*-FOKUS-*) i sal D eller E uten å sjekke hva som står der. "
+        "Alle 64 overlapp involverer et fokusrom. Ikke rettet: avklar om fokusrom er en egen sal eller deler sal.",
+    ),
+    Kontroll(
+        "B27", "B", "utstillinger (kuratert program): ingen to utstillinger i samme sal samtidig",
+        _sal_overlapp("utstillinger", "id", "startdato", "sluttdato", "sal"),
     ),
 ]
 
