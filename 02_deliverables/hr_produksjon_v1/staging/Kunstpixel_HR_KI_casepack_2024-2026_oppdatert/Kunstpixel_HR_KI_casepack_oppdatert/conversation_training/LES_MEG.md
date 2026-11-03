@@ -18,6 +18,7 @@ Kilde: brukers innlimte tekst 20. oktober 2026. Dette er **en katalogoversikt** 
 - `scenarios/*.json` — 113 individuelle metadatafiler med originale ID-er.
 - `links_to_hr_cases.json` — redaksjonelle koblinger fra 14 eksisterende KI-HR-case til relevante samtaler.
 - `source_paste_2026-10-20.txt` — uendret kildetekst for sporbarhet.
+  - Unntak: persona i `SYK-06` heter «Astrid Holmvik» i katalogen (endret 2026-11-03). Navnet i kildeteksten falt sammen med en tidligere intern person i HR/HMS-pakken. Kildeteksten er ikke endret.
 
 ## Betydningen av koblingene
 
