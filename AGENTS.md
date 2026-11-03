@@ -63,6 +63,7 @@ py -3.13 src/hr_mcp_server.py                    # Start HR FastMCP-serveren ove
 py -3.13 -m src.kunstpixel.persondata.generer --fra-csv  # Bygg kundedata fra CSV-ene (første gang og etter justering)
 py -3.13 src/persondata_mcp.py                   # Start åpen MCP for kundedata over stdio
 py -3.13 scripts/meld_feil.py                    # Meld feil i dataene (nettside på 127.0.0.1:8770, uten KI)
+py -3.13 scripts/koblingssjekk.py                # Finner datalagene hverandre (A), og stemmer de (B)? 41 kontroller
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode manual # Deterministisk verifisering
 ```
 

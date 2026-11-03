@@ -79,6 +79,7 @@ Kjør alt fra rotmappa i repoet.
 | K4 | Datakvalitet | `py -3.13 scripts/db_kvalitet.py` | 0 FEIL. Kjent OBS: 1 287 vakter over 9 timer er ikke merket som overtid |
 | K5 | Hele testpakken | `py -3.13 -m pytest` | 1726 bestått. Bare de 2 `anthropic`-testene kan feile |
 | K6 | Kundedata bygges | `py -3.13 -m src.kunstpixel.persondata.generer --fra-csv` | 49 513 rader |
+| K8 | Alle koblinger mellom datalagene (A: nøkler, B: samsvar) | `py -3.13 scripts/koblingssjekk.py --vis-kjente` | 33 OK, 8 KJENT AVVIK, 0 FEIL. Kjente avvik og forklaringer står i `src/kunstpixel/data/koblinger.py` |
 | K7 | Kryssjekker | SQL under, mot `persondata.db` med `museum.db` koblet på som `museum` | alle gir 0 rader eller angitt verdi |
 
 ```sql
@@ -129,6 +130,8 @@ SELECT kontakt_id FROM kontakter WHERE ansatt_id IS NULL AND epost NOT LIKE '%@e
 - **Tester:** kontrollene i K7 kjøres som tester mot datasjøen etterpå.
 
 ## 6. Kjente avvik (rapporter, ikke rett i stillhet)
+
+- **Koblingssjekken (K8) har 8 kjente avvik i `museum.db`** (B18–B25): publikumsvakter på stengte dager, vakter utenfor utstillingsperioden, interne saker meldt av folk som ikke var i jobb, innleie godkjent før godkjenneren ble ansatt, HMS-avvik med ansvarlig som ikke var i jobb, navn i `hr_people` som ikke stemmer med `hr_ansatte`, ulike aktive utstillinger i `utstillinger` og `utstillinger_historikk`, og hendelser på stengte dager. Ta dem med i datasjøen med en merknad. Ikke rett dem uten Lars.
 
 - `h5_historikk`: billettinntekt avviker under 2 % fra `dagsbesok`, med vilje, fordi snittprisen aldri faller.
 - `dagsbesok` har tall til og med 2026-12-31, altså i fremtiden. `hendelser` har 30 hendelser etter 2026-11-02, og 5 av dem ligger på dager `dagsbesok` sier er stengt.
