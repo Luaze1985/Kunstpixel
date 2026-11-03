@@ -22,7 +22,7 @@ aar:
   skoleelever: 19300
   arrangementer_antall: 87
   utstillinger_antall: 2
-  ansatte_arsverk: 6.5
+  ansatte_arsverk: 39.3
   snittpris_kr: 62
   billettinntekter_tkr: 6189
   tilskudd_tkr: 4100
@@ -57,7 +57,7 @@ aar:
   skoleelever: 19000
   arrangementer_antall: 92
   utstillinger_antall: 2
-  ansatte_arsverk: 7.0
+  ansatte_arsverk: 44.4
   snittpris_kr: 62
   billettinntekter_tkr: 6178
   tilskudd_tkr: 4300
@@ -92,7 +92,7 @@ aar:
   skoleelever: 18300
   arrangementer_antall: 91
   utstillinger_antall: 3
-  ansatte_arsverk: 7.5
+  ansatte_arsverk: 51.6
   snittpris_kr: 62
   billettinntekter_tkr: 5856
   tilskudd_tkr: 4600
@@ -127,7 +127,7 @@ aar:
   skoleelever: 19200
   arrangementer_antall: 103
   utstillinger_antall: 3
-  ansatte_arsverk: 8.0
+  ansatte_arsverk: 48.3
   snittpris_kr: 62
   billettinntekter_tkr: 5999
   tilskudd_tkr: 4900
@@ -162,7 +162,7 @@ aar:
   skoleelever: 19600
   arrangementer_antall: 112
   utstillinger_antall: 3
-  ansatte_arsverk: 8.5
+  ansatte_arsverk: 53.8
   snittpris_kr: 62
   billettinntekter_tkr: 6273
   tilskudd_tkr: 5200
@@ -197,7 +197,7 @@ aar:
   skoleelever: 21500
   arrangementer_antall: 126
   utstillinger_antall: 3
-  ansatte_arsverk: 9.0
+  ansatte_arsverk: 58.9
   snittpris_kr: 81
   billettinntekter_tkr: 8679
   tilskudd_tkr: 5400
@@ -232,7 +232,7 @@ aar:
   skoleelever: 19200
   arrangementer_antall: 109
   utstillinger_antall: 2
-  ansatte_arsverk: 9.0
+  ansatte_arsverk: 53.5
   snittpris_kr: 81
   billettinntekter_tkr: 7883
   tilskudd_tkr: 5500
@@ -267,7 +267,7 @@ aar:
   skoleelever: 18800
   arrangementer_antall: 111
   utstillinger_antall: 3
-  ansatte_arsverk: 9.5
+  ansatte_arsverk: 57.1
   snittpris_kr: 81
   billettinntekter_tkr: 7813
   tilskudd_tkr: 5800
@@ -302,7 +302,7 @@ aar:
   skoleelever: 19700
   arrangementer_antall: 121
   utstillinger_antall: 3
-  ansatte_arsverk: 10.0
+  ansatte_arsverk: 55.2
   snittpris_kr: 81
   billettinntekter_tkr: 8323
   tilskudd_tkr: 6100
@@ -337,7 +337,7 @@ aar:
   skoleelever: 20900
   arrangementer_antall: 130
   utstillinger_antall: 3
-  ansatte_arsverk: 10.5
+  ansatte_arsverk: 58.2
   snittpris_kr: 81
   billettinntekter_tkr: 8686
   tilskudd_tkr: 6400
@@ -372,7 +372,7 @@ aar:
   skoleelever: 3700
   arrangementer_antall: 33
   utstillinger_antall: 1
-  ansatte_arsverk: 10.0
+  ansatte_arsverk: 48.5
   snittpris_kr: 91
   billettinntekter_tkr: 3129
   tilskudd_tkr: 6900
@@ -407,7 +407,7 @@ aar:
   skoleelever: 6100
   arrangementer_antall: 57
   utstillinger_antall: 2
-  ansatte_arsverk: 9.5
+  ansatte_arsverk: 52.8
   snittpris_kr: 91
   billettinntekter_tkr: 4401
   tilskudd_tkr: 7200
@@ -442,7 +442,7 @@ aar:
   skoleelever: 20300
   arrangementer_antall: 147
   utstillinger_antall: 3
-  ansatte_arsverk: 10.0
+  ansatte_arsverk: 56.5
   snittpris_kr: 91
   billettinntekter_tkr: 10067
   tilskudd_tkr: 7000
@@ -477,7 +477,7 @@ aar:
   skoleelever: 20500
   arrangementer_antall: 148
   utstillinger_antall: 3
-  ansatte_arsverk: 10.5
+  ansatte_arsverk: 59.8
   snittpris_kr: 108
   billettinntekter_tkr: 11762
   tilskudd_tkr: 7300
@@ -512,7 +512,7 @@ aar:
   skoleelever: 20700
   arrangementer_antall: 149
   utstillinger_antall: 3
-  ansatte_arsverk: 11.0
+  ansatte_arsverk: 59.8
   snittpris_kr: 108
   billettinntekter_tkr: 11757
   tilskudd_tkr: 7600
@@ -547,7 +547,7 @@ aar:
   skoleelever: 19500
   arrangementer_antall: 140
   utstillinger_antall: 3
-  ansatte_arsverk: 11.0
+  ansatte_arsverk: 61.8
   snittpris_kr: 108
   billettinntekter_tkr: 11008
   tilskudd_tkr: 7900
@@ -582,7 +582,7 @@ aar:
   skoleelever: 17300
   arrangementer_antall: 126
   utstillinger_antall: 2
-  ansatte_arsverk: 11.5
+  ansatte_arsverk: 63.2
   snittpris_kr: 108
   billettinntekter_tkr: 9767
   tilskudd_tkr: 8100

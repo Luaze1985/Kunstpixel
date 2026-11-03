@@ -102,10 +102,10 @@ KONTAKTPERSONER = {
     "MK-07": ("Oda Marie Skogen", "oda.marie.skogen@datatilsynet.example.test"),
     "MK-08": ("Gerhard Nygaard", "gerhard.nygaard@stiftelsestilsynet.example.test"),
 }
-INTERNE_PERSONER = {
-    "Museumsdirektør": ("Thorvald Berntsen", "thorvald.berntsen@kunstpixel.example.test"),
-    "Kafeansvarlig": ("Astrid Moe", "astrid.moe@kunstpixel.example.test"),
-    "Driftsansvarlig": ("Edvard Rønning", "edvard.ronning@kunstpixel.example.test"),
+INTERNE_PERSONER = {  # samme personer som i hr_ansatte (KP-ANS-001, KP-ANS-143, KP-ANS-005)
+    "Museumsdirektør": ("Henrik Faye-Lund", "henrik.fayelund@kunstpixel.example.test"),
+    "Kafeansvarlig": ("Hilde Viken", "hilde.viken@kunstpixel.example.test"),
+    "Driftsansvarlig": ("Terje Bratt", "terje.bratt@kunstpixel.example.test"),
 }
 
 AVVIK_FRISTER = {"gult_avvik_lukkes_innen": "14 dager", "rodt_avvik_lukkes_innen": "24 timer"}  # samme som hms_arbeidsmiljo.yaml
@@ -172,7 +172,8 @@ def summer() -> dict[str, int]:
 # Tallene lages her, ikke av en modell. Seriene er skrevet ut og avledede tall regnes ut, så alt henger sammen.
 # 2026-11-02: besøk, betalende andel og snittpris er avstemt mot dagsbesok (eiers beslutning: dagsbesok er riktig).
 # Skoleelever, arrangementer, kafé- og andre inntekter er skalert med samme faktor, slik at andelene er uendret.
-# Årsverk er uendret (HR/HMS-pakken bygger på dem). Resultatserien er uendret, kostnadene regnes ut.
+# 2026-11-03: årsverk er summen av stillingsprosent i hr_ansatte ved årsslutt (samme register som HR/HMS-pakken).
+# Resultatserien er uendret, kostnadene regnes ut.
 
 HISTORIKK_AAR = list(range(2010, 2027))
 HISTORIKK_TEMA = [
@@ -186,7 +187,7 @@ _H: dict[str, list[Any]] = {
     "skoleelever": [19300, 19000, 18300, 19200, 19600, 21500, 19200, 18800, 19700, 20900, 3700, 6100, 20300, 20500, 20700, 19500, 17300],
     "arrangementer_antall": [87, 92, 91, 103, 112, 126, 109, 111, 121, 130, 33, 57, 147, 148, 149, 140, 126],
     "utstillinger_antall": [2, 2, 3, 3, 3, 3, 2, 3, 3, 3, 1, 2, 3, 3, 3, 3, 2],
-    "ansatte_arsverk": [6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.0, 9.5, 10.0, 10.5, 10.0, 9.5, 10.0, 10.5, 11.0, 11.0, 11.5],
+    "ansatte_arsverk": [39.3, 44.4, 51.6, 48.3, 53.8, 58.9, 53.5, 57.1, 55.2, 58.2, 48.5, 52.8, 56.5, 59.8, 59.8, 61.8, 63.2],
     "snittpris_kr": [62, 62, 62, 62, 62, 81, 81, 81, 81, 81, 91, 91, 91, 108, 108, 108, 108],
     "tilskudd_tkr": [4100, 4300, 4600, 4900, 5200, 5400, 5500, 5800, 6100, 6400, 6900, 7200, 7000, 7300, 7600, 7900, 8100],
     "kafeinntekter_tkr": [5100, 5180, 4980, 5120, 5280, 5620, 5010, 4940, 5300, 5510, 1560, 2270, 5910, 5830, 5970, 5630, 5030],

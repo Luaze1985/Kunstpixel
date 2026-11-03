@@ -16,8 +16,8 @@ from tests.test_leveranse import Teller, dump, fyll
 ROOT = Path(__file__).resolve().parent.parent
 
 # Fingeravtrykk av tallfilen. Endres tallene med vilje, oppdater disse to linjene og si fra hvorfor.
-# 2026-11-02: endret med vilje. Besøk og billettinntekter er avstemt mot dagsbesok (eiers beslutning).
-FINGERAVTRYKK_TALL = "6e3531f61858d50a907783853fa7e4b9fdc59158e082ff6b867dea737b437e35"
+# 2026-11-02/03: endret med vilje. Besøk og billettinntekter avstemt mot dagsbesok, årsverk mot hr_ansatte (eiers beslutning).
+FINGERAVTRYKK_TALL = "557606d205722c70761fec61fd48548bac309b1070d0eb3231f51699bdc42d10"
 FINGERAVTRYKK_TEKST_SKJELETT = "5bdf32bc3f877fbba3a93d99ea5f974b9d312e1240f6b1cae4b9260e59136f74"  # 2026-11-02: bare besok_totalt endret (avstemt mot dagsbesok)
 
 

@@ -76,8 +76,8 @@ myndigheter:
   intern_eier: Museumsdirektør
   kontaktperson: Harald Oskar Vinje
   kontakt_epost: harald.oskar.vinje@arbeidstilsynet.example.test
-  intern_eier_navn: Thorvald Berntsen
-  intern_eier_epost: thorvald.berntsen@kunstpixel.example.test
+  intern_eier_navn: Henrik Faye-Lund
+  intern_eier_epost: henrik.fayelund@kunstpixel.example.test
   hva_de_vil: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva myndigheten ber om fra oss'
   utloser: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som utløser kontakt'
   dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon de vanligvis ber om'
@@ -88,8 +88,8 @@ myndigheter:
   intern_eier: Kafeansvarlig
   kontaktperson: Theodor Sæther
   kontakt_epost: theodor.sather@mattilsynet.example.test
-  intern_eier_navn: Astrid Moe
-  intern_eier_epost: astrid.moe@kunstpixel.example.test
+  intern_eier_navn: Hilde Viken
+  intern_eier_epost: hilde.viken@kunstpixel.example.test
   hva_de_vil: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva myndigheten ber om fra oss'
   utloser: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som utløser kontakt'
   dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon de vanligvis ber om'
@@ -100,8 +100,8 @@ myndigheter:
   intern_eier: Driftsansvarlig
   kontaktperson: Kristian Hovland
   kontakt_epost: kristian.hovland@brann.example.test
-  intern_eier_navn: Edvard Rønning
-  intern_eier_epost: edvard.ronning@kunstpixel.example.test
+  intern_eier_navn: Terje Bratt
+  intern_eier_epost: terje.bratt@kunstpixel.example.test
   hva_de_vil: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva myndigheten ber om fra oss'
   utloser: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som utløser kontakt'
   dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon de vanligvis ber om'
@@ -112,8 +112,8 @@ myndigheter:
   intern_eier: Kafeansvarlig
   kontaktperson: Gunnar Eilif Lunde
   kontakt_epost: gunnar.eilif.lunde@kommunen.example.test
-  intern_eier_navn: Astrid Moe
-  intern_eier_epost: astrid.moe@kunstpixel.example.test
+  intern_eier_navn: Hilde Viken
+  intern_eier_epost: hilde.viken@kunstpixel.example.test
   hva_de_vil: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva myndigheten ber om fra oss'
   utloser: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som utløser kontakt'
   dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon de vanligvis ber om'
@@ -124,8 +124,8 @@ myndigheter:
   intern_eier: Museumsdirektør
   kontaktperson: Harriet Dahlen
   kontakt_epost: harriet.dahlen@fylkeskommunen.example.test
-  intern_eier_navn: Thorvald Berntsen
-  intern_eier_epost: thorvald.berntsen@kunstpixel.example.test
+  intern_eier_navn: Henrik Faye-Lund
+  intern_eier_epost: henrik.fayelund@kunstpixel.example.test
   hva_de_vil: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva myndigheten ber om fra oss'
   utloser: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som utløser kontakt'
   dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon de vanligvis ber om'
@@ -136,8 +136,8 @@ myndigheter:
   intern_eier: Museumsdirektør
   kontaktperson: Frits Strømme
   kontakt_epost: frits.stromme@kulturdirektoratet.example.test
-  intern_eier_navn: Thorvald Berntsen
-  intern_eier_epost: thorvald.berntsen@kunstpixel.example.test
+  intern_eier_navn: Henrik Faye-Lund
+  intern_eier_epost: henrik.fayelund@kunstpixel.example.test
   hva_de_vil: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva myndigheten ber om fra oss'
   utloser: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som utløser kontakt'
   dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon de vanligvis ber om'
@@ -148,8 +148,8 @@ myndigheter:
   intern_eier: Driftsansvarlig
   kontaktperson: Oda Marie Skogen
   kontakt_epost: oda.marie.skogen@datatilsynet.example.test
-  intern_eier_navn: Edvard Rønning
-  intern_eier_epost: edvard.ronning@kunstpixel.example.test
+  intern_eier_navn: Terje Bratt
+  intern_eier_epost: terje.bratt@kunstpixel.example.test
   hva_de_vil: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva myndigheten ber om fra oss'
   utloser: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som utløser kontakt'
   dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon de vanligvis ber om'
@@ -160,8 +160,8 @@ myndigheter:
   intern_eier: Museumsdirektør
   kontaktperson: Gerhard Nygaard
   kontakt_epost: gerhard.nygaard@stiftelsestilsynet.example.test
-  intern_eier_navn: Thorvald Berntsen
-  intern_eier_epost: thorvald.berntsen@kunstpixel.example.test
+  intern_eier_navn: Henrik Faye-Lund
+  intern_eier_epost: henrik.fayelund@kunstpixel.example.test
   hva_de_vil: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva myndigheten ber om fra oss'
   utloser: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som utløser kontakt'
   dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon de vanligvis ber om'

@@ -1,8 +1,9 @@
 """Syntetisk HR- og HMS-pakke for Kunstpixel, 2010 til 2026.
 
 Alt lages av koden med fast frø, så pakken er identisk hver gang. Totalene henger sammen med historikken i
-`leveranse._H` (årsverk, sykefravær, RUH, skader, tilsyn, avvik, vernerunder, temperaturavvik). Alle personer er
-oppdiktet, og alle e-poster ligger på det reserverte domenet .example.test. Ingen modell skriver data her.
+`leveranse._H` (årsverk, sykefravær, RUH, skader, tilsyn, avvik, vernerunder, temperaturavvik). Ansattregisteret er de
+samme (syntetiske) personene som hr_ansatte, og alle e-poster ligger på det reserverte domenet .example.test.
+Ingen modell skriver data her.
 """
 
 from __future__ import annotations
@@ -14,6 +15,7 @@ import json
 import random
 import zipfile
 from datetime import date, timedelta
+from pathlib import Path
 from typing import Any
 
 from src.kunstpixel.core.intern import leveranse as L
@@ -24,40 +26,29 @@ H = L._H
 KLASSE = "syntetisk"
 FIL_DATO = (2026, 10, 27, 0, 0, 0)  # fast tidsstempel i zip, så filen blir lik hver gang
 
-GIVEN = [
-    "Anders", "Birgit", "Carl", "Dagny", "Einar", "Fredrik", "Gro", "Helge", "Ingvild", "Jørgen", "Kari-Anne", "Leif", "Mona", "Nils",
-    "Olaug", "Per Anton", "Randi", "Sverre", "Tora", "Ulrik", "Vigdis", "Wilhelm", "Åse", "Bjørg", "Henning", "Liv Marit", "Mads", "Signe",
-    "Trygve", "Ragna",
-]  # fmt: skip
-ETTERNAVN = [
-    "Aasen", "Bakke", "Dalen", "Engen", "Foss", "Grindem", "Haugen", "Iversen", "Jakobsen", "Kolstad", "Lien", "Myhre", "Neset", "Opsahl",
-    "Pedersen", "Rud", "Sandvik", "Tollefsen", "Ulvestad", "Vik", "Wold", "Ytterdal", "Ødegård", "Aune", "Brekke", "Christensen", "Dyrnes",
-    "Eide", "Fjeld", "Gjerde",
-]  # fmt: skip
+# Ansattregisteret er de samme personene som hr_ansatte i museum.db. Kilden er datafila museum.db bygges fra.
+HR_ANSATTE_CSV = Path(__file__).resolve().parents[4] / "05_data" / "arkiv_hr_ansatte.csv"
 
-# (tittel, rolle i tilgangsmatrisen, avdeling, stillingsandel, ansettelsesform, [(navn eller None, fra, til, sluttårsak)])
-D = date
-POSISJONER: list[tuple[str, str, str, float, str, list[tuple[str | None, date, date | None, str]]]] = [
-    ("Museumsdirektør", "Museumsdirektør", "Ledelse", 1.0, "fast", [(None, D(2010, 1, 1), D(2020, 1, 31), "pensjon"), ("Thorvald Berntsen", D(2020, 2, 1), None, "")]),
-    ("Samlingsforvalter", "Samlingsforvalter", "Samling", 1.0, "fast", [(None, D(2010, 1, 1), D(2016, 6, 30), "ny jobb"), (None, D(2016, 9, 1), None, "")]),
-    ("Kurator", "Kurator", "Formidling og utstilling", 1.0, "fast", [(None, D(2010, 1, 1), None, "")]),
-    ("Formidler", "Formidler", "Formidling og utstilling", 1.0, "fast", [(None, D(2010, 1, 1), D(2021, 5, 31), "pensjon"), (None, D(2021, 8, 15), None, "")]),
-    ("Museumsvert", "Museumsvert", "Publikum", 1.0, "fast", [(None, D(2010, 1, 1), None, "")]),
-    ("Kafeansvarlig", "Kafeansvarlig", "Kafé", 1.0, "fast", [(None, D(2010, 1, 1), D(2017, 8, 31), "ny jobb"), ("Astrid Moe", D(2017, 10, 1), None, "")]),
-    ("Driftsansvarlig", "Driftsansvarlig", "Drift", 0.5, "fast", [("Edvard Rønning", D(2010, 1, 1), None, "")]),
-    ("Museumsvert, deltid", "Museumsvert", "Publikum", 0.5, "fast", [(None, D(2011, 3, 1), D(2020, 6, 30), "stillingen avviklet")]),
-    ("Formidler, deltid", "Formidler", "Formidling og utstilling", 0.5, "fast", [(None, D(2012, 2, 1), None, "")]),
-    ("Driftsmedarbeider", "Driftsansvarlig", "Drift", 0.5, "fast", [(None, D(2013, 4, 1), D(2022, 10, 31), "ny jobb"), (None, D(2022, 11, 15), None, "")]),
-    ("Konservator", "Konservator", "Samling", 0.5, "fast", [(None, D(2014, 1, 1), None, "")]),
-    ("Resepsjon og butikk", "Museumsvert", "Publikum", 0.5, "fast", [(None, D(2015, 5, 1), None, "")]),
-    ("Kafémedarbeider", "Kafeansvarlig", "Kafé", 0.5, "midlertidig", [(None, D(2017, 10, 1), D(2021, 3, 31), "midlertidig utløpt")]),
-    ("Kafémedarbeider", "Kafeansvarlig", "Kafé", 0.5, "fast", [(None, D(2018, 4, 1), None, "")]),
-    ("Markedsføring og kommunikasjon", "Formidler", "Formidling og utstilling", 0.5, "fast", [(None, D(2019, 3, 1), None, "")]),
-    ("Museumsvert, deltid", "Museumsvert", "Publikum", 0.5, "fast", [(None, D(2022, 2, 1), None, "")]),
-    ("Kvalitets- og rapporteringsansvarlig", "Kvalitetsvokter", "Ledelse", 0.5, "fast", [(None, D(2023, 1, 16), None, "")]),
-    ("Kafémedarbeider", "Kafeansvarlig", "Kafé", 0.5, "fast", [(None, D(2024, 3, 1), None, "")]),
-    ("Digital formidling", "Formidler", "Formidling og utstilling", 0.5, "fast", [(None, D(2026, 1, 15), None, "")]),
-]  # fmt: skip
+# Stillingstittel (eller avdeling) -> nærmeste rolle i tilgangsmatrisen (L.ROLLER_TILLATT).
+ROLLE_FOR_STILLING = {
+    "Kvalitets- og complianceansvarlig": "Kvalitetsvokter",
+    "Sikkerhetsleder / RVR": "Brannvernleder",
+    "Malerikonservator NKF-N": "Konservator",
+    "Papir- og fotokonservator": "Konservator",
+    "Museumsvert og omviser (Deltid)": "Museumsvert",
+    "Seniorvert / Skrankeleder": "Museumsvert",
+    "Butikkmedarbeider (Deltid)": "Museumsvert",
+    "Museumsbutikkleder": "Museumsvert",
+    "Kaféleder": "Kafeansvarlig",
+    "Kafémedarbeider (Deltid)": "Kafeansvarlig",
+    "Kommunikasjons- og markedssjef": "Formidler",
+    "Digital innholdsprodusent / Web": "Formidler",
+}
+ROLLE_FOR_AVDELING = {
+    "Ledelse": "Museumsdirektør", "Kuratering": "Kurator", "Samling": "Samlingsforvalter",
+    "Formidling": "Formidler", "Drift": "Driftsansvarlig", "Marked": "Formidler",
+}
+SLUTTARSAKER = ["ny jobb", "ny jobb", "pensjon", "flytting", "studier", "midlertidig utløpt"]
 
 STEDER = ["Sal A", "Sal B", "Sal C", "Sal D", "Sal E", "Kafé", "Foajé og butikk", "Lager og verksted", "Kontor"]
 KATEGORIER = {
@@ -86,27 +77,38 @@ def _rng(seksjon: str) -> random.Random:
 
 
 def ansatte() -> list[dict[str, Any]]:
-    """Ansattregister med oppdiktede personer. Hver stilling kan ha flere personer over tid."""
-    brukt: set[str] = {n for n, _ in L.KONTAKTPERSONER.values()} | {n for n, _ in L.INTERNE_PERSONER.values()}
+    """Ansattregister: de samme personene som hr_ansatte, unntatt de som starter etter siste dato i dataene.
+
+    Navn, stilling, avdeling, stillingsprosent og datoer kopieres. E-posten bruker samme lokale del som i
+    hr_ansatte, men på det reserverte domenet .example.test (pakken skal ikke inneholde adresser som kan virke ekte).
+    """
+    with open(HR_ANSATTE_CSV, encoding="utf-8", newline="") as f:
+        kilde = [r for r in csv.DictReader(f) if r["ansatt_fra"] <= IDAG.isoformat()]
+    lokal = [r["epost"].split("@")[0] for r in kilde]
+    stillinger = sorted({r["stilling"] for r in kilde})
+    rng = _rng("ansatte")
     rad: list[dict[str, Any]] = []
-    k = 0
-    for sid, (tittel, rolle, avd, andel, form, personer) in enumerate(POSISJONER, 1):
-        for navn, fra, til, arsak in personer:
-            while navn is None:
-                kandidat = f"{GIVEN[(k * 7) % len(GIVEN)]} {ETTERNAVN[(k * 11 + k // 30) % len(ETTERNAVN)]}"
-                k += 1
-                if kandidat not in brukt:
-                    navn = kandidat
-            brukt.add(navn)
-            rad.append(
-                {
-                    "ansatt_id": f"A-{len(rad) + 1:03d}", "stilling_id": f"S-{sid:02d}", "navn": navn,
-                    "epost": f"{_ascii(navn)}@kunstpixel.example.test", "stillingstittel": tittel, "rolle": rolle, "avdeling": avd,
-                    "stillingsandel_prosent": int(andel * 100), "ansettelsesform": form, "ansatt_fra": fra.isoformat(),
-                    "ansatt_til": til.isoformat() if til else "", "sluttarsak": arsak,
-                }
-            )  # fmt: skip
+    for r in sorted(kilde, key=lambda r: r["ansatt_id"]):
+        lok = r["epost"].split("@")[0]
+        if lokal.count(lok) > 1:
+            lok = f"{lok}.{r['ansatt_id'].split('-')[-1]}"
+        andel = round(float(r["stillingsprosent"]) * 100)
+        rad.append(
+            {
+                "ansatt_id": r["ansatt_id"], "stilling_id": f"S-{stillinger.index(r['stilling']) + 1:02d}", "navn": r["navn"],
+                "epost": f"{lok}@kunstpixel.example.test", "stillingstittel": r["stilling"],
+                "rolle": ROLLE_FOR_STILLING.get(r["stilling"], ROLLE_FOR_AVDELING[r["avdeling"]]), "avdeling": r["avdeling"],
+                "stillingsandel_prosent": andel, "ansettelsesform": "midlertidig" if "Sesong" in r["status"] else "fast",
+                "ansatt_fra": r["ansatt_fra"], "ansatt_til": r["ansatt_til"],
+                "sluttarsak": rng.choice(SLUTTARSAKER) if r["ansatt_til"] else "",
+            }
+        )  # fmt: skip
     return rad
+
+
+def _lengst_ansatt(reg: list[dict[str, Any]], d: date, rolle: str) -> dict[str, Any] | None:
+    aktive = [a for a in reg if a["rolle"] == rolle and _aktiv(a, d)]
+    return min(aktive, key=lambda a: (a["ansatt_fra"], a["ansatt_id"])) if aktive else None
 
 
 def _aktiv(a: dict[str, Any], d: date) -> bool:
@@ -334,12 +336,17 @@ def brannovelser(reg: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def hms_organisering(reg: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    vo = next(a for a in reg if a["stilling_id"] == "S-05")["ansatt_id"]
-    bl = next(a for a in reg if a["navn"] == L.INTERNE_PERSONER["Driftsansvarlig"][0])["ansatt_id"]
-    return [
-        {"ar": ar, "verneombud_id": vo, "brannvernleder_id": bl, "amu_moter": 3 if ar == 2020 else 4, "hms_handlingsplan_godkjent": date(ar, 1, 20).isoformat()}
-        for ar in AAR
-    ]
+    """Verneombud og brannvernleder per år: den lengst ansatte i rollen som var i jobb ved årsslutt."""
+    ut = []
+    for ar in AAR:
+        d = _slutt(ar)
+        vo = _lengst_ansatt(reg, d, "Museumsvert")
+        bl = _lengst_ansatt(reg, d, "Brannvernleder") or _lengst_ansatt(reg, d, "Driftsansvarlig")
+        ut.append(
+            {"ar": ar, "verneombud_id": vo["ansatt_id"], "brannvernleder_id": bl["ansatt_id"], "amu_moter": 3 if ar == 2020 else 4,
+             "hms_handlingsplan_godkjent": date(ar, 1, 20).isoformat()}
+        )  # fmt: skip
+    return ut
 
 
 def tabeller() -> dict[str, list[dict[str, Any]]]:
@@ -364,8 +371,8 @@ def csv_bytes(rader: list[dict[str, Any]]) -> bytes:
 
 README = """# HR- og HMS-data for Kunstpixel, 2010 til 2026
 
-Alt er **syntetisk** (klassifisering `syntetisk` i hver rad). Personene er oppdiktet, og e-postene ligger på
-`.example.test`. Dataene passer til historikken i `historikk_tall.yaml`: samme årsverk, sykefravær, antall RUH,
+Alt er **syntetisk** (klassifisering `syntetisk` i hver rad). Personene er de samme som i `hr_ansatte`
+(også syntetiske, ansatt-ID `KP-ANS-…`), og e-postene ligger på `.example.test`. Navn kan gå igjen, så bruk ansatt-ID som nøkkel. Dataene passer til historikken i `historikk_tall.yaml`: samme årsverk, sykefravær, antall RUH,
 skader, tilsyn, avvik, pålegg, vernerunder og temperaturavvik. 2026 er foreløpig og går til og med 2026-10-27.
 
 Filformat: UTF-8 med BOM, semikolon som skilletegn, datoer som ÅÅÅÅ-MM-DD. Excel på norsk åpner dem direkte.

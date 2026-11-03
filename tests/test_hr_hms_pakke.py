@@ -57,15 +57,27 @@ def test_year_end_fte_matches_the_history_series_exactly(tab):
 
 def test_staff_register_is_consistent(tab):
     reg = tab["ansatte.csv"]
-    assert len({a["ansatt_id"] for a in reg}) == len(reg) and len({a["navn"] for a in reg}) == len(reg)
+    # Navn kan gå igjen (som i hr_ansatte), så ansatt_id og e-post er nøklene.
+    assert len({a["ansatt_id"] for a in reg}) == len(reg) and len({a["epost"] for a in reg}) == len(reg)
     assert all(a["epost"].endswith("@kunstpixel.example.test") and re.fullmatch(r"[a-z0-9.@-]+", a["epost"]) for a in reg)
     for a in reg:
         assert not a["ansatt_til"] or a["ansatt_fra"] < a["ansatt_til"]
         assert a["rolle"] in L.ROLLER_TILLATT
-    nu = {a["stillingstittel"]: a["navn"] for a in reg if not a["ansatt_til"]}
-    for tittel in ("Museumsdirektør", "Driftsansvarlig", "Kafeansvarlig"):
-        assert nu[tittel] == L.INTERNE_PERSONER[tittel][0]
+    for rolle, (navn, _) in L.INTERNE_PERSONER.items():
+        assert navn in {a["navn"] for a in reg if a["rolle"] == rolle and not a["ansatt_til"]}, rolle
     assert not {a["navn"] for a in reg} & {n for n, _ in L.KONTAKTPERSONER.values()}  # myndighetenes folk er ikke ansatte
+
+
+def test_staff_register_is_the_same_people_as_hr_ansatte(tab):
+    """Pakken bruker de samme ansatte som hr_ansatte (05_data/arkiv_hr_ansatte.csv), unntatt de som starter etter siste dato."""
+    with open(P.HR_ANSATTE_CSV, encoding="utf-8", newline="") as f:
+        kilde = {r["ansatt_id"]: r for r in csv.DictReader(f) if r["ansatt_fra"] <= P.IDAG.isoformat()}
+    reg = {a["ansatt_id"]: a for a in tab["ansatte.csv"]}
+    assert set(reg) == set(kilde)
+    for aid, r in kilde.items():
+        a = reg[aid]
+        assert (a["navn"], a["stillingstittel"], a["ansatt_fra"], a["ansatt_til"]) == (r["navn"], r["stilling"], r["ansatt_fra"], r["ansatt_til"])
+        assert a["stillingsandel_prosent"] == round(float(r["stillingsprosent"]) * 100)
 
 
 def test_ruh_counts_injuries_and_deadlines_follow_the_history(tab):
