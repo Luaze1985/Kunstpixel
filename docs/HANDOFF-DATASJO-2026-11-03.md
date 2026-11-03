@@ -34,8 +34,8 @@ Les dette først, deretter `docs/HANDOFF-2026-11-03.md` (hva som er gjort og hvo
 | Governance-tekster | `05_data/governance/*.yaml` | delvis i `museum.db` (H5-tabellene) | `h5_governance_builder.py` |
 
 **Fingeravtrykk ved overlevering.** Kontroller disse først. Hvis de ikke stemmer, har noen endret dataene etterpå.
-- `05_data/museum.db`: sha256 begynner med `22873b7c6dcc49c8` (16,7 MB, 44 tabeller).
-- `05_data/persondata/persondata.db`, bygget med `--fra-csv`: sha256 begynner med `6c9958d3808e2a0c` (4,6 MB, 14 tabeller, 49 513 rader). Fila skal være byte-identisk når den bygges fra de committede CSV-ene. Hvis den ikke er det, sammenligner du innholdet tabell for tabell i stedet.
+- `05_data/museum.db`: sha256 begynner med `dae3d0cd7f163b62` (16,7 MB, 44 tabeller).
+- `05_data/persondata/persondata.db`, bygget med `--fra-csv`: sha256 begynner med `4186666f4d1de18e` (4,6 MB, 14 tabeller, 49 513 rader). Fila skal være byte-identisk når den bygges fra de committede CSV-ene. Hvis den ikke er det, sammenligner du innholdet tabell for tabell i stedet.
 
 ## 3. Datakatalog
 
@@ -43,9 +43,9 @@ Les dette først, deretter `docs/HANDOFF-2026-11-03.md` (hva som er gjort og hvo
 
 | Domene | Tabeller (rader) | Nøkkel og koblinger |
 | :--- | :--- | :--- |
-| Samling | `verk` (16), `kunstnere` (12), `saler` (6), `utstillinger` (3), `utstilling_verk` (15), `utstillinger_historikk` (102), `utstilling_okonomi` (102), `utstillingsinnlan` (50), `tilstandsrapporter` (16) | `verk.kunstner_id` → `kunstnere.id`. `sal_id` → `saler.id` |
+| Samling | `verk` (16), `kunstnere` (12), `saler` (6), `utstillinger` (3), `utstilling_verk` (15), `utstillinger_historikk` (103), `utstilling_okonomi` (102), `utstillingsinnlan` (50), `tilstandsrapporter` (16) | `verk.kunstner_id` → `kunstnere.id`. `sal_id` → `saler.id` |
 | Publikum | `dagsbesok` (6 209 dager, 2010–2026), `hendelser` (45, 2026-09 til 2026-12), `publikum_faq` (12) | `dagsbesok.dato` (ISO) |
-| HR | `hr_ansatte` (168), `hr_vakter` (54 994), `hr_fravaer` (3 456), `hr_innleie` (318), `org_ansatt_kompetanse` (596), `org_ferdigheter` (14), `hr_opplaering_onboarding` (18), `personas` (28), `hr_people` (12), `hr_person_skill` (30), `hr_skills` (7), `hr_availability` (11), `hr_rules` (8), `roller` (12), `rolle_sporsmal` (11) | `ansatt_id` = `KP-ANS-NNN`. `hr_people.ansatt_id` → `hr_ansatte` |
+| HR | `hr_ansatte` (168), `hr_vakter` (54 258), `hr_fravaer` (3 456), `hr_innleie` (318), `org_ansatt_kompetanse` (596), `org_ferdigheter` (14), `hr_opplaering_onboarding` (18), `personas` (28), `hr_people` (12), `hr_person_skill` (30), `hr_skills` (7), `hr_availability` (11), `hr_rules` (8), `roller` (12), `rolle_sporsmal` (11) | `ansatt_id` = `KP-ANS-NNN`. `hr_people.ansatt_id` → `hr_ansatte` |
 | HMS og drift | `avvik_hms_drift` (34), `hms_avvik_tekst` (40), `hms_ergonomi_rotasjon` (9), `arbeidstilsynet_renhold` (7), `arbeidstid_grenser` (6), `interne_henvendelser` (60) | |
 | Styring (H5) | `h5_historikk_2010_2026` (17), `h5_myndighetskontakter` (8), `h5_rapporteringskalender` (12), `h5_rapportmaler` (21), `h5_tilsynsbesok_rutine` (6), `h5_arbeidsoppgaver_tidsbruk` (19), `rapport_regler` (22) | `h5_historikk.ar` |
 | Referanse | `norske_helligdager` (237), `ssb_sykefraver_kultur` (68), `styrk08_katalog` (10), `virke_tariff` (67), `leverandor_enhetsregister` (12), `handbok_oppslag` (99) | |
@@ -73,13 +73,13 @@ Kjør alt fra rotmappa i repoet.
 
 | # | Kontroll | Kommando | Forventet |
 | :--- | :--- | :--- | :--- |
-| K1 | Fingeravtrykk | `python -c "import hashlib;print(hashlib.sha256(open('05_data/museum.db','rb').read()).hexdigest())"` | begynner med `22873b7c6dcc49c8` |
+| K1 | Fingeravtrykk | `python -c "import hashlib;print(hashlib.sha256(open('05_data/museum.db','rb').read()).hexdigest())"` | begynner med `dae3d0cd7f163b62` |
 | K2 | `museum.db` bygget fra gjeldende kilder | `py -3.13 src/kunstpixel/data/build_museum_db.py --check` | LIK |
 | K3 | Statusport | `py -3.13 scripts/db_status_gate.py` | KLAR. I skymiljøet blokkerer den bare på 2 tester som trenger pakken `anthropic` |
 | K4 | Datakvalitet | `py -3.13 scripts/db_kvalitet.py` | 0 FEIL. Kjent OBS: 1 287 vakter over 9 timer er ikke merket som overtid |
 | K5 | Hele testpakken | `py -3.13 -m pytest` | 1726 bestått. Bare de 2 `anthropic`-testene kan feile |
 | K6 | Kundedata bygges | `py -3.13 -m src.kunstpixel.persondata.generer --fra-csv` | 49 513 rader |
-| K8 | Alle koblinger mellom datalagene (A: nøkler, B: samsvar) | `py -3.13 scripts/koblingssjekk.py --vis-kjente` | 33 OK, 8 KJENT AVVIK, 0 FEIL. Kjente avvik og forklaringer står i `src/kunstpixel/data/koblinger.py` |
+| K8 | Alle koblinger mellom datalagene (A: nøkler, B: samsvar) | `py -3.13 scripts/koblingssjekk.py --vis-kjente` | 41 OK, 0 FEIL. Kontrollene står i `src/kunstpixel/data/koblinger.py` |
 | K7 | Kryssjekker | SQL under, mot `persondata.db` med `museum.db` koblet på som `museum` | alle gir 0 rader eller angitt verdi |
 
 ```sql
@@ -131,7 +131,7 @@ SELECT kontakt_id FROM kontakter WHERE ansatt_id IS NULL AND epost NOT LIKE '%@e
 
 ## 6. Kjente avvik (rapporter, ikke rett i stillhet)
 
-- **Koblingssjekken (K8) har 8 kjente avvik i `museum.db`** (B18–B25): publikumsvakter på stengte dager, vakter utenfor utstillingsperioden, interne saker meldt av folk som ikke var i jobb, innleie godkjent før godkjenneren ble ansatt, HMS-avvik med ansvarlig som ikke var i jobb, navn i `hr_people` som ikke stemmer med `hr_ansatte`, ulike aktive utstillinger i `utstillinger` og `utstillinger_historikk`, og hendelser på stengte dager. Ta dem med i datasjøen med en merknad. Ikke rett dem uten Lars.
+- **De 8 avvikene koblingssjekken fant (B18–B25) er rettet 2026-11-03** i `build_museum_db.rett_koblingsavvik`, `org_builder.py` og `hr_demo/seed.json`. Se avsnitt 9.
 
 - `h5_historikk`: billettinntekt avviker under 2 % fra `dagsbesok`, med vilje, fordi snittprisen aldri faller.
 - `dagsbesok` har tall til og med 2026-12-31, altså i fremtiden. `hendelser` har 30 hendelser etter 2026-11-02, og 5 av dem ligger på dager `dagsbesok` sier er stengt.
@@ -152,3 +152,17 @@ SELECT kontakt_id FROM kontakter WHERE ansatt_id IS NULL AND epost NOT LIKE '%@e
 1. **`docs/KONTROLLRAPPORT-DATASJO-<dato>.md`** med resultatet av K1–K7, funn med bevis, og hva som er kontrollert og hva som ikke er det.
 2. **Et forslag til datasjø**: plattform, format, lag og klassifiseringsregel, lagt fram for Lars før du bygger noe.
 3. **Etter et ja:** innlastingsskript, manifest og tester, på egen grein med egen PR. Ingen sammenslåing uten Lars.
+
+## 9. Rettinger 2026-11-03 (koblingssjekk B18–B25)
+
+| # | Retting | Hvor |
+| :--- | :--- | :--- |
+| B25 | 5 hendelser på stengte mandager er flyttet til neste åpne dag | `rett_koblingsavvik` |
+| B24 | Arkivets høst 2026 følger det kuraterte programmet: «Stille kraft» (KP-EXH-2026-068) og «Lys innenfra» (ny, KP-EXH-2026-069). Besøk og budsjett er delt 2/3 og 1/3, så årssummen er uendret | `rett_koblingsavvik` |
+| B18 | 736 publikumsvakter på stengte dager er fjernet: 54 994 → 54 258 vakter i databasen. Kildefila `arkiv_hr_vakt_historikk.csv` er uendret | `rett_koblingsavvik` |
+| B19 | Vaktenes `utstilling_id` er utstillingen som gikk den dagen (hovedutstilling foran fokusrom), ellers tom. 6 952 vakter i monteringsuker har tom kobling | `rett_koblingsavvik` |
+| B21 / B22 | Godkjenner og ansvarlig som ikke var i jobb, er byttet med den lengst ansatte i samme stilling (ellers avdeling) | `rett_koblingsavvik` |
+| B20 | Interne saker meldes bare av ansatte som er i jobb på datoen | `org_builder.generate_internal_requests` |
+| B23 | Navnene i HR-demoen er de samme som i `hr_ansatte` (E101 Ada Nord → Jonas Berg osv.) | `05_data/hr_demo/seed.json` |
+
+Fasiten (`tests/golden/regelbasert/golden.json`) er laget på nytt med `tests/make_golden.py`. Bare datoene til de flyttede hendelsene er endret.

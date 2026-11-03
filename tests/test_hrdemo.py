@@ -156,7 +156,7 @@ def test_get_person(env):
     from src.kunstpixel.core.hrdemo import get_person
     ada = get_person('E101', db_path=env[1])
     assert ada is not None
-    assert ada['name'] == 'Ada Nord'
+    assert ada['name'] == 'Jonas Berg'
     assert len(ada['skills']) == 4
     assert all(s['is_current'] for s in ada['skills'])
     assert len(ada['availability']) >= 1
@@ -182,7 +182,7 @@ def test_hrdemo_mcp_tools():
     catalog = get_competence_catalog()
     assert len(catalog) >= 7
     ada = get_staff_member('E101')
-    assert ada['name'] == 'Ada Nord'
+    assert ada['name'] == 'Jonas Berg'
     eval_res = evaluate_kiosk_proposal(['E101', 'E102', 'E106', 'E103', 'E111'])
     assert eval_res['verdict'] == 'PASS'
 
@@ -212,7 +212,7 @@ def test_hrdemo_api_handler():
     assert '"id": "E112"' not in h_people.wfile.getvalue().decode('utf-8')
 
     h_person = FakeServerHandler('/api/v1/hr/people?id=E101')
-    assert '"Ada Nord"' in h_person.wfile.getvalue().decode('utf-8')
+    assert '"Jonas Berg"' in h_person.wfile.getvalue().decode('utf-8')
 
     h_eval = FakeServerHandler('/api/v1/hr/evaluate?ids=E101,E102,E106,E103,E111')
     assert '"verdict": "PASS"' in h_eval.wfile.getvalue().decode('utf-8')

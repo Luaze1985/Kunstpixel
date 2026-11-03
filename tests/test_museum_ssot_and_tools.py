@@ -50,9 +50,11 @@ class TestConsolidatedDatabaseSSOT:
         """Row counts must match the operative archive."""
         cur = ssot_conn.cursor()
         assert cur.execute("SELECT count(*) FROM hr_ansatte").fetchone()[0] == 168
-        assert cur.execute("SELECT count(*) FROM utstillinger_historikk").fetchone()[0] == 102
+        # 103: «Lys innenfra» (2026) lagt til av rett_koblingsavvik (B24)
+        assert cur.execute("SELECT count(*) FROM utstillinger_historikk").fetchone()[0] == 103
         assert cur.execute("SELECT count(*) FROM hr_innleie").fetchone()[0] == 318
-        assert cur.execute("SELECT count(*) FROM hr_vakter").fetchone()[0] == 54994
+        # 54 258: 736 publikumsvakter på stengte dager fjernet av rett_koblingsavvik (B18). Kildefila har fortsatt 54 994.
+        assert cur.execute("SELECT count(*) FROM hr_vakter").fetchone()[0] == 54258
         assert cur.execute("SELECT count(*) FROM personas").fetchone()[0] == 28
 
     def test_new_operational_tables_exist(self, ssot_conn: sqlite3.Connection):

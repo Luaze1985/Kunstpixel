@@ -166,58 +166,42 @@ KONTROLLER: list[Kontroll] = [
         "UNION ALL SELECT 'skolebestillinger', bestilling_id FROM p.skolebestillinger s JOIN main.dagsbesok d ON d.dato = s.dato WHERE d.er_aapent = 0",
         trenger_persondata=True,
     ),
-    # --- kjente avvik i museum.db (ikke rettet ennå, se forklaring)
+    # --- rettet 2026-11-03 i build_museum_db.rett_koblingsavvik og org_builder (var kjente avvik)
     Kontroll(
         "B18", "B", "hr_vakter: publikumsvakter (sal, kafé, butikk, resepsjon) på dager dagsbesok sier stengt",
         "SELECT v.vakt_id FROM main.hr_vakter v JOIN main.dagsbesok d ON d.dato = v.dato "
         "WHERE d.er_aapent = 0 AND v.stasjon NOT LIKE 'Magasin%' AND v.stasjon NOT LIKE 'Vaktrom%'",
-        forventet=736,
-        forklaring="Vaktgeneratoren (archive_generator.py) vet om mandager, men ikke om de øvrige stengte dagene i dagsbesok (helligdager).",
     ),
     Kontroll(
         "B19", "B", "hr_vakter: vaktdato ligger innenfor perioden til utstillingen vakten er knyttet til",
         "SELECT v.vakt_id FROM main.hr_vakter v JOIN main.utstillinger_historikk u USING (utstilling_id) "
         "WHERE v.dato < u.periode_start OR v.dato > u.periode_slutt",
-        forventet=13548,
-        forklaring="Vakter mellom to utstillinger knyttes til nærmeste utstilling. Uklart om utstilling_id betyr «utstillingen som gikk» eller «sesongen».",
     ),
     Kontroll(
         "B20", "B", "interne_henvendelser: meldt av ansatt i jobb",
         _ikke_i_jobb("interne_henvendelser", "ansatt_id", "dato_tid"),
-        forventet=34,
-        forklaring="Sakene (2026) ble skrevet uten å sjekke ansettelsesperioden. Noen er meldt av folk som sluttet før 2026, én av en som starter 2026-12-15.",
     ),
     Kontroll(
         "B21", "B", "hr_innleie: godkjent av ansatt i jobb ved oppdragsstart",
         _ikke_i_jobb("hr_innleie", "godkjent_av_ansatt_id", "periode_fra"),
-        forventet=10,
-        forklaring="Godkjenner er satt etter stilling, uten å sjekke at personen var ansatt da (f.eks. sjefkurator ansatt 2012 godkjenner i 2010).",
     ),
     Kontroll(
         "B22", "B", "avvik_hms_drift: oppfølgingsansvarlig i jobb på avviksdatoen",
         _ikke_i_jobb("avvik_hms_drift", "oppfolging_ansvarlig_id", "dato"),
-        forventet=3,
-        forklaring="Ansvarlig er satt etter rolle uten å sjekke ansettelsesperioden.",
     ),
     Kontroll(
         "B23", "B", "hr_people (HR-demo): navn = navnet i hr_ansatte den peker på",
         "SELECT p.id, p.name, a.navn FROM main.hr_people p JOIN main.hr_ansatte a USING (ansatt_id) WHERE p.name <> a.navn",
-        forventet=12,
-        forklaring="HR-demoen har egne oppdiktede navn (E101 «Ada Nord» …) som ble koblet til hr_ansatte i ettertid (G10) uten å ta navnet med.",
     ),
     Kontroll(
         "B24", "B", "utstillinger med status aktiv finnes i utstillinger_historikk med overlappende periode og samme tittel",
         "SELECT u.id, u.tittel FROM main.utstillinger u WHERE u.status = 'aktiv' AND NOT EXISTS ("
         " SELECT 1 FROM main.utstillinger_historikk h WHERE h.tittel LIKE u.tittel || '%'"
         " AND h.periode_start <= u.sluttdato AND h.periode_slutt >= u.startdato)",
-        forventet=2,
-        forklaring="utstillinger (samlingsdelen) og utstillinger_historikk (arkivgeneratoren) er laget hver for seg og har ulike utstillinger høsten 2026.",
     ),
     Kontroll(
         "B25", "B", "hendelser bare på dager dagsbesok sier åpent",
         "SELECT h.id FROM main.hendelser h JOIN main.dagsbesok d ON d.dato = h.dato WHERE d.er_aapent = 0",
-        forventet=5,
-        forklaring="Hendelsene for høsten 2026 er lagt inn uten å sjekke åpningsdagene i dagsbesok.",
     ),
 ]
 
