@@ -1,4 +1,7 @@
 # AGENT HANDOFF: Kontroller og legg Kunstpixel-dataene inn i datasjøen
+
+> **Nyeste overlevering:** [`docs/HANDOFF-2026-11-03-SAMLET.md`](HANDOFF-2026-11-03-SAMLET.md). Den kobler sammen alle overleveringene og lenker alt på GitHub.
+
 *Timestamp: 2026-11-03 | Fra: Claude Code (sky) | Til: LLM som skal kontrollere dataene og ta dem inn i en datasjø | Eier: Lars*
 
 Les dette først, deretter `docs/HANDOFF-2026-11-03.md` (hva som er gjort og hvorfor), `docs/DATAPIPELINE.md` (hvordan `museum.db` bygges) og `05_data/persondata/README.md` (kundedataene).

@@ -1,5 +1,7 @@
 # Kunstpixel Handoff-dokument
 
+> **Nyeste overlevering:** [`docs/HANDOFF-2026-11-03-SAMLET.md`](HANDOFF-2026-11-03-SAMLET.md). Den kobler sammen alle overleveringene og lenker alt på GitHub.
+
 > **Dato:** 2026-10-17  
 > **Prosjekt:** Kunstpixel  
 > **Målgruppe:** Neste AI-agent eller utvikler som plukker opp stafettpinnen.  
