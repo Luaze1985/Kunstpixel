@@ -11,46 +11,15 @@ import threading
 import urllib.error
 import urllib.request
 from collections.abc import Iterator
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from http.server import ThreadingHTTPServer
 from typing import Any
 
 import pytest
 
 from src.kunstpixel.adapters import datafinner, datafinner_api
 from src.kunstpixel.core import llm
+from tests.hjelpere_ki import RekkefolgeKi, _konfig
 
-
-class RekkefolgeKi:
-    """Falsk leverandør: svarer med neste svar i lista for hvert kall, og husker hver forespørsel."""
-
-    def __init__(self, svar: list[dict]) -> None:
-        self.svar, self.sett = list(svar), []
-        falsk = self
-
-        class H(BaseHTTPRequestHandler):
-            def do_POST(self) -> None:
-                kropp = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
-                falsk.sett.append({"sti": self.path, "kropp": kropp})
-                neste = falsk.svar.pop(0) if len(falsk.svar) > 1 else falsk.svar[0]
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json")
-                self.end_headers()
-                self.wfile.write(json.dumps(neste).encode())
-
-            def log_message(self, *a: Any) -> None:
-                pass
-
-        self.server = ThreadingHTTPServer(("127.0.0.1", 0), H)
-        threading.Thread(target=self.server.serve_forever, daemon=True).start()
-        self.url = f"http://127.0.0.1:{self.server.server_address[1]}"
-
-    def stopp(self) -> None:
-        self.server.shutdown()
-        self.server.server_close()
-
-
-def _konfig(leverandor: str, url: str) -> llm.LlmKonfig:
-    return llm.LlmKonfig(leverandor=leverandor, modell="falsk", api_key="n", base_url=url)
 
 
 SKJEMA = datafinner_api.verktoyskjema(datafinner.VERKTOY)
@@ -77,6 +46,30 @@ def test_claude_formatet_kaller_verktoy_og_svarer() -> None:
     assert andre["messages"][1]["role"] == "assistant"
     resultat = andre["messages"][2]["content"][0]
     assert resultat["type"] == "tool_result" and resultat["tool_use_id"] == "tu1" and "Vaktrom" in resultat["content"]
+
+
+def test_hr_chat_finner_og_undersoeker_case_foer_svar() -> None:
+    """Fanger regresjon der modellen får et åpent HR-spørsmål uten å bli ledet til kildebasert oppdagelse."""
+    ki = RekkefolgeKi([
+        {"stop_reason": "tool_use", "content": [{"type": "tool_use", "id": "h1", "name": "discover_hr_cases",
+                                                  "input": {"sok": "KP-ANS-153"}}]},
+        {"stop_reason": "tool_use", "content": [{"type": "tool_use", "id": "h2", "name": "investigate_hr_case",
+                                                  "input": {"kategori": "medarbeidersamtale", "ansatt_id": "KP-ANS-153"}}]},
+        {"stop_reason": "end_turn", "content": [{"type": "text", "text": "Sindre Lindqvist har registrerte medarbeidersamtaler."}]},
+    ])
+    system = datafinner.SYSTEM_CHAT.format(dato="2026-11-02", ukedag="mandag", rolle="Leder")
+    try:
+        svar = llm.chat_med_verktoy([{"rolle": "bruker", "tekst": "Finn en interessant HR-oppgave"}], SKJEMA,
+                                    datafinner.run_tool, _konfig("anthropic", ki.url), system)
+    finally:
+        ki.stopp()
+    assert [k["navn"] for k in svar["verktoykall"]] == ["discover_hr_cases", "investigate_hr_case"]
+    assert all(k["ok"] for k in svar["verktoykall"])
+    assert "KP-ANS-153" in ki.sett[2]["kropp"]["messages"][-1]["content"][0]["content"]
+    assert "discover_hr_cases" in ki.sett[0]["kropp"]["system"]
+    assert "investigate_hr_case" in ki.sett[0]["kropp"]["system"]
+    assert "neste_verktoy" in ki.sett[0]["kropp"]["system"]
+    assert "resolve_employee" in ki.sett[0]["kropp"]["system"]
 
 
 def test_openai_formatet_kaller_verktoy_og_svarer() -> None:
@@ -116,8 +109,39 @@ def test_feil_i_verktoykall_gaar_tilbake_til_modellen() -> None:
     assert "Ukjente argumenter" in ki.sett[1]["kropp"]["messages"][-1]["content"]
 
 
-def test_for_mange_runder_stopper() -> None:
-    ki = RekkefolgeKi([{"stop_reason": "tool_use", "content": [{"type": "tool_use", "id": "t", "name": "list_stations", "input": {}}]}])
+VERKTOY_SVAR = {"stop_reason": "tool_use", "content": [{"type": "tool_use", "id": "t", "name": "list_stations", "input": {}}]}
+
+
+def test_siste_runde_tvinger_fram_et_svar_claude() -> None:
+    ki = RekkefolgeKi([VERKTOY_SVAR, VERKTOY_SVAR, {"stop_reason": "end_turn", "content": [{"type": "text", "text": "Det jeg rakk: vaktrommet."}]}])
+    try:
+        svar = llm.chat_med_verktoy([{"rolle": "bruker", "tekst": "x"}], SKJEMA, datafinner.run_tool,
+                                    _konfig("anthropic", ki.url), "system", maks_runder=3)
+    finally:
+        ki.stopp()
+    assert svar["avkortet"] is True and svar["tekst"] == "Det jeg rakk: vaktrommet."
+    siste = ki.sett[2]["kropp"]
+    assert siste["tool_choice"] == {"type": "none"}
+    assert siste["messages"][-1]["content"][-1] == {"type": "text", "text": llm.CHAT_SISTE_RUNDE}
+    assert "tool_choice" not in ki.sett[0]["kropp"]
+
+
+def test_siste_runde_tvinger_fram_et_svar_openai() -> None:
+    kall = {"choices": [{"message": {"content": None, "tool_calls": [
+        {"id": "c", "type": "function", "function": {"name": "list_stations", "arguments": "{}"}}]}}]}
+    ki = RekkefolgeKi([kall, {"choices": [{"message": {"content": "Det jeg rakk."}}]}])
+    try:
+        svar = llm.chat_med_verktoy([{"rolle": "bruker", "tekst": "x"}], SKJEMA, datafinner.run_tool,
+                                    _konfig("openai", ki.url), "system", maks_runder=2)
+    finally:
+        ki.stopp()
+    assert svar["avkortet"] is True
+    assert ki.sett[1]["kropp"]["tool_choice"] == "none"
+    assert ki.sett[1]["kropp"]["messages"][-1] == {"role": "user", "content": llm.CHAT_SISTE_RUNDE}
+
+
+def test_modell_som_ignorerer_siste_runde_gir_feil() -> None:
+    ki = RekkefolgeKi([VERKTOY_SVAR])
     try:
         with pytest.raises(llm.LlmFeil) as feil:
             llm.chat_med_verktoy([{"rolle": "bruker", "tekst": "x"}], SKJEMA, datafinner.run_tool,
@@ -127,15 +151,39 @@ def test_for_mange_runder_stopper() -> None:
     assert feil.value.kode == "for_mange_runder" and len(ki.sett) == 3
 
 
-def test_hver_runde_teller_mot_taket() -> None:
-    ki = RekkefolgeKi([{"stop_reason": "tool_use", "content": [{"type": "tool_use", "id": "t", "name": "list_stations", "input": {}}]}])
+def test_timetak_midt_i_gir_dataene_som_er_hentet() -> None:
+    ki = RekkefolgeKi([VERKTOY_SVAR])
     try:
-        with pytest.raises(llm.LlmFeil) as feil:
-            llm.chat_med_verktoy([{"rolle": "bruker", "tekst": "x"}], SKJEMA, datafinner.run_tool,
-                                 _konfig("anthropic", ki.url), "system", begrenser=llm.Begrenser(2))
+        svar = llm.chat_med_verktoy([{"rolle": "bruker", "tekst": "x"}], SKJEMA, datafinner.run_tool,
+                                    _konfig("anthropic", ki.url), "system", begrenser=llm.Begrenser(2))
     finally:
         ki.stopp()
-    assert feil.value.kode == "tak" and len(ki.sett) == 2
+    assert len(ki.sett) == 2
+    assert svar["avbrutt"] == "tak" and svar["merke"] == "Systemmelding" and svar["tekst"] == llm.CHAT_TAK_TEKST
+    assert len(svar["data_hentet"]) == 2 and "Magasin 1" in svar["data_hentet"][0]["utdrag"]
+
+
+def test_timetak_for_forste_runde_gir_feil() -> None:
+    with pytest.raises(llm.LlmFeil) as feil:
+        llm.chat_med_verktoy([{"rolle": "bruker", "tekst": "x"}], SKJEMA, datafinner.run_tool,
+                             _konfig("anthropic", "http://127.0.0.1:9"), "system", begrenser=llm.Begrenser(0))
+    assert feil.value.kode == "tak"
+
+
+def test_tallkontroll_godtar_riktig_regnestykke_og_varsler_feil() -> None:
+    grunnlag = [{"timepris_uten_tillegg": 284.92, "vaktlengde_timer": 8.0}]
+    assert llm.tallkontroll("284,92 × 8 = 2 279,36 kr", grunnlag) == {"ok": True, "ukjente_tall": [], "utregnet": ["284,92 × 8 = 2 279,36"]}
+    feil = llm.tallkontroll("284,92 × 8 = 2 500 kr", grunnlag)
+    assert feil["ok"] is False and feil["feil_utregning"] == ["284,92 × 8 = 2 500"]
+    assert llm.tallkontroll("rundt 2300 kr", grunnlag)["ukjente_tall"] == ["2300"]
+    # Inndata som ikke finnes i grunnlaget, gir ikke et godkjent regnestykke.
+    assert llm.tallkontroll("300 × 8 = 2 400", grunnlag)["ok"] is False
+
+
+def test_tallkontroll_godtar_sitert_telefonnummer() -> None:
+    grunnlag = [{"navn": "Fredrik Ruud", "telefon": "+47 483 77 67", "id": "KP-ANS-168"}]
+    assert llm.tallkontroll("Ring 483 77 67 eller +47 483 77 67 (KP-ANS-168).", grunnlag)["ok"] is True
+
 
 
 def test_tallkontroll_hopper_over_telefonnumre_i_verktoysvar() -> None:

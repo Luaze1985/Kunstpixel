@@ -39,6 +39,7 @@ Arenaen (øvelsescaser, se 04_knowledge/07_arena/caser.yaml):
 from __future__ import annotations
 
 import json
+import csv
 import os
 import sys
 from collections.abc import Callable
@@ -56,6 +57,7 @@ import yaml
 
 from src.kunstpixel.adapters import datafinner_api
 from src.kunstpixel.core import arena, llm, vaktrom
+from src.kunstpixel.core.hr_cases import discover_hr_cases, investigate_hr_case, resolve_employee
 from src.kunstpixel.core.bunnlinje import (
     get_day_overview,
     get_exhibition_ranking,
@@ -99,6 +101,7 @@ ASSETS = {
     "/arena": ("arena.html", "text/html; charset=utf-8"),
     "/vaktrom": ("vaktrom.html", "text/html; charset=utf-8"),
     "/chat": ("chat.html", "text/html; charset=utf-8"),
+    "/arbeidsflyt": ("arbeidsflyt.html", "text/html; charset=utf-8"),
     "/af.css": ("af.css", "text/css; charset=utf-8"),
 }
 
@@ -204,6 +207,13 @@ VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
     "get_weekend_shift_history": (vaktrom.get_weekend_shift_history, {"fra", "til", "stasjon"}),
     "get_staffing_candidates": (vaktrom.get_staffing_candidates, {"stasjon", "dato", "start", "slutt"}),
     "check_staffing_selection": (vaktrom.check_staffing_selection, {"stasjon", "dato", "start", "slutt", "ids"}),
+    "check_shift_swap": (vaktrom.check_shift_swap, {"vakt_a", "vakt_b"}),
+    "check_shift_takeover": (vaktrom.check_shift_takeover, {"vakt_id", "ansatt_id"}),
+    "find_employee": (vaktrom.find_employee, {"sok"}),
+    "resolve_employee": (resolve_employee, {"sok"}),
+    "discover_hr_cases": (discover_hr_cases, {"sok", "kategori", "limit"}),
+    "investigate_hr_case": (investigate_hr_case, {"kategori", "ansatt_id"}),
+    "get_employee_reviews": (vaktrom.get_employee_reviews, {"ansatt_id"}),
     # Personal, innleide, HMS og håndbøker. Uten rollesperre (spec vaktrom-uten-sperrer, 2026-10-31).
     "get_employee_cv": (get_employee_cv, {"ident"}),
     "search_active_contractors": (search_active_contractors, {"query", "kategori", "limit"}),
@@ -218,6 +228,14 @@ SYSTEM_CHAT = (
     "Du er Kunstpixel-assistenten i Datafinner for et norsk kunstmuseum. I dag er {ukedag} {dato}. "
     "Brukeren har rollen {rolle}.\n"
     "Bruk verktøyene for å hente fakta før du svarer, og ikke dikt opp tall, navn eller datoer. "
+    "Når du regner ut et tall, skriv regnestykket med tallene fra verktøyene, for eksempel «284,92 × 8 = 2 279,36». "
+    "Da kan tallkontrollen regne det etter. Ikke skriv løse anslag som «rundt 2300».\n"
+    "Når brukeren ber om interessante HR-caser eller oppgaver, kall discover_hr_cases. "
+    "Velg deretter et konkret case og følg feltet neste_verktoy for å hente grunnlaget før du beskriver funnet. "
+    "Ved personoppslag: kall resolve_employee med navn eller ID først. Er status tvetydig, be om ansatt-ID; "
+    "er status ingen, si at ingen ble funnet. Ikke velg person på egen hånd. "
+    "For medarbeidersamtale eller personalmappe kan du bruke investigate_hr_case med eksplisitt ansatt-ID. "
+    "Rollevalget identifiserer ingen ansatt, og verktøyene endrer ikke databasen.\n"
     "Svar på norsk bokmål, kort og direkte, i vanlig tekst uten tabeller. Alle data er syntetiske."
 )
 
@@ -292,6 +310,20 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
                 "llm_modell": LLM_KONFIG.modell if LLM_KONFIG else None,
                 "verktoy": len(VERKTOY),
             })
+            return
+        if url.path == "/api/arbeidsflyt":
+            with (PROJECT_ROOT / "05_data" / "arbeidsflyt_roller.csv").open(encoding="utf-8", newline="") as fil:
+                rader = list(csv.DictReader(fil))
+            self._json(200, {"oppgaver": rader})
+            return
+        if url.path == "/api/verktoykatalog":
+            skjema = datafinner_api.verktoyskjema(VERKTOY)
+            chat_verktoy = {v["navn"] for v in skjema}
+            beskrivelser = {v["navn"]: v["beskrivelse"] for v in skjema}
+            self._json(200, {"verktoy": [
+                {"navn": navn, "beskrivelse": beskrivelser[navn],
+                 "status": "I chat" if navn in chat_verktoy else "I Datafinner"}
+                for navn in VERKTOY]})
             return
         if url.path == "/api/arena/caser":
             self._json(200, arena.last_caser())
@@ -538,6 +570,15 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
 
 
 def main() -> None:
+    # KI-innstillinger fra .env i prosjektroten, bare ved oppstart (ikke ved import, så testene ikke ser nøkkelen).
+    global LLM_KONFIG, LLM_BEGRENSER
+    from src.kunstpixel.core import miljo
+    satt = miljo.last_env_fil()
+    LLM_KONFIG = llm.fra_miljo(os.environ)
+    LLM_BEGRENSER = llm.Begrenser(LLM_KONFIG.maks_per_time) if LLM_KONFIG else None
+    if satt:
+        print(f"Leste {', '.join(satt)} fra .env")
+    print(f"KI: {LLM_KONFIG.leverandor} {LLM_KONFIG.modell}" if LLM_KONFIG else "KI: av (sett LLM_PROVIDER, LLM_MODEL og LLM_API_KEY i .env)")
     port = int(os.environ.get("DATAFINNER_PORT", "8010"))
     host = os.environ.get("DATAFINNER_HOST", "127.0.0.1")
     server = ThreadingHTTPServer((host, port), DatafinnerHandler)

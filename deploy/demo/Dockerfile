@@ -25,6 +25,9 @@ COPY src/kunstpixel/core ./src/kunstpixel/core
 COPY src/kunstpixel/adapters/__init__.py src/kunstpixel/adapters/datafinner.py src/kunstpixel/adapters/datafinner_api.py ./src/kunstpixel/adapters/
 COPY src/kunstpixel/adapters/datafinner ./src/kunstpixel/adapters/datafinner
 COPY 05_data/museum.db ./data/museum.db
+COPY 05_data/arbeidsrolle_malgruppe.csv ./05_data/arbeidsrolle_malgruppe.csv
+COPY 05_data/arbeidsflyt_roller.csv ./05_data/arbeidsflyt_roller.csv
+COPY 05_data/arbeidsrolle_opplaering.csv ./05_data/arbeidsrolle_opplaering.csv
 RUN chmod -R a-w /app && chmod 444 /app/data/museum.db
 
 USER 10001:10001

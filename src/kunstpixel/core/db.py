@@ -7,6 +7,8 @@ query normalization, and table/column quoting.
 from __future__ import annotations
 
 import json
+import csv
+import functools
 import os
 import re
 import sqlite3
@@ -32,6 +34,33 @@ FORBIDDEN_SQL_KEYWORDS = {
 }
 
 VALID_ROOM_IDS = ["SAL-A", "SAL-B", "SAL-C", "SAL-D", "SAL-E", "MAG-1"]
+
+@functools.lru_cache(maxsize=1)
+def _get_arbeidsrolle_malgruppe() -> list[dict[str, str]]:
+    path = Path(__file__).resolve().parents[3] / "05_data" / "arbeidsrolle_malgruppe.csv"
+    if not path.is_file():
+        return []
+    with path.open(encoding="utf-8", newline="") as fil:
+        return list(csv.DictReader(fil))
+
+
+@functools.lru_cache(maxsize=1)
+def _get_arbeidsrolle_opplaering() -> list[dict[str, str]]:
+    path = Path(__file__).resolve().parents[3] / "05_data" / "arbeidsrolle_opplaering.csv"
+    if not path.is_file():
+        return []
+    with path.open(encoding="utf-8", newline="") as fil:
+        return list(csv.DictReader(fil))
+
+
+@functools.lru_cache(maxsize=1)
+def _get_bygning_geometri() -> dict[str, Any]:
+    path = Path(__file__).resolve().parents[3] / "06_kart" / "bygning_geometri.json"
+    if not path.is_file():
+        return {}
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
 
 
 def get_db_connection(db_path: Path | str | None = None) -> sqlite3.Connection:
@@ -1235,8 +1264,19 @@ def query_handbook(
         params["hb"] = f"%{hb_clean}%"
 
     if role:
-        clauses.append("(LOWER(malgruppe) LIKE :role OR LOWER(innhold) LIKE :role)")
-        params["role"] = f"%{role.lower().strip()}%"
+        rolle = role.casefold().strip()
+        koblinger = _get_arbeidsrolle_malgruppe()
+        termer = [r["malgruppe_term"] for r in koblinger if r["rolle"].casefold() == rolle]
+        if termer:
+            termer.append("alle ansatte")
+        else:
+            termer = [rolle]
+        rolle_vilkar = []
+        for i, term in enumerate(termer):
+            navn = f"rolle_{i}"
+            rolle_vilkar.append(f"LOWER(malgruppe) LIKE :{navn}")
+            params[navn] = f"%{term}%"
+        clauses.append(f"({' OR '.join(rolle_vilkar)})")
 
     if query:
         # Generic filler words to filter out
@@ -1247,6 +1287,8 @@ def query_handbook(
             "handbok", "håndbok", "handboken", "håndboken", "boken", "boka", "regel", "regler"
         }
         raw_tokens = [tok for tok in re.findall(r"\w+", query.lower()) if len(tok) >= 2]
+        if not raw_tokens:
+            return []
         base_tokens = [t for t in raw_tokens if t not in stop_words] or raw_tokens
 
         # Prepend high-signal museum domain roots for compound words
@@ -2123,8 +2165,15 @@ def query_hr_opplaering_onboarding(
         where.append("lower(kategori) = :kategori")
         params["kategori"] = kategori.strip().lower()
     if rolle and rolle.strip():
-        where.append("lower(rolle) = :rolle")
-        params["rolle"] = rolle.strip().lower()
+        roller = [r["opplaeringsrolle"] for r in _get_arbeidsrolle_opplaering()
+                  if r["rolle"].casefold() == rolle.strip().casefold()]
+        roller = roller or [rolle.strip()]
+        vilkar = []
+        for i, navn in enumerate(roller):
+            key = f"rolle_{i}"
+            vilkar.append(f"rolle = :{key} COLLATE NOCASE")
+            params[key] = navn
+        where.append("(" + " OR ".join(vilkar) + ")")
 
     filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
     sql = f"""
@@ -2140,3 +2189,42 @@ def query_hr_opplaering_onboarding(
         "opplaering": rader,
         "datakilde": "syntetisk (h5_governance_builder): hr_opplaering_onboarding",
     }
+
+
+def query_building_map_data(
+    etasje: int | None = None,
+    sone_type: str | None = None,
+) -> dict[str, Any]:
+    """Henter geometrisk bygningsmodell, etasjer og soner fra 06_kart/bygning_geometri.json.
+
+    Args:
+        etasje: Valgfritt etasjenummer (0 for U1 kjeller, 1 for P1 hovedplan, 2 for P2 galleri).
+        sone_type: Valgfri sonetype ('sikkerhet' eller 'klima').
+
+    Returns:
+        Strukturert oppslag med rom, mål, soner og sensorer.
+    """
+    data = _get_bygning_geometri()
+    if not data:
+        return {"error": "Kartmodell ikke funnet"}
+
+    result: dict[str, Any] = {
+        "museum": data.get("museum"),
+        "datakilde": data.get("datakilde"),
+    }
+
+    if sone_type:
+        sone_key = sone_type.lower()
+        if sone_key in data.get("soner_definisjon", {}):
+            result["soner_definisjon"] = {sone_key: data["soner_definisjon"][sone_key]}
+        else:
+            result["soner_definisjon"] = data.get("soner_definisjon", {})
+    else:
+        result["soner_definisjon"] = data.get("soner_definisjon", {})
+
+    etasjer = data.get("etasjer", [])
+    if etasje is not None:
+        etasjer = [e for e in etasjer if e.get("etasje_nr") == etasje]
+
+    result["etasjer"] = etasjer
+    return result

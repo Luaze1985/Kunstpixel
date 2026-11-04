@@ -90,6 +90,7 @@ ANMELDELSER_CSV = DATA_DIR / "anmeldelser.csv"
 PERSONAS_JSON = DATA_DIR / "arkiv_cv_personas.json"
 INNLEIDE_PERSONER_CSV = DATA_DIR / "arkiv_hr_innleide_personer.csv"
 INNLEIDE_KOMPETANSE_CSV = DATA_DIR / "arkiv_hr_innleide_kompetanse.csv"
+MEDARBEIDERSAMTALER_CSV = DATA_DIR / "arkiv_hr_medarbeidersamtaler.csv"
 PERSONALMAPPER_CSV = DATA_DIR / "arkiv_hr_personalmapper.csv"
 
 HR_DEMO_TABLES = ["hr_rules", "hr_availability", "hr_person_skill", "hr_skills", "hr_people"]
@@ -304,6 +305,21 @@ CREATE TABLE hr_innleide_kompetanse (
     status TEXT NOT NULL,
     datakilde TEXT NOT NULL,
     PRIMARY KEY (innleid_id, skill_code)
+)
+"""
+
+MEDARBEIDERSAMTALER_SQL = """
+CREATE TABLE hr_medarbeidersamtaler (
+    samtale_id TEXT PRIMARY KEY,
+    ansatt_id TEXT NOT NULL REFERENCES hr_ansatte(ansatt_id),
+    dato TEXT NOT NULL,
+    leder_rolle TEXT NOT NULL,
+    samlet_vurdering TEXT NOT NULL CHECK (samlet_vurdering IN ('Overgår', 'Innfrir', 'Delvis', 'Under')),
+    styrker TEXT,
+    utviklingsomrade TEXT,
+    erfaring_notat TEXT,
+    onsker_flere_helgevakter TEXT,
+    datakilde TEXT NOT NULL
 )
 """
 
@@ -957,6 +973,18 @@ def bygg_innleide_personer(con: sqlite3.Connection) -> int:
     return len(rader)
 
 
+def bygg_medarbeidersamtaler(con: sqlite3.Connection) -> int:
+    """Syntetiske medarbeidersamtaler (lag_medarbeidersamtaler.py). Kjøres etter hr_ansatte."""
+    con.execute("DROP TABLE IF EXISTS hr_medarbeidersamtaler")
+    con.execute(MEDARBEIDERSAMTALER_SQL)
+    rader = les_csv(MEDARBEIDERSAMTALER_CSV)
+    felt = ["samtale_id", "ansatt_id", "dato", "leder_rolle", "samlet_vurdering", "styrker", "utviklingsomrade",
+            "erfaring_notat", "onsker_flere_helgevakter", "datakilde"]
+    con.executemany(f"INSERT INTO hr_medarbeidersamtaler VALUES ({','.join('?' * len(felt))})",
+                    [tuple(r[f] for f in felt) for r in rader])
+    return len(rader)
+
+
 def bygg_innleide_kompetanse(con: sqlite3.Connection) -> int:
     """Kurs for innleide, samme form som org_ansatt_kompetanse. Kjøres etter innleide og org_ferdigheter."""
     con.execute("DROP TABLE IF EXISTS hr_innleide_kompetanse")
@@ -1194,6 +1222,7 @@ def bygg(til: Path) -> dict:
             antall_personas = bygg_personas(con)
             antall_innleide = bygg_innleide_personer(con)
             antall_innleide_kompetanse = bygg_innleide_kompetanse(con)
+            antall_medarbeidersamtaler = bygg_medarbeidersamtaler(con)
             antall_personalmapper = bygg_personalmapper(con)
             oppgrader_fremmednokler(con)
             koble_ansattregistre(con)

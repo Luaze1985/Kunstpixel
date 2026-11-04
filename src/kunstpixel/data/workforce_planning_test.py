@@ -15,6 +15,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 DB_HIST_PATH = PROJECT_ROOT / "05_data" / "kunstpixel_historikk.db"
 DB_CORE_PATH = PROJECT_ROOT / "05_data" / "museum.db"
+if not DB_HIST_PATH.exists():
+    DB_HIST_PATH = DB_CORE_PATH
 
 
 def run_scenario_suite():

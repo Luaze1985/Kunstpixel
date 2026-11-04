@@ -102,6 +102,7 @@ def test_kontroll_finner_overlapp_med_registrert_vakt() -> None:
     assert res["resultater"][0]["status"] == "avvik"
     assert any("Overlapper" in f for f in res["resultater"][0]["funn"])
     assert res["hviletid_krav_timer"] == 11.0
+    assert vaktrom.get_staffing_candidates(**VAKT)["vaktlengde_timer"] == 8.0
 
 
 def test_kontroll_av_innleide_sjekker_kurs_men_ikke_vakter() -> None:
@@ -240,3 +241,48 @@ def test_sidene_finnes(server: str) -> None:
     for sti, tekst in (("/vaktrom", b"Mine kontaktutkast"), ("/arena", b"Grensemodus"), ("/", b"Arbeidsflater")):
         with urllib.request.urlopen(server + sti, timeout=20) as res:
             assert res.status == 200 and tekst in res.read()
+
+
+# ---------- bytte, overtakelse, ansattsøk og medarbeidersamtaler ----------
+
+def test_bytte_som_gaar_i_orden_begge_veier() -> None:
+    r = vaktrom.check_shift_swap("VAKT-0054463", "VAKT-0054464")  # Frida Lund (Sal B) mot Maren Strand (Sal C), 2026-11-01
+    assert r["status"] == "ok"
+    assert [x["navn"] for x in r["retninger"]] == ["Frida Lund", "Maren Strand"]
+
+
+def test_bytte_med_avvik_bare_den_ene_veien() -> None:
+    r = vaktrom.check_shift_swap("VAKT-0054457", "VAKT-0054463")  # Astrid Moen (resepsjon) mot Frida Lund (Sal B)
+    assert r["status"] == "avvik"
+    astrid, frida = r["retninger"]
+    assert astrid["status"] == "ok" and frida["status"] == "avvik"
+    assert "kasse" in frida["funn"][0]
+
+
+def test_bytte_teller_ikke_vakten_man_gir_fra_seg() -> None:
+    """Uten unntak ville personen «overlappe» med sin egen gamle vakt når vaktene er samtidige."""
+    r = vaktrom.check_shift_swap("VAKT-0054463", "VAKT-0054464")
+    assert not any("Overlapper" in f for x in r["retninger"] for f in x["funn"])
+
+
+def test_overtakelse_og_feil_input() -> None:
+    t = vaktrom.check_shift_takeover("VAKT-0054457", "KP-ANS-153")
+    assert t["status"] == "avvik" and t["tar_over"]["navn"] == "Sindre Lindqvist" and "kasse" in t["funn"][0]
+    with pytest.raises(ValueError):
+        vaktrom.check_shift_takeover("VAKT-9999999", "KP-ANS-153")
+    with pytest.raises(ValueError):
+        vaktrom.check_shift_swap("VAKT-0054463", "VAKT-0054463")
+
+
+def test_finn_ansatt_paa_stilling_med_ansiennitet() -> None:
+    hr = vaktrom.find_employee("HR", per_dato="2026-11-01")
+    aktive = [x["ansatt_id"] for x in hr if x["aktiv"]]
+    assert aktive == ["KP-ANS-025", "KP-ANS-109", "KP-ANS-126"]
+    assert all("Christian" not in x["navn"] or "HR" in x["stilling"] for x in hr), "ikke treff midt i ord"
+    assert hr[0]["ansiennitet_aar"] >= 0 and "epost" in hr[0]
+
+
+def test_medarbeidersamtaler_for_en_ansatt() -> None:
+    r = vaktrom.get_employee_reviews("KP-ANS-153")
+    assert r["antall"] >= 1 and r["samtaler"][0]["navn"] == "Sindre Lindqvist"
+    assert r["samtaler"][0]["samlet_vurdering"] in ("Overgår", "Innfrir", "Delvis", "Under")

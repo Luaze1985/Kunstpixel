@@ -1,20 +1,18 @@
 # HUSKELAPP FOR LARS (CHEATSHEET)
-*Prosjekt: Kunstpixel | Sist oppdatert: 2026-10-31*
+*Prosjekt: Kunstpixel / Aura Museum | Sist oppdatert: 2026-11-01 00:20*
 
 ## 1. Hva vi gjorde sist
-- **Arenaen er klar til testing:** siden `/arena` har 19 caser (bemanning, tidsbruk, GDPR, økonomi, publikum og Drift og bunnlinje D1–D5).
-- **Databasen er bygd** (skjema 7): publikumsdata (2 040 anmeldelser, kafésalg), 14 roller (inkl. Kafeansvarlig og Kommunikasjon) og krav per stasjon.
-- **Grønt:** full testpakke og statusporten (KLAR, 0 feil). D1–D5 er kjørt gjennom den ekte serveren.
+- **Minimalistiske plantegninger for Aura Museum:** Bygget helt rene, enkle og lesbare SVG-tegninger (U1, P1, P2) for Bispegata 9B i Trondheim uten teknisk støy, med fargekodede rom og romliste.
+- **2.5D Kartviser og SSOT:** `06_kart/index.html` og `bygning_geometri.json` v2.0 er koblet sammen. 44 av 44 tester er 100 % grønne i `tests/test_building_map.py`.
 
 ## 2. Hvor vi slapp
-- Grenen `arena` (ikke pushet). Alt er committet.
-- Ikke gjort ennå: kafé- og anmeldelsescasene (dataene ligger nå i databasen), bemanningsmotoren (oppgave 08–09) og merking av `datakilde` på HR-tabellene.
+- Alt i `06_kart/` er ferdigstilt, minimalistisk og verifisert. Webviseren kjører lokalt på port 8085 (`http://localhost:8085`).
 
 ## 3. Første oppgave neste gang du setter deg ned
-- **Test arenaen selv:** start serveren, åpne http://127.0.0.1:8010/arena og klikk Kjør på hver case. Noter alt som skurrer eller er uforståelig, så rettes det.
+- **Inspiser i nettleser:** Åpne `http://localhost:8085` (fanen «2D Blueprint») og sjekk at layouten føles like rolig og enkel som ønsket.
+- **Commit i git:** Lagre endringene i `06_kart/`, `tests/test_building_map.py` og `build_map.py` til git på en ryddig commit.
 
-## 4. Nyttige snarveier
-- **Arenaen:** `py -3.13 src/kunstpixel/adapters/datafinner.py`
-- **Intern assistent:** `py -3.13 src/kunstpixel/adapters/intern_hub.py` (http://127.0.0.1:8001)
-- **Alle tester:** `py -3.13 -m pytest -q` · **Portvakt:** `py -3.13 scripts/db_status_gate.py`
-- **Casene (rediger tekst):** `04_knowledge/07_arena/caser.yaml`
+## 4. Nyttige snarveier for dette prosjektet
+- Start kartviser: `py -3.13 -m http.server 8085 --directory 06_kart`
+- Re-kompiler kart & tegninger: `py -3.13 06_kart/build_map.py`
+- Kjør karttester: `py -3.13 -m pytest tests/test_building_map.py -q`

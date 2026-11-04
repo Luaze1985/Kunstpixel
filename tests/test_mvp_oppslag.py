@@ -117,7 +117,6 @@ def test_1_datafinner_kan_sla_opp_i_handbokene() -> None:
 
 # ---------- 2 Ingen treff = ingen AI-kall ----------
 
-@VENTER_PA_04
 def test_2_ingen_treff_gir_ingen_kilde_og_ingen_ai(bygget_db: Path) -> None:
     lev = FalskLeverandor()
     res = _oppslag().svar(TULL, KONFIG, llm.Begrenser(20), apne=lev, db_path=bygget_db)
@@ -129,7 +128,6 @@ def test_2_ingen_treff_gir_ingen_kilde_og_ingen_ai(bygget_db: Path) -> None:
 
 # ---------- 3 AI kan bare vise til punktene den fikk ----------
 
-@VENTER_PA_04
 def test_3_ukjent_punkt_i_ai_svaret_blir_flagget() -> None:
     punkter = [{"punkt_id": "PERSONAL-5.2", "avsnitt_tittel": "Egenmeldingsregler", "innhold": "Egenmelding ..."}]
     lev = FalskLeverandor("Du kan bruke egenmelding (PERSONAL-5.2). Se også PERSONAL-99.9.")
@@ -140,7 +138,6 @@ def test_3_ukjent_punkt_i_ai_svaret_blir_flagget() -> None:
     assert len(lev.kall) == 1
 
 
-@VENTER_PA_04
 def test_3_ai_far_bare_sporsmalet_og_treffene(bygget_db: Path) -> None:
     lev = FalskLeverandor("Se PERSONAL-5.2.")
     res = _oppslag().svar("egenmelding", KONFIG, llm.Begrenser(20), apne=lev, db_path=bygget_db)
@@ -154,7 +151,6 @@ def test_3_ai_far_bare_sporsmalet_og_treffene(bygget_db: Path) -> None:
 
 # ---------- 4 Taket på AI-kall holder ----------
 
-@VENTER_PA_04
 def test_4_sporsmal_21_i_timen_stoppes_men_treffene_vises(bygget_db: Path) -> None:
     tid = [0.0]
     begrenser = llm.Begrenser(20, klokke=lambda: tid[0])
@@ -175,7 +171,6 @@ def test_4_standardtaket_er_20() -> None:
     assert konfig is not None and konfig.maks_per_time == 20
 
 
-@VENTER_PA_04
 @pytest.mark.parametrize("verdi", ["0", "-5"])
 def test_4_ugyldig_tak_stopper_oppstarten(verdi: str) -> None:
     with pytest.raises(ValueError):
@@ -184,14 +179,12 @@ def test_4_ugyldig_tak_stopper_oppstarten(verdi: str) -> None:
 
 # ---------- 5 Siden virker uten AI ----------
 
-@VENTER_PA_04
 def test_5_uten_ai_vises_treffene(bygget_db: Path) -> None:
     res = _oppslag().svar("egenmelding", None, None, db_path=bygget_db)
     assert res["status"] == "ai_av"
     assert res["treff"] and res["ai"] is None
 
 
-@VENTER_PA_04
 def test_5_feil_hos_claude_gir_likevel_treffene(bygget_db: Path) -> None:
     def nede(foresporsel, timeout=None):
         raise urllib.error.URLError("nede")

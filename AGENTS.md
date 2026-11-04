@@ -141,6 +141,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode man
 33. `get_governance_history(query, kategori, periode)`
     - Kvantitativ og kvalitativ styringshistorikk (publikum, økonomi, HMS, bemanning og hendelser 2021–2025).
 
+### Kart & Dataleveranser (3 read-only verktøy i `src/mcp_server.py`):
+34. `get_building_map_data(etasje, sone_type)`
+    - Geometrisk bygningsmodell, etasjer og soner for Aura Museum (06_kart).
+35. `list_colab_inbox_deliveries()`
+    - Lister innkommende leveranser og notatblokker fra Google Colab i `01_inbox/incoming`.
+36. `verify_colab_dataset(delivery_name)`
+    - Verifiserer sjekksummen for en innkommende Colab-leveranse via SHA-256.
 
 ---
 
@@ -202,3 +209,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode man
 - Alle nye data har `datakilde` som starter med «syntetisk». `tests/test_data_csv.py` vokter CSV-filene (komma i tekst må stå i anførselstegn).
 - Åpent API og valgfritt KI-lag (av som standard, alltid merket AI-forslag): `docs/DATAFINNER_API.md`. Hosting på VPS: `deploy/demo/README.md`.
 - Bruk `mcp==1.29.1`. Versjon 2.x brøt Datafinner.
+
+###Hurtigveiviser (0-LLM API, Kontrollcaser & Google Drive-git)
+- **0-LLM rapporter & verktøyskjema:** Ligger i `src/kunstpixel/adapters/datafinner_api.py` (`SPORSMAL` har 16 maler, `lag_rapport(sporsmal_id, args, datafinner.run_tool)`, og `verktoyskjema(datafinner.VERKTOY)` eksponerer 45 hvitelistede verktøy med JSON Schema).
+- **0-LLM bemanning, oppslag & HR-caser:** `bemanning.foreslaa(dato, None, None)` returnerer `deterministisk_forslag` og `kontroll`; `oppslag.svar(sporsmal, None, None)` returnerer `treff` med `status="ai_av"`; `hr_cases.discover_hr_cases(sok)` returnerer `{"caser": [...], "neste_verktoy": ...}`.
+- **Låst kontrollcase for tom personalmappe (`KP-ANS-155`):** Stine Haugen (`KP-ANS-155`) skal alltid ha `0` saker i `05_data/arkiv_hr_personalmapper.csv` (voktet av `tests/test_hr_case_discovery.py` og `chat_eval.yaml` oppgave `A5`), og alle rader i personalmappen må ha `gradering="LEDER_FORTROLIG"`.
+- **Google Drive `.git`-støy:** Hvis `git log --all` eller `git branch -a` klager på `desktop.ini`, kjør `Get-ChildItem .git -Recurse -Force -Filter "desktop.ini" | Remove-Item -Force`.

@@ -94,7 +94,9 @@ def test_rapporten_er_deterministisk_og_har_regel_og_merker(server: str, sporsma
 
 def test_vaktplanen_telles_for_regelen(server: str) -> None:
     _, r = _get(_rapport_url(server, "vaktplan", EKSEMPEL_ARGS["vaktplan"]))
-    assert r["regelverdier"] == {"antall_vakter": len(r["fakta"])}
+    assert r["regelverdier"]["antall_vakter"] == len(r["fakta"])
+    assert r["regelverdier"]["antall_stasjoner"] == len({v["stasjon"] for v in r["fakta"]})
+    assert r["regelverdier"]["timer_totalt"] == round(sum(float(v["timer"]) for v in r["fakta"]), 2)
 
 
 def test_ukjent_sporsmal_og_ukjent_argument_gir_400(server: str) -> None:

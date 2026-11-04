@@ -193,6 +193,7 @@ def test_tallkontroll_godtar_avrunding_men_ikke_andre_tall() -> None:
     assert llm.tallkontroll("Fravær 5,7 %.", {"f": 5.64})["ok"] is False
     assert llm.tallkontroll("Rundt 806 738 kr.", {"k": 806738.43})["ok"] is True
     assert llm.tallkontroll("Ingen tall her.", {"k": 1})["ok"] is True
+    assert llm.tallkontroll("Underskudd på 511 832 kr.", {"netto_resultat_nok": -511832})["ok"] is True
 
 
 # ---------- begrensning ----------

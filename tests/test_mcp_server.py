@@ -308,4 +308,15 @@ class TestSearchHmsGuidanceTool:
         for item in res:
             assert "lederansvar" in item["tema"].lower()
 
+class TestMcpReadOnlyCompliance:
+    """Verifies that mcp_server is strictly read-only and does not expose mutating tools."""
+
+    def test_mcp_tools_are_strictly_read_only(self):
+        from src.kunstpixel.core.mcp_server import mcp
+        tool_names = [t.name for t in mcp._tool_manager.list_tools()]
+        assert "dispatch_colab_data_order" not in tool_names
+        assert "ingest_colab_dataset" not in tool_names
+        assert "verify_colab_dataset" in tool_names
+        assert "list_colab_inbox_deliveries" in tool_names
+        assert "get_building_map_data" in tool_names
 

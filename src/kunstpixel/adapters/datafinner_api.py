@@ -46,7 +46,15 @@ SPORSMAL: dict[str, dict[str, Any]] = {
 def regelverdier(sporsmal_id: str, fakta: Any) -> dict[str, float]:
     """Tallene fra svaret som reglene sammenlignes mot. Vaktplanen er en liste, så den telles."""
     if sporsmal_id == "vaktplan":
-        return {"antall_vakter": len(fakta) if isinstance(fakta, list) else 0}
+        if not isinstance(fakta, list):
+            return {"antall_vakter": 0, "antall_stasjoner": 0, "timer_totalt": 0.0}
+        stasjoner = {r.get("stasjon") for r in fakta if isinstance(r, dict) and r.get("stasjon")}
+        timer = round(sum(float(r.get("timer") or 0) for r in fakta if isinstance(r, dict)), 2)
+        return {
+            "antall_vakter": len(fakta),
+            "antall_stasjoner": len(stasjoner),
+            "timer_totalt": timer,
+        }
     if isinstance(fakta, dict):
         return {k: v for k, v in fakta.items() if isinstance(v, (int, float)) and not isinstance(v, bool)}
     return {}

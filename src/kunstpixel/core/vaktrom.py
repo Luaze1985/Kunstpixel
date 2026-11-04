@@ -15,6 +15,7 @@ pris uten tillegg innenfor hver gruppe og lar et menneske velge.
 
 from __future__ import annotations
 
+import re
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -122,7 +123,8 @@ def get_staffing_candidates(
     Fravær gir «utilgjengelig» med fraværstypen.
     """
     dag = _dato(dato).isoformat()
-    _intervall(_dato(dato), start, slutt)
+    vakt_fra, vakt_til = _intervall(_dato(dato), start, slutt)
+    vaktlengde = round((vakt_til - vakt_fra).total_seconds() / 3600, 2)
     ett_aar_for = (_dato(dato) - timedelta(days=365)).isoformat()
     with db.get_db_connection(db_path) as con:
         krav = _krav_med_navn(con, stasjon)
@@ -192,7 +194,7 @@ def get_staffing_candidates(
     for i, r in enumerate(egne + innleide, start=1):
         r["nr"] = i
     return {
-        "stasjon": stasjon, "dato": dag, "start": start, "slutt": slutt, "krav": krav,
+        "stasjon": stasjon, "dato": dag, "start": start, "slutt": slutt, "vaktlengde_timer": vaktlengde, "krav": krav,
         "egne": egne, "innleide": innleide, "utilgjengelige": utilgjengelige,
         "antall_egne": len(egne), "antall_innleide": len(innleide), "antall_utilgjengelige": len(utilgjengelige),
         "sortering": "Egne ansatte først, så innleide. Innenfor hver gruppe lavest timepris uten tillegg. Ukjent pris sist.",
@@ -201,9 +203,14 @@ def get_staffing_candidates(
 
 
 def check_staffing_selection(
-    stasjon: str, dato: str, start: str, slutt: str, ids: list[str], db_path: Path | str | None = None
+    stasjon: str, dato: str, start: str, slutt: str, ids: list[str], db_path: Path | str | None = None,
+    unnta_vakter: list[str] | None = None,
 ) -> dict[str, Any]:
-    """Kontroller valgte kandidater: kompetanse, fravær, overlapp og hviletid mot registrerte vakter."""
+    """Kontroller valgte kandidater: kompetanse, fravær, overlapp og hviletid mot registrerte vakter.
+
+    `unnta_vakter`: vakter som ikke teller (vakten en person gir fra seg i et bytte).
+    """
+    unntatt = set(unnta_vakter or [])
     if not ids:
         raise ValueError("Velg minst én kandidat.")
     d = _dato(dato)
@@ -240,6 +247,8 @@ def check_staffing_selection(
                 (pid, (d - timedelta(days=1)).isoformat(), (d + timedelta(days=1)).isoformat()),
             ).fetchall()
             for v in vakter:
+                if v["vakt_id"] in unntatt:
+                    continue
                 a, b = _intervall(date.fromisoformat(v["dato"]), v["start"], v["slutt"])
                 if a < ny_b and ny_a < b:
                     funn.append(f"Overlapper med registrert vakt {v['vakt_id']} ({v['dato']} {v['start']}–{v['slutt']}, {v['stasjon']}).")
@@ -257,6 +266,101 @@ def check_staffing_selection(
         "hviletid_krav_timer": hvile, "dognmaks_timer": dognmaks,
         "resultater": resultater, "merknad": MERKNAD_KONTROLL,
     }
+
+
+def _vakt(con: Any, vakt_id: str) -> dict[str, Any]:
+    rad = con.execute(
+        "SELECT v.vakt_id, v.ansatt_id, a.navn, v.dato, v.start, v.slutt, v.stasjon FROM hr_vakter v "
+        "JOIN hr_ansatte a ON a.ansatt_id = v.ansatt_id WHERE v.vakt_id = ?", (str(vakt_id).strip().upper(),)
+    ).fetchone()
+    if rad is None:
+        raise ValueError(f"Finner ingen vakt med ID {vakt_id}. Bruk get_shifts_for_date for å finne vakt-ID.")
+    if not rad["start"] or not rad["slutt"]:
+        raise ValueError(f"Vakten {vakt_id} mangler klokkeslett og kan ikke kontrolleres.")
+    return dict(rad)
+
+
+def _navn(con: Any, ansatt_id: str) -> str:
+    rad = con.execute("SELECT navn FROM hr_ansatte WHERE ansatt_id = ?", (ansatt_id,)).fetchone()
+    if rad is None:
+        raise ValueError(f"Finner ingen ansatt med ID {ansatt_id}.")
+    return rad[0]
+
+
+def check_shift_takeover(vakt_id: str, ansatt_id: str, db_path: Path | str | None = None) -> dict[str, Any]:
+    """Kan en ansatt ta over en registrert vakt? Kurs, fravær, overlapp, hviletid og døgnmaks for den som tar over."""
+    with db.get_db_connection(db_path) as con:
+        v = _vakt(con, vakt_id)
+        ny = str(ansatt_id).strip().upper()
+        navn = _navn(con, ny)
+    if ny == v["ansatt_id"]:
+        raise ValueError(f"{navn} har allerede vakten {v['vakt_id']}.")
+    k = check_staffing_selection(v["stasjon"], v["dato"], v["start"], v["slutt"], [ny], db_path)
+    return {"vakt": v, "tar_over": {"ansatt_id": ny, "navn": navn}, "status": k["resultater"][0]["status"],
+            "funn": k["resultater"][0]["funn"], "hviletid_krav_timer": k["hviletid_krav_timer"], "merknad": MERKNAD_KONTROLL}
+
+
+def check_shift_swap(vakt_a: str, vakt_b: str, db_path: Path | str | None = None) -> dict[str, Any]:
+    """Bytte mellom to registrerte vakter: hver person tar den andres vakt og gir fra seg sin egen.
+
+    Begge retninger sjekkes. Vakten personen gir fra seg teller ikke i overlapp og hviletid.
+    """
+    with db.get_db_connection(db_path) as con:
+        va, vb = _vakt(con, vakt_a), _vakt(con, vakt_b)
+    if va["ansatt_id"] == vb["ansatt_id"]:
+        raise ValueError("Begge vaktene tilhører samme person. Et bytte trenger to personer.")
+    retninger = []
+    for gir, tar in ((va, vb), (vb, va)):
+        k = check_staffing_selection(tar["stasjon"], tar["dato"], tar["start"], tar["slutt"], [gir["ansatt_id"]], db_path,
+                                     unnta_vakter=[gir["vakt_id"]])
+        r = k["resultater"][0]
+        retninger.append({"ansatt_id": gir["ansatt_id"], "navn": gir["navn"], "gir_fra_seg": gir["vakt_id"],
+                          "tar": tar["vakt_id"], "status": r["status"], "funn": r["funn"]})
+    return {"vakt_a": va, "vakt_b": vb, "retninger": retninger,
+            "status": "ok" if all(r["status"] == "ok" for r in retninger) else "avvik",
+            "hviletid_krav_timer": k["hviletid_krav_timer"], "merknad": MERKNAD_KONTROLL}
+
+
+def find_employee(sok: str, per_dato: str | None = None, db_path: Path | str | None = None, maks_treff: int | None = 15) -> list[dict[str, Any]]:
+    """Finn ansatte på navn, ID, stilling eller avdeling. Med ansettelsesdato, ansiennitet, kontaktinfo og kurs."""
+    s = str(sok or "").strip()
+    if not s:
+        raise ValueError("Oppgi navn, ansatt-ID, stilling eller avdeling.")
+    per = _dato(per_dato) if per_dato else date.today()
+    # Treff på starten av et ord i navn, stilling eller avdeling («HR» finner HR-rådgivere, ikke «Christian»).
+    ord_start = re.compile(r"(?<![0-9a-zæøåA-ZÆØÅ])" + re.escape(s), re.IGNORECASE)
+    with db.get_db_connection(db_path) as con:
+        alle = con.execute(
+            "SELECT ansatt_id, navn, stilling, avdeling, ansatt_fra, ansatt_til, stillingsprosent, epost, telefon FROM hr_ansatte "
+            "ORDER BY (ansatt_til IS NOT NULL AND ansatt_til != ''), ansatt_id"
+        ).fetchall()
+        rader = [r for r in alle if r["ansatt_id"] == s.upper()
+                 or any(ord_start.search(r[f] or "") for f in ("navn", "stilling", "avdeling"))][:maks_treff]
+        navn = dict(con.execute("SELECT skill_code, navn FROM org_ferdigheter").fetchall())
+        ut = []
+        for r in rader:
+            fra = date.fromisoformat(r["ansatt_fra"])
+            kurs = [{"kurs": navn.get(k["skill_code"], k["skill_code"]), "gyldig_til": k["gyldig_til"], "status": k["status"]}
+                    for k in con.execute("SELECT skill_code, gyldig_til, status FROM org_ansatt_kompetanse WHERE ansatt_id = ? "
+                                         "ORDER BY skill_code", (r["ansatt_id"],))]
+            aktiv = not r["ansatt_til"] or r["ansatt_til"] >= per.isoformat()
+            ut.append({**dict(r), "aktiv": aktiv, "ansiennitet_aar": max(0, (per - fra).days // 365), "kurs": kurs})
+    return ut
+
+
+def get_employee_reviews(ansatt_id: str, db_path: Path | str | None = None) -> dict[str, Any]:
+    """Medarbeidersamtalene til én ansatt (søk på ID eller navn), nyeste først."""
+    s = str(ansatt_id or "").strip()
+    if not s:
+        raise ValueError("Oppgi ansatt-ID eller navn.")
+    with db.get_db_connection(db_path) as con:
+        rader = [dict(r) for r in con.execute(
+            "SELECT m.samtale_id, m.ansatt_id, a.navn, a.stilling, m.dato, m.leder_rolle, m.samlet_vurdering, m.styrker, "
+            "m.utviklingsomrade, m.erfaring_notat, m.onsker_flere_helgevakter FROM hr_medarbeidersamtaler m "
+            "JOIN hr_ansatte a ON a.ansatt_id = m.ansatt_id WHERE m.ansatt_id = ? OR lower(a.navn) LIKE ? "
+            "ORDER BY m.dato DESC", (s.upper(), f"%{s.lower()}%"),
+        )]
+    return {"sok": s, "antall": len(rader), "samtaler": rader}
 
 
 # ---------------------------------------------------------------------------

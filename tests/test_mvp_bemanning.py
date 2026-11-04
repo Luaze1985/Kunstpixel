@@ -138,7 +138,6 @@ def test_b1_alle_stasjoner_i_vaktplanen_har_krav_som_finnes(bygget_db: Path) -> 
 
 # ---------- B2 «Egnet» betyr egnet ----------
 
-@VENTER_PA_08
 def test_b2_alle_som_merkes_egnet_er_aktive_til_stede_og_har_gyldige_kurs(bygget_db: Path) -> None:
     aktive, borte = set(_aktive(bygget_db)), set(_fravaerende(bygget_db, DATO))
     egnede_totalt = 0
@@ -155,7 +154,6 @@ def test_b2_alle_som_merkes_egnet_er_aktive_til_stede_og_har_gyldige_kurs(bygget
     assert egnede_totalt > 0
 
 
-@VENTER_PA_08
 def test_b2_vurder_ansatt_gir_fravaer_uten_arsak(bygget_db: Path) -> None:
     borte = _fravaerende(bygget_db, DATO)[0]
     stasjon = _vakter(bygget_db, DATO)[0][0]
@@ -168,7 +166,6 @@ def test_b2_vurder_ansatt_gir_fravaer_uten_arsak(bygget_db: Path) -> None:
 
 # ---------- B3 Kontrollen avviser feil forslag ----------
 
-@VENTER_PA_08
 def test_b3_ukjent_sluttet_og_fravaerende_avvises(bygget_db: Path) -> None:
     vakter = _vakter(bygget_db, DATO)
     sluttet = _sql(bygget_db, "SELECT ansatt_id FROM hr_ansatte WHERE status = 'Sluttet' LIMIT 1")[0][0]
@@ -181,7 +178,6 @@ def test_b3_ukjent_sluttet_og_fravaerende_avvises(bygget_db: Path) -> None:
     assert "FRAVAER" in _grunner(kontroll, vakter[2][0])
 
 
-@VENTER_PA_08
 def test_b3_manglende_eller_utlopt_kurs_avvises(bygget_db: Path) -> None:
     for stasjon, *_ in _vakter(bygget_db, DATO):
         krav = _bemanning().krav(stasjon, db_path=bygget_db)
@@ -193,7 +189,6 @@ def test_b3_manglende_eller_utlopt_kurs_avvises(bygget_db: Path) -> None:
     pytest.fail("fant ingen aktiv ansatt som mangler kurs for noen stasjon")
 
 
-@VENTER_PA_08
 def test_b3_samme_person_pa_to_vakter_samtidig_avvises(bygget_db: Path) -> None:
     vakter = _vakter(bygget_db, DATO)
     (s1, _, start1, slutt1), (s2, _, start2, slutt2) = next(
@@ -204,7 +199,6 @@ def test_b3_samme_person_pa_to_vakter_samtidig_avvises(bygget_db: Path) -> None:
     assert "DOBBELTBOOKET" in _grunner(kontroll, s1) | _grunner(kontroll, s2)
 
 
-@VENTER_PA_08
 def test_b3_for_kort_hviletid_etter_kveldsvakt_avvises(bygget_db: Path) -> None:
     for ansatt_id, dag in _sql(bygget_db, """SELECT v.ansatt_id, v.dato FROM hr_vakter v JOIN hr_ansatte a USING (ansatt_id)
                                             WHERE v.slutt >= '23:00' AND v.aar = '2026' AND a.status != 'Sluttet'
@@ -220,7 +214,6 @@ def test_b3_for_kort_hviletid_etter_kveldsvakt_avvises(bygget_db: Path) -> None:
 
 # ---------- B4 Fraværsårsak og navn går aldri til AI ----------
 
-@VENTER_PA_09
 def test_b4_ai_far_ikke_navn_eller_fravaersarsak(bygget_db: Path) -> None:
     lev = FalskLeverandor(json.dumps({"forslag": {}}))
     _bemanning().foreslaa(DATO, KONFIG, llm.Begrenser(20), apne=lev, db_path=bygget_db)
@@ -236,7 +229,6 @@ def test_b4_ai_far_ikke_navn_eller_fravaersarsak(bygget_db: Path) -> None:
 
 # ---------- B5 AI-forslaget kontrolleres og må godkjennes ----------
 
-@VENTER_PA_09
 def test_b5_ai_forslag_med_feil_person_blir_stoppet_av_kontrollen(bygget_db: Path) -> None:
     vakter = _vakter(bygget_db, DATO)
     sluttet = _sql(bygget_db, "SELECT ansatt_id FROM hr_ansatte WHERE status = 'Sluttet' LIMIT 1")[0][0]
@@ -252,7 +244,6 @@ def test_b5_ai_forslag_med_feil_person_blir_stoppet_av_kontrollen(bygget_db: Pat
 
 # ---------- B6 Uten AI vises et forslag som består kontrollen ----------
 
-@VENTER_PA_09
 def test_b6_uten_ai_finnes_et_forslag_som_bestar_kontrollen(bygget_db: Path) -> None:
     res = _bemanning().foreslaa(DATO, None, None, db_path=bygget_db)
     assert res["status"] == "ai_av" and res["ai"] is None

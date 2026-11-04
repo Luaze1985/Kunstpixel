@@ -1,0 +1,21 @@
+{
+  "bestilling_id": "order_personalmapper_163",
+  "opprettet_tidspunkt": "2026-11-03T22:35:22.115592",
+  "antall_rader": 162,
+  "feltnavn": [
+    "saksnr",
+    "ansatt_id",
+    "navn",
+    "opprettet_dato",
+    "kategori",
+    "tittel",
+    "innhold_fortrolig",
+    "gradering",
+    "saksbehandler_rolle",
+    "datakilde"
+  ],
+  "kilde": "Google Colab FastMCP Dyp Datagenerator (100% unike saksforløp)",
+  "godkjent_av_validering": true,
+  "kategorier_totalt": 12,
+  "beskrivelse": "Dype, naturalistiske og faglig forankrede personalmapper for samtlige ansatte."
+}

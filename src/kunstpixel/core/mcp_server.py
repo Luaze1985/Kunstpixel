@@ -54,6 +54,7 @@ from src.kunstpixel.core.db import (
     query_arbeidsoppgaver_tidsbruk,
     query_historikk_2010_2026,
     query_hr_opplaering_onboarding,
+    query_building_map_data,
 )
 from src.kunstpixel.core.hr_eval import evaluate_staffing_proposal
 from src.kunstpixel.core.hrdemo import (
@@ -908,6 +909,39 @@ def search_hr_onboarding(
         Opplæringsmoduler, faser, aktiviteter og ansvarlig rolle.
     """
     return query_hr_opplaering_onboarding(kategori=kategori, rolle=rolle)
+
+
+
+@mcp.tool()
+def get_building_map_data(
+    etasje: int | None = None,
+    sone_type: str | None = None,
+) -> dict[str, Any]:
+    """Hent geometrisk bygningsmodell, etasjer og soner for Aura Museum (06_kart).
+
+    Args:
+        etasje: Valgfritt etasjenummer (0 for U1 kjeller, 1 for P1 hovedplan, 2 for P2 galleri).
+        sone_type: Valgfri sonetype ('sikkerhet' for S1-S4 eller 'klima' for K1-K3).
+
+    Returns:
+        Strukturert oppslag med rom, mål, soner og sensorer.
+    """
+    return query_building_map_data(etasje=etasje, sone_type=sone_type)
+
+
+
+@mcp.tool()
+def list_colab_inbox_deliveries() -> list[dict[str, Any]]:
+    """Lister alle innkommende leveranser og notatblokker fra Google Colab i 01_inbox/incoming."""
+    from src.kunstpixel.core.colab_bridge import list_colab_deliveries
+    return list_colab_deliveries()
+
+
+@mcp.tool()
+def verify_colab_dataset(delivery_name: str) -> dict[str, Any]:
+    """Verifiserer sjekksummen for en innkommende Colab-leveranse via MCP."""
+    from src.kunstpixel.core.colab_bridge import verify_colab_delivery
+    return verify_colab_delivery(delivery_name)
 
 
 if __name__ == "__main__":

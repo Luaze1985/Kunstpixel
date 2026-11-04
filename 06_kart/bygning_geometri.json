@@ -1,0 +1,813 @@
+{
+  "datakilde": "syntetisk (Aura Museum bygningsgeometri, NS 8351, NS 3940 og DiBK brannkonsept)",
+  "versjon": "2.0",
+  "museum": {
+    "navn": "Aura Museum",
+    "adresse": "Bispegata 9B, 7012 Trondheim",
+    "fiktiv_adresse": "Bispegata 9B, 7012 Trondheim",
+    "kommune": "Trondheim (5001)",
+    "kommunenummer": "5001",
+    "matrikkel": {
+      "kommune": "Trondheim (5001)",
+      "kommunenummer": "5001",
+      "gnr": 401,
+      "bnr": 12,
+      "lokalid": "279106015",
+      "adresse": "Bispegata 9B, 7012 Trondheim",
+      "koordinater": {
+        "lat": 63.4273687,
+        "lon": 10.3914082,
+        "projeksjon": "WGS84 / ETRS89"
+      },
+      "kote_terreng_moh": 13.27,
+      "kote_p1_fg_moh": 13.50,
+      "kote_u1_fg_moh": 9.30,
+      "kote_p2_fg_moh": 19.80,
+      "kote_gesims_moh": 24.90
+    },
+    "georeferanse": {
+      "lat": 63.4273687,
+      "lon": 10.3914082,
+      "moh": 13.27,
+      "gnr_bnr": "401/12",
+      "lokalid": "279106015"
+    },
+    "kotehoyder": {
+      "kote_terreng_moh": 13.27,
+      "kote_p1_fg_moh": 13.50,
+      "kote_u1_fg_moh": 9.30,
+      "kote_p2_fg_moh": 19.80,
+      "kote_gesims_moh": 24.90
+    },
+    "arealer_ns3940": {
+      "bta_m2": 4350,
+      "bra_m2": 3920,
+      "bya_m2": 1450,
+      "tomteareal_m2": 3200,
+      "utnyttelsesgrad_prosent_bya": 45.3,
+      "etasjefordeling_bra": {
+        "U1": 1300,
+        "P1": 1310,
+        "P2": 1310
+      },
+      "etasjefordeling_bta": {
+        "U1": 1450,
+        "P1": 1450,
+        "P2": 1450
+      }
+    },
+    "brannkonsept": {
+      "brannklasse": "BKL 3",
+      "risikoklasse": "RKL 5",
+      "baeresystem": "R 90",
+      "etasjeskiller": "REI 90 / REI 120",
+      "seksjonering": "EI 60",
+      "slokkesystem": "Pre-action vanntåke/sprinkler i publikumsarealer (S1, S2, S3), Inergen inertgasslukking i Magasin 1 (MAG-1), Kunstmottak (VER-1) og Teknisk sentral (TEK-1)",
+      "slokking": "Pre-action vanntåke/sprinkler i publikumsarealer (S1, S2, S3), Inergen inertgasslukking i Magasin 1 (MAG-1), Kunstmottak (VER-1) og Teknisk sentral (TEK-1)",
+      "alarmanlegg": "Kategori 2 heldekkende med direktevarsling 110-sentral",
+      "romning": "Brannsikre rømningstrapper EI-60 og direkte nødutganger til terreng/Marinen/Nidelva"
+    },
+    "veggtykkelser_mm": {
+      "yttervegg_1912_fløy": 400,
+      "yttervegg_2016_tilbygg": 300,
+      "innvendig_baerevegg": 200,
+      "innvendig_lettvegg": 100,
+      "yttervegg_eldre_floy": 400,
+      "yttervegg_tilbygg_ost": 300,
+      "detaljer": {
+        "yttervegg_1912_fløy": {
+          "tykkelse_mm": 400,
+          "konstruksjon": "Tegl/mur med isolasjon",
+          "hatch": "tegl-hatch"
+        },
+        "yttervegg_2016_tilbygg": {
+          "tykkelse_mm": 300,
+          "konstruksjon": "Betong/glass",
+          "hatch": "betong-hatch"
+        },
+        "innvendig_baerevegg": {
+          "tykkelse_mm": 200,
+          "konstruksjon": "Armert betong/tegl",
+          "hatch": "innervegg-hatch"
+        },
+        "innvendig_lettvegg": {
+          "tykkelse_mm": 100,
+          "konstruksjon": "Stenderverk med gips",
+          "hatch": "lettvegg-hatch"
+        }
+      }
+    },
+    "eksterior": {
+      "hovedfløy": {
+        "byggeaar": 1912,
+        "arkitekturstil": "Nyklassisistisk museumspalass",
+        "fasade": "Rød håndbanket tegl på sokkel av Iddefjord-granitt, gesimser i sandstein",
+        "tak": "Mansardtak med patinert kobbertekking og overlyskupler med UV-filter",
+        "hovedinngang": "Monumental granitt-trapp med doble eikedører og automatiske skyvedører i glass innenfor"
+      },
+      "tilbygg_ost": {
+        "byggeaar": 2016,
+        "arkitekturstil": "Skandinavisk modernisme",
+        "fasade": "Strukturelt glass med integrerte solskjermingslameller og lys slipt betong",
+        "tak": "Ekstensivt sedumtak med integrert overvannshåndtering",
+        "adkomst": "Varelevering og kunstinntak på bakkenivå mot bakgård med låsbar kjøresluse"
+      },
+      "omgivelser": {
+        "tomteareal_m2": 3200,
+        "bebygd_areal_m2": 1450,
+        "bruttoareal_m2": 4350,
+        "skallsikring": "Perimeterovervåking med IR-kameraer, pullerter mot gate, adgangskontroll på samtlige rømningstrapper",
+        "by_kontekst": "Plassert ved Bispegata og Marinen langs Nidelva, med historiske trebrygger og Nidarosdomens spir i nabolaget."
+      }
+    }
+  },
+  "matrikkel": {
+    "kommune": "Trondheim (5001)",
+    "kommunenummer": "5001",
+    "gnr": 401,
+    "bnr": 12,
+    "lokalid": "279106015",
+    "adresse": "Bispegata 9B, 7012 Trondheim",
+    "koordinater": {
+      "lat": 63.4273687,
+      "lon": 10.3914082,
+      "projeksjon": "WGS84 / ETRS89"
+    },
+    "kote_terreng_moh": 13.27,
+    "kote_p1_fg_moh": 13.50,
+    "kote_u1_fg_moh": 9.30,
+    "kote_p2_fg_moh": 19.80,
+    "kote_gesims_moh": 24.90
+  },
+  "arealer_ns3940": {
+    "bta_m2": 4350,
+    "bra_m2": 3920,
+    "bya_m2": 1450,
+    "tomteareal_m2": 3200,
+    "utnyttelsesgrad_prosent_bya": 45.3,
+    "etasjefordeling_bra": {
+      "U1": 1300,
+      "P1": 1310,
+      "P2": 1310
+    },
+    "etasjefordeling_bta": {
+      "U1": 1450,
+      "P1": 1450,
+      "P2": 1450
+    }
+  },
+  "brannkonsept": {
+    "brannklasse": "BKL 3",
+    "risikoklasse": "RKL 5",
+    "baeresystem": "R 90",
+    "etasjeskiller": "REI 90 / REI 120",
+    "seksjonering": "EI 60",
+    "slokkesystem": "Pre-action vanntåke/sprinkler i publikumsarealer (S1, S2, S3), Inergen inertgasslukking i Magasin 1 (MAG-1), Kunstmottak (VER-1) og Teknisk sentral (TEK-1)",
+    "slokking": "Pre-action vanntåke/sprinkler i publikumsarealer (S1, S2, S3), Inergen inertgasslukking i Magasin 1 (MAG-1), Kunstmottak (VER-1) og Teknisk sentral (TEK-1)",
+    "alarmanlegg": "Kategori 2 heldekkende med direktevarsling 110-sentral",
+    "romning": "Brannsikre rømningstrapper EI-60 og direkte nødutganger til terreng/Marinen/Nidelva"
+  },
+  "veggtykkelser_mm": {
+    "yttervegg_1912_fløy": 400,
+    "yttervegg_2016_tilbygg": 300,
+    "innvendig_baerevegg": 200,
+    "innvendig_lettvegg": 100,
+    "yttervegg_eldre_floy": 400,
+    "yttervegg_tilbygg_ost": 300,
+    "detaljer": {
+      "yttervegg_1912_fløy": {
+        "tykkelse_mm": 400,
+        "konstruksjon": "Tegl/mur med isolasjon",
+        "hatch": "tegl-hatch"
+      },
+      "yttervegg_2016_tilbygg": {
+        "tykkelse_mm": 300,
+        "konstruksjon": "Betong/glass",
+        "hatch": "betong-hatch"
+      },
+      "innvendig_baerevegg": {
+        "tykkelse_mm": 200,
+        "konstruksjon": "Armert betong/tegl",
+        "hatch": "innervegg-hatch"
+      },
+      "innvendig_lettvegg": {
+        "tykkelse_mm": 100,
+        "konstruksjon": "Stenderverk med gips",
+        "hatch": "lettvegg-hatch"
+      }
+    }
+  },
+  "soner_definisjon": {
+    "sikkerhet": {
+      "S1": {
+        "kode": "S1",
+        "navn": "Sone 1 – Publikumssone",
+        "farge": "#10b981",
+        "beskrivelse": "Åpen adgang i museets åpningstid. Resepsjon, kafé, butikk, toaletter.",
+        "krav": "Alminnelig kameraovervåking, kassaansvarlig til stede, fri ferdsel for publikum."
+      },
+      "S2": {
+        "kode": "S2",
+        "navn": "Sone 2 – Utstillingssone",
+        "farge": "#f59e0b",
+        "beskrivelse": "Krever gyldig museumsbillett. Sal A, B, C, D og E.",
+        "krav": "Kontinuerlig sensorikk på verker, salvert til stede, maks 2t ståtid, røyk- og bevegelsesdetektorer."
+      },
+      "S3": {
+        "kode": "S3",
+        "navn": "Sone 3 – Drift & Personal",
+        "farge": "#3b82f6",
+        "beskrivelse": "Skjermet for publikum. Kjøkken, vaktrom, personalavdeling og tekniske sjakter.",
+        "krav": "Elektronisk nøkkelkort med loggføring, PIN-kode, kun ansatte og autoriserte leverandører."
+      },
+      "S4": {
+        "kode": "S4",
+        "navn": "Sone 4 – Høysikkerhet",
+        "farge": "#ef4444",
+        "beskrivelse": "Maksimal sikring. Magasin 1, kunstmottak, safe og klimakontrollert papirarkiv.",
+        "krav": "To-personers adgangsregel, biometrisk/kort-kontroll, Inergen gasslukkeanlegg, klimavakt 24/7."
+      }
+    },
+    "klima": {
+      "K1": {
+        "kode": "K1",
+        "navn": "Klimasone K1 – Høykonservering",
+        "farge": "#06b6d4",
+        "temp": "18°C ± 1°C",
+        "rf": "50% ± 5% RF",
+        "luks": "Maks 50 luks (papir/tegninger)",
+        "uv": "0 µW/lumen",
+        "beskrivelse": "Magasin 1 og spesialmontre for sårbare papirverk i Sal D."
+      },
+      "K2": {
+        "kode": "K2",
+        "navn": "Klimasone K2 – Standard Kunstsal",
+        "farge": "#8b5cf6",
+        "temp": "20°C ± 2°C",
+        "rf": "45–55% RF",
+        "luks": "150–200 luks (oljemalerier)",
+        "uv": "< 75 µW/lumen",
+        "beskrivelse": "Sal A, Sal B, Sal C og Sal E."
+      },
+      "K3": {
+        "kode": "K3",
+        "navn": "Klimasone K3 – Publikumskomfort",
+        "farge": "#64748b",
+        "temp": "21°C ± 2°C",
+        "rf": "30–60% RF",
+        "luks": "Normal belysning (300–500 luks)",
+        "uv": "Ingen begrensning",
+        "beskrivelse": "Vestibyle, kafé, butikk, vaktrom og kontorer."
+      }
+    }
+  },
+  "etasjer": [
+    {
+      "etasje_nr": 0,
+      "kode": "U1",
+      "navn": "Kjeller / Underetasje",
+      "beskrivelse": "Magasinering, kunstmottak og primære tekniske anlegg.",
+      "takhoyde_m": 3.8,
+      "kote_moh": 9.30,
+      "kote_relativ": "-4.20 m",
+      "bra_etasje_m2": 1300,
+      "bta_etasje_m2": 1450,
+      "tegningsnummer": "A-10-01",
+      "malestokk": "1:100",
+      "rom": [
+        {
+          "id": "MAG-1",
+          "romnummer": "001",
+          "navn": "Magasin 1 – Klimastyrt lager",
+          "romnavn_kort": "MAGASIN 1",
+          "x": 40,
+          "y": 40,
+          "w": 180,
+          "h": 140,
+          "areal_m2": 252,
+          "takhoyde_m": 3.8,
+          "sikkerhetssone": "S4",
+          "klimasone": "K1",
+          "brannklasse": "EI-90-A2-s1,d0",
+          "materialer": {
+            "gulv": "Sømløs antistatisk epoksy med hulkil (ESD)",
+            "vegg": "Sparklet og støvbundet hvitmalt betong",
+            "himling": "Åpen betong med Inergen-slokkerør og kabelbroer"
+          },
+          "kapasitet_verk": 200,
+          "beskrivelse": "Hovedmagasin med elektriske kompaktusrullehyller i stål. Sikret med Inergen gasslukking og seismiske vibrasjonsvarslere.",
+          "dor_pos": "ost",
+          "sensorer": [
+            "Klimasensor K1-01",
+            "Inergen-dyse 1-4",
+            "Vibrasjonssensor V-01"
+          ]
+        },
+        {
+          "id": "VER-1",
+          "romnummer": "002",
+          "navn": "Kunstmottak & Konservering",
+          "romnavn_kort": "KUNSTMOTTAK",
+          "x": 240,
+          "y": 40,
+          "w": 120,
+          "h": 140,
+          "areal_m2": 168,
+          "takhoyde_m": 3.8,
+          "sikkerhetssone": "S4",
+          "klimasone": "K2",
+          "brannklasse": "EI-60",
+          "materialer": {
+            "gulv": "Antistatisk vinyl med fuktbestandig membran",
+            "vegg": "Vaskbar støvfri silikatmaling på betong",
+            "himling": "Akustikkplater i metallkassett med integrert dagslysarmatur"
+          },
+          "kapasitet_verk": 25,
+          "beskrivelse": "Sluse for akklimatisering av kunstkasser etter transport. Konserveringsbenk, UV-undersøkelsesstasjon og heisforbindelse.",
+          "dor_pos": "ost",
+          "sensorer": [
+            "Adgangsleser Kort+PIN",
+            "Overvåkingskamera CAM-U1-02"
+          ]
+        },
+        {
+          "id": "TEK-1",
+          "romnummer": "003",
+          "navn": "Teknisk rom & Klimasentral",
+          "romnavn_kort": "KLIMASENTRAL",
+          "x": 380,
+          "y": 40,
+          "w": 140,
+          "h": 140,
+          "areal_m2": 196,
+          "takhoyde_m": 3.8,
+          "sikkerhetssone": "S3",
+          "klimasone": "K3",
+          "brannklasse": "EI-90-A2-s1,d0",
+          "materialer": {
+            "gulv": "Avrettet støvbundet betong med sluk og oljeutskiller",
+            "vegg": "Ubehandlet betong og teglmur EI-90",
+            "himling": "Lydisolert himling med synlige tekniske føringsveier"
+          },
+          "kapasitet_verk": 0,
+          "beskrivelse": "Ventilasjonsaggregat med roterende gjenvinner, dampbefukter, kjølemaskin og nødstrømsbatterier (UPS).",
+          "dor_pos": "vest",
+          "sensorer": [
+            "Vannlekkasjealarm",
+            "Brannalarm optisk+termisk"
+          ]
+        },
+        {
+          "id": "HEIS-U1",
+          "romnummer": "004",
+          "navn": "Vare- og Kunstheis U1",
+          "romnavn_kort": "VAREHEIS U1",
+          "x": 240,
+          "y": 200,
+          "w": 60,
+          "h": 60,
+          "areal_m2": 36,
+          "takhoyde_m": 3.8,
+          "sikkerhetssone": "S3",
+          "klimasone": "K2",
+          "brannklasse": "REI-120 (sjakt)",
+          "materialer": {
+            "gulv": "Sklisikkert riflet aluminium/stål",
+            "vegg": "Armert betongsjakt REI-120 med rustfrie sparkeplater",
+            "himling": "Lukket sjakttopp med røykventilasjon"
+          },
+          "kapasitet_verk": 4,
+          "beskrivelse": "Gjennomgående godsheis (3.5 tonn) med innvendige mål 3.2 x 2.2 meter for transport av storformater.",
+          "dor_pos": "nord",
+          "sensorer": [
+            "Nøkkelbryter drift"
+          ]
+        },
+        {
+          "id": "TRAPP-U1",
+          "romnummer": "005",
+          "navn": "Hovedtrapp & Rømning U1",
+          "romnavn_kort": "RØMNINGSTRAPP U1",
+          "x": 320,
+          "y": 200,
+          "w": 60,
+          "h": 60,
+          "areal_m2": 36,
+          "takhoyde_m": 3.8,
+          "sikkerhetssone": "S3",
+          "klimasone": "K3",
+          "brannklasse": "EI-60",
+          "materialer": {
+            "gulv": "Slipt terrazzo med sklisikre trappeneser",
+            "vegg": "Pusset tegl hvitmalt NCS S 0500-N",
+            "himling": "Sparklet gips med innfelt nødlysledelys"
+          },
+          "kapasitet_verk": 0,
+          "beskrivelse": "Brannsikret trappeløp EI-60 med direkte adgang til rømningsvei.",
+          "dor_pos": "vest",
+          "sensorer": [
+            "Nødlysledelys"
+          ]
+        }
+      ]
+    },
+    {
+      "etasje_nr": 1,
+      "kode": "P1",
+      "navn": "1. etasje / Hovedplan",
+      "beskrivelse": "Publikumsadkomst, vestibyle, kafé, butikk og faste utstillingssaler A, B og E.",
+      "takhoyde_m": 6.0,
+      "kote_moh": 13.50,
+      "kote_relativ": "±0.00 m",
+      "bra_etasje_m2": 1310,
+      "bta_etasje_m2": 1450,
+      "tegningsnummer": "A-10-02",
+      "malestokk": "1:100",
+      "rom": [
+        {
+          "id": "SAL-A",
+          "romnummer": "101",
+          "navn": "Sal A – Mytologi og natur",
+          "romnavn_kort": "SAL A",
+          "x": 40,
+          "y": 40,
+          "w": 180,
+          "h": 120,
+          "areal_m2": 216,
+          "takhoyde_m": 6.0,
+          "sikkerhetssone": "S2",
+          "klimasone": "K2",
+          "brannklasse": "EI-60",
+          "materialer": {
+            "gulv": "Hvitoljet eikeparkett i fiskeben",
+            "vegg": "Pusset tegl koksgrå NCS S 8000-N",
+            "himling": "Akustisk dagslyslanternetak med UV-filter"
+          },
+          "kapasitet_verk": 20,
+          "beskrivelse": "Museets største sal med 6 meter takhøyde og dempet belysning. Veggene er holdt i mørk antrasitt for å løfte Kittelsens og Sohlbergs stemningskunst. Naturlig dagslys filtreres gjennom takvinduer med UV-filter.",
+          "dor_pos": "sor",
+          "sensorer": [
+            "Luks-meter LUX-A1",
+            "Bevegelsessensor PIR-A1",
+            "Temperatur/RF-sensor KLIM-A1"
+          ]
+        },
+        {
+          "id": "SAL-B",
+          "romnummer": "102",
+          "navn": "Sal B – Realisme og samfunn",
+          "romnavn_kort": "SAL B",
+          "x": 240,
+          "y": 40,
+          "w": 130,
+          "h": 120,
+          "areal_m2": 156,
+          "takhoyde_m": 5.0,
+          "sikkerhetssone": "S2",
+          "klimasone": "K2",
+          "brannklasse": "EI-60",
+          "materialer": {
+            "gulv": "Massiv hvitoljet eikeplank",
+            "vegg": "Malt armert puss lys varmgrå NCS S 1502-Y",
+            "himling": "Akustisk puss med innfelte strømskinner for spotbelysning"
+          },
+          "kapasitet_verk": 15,
+          "beskrivelse": "Kompakt og intim sal med lyse vegger og fokusert spotbelysning. Innrettet for Krohgs storformater med tilstrekkelig betrakteravstand. Veggstøtter for verk over 200 cm.",
+          "dor_pos": "sor",
+          "sensorer": [
+            "Luks-meter LUX-B1",
+            "Temperatur/RF-sensor KLIM-B1"
+          ]
+        },
+        {
+          "id": "SAL-E",
+          "romnummer": "103",
+          "navn": "Sal E – Temporær utstilling",
+          "romnavn_kort": "SAL E",
+          "x": 390,
+          "y": 40,
+          "w": 130,
+          "h": 120,
+          "areal_m2": 156,
+          "takhoyde_m": 5.0,
+          "sikkerhetssone": "S2",
+          "klimasone": "K2",
+          "brannklasse": "EI-60",
+          "materialer": {
+            "gulv": "Industriparkett i eik natur",
+            "vegg": "Modulære forsterkede gipsvegger hvit NCS S 0500-N",
+            "himling": "Åpent teknisk gittersystem med fleksible lysskinner"
+          },
+          "kapasitet_verk": 25,
+          "beskrivelse": "Fleksibel sal med modulære veggsystemer for skiftende utstillinger. Skinnesystem i tak for variabel belysning. Kan deles i to mindre rom med foldevegg.",
+          "dor_pos": "sor",
+          "sensorer": [
+            "Fleksibelt trådløst sensorsett E1-E4"
+          ]
+        },
+        {
+          "id": "RES-1",
+          "romnummer": "104",
+          "navn": "Vestibyle & Resepsjon",
+          "romnavn_kort": "VESTIBYLE",
+          "x": 200,
+          "y": 180,
+          "w": 160,
+          "h": 100,
+          "areal_m2": 160,
+          "takhoyde_m": 6.0,
+          "sikkerhetssone": "S1",
+          "klimasone": "K3",
+          "brannklasse": "EI-60",
+          "materialer": {
+            "gulv": "Lys grå diamantslipt terrazzo med marmortilslag",
+            "vegg": "Vertikale eikespiler på akustikkfilt og pusset betong",
+            "himling": "Rytterlystak i glass med stålprofiler og integrert solskjerming"
+          },
+          "kapasitet_verk": 2,
+          "beskrivelse": "Museets ankomstrom. Skranke for billettsalg, audioguider, info og sikkerhetssluse til utstillingssaler.",
+          "dor_pos": "sor",
+          "sensorer": [
+            "Besøsteller IR",
+            "Kamera CAM-P1-01"
+          ]
+        },
+        {
+          "id": "BUT-1",
+          "romnummer": "105",
+          "navn": "Museumsbutikk / Bokhandel",
+          "romnavn_kort": "BOKHANDEL",
+          "x": 380,
+          "y": 180,
+          "w": 140,
+          "h": 100,
+          "areal_m2": 140,
+          "takhoyde_m": 4.5,
+          "sikkerhetssone": "S1",
+          "klimasone": "K3",
+          "brannklasse": "EI-30",
+          "materialer": {
+            "gulv": "Røkt eik heltreplank",
+            "vegg": "Spesialbygde eikebokhyller fra gulv til tak med LED-linjer",
+            "himling": "Sort akustisk spilehimling med innfelte spotlights"
+          },
+          "kapasitet_verk": 0,
+          "beskrivelse": "Kunstbøker, kataloger, grafiske trykk og suvenirer. Egen utgang mot Kristian Augusts gate.",
+          "dor_pos": "vest",
+          "sensorer": [
+            "Kassasystem",
+            "Varesikringsbuer"
+          ]
+        },
+        {
+          "id": "KAF-1",
+          "romnummer": "106",
+          "navn": "Museumskafé & Atrium",
+          "romnavn_kort": "KAFÉ",
+          "x": 40,
+          "y": 180,
+          "w": 140,
+          "h": 100,
+          "areal_m2": 140,
+          "takhoyde_m": 4.5,
+          "sikkerhetssone": "S1",
+          "klimasone": "K3",
+          "brannklasse": "EI-30",
+          "materialer": {
+            "gulv": "Børstet lys askeparkett og terrazzo i serveringssone",
+            "vegg": "Helglassfasade mot Nidelva og spilekledd fondvegg i eik",
+            "himling": "Akustikkpuss med pendelarmaturer i munnblåst glass"
+          },
+          "kapasitet_verk": 0,
+          "beskrivelse": "Kafé med 60 sitteplasser og adgang til skjermet skulpturhage i atriet.",
+          "dor_pos": "ost",
+          "sensorer": [
+            "Kjøletemperaturlogg"
+          ]
+        },
+        {
+          "id": "HEIS-P1",
+          "romnummer": "107",
+          "navn": "Gjennomgående Heis P1",
+          "romnavn_kort": "HEIS P1",
+          "x": 240,
+          "y": 180,
+          "w": 40,
+          "h": 40,
+          "areal_m2": 16,
+          "takhoyde_m": 6.0,
+          "sikkerhetssone": "S1",
+          "klimasone": "K3",
+          "brannklasse": "REI-120 (sjakt)",
+          "materialer": {
+            "gulv": "Terrazzofliser",
+            "vegg": "Glass og børstet rustfritt stål i heisstol",
+            "himling": "Opalglass med indirekte LED-panel"
+          },
+          "kapasitet_verk": 4,
+          "beskrivelse": "Heisforbindelse for publikum og rullestolbrukere mellom etasje 1 og 2, med låst adgang til kjeller.",
+          "dor_pos": "nord",
+          "sensorer": [
+            "Nødtelefon"
+          ]
+        },
+        {
+          "id": "TRAPP-P1",
+          "romnummer": "108",
+          "navn": "Monumentaltrapp P1",
+          "romnavn_kort": "TRAPP P1",
+          "x": 290,
+          "y": 180,
+          "w": 50,
+          "h": 50,
+          "areal_m2": 25,
+          "takhoyde_m": 6.0,
+          "sikkerhetssone": "S1",
+          "klimasone": "K3",
+          "brannklasse": "EI-60",
+          "materialer": {
+            "gulv": "Hvit Carrara-marmor i trinn med eikehåndløper",
+            "vegg": "Pusset betong hvitmalt NCS S 0500-N",
+            "himling": "Åpen mot overlystak i vestibyle"
+          },
+          "kapasitet_verk": 0,
+          "beskrivelse": "Bred marmortrapp som fører publikum opp til 2. etasje.",
+          "dor_pos": "vest",
+          "sensorer": []
+        }
+      ]
+    },
+    {
+      "etasje_nr": 2,
+      "kode": "P2",
+      "navn": "2. etasje / Galleri & Sikkerhet",
+      "beskrivelse": "Faste samlingssaler C og D, samt museets vaktrom og sikkerhetssentral.",
+      "takhoyde_m": 4.8,
+      "kote_moh": 19.80,
+      "kote_relativ": "+6.30 m",
+      "bra_etasje_m2": 1310,
+      "bta_etasje_m2": 1450,
+      "tegningsnummer": "A-10-03",
+      "malestokk": "1:100",
+      "rom": [
+        {
+          "id": "SAL-C",
+          "romnummer": "201",
+          "navn": "Sal C – Lys, farge og interiør",
+          "romnavn_kort": "SAL C",
+          "x": 40,
+          "y": 40,
+          "w": 200,
+          "h": 120,
+          "areal_m2": 240,
+          "takhoyde_m": 4.8,
+          "sikkerhetssone": "S2",
+          "klimasone": "K2",
+          "brannklasse": "EI-60",
+          "materialer": {
+            "gulv": "Hvitoljet askeparkett i bredformat",
+            "vegg": "Malt glatt puss i dempet linblå NCS S 2010-B",
+            "himling": "Akustisk kassetthimling med regulerbart overlys"
+          },
+          "kapasitet_verk": 18,
+          "beskrivelse": "Sal med store sør-øst-vendte vinduer som gir naturlig dagslys i harmoni med Backers lysstudier. Gardinstyring for å kontrollere UV-eksponering. Varme tregulv.",
+          "dor_pos": "sor",
+          "sensorer": [
+            "UV-sensor UV-C1",
+            "Automatisk gardinstyring",
+            "Luks-logg"
+          ]
+        },
+        {
+          "id": "SAL-D",
+          "romnummer": "202",
+          "navn": "Sal D – Eksistens og modernisme",
+          "romnavn_kort": "SAL D",
+          "x": 260,
+          "y": 40,
+          "w": 180,
+          "h": 120,
+          "areal_m2": 216,
+          "takhoyde_m": 4.8,
+          "sikkerhetssone": "S2",
+          "klimasone": "K1",
+          "brannklasse": "EI-60",
+          "materialer": {
+            "gulv": "Diamantslipt og polert betong Superfloor",
+            "vegg": "Matt karmosinrød museumspuss NCS S 4550-Y90R",
+            "himling": "Mørk akustikkpuss med mikrospotter for montrebelysning"
+          },
+          "kapasitet_verk": 16,
+          "beskrivelse": "Langstrakt sal med røde aksenter på kortveggene. Dempet, dramatisk belysning som forsterker Munchs koloritt. Klimastyrte montre for verk på papir.",
+          "dor_pos": "sor",
+          "sensorer": [
+            "Montermikroklima MK-01-04",
+            "Vibrasjonssensor Munch-vegg"
+          ]
+        },
+        {
+          "id": "VAK-1",
+          "romnummer": "203",
+          "navn": "Vaktrom & Sikkerhetssentral",
+          "romnavn_kort": "VAKTROM",
+          "x": 380,
+          "y": 180,
+          "w": 140,
+          "h": 100,
+          "areal_m2": 140,
+          "takhoyde_m": 3.2,
+          "sikkerhetssone": "S3",
+          "klimasone": "K3",
+          "brannklasse": "EI-60",
+          "materialer": {
+            "gulv": "Antistatisk hevet datagulv med avledende vinyl",
+            "vegg": "Lyddempende veggpaneler og skuddsikkert observasjonsglass",
+            "himling": "Akustisk mineralullhimling med blendfri LED-belysning"
+          },
+          "kapasitet_verk": 0,
+          "beskrivelse": "Døgnbemannet sentral med CCTV-vegger, direkte linje til 110/112, brannsentral og nøkkeladministrasjon.",
+          "dor_pos": "nord",
+          "sensorer": [
+            "Adgangslogg biometri",
+            "Nødknapp politi",
+            "UPS-status"
+          ]
+        },
+        {
+          "id": "PAU-1",
+          "romnummer": "204",
+          "navn": "Personalrom & Garderobe",
+          "romnavn_kort": "PERSONALROM",
+          "x": 40,
+          "y": 180,
+          "w": 180,
+          "h": 100,
+          "areal_m2": 180,
+          "takhoyde_m": 3.2,
+          "sikkerhetssone": "S3",
+          "klimasone": "K3",
+          "brannklasse": "EI-30",
+          "materialer": {
+            "gulv": "Akustisk linoleum med korkbakside",
+            "vegg": "Varmhvit malt gips og eikefinérte moduler",
+            "himling": "Akustikkplater med indirekte varmhvit belysning"
+          },
+          "kapasitet_verk": 0,
+          "beskrivelse": "Oppholdsrom for verter og vakter i pausene. Ergonomisk hvilesone (STAMI-krav), kjøkkenkrok og personlige skap.",
+          "dor_pos": "nord",
+          "sensorer": [
+            "Kortleser"
+          ]
+        },
+        {
+          "id": "HEIS-P2",
+          "romnummer": "205",
+          "navn": "Heis Repos P2",
+          "romnavn_kort": "HEIS P2",
+          "x": 240,
+          "y": 180,
+          "w": 40,
+          "h": 40,
+          "areal_m2": 16,
+          "takhoyde_m": 4.8,
+          "sikkerhetssone": "S1",
+          "klimasone": "K3",
+          "brannklasse": "REI-120 (sjakt)",
+          "materialer": {
+            "gulv": "Lys grå terrazzo i flukt med gangbro",
+            "vegg": "Strukturelt glassrekkverk og børstet stål",
+            "himling": "Åpen mot glasstak"
+          },
+          "kapasitet_verk": 0,
+          "beskrivelse": "Øvre heisankomst med glassrekkverk mot lysgården.",
+          "dor_pos": "sor",
+          "sensorer": []
+        },
+        {
+          "id": "TRAPP-P2",
+          "romnummer": "206",
+          "navn": "Trappeløp Repos P2",
+          "romnavn_kort": "TRAPP P2",
+          "x": 290,
+          "y": 180,
+          "w": 50,
+          "h": 50,
+          "areal_m2": 25,
+          "takhoyde_m": 4.8,
+          "sikkerhetssone": "S1",
+          "klimasone": "K3",
+          "brannklasse": "EI-60",
+          "materialer": {
+            "gulv": "Hvit marmor og massiv eik på repos",
+            "vegg": "Hvitmalt pusset betong med integrert håndløper i eik",
+            "himling": "Åpen mot overlystak i atrium"
+          },
+          "kapasitet_verk": 0,
+          "beskrivelse": "Øverste trappeavsats med oversikt over vestibylen.",
+          "dor_pos": "vest",
+          "sensorer": []
+        }
+      ]
+    }
+  ]
+}
