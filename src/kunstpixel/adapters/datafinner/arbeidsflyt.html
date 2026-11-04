@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arbeidsflyter – Datafinner</title>
+<link rel="stylesheet" href="/af.css">
+<style>
+body{margin:0;padding:24px 16px;background:var(--canvas)}
+[hidden]{display:none!important}.af-shell{min-height:75vh}.oppgaver{display:grid;gap:10px}.oppgave{width:100%;text-align:left;cursor:pointer}.felt{margin:12px 0}.felt label{display:block;margin-bottom:4px;font-weight:600}.felt input{width:100%;max-width:32rem}.resultat{white-space:pre-wrap;overflow-wrap:anywhere;max-height:28rem;overflow:auto}.katalog li{margin:10px 0}.utkast{white-space:pre-wrap;overflow-wrap:anywhere}
+</style>
+</head>
+<body class="af">
+<div class="af"><div class="af-shell">
+<nav class="af-sidebar" aria-label="Steg"><p class="af-side-heading">Datafinner</p><ol class="af-flow-list"><li><a class="af-flow-link" href="/">Startside</a></li><li><a class="af-flow-link" href="/chat">Chat</a></li><li><a class="af-flow-link" href="/vaktrom">Vaktrom</a></li></ol></nav>
+<main class="af-main"><p class="af-caption">Syntetiske øvingsdata</p><h1 class="af-title">Arbeidsflyter</h1><p>Velg en arbeidsrolle for å se oppgavene. Rollen er et arbeidsområde og identifiserer ingen person.</p>
+<div class="af-group"><label class="af-label" for="rolle">Arbeidsrolle</label><select class="af-input" id="rolle"></select></div>
+<h2>Oppgaver</h2><div class="oppgaver" id="oppgaver"></div>
+<section id="flyt" hidden><h2 id="flyt-tittel"></h2><p id="flyt-beskrivelse"></p><div id="felter"></div><div class="af-actions"><button class="af-btn af-btn-primary" id="finn" type="button">Finn svar</button><button class="af-btn af-btn-secondary" id="lagre" type="button" hidden>Lagre lokalt utkast</button></div><div id="vaktkontroll" hidden><div class="felt"><label for="kandidat-id">Kandidat-ID fra resultatet</label><input class="af-input" id="kandidat-id"></div><button class="af-btn af-btn-secondary" id="kontroller" type="button">Kontroller kandidaten</button></div><p id="feil" role="alert"></p><div class="af-context-card" id="resultat-kort" hidden><strong>Resultat fra verktøy</strong><p id="kilde"></p><div class="resultat" id="resultat"></div></div></section>
+<section><h2>Lokale utkast</h2><div id="utkast"></div></section>
+</main>
+<aside class="af-context" aria-label="Verktøy"><h2 class="af-context-title">Verktøy i Datafinner</h2><p>Hele katalogen vises her. Status kommer fra serveren.</p><ul class="katalog" id="katalog"></ul></aside>
+</div></div>
+<script>
+(function(){
+  "use strict";
+  const $=id=>document.getElementById(id);
+  const definisjoner={
+    ansatt:{felt:[["sok","Navn eller ansatt-ID"]],kall:f=>({navn:"find_employee",args:{sok:f.sok}})},
+    handbok:{felt:[["query","Hva vil du finne i håndboken?"]],kall:f=>({navn:"lookup_handbook",args:{query:f.query,limit:10}})},
+    hms:{felt:[["query","HMS-tema"]],kall:f=>({navn:"search_hms_guidance",args:{query:f.query,limit:10}})},
+    onboarding:{felt:[],kall:()=>({navn:"search_hr_onboarding",args:{rolle:$("rolle").value}})},
+    vakt:{felt:[["stasjon","Stasjon"],["dato","Dato (ÅÅÅÅ-MM-DD)"],["start","Start (TT:MM)"],["slutt","Slutt (TT:MM)"]],kall:f=>({navn:"get_staffing_candidates",args:f})},
+    bytte:{felt:[["vakt_a","Første vakt-ID"],["vakt_b","Andre vakt-ID"]],kall:f=>({navn:"check_shift_swap",args:f})},
+    tiltak:{felt:[["query","Rutine eller tema"],["tiltakstekst","Beskriv et mulig tiltak"]],kall:f=>({navn:"lookup_handbook",args:{query:f.query,limit:10}})}
+  };
+  let oppgaver=[],gjeldende=null,siste=null;
+  const lagretNokkel="kunstpixel-arbeidsflyt-utkast-v1";
+  function lagElement(tag,tekst,cls){const e=document.createElement(tag);if(tekst!==undefined)e.textContent=tekst;if(cls)e.className=cls;return e;}
+  function visResultat(svar,oppgave){
+    const b=$("resultat");
+    if(oppgave!=="onboarding" || !Array.isArray(svar.opplaering)){
+      b.textContent=Array.isArray(svar)&&!svar.length?"Ingen treff i datagrunnlaget.":JSON.stringify(svar,null,2);return;
+    }
+    b.replaceChildren();
+    if(!svar.opplaering.length){b.textContent="Ingen opplæring funnet for rollen.";return;}
+    svar.opplaering.forEach(r=>{
+      const kort=lagElement("div",undefined,"af-context-card");
+      kort.append(lagElement("strong",r.tema_eller_sertifisering),
+        lagElement("p",r.aktivitet_eller_beskrivelse),
+        lagElement("p","Rolle: "+r.rolle+" · Status: "+r.fase_eller_status),
+        lagElement("p","Kilde: "+r.opplaering_id+" · "+r.datakilde));
+      b.appendChild(kort);
+    });
+  }
+  function visUtkast(){const b=$("utkast");b.replaceChildren();let liste=[];try{liste=JSON.parse(localStorage.getItem(lagretNokkel)||"[]");}catch(_){}if(!liste.length){b.textContent="Ingen utkast lagret.";return;}liste.forEach(x=>{const p=lagElement("p",x.tid+" · "+x.rolle+" · "+x.oppgave+"\n"+x.tekst,"utkast");b.appendChild(p);});}
+  function velg(o){gjeldende=o;siste=null;$("flyt").hidden=false;$("resultat-kort").hidden=true;$("lagre").hidden=true;$("vaktkontroll").hidden=true;$("feil").textContent="";$("flyt-tittel").textContent=o.tittel;$("flyt-beskrivelse").textContent=o.beskrivelse;$("felter").replaceChildren();const d=definisjoner[o.oppgave_id];d.felt.forEach(([id,label])=>{const box=lagElement("div",undefined,"felt"),lab=lagElement("label",label),input=document.createElement("input");input.id="felt-"+id;input.className="af-input";input.required=true;lab.htmlFor=input.id;box.append(lab,input);$("felter").appendChild(box);});$("flyt").scrollIntoView({block:"start"});}
+  function visOppgaver(){const ul=$("oppgaver");ul.replaceChildren();oppgaver.filter(o=>o.rolle===$("rolle").value).forEach(o=>{const b=lagElement("button",o.tittel+" — "+o.beskrivelse,"af-context-card oppgave");b.type="button";b.onclick=()=>velg(o);ul.appendChild(b);});$("flyt").hidden=true;}
+  function datahent(navn,args){const u="/api/verktoy?navn="+encodeURIComponent(navn)+"&args="+encodeURIComponent(JSON.stringify(args));return fetch(u).then(r=>r.json().then(x=>{if(!r.ok)throw Error(x.error||"Oppslaget feilet");return x.resultat;}));}
+  $("finn").onclick=async()=>{if(!gjeldende)return;const d=definisjoner[gjeldende.oppgave_id],f={};for(const [id,label] of d.felt){const v=$("felt-"+id).value.trim();if(!v){$("feil").textContent="Fyll ut: "+label;return;}f[id]=v;}$("feil").textContent="";$("lagre").hidden=true;$("vaktkontroll").hidden=true;const k=d.kall(f);$("finn").disabled=true;try{const svar=await datahent(k.navn,k.args);siste={rolle:$("rolle").value,oppgave:gjeldende.tittel,tekst:f.tiltakstekst||"",grunnlag:svar,verktoy:k.navn,inngang:f};$("kilde").textContent="Kilde: "+k.navn+" · museum.db (kun lesing).";visResultat(svar,gjeldende.oppgave_id);$("resultat-kort").hidden=false;$("vaktkontroll").hidden=gjeldende.oppgave_id!=="vakt";$("lagre").hidden=gjeldende.oppgave_id==="vakt";}catch(e){$("feil").textContent=e.message;}finally{$("finn").disabled=false;}};
+  $("kontroller").onclick=async()=>{if(!siste||gjeldende.oppgave_id!=="vakt")return;const id=$("kandidat-id").value.trim();if(!id){$("feil").textContent="Oppgi kandidat-ID fra resultatet.";return;}try{const kontroll=await datahent("check_staffing_selection",{...siste.inngang,ids:[id]});siste.kontroll=kontroll;siste.tekst="Kontrollert kandidat: "+id;$("resultat").textContent+="\n\nKontroll:\n"+JSON.stringify(kontroll,null,2);$("kilde").textContent+=" Kontroll: check_staffing_selection.";$("lagre").hidden=false;$("feil").textContent="";}catch(e){$("feil").textContent=e.message;}};
+  $("lagre").onclick=()=>{if(!siste)return;let liste=[];try{liste=JSON.parse(localStorage.getItem(lagretNokkel)||"[]");}catch(_){}liste.unshift({...siste,tid:new Date().toLocaleString("nb-NO")});localStorage.setItem(lagretNokkel,JSON.stringify(liste.slice(0,30)));visUtkast();$("lagre").textContent="Lagret lokalt";};
+  Promise.all([fetch("/api/arbeidsflyt").then(r=>r.json()),fetch("/api/verktoykatalog").then(r=>r.json())]).then(([a,k])=>{oppgaver=a.oppgaver;[...new Set(oppgaver.map(x=>x.rolle))].forEach(r=>{const o=document.createElement("option");o.value=r;o.textContent=r;$("rolle").appendChild(o);});const param=new URLSearchParams(location.search).get("rolle");if(param&&[...$("rolle").options].some(o=>o.value===param))$("rolle").value=param;visOppgaver();k.verktoy.forEach(v=>{const li=lagElement("li",v.navn+" — "+v.beskrivelse+" ("+v.status+")");$("katalog").appendChild(li);});}).catch(e=>{$("feil").textContent="Kunne ikke hente oppgaver: "+e.message;$("flyt").hidden=false;});
+  $("rolle").onchange=visOppgaver;visUtkast();
+})();
+</script>
+</body>
+</html>

@@ -14,6 +14,8 @@ htmlcov/
 env/
 venv/
 ENV/
+deploy/demo/brukere.caddy
+deploy/demo/.env
 
 # OS generated files
 .DS_Store
@@ -23,4 +25,12 @@ desktop.ini
 
 # Agent traces & temporary scratch
 .agents/
+.scratch/
+.playwright-mcp/
+.runtime/
+.serena/
+.worktrees/
+gate-log.jsonl
 
+# Colab-leveranser som ikke er kontrollert ennå (se 01_inbox/MOTTAK_COLAB_DATA.md)
+05_data/innkommende/

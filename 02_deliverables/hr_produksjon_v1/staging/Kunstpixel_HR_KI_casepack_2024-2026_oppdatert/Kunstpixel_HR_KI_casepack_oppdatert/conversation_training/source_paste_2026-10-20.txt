@@ -1,0 +1,1873 @@
+ONB-01
+
+
+90-dagers/prøvetid-evaluering
+Vurdere om prøvetiden er bestått.
+
+10 min
+Performance- og forventningssamtale
+Jonas
+Jonas
+
+Nyansatt i prøvetidsevaluering
+
+prøvetid
+evaluering
+90-dager
++1
+Start scenario
+VANS-29
+
+
+Adressere isolasjon/ensomhet
+Støtte medarbeider som føler seg alene.
+
+10 min
+Bekymringssamtale
+Tuva
+Tuva
+
+Designer som jobber remote
+
+isolasjon
+ensomhet
+støtte
++1
+Start scenario
+VANS-36
+
+
+Adressere overarbeid
+Ta opp at noen jobber for mye.
+
+10 min
+Bekymringssamtale
+Synne
+Synne
+
+Konsulent med 2 års erfaring
+
+overarbeid
+grenser
+helse
++1
+Start scenario
+KRIS-03
+
+
+Akutt kundeeskalering
+Viktig kunde som truer med å avslutte.
+
+10 min
+Undersøkende samtale
+Frode
+Frode
+
+Medarbeider ansvarlig for mislykket leveranse
+
+kunde
+eskalering
+krise
++1
+Start scenario
+VANS-19
+
+
+Avslå forfremmelsesønske
+Si nei til noen som vil bli forfremmet.
+
+10 min
+Konsekvenssamtale
+Vegard
+Vegard
+
+Seniorutvikler med 8 års erfaring
+
+forfremmelse
+avslag
+utvikling
++1
+Start scenario
+VANS-12
+
+
+Avslå lønnskrav
+Si nei til lønnsforespørsel.
+
+10 min
+Konsekvenssamtale
+Stian
+Stian
+
+Analytiker med 3 års erfaring
+
+lønn
+avslag
+forventning
++1
+Start scenario
+COACH-02
+
+
+Bare si hva jeg skal gjøre: Kristian vil ha et svar
+Kristian har to alternativer og vil at du skal velge. Han har en mening selv, men sier den ikke før noen spør. Øvelsen er å holde ut i utforsking uten å ta over — og uten å miste ham på veien.
+
+10 min
+Coachende samtale
+Kristian Moe
+Kristian Moe
+
+Prosjektleder
+
+Start scenario
+VANS-26
+
+
+Bonus under forventning
+Forklare lavere bonus enn forventet.
+
+10 min
+Konsekvenssamtale
+Tone
+Tone
+
+Key Account Manager med 5 års erfaring
+
+bonus
+skuffelse
+forklaring
++1
+Start scenario
+VANS-06
+
+
+Brudd på hjemmekontor-avtale
+Medarbeider som ikke følger avtalt hjemmekontor-ordning.
+
+10 min
+Endringssamtale
+Jonas
+Jonas
+
+Junior prosjektleder
+
+hjemmekontor
+avtale
+oppfølging
++1
+Start scenario
+SALG-12
+
+
+Closing: den evige "vi må tenke" (Petter)
+Trening på å hjelpe en uforpliktende kjøper fra "vi må tenke litt" til en konkret beslutning eller et committed neste steg.
+
+10 min
+Closing
+Petter Lund
+Petter Lund
+
+Avdelingsleder
+
+Start scenario
+SALG-09
+
+
+Closing: konsensus i kjøpsgruppen (Ingrid)
+Trening på å hjelpe en positiv kjøper gjennom intern konsensus, der beslutningen henger på andre interessenter.
+
+10 min
+Closing
+Ingrid Moe
+Ingrid Moe
+
+Prosjektleder (champion)
+
+Start scenario
+SALG-05
+
+
+Demo: ROI-presset COO Anders
+Trening på en fokusert demo for en presset toppleder som straffer feature-dump og belønner kobling til smerte og ROI.
+
+10 min
+Demo og løsningspresentasjon
+Anders Five
+Anders Five
+
+COO
+
+Start scenario
+SALG-07
+
+
+Demo: teknisk skeptiske Mariann
+Trening på å tilpasse demoen til en teknisk fagansvarlig som bryr seg om arbeidsflyt, integrasjon og sikkerhet — ikke om salgsbudskap.
+
+10 min
+Demo og løsningspresentasjon
+Mariann Holt
+Mariann Holt
+
+Fagansvarlig og hovedbruker
+
+Start scenario
+COACH-04
+
+
+Den korte: Aksel svarer med tre ord
+Aksel ba om samtalen selv og sier nesten ingenting. Han er ikke uvillig, bare knapp. Øvelsen er å ikke fylle tomrommet med egne ord. Fungerer i tekst, men er på sitt beste i stemmemodus.
+
+10 min
+Coachende samtale
+Aksel Rygg
+Aksel Rygg
+
+Utvikler
+
+Start scenario
+SELV-01
+
+
+Din leder kritiserer deg foran andre
+Du blir tatt for noe i et møte, med kolleger til stede. Hva gjør du med deg selv?
+
+10 min
+Motta tilbakemelding
+Marius
+Marius
+
+Direktør, din nærmeste leder
+
+Start scenario
+SALG-08
+
+
+Discovery: avdekk den skjulte smerten hos Henrik
+Trening på SPIN-discovery med en skeptisk, kortfattet beslutningstaker som ikke deler smerte før selgeren stiller gode implikasjonsspørsmål.
+
+10 min
+Behovsavdekking (discovery)
+Henrik Movik
+Henrik Movik
+
+IT-sjef i mellomstort selskap
+
+Start scenario
+SALG-06
+
+
+Discovery: styr den snakkesalige Camilla mot kjernen
+Trening på å styre en snakkesalig, men diffus, kjøper fra generelt prat til konkret problem og kostnad — uten å miste relasjonen.
+
+10 min
+Behovsavdekking (discovery)
+Camilla Sæther
+Camilla Sæther
+
+Driftsleder
+
+Start scenario
+PRES-01
+
+
+Diskutere karriereprogresjon
+Snakke om fremtidige muligheter og vekst.
+
+10 min
+Performance- og forventningssamtale
+Sivert
+Sivert
+
+Medarbeider som vil avansere
+
+karriere
+vekst
+muligheter
++1
+Start scenario
+VANS-13
+
+
+Drøftelsesmøte (§ 15-1)
+Lovpålagt møte før oppsigelse.
+
+10 min
+Konsekvenssamtale
+Astrid
+Astrid
+
+Controller med 9 års erfaring
+
+drøftelse
+oppsigelse
+lov
++2
+Start scenario
+VANS-03
+
+
+Dårlig kundebehandling
+Gi tilbakemelding på uakseptabel kundebehandling.
+
+10 min
+Endringssamtale
+Marte
+Marte
+
+Kundeservicemedarbeider med 4 års erfaring
+
+kunde
+service
+feedback
++1
+Start scenario
+ANN-01
+
+
+Egendefinert scenario
+Brukerdefinert treningsscenario
+
+10 min
+Custom
+Egendefinert karakter
+Egendefinert karakter
+
+Rolle definert av bruker
+
+Start scenario
+MOT-08
+
+
+Emosjonell utmattelse i kundeyrke (aml § 4-3)
+Støtte medarbeider som viser tegn på emosjonell slitasje.
+
+10 min
+Bekymringssamtale
+Charlotte
+Charlotte
+
+Kundeservicemedarbeider med emosjonell slitasje
+
+emosjonell_belastning
+utmattelse
+kundeservice
++2
+Start scenario
+SELV-02
+
+
+En medarbeider sier du ikke lytter
+Noen i teamet ditt gir deg kritisk tilbakemelding om din egen lederstil.
+
+10 min
+Motta tilbakemelding
+Sara
+Sara
+
+Seniorrådgiver, har vært i teamet i tre år
+
+Start scenario
+ENDR-04
+
+
+Endre arbeidsmetodikk (Agile)
+Innføre ny måte å jobbe på.
+
+10 min
+Endringssamtale
+Fredrik
+Fredrik
+
+Utvikler som foretrekker struktur
+
+agile
+metodikk
+prosess
++1
+Start scenario
+VANS-15
+
+
+Exit-intervju
+Lære av medarbeider som slutter frivillig.
+
+10 min
+Undersøkende samtale
+Katrine
+Katrine
+
+Produktutvikler med 4 års erfaring
+
+exit
+læring
+feedback
++1
+Start scenario
+TILB-03
+
+
+Feedback etter presentasjon/møte
+Gi konstruktiv tilbakemelding rett etter en leveranse.
+
+10 min
+Endringssamtale
+Mathilde
+Mathilde
+
+Konsulent som nettopp holdt presentasjon
+
+presentasjon
+timing
+konkret
++1
+Start scenario
+TILB-07
+
+
+Feedback til defensiv medarbeider
+Håndtere medarbeider som avviser all kritikk.
+
+10 min
+Endringssamtale
+Bent
+Bent
+
+Konsulent som avviser feedback
+
+defensiv
+motstand
+teknikk
++1
+Start scenario
+TILB-09
+
+
+Feedback til senior/erfaren kollega
+Gi feedback til noen med mer erfaring enn deg.
+
+10 min
+Endringssamtale
+Håvard
+Håvard
+
+Senior partner med 20 års erfaring
+
+senior
+erfaring
+respekt
++2
+Start scenario
+SALG-14
+
+
+Flertråding: få tilgang til kjøpsgruppen (Wenche)
+Trening på å utvide fra én kontakt til flere i kjøpsgruppen — uten å gå over hodet på en kontakt som beskytter sine interne relasjoner.
+
+10 min
+Flertråding og interessenter
+Wenche Dahl
+Wenche Dahl
+
+Kontaktperson hos prospekt
+
+Start scenario
+KONF-02
+
+
+Forbigått kollega etter forfremmelse
+Kollega som er bitter over å ikke bli forfremmet.
+
+10 min
+Undersøkende samtale
+Pål
+Pål
+
+Kollega som ble forbigått til forfremmelse
+
+forfremmelse
+skuffelse
+relasjon
++1
+Start scenario
+VANS-34
+
+
+Forebygge utbrenthet i team
+Proaktivt arbeid mot utbrenthet.
+
+10 min
+Bekymringssamtale
+Julie
+Julie
+
+Teamleder som har stått på i en tøff periode
+
+utbrenthet
+forebygging
+team
++1
+Start scenario
+VANS-23
+
+
+Forfremmelse uten lønnsøkning
+Gi ny tittel men ikke mer penger.
+
+10 min
+Konsekvenssamtale
+Marius
+Marius
+
+Seniorkonsulent med 3 års erfaring
+
+forfremmelse
+lønn
+forventning
++1
+Start scenario
+SALG-10
+
+
+Forhandling: konkurrenten er billigere (Solveig)
+Trening på å håndtere et konkret konkurrenttilbud uten å matche prisen blindt eller snakke ned konkurrenten.
+
+10 min
+Forhandling og prising
+Solveig Aas
+Solveig Aas
+
+Avdelingsleder
+
+Start scenario
+SALG-11
+
+
+Forhandling: rabattjegeren Bjørn
+Trening på å holde på margin mot en hard innkjøper som presser på rabatt og prøver å splitte differansen.
+
+10 min
+Forhandling og prising
+Bjørn Rygh
+Bjørn Rygh
+
+Innkjøpssjef
+
+Start scenario
+VANS-11
+
+
+Forklare lønnsoppgjør under forventning
+Kommunisere skuffende lønnsøkning.
+
+10 min
+Konsekvenssamtale
+Ingeborg
+Ingeborg
+
+Seniorrådgiver med 6 års erfaring
+
+lønn
+skuffelse
+kommunikasjon
++1
+Start scenario
+SALG-16
+
+
+Fornyelse: den lunkne kunden (Dag)
+Trening på en fornyelsessamtale med en kunde som bruker løsningen lite og er usikker på verdien — gjøre verdi synlig før du ber om fornyelse.
+
+10 min
+Fornyelse og mersalg
+Dag Sætre
+Dag Sætre
+
+Kontaktperson hos eksisterende kunde
+
+Start scenario
+ENDR-01
+
+
+Fryktbasert ledelse - overta team (aml § 4-3)
+Overta team som har opplevd autoritær ledelse og bygge tillit.
+
+10 min
+Undersøkende samtale
+Marianne
+Marianne
+
+Erfaren medarbeider fra team med fryktkultur
+
+fryktkultur
+tillit
+psykologisk_trygghet
++2
+Start scenario
+KONF-01
+
+
+Generasjonskonflikt (ung vs. erfaren)
+Konflikt mellom yngre og eldre medarbeidere.
+
+10 min
+Undersøkende samtale
+Birger
+Birger
+
+Seniorrådgiver med 25 års erfaring
+
+generasjoner
+kultur
+perspektiv
++1
+Start scenario
+TILB-05
+
+
+Gi oppover-feedback til din leder
+Gi ærlig feedback til din egen sjef.
+
+10 min
+Endringssamtale
+Camilla
+Camilla
+
+Din leder som skal motta feedback
+
+oppover
+leder
+mot
++1
+Start scenario
+VANS-20
+
+
+Gi skriftlig advarsel
+Formell advarsel som del av oppsigelsesløp.
+
+10 min
+Konsekvenssamtale
+Anders
+Anders
+
+Servicetekniker med 6 års ansiennitet
+
+advarsel
+dokumentasjon
+formell
++2
+Start scenario
+PRES-10
+
+
+Halvårs-evaluering
+Midtveis-sjekk på mål og utvikling.
+
+10 min
+Performance- og forventningssamtale
+Agnes
+Agnes
+
+Medarbeider i halvårsevaluering
+
+halvår
+evaluering
+oppfølging
++1
+Start scenario
+COACH-06
+
+
+Har prøvd før: Tone får ikke tallene i tide
+Et gammelt problem Tone har forsøkt å løse fire ganger. Foreslår du noe hun allerede har gjort, sier hun det rett ut. Øvelsen er R-fasen: hva har du prøvd, hva skjedde, og på hvilken måte er dette et problem?
+
+10 min
+Coachende samtale
+Tone Iversen
+Tone Iversen
+
+Seniorrådgiver
+
+Start scenario
+VANS-35
+
+
+Hjemmekontor og isolasjon (aml § 4-3)
+Medarbeider som viser tegn på isolasjon etter langvarig hjemmearbeid.
+
+10 min
+Bekymringssamtale
+Lisa
+Lisa
+
+Markedskonsulent som har jobbet remote lenge
+
+hjemmekontor
+isolasjon
+psykososialt
++2
+Start scenario
+ENDR-08
+
+
+Håndtere endringstrøtthet
+Team som er lei av stadig nye endringer.
+
+10 min
+Endringssamtale
+Ola
+Ola
+
+Teammedlem utmattet av endringer
+
+endringstrøtthet
+motivasjon
+utmattelse
++1
+Start scenario
+VANS-28
+
+
+Håndtere out of sight out of mind
+Sikre at remote-ansatte ikke blir glemt.
+
+10 min
+Bekymringssamtale
+Aksel
+Aksel
+
+Fullstack-utvikler som jobber remote
+
+remote
+synlighet
+rettferdighet
++1
+Start scenario
+PRES-09
+
+
+Håndtere quiet quitting
+Medarbeider som gjør minimum.
+
+10 min
+Performance- og forventningssamtale
+Line
+Line
+
+Medarbeider som gjør bare minimum
+
+quiet_quitting
+engasjement
+motivasjon
++1
+Start scenario
+VANS-33
+
+
+Håndtere sorg på arbeidsplassen
+Støtte team etter dødsfall eller tap.
+
+10 min
+Bekymringssamtale
+Bente
+Bente
+
+Nær kollega av den avdøde
+
+sorg
+tap
+støtte
++1
+Start scenario
+ENDR-07
+
+
+Innføre KPIer/målstyring
+Introdusere måling og oppfølging av resultater.
+
+10 min
+Endringssamtale
+Vilde
+Vilde
+
+Konsulent skeptisk til KPIer
+
+KPI
+mål
+måling
++2
+Start scenario
+SELV-03
+
+
+Innrømme en feil som kostet teamet
+Du tok en beslutning som viste seg å være gal. Nå skal du si det.
+
+10 min
+Motta tilbakemelding
+Kim
+Kim
+
+Utvikler, har jobbet helgen med opprettingen
+
+Start scenario
+SALG-02
+
+
+Innvending: "send meg en e-post"
+Drill på den avvisende innvendingen "send meg en mail" — der kjøperen prøver å avfeie deg høflig uten å egentlig si nei.
+
+7 min
+Innvendingshåndtering
+Kristine Moen
+Kristine Moen
+
+Markedssjef
+
+Start scenario
+SALG-03
+
+
+Innvending: "vi har allerede en leverandør"
+Drill på den situasjonelle innvendingen "vi er fornøyd med leverandøren vi har" — håndtert med LAER framfor argumentasjon.
+
+7 min
+Innvendingshåndtering
+Geir Lund
+Geir Lund
+
+Innkjøpsansvarlig
+
+Start scenario
+ENDR-05
+
+
+Introdusere nytt IT-system
+Få teamet med på nytt verktøy eller system.
+
+10 min
+Endringssamtale
+Arne
+Arne
+
+Selger som er motvillig til nytt system
+
+IT
+system
+adopsjon
++2
+Start scenario
+ENDR-09
+
+
+Kommunisere fusjon/oppkjøp
+Informere teamet om oppkjøp/fusjon.
+
+10 min
+Konsekvenssamtale
+Laila
+Laila
+
+Teammedlem bekymret for oppkjøp
+
+fusjon
+oppkjøp
+usikkerhet
++2
+Start scenario
+VANS-10
+
+
+Konfidensialitetsbrudd
+Adressere brudd på taushetsplikt eller konfidensialitet.
+
+10 min
+Konsekvenssamtale
+Knut
+Knut
+
+Teamleder med 8 års erfaring
+
+konfidensialitet
+tillit
+brudd
++1
+Start scenario
+KONF-09
+
+
+Konflikt etter mislykket prosjekt
+Skylddeling og frustrasjon etter fiasko.
+
+10 min
+Konflikthåndtering
+Henrik
+Henrik
+
+Prosjektdeltaker som føler seg syndebukk
+
+fiasko
+skyld
+frustrasjon
++2
+Start scenario
+KONF-03
+
+
+Konflikt med tillitsvalgt
+Uenighet med tillitsvalgt om prosess eller beslutning.
+
+10 min
+Konflikthåndtering
+Berit
+Berit
+
+Tillitsvalgt med 15 års erfaring
+
+tillitsvalgt
+medbestemmelse
+prosess
++1
+Start scenario
+KONF-04
+
+
+Konflikt om arbeidsfordeling
+Uenighet om hvem som gjør hva i teamet.
+
+10 min
+Konflikthåndtering
+Siri
+Siri
+
+Analytiker med 2 års erfaring
+
+arbeidsfordeling
+rettferdighet
+roller
++1
+Start scenario
+KONF-06
+
+
+Konflikt om hjemmekontor vs. kontor
+Uenighet om hvem som får jobbe hjemmefra.
+
+10 min
+Konflikthåndtering
+Vibeke
+Vibeke
+
+Kundeansvarlig som ønsker mer hjemmekontor
+
+hjemmekontor
+rettferdighet
+policy
++1
+Start scenario
+SALG-15
+
+
+Kvalifisering: kartlegg MEDDPICC hos Tor Inge
+Trening på å kvalifisere en mulighet (MEDDPICC) ved å avdekke metrics, økonomisk kjøper, beslutningsprosess og konkurranse — uten å forhøre.
+
+10 min
+Kvalifisering (MEDDPICC)
+Tor Inge Berg
+Tor Inge Berg
+
+Avdelingsdirektør hos prospekt
+
+Start scenario
+VANS-27
+
+
+Likelønn-diskusjon
+Håndtere spørsmål om lønnsforskjeller.
+
+10 min
+Konsekvenssamtale
+Live
+Live
+
+Controller med 5 års erfaring
+
+likelønn
+rettferdighet
+lov
++1
+Start scenario
+TILB-04
+
+
+Løpende feedback (in-the-moment)
+Gi feedback i øyeblikket når noe skjer.
+
+10 min
+Endringssamtale
+Adrian
+Adrian
+
+Teammedlem som nettopp avbrøt en kollega
+
+timing
+umiddelbar
+effektiv
++1
+Start scenario
+VANS-17
+
+
+Medarbeider i personlig krise
+Støtte medarbeider som går gjennom skilsmisse eller lignende.
+
+10 min
+Bekymringssamtale
+Hanne
+Hanne
+
+Prosjektleder med 10 års erfaring
+
+krise
+støtte
+empati
++2
+Start scenario
+VANS-05
+
+
+Medarbeider som baksnakker kolleger
+Adressere baksnakking og negativ prat om kolleger.
+
+10 min
+Endringssamtale
+Silje
+Silje
+
+Markedskoordinator med 3 års erfaring
+
+baksnakking
+kultur
+kommunikasjon
++1
+Start scenario
+PRES-06
+
+
+Medarbeider som ikke aksepterer feedback
+Person som avviser eller bortforklarer alt.
+
+10 min
+Endringssamtale
+Jens
+Jens
+
+Medarbeider som avviser feedback
+
+motstand
+feedback
+håndtering
++1
+Start scenario
+MOT-09
+
+
+Medarbeider som vurderer å slutte
+Samtale med noen som tenker på å bytte jobb.
+
+10 min
+Undersøkende samtale
+Mathias
+Mathias
+
+Utvikler som vurderer å slutte
+
+turnover
+retensjon
+karriere
++1
+Start scenario
+VANS-22
+
+
+Medarbeider viser stress-tegn
+Ta tak i tidlige tegn på stress.
+
+10 min
+Bekymringssamtale
+Eirik
+Eirik
+
+Prosjektleder med ansvar for stort prosjekt
+
+stress
+HMS
+forebygging
++1
+Start scenario
+VANS-02
+
+
+Mistanke om rus/alkohol
+Håndtere mistanke om rus i henhold til AKAN-retningslinjer.
+
+10 min
+Undersøkende samtale
+Geir
+Geir
+
+Lagermedarbeider med 12 års ansiennitet
+
+rus
+AKAN
+sensitiv
++2
+Start scenario
+MOT-04
+
+
+Motivere etter mislykket prosjekt
+Reise teamet etter en fiasko.
+
+10 min
+Performance- og forventningssamtale
+Ida
+Ida
+
+Prosjektleder etter mislykket prosjekt
+
+fiasko
+resiliens
+team
++1
+Start scenario
+MOT-02
+
+
+Motivere i remote-setting
+Holde motivasjonen oppe på avstand.
+
+10 min
+Bekymringssamtale
+Lise
+Lise
+
+Remote-medarbeider med dalende motivasjon
+
+remote
+avstand
+engasjement
++1
+Start scenario
+MOT-01
+
+
+Motivere stagnert senior-medarbeider
+Erfaren person som har gått på autopilot.
+
+10 min
+Performance- og forventningssamtale
+Per
+Per
+
+Senior medarbeider på autopilot
+
+senior
+stagnasjon
+utvikling
++1
+Start scenario
+MOT-05
+
+
+Motivere under høyt arbeidspress
+Holde motet oppe når alt brenner.
+
+10 min
+Bekymringssamtale
+Kristoffer
+Kristoffer
+
+Teammedlem under ekstremt press
+
+press
+stress
+støtte
++1
+Start scenario
+KRIS-06
+
+
+Motta varsling
+Noen varsler om kritikkverdig forhold.
+
+10 min
+Undersøkende samtale
+Kari
+Kari
+
+Medarbeider som varsler om kollega
+
+varsling
+håndtering
+prosess
++2
+Start scenario
+VANS-24
+
+
+Mottilbud (ansatt har annet tilbud)
+Vurdere om du skal matche eksternt tilbud.
+
+10 min
+Konsekvenssamtale
+Nina
+Nina
+
+Markedssjef med 4 års erfaring
+
+mottilbud
+retensjon
+forhandling
++1
+Start scenario
+SALG-01
+
+
+Møtebooking: forbi portvakten
+Trening på å komme forbi en portvakt som skjermer beslutningstakeren — uten triks, men ved å gjøre henne til en alliert.
+
+8 min
+Møtebooking – kald samtale
+Nina Dahl
+Nina Dahl
+
+Resepsjonist / sentralbord
+
+Start scenario
+SALG-04
+
+
+Møtebooking: travle Markus
+Trening på en kald møtebooking-samtale mot en travel, avvisende beslutningstaker som helst vil bli kvitt deg raskt.
+
+8 min
+Møtebooking – kald samtale
+Markus Hansen
+Markus Hansen
+
+Driftssjef i logistikkselskap
+
+Start scenario
+VANS-14
+
+
+Nedbemanning - utvelgelsessamtale
+Informere om utvelgelse ved nedbemanning.
+
+10 min
+Konsekvenssamtale
+Marianne
+Marianne
+
+Innkjøper med 7 års erfaring
+
+nedbemanning
+utvelgelse
+formell
++2
+Start scenario
+VANS-01
+
+
+Negativ holdning som påvirker teamet
+Medarbeider med dårlig holdning som smitter over på andre.
+
+10 min
+Endringssamtale
+Petter
+Petter
+
+Erfaren konsulent med 7 års ansiennitet
+
+holdning
+teamkultur
+negativitet
++1
+Start scenario
+ENDR-02
+
+
+Ny strategi for avdelingen
+Kommunisere og forankre ny retning.
+
+10 min
+Endringssamtale
+Hilde
+Hilde
+
+Produktspesialist i tradisjonelle produkter
+
+strategi
+retning
+kommunikasjon
++1
+Start scenario
+ONB-02
+
+
+Onboarde erfaren (senior hire)
+Integrere senior person uten å virke nedlatende.
+
+10 min
+Performance- og forventningssamtale
+Vigdis
+Vigdis
+
+Senior nyansatt med 20 års erfaring
+
+senior
+erfaren
+respekt
++1
+Start scenario
+ONB-05
+
+
+Onboarde remote-ansatt
+Integrere ny ansatt som jobber hjemmefra.
+
+10 min
+Performance- og forventningssamtale
+Øyvind
+Øyvind
+
+Remote nyansatt på første dag
+
+remote
+onboarding
+tilhørighet
++1
+Start scenario
+ONB-03
+
+
+Onboarding går dårlig - intervensjon
+Ny ansatt som sliter - tidlig inngripen.
+
+10 min
+Performance- og forventningssamtale
+Espen
+Espen
+
+Nyansatt som sliter
+
+problem
+intervensjon
+støtte
++1
+Start scenario
+SALG-13
+
+
+Oppfølging: kunden som ghoster (Frode)
+Trening på å gjenåpne en stoppet deal: diagnostisere rotårsaken og re-engasjere med verdi i stedet for å mase.
+
+10 min
+Oppfølging av stoppet deal
+Frode Nilsen
+Frode Nilsen
+
+Mellomleder hos kunde
+
+Start scenario
+PRES-02
+
+
+Oppfølgingssamtale ved underprestasjon
+Formell oppfølging som del av dokumentasjonsløp.
+
+10 min
+Endringssamtale
+Mari
+Mari
+
+Medarbeider i oppfølging for underprestasjon
+
+underprestasjon
+dokumentasjon
+formell
++1
+Start scenario
+ENDR-03
+
+
+Organisasjonsendring med nye roller
+Kommunisere omorganisering som påvirker roller.
+
+10 min
+Endringssamtale
+Svein
+Svein
+
+Medarbeider hvis rolle endres
+
+omorganisering
+roller
+struktur
++2
+Start scenario
+TILB-01
+
+
+Peer-to-peer feedback fasilitering
+Hjelpe teammedlemmer gi feedback til hverandre.
+
+10 min
+Endringssamtale
+Eskild
+Eskild
+
+Teammedlem i peer-feedback sesjon
+
+peer
+fasilitering
+team
++1
+Start scenario
+VANS-08
+
+
+Personlig hygiene-problem
+Ta opp sensitiv personlig hygiene-problematikk.
+
+10 min
+Endringssamtale
+Henrik
+Henrik
+
+Systemutvikler med 2 års erfaring
+
+hygiene
+sensitiv
+personlig
++1
+Start scenario
+KONF-05
+
+
+Personlighetskonflikt i teamet
+To personer som bare ikke går overens.
+
+10 min
+Undersøkende samtale
+Mona
+Mona
+
+Seniorkonsulent med 5 års erfaring
+
+personlighet
+relasjon
+team
++1
+Start scenario
+COACH-01
+
+
+Prioriteringen: Ingrid har for mye å gjøre
+Grunnformen i en coachende samtale. Ingrid har for mye på bordet og vet ikke hva hun skal droppe. Hun er samarbeidsvillig og problemet er konkret — det eneste som er vanskelig, er å la være å løse det for henne.
+
+10 min
+Coachende samtale
+Ingrid Bakke
+Ingrid Bakke
+
+Rådgiver i teamet ditt
+
+Start scenario
+VANS-18
+
+
+Prøvetid-evaluering (ikke bestått)
+Avslutte arbeidsforhold i prøvetid.
+
+10 min
+Konsekvenssamtale
+Emil
+Emil
+
+Junior konsulent i prøvetid
+
+prøvetid
+avslutning
+formell
++1
+Start scenario
+VANS-37
+
+
+Psykisk helse-samtale
+Snakke om psykisk helse på jobb.
+
+10 min
+Bekymringssamtale
+Jørgen
+Jørgen
+
+Konsulent som sliter med angst
+
+psykisk_helse
+støtte
+sensitiv
++1
+Start scenario
+TILB-02
+
+
+Psykologisk trygghet i møter (aml § 4-3)
+Skape rom der alle tør å si fra og bidra.
+
+10 min
+Undersøkende samtale
+Anders
+Anders
+
+Introvert teammedlem som holder tilbake i møter
+
+psykologisk_trygghet
+møtekultur
+inkludering
++1
+Start scenario
+KONF-07
+
+
+Remote team-konflikt
+Løse konflikt når dere ikke møtes fysisk.
+
+10 min
+Endringssamtale
+Ole
+Ole
+
+Utvikler i remote-team i konflikt med kollega
+
+remote
+konflikt
+avstand
++1
+Start scenario
+MOT-06
+
+
+Remotivere demotivert medarbeider
+Hjelpe noen som har mistet motivasjonen.
+
+10 min
+Bekymringssamtale
+Katinka
+Katinka
+
+Konsulent som har mistet motivasjonen
+
+motivasjon
+engasjement
+støtte
++1
+Start scenario
+PRES-05
+
+
+Sette mål sammen
+Definere gode mål i samarbeid.
+
+10 min
+Performance- og forventningssamtale
+Daniel
+Daniel
+
+Konsulent som skal sette mål
+
+mål
+SMART
+samarbeid
++1
+Start scenario
+SELV-05
+
+
+Si fra at du ikke har mer å gå på
+Du er nær utbrenthet. Samtalen du har utsatt lengst er denne.
+
+10 min
+Motta tilbakemelding
+Terje
+Terje
+
+Regiondirektør, din nærmeste leder
+
+Start scenario
+SELV-04
+
+
+Si nei til din egen leder
+Du får enda et prosjekt. Du har ikke kapasitet. Nå skal du si det.
+
+10 min
+Motta tilbakemelding
+Hanne
+Hanne
+
+Avdelingsdirektør, din nærmeste leder
+
+Start scenario
+COACH-03
+
+
+Sirkelpraten: Bente snakker om alt
+Bente ba om en prat om samarbeidet i teamet, og snakker om alt annet. Øvelsen er å avbryte vennlig — forberede henne på at det kommer, si hvorfor, og få samtalen tilbake til et mål.
+
+10 min
+Coachende samtale
+Bente Lund
+Bente Lund
+
+Fagansvarlig
+
+Start scenario
+VANS-16
+
+
+Sluttavtale-forhandling
+Forhandle frivillig avgang.
+
+10 min
+Konsekvenssamtale
+Rune
+Rune
+
+Senior arkitekt med 14 års erfaring
+
+sluttavtale
+forhandling
+avgang
++1
+Start scenario
+VANS-38
+
+
+Snakke om balansen mellom jobb og fritid
+Diskutere balanse jobb/privat.
+
+10 min
+Bekymringssamtale
+Linn
+Linn
+
+Markedsanalytiker med 2 års erfaring
+
+balanse
+grenser
+wellbeing
++1
+Start scenario
+VANS-09
+
+
+Sykefravær-oppfølging (4-ukers samtale)
+Lovpålagt oppfølgingssamtale etter 4 ukers sykefravær.
+
+10 min
+Bekymringssamtale
+Kristine
+Kristine
+
+Rådgiver med 5 års erfaring
+
+sykefravær
+AML
+oppfølging
++1
+Start scenario
+VANS-32
+
+
+Sykefravær-oppfølging (7 uker)
+Lovpålagt dialogmøte innen 7 uker.
+
+10 min
+Bekymringssamtale
+Erlend
+Erlend
+
+Lagerarbeider sykmeldt for ryggproblemer
+
+sykefravær
+dialogmøte
+lov
++1
+Start scenario
+SYK-06
+
+
+Sykmelding: ambivalensen hos Astrid
+Medarbeider som veksler mellom å ville tilbake og å trekke seg unna, etter lang sykmelding med utmattelse. Test på å romme ambivalens uten å presse på beslutning.
+
+10 min
+Oppfølging av sykmeldt medarbeider
+Astrid Moe
+Astrid Moe
+
+Prosjektleder
+
+Start scenario
+SYK-09
+
+
+Sykmelding: Elin tilbake etter langtid
+Medarbeider tilbake fra lengre fravær, men ikke 100 %. Handler om å møte en litt annen versjon av seg selv — communityship.
+
+10 min
+Oppfølging av sykmeldt medarbeider
+Elin Vik
+Elin Vik
+
+Fagleder
+
+Start scenario
+SYK-03
+
+
+Sykmelding: fraværsmønsteret til Linn
+Trening på å ta opp et fraværsmønster faktabasert, uten å anklage eller gjette på årsak.
+
+10 min
+Oppfølging av sykmeldt medarbeider
+Linn Bergheim
+Linn Bergheim
+
+Rådgiver
+
+Start scenario
+SYK-05
+
+
+Sykmelding: få Thomas til å åpne seg
+Medarbeider som snakker lite og avleder spørsmål — kronisk migrene som usynlig plage. Krever konkrete, ikke-invaderende spørsmål om hverdagen.
+
+10 min
+Oppfølging av sykmeldt medarbeider
+Thomas Grue
+Thomas Grue
+
+Systemutvikler
+
+Start scenario
+SYK-07
+
+
+Sykmelding: Jonas i en livskrise
+Overveldet medarbeider i livskrise (brått samlivsbrudd). Emosjonell og ustrukturert — trening i å tåle stillhet og ikke fylle rommet med råd.
+
+10 min
+Oppfølging av sykmeldt medarbeider
+Jonas Lyng
+Jonas Lyng
+
+Team lead
+
+Start scenario
+SYK-01
+
+
+Sykmelding: komme tilbake til Maria
+Trening på første oppfølgingssamtale med medarbeider som opplever fraværet som skamfullt og bagatelliserer egen tilstand.
+
+10 min
+Oppfølging av sykmeldt medarbeider
+Maria Solberg
+Maria Solberg
+
+Seniorrådgiver
+
+Start scenario
+SYK-08
+
+
+Sykmelding: Nina og lederens rolle
+Nivå 5 — medarbeider som kobler fraværet til lederens egen ledelse. Krever å ta inn tilbakemelding uten å gå i forsvar.
+
+10 min
+Oppfølging av sykmeldt medarbeider
+Nina Dahl
+Nina Dahl
+
+Senior rådgiver
+
+Start scenario
+SYK-02
+
+
+Sykmelding: reparere tilliten med Kenneth
+Trening på å bygge tilbake tillit etter en samtale som ikke traff — med en medarbeider som leser kritikk inn i alt lederen sier.
+
+10 min
+Oppfølging av sykmeldt medarbeider
+Kenneth Aasheim
+Kenneth Aasheim
+
+Senioringeniør
+
+Start scenario
+SYK-04
+
+
+Sykmelding: returplan med Anders
+Grunnleggende oppfølgingssamtale med en åpen medarbeider etter kneoperasjon. Kort fravær, tydelig returplan.
+
+10 min
+Oppfølging av sykmeldt medarbeider
+Anders Haugen
+Anders Haugen
+
+Salgskonsulent
+
+Start scenario
+VANS-31
+
+
+Tilrettelegging etter sykmelding
+Tilpasse arbeid for retur etter sykdom.
+
+10 min
+Bekymringssamtale
+Gunhild
+Gunhild
+
+Prosjektleder tilbake etter utmattelse
+
+tilrettelegging
+retur
+tilpasning
++1
+Start scenario
+COACH-05
+
+
+Uklart mål: Marit vurderer å søke seg bort
+Marit starter midt i nåsituasjonen og vet ikke selv hva hun vil ha ut av samtalen. Øvelsen er å møte henne der hun er, og likevel hente samtalen tilbake til et mål — uten å avbryte henne før hun har fått sagt noe.
+
+10 min
+Coachende samtale
+Marit Hovden
+Marit Hovden
+
+Rådgiver
+
+Start scenario
+VANS-07
+
+
+Upassende oppførsel på arrangement
+Følge opp upassende oppførsel på firmafest eller lignende.

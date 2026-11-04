@@ -1,0 +1,179 @@
+{
+  "rapport_metadata": {
+    "prosjekt": "Kunstpixel HR Produksjonsklargjøring",
+    "versjon": "1.0.0",
+    "generert_tidspunkt": "2026-10-21T06:17:43.862923",
+    "miljo": "Produksjon / Staging",
+    "evaluator": "Senior AI Utviklingsagent"
+  },
+  "kvalitetsporter_status": {
+    "samlet_nivaa": "PILOT_READY",
+    "porter": {
+      "RESEARCH": {
+        "status": "PASS",
+        "kriterium": "Forskningsmateriale AP0-AP9 og kildedokumenter samlet og inventarført.",
+        "bevis": "14 filer i raw inventarført med SHA-256; 220 kilder identifisert."
+      },
+      "VALIDATED": {
+        "status": "PASS",
+        "kriterium": "Skjema, unike ID-er, datakontrakter og relasjoner kontrollert.",
+        "bevis": "94 unike spørsmåls-ID-er, 212 unike regel-ID-er, 0 foreldreløse relasjoner i museum.db."
+      },
+      "TESTED": {
+        "status": "PASS",
+        "kriterium": "Deterministiske regler, tidslinjer, beregninger og operatorer testet automatisk.",
+        "bevis": "100 % passering på automatiserte tester i test_hr_production.py og repoets baseline (351 tester)."
+      },
+      "PILOT_READY": {
+        "status": "PASS",
+        "kriterium": "Sikkerhets- og rollegrenser for Ansatt, Leder og HR etablert i avgrenset miljø.",
+        "bevis": "Skrivebeskyttelse håndhevet, k-anonymitet k>=5 formalisert, diagnoseforbud innført."
+      },
+      "PRODUCTION_READY": {
+        "status": "BLOCKED",
+        "kriterium": "Driftsansvar, formell tariffbinding, foretaksform og databehandleravtale godkjent.",
+        "bevis": "5 uavklarte juridiske og organisatoriske forhold dokumentert i blockers.md."
+      }
+    }
+  },
+  "inventar_oversikt": {
+    "antall_filer_raw": 14,
+    "filer": [
+      {
+        "filnavn": "AP1 – Personalhåndbok_ kildegrunnlag, regler og fasit.pdf",
+        "bytes": 287584,
+        "sha256": "1c3da2fe38c32189f8b3b9532cf4cc79885b2dfd4a5d04a32d6e67b5ee78783f"
+      },
+      {
+        "filnavn": "AP2_lonn_og_lonnsarter.zip",
+        "bytes": 12013,
+        "sha256": "847025e42549494a359deb8b8e1bea0ceeec92b2cb2a2de1574e6c6b947d6d21"
+      },
+      {
+        "filnavn": "AP3_arbeidstid_og_bemanning.zip",
+        "bytes": 35429,
+        "sha256": "f03f3d63db1113e834b286881b2da0c9a7e83f2cb8ffc563295a11d9581f445b"
+      },
+      {
+        "filnavn": "AP4_fravaer_og_oppfolging.zip",
+        "bytes": 16541,
+        "sha256": "01d2707109b5dbbba0ab1f14d151f2f7fa697d6033513791549f1cea45fa6dfc"
+      },
+      {
+        "filnavn": "AP5_produktivitet_og_grensetilfeller.zip",
+        "bytes": 18926,
+        "sha256": "41063234ef65d75054a84a88c606dc1fbf40e6d4cf18b4ec34c29ad11561e22b"
+      },
+      {
+        "filnavn": "AP6_innsamling_fra_ansatte.zip",
+        "bytes": 18366,
+        "sha256": "ba2c57ec80ad87ee7ca96e75c758433f1b3167d489289f787aa533f3e032a511"
+      },
+      {
+        "filnavn": "AP7_likelonn_og_redegjorelse.zip",
+        "bytes": 17635,
+        "sha256": "99557ca4f0f873a56690959eeaa48b260a4794424718370e701221d924ce4a02"
+      },
+      {
+        "filnavn": "AP8_livslop_rekruttering_oppsigelse.zip",
+        "bytes": 18068,
+        "sha256": "d9cf52d94106b23cfdecd4f111640cd3be78dc20a8698e4c58fd17470116bc16"
+      },
+      {
+        "filnavn": "AP9_museum_kunst_sluttleveranse.zip",
+        "bytes": 97849,
+        "sha256": "48396abe7915fc8967d9b458b1538e70ea8a47145c1a69e691d1da70888084fd"
+      },
+      {
+        "filnavn": "Dyptgående «ende»-research_ end-to-end dyp læring, deep edge-to-end og komplette KI-systemer.pdf",
+        "bytes": 280195,
+        "sha256": "469b6272f47a5d5aed315994412e7eda9597a95879614528d366db6ec6ca93d1"
+      },
+      {
+        "filnavn": "Kildekartlegging for de åtte HR-områdene.pdf",
+        "bytes": 335447,
+        "sha256": "f07ba7bdd670d6cc2c66a8a121d7f0ff8df0e94e042f416eb193f51df9aec573"
+      },
+      {
+        "filnavn": "Kunstpixel_HR_KI_casepack_2024-2026_oppdatert.zip",
+        "bytes": 150055,
+        "sha256": "101827e0521cc261838570474755c08daa741bad480d3e7f8370b4d5d5710b0b"
+      },
+      {
+        "filnavn": "Personalhåndbok – bekreftet arbeidspakke og dyptgående kildegrunnlag.pdf",
+        "bytes": 293615,
+        "sha256": "e64ca9be7921acfb1d85ae428c000de936945f1307b5afa2b3c628849c57074e"
+      },
+      {
+        "filnavn": "minthcm-minthcm-8a5edab282632443.txt",
+        "bytes": 45034685,
+        "sha256": "c241ded494b6990f33d50b7b45d7eab18faeb1948eb1d337e0f2f621a6c177f1"
+      }
+    ]
+  },
+  "database_integritet_museum_db": {
+    "ansatte_totalt": 168,
+    "vakter_totalt": 54994,
+    "fravaer_totalt": 3456,
+    "virke_tariff_trinn": 67,
+    "avvik_vakter_for_ansettelse": 0,
+    "avvik_vakter_etter_fratredelse": 0,
+    "avvik_foreldrelose_vakter": 0,
+    "avvik_fravaer_for_ansettelse": 0,
+    "avvik_foreldrelose_fravaer": 0,
+    "avdelinger": [
+      "Ledelse",
+      "Kuratering",
+      "Samling",
+      "Formidling",
+      "Drift",
+      "Marked"
+    ]
+  },
+  "ap9_master_datasett": {
+    "antall_sporsmal": 94,
+    "antall_regler": 212,
+    "antall_tabeller_forslag": 58,
+    "antall_kilder": 154,
+    "sporsmal_per_omraade": {
+      "1": 10,
+      "2": 12,
+      "3": 12,
+      "4": 12,
+      "5": 12,
+      "6": 12,
+      "7": 12,
+      "8": 12
+    },
+    "vanskelighetsgrad_fordeling": {
+      "ja": 73,
+      "nei": 21
+    },
+    "sektor_fordeling_sporsmal": {
+      "museum – privat/kommune": 24,
+      "alle": 46,
+      "privat": 7,
+      "kommune": 11,
+      "industri": 6
+    },
+    "regel_lag_fordeling": {
+      "Tier 5: Regler som krever menneskelig beslutning": 95,
+      "Tier 1: Deterministisk beregningsregel": 33,
+      "Tier 2: Juridisk vilkårsregel": 77,
+      "Tier 3: Tariffavhengig regel": 4,
+      "Tier 4: Faglig vurderingsregel": 3
+    }
+  },
+  "avvik_og_issues_summary": {
+    "totalt_identifisert": 9,
+    "fordeling_alvorlighet": {
+      "MEDIUM": 4,
+      "LOW": 2,
+      "HIGH": 3
+    },
+    "kritiske_avvik": 0,
+    "hoy_alvorlighet": 3,
+    "medium_alvorlighet": 4,
+    "lav_alvorlighet": 2
+  }
+}

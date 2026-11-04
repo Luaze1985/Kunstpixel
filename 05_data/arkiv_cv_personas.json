@@ -1,0 +1,6398 @@
+[
+  {
+    "id": "KP-ANS-001",
+    "navn": "Henrik Faye-Lund",
+    "kjonn": "M",
+    "fodselsaar": 1968,
+    "avdeling": "Ledelse",
+    "stilling": "Museumsdirektør",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 86,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Dr.philos. Kunsthistorie",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 1999
+      },
+      {
+        "grad": "Cand.philol. Kunsthistorie og filosofi",
+        "institusjon": "UiO",
+        "aar": 1994
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Sjefkurator",
+        "periode": "2002-2009"
+      },
+      {
+        "institusjon": "Nasjonalgalleriet",
+        "rolle": "Kurator",
+        "periode": "1999-2002"
+      }
+    ],
+    "publikasjoner": [
+      "Modernismens grenseland: Nordisk kunst etter 1945 (2005)",
+      "Institusjonsbygging og samfunnsansvar i kunstmuseet (2018)"
+    ],
+    "icor_rolle": "Museumsdirektør (/direktor)"
+  },
+  {
+    "id": "KP-ANS-002",
+    "navn": "Silje Lindqvist",
+    "kjonn": "K",
+    "fodselsaar": 1977,
+    "avdeling": "Kuratering",
+    "stilling": "Sjefkurator",
+    "ansatt_fra": "2012-03-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 76,
+    "kontor_sal": "Kuratorfløyen 2. etg",
+    "utdanning": [
+      {
+        "grad": "MA Curating Contemporary Art",
+        "institusjon": "Goldsmiths, University of London",
+        "aar": 2003
+      },
+      {
+        "grad": "Bachelor i Estetiske studier",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2000
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Astrup Fearnley Museet",
+        "rolle": "Kurator",
+        "periode": "2006-2012"
+      },
+      {
+        "institusjon": "Kunstnernes Hus",
+        "rolle": "Formidlingskonsulent",
+        "periode": "2003-2006"
+      }
+    ],
+    "publikasjoner": [
+      "Det post-digitale blikk: Nye medier i norsk samtidskunst (2016)",
+      "Stillhetens Rom: Kuratoriske refleksjoner under pandemien (2021)"
+    ],
+    "icor_rolle": "Kurator (/kurator)"
+  },
+  {
+    "id": "KP-ANS-003",
+    "navn": "Gunnar Viken",
+    "kjonn": "M",
+    "fodselsaar": 1974,
+    "avdeling": "Samling",
+    "stilling": "Samlingsforvalter / Registrar",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 68,
+    "kontor_sal": "Hovedmagasinet U1",
+    "utdanning": [
+      {
+        "grad": "Master i Konservering (NKF-N)",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2001
+      },
+      {
+        "grad": "Museumspedagogikk og arkivfag",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 1997
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "KODE Kunstmuseer i Bergen",
+        "rolle": "Registrator",
+        "periode": "2001-2009"
+      }
+    ],
+    "publikasjoner": [
+      "Standarder for magasinering og klimakontroll i kystklima (2012)",
+      "Proveniensforskning i norske privatsamlinger (2019)"
+    ],
+    "icor_rolle": "Samlingsforvalter (/samlingsforvalter)"
+  },
+  {
+    "id": "KP-ANS-004",
+    "navn": "Astrid Moen",
+    "kjonn": "K",
+    "fodselsaar": 1983,
+    "avdeling": "Formidling",
+    "stilling": "Formidlingsleder",
+    "ansatt_fra": "2014-08-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 70,
+    "kontor_sal": "Formidlingssenteret 1. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Kunstformidling og drama",
+        "institusjon": "Kunsthøgskolen i Oslo (KHiO)",
+        "aar": 2009
+      },
+      {
+        "grad": "Pedagogisk grunnmodul",
+        "institusjon": "UiO",
+        "aar": 2006
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Museumspedagog",
+        "periode": "2009-2014"
+      }
+    ],
+    "publikasjoner": [
+      "Sanselig møte med kunsten: DKS i det 21. århundre (2017)"
+    ],
+    "icor_rolle": "Formidler (/formidler)"
+  },
+  {
+    "id": "KP-ANS-005",
+    "navn": "Terje Bratt",
+    "kjonn": "M",
+    "fodselsaar": 1969,
+    "avdeling": "Drift",
+    "stilling": "Drifts- og eiendomssjef",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 72,
+    "kontor_sal": "Driftssentralen U1",
+    "utdanning": [
+      {
+        "grad": "Fagbrev Byggdrift & Sertifisert RVR-leder",
+        "institusjon": "Forsvarsbygg / Teknisk Fagskole",
+        "aar": 1993
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Forsvarsbygg",
+        "rolle": "Eiendomssjef",
+        "periode": "1995-2009"
+      }
+    ],
+    "publikasjoner": [
+      "Beredskapsplan for uerstattelig kulturarv ved brann og flom (2015)"
+    ],
+    "icor_rolle": "Driftsansvarlig (/drift)"
+  },
+  {
+    "id": "KP-ANS-006",
+    "navn": "Jonas Berg",
+    "kjonn": "M",
+    "fodselsaar": 2000,
+    "avdeling": "Formidling",
+    "stilling": "Seniorvert / Skrankeleder",
+    "ansatt_fra": "2021-09-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 0.8,
+    "lonnstrinn_virke": 45,
+    "kontor_sal": "Skranken / Vestibylen",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Kunsthistorie",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2023
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Kunstnernes Hus",
+        "rolle": "Galleriassistent",
+        "periode": "2020-2021"
+      }
+    ],
+    "publikasjoner": [],
+    "icor_rolle": "Museumsvert (/museumsvert)"
+  },
+  {
+    "id": "KP-ANS-007",
+    "navn": "Ragnhild Eide",
+    "kjonn": "K",
+    "fodselsaar": 1976,
+    "avdeling": "Ledelse",
+    "stilling": "Kvalitets- og complianceansvarlig",
+    "ansatt_fra": "2015-01-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 74,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Cand.jur. Forvaltningsrett og opphavsrett",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2002
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Kulturrådet",
+        "rolle": "Seniorrådgiver juridisk",
+        "periode": "2005-2014"
+      }
+    ],
+    "publikasjoner": [
+      "Opphavsrett og digitale museer: En veileder (2018)"
+    ],
+    "icor_rolle": "Kvalitetsvokter (/qa)"
+  },
+  {
+    "id": "KP-ANS-009",
+    "navn": "Liv Eide",
+    "avdeling": "Kuratering",
+    "stilling": "Sjefkurator",
+    "utdanning": [
+      {
+        "grad": "Master i Kunsthistorie",
+        "institusjon": "Goldsmiths, University of London",
+        "aar": 2002
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Tidligere sjefkurator",
+        "periode": "2004-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om digital kuratering (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-010",
+    "navn": "Håkon Bratt",
+    "avdeling": "Ledelse",
+    "stilling": "Assisterende direktør",
+    "utdanning": [
+      {
+        "grad": "Master i Kuratering",
+        "institusjon": "Københavns Universitet",
+        "aar": 2010
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Stavanger kunstmuseum",
+        "rolle": "Tidligere assisterende direktør",
+        "periode": "2006-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om materiell bevaring (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-012",
+    "navn": "Christian Sivertsen",
+    "avdeling": "Samling",
+    "stilling": "Samlingsforvalter / Registrar",
+    "utdanning": [
+      {
+        "grad": "Master i Kuratering",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2008
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Stavanger kunstmuseum",
+        "rolle": "Tidligere samlingsforvalter / registrar",
+        "periode": "2005-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om veggtekstens dramaturgi (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-016",
+    "navn": "Sverre Ruud",
+    "avdeling": "Ledelse",
+    "stilling": "Økonomisjef",
+    "utdanning": [
+      {
+        "grad": "Master i Konservering",
+        "institusjon": "Kunstakademiet i Bergen (KMD)",
+        "aar": 2007
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Haugar Kunstmuseum",
+        "rolle": "Tidligere økonomisjef",
+        "periode": "2007-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om nordisk modernisme (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-017",
+    "navn": "Mikkel Lindqvist",
+    "avdeling": "Kuratering",
+    "stilling": "Kurator samtidskunst",
+    "utdanning": [
+      {
+        "grad": "Master i Konservering",
+        "institusjon": "Kunstakademiet i Bergen (KMD)",
+        "aar": 2010
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Stavanger kunstmuseum",
+        "rolle": "Tidligere kurator samtidskunst",
+        "periode": "2005-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om materiell bevaring (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-019",
+    "navn": "Andreas Jensen",
+    "avdeling": "Kuratering",
+    "stilling": "Kurator samtidskunst",
+    "utdanning": [
+      {
+        "grad": "Master i Kunsthistorie",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2001
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Tidligere kurator samtidskunst",
+        "periode": "2008-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om digital kuratering (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-020",
+    "navn": "Katrine Jensen",
+    "avdeling": "Samling",
+    "stilling": "Digitaliserings- og samlingstekniker",
+    "utdanning": [
+      {
+        "grad": "Master i Konservering",
+        "institusjon": "Kunsthøgskolen i Oslo (KHiO)",
+        "aar": 2007
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Tidligere digitaliserings- og samlingstekniker",
+        "periode": "2005-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om digital kuratering (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-022",
+    "navn": "Thea Pedersen",
+    "avdeling": "Kuratering",
+    "stilling": "Kurator modernisme",
+    "utdanning": [
+      {
+        "grad": "Master i Kunsthistorie",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2005
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Stavanger kunstmuseum",
+        "rolle": "Tidligere kurator modernisme",
+        "periode": "2004-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om nordisk modernisme (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-025",
+    "navn": "Maren Moen",
+    "avdeling": "Ledelse",
+    "stilling": "HR- og organisasjonsrådgiver",
+    "utdanning": [
+      {
+        "grad": "Master i Kunsthistorie",
+        "institusjon": "Kunstakademiet i Bergen (KMD)",
+        "aar": 2017
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Tidligere hr- og organisasjonsrådgiver",
+        "periode": "2004-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om nordisk modernisme (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-031",
+    "navn": "Bjørn Viken",
+    "avdeling": "Ledelse",
+    "stilling": "Assisterende direktør",
+    "utdanning": [
+      {
+        "grad": "Master i Kunsthistorie",
+        "institusjon": "Kunsthøgskolen i Oslo (KHiO)",
+        "aar": 2021
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Tidligere assisterende direktør",
+        "periode": "2007-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om nordisk modernisme (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-032",
+    "navn": "Fredrik Nygård",
+    "avdeling": "Kuratering",
+    "stilling": "Kurator samtidskunst",
+    "utdanning": [
+      {
+        "grad": "Master i Konservering",
+        "institusjon": "Kunsthøgskolen i Oslo (KHiO)",
+        "aar": 2012
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Haugar Kunstmuseum",
+        "rolle": "Tidligere kurator samtidskunst",
+        "periode": "2004-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om veggtekstens dramaturgi (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-035",
+    "navn": "Emilie Bakke",
+    "avdeling": "Samling",
+    "stilling": "Samlingsforvalter / Registrar",
+    "utdanning": [
+      {
+        "grad": "Master i Kunsthistorie",
+        "institusjon": "NTNU (Trondheim)",
+        "aar": 2009
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Astrup Fearnley Museet",
+        "rolle": "Tidligere samlingsforvalter / registrar",
+        "periode": "2004-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om digital kuratering (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-041",
+    "navn": "Christian Pedersen",
+    "avdeling": "Kuratering",
+    "stilling": "Sjefkurator",
+    "utdanning": [
+      {
+        "grad": "Master i Konservering",
+        "institusjon": "Goldsmiths, University of London",
+        "aar": 1998
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Galleri F 15",
+        "rolle": "Tidligere sjefkurator",
+        "periode": "2005-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om materiell bevaring (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-043",
+    "navn": "Sigrid Ruud",
+    "avdeling": "Kuratering",
+    "stilling": "Kurator modernisme",
+    "utdanning": [
+      {
+        "grad": "Master i Estetikk",
+        "institusjon": "Uppsala Universitet",
+        "aar": 2017
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Galleri F 15",
+        "rolle": "Tidligere kurator modernisme",
+        "periode": "2007-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om veggtekstens dramaturgi (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-045",
+    "navn": "Kirsti Bakke",
+    "avdeling": "Samling",
+    "stilling": "Magasinforvalter",
+    "utdanning": [
+      {
+        "grad": "Master i Estetikk",
+        "institusjon": "Goldsmiths, University of London",
+        "aar": 2003
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Haugar Kunstmuseum",
+        "rolle": "Tidligere magasinforvalter",
+        "periode": "2004-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om veggtekstens dramaturgi (2009)"
+    ]
+  },
+  {
+    "id": "KP-ANS-058",
+    "navn": "Emilie Jensen",
+    "avdeling": "Samling",
+    "stilling": "Magasinforvalter",
+    "utdanning": [
+      {
+        "grad": "Master i Estetikk",
+        "institusjon": "NTNU (Trondheim)",
+        "aar": 2012
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Lillehammer Kunstmuseum",
+        "rolle": "Tidligere magasinforvalter",
+        "periode": "2008-2012"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om materiell bevaring (2011)"
+    ]
+  },
+  {
+    "id": "KP-ANS-059",
+    "navn": "Guro Haugen",
+    "avdeling": "Kuratering",
+    "stilling": "Forskningsstipendiat",
+    "utdanning": [
+      {
+        "grad": "Master i Kunsthistorie",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2006
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Lillehammer Kunstmuseum",
+        "rolle": "Tidligere forskningsstipendiat",
+        "periode": "2009-2012"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om digital kuratering (2011)"
+    ]
+  },
+  {
+    "id": "KP-ANS-064",
+    "navn": "Erik Larsen",
+    "avdeling": "Kuratering",
+    "stilling": "Forskningsstipendiat",
+    "utdanning": [
+      {
+        "grad": "Master i Konservering",
+        "institusjon": "NTNU (Trondheim)",
+        "aar": 2003
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Kulturrådet",
+        "rolle": "Tidligere forskningsstipendiat",
+        "periode": "2008-2012"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om veggtekstens dramaturgi (2011)"
+    ]
+  },
+  {
+    "id": "KP-ANS-067",
+    "navn": "Erik Strand",
+    "avdeling": "Ledelse",
+    "stilling": "HR- og organisasjonsrådgiver",
+    "utdanning": [
+      {
+        "grad": "Master i Konservering",
+        "institusjon": "Københavns Universitet",
+        "aar": 2011
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Kunstnernes Hus",
+        "rolle": "Tidligere hr- og organisasjonsrådgiver",
+        "periode": "2008-2013"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om digital kuratering (2012)"
+    ]
+  },
+  {
+    "id": "KP-ANS-070",
+    "navn": "Per Moen",
+    "avdeling": "Kuratering",
+    "stilling": "Kurator samtidskunst",
+    "utdanning": [
+      {
+        "grad": "Master i Estetikk",
+        "institusjon": "Københavns Universitet",
+        "aar": 2020
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Tidligere kurator samtidskunst",
+        "periode": "2011-2013"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om materiell bevaring (2012)"
+    ]
+  },
+  {
+    "id": "KP-ANS-071",
+    "navn": "Synnøve Dahl",
+    "avdeling": "Ledelse",
+    "stilling": "HR- og organisasjonsrådgiver",
+    "utdanning": [
+      {
+        "grad": "Master i Kuratering",
+        "institusjon": "Goldsmiths, University of London",
+        "aar": 2003
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Galleri F 15",
+        "rolle": "Tidligere hr- og organisasjonsrådgiver",
+        "periode": "2008-2013"
+      }
+    ],
+    "publikasjoner": [
+      "Refleksjoner om materiell bevaring (2012)"
+    ]
+  },
+  {
+    "id": "KP-ANS-008",
+    "navn": "Guro Thorvaldsen",
+    "kjonn": "K",
+    "fodselsaar": 1982,
+    "avdeling": "Formidling",
+    "stilling": "Museumspedagog",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2016-05-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.3,
+    "lonnstrinn_virke": 50,
+    "kontor_sal": "Sal B",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 2008
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 2009
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2007-2010"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2004-2006"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumspedagog (/formidling)"
+  },
+  {
+    "id": "KP-ANS-011",
+    "navn": "Alexander Nilsen",
+    "kjonn": "M",
+    "fodselsaar": 2002,
+    "avdeling": "Formidling",
+    "stilling": "Museumsvert og omviser (Deltid)",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2013-10-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.4,
+    "lonnstrinn_virke": 44,
+    "kontor_sal": "Sal D",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2026
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2024
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2027-2030"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2024-2026"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumsvert og omviser (Deltid) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-013",
+    "navn": "Fredrik Karlsen",
+    "kjonn": "M",
+    "fodselsaar": 1992,
+    "avdeling": "Kuratering",
+    "stilling": "Kuratorassistent",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2016-12-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.6,
+    "lonnstrinn_virke": 52,
+    "kontor_sal": "Kuratorfløyen 2. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2018
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2017-2021"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Kuratorassistent (/kuratering)"
+  },
+  {
+    "id": "KP-ANS-014",
+    "navn": "Erik Moen",
+    "kjonn": "M",
+    "fodselsaar": 1995,
+    "avdeling": "Marked",
+    "stilling": "Digital innholdsprodusent / Web",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2013-11-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 58,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Reiseliv, vertskap og opplevelsesøkonomi",
+        "institusjon": "Høyskolen Kristiania",
+        "aar": 2018
+      },
+      {
+        "grad": "IK-mat og allergiansvarlig kurs",
+        "institusjon": "Mattilsynet / NHO Reiseliv",
+        "aar": 2019
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2019-2023"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2016-2019"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Digital innholdsprodusent / Web (/marked)"
+  },
+  {
+    "id": "KP-ANS-015",
+    "navn": "Morten Dahl",
+    "kjonn": "M",
+    "fodselsaar": 1968,
+    "avdeling": "Marked",
+    "stilling": "Kommunikasjons- og markedssjef",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2020-09-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 70,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Master i Strategisk markedsføring og ledelse",
+        "institusjon": "Handelshøyskolen BI",
+        "aar": 1993
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "1992-1996"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "1989-1992"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Kommunikasjons- og markedssjef (/marked)"
+  },
+  {
+    "id": "KP-ANS-018",
+    "navn": "Arild Nilsen",
+    "kjonn": "M",
+    "fodselsaar": 2003,
+    "avdeling": "Marked",
+    "stilling": "Kafémedarbeider (Deltid)",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2012-05-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.6,
+    "lonnstrinn_virke": 37,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Reiseliv, vertskap og opplevelsesøkonomi",
+        "institusjon": "Høyskolen Kristiania",
+        "aar": 2026
+      },
+      {
+        "grad": "IK-mat og allergiansvarlig kurs",
+        "institusjon": "Mattilsynet / NHO Reiseliv",
+        "aar": 2027
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2027-2031"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2024-2027"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Kafémedarbeider (Deltid) (/marked)"
+  },
+  {
+    "id": "KP-ANS-021",
+    "navn": "Per Ruud",
+    "kjonn": "M",
+    "fodselsaar": 1985,
+    "avdeling": "Marked",
+    "stilling": "Kommunikasjons- og markedssjef",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 67,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Master i Strategisk markedsføring og ledelse",
+        "institusjon": "Handelshøyskolen BI",
+        "aar": 2010
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2009-2013"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2006-2009"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Kommunikasjons- og markedssjef (/marked)"
+  },
+  {
+    "id": "KP-ANS-023",
+    "navn": "Thea Larsen",
+    "kjonn": "K",
+    "fodselsaar": 1981,
+    "avdeling": "Formidling",
+    "stilling": "Museumspedagog",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 0.3,
+    "lonnstrinn_virke": 50,
+    "kontor_sal": "Sal C",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 2007
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 2008
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2006-2009"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2003-2005"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumspedagog (/formidling)"
+  },
+  {
+    "id": "KP-ANS-024",
+    "navn": "Trond Nygård",
+    "kjonn": "M",
+    "fodselsaar": 2004,
+    "avdeling": "Formidling",
+    "stilling": "Museumsvert og omviser (Deltid)",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2013-12-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.6,
+    "lonnstrinn_virke": 38,
+    "kontor_sal": "Sal A",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2028
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2026
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2029-2032"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2026-2028"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumsvert og omviser (Deltid) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-026",
+    "navn": "Emilie Hansen",
+    "kjonn": "K",
+    "fodselsaar": 1972,
+    "avdeling": "Marked",
+    "stilling": "Kaféleder",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2013-01-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 47,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Master i Strategisk markedsføring og ledelse",
+        "institusjon": "Handelshøyskolen BI",
+        "aar": 1997
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "1996-2000"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "1993-1996"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Kaféleder (/marked)"
+  },
+  {
+    "id": "KP-ANS-027",
+    "navn": "Morten Nilsen",
+    "kjonn": "M",
+    "fodselsaar": 1972,
+    "avdeling": "Formidling",
+    "stilling": "Senior museumspedagog",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2016-03-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 58,
+    "kontor_sal": "Sal A",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 1998
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 1999
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "1997-2000"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "1994-1996"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Senior museumspedagog (/formidling)"
+  },
+  {
+    "id": "KP-ANS-028",
+    "navn": "Magnus Bratt",
+    "kjonn": "M",
+    "fodselsaar": 1983,
+    "avdeling": "Formidling",
+    "stilling": "Audioguide- og innholdsprodusent",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2013-06-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.3,
+    "lonnstrinn_virke": 53,
+    "kontor_sal": "Sal D",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2007
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2005
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2008-2011"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2005-2007"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Audioguide- og innholdsprodusent (/formidling)"
+  },
+  {
+    "id": "KP-ANS-029",
+    "navn": "Henrik Helgesen",
+    "kjonn": "M",
+    "fodselsaar": 1978,
+    "avdeling": "Drift",
+    "stilling": "AV- og utstillingslystekniker",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 52,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Elektrikerfaget / Byggdrifterfaget",
+        "institusjon": "Agder Fylkeskommune",
+        "aar": 1999
+      },
+      {
+        "grad": "Sertifisering: Varme arbeider og stillas",
+        "institusjon": "Norsk Brannvernforening",
+        "aar": 2001
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2001-2005"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "1999-2001"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "AV- og utstillingslystekniker (/drift)"
+  },
+  {
+    "id": "KP-ANS-030",
+    "navn": "Kirsti Pettersen",
+    "kjonn": "K",
+    "fodselsaar": 1997,
+    "avdeling": "Formidling",
+    "stilling": "Museumsvert og omviser (Deltid)",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2012-11-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.5,
+    "lonnstrinn_virke": 44,
+    "kontor_sal": "Sal A",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2021
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2019
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2022-2025"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2019-2021"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumsvert og omviser (Deltid) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-033",
+    "navn": "Thea Larsen",
+    "kjonn": "K",
+    "fodselsaar": 1988,
+    "avdeling": "Marked",
+    "stilling": "Digital innholdsprodusent / Web",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2013-12-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 57,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Reiseliv, vertskap og opplevelsesøkonomi",
+        "institusjon": "Høyskolen Kristiania",
+        "aar": 2011
+      },
+      {
+        "grad": "IK-mat og allergiansvarlig kurs",
+        "institusjon": "Mattilsynet / NHO Reiseliv",
+        "aar": 2012
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2012-2016"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2009-2012"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Digital innholdsprodusent / Web (/marked)"
+  },
+  {
+    "id": "KP-ANS-034",
+    "navn": "Sverre Eide",
+    "kjonn": "M",
+    "fodselsaar": 1980,
+    "avdeling": "Formidling",
+    "stilling": "Formidlingsleder",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2013-08-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 69,
+    "kontor_sal": "Sal A",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 2006
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 2007
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2005-2008"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2002-2004"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Formidlingsleder (/formidling)"
+  },
+  {
+    "id": "KP-ANS-036",
+    "navn": "Ragnhild Strand",
+    "kjonn": "K",
+    "fodselsaar": 2004,
+    "avdeling": "Formidling",
+    "stilling": "Museumsvert og omviser (Deltid)",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2012-10-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.3,
+    "lonnstrinn_virke": 42,
+    "kontor_sal": "Sal A",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2028
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2026
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2029-2032"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2026-2028"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumsvert og omviser (Deltid) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-037",
+    "navn": "Henrik Sandvik",
+    "kjonn": "M",
+    "fodselsaar": 1971,
+    "avdeling": "Marked",
+    "stilling": "Kaféleder",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2013-02-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 51,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Master i Strategisk markedsføring og ledelse",
+        "institusjon": "Handelshøyskolen BI",
+        "aar": 1996
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "1995-1999"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "1992-1995"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Kaféleder (/marked)"
+  },
+  {
+    "id": "KP-ANS-038",
+    "navn": "Harald Eriksen",
+    "kjonn": "M",
+    "fodselsaar": 1977,
+    "avdeling": "Formidling",
+    "stilling": "Senior museumspedagog",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2020-09-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 56,
+    "kontor_sal": "Sal D",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 2003
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 2004
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2002-2005"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "1999-2001"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Senior museumspedagog (/formidling)"
+  },
+  {
+    "id": "KP-ANS-039",
+    "navn": "Synnøve Myhre",
+    "kjonn": "K",
+    "fodselsaar": 1974,
+    "avdeling": "Formidling",
+    "stilling": "Formidlingsleder",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2016-07-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 69,
+    "kontor_sal": "Resepsjon / Skranke",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 2000
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 2001
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "1999-2002"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "1996-1998"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Formidlingsleder (/formidling)"
+  },
+  {
+    "id": "KP-ANS-040",
+    "navn": "Katrine Tangen",
+    "kjonn": "K",
+    "fodselsaar": 1977,
+    "avdeling": "Drift",
+    "stilling": "Bygningstekniker / Montør",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2016-11-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 53,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Elektrikerfaget / Byggdrifterfaget",
+        "institusjon": "Agder Fylkeskommune",
+        "aar": 1998
+      },
+      {
+        "grad": "Sertifisering: Varme arbeider og stillas",
+        "institusjon": "Norsk Brannvernforening",
+        "aar": 2000
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2000-2004"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "1998-2000"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Bygningstekniker / Montør (/drift)"
+  },
+  {
+    "id": "KP-ANS-042",
+    "navn": "Ingrid Eide",
+    "kjonn": "K",
+    "fodselsaar": 1980,
+    "avdeling": "Drift",
+    "stilling": "Bygningstekniker / Montør",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2020-12-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 56,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Elektrikerfaget / Byggdrifterfaget",
+        "institusjon": "Agder Fylkeskommune",
+        "aar": 2001
+      },
+      {
+        "grad": "Sertifisering: Varme arbeider og stillas",
+        "institusjon": "Norsk Brannvernforening",
+        "aar": 2003
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2003-2007"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2001-2003"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Bygningstekniker / Montør (/drift)"
+  },
+  {
+    "id": "KP-ANS-044",
+    "navn": "Morten Jensen",
+    "kjonn": "M",
+    "fodselsaar": 1991,
+    "avdeling": "Drift",
+    "stilling": "AV- og utstillingslystekniker",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2016-04-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 54,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Elektrikerfaget / Byggdrifterfaget",
+        "institusjon": "Agder Fylkeskommune",
+        "aar": 2012
+      },
+      {
+        "grad": "Sertifisering: Varme arbeider og stillas",
+        "institusjon": "Norsk Brannvernforening",
+        "aar": 2014
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2014-2018"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2012-2014"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "AV- og utstillingslystekniker (/drift)"
+  },
+  {
+    "id": "KP-ANS-046",
+    "navn": "Jonas Nilsen",
+    "kjonn": "M",
+    "fodselsaar": 1983,
+    "avdeling": "Drift",
+    "stilling": "Sikkerhetsleder / RVR",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 54,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Bygg- og eiendomsledelse",
+        "institusjon": "NTNU Trondheim",
+        "aar": 2008
+      },
+      {
+        "grad": "HMS- og verneingeniørsertifikat",
+        "institusjon": "Kiwa Teknologisk Institutt",
+        "aar": 2011
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2006-2010"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2004-2006"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Sikkerhetsleder / RVR (/drift)"
+  },
+  {
+    "id": "KP-ANS-047",
+    "navn": "Anja Eriksen",
+    "kjonn": "K",
+    "fodselsaar": 1982,
+    "avdeling": "Drift",
+    "stilling": "Sikkerhetsleder / RVR",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2020-09-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 57,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Bygg- og eiendomsledelse",
+        "institusjon": "NTNU Trondheim",
+        "aar": 2007
+      },
+      {
+        "grad": "HMS- og verneingeniørsertifikat",
+        "institusjon": "Kiwa Teknologisk Institutt",
+        "aar": 2010
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2005-2009"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2003-2005"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Sikkerhetsleder / RVR (/drift)"
+  },
+  {
+    "id": "KP-ANS-048",
+    "navn": "Mikkel Lindqvist",
+    "kjonn": "M",
+    "fodselsaar": 2002,
+    "avdeling": "Formidling",
+    "stilling": "Museumsvert og omviser (Deltid)",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2014-12-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.4,
+    "lonnstrinn_virke": 43,
+    "kontor_sal": "Sal A",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2026
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2024
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2027-2030"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2024-2026"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumsvert og omviser (Deltid) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-049",
+    "navn": "Gunnar Berg",
+    "kjonn": "M",
+    "fodselsaar": 1989,
+    "avdeling": "Formidling",
+    "stilling": "DKS-koordinator (Skolesekken)",
+    "ansatt_fra": "2010-01-01",
+    "ansatt_til": "2013-05-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 62,
+    "kontor_sal": "Sal C",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2013
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2011
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2014-2017"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2011-2013"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "DKS-koordinator (Skolesekken) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-050",
+    "navn": "Vegard Johnsen",
+    "kjonn": "M",
+    "fodselsaar": 1973,
+    "avdeling": "Drift",
+    "stilling": "Sikkerhetsleder / RVR",
+    "ansatt_fra": "2011-02-15",
+    "ansatt_til": "2014-09-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 54,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Bygg- og eiendomsledelse",
+        "institusjon": "NTNU Trondheim",
+        "aar": 1998
+      },
+      {
+        "grad": "HMS- og verneingeniørsertifikat",
+        "institusjon": "Kiwa Teknologisk Institutt",
+        "aar": 2001
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "1996-2000"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "1994-1996"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Sikkerhetsleder / RVR (/drift)"
+  },
+  {
+    "id": "KP-ANS-051",
+    "navn": "Astrid Lindqvist",
+    "kjonn": "K",
+    "fodselsaar": 1975,
+    "avdeling": "Marked",
+    "stilling": "Digital innholdsprodusent / Web",
+    "ansatt_fra": "2011-10-01",
+    "ansatt_til": "2014-08-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 53,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Reiseliv, vertskap og opplevelsesøkonomi",
+        "institusjon": "Høyskolen Kristiania",
+        "aar": 1998
+      },
+      {
+        "grad": "IK-mat og allergiansvarlig kurs",
+        "institusjon": "Mattilsynet / NHO Reiseliv",
+        "aar": 1999
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "1999-2003"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "1996-1999"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Digital innholdsprodusent / Web (/marked)"
+  },
+  {
+    "id": "KP-ANS-052",
+    "navn": "Simen Larsen",
+    "kjonn": "M",
+    "fodselsaar": 2003,
+    "avdeling": "Formidling",
+    "stilling": "Museumsvert og omviser (Deltid)",
+    "ansatt_fra": "2011-02-01",
+    "ansatt_til": "2016-02-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.3,
+    "lonnstrinn_virke": 40,
+    "kontor_sal": "Sal D",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2027
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2025
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2028-2031"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2025-2027"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumsvert og omviser (Deltid) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-053",
+    "navn": "Kari Sæther",
+    "kjonn": "K",
+    "fodselsaar": 1995,
+    "avdeling": "Formidling",
+    "stilling": "Museumsvert og omviser (Deltid)",
+    "ansatt_fra": "2011-02-15",
+    "ansatt_til": "2015-10-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.3,
+    "lonnstrinn_virke": 36,
+    "kontor_sal": "Resepsjon / Skranke",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2019
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2017
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2020-2023"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2017-2019"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumsvert og omviser (Deltid) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-054",
+    "navn": "Lars Moe",
+    "kjonn": "M",
+    "fodselsaar": 1978,
+    "avdeling": "Formidling",
+    "stilling": "Formidlingsleder",
+    "ansatt_fra": "2011-08-01",
+    "ansatt_til": "2017-06-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 71,
+    "kontor_sal": "Resepsjon / Skranke",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 2004
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 2005
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2003-2006"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2000-2002"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Formidlingsleder (/formidling)"
+  },
+  {
+    "id": "KP-ANS-055",
+    "navn": "Sindre Ruud",
+    "kjonn": "M",
+    "fodselsaar": 2001,
+    "avdeling": "Formidling",
+    "stilling": "Museumsvert og omviser (Deltid)",
+    "ansatt_fra": "2011-05-15",
+    "ansatt_til": "2015-02-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.5,
+    "lonnstrinn_virke": 43,
+    "kontor_sal": "Sal E",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2025
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2023
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2026-2029"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2023-2025"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumsvert og omviser (Deltid) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-056",
+    "navn": "Kristian Lindqvist",
+    "kjonn": "M",
+    "fodselsaar": 1970,
+    "avdeling": "Formidling",
+    "stilling": "Senior museumspedagog",
+    "ansatt_fra": "2011-08-01",
+    "ansatt_til": "2017-05-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 59,
+    "kontor_sal": "Sal C",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 1996
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 1997
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "1995-1998"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "1992-1994"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Senior museumspedagog (/formidling)"
+  },
+  {
+    "id": "KP-ANS-057",
+    "navn": "Hanna Pedersen",
+    "kjonn": "K",
+    "fodselsaar": 1988,
+    "avdeling": "Kuratering",
+    "stilling": "Kuratorassistent",
+    "ansatt_fra": "2012-08-01",
+    "ansatt_til": "2022-11-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.6,
+    "lonnstrinn_virke": 53,
+    "kontor_sal": "Kuratorfløyen 2. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2014
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2013-2017"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Kuratorassistent (/kuratering)"
+  },
+  {
+    "id": "KP-ANS-060",
+    "navn": "Synnøve Faye-Lund",
+    "kjonn": "K",
+    "fodselsaar": 1983,
+    "avdeling": "Formidling",
+    "stilling": "DKS-koordinator (Skolesekken)",
+    "ansatt_fra": "2012-01-01",
+    "ansatt_til": "2018-12-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 58,
+    "kontor_sal": "Sal E",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2007
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2005
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2008-2011"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2005-2007"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "DKS-koordinator (Skolesekken) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-061",
+    "navn": "Sindre Tangen",
+    "kjonn": "M",
+    "fodselsaar": 1976,
+    "avdeling": "Formidling",
+    "stilling": "DKS-koordinator (Skolesekken)",
+    "ansatt_fra": "2012-05-15",
+    "ansatt_til": "2015-02-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 62,
+    "kontor_sal": "Resepsjon / Skranke",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2000
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 1998
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2001-2004"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "1998-2000"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "DKS-koordinator (Skolesekken) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-062",
+    "navn": "Camilla Olsen",
+    "kjonn": "K",
+    "fodselsaar": 1977,
+    "avdeling": "Drift",
+    "stilling": "AV- og utstillingslystekniker",
+    "ansatt_fra": "2012-04-01",
+    "ansatt_til": "2018-07-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 53,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Elektrikerfaget / Byggdrifterfaget",
+        "institusjon": "Agder Fylkeskommune",
+        "aar": 1998
+      },
+      {
+        "grad": "Sertifisering: Varme arbeider og stillas",
+        "institusjon": "Norsk Brannvernforening",
+        "aar": 2000
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2000-2004"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "1998-2000"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "AV- og utstillingslystekniker (/drift)"
+  },
+  {
+    "id": "KP-ANS-063",
+    "navn": "Geir Sæther",
+    "kjonn": "M",
+    "fodselsaar": 1983,
+    "avdeling": "Marked",
+    "stilling": "Museumsbutikkleder",
+    "ansatt_fra": "2012-10-01",
+    "ansatt_til": "2018-12-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 49,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Master i Strategisk markedsføring og ledelse",
+        "institusjon": "Handelshøyskolen BI",
+        "aar": 2008
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2007-2011"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2004-2007"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Museumsbutikkleder (/marked)"
+  },
+  {
+    "id": "KP-ANS-065",
+    "navn": "Nora Karlsen",
+    "kjonn": "K",
+    "fodselsaar": 1981,
+    "avdeling": "Drift",
+    "stilling": "Vekter og sikkerhetsvakt",
+    "ansatt_fra": "2013-07-01",
+    "ansatt_til": "2019-11-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.4,
+    "lonnstrinn_virke": 42,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Sikkerhetsfaget",
+        "institusjon": "Fylkeskommunal yrkesopplæring",
+        "aar": 2002
+      },
+      {
+        "grad": "Nasjonal vekteropplæring trinn 1-3 & RVR-kurs",
+        "institusjon": "NHO Service og Handel",
+        "aar": 2003
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2004-2008"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2002-2004"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Vekter og sikkerhetsvakt (/drift)"
+  },
+  {
+    "id": "KP-ANS-066",
+    "navn": "Synnøve Strand",
+    "kjonn": "K",
+    "fodselsaar": 1984,
+    "avdeling": "Drift",
+    "stilling": "Vekter og sikkerhetsvakt",
+    "ansatt_fra": "2013-08-01",
+    "ansatt_til": "2019-05-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.6,
+    "lonnstrinn_virke": 42,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Sikkerhetsfaget",
+        "institusjon": "Fylkeskommunal yrkesopplæring",
+        "aar": 2005
+      },
+      {
+        "grad": "Nasjonal vekteropplæring trinn 1-3 & RVR-kurs",
+        "institusjon": "NHO Service og Handel",
+        "aar": 2006
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2007-2011"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2005-2007"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Vekter og sikkerhetsvakt (/drift)"
+  },
+  {
+    "id": "KP-ANS-068",
+    "navn": "Benedicte Gulliksen",
+    "kjonn": "K",
+    "fodselsaar": 1980,
+    "avdeling": "Drift",
+    "stilling": "Drifts- og eiendomssjef",
+    "ansatt_fra": "2013-06-15",
+    "ansatt_til": "2019-11-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 67,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Bygg- og eiendomsledelse",
+        "institusjon": "NTNU Trondheim",
+        "aar": 2005
+      },
+      {
+        "grad": "HMS- og verneingeniørsertifikat",
+        "institusjon": "Kiwa Teknologisk Institutt",
+        "aar": 2008
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2003-2007"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2001-2003"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Drifts- og eiendomssjef (/drift)"
+  },
+  {
+    "id": "KP-ANS-069",
+    "navn": "Trond Helgesen",
+    "kjonn": "M",
+    "fodselsaar": 1966,
+    "avdeling": "Marked",
+    "stilling": "Kaféleder",
+    "ansatt_fra": "2013-08-01",
+    "ansatt_til": "2015-06-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 47,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Master i Strategisk markedsføring og ledelse",
+        "institusjon": "Handelshøyskolen BI",
+        "aar": 1991
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "1990-1994"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "1987-1990"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Kaféleder (/marked)"
+  },
+  {
+    "id": "KP-ANS-072",
+    "navn": "Fredrik Lie",
+    "kjonn": "M",
+    "fodselsaar": 1991,
+    "avdeling": "Kuratering",
+    "stilling": "Forskningsstipendiat",
+    "ansatt_fra": "2014-12-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 56,
+    "kontor_sal": "Kuratorfløyen 2. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2017
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2016-2020"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Forskningsstipendiat (/kuratering)"
+  },
+  {
+    "id": "KP-ANS-073",
+    "navn": "Henrik Pettersen",
+    "kjonn": "M",
+    "fodselsaar": 1993,
+    "avdeling": "Drift",
+    "stilling": "Vekter og sikkerhetsvakt",
+    "ansatt_fra": "2014-11-15",
+    "ansatt_til": null,
+    "status": "Deltid / Sesong",
+    "stillingsprosent": 0.6,
+    "lonnstrinn_virke": 46,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Sikkerhetsfaget",
+        "institusjon": "Fylkeskommunal yrkesopplæring",
+        "aar": 2014
+      },
+      {
+        "grad": "Nasjonal vekteropplæring trinn 1-3 & RVR-kurs",
+        "institusjon": "NHO Service og Handel",
+        "aar": 2015
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2016-2020"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2014-2016"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Vekter og sikkerhetsvakt (/drift)"
+  },
+  {
+    "id": "KP-ANS-074",
+    "navn": "Even Haugen",
+    "kjonn": "M",
+    "fodselsaar": 1995,
+    "avdeling": "Marked",
+    "stilling": "Kafémedarbeider (Deltid)",
+    "ansatt_fra": "2014-10-15",
+    "ansatt_til": "2016-07-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.3,
+    "lonnstrinn_virke": 34,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Reiseliv, vertskap og opplevelsesøkonomi",
+        "institusjon": "Høyskolen Kristiania",
+        "aar": 2018
+      },
+      {
+        "grad": "IK-mat og allergiansvarlig kurs",
+        "institusjon": "Mattilsynet / NHO Reiseliv",
+        "aar": 2019
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2019-2023"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2016-2019"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Kafémedarbeider (Deltid) (/marked)"
+  },
+  {
+    "id": "KP-ANS-075",
+    "navn": "Elin Viken",
+    "kjonn": "K",
+    "fodselsaar": 1985,
+    "avdeling": "Kuratering",
+    "stilling": "Forskningsstipendiat",
+    "ansatt_fra": "2014-02-15",
+    "ansatt_til": "2017-08-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 54,
+    "kontor_sal": "Kuratorfløyen 2. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2011
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2010-2014"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Forskningsstipendiat (/kuratering)"
+  },
+  {
+    "id": "KP-ANS-076",
+    "navn": "Kari Tangen",
+    "kjonn": "K",
+    "fodselsaar": 1985,
+    "avdeling": "Drift",
+    "stilling": "AV- og utstillingslystekniker",
+    "ansatt_fra": "2014-10-15",
+    "ansatt_til": "2020-06-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 58,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Elektrikerfaget / Byggdrifterfaget",
+        "institusjon": "Agder Fylkeskommune",
+        "aar": 2006
+      },
+      {
+        "grad": "Sertifisering: Varme arbeider og stillas",
+        "institusjon": "Norsk Brannvernforening",
+        "aar": 2008
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2008-2012"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2006-2008"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "AV- og utstillingslystekniker (/drift)"
+  },
+  {
+    "id": "KP-ANS-077",
+    "navn": "Terje Aas",
+    "kjonn": "M",
+    "fodselsaar": 1972,
+    "avdeling": "Ledelse",
+    "stilling": "Økonomisjef",
+    "ansatt_fra": "2014-12-01",
+    "ansatt_til": "2020-02-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 69,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 1998
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "1997-2001"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Økonomisjef (/ledelse)"
+  },
+  {
+    "id": "KP-ANS-078",
+    "navn": "Gunnar Viken",
+    "kjonn": "M",
+    "fodselsaar": 1984,
+    "avdeling": "Samling",
+    "stilling": "Samlingsforvalter / Registrar",
+    "ansatt_fra": "2014-06-15",
+    "ansatt_til": "2020-04-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 70,
+    "kontor_sal": "Konserveringsatelier U1 / Magasin",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Museologi og kulturarv",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2008
+      },
+      {
+        "grad": "Sertifisering i Primus samlingsdatabase",
+        "institusjon": "KulturIT",
+        "aar": 2009
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Nasjonalmuseet",
+        "rolle": "Konserveringsassistent",
+        "periode": "2009-2013"
+      },
+      {
+        "institusjon": "KODE Kunstmuseer",
+        "rolle": "Magasintekniker",
+        "periode": "2007-2009"
+      }
+    ],
+    "publikasjoner": [
+      "Tilstandsvurdering og mikro-klimaovervåking i historiske magasiner (2021)",
+      "Forebyggende konservering ved utlån av papirverk (2023)"
+    ],
+    "icor_rolle": "Samlingsforvalter / Registrar (/samling)"
+  },
+  {
+    "id": "KP-ANS-079",
+    "navn": "Tone Andersen",
+    "kjonn": "K",
+    "fodselsaar": 1994,
+    "avdeling": "Ledelse",
+    "stilling": "HR- og organisasjonsrådgiver",
+    "ansatt_fra": "2014-11-01",
+    "ansatt_til": "2020-10-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 62,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2020
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2019-2023"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "HR- og organisasjonsrådgiver (/ledelse)"
+  },
+  {
+    "id": "KP-ANS-080",
+    "navn": "Even Karlsen",
+    "kjonn": "M",
+    "fodselsaar": 1979,
+    "avdeling": "Formidling",
+    "stilling": "Seniorvert / Skrankeleder",
+    "ansatt_fra": "2015-05-01",
+    "ansatt_til": "2017-06-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.5,
+    "lonnstrinn_virke": 47,
+    "kontor_sal": "Sal D",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 2005
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 2006
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2004-2007"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2001-2003"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Seniorvert / Skrankeleder (/formidling)"
+  },
+  {
+    "id": "KP-ANS-081",
+    "navn": "Håkon Lie",
+    "kjonn": "M",
+    "fodselsaar": 1972,
+    "avdeling": "Drift",
+    "stilling": "Drifts- og eiendomssjef",
+    "ansatt_fra": "2015-07-15",
+    "ansatt_til": "2021-12-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 70,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Bygg- og eiendomsledelse",
+        "institusjon": "NTNU Trondheim",
+        "aar": 1997
+      },
+      {
+        "grad": "HMS- og verneingeniørsertifikat",
+        "institusjon": "Kiwa Teknologisk Institutt",
+        "aar": 2000
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "1995-1999"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "1993-1995"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Drifts- og eiendomssjef (/drift)"
+  },
+  {
+    "id": "KP-ANS-082",
+    "navn": "Henrik Hagen",
+    "kjonn": "M",
+    "fodselsaar": 1992,
+    "avdeling": "Marked",
+    "stilling": "Kafémedarbeider (Deltid)",
+    "ansatt_fra": "2015-10-15",
+    "ansatt_til": "2019-05-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.4,
+    "lonnstrinn_virke": 36,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Reiseliv, vertskap og opplevelsesøkonomi",
+        "institusjon": "Høyskolen Kristiania",
+        "aar": 2015
+      },
+      {
+        "grad": "IK-mat og allergiansvarlig kurs",
+        "institusjon": "Mattilsynet / NHO Reiseliv",
+        "aar": 2016
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2016-2020"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2013-2016"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Kafémedarbeider (Deltid) (/marked)"
+  },
+  {
+    "id": "KP-ANS-083",
+    "navn": "Tuva Sivertsen",
+    "kjonn": "K",
+    "fodselsaar": 1995,
+    "avdeling": "Drift",
+    "stilling": "Bygningstekniker / Montør",
+    "ansatt_fra": "2015-02-01",
+    "ansatt_til": "2021-08-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 48,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Elektrikerfaget / Byggdrifterfaget",
+        "institusjon": "Agder Fylkeskommune",
+        "aar": 2016
+      },
+      {
+        "grad": "Sertifisering: Varme arbeider og stillas",
+        "institusjon": "Norsk Brannvernforening",
+        "aar": 2018
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2018-2022"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2016-2018"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Bygningstekniker / Montør (/drift)"
+  },
+  {
+    "id": "KP-ANS-084",
+    "navn": "Hege Haugen",
+    "kjonn": "K",
+    "fodselsaar": 1981,
+    "avdeling": "Drift",
+    "stilling": "Bygningstekniker / Montør",
+    "ansatt_fra": "2015-03-15",
+    "ansatt_til": "2021-05-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 50,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Elektrikerfaget / Byggdrifterfaget",
+        "institusjon": "Agder Fylkeskommune",
+        "aar": 2002
+      },
+      {
+        "grad": "Sertifisering: Varme arbeider og stillas",
+        "institusjon": "Norsk Brannvernforening",
+        "aar": 2004
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2004-2008"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2002-2004"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Bygningstekniker / Montør (/drift)"
+  },
+  {
+    "id": "KP-ANS-085",
+    "navn": "Andreas Ruud",
+    "kjonn": "M",
+    "fodselsaar": 1982,
+    "avdeling": "Marked",
+    "stilling": "Digital innholdsprodusent / Web",
+    "ansatt_fra": "2015-11-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 60,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Reiseliv, vertskap og opplevelsesøkonomi",
+        "institusjon": "Høyskolen Kristiania",
+        "aar": 2005
+      },
+      {
+        "grad": "IK-mat og allergiansvarlig kurs",
+        "institusjon": "Mattilsynet / NHO Reiseliv",
+        "aar": 2006
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2006-2010"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2003-2006"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Digital innholdsprodusent / Web (/marked)"
+  },
+  {
+    "id": "KP-ANS-086",
+    "navn": "Tuva Brekke",
+    "kjonn": "K",
+    "fodselsaar": 1983,
+    "avdeling": "Kuratering",
+    "stilling": "Kurator samtidskunst",
+    "ansatt_fra": "2015-10-15",
+    "ansatt_til": "2025-06-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 59,
+    "kontor_sal": "Kuratorfløyen 2. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2009
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2008-2012"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Kurator samtidskunst (/kuratering)"
+  },
+  {
+    "id": "KP-ANS-087",
+    "navn": "Christian Thorvaldsen",
+    "kjonn": "M",
+    "fodselsaar": 1984,
+    "avdeling": "Ledelse",
+    "stilling": "HR- og organisasjonsrådgiver",
+    "ansatt_fra": "2015-11-15",
+    "ansatt_til": "2018-01-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 60,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2010
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2009-2013"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "HR- og organisasjonsrådgiver (/ledelse)"
+  },
+  {
+    "id": "KP-ANS-088",
+    "navn": "Thea Brekke",
+    "kjonn": "K",
+    "fodselsaar": 1986,
+    "avdeling": "Kuratering",
+    "stilling": "Kurator modernisme",
+    "ansatt_fra": "2016-11-15",
+    "ansatt_til": "2022-12-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 60,
+    "kontor_sal": "Kuratorfløyen 2. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2012
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2011-2015"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Kurator modernisme (/kuratering)"
+  },
+  {
+    "id": "KP-ANS-089",
+    "navn": "Per Johnsen",
+    "kjonn": "M",
+    "fodselsaar": 1971,
+    "avdeling": "Ledelse",
+    "stilling": "Økonomisjef",
+    "ansatt_fra": "2016-08-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 73,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 1997
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "1996-2000"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Økonomisjef (/ledelse)"
+  },
+  {
+    "id": "KP-ANS-090",
+    "navn": "Jonas Myhre",
+    "kjonn": "M",
+    "fodselsaar": 1989,
+    "avdeling": "Samling",
+    "stilling": "Samlingsforvalter / Registrar",
+    "ansatt_fra": "2016-02-01",
+    "ansatt_til": "2022-10-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 62,
+    "kontor_sal": "Konserveringsatelier U1 / Magasin",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Museologi og kulturarv",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2013
+      },
+      {
+        "grad": "Sertifisering i Primus samlingsdatabase",
+        "institusjon": "KulturIT",
+        "aar": 2014
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Nasjonalmuseet",
+        "rolle": "Konserveringsassistent",
+        "periode": "2014-2018"
+      },
+      {
+        "institusjon": "KODE Kunstmuseer",
+        "rolle": "Magasintekniker",
+        "periode": "2012-2014"
+      }
+    ],
+    "publikasjoner": [
+      "Tilstandsvurdering og mikro-klimaovervåking i historiske magasiner (2021)",
+      "Forebyggende konservering ved utlån av papirverk (2023)"
+    ],
+    "icor_rolle": "Samlingsforvalter / Registrar (/samling)"
+  },
+  {
+    "id": "KP-ANS-091",
+    "navn": "Sunniva Bratt",
+    "kjonn": "K",
+    "fodselsaar": 1981,
+    "avdeling": "Drift",
+    "stilling": "Vekter og sikkerhetsvakt",
+    "ansatt_fra": "2016-10-01",
+    "ansatt_til": null,
+    "status": "Deltid / Sesong",
+    "stillingsprosent": 0.4,
+    "lonnstrinn_virke": 43,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Sikkerhetsfaget",
+        "institusjon": "Fylkeskommunal yrkesopplæring",
+        "aar": 2002
+      },
+      {
+        "grad": "Nasjonal vekteropplæring trinn 1-3 & RVR-kurs",
+        "institusjon": "NHO Service og Handel",
+        "aar": 2003
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2004-2008"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2002-2004"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Vekter og sikkerhetsvakt (/drift)"
+  },
+  {
+    "id": "KP-ANS-092",
+    "navn": "Fredrik Johansen",
+    "kjonn": "M",
+    "fodselsaar": 1970,
+    "avdeling": "Formidling",
+    "stilling": "Seniorvert / Skrankeleder",
+    "ansatt_fra": "2016-02-01",
+    "ansatt_til": "2018-06-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.4,
+    "lonnstrinn_virke": 46,
+    "kontor_sal": "Sal C",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 1996
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 1997
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "1995-1998"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "1992-1994"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Seniorvert / Skrankeleder (/formidling)"
+  },
+  {
+    "id": "KP-ANS-093",
+    "navn": "Ida Lund",
+    "kjonn": "K",
+    "fodselsaar": 1993,
+    "avdeling": "Formidling",
+    "stilling": "Museumsvert og omviser (Deltid)",
+    "ansatt_fra": "2016-08-15",
+    "ansatt_til": "2020-09-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.3,
+    "lonnstrinn_virke": 43,
+    "kontor_sal": "Sal A",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2017
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2015
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2018-2021"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2015-2017"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumsvert og omviser (Deltid) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-094",
+    "navn": "Even Thorvaldsen",
+    "kjonn": "M",
+    "fodselsaar": 1980,
+    "avdeling": "Marked",
+    "stilling": "Kommunikasjons- og markedssjef",
+    "ansatt_fra": "2016-07-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 73,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Master i Strategisk markedsføring og ledelse",
+        "institusjon": "Handelshøyskolen BI",
+        "aar": 2005
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2004-2008"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2001-2004"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Kommunikasjons- og markedssjef (/marked)"
+  },
+  {
+    "id": "KP-ANS-095",
+    "navn": "Fredrik Bratt",
+    "kjonn": "M",
+    "fodselsaar": 1995,
+    "avdeling": "Kuratering",
+    "stilling": "Forskningsstipendiat",
+    "ansatt_fra": "2017-10-15",
+    "ansatt_til": "2023-10-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 58,
+    "kontor_sal": "Kuratorfløyen 2. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2021
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2020-2024"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Forskningsstipendiat (/kuratering)"
+  },
+  {
+    "id": "KP-ANS-096",
+    "navn": "Magnus Hansen",
+    "kjonn": "M",
+    "fodselsaar": 1981,
+    "avdeling": "Drift",
+    "stilling": "Vekter og sikkerhetsvakt",
+    "ansatt_fra": "2017-07-15",
+    "ansatt_til": null,
+    "status": "Deltid / Sesong",
+    "stillingsprosent": 0.6,
+    "lonnstrinn_virke": 43,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Sikkerhetsfaget",
+        "institusjon": "Fylkeskommunal yrkesopplæring",
+        "aar": 2002
+      },
+      {
+        "grad": "Nasjonal vekteropplæring trinn 1-3 & RVR-kurs",
+        "institusjon": "NHO Service og Handel",
+        "aar": 2003
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2004-2008"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2002-2004"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Vekter og sikkerhetsvakt (/drift)"
+  },
+  {
+    "id": "KP-ANS-097",
+    "navn": "Maren Nygård",
+    "kjonn": "K",
+    "fodselsaar": 1986,
+    "avdeling": "Samling",
+    "stilling": "Papir- og fotokonservator",
+    "ansatt_fra": "2017-03-15",
+    "ansatt_til": "2020-02-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 61,
+    "kontor_sal": "Konserveringsatelier U1 / Magasin",
+    "utdanning": [
+      {
+        "grad": "Master i Gjenstands- og malerikonservering",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2012
+      },
+      {
+        "grad": "NKF-N sertifisert konservator",
+        "institusjon": "Nordisk Konservatorforbund",
+        "aar": 2014
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Nasjonalmuseet",
+        "rolle": "Konserveringsassistent",
+        "periode": "2011-2015"
+      },
+      {
+        "institusjon": "KODE Kunstmuseer",
+        "rolle": "Magasintekniker",
+        "periode": "2009-2011"
+      }
+    ],
+    "publikasjoner": [
+      "Tilstandsvurdering og mikro-klimaovervåking i historiske magasiner (2021)",
+      "Forebyggende konservering ved utlån av papirverk (2023)"
+    ],
+    "icor_rolle": "Papir- og fotokonservator (/samling)"
+  },
+  {
+    "id": "KP-ANS-098",
+    "navn": "Marit Sæther",
+    "kjonn": "K",
+    "fodselsaar": 1975,
+    "avdeling": "Marked",
+    "stilling": "Kaféleder",
+    "ansatt_fra": "2017-11-01",
+    "ansatt_til": "2020-11-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 52,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Master i Strategisk markedsføring og ledelse",
+        "institusjon": "Handelshøyskolen BI",
+        "aar": 2000
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "1999-2003"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "1996-1999"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Kaféleder (/marked)"
+  },
+  {
+    "id": "KP-ANS-099",
+    "navn": "Alexander Eide",
+    "kjonn": "M",
+    "fodselsaar": 1979,
+    "avdeling": "Formidling",
+    "stilling": "DKS-koordinator (Skolesekken)",
+    "ansatt_fra": "2017-11-15",
+    "ansatt_til": "2020-02-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 61,
+    "kontor_sal": "Formidlingsrom",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2003
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2001
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2004-2007"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2001-2003"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "DKS-koordinator (Skolesekken) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-100",
+    "navn": "Christian Nygård",
+    "kjonn": "M",
+    "fodselsaar": 1994,
+    "avdeling": "Drift",
+    "stilling": "Vekter og sikkerhetsvakt",
+    "ansatt_fra": "2017-11-01",
+    "ansatt_til": "2023-11-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.5,
+    "lonnstrinn_virke": 38,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Sikkerhetsfaget",
+        "institusjon": "Fylkeskommunal yrkesopplæring",
+        "aar": 2015
+      },
+      {
+        "grad": "Nasjonal vekteropplæring trinn 1-3 & RVR-kurs",
+        "institusjon": "NHO Service og Handel",
+        "aar": 2016
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2017-2021"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2015-2017"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Vekter og sikkerhetsvakt (/drift)"
+  },
+  {
+    "id": "KP-ANS-101",
+    "navn": "Kristian Solberg",
+    "kjonn": "M",
+    "fodselsaar": 1993,
+    "avdeling": "Ledelse",
+    "stilling": "Assisterende direktør",
+    "ansatt_fra": "2017-11-15",
+    "ansatt_til": "2020-12-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 77,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2019
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2018-2022"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Assisterende direktør (/ledelse)"
+  },
+  {
+    "id": "KP-ANS-102",
+    "navn": "Frida Lund",
+    "kjonn": "K",
+    "fodselsaar": 1986,
+    "avdeling": "Formidling",
+    "stilling": "DKS-koordinator (Skolesekken)",
+    "ansatt_fra": "2017-05-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 57,
+    "kontor_sal": "Formidlingsrom",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2010
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2008
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2011-2014"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2008-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "DKS-koordinator (Skolesekken) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-103",
+    "navn": "Hilde Johnsen",
+    "kjonn": "K",
+    "fodselsaar": 1990,
+    "avdeling": "Formidling",
+    "stilling": "Museumspedagog",
+    "ansatt_fra": "2018-10-15",
+    "ansatt_til": "2024-04-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.3,
+    "lonnstrinn_virke": 53,
+    "kontor_sal": "Resepsjon / Skranke",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 2016
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 2017
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2015-2018"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2012-2014"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumspedagog (/formidling)"
+  },
+  {
+    "id": "KP-ANS-104",
+    "navn": "Geir Viken",
+    "kjonn": "M",
+    "fodselsaar": 1976,
+    "avdeling": "Kuratering",
+    "stilling": "Forskningsstipendiat",
+    "ansatt_fra": "2018-01-01",
+    "ansatt_til": "2024-04-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 60,
+    "kontor_sal": "Kuratorfløyen 2. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2002
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2001-2005"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Forskningsstipendiat (/kuratering)"
+  },
+  {
+    "id": "KP-ANS-105",
+    "navn": "Andreas Faye-Lund",
+    "kjonn": "M",
+    "fodselsaar": 1980,
+    "avdeling": "Formidling",
+    "stilling": "Museumspedagog",
+    "ansatt_fra": "2018-03-15",
+    "ansatt_til": "2024-04-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.5,
+    "lonnstrinn_virke": 49,
+    "kontor_sal": "Sal A",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 2006
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 2007
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2005-2008"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2002-2004"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumspedagog (/formidling)"
+  },
+  {
+    "id": "KP-ANS-106",
+    "navn": "Lars Haugen",
+    "kjonn": "M",
+    "fodselsaar": 1987,
+    "avdeling": "Formidling",
+    "stilling": "Audioguide- og innholdsprodusent",
+    "ansatt_fra": "2018-12-15",
+    "ansatt_til": "2024-07-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.3,
+    "lonnstrinn_virke": 55,
+    "kontor_sal": "Formidlingsrom",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2011
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2009
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2012-2015"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2009-2011"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Audioguide- og innholdsprodusent (/formidling)"
+  },
+  {
+    "id": "KP-ANS-107",
+    "navn": "Erik Nygård",
+    "kjonn": "M",
+    "fodselsaar": 1988,
+    "avdeling": "Drift",
+    "stilling": "Bygningstekniker / Montør",
+    "ansatt_fra": "2018-10-15",
+    "ansatt_til": "2024-07-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 52,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Elektrikerfaget / Byggdrifterfaget",
+        "institusjon": "Agder Fylkeskommune",
+        "aar": 2009
+      },
+      {
+        "grad": "Sertifisering: Varme arbeider og stillas",
+        "institusjon": "Norsk Brannvernforening",
+        "aar": 2011
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2011-2015"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2009-2011"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Bygningstekniker / Montør (/drift)"
+  },
+  {
+    "id": "KP-ANS-108",
+    "navn": "Kari Moe",
+    "kjonn": "K",
+    "fodselsaar": 1991,
+    "avdeling": "Formidling",
+    "stilling": "Audioguide- og innholdsprodusent",
+    "ansatt_fra": "2018-04-15",
+    "ansatt_til": "2024-11-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.4,
+    "lonnstrinn_virke": 53,
+    "kontor_sal": "Sal B",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2015
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2013
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2016-2019"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2013-2015"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Audioguide- og innholdsprodusent (/formidling)"
+  },
+  {
+    "id": "KP-ANS-109",
+    "navn": "Camilla Thorvaldsen",
+    "kjonn": "K",
+    "fodselsaar": 1989,
+    "avdeling": "Ledelse",
+    "stilling": "HR- og organisasjonsrådgiver",
+    "ansatt_fra": "2018-10-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 65,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2015
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2014-2018"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "HR- og organisasjonsrådgiver (/ledelse)"
+  },
+  {
+    "id": "KP-ANS-110",
+    "navn": "Marie Sørensen",
+    "kjonn": "K",
+    "fodselsaar": 1973,
+    "avdeling": "Formidling",
+    "stilling": "Seniorvert / Skrankeleder",
+    "ansatt_fra": "2019-10-01",
+    "ansatt_til": "2022-02-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.5,
+    "lonnstrinn_virke": 45,
+    "kontor_sal": "Sal C",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 1999
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 2000
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "1998-2001"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "1995-1997"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Seniorvert / Skrankeleder (/formidling)"
+  },
+  {
+    "id": "KP-ANS-111",
+    "navn": "Lars Thorvaldsen",
+    "kjonn": "M",
+    "fodselsaar": 1984,
+    "avdeling": "Marked",
+    "stilling": "Kommunikasjons- og markedssjef",
+    "ansatt_fra": "2019-10-15",
+    "ansatt_til": "2025-09-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 66,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Master i Strategisk markedsføring og ledelse",
+        "institusjon": "Handelshøyskolen BI",
+        "aar": 2009
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2008-2012"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2005-2008"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Kommunikasjons- og markedssjef (/marked)"
+  },
+  {
+    "id": "KP-ANS-112",
+    "navn": "Maren Strand",
+    "kjonn": "K",
+    "fodselsaar": 1976,
+    "avdeling": "Formidling",
+    "stilling": "DKS-koordinator (Skolesekken)",
+    "ansatt_fra": "2019-08-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 61,
+    "kontor_sal": "Sal B",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2000
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 1998
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2001-2004"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "1998-2000"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "DKS-koordinator (Skolesekken) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-113",
+    "navn": "Thea Sørensen",
+    "kjonn": "K",
+    "fodselsaar": 1981,
+    "avdeling": "Marked",
+    "stilling": "Kaféleder",
+    "ansatt_fra": "2019-10-01",
+    "ansatt_til": "2022-05-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 52,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Master i Strategisk markedsføring og ledelse",
+        "institusjon": "Handelshøyskolen BI",
+        "aar": 2006
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2005-2009"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2002-2005"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Kaféleder (/marked)"
+  },
+  {
+    "id": "KP-ANS-114",
+    "navn": "Liv Bratt",
+    "kjonn": "K",
+    "fodselsaar": 1987,
+    "avdeling": "Samling",
+    "stilling": "Magasinforvalter",
+    "ansatt_fra": "2019-05-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 50,
+    "kontor_sal": "Konserveringsatelier U1 / Magasin",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Museologi og kulturarv",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2011
+      },
+      {
+        "grad": "Sertifisering i Primus samlingsdatabase",
+        "institusjon": "KulturIT",
+        "aar": 2012
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Nasjonalmuseet",
+        "rolle": "Konserveringsassistent",
+        "periode": "2012-2016"
+      },
+      {
+        "institusjon": "KODE Kunstmuseer",
+        "rolle": "Magasintekniker",
+        "periode": "2010-2012"
+      }
+    ],
+    "publikasjoner": [
+      "Tilstandsvurdering og mikro-klimaovervåking i historiske magasiner (2021)",
+      "Forebyggende konservering ved utlån av papirverk (2023)"
+    ],
+    "icor_rolle": "Magasinforvalter (/samling)"
+  },
+  {
+    "id": "KP-ANS-115",
+    "navn": "Anja Eriksen",
+    "kjonn": "K",
+    "fodselsaar": 2002,
+    "avdeling": "Marked",
+    "stilling": "Kafémedarbeider (Deltid)",
+    "ansatt_fra": "2019-07-01",
+    "ansatt_til": "2022-02-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.5,
+    "lonnstrinn_virke": 36,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Reiseliv, vertskap og opplevelsesøkonomi",
+        "institusjon": "Høyskolen Kristiania",
+        "aar": 2025
+      },
+      {
+        "grad": "IK-mat og allergiansvarlig kurs",
+        "institusjon": "Mattilsynet / NHO Reiseliv",
+        "aar": 2026
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2026-2030"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2023-2026"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Kafémedarbeider (Deltid) (/marked)"
+  },
+  {
+    "id": "KP-ANS-116",
+    "navn": "Hanna Berg",
+    "kjonn": "K",
+    "fodselsaar": 1991,
+    "avdeling": "Formidling",
+    "stilling": "Museumspedagog",
+    "ansatt_fra": "2019-06-01",
+    "ansatt_til": "2025-03-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.4,
+    "lonnstrinn_virke": 53,
+    "kontor_sal": "Sal B",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 2017
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 2018
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2016-2019"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2013-2015"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumspedagog (/formidling)"
+  },
+  {
+    "id": "KP-ANS-117",
+    "navn": "Kari Pettersen",
+    "kjonn": "K",
+    "fodselsaar": 1981,
+    "avdeling": "Drift",
+    "stilling": "Drifts- og eiendomssjef",
+    "ansatt_fra": "2019-09-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 68,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Bygg- og eiendomsledelse",
+        "institusjon": "NTNU Trondheim",
+        "aar": 2006
+      },
+      {
+        "grad": "HMS- og verneingeniørsertifikat",
+        "institusjon": "Kiwa Teknologisk Institutt",
+        "aar": 2009
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2004-2008"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2002-2004"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Drifts- og eiendomssjef (/drift)"
+  },
+  {
+    "id": "KP-ANS-118",
+    "navn": "Tone Sørensen",
+    "kjonn": "K",
+    "fodselsaar": 1972,
+    "avdeling": "Ledelse",
+    "stilling": "Økonomisjef",
+    "ansatt_fra": "2020-08-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 75,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 1998
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "1997-2001"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Økonomisjef (/ledelse)"
+  },
+  {
+    "id": "KP-ANS-119",
+    "navn": "Sindre Pedersen",
+    "kjonn": "M",
+    "fodselsaar": 1989,
+    "avdeling": "Formidling",
+    "stilling": "Audioguide- og innholdsprodusent",
+    "ansatt_fra": "2020-08-15",
+    "ansatt_til": null,
+    "status": "Deltid / Sesong",
+    "stillingsprosent": 0.6,
+    "lonnstrinn_virke": 52,
+    "kontor_sal": "Formidlingsrom",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2013
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2011
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2014-2017"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2011-2013"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Audioguide- og innholdsprodusent (/formidling)"
+  },
+  {
+    "id": "KP-ANS-120",
+    "navn": "Jonas Thorvaldsen",
+    "kjonn": "M",
+    "fodselsaar": 1982,
+    "avdeling": "Formidling",
+    "stilling": "Senior museumspedagog",
+    "ansatt_fra": "2020-02-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 56,
+    "kontor_sal": "Sal B",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 2008
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 2009
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2007-2010"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2004-2006"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Senior museumspedagog (/formidling)"
+  },
+  {
+    "id": "KP-ANS-121",
+    "navn": "Erik Kristiansen",
+    "kjonn": "M",
+    "fodselsaar": 1975,
+    "avdeling": "Drift",
+    "stilling": "AV- og utstillingslystekniker",
+    "ansatt_fra": "2020-07-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 55,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Elektrikerfaget / Byggdrifterfaget",
+        "institusjon": "Agder Fylkeskommune",
+        "aar": 1996
+      },
+      {
+        "grad": "Sertifisering: Varme arbeider og stillas",
+        "institusjon": "Norsk Brannvernforening",
+        "aar": 1998
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "1998-2002"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "1996-1998"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "AV- og utstillingslystekniker (/drift)"
+  },
+  {
+    "id": "KP-ANS-122",
+    "navn": "Christian Lindqvist",
+    "kjonn": "M",
+    "fodselsaar": 1995,
+    "avdeling": "Samling",
+    "stilling": "Samlingsforvalter / Registrar",
+    "ansatt_fra": "2020-06-01",
+    "ansatt_til": "2023-05-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 69,
+    "kontor_sal": "Konserveringsatelier U1 / Magasin",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Museologi og kulturarv",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2019
+      },
+      {
+        "grad": "Sertifisering i Primus samlingsdatabase",
+        "institusjon": "KulturIT",
+        "aar": 2020
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Nasjonalmuseet",
+        "rolle": "Konserveringsassistent",
+        "periode": "2020-2024"
+      },
+      {
+        "institusjon": "KODE Kunstmuseer",
+        "rolle": "Magasintekniker",
+        "periode": "2018-2020"
+      }
+    ],
+    "publikasjoner": [
+      "Tilstandsvurdering og mikro-klimaovervåking i historiske magasiner (2021)",
+      "Forebyggende konservering ved utlån av papirverk (2023)"
+    ],
+    "icor_rolle": "Samlingsforvalter / Registrar (/samling)"
+  },
+  {
+    "id": "KP-ANS-123",
+    "navn": "Hilde Lindqvist",
+    "kjonn": "K",
+    "fodselsaar": 1992,
+    "avdeling": "Samling",
+    "stilling": "Malerikonservator NKF-N",
+    "ansatt_fra": "2020-12-15",
+    "ansatt_til": "2023-05-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 63,
+    "kontor_sal": "Konserveringsatelier U1 / Magasin",
+    "utdanning": [
+      {
+        "grad": "Master i Gjenstands- og malerikonservering",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2018
+      },
+      {
+        "grad": "NKF-N sertifisert konservator",
+        "institusjon": "Nordisk Konservatorforbund",
+        "aar": 2020
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Nasjonalmuseet",
+        "rolle": "Konserveringsassistent",
+        "periode": "2017-2021"
+      },
+      {
+        "institusjon": "KODE Kunstmuseer",
+        "rolle": "Magasintekniker",
+        "periode": "2015-2017"
+      }
+    ],
+    "publikasjoner": [
+      "Tilstandsvurdering og mikro-klimaovervåking i historiske magasiner (2021)",
+      "Forebyggende konservering ved utlån av papirverk (2023)"
+    ],
+    "icor_rolle": "Malerikonservator NKF-N (/samling)"
+  },
+  {
+    "id": "KP-ANS-124",
+    "navn": "Signe Gulliksen",
+    "kjonn": "K",
+    "fodselsaar": 1967,
+    "avdeling": "Drift",
+    "stilling": "Sikkerhetsleder / RVR",
+    "ansatt_fra": "2021-02-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 54,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Bygg- og eiendomsledelse",
+        "institusjon": "NTNU Trondheim",
+        "aar": 1992
+      },
+      {
+        "grad": "HMS- og verneingeniørsertifikat",
+        "institusjon": "Kiwa Teknologisk Institutt",
+        "aar": 1995
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "1990-1994"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "1988-1990"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Sikkerhetsleder / RVR (/drift)"
+  },
+  {
+    "id": "KP-ANS-125",
+    "navn": "Hege Nygård",
+    "kjonn": "K",
+    "fodselsaar": 1972,
+    "avdeling": "Ledelse",
+    "stilling": "Økonomisjef",
+    "ansatt_fra": "2021-10-15",
+    "ansatt_til": "2024-11-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 69,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 1998
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "1997-2001"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Økonomisjef (/ledelse)"
+  },
+  {
+    "id": "KP-ANS-126",
+    "navn": "Frida Tangen",
+    "kjonn": "K",
+    "fodselsaar": 1986,
+    "avdeling": "Ledelse",
+    "stilling": "HR- og organisasjonsrådgiver",
+    "ansatt_fra": "2021-05-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 61,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2012
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2011-2015"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "HR- og organisasjonsrådgiver (/ledelse)"
+  },
+  {
+    "id": "KP-ANS-127",
+    "navn": "Liv Johansen",
+    "kjonn": "K",
+    "fodselsaar": 1985,
+    "avdeling": "Ledelse",
+    "stilling": "Administrasjonskonsulent",
+    "ansatt_fra": "2021-11-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 57,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2011
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2010-2014"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Administrasjonskonsulent (/ledelse)"
+  },
+  {
+    "id": "KP-ANS-128",
+    "navn": "Kari Ruud",
+    "kjonn": "K",
+    "fodselsaar": 1976,
+    "avdeling": "Ledelse",
+    "stilling": "Assisterende direktør",
+    "ansatt_fra": "2021-04-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 74,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2002
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2001-2005"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Assisterende direktør (/ledelse)"
+  },
+  {
+    "id": "KP-ANS-129",
+    "navn": "Morten Viken",
+    "kjonn": "M",
+    "fodselsaar": 1984,
+    "avdeling": "Drift",
+    "stilling": "Bygningstekniker / Montør",
+    "ansatt_fra": "2021-06-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 53,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Elektrikerfaget / Byggdrifterfaget",
+        "institusjon": "Agder Fylkeskommune",
+        "aar": 2005
+      },
+      {
+        "grad": "Sertifisering: Varme arbeider og stillas",
+        "institusjon": "Norsk Brannvernforening",
+        "aar": 2007
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2007-2011"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2005-2007"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Bygningstekniker / Montør (/drift)"
+  },
+  {
+    "id": "KP-ANS-130",
+    "navn": "Kjetil Sørensen",
+    "kjonn": "M",
+    "fodselsaar": 1997,
+    "avdeling": "Marked",
+    "stilling": "Butikkmedarbeider (Deltid)",
+    "ansatt_fra": "2021-03-15",
+    "ansatt_til": "2024-06-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.5,
+    "lonnstrinn_virke": 40,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Reiseliv, vertskap og opplevelsesøkonomi",
+        "institusjon": "Høyskolen Kristiania",
+        "aar": 2020
+      },
+      {
+        "grad": "IK-mat og allergiansvarlig kurs",
+        "institusjon": "Mattilsynet / NHO Reiseliv",
+        "aar": 2021
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2021-2025"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2018-2021"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Butikkmedarbeider (Deltid) (/marked)"
+  },
+  {
+    "id": "KP-ANS-131",
+    "navn": "Olav Brekke",
+    "kjonn": "M",
+    "fodselsaar": 1977,
+    "avdeling": "Samling",
+    "stilling": "Samlingsforvalter / Registrar",
+    "ansatt_fra": "2022-06-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 68,
+    "kontor_sal": "Konserveringsatelier U1 / Magasin",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Museologi og kulturarv",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2001
+      },
+      {
+        "grad": "Sertifisering i Primus samlingsdatabase",
+        "institusjon": "KulturIT",
+        "aar": 2002
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Nasjonalmuseet",
+        "rolle": "Konserveringsassistent",
+        "periode": "2002-2006"
+      },
+      {
+        "institusjon": "KODE Kunstmuseer",
+        "rolle": "Magasintekniker",
+        "periode": "2000-2002"
+      }
+    ],
+    "publikasjoner": [
+      "Tilstandsvurdering og mikro-klimaovervåking i historiske magasiner (2021)",
+      "Forebyggende konservering ved utlån av papirverk (2023)"
+    ],
+    "icor_rolle": "Samlingsforvalter / Registrar (/samling)"
+  },
+  {
+    "id": "KP-ANS-132",
+    "navn": "Thomas Viken",
+    "kjonn": "M",
+    "fodselsaar": 1994,
+    "avdeling": "Drift",
+    "stilling": "AV- og utstillingslystekniker",
+    "ansatt_fra": "2022-07-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 50,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Elektrikerfaget / Byggdrifterfaget",
+        "institusjon": "Agder Fylkeskommune",
+        "aar": 2015
+      },
+      {
+        "grad": "Sertifisering: Varme arbeider og stillas",
+        "institusjon": "Norsk Brannvernforening",
+        "aar": 2017
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2017-2021"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2015-2017"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "AV- og utstillingslystekniker (/drift)"
+  },
+  {
+    "id": "KP-ANS-133",
+    "navn": "Simen Moe",
+    "kjonn": "M",
+    "fodselsaar": 1975,
+    "avdeling": "Drift",
+    "stilling": "Bygningstekniker / Montør",
+    "ansatt_fra": "2022-03-15",
+    "ansatt_til": "2025-02-28",
+    "status": "Sluttet",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 51,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Elektrikerfaget / Byggdrifterfaget",
+        "institusjon": "Agder Fylkeskommune",
+        "aar": 1996
+      },
+      {
+        "grad": "Sertifisering: Varme arbeider og stillas",
+        "institusjon": "Norsk Brannvernforening",
+        "aar": 1998
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "1998-2002"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "1996-1998"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Bygningstekniker / Montør (/drift)"
+  },
+  {
+    "id": "KP-ANS-134",
+    "navn": "Camilla Sivertsen",
+    "kjonn": "K",
+    "fodselsaar": 1976,
+    "avdeling": "Formidling",
+    "stilling": "Senior museumspedagog",
+    "ansatt_fra": "2022-08-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 62,
+    "kontor_sal": "Resepsjon / Skranke",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 2002
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 2003
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2001-2004"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "1998-2000"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Senior museumspedagog (/formidling)"
+  },
+  {
+    "id": "KP-ANS-135",
+    "navn": "Espen Hansen",
+    "kjonn": "M",
+    "fodselsaar": 1990,
+    "avdeling": "Ledelse",
+    "stilling": "Assisterende direktør",
+    "ansatt_fra": "2022-09-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 72,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2016
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2015-2019"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Assisterende direktør (/ledelse)"
+  },
+  {
+    "id": "KP-ANS-136",
+    "navn": "Hege Bjerke",
+    "kjonn": "K",
+    "fodselsaar": 1967,
+    "avdeling": "Kuratering",
+    "stilling": "Seniorkurator",
+    "ansatt_fra": "2022-08-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 71,
+    "kontor_sal": "Kuratorfløyen 2. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 1993
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "1992-1996"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Seniorkurator (/kuratering)"
+  },
+  {
+    "id": "KP-ANS-137",
+    "navn": "Lars Dahl",
+    "kjonn": "M",
+    "fodselsaar": 1970,
+    "avdeling": "Formidling",
+    "stilling": "Senior museumspedagog",
+    "ansatt_fra": "2022-12-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 62,
+    "kontor_sal": "Formidlingsrom",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 1996
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 1997
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "1995-1998"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "1992-1994"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Senior museumspedagog (/formidling)"
+  },
+  {
+    "id": "KP-ANS-138",
+    "navn": "Thea Bjerke",
+    "kjonn": "K",
+    "fodselsaar": 1993,
+    "avdeling": "Ledelse",
+    "stilling": "Administrasjonskonsulent",
+    "ansatt_fra": "2022-06-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 58,
+    "kontor_sal": "Administrasjonsfløyen 3. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2019
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2018-2022"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Administrasjonskonsulent (/ledelse)"
+  },
+  {
+    "id": "KP-ANS-139",
+    "navn": "Synnøve Myhre",
+    "kjonn": "K",
+    "fodselsaar": 1999,
+    "avdeling": "Marked",
+    "stilling": "Kafémedarbeider (Deltid)",
+    "ansatt_fra": "2022-09-15",
+    "ansatt_til": null,
+    "status": "Deltid / Sesong",
+    "stillingsprosent": 0.3,
+    "lonnstrinn_virke": 33,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Reiseliv, vertskap og opplevelsesøkonomi",
+        "institusjon": "Høyskolen Kristiania",
+        "aar": 2022
+      },
+      {
+        "grad": "IK-mat og allergiansvarlig kurs",
+        "institusjon": "Mattilsynet / NHO Reiseliv",
+        "aar": 2023
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2023-2027"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2020-2023"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Kafémedarbeider (Deltid) (/marked)"
+  },
+  {
+    "id": "KP-ANS-140",
+    "navn": "Even Sivertsen",
+    "kjonn": "M",
+    "fodselsaar": 1992,
+    "avdeling": "Formidling",
+    "stilling": "DKS-koordinator (Skolesekken)",
+    "ansatt_fra": "2022-11-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 58,
+    "kontor_sal": "Formidlingsrom",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2016
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2014
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2017-2020"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2014-2016"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "DKS-koordinator (Skolesekken) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-141",
+    "navn": "Hanna Olsen",
+    "kjonn": "K",
+    "fodselsaar": 1985,
+    "avdeling": "Samling",
+    "stilling": "Malerikonservator NKF-N",
+    "ansatt_fra": "2023-12-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 68,
+    "kontor_sal": "Konserveringsatelier U1 / Magasin",
+    "utdanning": [
+      {
+        "grad": "Master i Gjenstands- og malerikonservering",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2011
+      },
+      {
+        "grad": "NKF-N sertifisert konservator",
+        "institusjon": "Nordisk Konservatorforbund",
+        "aar": 2013
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Nasjonalmuseet",
+        "rolle": "Konserveringsassistent",
+        "periode": "2010-2014"
+      },
+      {
+        "institusjon": "KODE Kunstmuseer",
+        "rolle": "Magasintekniker",
+        "periode": "2008-2010"
+      }
+    ],
+    "publikasjoner": [
+      "Tilstandsvurdering og mikro-klimaovervåking i historiske magasiner (2021)",
+      "Forebyggende konservering ved utlån av papirverk (2023)"
+    ],
+    "icor_rolle": "Malerikonservator NKF-N (/samling)"
+  },
+  {
+    "id": "KP-ANS-142",
+    "navn": "Kirsti Johansen",
+    "kjonn": "K",
+    "fodselsaar": 1992,
+    "avdeling": "Formidling",
+    "stilling": "Audioguide- og innholdsprodusent",
+    "ansatt_fra": "2023-02-01",
+    "ansatt_til": null,
+    "status": "Deltid / Sesong",
+    "stillingsprosent": 0.4,
+    "lonnstrinn_virke": 52,
+    "kontor_sal": "Formidlingsrom",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2016
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2014
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2017-2020"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2014-2016"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Audioguide- og innholdsprodusent (/formidling)"
+  },
+  {
+    "id": "KP-ANS-143",
+    "navn": "Hilde Viken",
+    "kjonn": "K",
+    "fodselsaar": 1973,
+    "avdeling": "Marked",
+    "stilling": "Kaféleder",
+    "ansatt_fra": "2023-11-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 52,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Master i Strategisk markedsføring og ledelse",
+        "institusjon": "Handelshøyskolen BI",
+        "aar": 1998
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "1997-2001"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "1994-1997"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Kaféleder (/marked)"
+  },
+  {
+    "id": "KP-ANS-144",
+    "navn": "Geir Tangen",
+    "kjonn": "M",
+    "fodselsaar": 1984,
+    "avdeling": "Samling",
+    "stilling": "Digitaliserings- og samlingstekniker",
+    "ansatt_fra": "2023-08-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 52,
+    "kontor_sal": "Konserveringsatelier U1 / Magasin",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Museologi og kulturarv",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2008
+      },
+      {
+        "grad": "Sertifisering i Primus samlingsdatabase",
+        "institusjon": "KulturIT",
+        "aar": 2009
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Nasjonalmuseet",
+        "rolle": "Konserveringsassistent",
+        "periode": "2009-2013"
+      },
+      {
+        "institusjon": "KODE Kunstmuseer",
+        "rolle": "Magasintekniker",
+        "periode": "2007-2009"
+      }
+    ],
+    "publikasjoner": [
+      "Tilstandsvurdering og mikro-klimaovervåking i historiske magasiner (2021)",
+      "Forebyggende konservering ved utlån av papirverk (2023)"
+    ],
+    "icor_rolle": "Digitaliserings- og samlingstekniker (/samling)"
+  },
+  {
+    "id": "KP-ANS-145",
+    "navn": "Torstein Bakke",
+    "kjonn": "M",
+    "fodselsaar": 1975,
+    "avdeling": "Formidling",
+    "stilling": "Senior museumspedagog",
+    "ansatt_fra": "2023-12-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 56,
+    "kontor_sal": "Sal A",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 2001
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 2002
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2000-2003"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "1997-1999"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Senior museumspedagog (/formidling)"
+  },
+  {
+    "id": "KP-ANS-146",
+    "navn": "Espen Ruud",
+    "kjonn": "M",
+    "fodselsaar": 1982,
+    "avdeling": "Kuratering",
+    "stilling": "Kurator modernisme",
+    "ansatt_fra": "2023-03-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 64,
+    "kontor_sal": "Kuratorfløyen 2. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2008
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2007-2011"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Kurator modernisme (/kuratering)"
+  },
+  {
+    "id": "KP-ANS-147",
+    "navn": "Stian Pedersen",
+    "kjonn": "M",
+    "fodselsaar": 1981,
+    "avdeling": "Drift",
+    "stilling": "Sikkerhetsleder / RVR",
+    "ansatt_fra": "2023-08-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 61,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Bygg- og eiendomsledelse",
+        "institusjon": "NTNU Trondheim",
+        "aar": 2006
+      },
+      {
+        "grad": "HMS- og verneingeniørsertifikat",
+        "institusjon": "Kiwa Teknologisk Institutt",
+        "aar": 2009
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2004-2008"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2002-2004"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Sikkerhetsleder / RVR (/drift)"
+  },
+  {
+    "id": "KP-ANS-148",
+    "navn": "Espen Nilsen",
+    "kjonn": "M",
+    "fodselsaar": 1966,
+    "avdeling": "Formidling",
+    "stilling": "Formidlingsleder",
+    "ansatt_fra": "2023-05-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 71,
+    "kontor_sal": "Formidlingsrom",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 1992
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 1993
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "1991-1994"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "1988-1990"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Formidlingsleder (/formidling)"
+  },
+  {
+    "id": "KP-ANS-149",
+    "navn": "Benedicte Johansen",
+    "kjonn": "K",
+    "fodselsaar": 1997,
+    "avdeling": "Marked",
+    "stilling": "Kafémedarbeider (Deltid)",
+    "ansatt_fra": "2023-07-15",
+    "ansatt_til": "2025-01-28",
+    "status": "Sluttet",
+    "stillingsprosent": 0.4,
+    "lonnstrinn_virke": 34,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Reiseliv, vertskap og opplevelsesøkonomi",
+        "institusjon": "Høyskolen Kristiania",
+        "aar": 2020
+      },
+      {
+        "grad": "IK-mat og allergiansvarlig kurs",
+        "institusjon": "Mattilsynet / NHO Reiseliv",
+        "aar": 2021
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2021-2025"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2018-2021"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Kafémedarbeider (Deltid) (/marked)"
+  },
+  {
+    "id": "KP-ANS-150",
+    "navn": "Harald Sørensen",
+    "kjonn": "M",
+    "fodselsaar": 1994,
+    "avdeling": "Drift",
+    "stilling": "AV- og utstillingslystekniker",
+    "ansatt_fra": "2024-11-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 51,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Elektrikerfaget / Byggdrifterfaget",
+        "institusjon": "Agder Fylkeskommune",
+        "aar": 2015
+      },
+      {
+        "grad": "Sertifisering: Varme arbeider og stillas",
+        "institusjon": "Norsk Brannvernforening",
+        "aar": 2017
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2017-2021"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2015-2017"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "AV- og utstillingslystekniker (/drift)"
+  },
+  {
+    "id": "KP-ANS-151",
+    "navn": "Fredrik Pedersen",
+    "kjonn": "M",
+    "fodselsaar": 1991,
+    "avdeling": "Formidling",
+    "stilling": "Museumspedagog",
+    "ansatt_fra": "2024-01-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 0.5,
+    "lonnstrinn_virke": 55,
+    "kontor_sal": "Sal E",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 2017
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 2018
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2016-2019"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2013-2015"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumspedagog (/formidling)"
+  },
+  {
+    "id": "KP-ANS-152",
+    "navn": "Maren Aas",
+    "kjonn": "K",
+    "fodselsaar": 1994,
+    "avdeling": "Samling",
+    "stilling": "Digitaliserings- og samlingstekniker",
+    "ansatt_fra": "2024-12-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 58,
+    "kontor_sal": "Konserveringsatelier U1 / Magasin",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Museologi og kulturarv",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2018
+      },
+      {
+        "grad": "Sertifisering i Primus samlingsdatabase",
+        "institusjon": "KulturIT",
+        "aar": 2019
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Nasjonalmuseet",
+        "rolle": "Konserveringsassistent",
+        "periode": "2019-2023"
+      },
+      {
+        "institusjon": "KODE Kunstmuseer",
+        "rolle": "Magasintekniker",
+        "periode": "2017-2019"
+      }
+    ],
+    "publikasjoner": [
+      "Tilstandsvurdering og mikro-klimaovervåking i historiske magasiner (2021)",
+      "Forebyggende konservering ved utlån av papirverk (2023)"
+    ],
+    "icor_rolle": "Digitaliserings- og samlingstekniker (/samling)"
+  },
+  {
+    "id": "KP-ANS-153",
+    "navn": "Sindre Lindqvist",
+    "kjonn": "M",
+    "fodselsaar": 1993,
+    "avdeling": "Formidling",
+    "stilling": "Museumsvert og omviser (Deltid)",
+    "ansatt_fra": "2024-07-15",
+    "ansatt_til": null,
+    "status": "Deltid / Sesong",
+    "stillingsprosent": 0.3,
+    "lonnstrinn_virke": 43,
+    "kontor_sal": "Sal E",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2017
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2015
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2018-2021"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2015-2017"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumsvert og omviser (Deltid) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-154",
+    "navn": "Marit Sæther",
+    "kjonn": "K",
+    "fodselsaar": 1995,
+    "avdeling": "Formidling",
+    "stilling": "Audioguide- og innholdsprodusent",
+    "ansatt_fra": "2024-12-15",
+    "ansatt_til": null,
+    "status": "Deltid / Sesong",
+    "stillingsprosent": 0.4,
+    "lonnstrinn_virke": 50,
+    "kontor_sal": "Sal B",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2019
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2017
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2020-2023"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2017-2019"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Audioguide- og innholdsprodusent (/formidling)"
+  },
+  {
+    "id": "KP-ANS-155",
+    "navn": "Stine Haugen",
+    "kjonn": "K",
+    "fodselsaar": 1981,
+    "avdeling": "Formidling",
+    "stilling": "Museumspedagog",
+    "ansatt_fra": "2024-07-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 0.3,
+    "lonnstrinn_virke": 50,
+    "kontor_sal": "Sal C",
+    "utdanning": [
+      {
+        "grad": "Master i Kunst- og formidlingsfag",
+        "institusjon": "Universitetet i Agder (UiA)",
+        "aar": 2007
+      },
+      {
+        "grad": "Praktisk-pedagogisk utdanning (PPU)",
+        "institusjon": "UiA",
+        "aar": 2008
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2006-2009"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2003-2005"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumspedagog (/formidling)"
+  },
+  {
+    "id": "KP-ANS-156",
+    "navn": "Vegard Haugen",
+    "kjonn": "M",
+    "fodselsaar": 2000,
+    "avdeling": "Marked",
+    "stilling": "Butikkmedarbeider (Deltid)",
+    "ansatt_fra": "2024-06-15",
+    "ansatt_til": null,
+    "status": "Deltid / Sesong",
+    "stillingsprosent": 0.5,
+    "lonnstrinn_virke": 38,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Reiseliv, vertskap og opplevelsesøkonomi",
+        "institusjon": "Høyskolen Kristiania",
+        "aar": 2023
+      },
+      {
+        "grad": "IK-mat og allergiansvarlig kurs",
+        "institusjon": "Mattilsynet / NHO Reiseliv",
+        "aar": 2024
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2024-2028"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2021-2024"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Butikkmedarbeider (Deltid) (/marked)"
+  },
+  {
+    "id": "KP-ANS-157",
+    "navn": "Geir Kristiansen",
+    "kjonn": "M",
+    "fodselsaar": 1974,
+    "avdeling": "Marked",
+    "stilling": "Museumsbutikkleder",
+    "ansatt_fra": "2024-12-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 55,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Master i Strategisk markedsføring og ledelse",
+        "institusjon": "Handelshøyskolen BI",
+        "aar": 1999
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "1998-2002"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "1995-1998"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Museumsbutikkleder (/marked)"
+  },
+  {
+    "id": "KP-ANS-158",
+    "navn": "Trond Hansen",
+    "kjonn": "M",
+    "fodselsaar": 1987,
+    "avdeling": "Formidling",
+    "stilling": "Audioguide- og innholdsprodusent",
+    "ansatt_fra": "2025-07-15",
+    "ansatt_til": null,
+    "status": "Deltid / Sesong",
+    "stillingsprosent": 0.4,
+    "lonnstrinn_virke": 54,
+    "kontor_sal": "Sal C",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2011
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2009
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2012-2015"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2009-2011"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Audioguide- og innholdsprodusent (/formidling)"
+  },
+  {
+    "id": "KP-ANS-159",
+    "navn": "Morten Tangen",
+    "kjonn": "M",
+    "fodselsaar": 1983,
+    "avdeling": "Kuratering",
+    "stilling": "Forskningsstipendiat",
+    "ansatt_fra": "2025-09-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 58,
+    "kontor_sal": "Kuratorfløyen 2. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2009
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2008-2012"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Forskningsstipendiat (/kuratering)"
+  },
+  {
+    "id": "KP-ANS-160",
+    "navn": "Nora Moen",
+    "kjonn": "K",
+    "fodselsaar": 1990,
+    "avdeling": "Kuratering",
+    "stilling": "Kurator samtidskunst",
+    "ansatt_fra": "2025-02-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 66,
+    "kontor_sal": "Kuratorfløyen 2. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2016
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2015-2019"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Kurator samtidskunst (/kuratering)"
+  },
+  {
+    "id": "KP-ANS-161",
+    "navn": "Sindre Thorvaldsen",
+    "kjonn": "M",
+    "fodselsaar": 1985,
+    "avdeling": "Kuratering",
+    "stilling": "Kurator samtidskunst",
+    "ansatt_fra": "2025-05-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 59,
+    "kontor_sal": "Kuratorfløyen 2. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2011
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2010-2014"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Kurator samtidskunst (/kuratering)"
+  },
+  {
+    "id": "KP-ANS-162",
+    "navn": "Ellen Lund",
+    "kjonn": "K",
+    "fodselsaar": 1976,
+    "avdeling": "Marked",
+    "stilling": "Digital innholdsprodusent / Web",
+    "ansatt_fra": "2025-07-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 56,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Reiseliv, vertskap og opplevelsesøkonomi",
+        "institusjon": "Høyskolen Kristiania",
+        "aar": 1999
+      },
+      {
+        "grad": "IK-mat og allergiansvarlig kurs",
+        "institusjon": "Mattilsynet / NHO Reiseliv",
+        "aar": 2000
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2000-2004"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "1997-2000"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Digital innholdsprodusent / Web (/marked)"
+  },
+  {
+    "id": "KP-ANS-163",
+    "navn": "Liv Pettersen",
+    "kjonn": "K",
+    "fodselsaar": 2000,
+    "avdeling": "Formidling",
+    "stilling": "Museumsvert og omviser (Deltid)",
+    "ansatt_fra": "2025-09-15",
+    "ansatt_til": null,
+    "status": "Deltid / Sesong",
+    "stillingsprosent": 0.4,
+    "lonnstrinn_virke": 44,
+    "kontor_sal": "Formidlingsrom",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Visuell kultur og kunstformidling",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2024
+      },
+      {
+        "grad": "Vekterutdanning & Førstehjelpssertifisering",
+        "institusjon": "Norsk Førstehjelpsråd / Vekterskolen",
+        "aar": 2022
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Munchmuseet",
+        "rolle": "Omviser og vert",
+        "periode": "2025-2028"
+      },
+      {
+        "institusjon": "Kulturhuset i Kristiansand",
+        "rolle": "Arrangementsvert",
+        "periode": "2022-2024"
+      }
+    ],
+    "publikasjoner": [
+      "Deltaker i nasjonalt nettverk for universell museumstilrettelegging (2023)",
+      "Kursbevis: Håndtering av uønskede publikumshendelser og konfliktdemping (2024)"
+    ],
+    "icor_rolle": "Museumsvert og omviser (Deltid) (/formidling)"
+  },
+  {
+    "id": "KP-ANS-164",
+    "navn": "Liv Larsen",
+    "kjonn": "K",
+    "fodselsaar": 1980,
+    "avdeling": "Drift",
+    "stilling": "AV- og utstillingslystekniker",
+    "ansatt_fra": "2025-01-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 53,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Elektrikerfaget / Byggdrifterfaget",
+        "institusjon": "Agder Fylkeskommune",
+        "aar": 2001
+      },
+      {
+        "grad": "Sertifisering: Varme arbeider og stillas",
+        "institusjon": "Norsk Brannvernforening",
+        "aar": 2003
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2003-2007"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2001-2003"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "AV- og utstillingslystekniker (/drift)"
+  },
+  {
+    "id": "KP-ANS-165",
+    "navn": "Arild Moe",
+    "kjonn": "M",
+    "fodselsaar": 1978,
+    "avdeling": "Samling",
+    "stilling": "Digitaliserings- og samlingstekniker",
+    "ansatt_fra": "2026-03-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 53,
+    "kontor_sal": "Konserveringsatelier U1 / Magasin",
+    "utdanning": [
+      {
+        "grad": "Bachelor i Museologi og kulturarv",
+        "institusjon": "Universitetet i Oslo (UiO)",
+        "aar": 2002
+      },
+      {
+        "grad": "Sertifisering i Primus samlingsdatabase",
+        "institusjon": "KulturIT",
+        "aar": 2003
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Nasjonalmuseet",
+        "rolle": "Konserveringsassistent",
+        "periode": "2003-2007"
+      },
+      {
+        "institusjon": "KODE Kunstmuseer",
+        "rolle": "Magasintekniker",
+        "periode": "2001-2003"
+      }
+    ],
+    "publikasjoner": [
+      "Tilstandsvurdering og mikro-klimaovervåking i historiske magasiner (2021)",
+      "Forebyggende konservering ved utlån av papirverk (2023)"
+    ],
+    "icor_rolle": "Digitaliserings- og samlingstekniker (/samling)"
+  },
+  {
+    "id": "KP-ANS-166",
+    "navn": "Stine Johnsen",
+    "kjonn": "K",
+    "fodselsaar": 1983,
+    "avdeling": "Marked",
+    "stilling": "Museumsbutikkleder",
+    "ansatt_fra": "2026-12-01",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 1.0,
+    "lonnstrinn_virke": 53,
+    "kontor_sal": "Kafé / Butikk / Markedskontor",
+    "utdanning": [
+      {
+        "grad": "Master i Strategisk markedsføring og ledelse",
+        "institusjon": "Handelshøyskolen BI",
+        "aar": 2008
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Henie Onstad Kunstsenter",
+        "rolle": "Butikk- og kafékoordinator",
+        "periode": "2007-2011"
+      },
+      {
+        "institusjon": "Kaffebrenneriet",
+        "rolle": "Barista og skiftleder",
+        "periode": "2004-2007"
+      }
+    ],
+    "publikasjoner": [
+      "Bærekraftig varesortiment i museumsbutikken (2022)",
+      "Publikumsreisen: Fra skranke til museumsbutikk (2024)"
+    ],
+    "icor_rolle": "Museumsbutikkleder (/marked)"
+  },
+  {
+    "id": "KP-ANS-167",
+    "navn": "Sofie Eriksen",
+    "kjonn": "K",
+    "fodselsaar": 1991,
+    "avdeling": "Kuratering",
+    "stilling": "Kuratorassistent",
+    "ansatt_fra": "2026-12-15",
+    "ansatt_til": null,
+    "status": "Fast",
+    "stillingsprosent": 0.5,
+    "lonnstrinn_virke": 51,
+    "kontor_sal": "Kuratorfløyen 2. etg",
+    "utdanning": [
+      {
+        "grad": "Master i Samfunnsvitenskap / Administrasjon",
+        "institusjon": "Universitetet i Bergen (UiB)",
+        "aar": 2017
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Fylkeskommunen",
+        "rolle": "Rådgiver kulturseksjon",
+        "periode": "2016-2020"
+      }
+    ],
+    "publikasjoner": [
+      "Organisasjonsutvikling og HMS i kulturinstitusjoner (2023)"
+    ],
+    "icor_rolle": "Kuratorassistent (/kuratering)"
+  },
+  {
+    "id": "KP-ANS-168",
+    "navn": "Fredrik Ruud",
+    "kjonn": "M",
+    "fodselsaar": 1986,
+    "avdeling": "Drift",
+    "stilling": "Vekter og sikkerhetsvakt",
+    "ansatt_fra": "2026-07-15",
+    "ansatt_til": null,
+    "status": "Deltid / Sesong",
+    "stillingsprosent": 0.4,
+    "lonnstrinn_virke": 41,
+    "kontor_sal": "Driftssentralen U1 / Sikkerhetsrom",
+    "utdanning": [
+      {
+        "grad": "Fagbrev i Sikkerhetsfaget",
+        "institusjon": "Fylkeskommunal yrkesopplæring",
+        "aar": 2007
+      },
+      {
+        "grad": "Nasjonal vekteropplæring trinn 1-3 & RVR-kurs",
+        "institusjon": "NHO Service og Handel",
+        "aar": 2008
+      }
+    ],
+    "tidligere_arbeidsgivere": [
+      {
+        "institusjon": "Statsbygg Drift",
+        "rolle": "Driftstekniker",
+        "periode": "2009-2013"
+      },
+      {
+        "institusjon": "Securitas AS",
+        "rolle": "Stasjonærvakt / teknisk tilsyn",
+        "periode": "2007-2009"
+      }
+    ],
+    "publikasjoner": [
+      "Godkjent brannvernleder for forsamlingslokaler (2022)",
+      "Sertifikat i nødstrøms- og klimaovervåking for verneverdige bygg (2024)"
+    ],
+    "icor_rolle": "Vekter og sikkerhetsvakt (/drift)"
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "id": "SALG-05",
+  "title": "Demo: ROI-presset COO Anders",
+  "description": "Trening på en fokusert demo for en presset toppleder som straffer feature-dump og belønner kobling til smerte og ROI.",
+  "duration_minutes": 10,
+  "conversation_type": "Demo og løsningspresentasjon",
+  "persona_name": "Anders Five",
+  "persona_role": "COO",
+  "tags_visible": [],
+  "hidden_tag_count": 0,
+  "source_status": "metadata_complete",
+  "catalog_group": "Salg og kundedialog",
+  "input_notes": "Katalogmetadata fra brukerens innlimte tekst, ikke komplett rollemanus. +N betyr at flere tagger er skjult i kilden, ikke at de er kjent.",
+  "source": "user_supplied_paste_2026-10-20",
+  "scenario_implemented": false,
+  "persona_is_verified_synthetic": false
+}

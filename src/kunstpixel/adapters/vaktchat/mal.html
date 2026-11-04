@@ -1,0 +1,246 @@
+<title>Kunstpixel Vaktchat</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/*AFCSS*/
+/* Arbeidsflyt er et bevisst lyst design: én look, alle farger satt eksplisitt. */
+:root { color-scheme: light; }
+body { background: #f3f6f8; color: #172b3b; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 24px; }
+.vc-logg { display: grid; gap: 10px; margin: 0 0 14px; }
+.vc-msg { border: 1px solid var(--line); border-radius: var(--radius-field); padding: 10px 12px; background: var(--panel); min-width: 0; }
+.vc-msg.bruker { background: var(--paper); margin-left: 12%; }
+.vc-hvem { font-size: .72rem; font-weight: 650; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 0 0 4px; }
+.vc-tekst { white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; }
+.vc-msg details { margin-top: 8px; font-size: .82rem; color: var(--muted); }
+.vc-msg details li, .vc-msg details p { overflow-wrap: anywhere; }
+.vc-forslag { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+.vc-forslag .af-btn { text-align: left; white-space: normal; }
+.vc-varsel { margin: 6px 0 0; font-size: .85rem; }
+.vc-ok { color: var(--green-ink); }
+.vc-advar { color: var(--gold); }
+.vc-feil { color: var(--danger); }
+@media (max-width: 1050px) { .af-context { display: block; grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); } }
+</style>
+
+<div class="af">
+  <div class="af-shell">
+    <nav class="af-sidebar" aria-label="Steg">
+      <p class="af-side-heading">Datafinner</p>
+      <ol class="af-flow-list">
+        <li><a class="af-flow-link" href="#chat" aria-current="step"><span class="af-step-dot">1</span><span>Vaktchat</span></a></li>
+      </ol>
+      <hr class="af-side-rule">
+      <p class="af-task-hint">Syntetiske data fra Kunstpixel. Claude svarer gjennom din egen Claude-konto.</p>
+    </nav>
+
+    <main class="af-main">
+      <section class="af-view" id="chat">
+        <p class="af-caption">Spør med vanlige ord</p>
+        <h1 class="af-title" tabindex="-1">Vaktchat</h1>
+        <div class="af-alert info" role="status"><strong>Øvingsdata</strong><span>Alle ansatte, innleide og vakter er syntetiske. Claude henter fakta med verktøyene til høyre. Ingen sperrer.</span></div>
+        <div class="af-alert warn" role="status" id="ingen-ki" hidden><strong>Claude er ikke tilgjengelig her</strong><span id="ingen-ki-tekst">Åpne siden i Claude for å chatte. Verktøyene og dataene virker likevel.</span></div>
+        <div class="af-error-summary" id="feil" role="alert" hidden>
+          <h2>Feil</h2>
+          <p id="feil-tekst"></p>
+        </div>
+        <div class="vc-forslag" id="forslag" aria-label="Eksempelspørsmål"></div>
+        <div class="vc-logg" id="logg" aria-live="polite"></div>
+        <div class="af-group">
+          <label class="af-label" for="sporsmal">Spørsmål</label>
+          <textarea class="af-textarea" id="sporsmal" rows="3"></textarea>
+        </div>
+        <div class="af-actions">
+          <button class="af-btn af-btn-primary" type="button" id="send">Send</button>
+          <button class="af-btn af-btn-secondary" type="button" id="stopp" hidden>Stopp</button>
+          <button class="af-btn af-btn-secondary" type="button" id="ny">Ny samtale</button>
+          <span class="af-save-status" id="status"></span>
+        </div>
+      </section>
+    </main>
+
+    <aside class="af-context" aria-label="Innstillinger">
+      <h2 class="af-context-title">Rolle</h2>
+      <div class="af-context-card">
+        <label class="af-small-label" for="meg">Jeg er</label>
+        <select class="af-input" id="meg"></select>
+        <label class="af-small-label" for="rolle">Rolle</label>
+        <select class="af-input" id="rolle"></select>
+      </div>
+      <h2 class="af-context-title">Verktøy Claude kan bruke</h2>
+      <div class="af-context-card"><ul id="verktoyliste"></ul></div>
+      <h2 class="af-context-title">Data</h2>
+      <div class="af-context-card"><p id="datainfo"></p></div>
+    </aside>
+  </div>
+</div>
+
+<script type="application/json" id="data">/*DATA*/</script>
+<script>
+/*VERKTOY*/
+</script>
+<script>
+(function () {
+  var D = JSON.parse(document.getElementById("data").textContent);
+  var VERKTOY = lagVerktoy(D);
+  var ROLLER = ["Museumsdirektør", "Driftsansvarlig", "HR og bemanning", "Avdelingsleder", "Kafeansvarlig", "Kommunikasjon", "Museumsvert"];
+  var FORSLAG = [
+    "Hvem har vakt søndag 1. november 2026, og når starter og slutter vaktene?",
+    "Kan Astrid Moen og Frida Lund bytte vaktene sine 1. november 2026? Sjekk begge veier.",
+    "Hvem kan ta vakt i vaktrommet lørdag 7. november 2026 kl. 08–16? Ranger dem og regn ut prisen for vakten.",
+    "Hvem i HR kan jeg kontakte om et vaktbytte?",
+    "Hva sier håndboken om betingelser for ordinært vaktbytte?",
+    "Hva kom fram i den siste medarbeidersamtalen min?"
+  ];
+  var UKEDAG = ["søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"];
+  var IDENT = { navn: 1, epost: 1, telefon: 1, ansatt_id: 1, id: 1, orgnr: 1, saksnr: 1, vakt_id: 1 };
+  var $ = function (id) { return document.getElementById(id); };
+  var turer = [], sample = null, ctl = null, maksVerktoy = 64;
+
+  function el(tag, cls, tekst) { var e = document.createElement(tag); if (cls) e.className = cls; if (tekst != null) e.textContent = tekst; return e; }
+  function feil(m) { $("feil-tekst").textContent = m || ""; $("feil").hidden = !m; }
+
+  function regler() {
+    var d = new Date(), iso = d.toISOString().slice(0, 10);
+    return "Du er Kunstpixel-assistenten for et norsk kunstmuseum. I dag er " + UKEDAG[d.getDay()] + " " + iso +
+      ". Brukeren er " + $("meg").selectedOptions[0].textContent + " og har rollen " + $("rolle").value +
+      ". Når brukeren sier «jeg», «meg» eller «min», gjelder det denne personen.\n" +
+      "Bruk verktøyene for å hente fakta før du svarer, og ikke dikt opp tall, navn eller datoer. " +
+      "Dataene dekker " + D.vindu[0] + " til " + D.vindu[1] + " og er syntetiske øvingsdata.\n" +
+      "Når du regner ut et tall, skriv regnestykket med tallene fra verktøyene, for eksempel «284,92 × 8 = 2 279,36».\n" +
+      "Svar på norsk bokmål, kort og direkte, i vanlig tekst uten tabeller og uten markdown-overskrifter.";
+  }
+
+  // Verktøysvar kortes så de holder seg under grensen på 32 KB.
+  function kort(x, n) {
+    n = n || 60;
+    if (Array.isArray(x)) { var r = x.slice(0, n).map(function (v) { return kort(v, n); }); if (x.length > n) r.push({ _utelatt_rader: x.length - n }); return r; }
+    if (x && typeof x === "object") { var o = {}; Object.keys(x).forEach(function (k) { o[k] = kort(x[k], n); }); return o; }
+    return x;
+  }
+
+  // Tallkontroll: samme regel som i Datafinner (llm.tallkontroll), forenklet.
+  var TALL = /\d+(?:[   ]\d{3})*(?:[.,]\d+)?/g;
+  var tilTall = function (t) { return parseFloat(t.replace(/[   ]/g, "").replace(",", ".")); };
+  var tol = function (t) { var m = /[.,](\d+)$/.exec(t); return 0.5 * Math.pow(10, -(m ? m[1].length : 0)) + 1e-9; };
+  function samle(x, tall, ident) {
+    if (typeof x === "number") tall.push(x);
+    else if (typeof x === "string") (x.match(TALL) || []).forEach(function (t) { tall.push(tilTall(t)); });
+    else if (Array.isArray(x)) x.forEach(function (v) { samle(v, tall, ident); });
+    else if (x && typeof x === "object") Object.keys(x).forEach(function (k) {
+      if (IDENT[k]) { if (x[k] != null && String(x[k]).length >= 4) ident.push(String(x[k])); } else samle(x[k], tall, ident);
+    });
+  }
+  function tallkontroll(tekst, grunnlag) {
+    var kjent = [], ident = []; samle(grunnlag, kjent, ident);
+    ident.sort(function (a, b) { return b.length - a.length; }).forEach(function (v) { tekst = tekst.split(v).join(" "); });
+    var sifre = ident.map(function (v) { return v.replace(/\D/g, ""); }).filter(function (s) { return s.length >= 6; });
+    tekst = tekst.replace(/\+?\d[\d   ]{4,}\d/g, function (m) { var d = m.replace(/\D/g, ""); return d.length >= 6 && sifre.some(function (s) { return s.slice(-d.length) === d; }) ? " " : m; });
+    var erKjent = function (v, t) { return kjent.some(function (k) { return Math.abs(k - v) <= tol(t); }); };
+    var N = TALL.source, utregnet = [], feilR = [];
+    tekst = tekst.replace(new RegExp("(" + N + ")\\s*([×x*·+\\-−–/:])\\s*(" + N + ")\\s*=\\s*(" + N + ")", "g"), function (m, a, op, b, c) {
+      var A = tilTall(a), B = tilTall(b), C = tilTall(c);
+      if (!erKjent(A, a) || !erKjent(B, b)) return m;
+      var f = /[+]/.test(op) ? A + B : /[\-−–]/.test(op) ? A - B : /[/:]/.test(op) ? A / B : A * B;
+      if (Math.abs(f - C) <= Math.max(tol(c), Math.abs(f) * 0.005)) { kjent.push(C); utregnet.push(m.trim()); } else feilR.push(m.trim());
+      return " ";
+    });
+    var ukjente = (tekst.match(TALL) || []).filter(function (t) { return !erKjent(tilTall(t), t); });
+    return { ok: !ukjente.length && !feilR.length, ukjente: ukjente, utregnet: utregnet, feil: feilR };
+  }
+
+  function visBruker(tekst) {
+    var m = el("div", "vc-msg bruker"); m.appendChild(el("p", "vc-hvem", "Du")); m.appendChild(el("p", "vc-tekst", tekst));
+    $("logg").appendChild(m); m.scrollIntoView({ block: "end" });
+  }
+  function nySvarboble() {
+    var m = el("div", "vc-msg"); m.appendChild(el("p", "vc-hvem", "Claude"));
+    var t = el("p", "vc-tekst", "Tenker …"); m.appendChild(t);
+    var kallUl = el("ul"); var d = el("details"); var s = el("summary", null, "Verktøy brukt (0)"); d.appendChild(s); d.appendChild(kallUl);
+    m.appendChild(d); $("logg").appendChild(m); m.scrollIntoView({ block: "end" });
+    return { boble: m, tekst: t, kallUl: kallUl, sammendrag: s, antall: 0, resultater: [] };
+  }
+
+  function send() {
+    var tekst = $("sporsmal").value.trim();
+    if (!tekst || !sample) return;
+    feil("");
+    turer.push({ role: "user", content: tekst });
+    visBruker(tekst); $("sporsmal").value = "";
+    var b = nySvarboble();
+    var verktoy = VERKTOY.slice(0, maksVerktoy).map(function (v) {
+      var t = { name: v.name, description: v.description, execute: function (inp) {
+        b.antall++; b.sammendrag.textContent = "Verktøy brukt (" + b.antall + ")";
+        var li = el("li", null, v.name + " " + JSON.stringify(inp)); b.kallUl.appendChild(li);
+        $("status").textContent = "Claude bruker " + v.name + " …";
+        try { var r = kort(v.run(inp || {})); b.resultater.push(r); return r; }
+        catch (e) { li.textContent += " (feil: " + e.message + ")"; throw e; }
+      } };
+      if (v.inputSchema) t.inputSchema = v.inputSchema;
+      return t;
+    });
+    ctl = new AbortController();
+    $("send").disabled = true; $("stopp").hidden = false; $("status").textContent = "Claude tenker …";
+    sample([{ role: "user", content: regler() }].concat(turer), {
+      tools: verktoy, signal: ctl.signal, model: "claude-sonnet-5-5", modelTier: "default",
+      onText: function (u) { b.tekst.textContent = u.text; }
+    }).then(function (svar) {
+      b.tekst.textContent = svar.text;
+      turer.push({ role: "assistant", content: svar.text });
+      b.boble.appendChild(el("span", "af-source suggested", "AI-forslag"));
+      var brukerTekster = turer.filter(function (x) { return x.role === "user"; }).map(function (x) { return x.content; });
+      var tk = tallkontroll(svar.text, b.resultater.concat(brukerTekster));
+      if (tk.utregnet.length) b.boble.appendChild(el("p", "vc-varsel vc-ok", "Regnet etter og stemmer: " + tk.utregnet.join("; ") + "."));
+      if (tk.feil.length) b.boble.appendChild(el("p", "vc-varsel vc-feil", "Feil regnestykke: " + tk.feil.join("; ") + "."));
+      if (tk.ukjente.length) b.boble.appendChild(el("p", "vc-varsel vc-advar", "Sjekk tallene: " + tk.ukjente.join(", ") + " står ikke i det verktøyene ga."));
+      if (svar.truncated) b.boble.appendChild(el("p", "vc-varsel vc-advar", "Svaret ble kuttet. Spør om mindre om gangen."));
+      if (!b.antall) b.kallUl.appendChild(el("li", null, "Ingen. Svaret bygger ikke på dataene."));
+    }).catch(function (e) {
+      turer.pop();
+      b.tekst.textContent = e && e.text ? e.text : "";
+      var kode = e && e.code;
+      if (kode === "cancelled") { b.boble.appendChild(el("p", "vc-varsel vc-advar", "Stoppet.")); return; }
+      if (kode === "not_granted" || kode === "sampling_disabled" || kode === "tools_unavailable") { slaaAv("Claude er ikke tillatt for denne siden (" + kode + ")."); return; }
+      var tekster = { rate_limited: "For mange spørsmål akkurat nå. Vent litt og prøv igjen.", refused: "Claude ville ikke svare på dette. Omformuler spørsmålet.",
+        prompt_too_large: "Samtalen ble for lang. Start en ny samtale.", session_expired: "Du må logge inn på nytt i Claude." };
+      feil(tekster[kode] || "Noe gikk galt hos Claude (" + (kode || "ukjent") + "). Prøv igjen.");
+    }).then(function () { $("send").disabled = false; $("stopp").hidden = true; $("status").textContent = ""; });
+  }
+
+  function slaaAv(grunn) {
+    sample = null; $("send").disabled = true; $("ingen-ki").hidden = false;
+    if (grunn) $("ingen-ki-tekst").textContent = grunn + " Verktøyene og dataene virker likevel.";
+  }
+
+  // Oppsett
+  ROLLER.forEach(function (r) { var o = el("option", null, r); o.value = r; $("rolle").appendChild(o); });
+  var iDag = new Date().toISOString().slice(0, 10);
+  D.ansatte.filter(function (a) { return !a.ansatt_til || a.ansatt_til >= iDag; })
+    .sort(function (a, b) { return a.navn.localeCompare(b.navn, "nb"); })
+    .forEach(function (a) { var o = el("option", null, a.navn + " (" + a.id + ", " + a.stilling + ")"); o.value = a.id; $("meg").appendChild(o); });
+  $("meg").value = "KP-ANS-153";
+  $("rolle").value = "Driftsansvarlig";
+  VERKTOY.forEach(function (v) { var li = el("li"); li.appendChild(el("strong", null, v.name)); li.appendChild(el("span", null, ": " + v.description)); $("verktoyliste").appendChild(li); });
+  $("datainfo").textContent = D.ansatte.length + " ansatte, " + D.innleide.length + " innleide, " + D.vakter.length + " vakter og " + Object.keys(D.krav).length +
+    " stasjoner. Vakter " + D.vakter_fra + " til " + D.vindu[1] + ". Øyeblikksbilde av museum.db.";
+  FORSLAG.forEach(function (f) {
+    var b = el("button", "af-btn af-btn-secondary", f); b.type = "button";
+    b.addEventListener("click", function () { $("sporsmal").value = f; $("sporsmal").focus(); });
+    $("forslag").appendChild(b);
+  });
+  $("send").addEventListener("click", send);
+  $("stopp").addEventListener("click", function () { if (ctl) ctl.abort(); });
+  $("sporsmal").addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } });
+  $("ny").addEventListener("click", function () { if (ctl) ctl.abort(); turer = []; $("logg").textContent = ""; feil(""); });
+  $("send").disabled = true; $("status").textContent = "Kobler til Claude …";
+
+  if (!window.claude || !window.claude.use) { slaaAv(); $("status").textContent = ""; return; }
+  window.claude.use("sample").then(function (s) {
+    $("status").textContent = "";
+    if (!s) { slaaAv(); return; }
+    return s.limits().then(function (l) {
+      if (!l || !l.tools) { slaaAv("Denne visningen kan ikke la Claude bruke verktøy."); return; }
+      if (l.tools.maxCount) maksVerktoy = l.tools.maxCount;
+      sample = s; $("send").disabled = false;
+    }, function () { sample = s; $("send").disabled = false; });
+  }, function () { slaaAv(); $("status").textContent = ""; });
+})();
+</script>

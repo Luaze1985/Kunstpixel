@@ -1,0 +1,38 @@
+klassifisering: syntetisk
+syntetisk: true
+merknad: Treningsdata, ikke rettesnor. Alle frister, terskler og timer er oppdiktet.
+versjon: 1
+avvik_frister:
+  gult_avvik_lukkes_innen: 14 dager
+  rodt_avvik_lukkes_innen: 24 timer
+steg:
+- nr: 1
+  navn: Varsel kommer
+  ansvarlig: Driftsansvarlig
+  handling: Driftsansvarlig mottar og registrerer varselet i kvalitetssystemet og varsler umiddelbart berørte ledere.
+  dokumentasjon: Mottatt varselbrev fra tilsynsmyndigheten og opprettet saksmappe i arkivet.
+- nr: 2
+  navn: Samle dokumentasjon
+  ansvarlig: Driftsansvarlig
+  handling: Verneombud og Driftsansvarlig gjennomgår logger og samler alle etterspurte rutiner og sjekklister.
+  dokumentasjon: Gjeldende avvikslogger, referater fra vernerunder og oppdaterte instrukser for fagområdet.
+- nr: 3
+  navn: Under besøket
+  ansvarlig: Museumsdirektør
+  handling: Museumsdirektør og Driftsansvarlig tar imot inspektørene, orienterer om virksomheten og ledsager dem på befaringen.
+  dokumentasjon: Fysiske plantegninger over bygget, skilting av nødutganger og oversikt over tekniske anlegg.
+- nr: 4
+  navn: Tilbakemelding
+  ansvarlig: Museumsdirektør
+  handling: Museumsdirektør deltar i oppsummeringsmøte med inspektørene og noterer foreløpige tilbakemeldinger og observasjoner.
+  dokumentasjon: Møtereferat fra oppsummeringsmøtet med inspektørenes muntlige kommentarer.
+- nr: 5
+  navn: Skriftlig svar
+  ansvarlig: Museumsdirektør
+  handling: Museumsdirektør utarbeider et formelt skriftlig tilsvar med tiltaksplan basert på den endelige tilsynsrapporten.
+  dokumentasjon: Endelig tilsynsrapport fra myndigheten, styrevedtak og oversendelsesbrev med utbedringsplan.
+- nr: 6
+  navn: Lukke avvik
+  ansvarlig: Driftsansvarlig
+  handling: Driftsansvarlig verifiserer at samtlige korrigerende tiltak er utført og lukker avvikene formelt i systemet.
+  dokumentasjon: Bilder av utbedringer, kvitteringer for utført arbeid og bekreftelse fra tilsynet.

@@ -1,0 +1,161 @@
+klassifisering: syntetisk
+syntetisk: true
+merknad: Treningsdata, ikke rettesnor. Alle frister, terskler og timer er oppdiktet.
+versjon: 1
+oppgaver:
+- id: AO-01
+  omrade: Myndighetskontakt
+  oppgave: Tilskuddssøknad
+  myndighet: Kulturdirektoratet
+  rolle: Museumsdirektør
+  timer_per_ar: 40
+  automatiseringspotensial: Middels
+  begrunnelse: Søknadsarbeid krever betydelig faglig og strategisk skjønn tilpasset politiske prioriteringer.
+- id: AO-02
+  omrade: Myndighetskontakt
+  oppgave: Følge opp avvik og pålegg
+  myndighet: Flere
+  rolle: Driftsansvarlig
+  timer_per_ar: 20
+  automatiseringspotensial: Middels
+  begrunnelse: Oppfølging krever skjønnsmessige risikovurderinger og fysiske befaringer på stedet.
+- id: AO-03
+  omrade: Myndighetskontakt
+  oppgave: Forberede tilsyn fra Arbeidstilsynet
+  myndighet: Arbeidstilsynet
+  rolle: Museumsdirektør
+  timer_per_ar: 16
+  automatiseringspotensial: Høy
+  begrunnelse: Dokumentasjonskravene er standardiserte og kan i stor grad hentes automatisk fra logger.
+- id: AO-04
+  omrade: Myndighetskontakt
+  oppgave: Forberede tilsyn fra Mattilsynet
+  myndighet: Mattilsynet
+  rolle: Kafeansvarlig
+  timer_per_ar: 12
+  automatiseringspotensial: Høy
+  begrunnelse: Kjøkkenrutiner og egenkontrollskjemaer følger faste maler som enkelt kan sammenstilles.
+- id: AO-05
+  omrade: Myndighetskontakt
+  oppgave: Forberede brannøvelse og brannsyn
+  myndighet: Brann- og redningsetaten
+  rolle: Driftsansvarlig
+  timer_per_ar: 10
+  automatiseringspotensial: Høy
+  begrunnelse: Inspeksjonslister for brannvern er rutinepregede og egner seg godt for sjekklisteautomatisering.
+- id: AO-06
+  omrade: Myndighetskontakt
+  oppgave: Fornye skjenkebevilling
+  myndighet: Kommunen
+  rolle: Kafeansvarlig
+  timer_per_ar: 8
+  automatiseringspotensial: Lav
+  begrunnelse: Kommunale søknader krever personlige vandelsattester og politiske vedtak som krever manuell saksgang.
+- id: AO-07
+  omrade: Myndighetskontakt
+  oppgave: Svare på personvernhenvendelser
+  myndighet: Datatilsynet
+  rolle: Driftsansvarlig
+  timer_per_ar: 6
+  automatiseringspotensial: Lav
+  begrunnelse: Henvendelser om innsyn krever individuelle juridiske vurderinger av personvernhensyn.
+- id: AO-08
+  omrade: Rapportering
+  oppgave: Månedlig driftsrapport
+  rapport_id: RP-01
+  rolle: Driftsansvarlig
+  timer_per_ar: 24
+  automatiseringspotensial: Høy
+  begrunnelse: Driftsdata og hendelseslogger kan aggregeres automatisk til ferdige månedsoppsummeringer.
+- id: AO-09
+  omrade: Rapportering
+  oppgave: Besøkstall og statistikk
+  rapport_id: RP-02
+  rolle: Driftsansvarlig
+  timer_per_ar: 14
+  automatiseringspotensial: Høy
+  begrunnelse: Billettstatistikk genereres direkte fra salgssystemet og kan eksporteres maskinelt.
+- id: AO-10
+  omrade: Rapportering
+  oppgave: Tilskuddsrapport
+  rapport_id: RP-03
+  rolle: Museumsdirektør
+  timer_per_ar: 36
+  automatiseringspotensial: Middels
+  begrunnelse: Rapporten krever faglige vurderinger og tilpasning mot overordnede strategiske målsetninger.
+- id: AO-11
+  omrade: Rapportering
+  oppgave: Årsregnskap og årsberetning
+  rapport_id: RP-04
+  rolle: Museumsdirektør
+  timer_per_ar: 24
+  automatiseringspotensial: Lav
+  begrunnelse: Finansiell rapportering og årsberetning krever revisorkontroll og grundig styrebehandling.
+- id: AO-12
+  omrade: Rapportering
+  oppgave: HMS-årsrapport
+  rapport_id: RP-05
+  rolle: Museumsdirektør
+  timer_per_ar: 10
+  automatiseringspotensial: Høy
+  begrunnelse: Data fra vernerunder og fraværsstatistikk kan trekkes ut og oppsummeres digitalt.
+- id: AO-13
+  omrade: Rapportering
+  oppgave: Avviksrapport
+  rapport_id: RP-06
+  rolle: Driftsansvarlig
+  timer_per_ar: 20
+  automatiseringspotensial: Høy
+  begrunnelse: Hendelsesmeldinger registreres digitalt og kan struktureres i rapporter uten manuell bearbeiding.
+- id: AO-14
+  omrade: Rapportering
+  oppgave: IK-Mat-sammenstilling
+  rapport_id: RP-07
+  rolle: Kafeansvarlig
+  timer_per_ar: 18
+  automatiseringspotensial: Høy
+  begrunnelse: Sensorer og manuelle målinger i serveringen mates inn i faste oversikter automatisk.
+- id: AO-15
+  omrade: Rapportering
+  oppgave: Vernerundeprotokoll
+  rapport_id: RP-08
+  rolle: Driftsansvarlig
+  timer_per_ar: 4
+  automatiseringspotensial: Middels
+  begrunnelse: Protokollen bygger på en fast sjekkliste, men krever noen manuelle prioriteringer.
+- id: AO-16
+  omrade: Rapportering
+  oppgave: Tilstandsrapport samling
+  rapport_id: RP-09
+  rolle: Samlingsforvalter
+  timer_per_ar: 6
+  automatiseringspotensial: Middels
+  begrunnelse: Klimadata fra salene samles maskinelt, men vurdering av verk krever konservatorskjønn.
+- id: AO-17
+  omrade: Rapportering
+  oppgave: Brannøvelsesrapport
+  rapport_id: RP-10
+  rolle: Driftsansvarlig
+  timer_per_ar: 3
+  automatiseringspotensial: Høy
+  begrunnelse: Øvelseslogger kan sammenstilles raskt i standardiserte rapportmaler for beredskap.
+- id: AO-18
+  omrade: Rapportering
+  oppgave: Innlånsoversikt
+  rapport_id: RP-11
+  rolle: Samlingsforvalter
+  timer_per_ar: 4
+  automatiseringspotensial: Høy
+  begrunnelse: Innlånsoversikter er ferdig registrert i samlingsbasen og kan trekkes ut med et tastetrykk.
+- id: AO-19
+  omrade: Rapportering
+  oppgave: Styrerapport
+  rapport_id: RP-12
+  rolle: Museumsdirektør
+  timer_per_ar: 12
+  automatiseringspotensial: Middels
+  begrunnelse: Orienteringen forutsetter en helhetlig strategisk oppsummering fra toppledelsen.
+sum:
+  myndighetskontakt: 112
+  rapportering: 175
+  totalt: 287

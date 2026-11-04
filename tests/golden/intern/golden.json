@@ -1,0 +1,517 @@
+[
+  {
+    "sporsmal": "Hvor lenge kan museumsverter stå sammenhengende?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **ergonomi museumsverter**: maks sammenhengende staing: 90 minutter; rotasjonsintervall: Hver 2. time rullering mellom salsoppsyn, sittende skranke og kafévakt; palagt skotoy: Dempede arbeidssko godkjent for harde steingulv\n  Kilde: 05_data/governance/hms_arbeidsmiljo.yaml › fysisk arbeidsmiljo › ergonomi museumsverter",
+    "category": "hms",
+    "tools_used": [
+      "search_hms"
+    ],
+    "kilder": [
+      "05_data/governance/hms_arbeidsmiljo.yaml › fysisk arbeidsmiljo › ergonomi museumsverter"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvor ofte skal museumsvertene rullere mellom oppgaver?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **ergonomi museumsverter**: maks sammenhengende staing: 90 minutter; rotasjonsintervall: Hver 2. time rullering mellom salsoppsyn, sittende skranke og kafévakt; palagt skotoy: Dempede arbeidssko godkjent for harde steingulv\n  Kilde: 05_data/governance/hms_arbeidsmiljo.yaml › fysisk arbeidsmiljo › ergonomi museumsverter",
+    "category": "hms",
+    "tools_used": [
+      "search_hms",
+      "get_rolle"
+    ],
+    "kilder": [
+      "05_data/governance/hms_arbeidsmiljo.yaml › fysisk arbeidsmiljo › ergonomi museumsverter"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hva er maks løftevekt for én person?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **manuell handtering og loft**: grense en person: Maks 15 kg; grense to personer: 15 til 40 kg; over 40 kg: Kun med mekanisk løftehjelpemiddel (jekketralle, traverskran, sugekopper)\n  Kilde: 05_data/governance/hms_arbeidsmiljo.yaml › fysisk arbeidsmiljo › manuell handtering og loft\n- **virksomhet**: bygg: Kunstpixel Kunstmuseum; adresse: Hovedgaten 1, Kulturkvartalet; tilsynsmyndighet: Brann- og redningsetaten / DSB; total maks personer samtidig: 250\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › virksomhet\n- **sal a**: navn: Sal A – Mytologi og natur; etasje: 1; areal m2: 95; maks personer: 50; romningsveier: 2\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › rom kapasiteter › sal a",
+    "category": "hms",
+    "tools_used": [
+      "search_hms",
+      "search_brann_sikring"
+    ],
+    "kilder": [
+      "05_data/governance/hms_arbeidsmiljo.yaml › fysisk arbeidsmiljo › manuell handtering og loft",
+      "05_data/governance/brann_sikring_kapasitet.yaml › virksomhet",
+      "05_data/governance/brann_sikring_kapasitet.yaml › rom kapasiteter › sal a"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvor mye kan to personer løfte sammen?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **manuell handtering og loft**: grense en person: Maks 15 kg; grense to personer: 15 til 40 kg; over 40 kg: Kun med mekanisk løftehjelpemiddel (jekketralle, traverskran, sugekopper)\n  Kilde: 05_data/governance/hms_arbeidsmiljo.yaml › fysisk arbeidsmiljo › manuell handtering og loft",
+    "category": "hms",
+    "tools_used": [
+      "search_hms",
+      "search_brann_sikring"
+    ],
+    "kilder": [
+      "05_data/governance/hms_arbeidsmiljo.yaml › fysisk arbeidsmiljo › manuell handtering og loft"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hva kreves for å løfte over 40 kg?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **manuell handtering og loft**: grense en person: Maks 15 kg; grense to personer: 15 til 40 kg; over 40 kg: Kun med mekanisk løftehjelpemiddel (jekketralle, traverskran, sugekopper)\n  Kilde: 05_data/governance/hms_arbeidsmiljo.yaml › fysisk arbeidsmiljo › manuell handtering og loft",
+    "category": "hms",
+    "tools_used": [
+      "search_hms"
+    ],
+    "kilder": [
+      "05_data/governance/hms_arbeidsmiljo.yaml › fysisk arbeidsmiljo › manuell handtering og loft"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvilke hansker skal brukes på malerier?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **hansker**: tekstiler og malerier: Ublekede hvite bomullshansker; skulptur og glass: Nitrilhansker med godt grep\n  Kilde: 05_data/governance/hms_arbeidsmiljo.yaml › fysisk arbeidsmiljo › kunsthåndtering og verneutstyr › hansker",
+    "category": "hms",
+    "tools_used": [
+      "search_hms"
+    ],
+    "kilder": [
+      "05_data/governance/hms_arbeidsmiljo.yaml › fysisk arbeidsmiljo › kunsthåndtering og verneutstyr › hansker"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvilke hansker brukes for skulptur og glass?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **hansker**: tekstiler og malerier: Ublekede hvite bomullshansker; skulptur og glass: Nitrilhansker med godt grep\n  Kilde: 05_data/governance/hms_arbeidsmiljo.yaml › fysisk arbeidsmiljo › kunsthåndtering og verneutstyr › hansker",
+    "category": "hms",
+    "tools_used": [
+      "search_hms"
+    ],
+    "kilder": [
+      "05_data/governance/hms_arbeidsmiljo.yaml › fysisk arbeidsmiljo › kunsthåndtering og verneutstyr › hansker"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Når er alenearbeid forbudt?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **alenearbeid**: forbudt: Ved åpningskvelder, store arrangementer (> 80 gjester) og etter kl. 20:00\n  Kilde: 05_data/governance/hms_arbeidsmiljo.yaml › psykososialt arbeidsmiljo og sikkerhet › alenearbeid",
+    "category": "hms",
+    "tools_used": [
+      "search_hms"
+    ],
+    "kilder": [
+      "05_data/governance/hms_arbeidsmiljo.yaml › psykososialt arbeidsmiljo og sikkerhet › alenearbeid"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hva gjør jeg ved utagering fra publikum?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **publikumskonflikter og utagering**: rutine: Rolig henvendelse, tilkall vaktkollega via radio/alarmknapp, politi 112 ved trusler\n  Kilde: 05_data/governance/hms_arbeidsmiljo.yaml › psykososialt arbeidsmiljo og sikkerhet › publikumskonflikter og utagering",
+    "category": "hms",
+    "tools_used": [
+      "search_hms"
+    ],
+    "kilder": [
+      "05_data/governance/hms_arbeidsmiljo.yaml › psykososialt arbeidsmiljo og sikkerhet › publikumskonflikter og utagering"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvordan varsler jeg om kritikkverdige forhold?",
+    "rolle": "museumsvert",
+    "text": "Det står ikke i de interne dataene jeg har tilgang til, så jeg vil ikke gjette. Jeg kan svare på HMS og arbeidsmiljø, IK-Mat for kaféen, brann og sikring, tilsynskalenderen, roller og ansvar, myndighetskontakt, rapportering og (for ledelsen) prioriterte tiltak og arbeidsoppgaver. For alt annet, spør nærmeste leder.",
+    "category": "ikke_funnet",
+    "tools_used": [
+      "search_hms"
+    ],
+    "kilder": [],
+    "funnet": false
+  },
+  {
+    "sporsmal": "Hvor ofte er det vernerunde?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **vernerunder og avvik**: frekvens: Kvartalsvis (mars, juni, september, desember)\n  Kilde: 05_data/governance/hms_arbeidsmiljo.yaml › vernerunder og avvik\n- **deltakere**: Verneombud; Museumsdirektør / Driftssjef; Tillitsvalgt\n  Kilde: 05_data/governance/hms_arbeidsmiljo.yaml › vernerunder og avvik › deltakere",
+    "category": "hms",
+    "tools_used": [
+      "search_hms"
+    ],
+    "kilder": [
+      "05_data/governance/hms_arbeidsmiljo.yaml › vernerunder og avvik",
+      "05_data/governance/hms_arbeidsmiljo.yaml › vernerunder og avvik › deltakere"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvor raskt må røde avvik lukkes?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **avviksskjema ruh**: krav til lukking: Innen 14 dager for gule avvik, umiddelbart (< 24t) for røde fareavvik\n  Kilde: 05_data/governance/hms_arbeidsmiljo.yaml › vernerunder og avvik › avviksskjema ruh",
+    "category": "hms",
+    "tools_used": [
+      "search_hms"
+    ],
+    "kilder": [
+      "05_data/governance/hms_arbeidsmiljo.yaml › vernerunder og avvik › avviksskjema ruh"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hva er maks temperatur i kjøleskapet?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **kjoleskap**: krav: maks +4 °C; varslingsgrense: +6 °C; loggfrekvens: 2 ganger daglig (morgen og kveld); tiltak ved avvik: Varer over +8 °C i mer enn 2 timer kastes. Teknisk service tilkalles.\n  Kilde: 05_data/governance/ik_mat_kafe.yaml › haccp kritiske styringspunkter › kjol og frys › kjoleskap",
+    "category": "ik_mat",
+    "tools_used": [
+      "search_ik_mat"
+    ],
+    "kilder": [
+      "05_data/governance/ik_mat_kafe.yaml › haccp kritiske styringspunkter › kjol og frys › kjoleskap"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvilken temperatur skal fryseren ha?",
+    "rolle": "museumsvert",
+    "text": "Det står ikke i de interne dataene jeg har tilgang til, så jeg vil ikke gjette. Jeg kan svare på HMS og arbeidsmiljø, IK-Mat for kaféen, brann og sikring, tilsynskalenderen, roller og ansvar, myndighetskontakt, rapportering og (for ledelsen) prioriterte tiltak og arbeidsoppgaver. For alt annet, spør nærmeste leder.",
+    "category": "ikke_funnet",
+    "tools_used": [
+      "search_ik_mat"
+    ],
+    "kilder": [],
+    "funnet": false
+  },
+  {
+    "sporsmal": "Hva er minste kjernetemperatur ved oppvarming?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **oppvarming kjernetemp**: krav: minimum +72 °C; kontroll: Stikkprøve med innstikkstermometer\n  Kilde: 05_data/governance/ik_mat_kafe.yaml › haccp kritiske styringspunkter › varmebehandling › oppvarming kjernetemp",
+    "category": "ik_mat",
+    "tools_used": [
+      "search_ik_mat"
+    ],
+    "kilder": [
+      "05_data/governance/ik_mat_kafe.yaml › haccp kritiske styringspunkter › varmebehandling › oppvarming kjernetemp"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvor lenge kan mat stå i varmholding på buffet?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **varmholding**: krav: minimum +60 °C; maks tid: 4 timer i buffet; tiltak ved avvik: Mat under +60 °C kastes umiddelbart\n  Kilde: 05_data/governance/ik_mat_kafe.yaml › haccp kritiske styringspunkter › varmebehandling › varmholding",
+    "category": "ik_mat",
+    "tools_used": [
+      "search_hms",
+      "search_ik_mat"
+    ],
+    "kilder": [
+      "05_data/governance/ik_mat_kafe.yaml › haccp kritiske styringspunkter › varmebehandling › varmholding"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvor lenge er karantenen etter magesyke?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **sykdom**: karantene: 48 timer etter opphør av oppkast eller diaré (norovirus-regel); meldeplikt: Ansatte plikter å varsle kaféansvarlig ved magesyke\n  Kilde: 05_data/governance/ik_mat_kafe.yaml › personlig hygiene og helse › sykdom",
+    "category": "ik_mat",
+    "tools_used": [
+      "search_ik_mat"
+    ],
+    "kilder": [
+      "05_data/governance/ik_mat_kafe.yaml › personlig hygiene og helse › sykdom"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvem har skadedyrkontrollen?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **skadedyrkontroll**: avtale: Autorisert skadedyrfirma (Pest Control AS); inspeksjoner per ar: 4\n  Kilde: 05_data/governance/ik_mat_kafe.yaml › renhold og oppvask › skadedyrkontroll",
+    "category": "ik_mat",
+    "tools_used": [
+      "search_ik_mat",
+      "get_rolle"
+    ],
+    "kilder": [
+      "05_data/governance/ik_mat_kafe.yaml › renhold og oppvask › skadedyrkontroll"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvor mange personer kan være i Sal A samtidig?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **sal a**: navn: Sal A – Mytologi og natur; etasje: 1; areal m2: 95; maks personer: 50; romningsveier: 2\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › rom kapasiteter › sal a",
+    "category": "brann",
+    "tools_used": [
+      "search_brann_sikring"
+    ],
+    "kilder": [
+      "05_data/governance/brann_sikring_kapasitet.yaml › rom kapasiteter › sal a"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvor mange personer kan være i museet samtidig?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **virksomhet**: bygg: Kunstpixel Kunstmuseum; adresse: Hovedgaten 1, Kulturkvartalet; tilsynsmyndighet: Brann- og redningsetaten / DSB; total maks personer samtidig: 250\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › virksomhet",
+    "category": "brann",
+    "tools_used": [
+      "search_brann_sikring"
+    ],
+    "kilder": [
+      "05_data/governance/brann_sikring_kapasitet.yaml › virksomhet"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvilke verk skal evakueres umiddelbart?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **AURA-2026-009**: id: AURA-2026-009; tittel: Skrik; kunstner: Edvard Munch; plassering: Sal D, vestvegg\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › AURA-2026-009\n- **AURA-2026-007**: id: AURA-2026-007; tittel: Vinternatt i Rondane; kunstner: Harald Sohlberg; plassering: Sal A, nordvegg\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › AURA-2026-007",
+    "category": "brann",
+    "tools_used": [
+      "search_brann_sikring"
+    ],
+    "kilder": [
+      "05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › AURA-2026-009",
+      "05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › AURA-2026-007"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hva betyr rødt klistremerke bak en ramme?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **niva 1 kritisk**: fargekode: Rødt klistremerke bak ramme; handling: Evakueres umiddelbart ved fare dersom mannskapets sikkerhet tillater det\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk\n- **AURA-2026-009**: id: AURA-2026-009; tittel: Skrik; kunstner: Edvard Munch; plassering: Sal D, vestvegg\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › AURA-2026-009",
+    "category": "brann",
+    "tools_used": [
+      "search_brann_sikring"
+    ],
+    "kilder": [
+      "05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk",
+      "05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › AURA-2026-009"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Når er brannøvelsen?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **virksomhet**: bygg: Kunstpixel Kunstmuseum; adresse: Hovedgaten 1, Kulturkvartalet; tilsynsmyndighet: Brann- og redningsetaten / DSB; total maks personer samtidig: 250\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › virksomhet\n- **niva 2 hoy**: fargekode: Gult klistremerke; handling: Evakueres etter nivå 1, eller dekkes med brann- og vanntett duk\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 2 hoy\n- **Mars**: kvartal: Q1; maned: Mars; tilsynsomrade: Brannsikkerhet & Beredskap; myndighet: Brann- og redningsetaten; oppgave: Arlig brannovelse med praktisk slukking og evakueringstest for alle ansatte; ansvarlig rolle: Driftsansvarlig / Brannvernleder\n  Kilde: 05_data/governance/tilsynskalender.json › revisjonskalender › Mars",
+    "category": "brann",
+    "tools_used": [
+      "search_brann_sikring",
+      "get_tilsyn"
+    ],
+    "kilder": [
+      "05_data/governance/brann_sikring_kapasitet.yaml › virksomhet",
+      "05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 2 hoy",
+      "05_data/governance/tilsynskalender.json › revisjonskalender › Mars"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvem har ansvar for vernerunden i september?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **vernerunder og avvik**: frekvens: Kvartalsvis (mars, juni, september, desember)\n  Kilde: 05_data/governance/hms_arbeidsmiljo.yaml › vernerunder og avvik\n- **deltakere**: Verneombud; Museumsdirektør / Driftssjef; Tillitsvalgt\n  Kilde: 05_data/governance/hms_arbeidsmiljo.yaml › vernerunder og avvik › deltakere\n- **September**: kvartal: Q3; maned: September; tilsynsomrade: Arbeidsmiljo & Ergonomi; myndighet: Arbeidstilsynet; oppgave: Hostens vernerunde med verneombud, sjekk av lys, luftkvalitet og vertskapsrutiner; ansvarlig rolle: Verneombud\n  Kilde: 05_data/governance/tilsynskalender.json › revisjonskalender › September",
+    "category": "hms",
+    "tools_used": [
+      "search_hms",
+      "get_tilsyn",
+      "get_rolle"
+    ],
+    "kilder": [
+      "05_data/governance/hms_arbeidsmiljo.yaml › vernerunder og avvik",
+      "05_data/governance/hms_arbeidsmiljo.yaml › vernerunder og avvik › deltakere",
+      "05_data/governance/tilsynskalender.json › revisjonskalender › September"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvilken myndighet fører tilsyn med IK-Mat?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **Juni**: kvartal: Q2; maned: Juni; tilsynsomrade: IK-Mat & Hygiene; myndighet: Mattilsynet; oppgave: Hovedrengjoring, mikrobiologisk vanntest og kalibrering av termometre for sommersesong; ansvarlig rolle: IK-Mat ansvarlig / Kafeleder\n  Kilde: 05_data/governance/tilsynskalender.json › revisjonskalender › Juni",
+    "category": "tilsyn",
+    "tools_used": [
+      "search_ik_mat",
+      "get_tilsyn"
+    ],
+    "kilder": [
+      "05_data/governance/tilsynskalender.json › revisjonskalender › Juni"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Når kalibreres hygrografene?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **November**: kvartal: Q4; maned: November; tilsynsomrade: Samlingssikring & Klima; myndighet: Kulturdirektoratet / Forsikring; oppgave: Arlig kalibrering av hygrografer, klimakontroll i saler (20 grader, 50 % RF) og tyverialarmer; ansvarlig rolle: Samlingsforvalter / Konservator\n  Kilde: 05_data/governance/tilsynskalender.json › revisjonskalender › November",
+    "category": "tilsyn",
+    "tools_used": [
+      "get_tilsyn"
+    ],
+    "kilder": [
+      "05_data/governance/tilsynskalender.json › revisjonskalender › November"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hva er Driftsansvarlig sitt ansvar?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **Driftsansvarlig**: trigger: /drift; icor-funksjon: Drift & Sikkerhet; verktøytilganger (mcp / core): data/governance/ (YAML/JSON); eier sop-er: IK-Mat, HMS, Brann/RVR\n  Kilde: 03_team/team_roster.md › Team-oversikt › Driftsansvarlig\n- **Persona**: Strukturert, sikkerhetsbevisst, opptatt av orden og forskrifter.\n  Kilde: 03_team/team_roster.md › Rollekontrakter › Driftsansvarlig › Persona\n- **Input**: Tilsynsfrister, arrangementskalender, kafélogger.\n  Kilde: 03_team/team_roster.md › Rollekontrakter › Driftsansvarlig › Input\n- **Control**: Samsvar med Mattilsynet (IK-Mat), Arbeidstilsynet (HMS) og Brannvesenet (RVR).\n  Kilde: 03_team/team_roster.md › Rollekontrakter › Driftsansvarlig › Control\n- **Output**: Risikovurderinger, vaktlister, temperaturlogger og rømningsplaner.\n  Kilde: 03_team/team_roster.md › Rollekontrakter › Driftsansvarlig › Output",
+    "category": "rolle",
+    "tools_used": [
+      "get_rolle"
+    ],
+    "kilder": [
+      "03_team/team_roster.md › Team-oversikt › Driftsansvarlig",
+      "03_team/team_roster.md › Rollekontrakter › Driftsansvarlig › Persona",
+      "03_team/team_roster.md › Rollekontrakter › Driftsansvarlig › Input",
+      "03_team/team_roster.md › Rollekontrakter › Driftsansvarlig › Control",
+      "03_team/team_roster.md › Rollekontrakter › Driftsansvarlig › Output"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hva gjør kvalitetsvokteren?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **Kvalitetsvokter**: trigger: /qa; icor-funksjon: QA & Compliance; verktøytilganger (mcp / core): Pytest, Kildeverifikator, Deterministisk validator; eier sop-er: Regelvalidering, Tilsynsberedskap\n  Kilde: 03_team/team_roster.md › Team-oversikt › Kvalitetsvokter\n- **Persona**: Streng sensor og kildekritiker (Djevelens advokat).\n  Kilde: 03_team/team_roster.md › Rollekontrakter › Kvalitetsvokter › Persona\n- **Input**: Utkast produsert av de andre agentene.\n  Kilde: 03_team/team_roster.md › Rollekontrakter › Kvalitetsvokter › Input\n- **Control**: Verifiserer mot lover (Nivå 1–5), sjekker at ingen tester brekker, og blokkerer udokumenterte påstander.\n  Kilde: 03_team/team_roster.md › Rollekontrakter › Kvalitetsvokter › Control\n- **Output**: Godkjentstempel eller spesifikk avviksrapport før noe leveres til deliverables/.\n  Kilde: 03_team/team_roster.md › Rollekontrakter › Kvalitetsvokter › Output",
+    "category": "rolle",
+    "tools_used": [
+      "get_rolle"
+    ],
+    "kilder": [
+      "03_team/team_roster.md › Team-oversikt › Kvalitetsvokter",
+      "03_team/team_roster.md › Rollekontrakter › Kvalitetsvokter › Persona",
+      "03_team/team_roster.md › Rollekontrakter › Kvalitetsvokter › Input",
+      "03_team/team_roster.md › Rollekontrakter › Kvalitetsvokter › Control",
+      "03_team/team_roster.md › Rollekontrakter › Kvalitetsvokter › Output"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvor mange ord skal en veggtekst ha?",
+    "rolle": "museumsvert",
+    "text": "Dette sier de interne dataene:\n\n- **Control**: Veggtekster: Strengt 50–90 ord. Starter alltid med det synlige blikkfanget. Audioguider: 60–90 sekunder (130–180 ord) i muntlig form.\n  Kilde: 03_team/team_roster.md › Rollekontrakter › Formidler › Control",
+    "category": "rolle",
+    "tools_used": [
+      "get_rolle"
+    ],
+    "kilder": [
+      "03_team/team_roster.md › Rollekontrakter › Formidler › Control"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hva er ambisjonen for digital formidling?",
+    "rolle": "museumsdirektor",
+    "text": "Dette sier de interne dataene:\n\n- **NE-08**: id: NE-08; omrade: Identitet; tema: Ambisjonsbevissthet; handling: Ambisjon om a vaere Norges ledende SMB-museum pa digital formidling og autonom drift.; status: Aktiv / Etterleves\n  Kilde: 05_data/governance/noexcuse_prioriterte_tiltak.yaml › tiltak › NE-08",
+    "category": "tiltak",
+    "tools_used": [
+      "get_rolle",
+      "search_tiltak"
+    ],
+    "kilder": [
+      "05_data/governance/noexcuse_prioriterte_tiltak.yaml › tiltak › NE-08"
+    ],
+    "funnet": true
+  },
+  {
+    "sporsmal": "Hvor mange feriedager har en museumsvert?",
+    "rolle": "museumsvert",
+    "text": "Det står ikke i de interne dataene jeg har tilgang til, så jeg vil ikke gjette. Jeg kan svare på HMS og arbeidsmiljø, IK-Mat for kaféen, brann og sikring, tilsynskalenderen, roller og ansvar, myndighetskontakt, rapportering og (for ledelsen) prioriterte tiltak og arbeidsoppgaver. For alt annet, spør nærmeste leder.",
+    "category": "utenfor",
+    "tools_used": [],
+    "kilder": [],
+    "funnet": false
+  },
+  {
+    "sporsmal": "Hva er lønnen til en kurator?",
+    "rolle": "museumsvert",
+    "text": "Det står ikke i de interne dataene jeg har tilgang til, så jeg vil ikke gjette. Jeg kan svare på HMS og arbeidsmiljø, IK-Mat for kaféen, brann og sikring, tilsynskalenderen, roller og ansvar, myndighetskontakt, rapportering og (for ledelsen) prioriterte tiltak og arbeidsoppgaver. For alt annet, spør nærmeste leder.",
+    "category": "utenfor",
+    "tools_used": [],
+    "kilder": [],
+    "funnet": false
+  },
+  {
+    "sporsmal": "Hva står det om overtid i arbeidskontrakten?",
+    "rolle": "museumsvert",
+    "text": "Det står ikke i de interne dataene jeg har tilgang til, så jeg vil ikke gjette. Jeg kan svare på HMS og arbeidsmiljø, IK-Mat for kaféen, brann og sikring, tilsynskalenderen, roller og ansvar, myndighetskontakt, rapportering og (for ledelsen) prioriterte tiltak og arbeidsoppgaver. For alt annet, spør nærmeste leder.",
+    "category": "utenfor",
+    "tools_used": [],
+    "kilder": [],
+    "funnet": false
+  },
+  {
+    "sporsmal": "Hva heter verneombudet vårt?",
+    "rolle": "museumsvert",
+    "text": "Det står ikke i de interne dataene jeg har tilgang til, så jeg vil ikke gjette. Jeg kan svare på HMS og arbeidsmiljø, IK-Mat for kaféen, brann og sikring, tilsynskalenderen, roller og ansvar, myndighetskontakt, rapportering og (for ledelsen) prioriterte tiltak og arbeidsoppgaver. For alt annet, spør nærmeste leder.",
+    "category": "utenfor",
+    "tools_used": [],
+    "kilder": [],
+    "funnet": false
+  },
+  {
+    "sporsmal": "Hvor mye sykepenger får jeg ved sykdom?",
+    "rolle": "museumsvert",
+    "text": "Det står ikke i de interne dataene jeg har tilgang til, så jeg vil ikke gjette. Jeg kan svare på HMS og arbeidsmiljø, IK-Mat for kaféen, brann og sikring, tilsynskalenderen, roller og ansvar, myndighetskontakt, rapportering og (for ledelsen) prioriterte tiltak og arbeidsoppgaver. For alt annet, spør nærmeste leder.",
+    "category": "utenfor",
+    "tools_used": [],
+    "kilder": [],
+    "funnet": false
+  },
+  {
+    "sporsmal": "Hvem sitter i styret?",
+    "rolle": "museumsvert",
+    "text": "Det står ikke i de interne dataene jeg har tilgang til, så jeg vil ikke gjette. Jeg kan svare på HMS og arbeidsmiljø, IK-Mat for kaféen, brann og sikring, tilsynskalenderen, roller og ansvar, myndighetskontakt, rapportering og (for ledelsen) prioriterte tiltak og arbeidsoppgaver. For alt annet, spør nærmeste leder.",
+    "category": "ikke_funnet",
+    "tools_used": [
+      "get_rolle"
+    ],
+    "kilder": [],
+    "funnet": false
+  },
+  {
+    "sporsmal": "Hvor mange dager permisjon kan jeg ta?",
+    "rolle": "museumsvert",
+    "text": "Det står ikke i de interne dataene jeg har tilgang til, så jeg vil ikke gjette. Jeg kan svare på HMS og arbeidsmiljø, IK-Mat for kaféen, brann og sikring, tilsynskalenderen, roller og ansvar, myndighetskontakt, rapportering og (for ledelsen) prioriterte tiltak og arbeidsoppgaver. For alt annet, spør nærmeste leder.",
+    "category": "utenfor",
+    "tools_used": [],
+    "kilder": [],
+    "funnet": false
+  },
+  {
+    "sporsmal": "Hva er reglene for hjemmekontor?",
+    "rolle": "museumsvert",
+    "text": "Det står ikke i de interne dataene jeg har tilgang til, så jeg vil ikke gjette. Jeg kan svare på HMS og arbeidsmiljø, IK-Mat for kaféen, brann og sikring, tilsynskalenderen, roller og ansvar, myndighetskontakt, rapportering og (for ledelsen) prioriterte tiltak og arbeidsoppgaver. For alt annet, spør nærmeste leder.",
+    "category": "utenfor",
+    "tools_used": [],
+    "kilder": [],
+    "funnet": false
+  },
+  {
+    "sporsmal": "Hvilken pensjonsordning har vi?",
+    "rolle": "museumsvert",
+    "text": "Det står ikke i de interne dataene jeg har tilgang til, så jeg vil ikke gjette. Jeg kan svare på HMS og arbeidsmiljø, IK-Mat for kaféen, brann og sikring, tilsynskalenderen, roller og ansvar, myndighetskontakt, rapportering og (for ledelsen) prioriterte tiltak og arbeidsoppgaver. For alt annet, spør nærmeste leder.",
+    "category": "utenfor",
+    "tools_used": [],
+    "kilder": [],
+    "funnet": false
+  },
+  {
+    "sporsmal": "Hva er været i morgen?",
+    "rolle": "museumsvert",
+    "text": "Det står ikke i de interne dataene jeg har tilgang til, så jeg vil ikke gjette. Jeg kan svare på HMS og arbeidsmiljø, IK-Mat for kaféen, brann og sikring, tilsynskalenderen, roller og ansvar, myndighetskontakt, rapportering og (for ledelsen) prioriterte tiltak og arbeidsoppgaver. For alt annet, spør nærmeste leder.",
+    "category": "ikke_funnet",
+    "tools_used": [
+      "search_hms",
+      "search_ik_mat",
+      "search_brann_sikring",
+      "get_tilsyn",
+      "get_rolle",
+      "search_tiltak",
+      "search_myndighet",
+      "search_rapportering",
+      "search_arbeidsoppgaver"
+    ],
+    "kilder": [],
+    "funnet": false
+  }
+]

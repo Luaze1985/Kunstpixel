@@ -1,0 +1,81 @@
+{
+  "database": "G:\\Min disk\\Kunstpixel\\05_data\\colab_personvern_historikk.db",
+  "dimensjoner": {
+    "fullstendighet": {
+      "totalt_rader": 439952,
+      "mangler_vakt_id": 0,
+      "mangler_ansatt_id": 0,
+      "mangler_dato": 0,
+      "mangler_time": 0,
+      "mangler_stasjon": 0,
+      "kompletthet_prosent": 100.0
+    },
+    "dobbeltbooking": {
+      "antall_konflikter": 0,
+      "eksempler": []
+    },
+    "fravaerskonflikt": {
+      "vakter_paa_sykedato": 0,
+      "eksempler": []
+    },
+    "stasjonsfordeling": [
+      {
+        "stasjon": "Vaktrom / Sikkerhetssentral",
+        "aktive_timer": 16,
+        "total_timer": 49672
+      },
+      {
+        "stasjon": "Magasin 1 (Klimastyrt lager)",
+        "aktive_timer": 10,
+        "total_timer": 49672
+      },
+      {
+        "stasjon": "Sal E (Temporær utstilling)",
+        "aktive_timer": 10,
+        "total_timer": 42576
+      },
+      {
+        "stasjon": "Sal D (Eksistens og modernisme)",
+        "aktive_timer": 10,
+        "total_timer": 42576
+      },
+      {
+        "stasjon": "Sal C (Lys, farge og interiør)",
+        "aktive_timer": 10,
+        "total_timer": 42576
+      },
+      {
+        "stasjon": "Sal B (Realisme og samfunn)",
+        "aktive_timer": 10,
+        "total_timer": 42576
+      },
+      {
+        "stasjon": "Sal A (Mytologi og natur)",
+        "aktive_timer": 10,
+        "total_timer": 42576
+      },
+      {
+        "stasjon": "Resepsjon og billett",
+        "aktive_timer": 10,
+        "total_timer": 42576
+      },
+      {
+        "stasjon": "Museumskafé",
+        "aktive_timer": 9,
+        "total_timer": 42576
+      },
+      {
+        "stasjon": "Museumsbutikk",
+        "aktive_timer": 10,
+        "total_timer": 42576
+      }
+    ],
+    "k_anonymitet": [
+      {
+        "k": 1,
+        "antall_tidspunkter": 439952,
+        "prosent": 100.0
+      }
+    ]
+  }
+}

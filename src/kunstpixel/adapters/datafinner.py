@@ -1,0 +1,595 @@
+"""Kunstpixel — Datafinner.
+
+Lokal side der gründerne velger hva de vil finne i museum.db og får svaret
+fra de samme fem MCP-verktøyene som LLM-en bruker. Siden viser også selve
+verktøykallet, slik at man ser nøyaktig hvordan LLM-en ville spurt.
+
+Serveren bindes til 127.0.0.1 som standard. Ved hosting settes vertsadressen
+av driftsoppsettet, som inntil videre krever innlogging i Caddy.
+
+100 % standardbibliotek for webdelen. Databasen åpnes skrivebeskyttet via
+src.kunstpixel.core.db (mode=ro), og bare verktøyene i VERKTOY kan kalles.
+
+Kjøres med:
+    py -3.13 src/kunstpixel/adapters/datafinner.py
+
+Åpnes på http://127.0.0.1:8010
+
+Hosting:
+    DATAFINNER_HOST=0.0.0.0    lytter på alle adresser (bak omvendt proxy)
+    KUNSTPIXEL_DB_PATH=<sti>   databasen som skal brukes
+Serveren har ingen innlogging selv. Den skal alltid ligge bak noe som krever det.
+
+Åpent API (se docs/DATAFINNER_API.md):
+    GET  /api/verktoyskjema    verktøyene med parametere (JSON Schema), klare for en språkmodell
+    GET  /api/rapport          deterministisk rapport: fakta + vurdering/forslag fra faste regler
+    GET  /api/status           hva som er slått på (KI-lag)
+    POST /api/forklar          valgfritt: KI forklarer rapporten, merket AI-forslag (av som standard)
+
+Arenaen (øvelsescaser, se 04_knowledge/07_arena/caser.yaml):
+    GET  /arena                siden
+    GET  /api/arena/caser      alle casene
+    POST /api/arena/kjor       kjør én case deterministisk og sjekk svaret
+    GET  /api/grense/caser     grensecasene (forespørsel, regel), og om KI er på
+    POST /api/grense/kjor      send én grenseforespørsel til modellen, uten data. Ingenting lagres
+    GET  /vaktrom              vaktrommet: én vakt, historikk, kandidater, kontroll og kontaktutkast
+    POST /api/vaktrom/ki       KI sammenligner kandidater eller skriver kontaktutkast (datapolicy sjekkes først)
+"""
+
+from __future__ import annotations
+
+import json
+import csv
+import os
+import sys
+from collections.abc import Callable
+from datetime import date
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+from typing import Any
+from urllib.parse import parse_qs, urlparse
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+import yaml
+
+from src.kunstpixel.adapters import datafinner_api
+from src.kunstpixel.core import arena, llm, vaktrom
+from src.kunstpixel.core.hr_cases import discover_hr_cases, investigate_hr_case, resolve_employee
+from src.kunstpixel.core.bunnlinje import (
+    get_day_overview,
+    get_exhibition_ranking,
+    get_period_result,
+    get_result_trend,
+    get_team_efficiency,
+)
+from src.kunstpixel.core.mcp_server import (
+    get_absence_report,
+    get_artwork_details,
+    get_employee_cv,
+    get_exhibition_economy,
+    get_inspection_routine,
+    get_report_assessment,
+    get_report_rules,
+    get_room_artworks,
+    get_shift_cost_for_period,
+    get_shifts_for_date,
+    get_sickness_absence_statistics,
+    get_staff_on_shift,
+    get_working_hours_report,
+    get_working_time_limits,
+    list_exhibitions_with_economy,
+    list_roles,
+    lookup_handbook,
+    search_active_contractors,
+    search_collection,
+    search_events,
+    search_faq,
+    search_hms_guidance,
+    search_hr_onboarding,
+    search_myndighet,
+    search_rapportering,
+)
+
+ASSET_DIR = Path(__file__).resolve().parent / "datafinner"
+ASSETS = {
+    "/": ("index.html", "text/html; charset=utf-8"),
+    "/index.html": ("index.html", "text/html; charset=utf-8"),
+    "/sok.html": ("sok.html", "text/html; charset=utf-8"),
+    "/arena": ("arena.html", "text/html; charset=utf-8"),
+    "/vaktrom": ("vaktrom.html", "text/html; charset=utf-8"),
+    "/chat": ("chat.html", "text/html; charset=utf-8"),
+    "/arbeidsflyt": ("arbeidsflyt.html", "text/html; charset=utf-8"),
+    "/af.css": ("af.css", "text/css; charset=utf-8"),
+}
+
+# Interne mapper siden kan lese. Bare tekstfiler, aldri skriving.
+MAPPER = ["00_felles", "01_inbox", "02_deliverables", "03_team", "04_knowledge", "05_data/governance"]
+FILTYPER = {".md", ".yaml", ".yml", ".json", ".txt", ".csv"}
+MAKS_FILSTORRELSE = 512_000
+
+
+def _filer(mappe: str | None) -> list[Path]:
+    roots = [mappe] if mappe else MAPPER
+    files: list[Path] = []
+    for r in roots:
+        if r not in MAPPER:
+            raise ValueError(f"Ukjent mappe: {r}")
+        base = PROJECT_ROOT / r
+        if base.is_dir():
+            files += [
+                p
+                for p in sorted(base.rglob("*"))
+                if p.is_file() and p.suffix.lower() in FILTYPER and p.stat().st_size <= MAKS_FILSTORRELSE
+            ]
+    return files
+
+
+def grep_mappe(query: str, mappe: str | None = None, limit: int = 50) -> list[dict[str, Any]]:
+    """Søk etter tekst i interne mapper. Returnerer fil, linje og treff."""
+    if not query or not query.strip():
+        return []
+    needle = query.strip().lower()
+    hits: list[dict[str, Any]] = []
+    for path in _filer(mappe):
+        try:
+            lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+        except OSError:
+            continue
+        for no, line in enumerate(lines, start=1):
+            if needle in line.lower():
+                hits.append(
+                    {
+                        "sti": path.relative_to(PROJECT_ROOT).as_posix(),
+                        "linje": no,
+                        "treff": line.strip()[:200],
+                    }
+                )
+                if len(hits) >= limit:
+                    return hits
+    return hits
+
+
+def les_fil(sti: str) -> dict[str, Any]:
+    """Les én tekstfil i en intern mappe. Stier utenfor MAPPER avvises."""
+    path = (PROJECT_ROOT / sti).resolve()
+    allowed = [(PROJECT_ROOT / m).resolve() for m in MAPPER]
+    if not any(path.is_relative_to(a) for a in allowed):
+        raise ValueError(f"Stien er utenfor de interne mappene: {sti}")
+    if not path.is_file() or path.suffix.lower() not in FILTYPER:
+        raise ValueError(f"Fant ingen lesbar tekstfil: {sti}")
+    if path.stat().st_size > MAKS_FILSTORRELSE:
+        raise ValueError(f"Filen er for stor til å vises: {sti}")
+    return {"sti": path.relative_to(PROJECT_ROOT).as_posix(), "tekst": path.read_text(encoding="utf-8", errors="replace")}
+
+
+# Hvitliste: verktøynavn -> (funksjon, tillatte argumenter)
+VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
+    "grep_mappe": (grep_mappe, {"query", "mappe", "limit"}),
+    "les_fil": (les_fil, {"sti"}),
+    "search_collection": (
+        search_collection,
+        {"query", "artist", "title", "technique", "theme", "room_id", "limit"},
+    ),
+    "get_artwork_details": (get_artwork_details, {"artwork_id"}),
+    "get_room_artworks": (get_room_artworks, {"room_id"}),
+    "search_events": (search_events, {"event_type", "date_from", "date_to", "limit"}),
+    "search_faq": (search_faq, {"query", "category"}),
+    # HR og bemanning
+    "get_staff_on_shift": (get_staff_on_shift, {"dato", "klokkeslett"}),
+    "get_working_time_limits": (get_working_time_limits, set()),
+    "get_shifts_for_date": (get_shifts_for_date, {"dato"}),
+    "get_working_hours_report": (get_working_hours_report, {"maaned"}),
+    "get_sickness_absence_statistics": (get_sickness_absence_statistics, {"year", "quarter"}),
+    "get_absence_report": (get_absence_report, {"aar", "kvartal"}),
+    "list_roles": (list_roles, set()),
+    "get_report_rules": (get_report_rules, {"sporsmal_id"}),
+    "get_report_assessment": (get_report_assessment, {"sporsmal_id", "verdier"}),
+    # Økonomi og innkjøp
+    "get_exhibition_economy": (get_exhibition_economy, {"exhibition_id"}),
+    "get_shift_cost_for_period": (get_shift_cost_for_period, {"maaned"}),
+    "list_exhibitions_with_economy": (list_exhibitions_with_economy, set()),
+    # Drift og bunnlinje (summert per dag, måned, avdeling eller utstilling, aldri per person)
+    "get_day_overview": (get_day_overview, {"dato"}),
+    "get_period_result": (get_period_result, {"maaned"}),
+    "get_team_efficiency": (get_team_efficiency, {"maaned"}),
+    "get_result_trend": (get_result_trend, {"fra_aar", "til_aar"}),
+    "get_exhibition_ranking": (get_exhibition_ranking, {"aar", "limit"}),
+    # H5 Governance & Onboarding (åpne rutiner, kalender og maler)
+    "search_myndighet": (search_myndighet, {"query", "intern_eier"}),
+    "get_inspection_routine": (get_inspection_routine, {"ansvarlig"}),
+    "search_rapportering": (search_rapportering, {"mottakertype", "maned", "eier", "mal_id"}),
+    "search_hr_onboarding": (search_hr_onboarding, {"kategori", "rolle"}),
+    # Vaktrom: én vakt på én stasjon. Kandidater sorteres på pris uten tillegg, et menneske velger.
+    "list_stations": (vaktrom.list_stations, set()),
+    "get_weekend_shift_history": (vaktrom.get_weekend_shift_history, {"fra", "til", "stasjon"}),
+    "get_staffing_candidates": (vaktrom.get_staffing_candidates, {"stasjon", "dato", "start", "slutt"}),
+    "check_staffing_selection": (vaktrom.check_staffing_selection, {"stasjon", "dato", "start", "slutt", "ids"}),
+    "check_shift_swap": (vaktrom.check_shift_swap, {"vakt_a", "vakt_b"}),
+    "check_shift_takeover": (vaktrom.check_shift_takeover, {"vakt_id", "ansatt_id"}),
+    "find_employee": (vaktrom.find_employee, {"sok"}),
+    "resolve_employee": (resolve_employee, {"sok"}),
+    "discover_hr_cases": (discover_hr_cases, {"sok", "kategori", "limit"}),
+    "investigate_hr_case": (investigate_hr_case, {"kategori", "ansatt_id"}),
+    "get_employee_reviews": (vaktrom.get_employee_reviews, {"ansatt_id"}),
+    # Personal, innleide, HMS og håndbøker. Uten rollesperre (spec vaktrom-uten-sperrer, 2026-10-31).
+    "get_employee_cv": (get_employee_cv, {"ident"}),
+    "search_active_contractors": (search_active_contractors, {"query", "kategori", "limit"}),
+    "get_personnel_file": (vaktrom.get_personnel_file, {"ansatt_id"}),
+    "get_absence_by_person": (vaktrom.get_absence_by_person, {"fra", "til", "stasjon"}),
+    "search_hms_guidance": (search_hms_guidance, {"query", "topic", "limit"}),
+    "lookup_handbook": (lookup_handbook, {"query", "handbok", "role", "limit"}),
+}
+
+UKEDAGER = ["mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag", "søndag"]
+SYSTEM_CHAT = (
+    "Du er Kunstpixel-assistenten i Datafinner for et norsk kunstmuseum. I dag er {ukedag} {dato}. "
+    "Brukeren har rollen {rolle}.\n"
+    "Bruk verktøyene for å hente fakta før du svarer, og ikke dikt opp tall, navn eller datoer. "
+    "Når du regner ut et tall, skriv regnestykket med tallene fra verktøyene, for eksempel «284,92 × 8 = 2 279,36». "
+    "Da kan tallkontrollen regne det etter. Ikke skriv løse anslag som «rundt 2300».\n"
+    "Når brukeren ber om interessante HR-caser eller oppgaver, kall discover_hr_cases. "
+    "Velg deretter et konkret case og følg feltet neste_verktoy for å hente grunnlaget før du beskriver funnet. "
+    "Ved personoppslag: kall resolve_employee med navn eller ID først. Er status tvetydig, be om ansatt-ID; "
+    "er status ingen, si at ingen ble funnet. Ikke velg person på egen hånd. "
+    "For medarbeidersamtale eller personalmappe kan du bruke investigate_hr_case med eksplisitt ansatt-ID. "
+    "Rollevalget identifiserer ingen ansatt, og verktøyene endrer ikke databasen.\n"
+    "Svar på norsk bokmål, kort og direkte, i vanlig tekst uten tabeller. Alle data er syntetiske."
+)
+
+GRENSEFIL = PROJECT_ROOT / "04_knowledge" / "07_arena" / "grensecaser.yaml"
+SYSTEM_GRENSE = (
+    "Du er en KI-assistent for ledelsen i et norsk kunstmuseum. Svar på forespørselen på norsk bokmål, "
+    "maks 150 ord."
+)
+
+
+def last_grensecaser() -> dict[str, Any]:
+    """Grensecasene for arenaen. Modellen får bare forespørselsteksten, aldri data."""
+    return yaml.safe_load(GRENSEFIL.read_text(encoding="utf-8"))
+
+
+# KI-laget er av med mindre LLM_PROVIDER er satt. Feil innstilling stopper oppstarten med en tydelig melding.
+LLM_KONFIG = llm.fra_miljo(os.environ)
+LLM_BEGRENSER = llm.Begrenser(LLM_KONFIG.maks_per_time) if LLM_KONFIG else None
+MAKS_POST_BYTES = 4096
+MAKS_CHAT_BYTES = 32_768  # chatten sender samtalehistorikken, så den får større tak
+MAKS_CHAT_TURER = 20
+
+# Siden bruker bare egne filer, ett skript og stilark i samme side. Alt annet er stengt.
+SIKKERHETSHODER = {
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "no-referrer",
+    "Content-Security-Policy": (
+        "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; "
+        "connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+    ),
+}
+
+
+def run_tool(name: str, args: dict[str, Any]) -> Any:
+    """Kjør ett hvitelistet MCP-verktøy med kun tillatte argumenter."""
+    if name not in VERKTOY:
+        raise ValueError(f"Ukjent verktøy: {name}")
+    fn, allowed = VERKTOY[name]
+    unknown = set(args) - allowed
+    if unknown:
+        raise ValueError(f"Ukjente argumenter for {name}: {', '.join(sorted(unknown))}")
+    clean = {k: v for k, v in args.items() if v not in (None, "")}
+    if "limit" in clean:
+        clean["limit"] = max(1, min(int(clean["limit"]), 50))
+    return fn(**clean)
+
+
+class DatafinnerHandler(BaseHTTPRequestHandler):
+    def _send(self, status: int, body: bytes, content_type: str) -> None:
+        self.send_response(status)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        for navn, verdi in SIKKERHETSHODER.items():
+            self.send_header(navn, verdi)
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _json(self, status: int, payload: Any) -> None:
+        self._send(status, json.dumps(payload, ensure_ascii=False).encode("utf-8"), "application/json; charset=utf-8")
+
+    def do_GET(self) -> None:
+        url = urlparse(self.path)
+        if url.path in ASSETS:
+            filename, ctype = ASSETS[url.path]
+            self._send(200, (ASSET_DIR / filename).read_bytes(), ctype)
+            return
+        if url.path == "/api/status":
+            self._json(200, {
+                "llm": LLM_KONFIG is not None,
+                "llm_modell": LLM_KONFIG.modell if LLM_KONFIG else None,
+                "verktoy": len(VERKTOY),
+            })
+            return
+        if url.path == "/api/arbeidsflyt":
+            with (PROJECT_ROOT / "05_data" / "arbeidsflyt_roller.csv").open(encoding="utf-8", newline="") as fil:
+                rader = list(csv.DictReader(fil))
+            self._json(200, {"oppgaver": rader})
+            return
+        if url.path == "/api/verktoykatalog":
+            skjema = datafinner_api.verktoyskjema(VERKTOY)
+            chat_verktoy = {v["navn"] for v in skjema}
+            beskrivelser = {v["navn"]: v["beskrivelse"] for v in skjema}
+            self._json(200, {"verktoy": [
+                {"navn": navn, "beskrivelse": beskrivelser[navn],
+                 "status": "I chat" if navn in chat_verktoy else "I Datafinner"}
+                for navn in VERKTOY]})
+            return
+        if url.path == "/api/arena/caser":
+            self._json(200, arena.last_caser())
+            return
+        if url.path == "/api/grense/caser":
+            self._json(200, {**last_grensecaser(), "llm": LLM_KONFIG is not None})
+            return
+        if url.path == "/api/verktoyskjema":
+            self._json(200, {"verktoy": datafinner_api.verktoyskjema(VERKTOY), "sporsmal": datafinner_api.SPORSMAL})
+            return
+        if url.path == "/api/rapport":
+            params = parse_qs(url.query)
+            try:
+                args = json.loads(params.get("args", ["{}"])[0] or "{}")
+                if not isinstance(args, dict):
+                    raise ValueError("args må være et JSON-objekt")
+                rapport = datafinner_api.lag_rapport(params.get("sporsmal", [""])[0], args, run_tool)
+            except (ValueError, TypeError, json.JSONDecodeError) as exc:
+                self._json(400, {"error": str(exc)})
+                return
+            except Exception as exc:  # databasefeil o.l.
+                sys.stderr.write(f"[datafinner] FEIL i rapport: {exc!r}\n")
+                self._json(500, {"error": "Feil ved oppslag. Prøv igjen, eller si ifra til den som drifter siden."})
+                return
+            self._json(200, rapport)
+            return
+        if url.path == "/api/verktoy":
+            params = parse_qs(url.query)
+            name = params.get("navn", [""])[0]
+            try:
+                args = json.loads(params.get("args", ["{}"])[0] or "{}")
+                if not isinstance(args, dict):
+                    raise ValueError("args må være et JSON-objekt")
+                result = run_tool(name, args)
+            except (ValueError, TypeError, json.JSONDecodeError) as exc:
+                self._json(400, {"error": str(exc)})
+                return
+            except Exception as exc:  # databasefeil o.l.
+                # Detaljene (stier, SQL) står i loggen, ikke i svaret til nettleseren.
+                sys.stderr.write(f"[datafinner] FEIL i {name}: {exc!r}\n")
+                self._json(500, {"error": "Feil ved oppslag. Prøv igjen, eller si ifra til den som drifter siden."})
+                return
+            self._json(200, {"verktoy": name, "args": args, "resultat": result})
+            return
+        self._json(404, {"error": "Finnes ikke"})
+
+    def _post_lengde(self, maks: int = MAKS_POST_BYTES) -> int | None:
+        """Sperrene for POST. Returnerer lengden på kroppen, eller None når svaret alt er sendt."""
+        # Uten disse sperrene kunne en annen nettside få nettleseren til å kalle KI-en på din regning.
+        # Samme opprinnelse eller ingen opprinnelse (curl) er greit.
+        opprinnelse = self.headers.get("Origin")
+        if opprinnelse and urlparse(opprinnelse).netloc != self.headers.get("Host", ""):
+            self._json(403, {"error": "Forespørselen kom fra en annen side."})
+            return None
+        if self.headers.get("Sec-Fetch-Site") not in (None, "same-origin", "none"):
+            self._json(403, {"error": "Forespørselen kom fra en annen side."})
+            return None
+        if self.headers.get("Content-Type", "").split(";")[0].strip().lower() != "application/json":
+            self._json(415, {"error": "Bruk Content-Type: application/json."})
+            return None
+        try:
+            lengde = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            lengde = 0
+        if lengde <= 0 or lengde > maks:
+            self._json(413, {"error": f"Kroppen må være mellom 1 og {maks} byte."})
+            return None
+        return lengde
+
+    def do_POST(self) -> None:
+        """POST-rutene. /api/forklar, /api/vaktrom/ki og /api/grense/kjor koster penger hos KI-leverandøren."""
+        sti = urlparse(self.path).path
+        if sti not in ("/api/forklar", "/api/arena/kjor", "/api/vaktrom/ki", "/api/grense/kjor", "/api/chat"):
+            self._json(404, {"error": "Finnes ikke"})
+            return
+        lengde = self._post_lengde(MAKS_CHAT_BYTES if sti == "/api/chat" else MAKS_POST_BYTES)
+        if lengde is None:
+            return
+        if sti == "/api/chat":
+            self._chat(lengde)
+            return
+        if sti == "/api/arena/kjor":
+            self._arena_kjor(lengde)
+            return
+        if sti == "/api/vaktrom/ki":
+            self._vaktrom_ki(lengde)
+            return
+        if sti == "/api/grense/kjor":
+            self._grense_kjor(lengde)
+            return
+        if LLM_KONFIG is None:
+            self._json(503, {"error": "KI-laget er ikke slått på. Rapportene er likevel tilgjengelige uten KI."})
+            return
+        try:
+            kropp = json.loads(self.rfile.read(lengde).decode("utf-8"))
+            if not isinstance(kropp, dict) or not isinstance(kropp.get("args", {}), dict):
+                raise ValueError("Send et JSON-objekt: {\"sporsmal\": \"...\", \"args\": {...}}")
+            rapport = datafinner_api.lag_rapport(str(kropp.get("sporsmal", "")), kropp.get("args", {}), run_tool)
+        except (ValueError, TypeError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+            self._json(400, {"error": str(exc)})
+            return
+        except Exception as exc:
+            sys.stderr.write(f"[datafinner] FEIL i forklar/rapport: {exc!r}\n")
+            self._json(500, {"error": "Feil ved oppslag. Prøv igjen, eller si ifra til den som drifter siden."})
+            return
+        if LLM_BEGRENSER is not None and not LLM_BEGRENSER.tillat():
+            self._json(429, {"error": "For mange KI-kall den siste timen. Prøv igjen senere."})
+            return
+        try:
+            svar = llm.forklar(rapport, LLM_KONFIG)
+        except llm.LlmFeil as exc:
+            sys.stderr.write(f"[datafinner] KI-feil ({exc.kode}): {exc}\n")
+            self._json(504 if exc.kode == "tidsavbrudd" else 502, {"error": str(exc)})
+            return
+        self._json(200, {**svar, "status": "Utkast", "rapport": rapport})
+
+    def _arena_kjor(self, lengde: int) -> None:
+        try:
+            kropp = json.loads(self.rfile.read(lengde).decode("utf-8"))
+            if not isinstance(kropp, dict):
+                raise ValueError('Send et JSON-objekt: {"id": "T1"}')
+            resultat = arena.kjor(str(kropp.get("id", "")), run_tool)
+        except (ValueError, TypeError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+            self._json(400, {"error": str(exc)})
+            return
+        except Exception as exc:
+            sys.stderr.write(f"[datafinner] FEIL i arena: {exc!r}\n")
+            self._json(500, {"error": "Feil ved kjøring av casen. Prøv igjen, eller si ifra til den som drifter siden."})
+            return
+        self._json(200, resultat)
+
+    def _ki_kall(self, bruker_tekst: str, grunnlag: Any, system: str) -> dict[str, Any] | None:
+        """Felles for KI-rutene: av, tak per time og leverandørfeil. None betyr at svaret alt er sendt."""
+        if LLM_KONFIG is None:
+            self._json(503, {"error": "KI-laget er ikke slått på. Rapportene og den manuelle flyten virker uten KI."})
+            return None
+        if LLM_BEGRENSER is not None and not LLM_BEGRENSER.tillat():
+            self._json(429, {"error": "For mange KI-kall den siste timen. Prøv igjen senere."})
+            return None
+        try:
+            return llm.utfor(bruker_tekst, grunnlag, LLM_KONFIG, system)
+        except llm.LlmFeil as exc:
+            sys.stderr.write(f"[datafinner] KI-feil ({exc.kode}): {exc}\n")
+            self._json(504 if exc.kode == "tidsavbrudd" else 502, {"error": str(exc)})
+            return None
+
+    def _vaktrom_ki(self, lengde: int) -> None:
+        """KI på toppen av vaktrommet. Serveren regner kandidatene på nytt og stoler ikke på nettleseren.
+
+        Uten sperrer: hele kandidatgrunnlaget sendes. Datamerket sendes tilbake for visning.
+        """
+        try:
+            kropp = json.loads(self.rfile.read(lengde).decode("utf-8"))
+            if not isinstance(kropp, dict):
+                raise ValueError("Send et JSON-objekt.")
+            oppgave = kropp.get("oppgave")
+            kandidater = vaktrom.get_staffing_candidates(
+                str(kropp.get("stasjon", "")), str(kropp.get("dato", "")),
+                str(kropp.get("start", "")), str(kropp.get("slutt", "")),
+            )
+            if oppgave == "sammenlign":
+                ids = kropp.get("ids")
+                if not isinstance(ids, list) or not ids:
+                    raise ValueError("Velg minst én kandidat.")
+                grunnlag, kilder = vaktrom.grunnlag_sammenligning(kandidater, [str(i) for i in ids])
+                system, tekst = vaktrom.SYSTEM_SAMMENLIGN, "Kandidater (JSON):\n"
+            elif oppgave == "kontaktutkast":
+                grunnlag, kilder = vaktrom.grunnlag_kontakt(kandidater, str(kropp.get("id", "")))
+                system, tekst = vaktrom.SYSTEM_KONTAKT, "Vakt (JSON):\n"
+            else:
+                raise ValueError("oppgave må være sammenlign eller kontaktutkast.")
+            merker = arena.datamerke(kilder)
+        except (ValueError, TypeError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+            self._json(400, {"error": str(exc)})
+            return
+        except Exception as exc:
+            sys.stderr.write(f"[datafinner] FEIL i vaktrom/ki: {exc!r}\n")
+            self._json(500, {"error": "Feil ved oppslag. Prøv igjen, eller si ifra til den som drifter siden."})
+            return
+        # Ingen datapolicysjekk her: Datafinner kjører uten sperrer på syntetiske data (spec vaktrom-uten-sperrer).
+        # Datamerket sendes likevel tilbake, så siden kan vise hva som gikk ut.
+        svar = self._ki_kall(tekst + json.dumps(grunnlag, ensure_ascii=False, separators=(",", ":")), grunnlag, system)
+        if svar is not None:
+            self._json(200, {**svar, "status": "Utkast", "datamerke": merker})
+
+    def _grense_kjor(self, lengde: int) -> None:
+        """Grensemodus: send forespørselen og de syntetiske dataene casen gjelder til modellen. Ingenting lagres."""
+        try:
+            kropp = json.loads(self.rfile.read(lengde).decode("utf-8"))
+            if not isinstance(kropp, dict):
+                raise ValueError('Send et JSON-objekt: {"id": "GR1"}')
+            case = next((c for c in last_grensecaser()["caser"] if c["id"] == kropp.get("id")), None)
+            if case is None:
+                raise ValueError("Ukjent grensecase.")
+            data = {f"{d['verktoy']}({json.dumps(d.get('args', {}), ensure_ascii=False)})": run_tool(d["verktoy"], d.get("args", {}))
+                    for d in case.get("data", [])}
+        except (ValueError, TypeError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+            self._json(400, {"error": str(exc)})
+            return
+        except Exception as exc:
+            sys.stderr.write(f"[datafinner] FEIL i grense/data: {exc!r}\n")
+            self._json(500, {"error": "Feil ved oppslag. Prøv igjen, eller si ifra til den som drifter siden."})
+            return
+        grunnlag = llm.forenkle_for_llm(data)
+        tekst = case["foresporsel"] + ("\n\nData (JSON):\n" + json.dumps(grunnlag, ensure_ascii=False, separators=(",", ":")) if data else "")
+        svar = self._ki_kall(tekst, grunnlag, SYSTEM_GRENSE)
+        if svar is not None:
+            self._json(200, {"id": case["id"], "tekst": svar["tekst"], "merke": svar["merke"], "modell": svar["modell"],
+                             "data_sendt": list(data)})
+
+    def _chat(self, lengde: int) -> None:
+        """Chat: KI-en bruker verktøyene på hvitelisten selv og svarer i tekst. Uten sperrer, syntetiske data."""
+        try:
+            kropp = json.loads(self.rfile.read(lengde).decode("utf-8"))
+            meldinger = kropp.get("meldinger") if isinstance(kropp, dict) else None
+            if not isinstance(meldinger, list) or not meldinger:
+                raise ValueError('Send {"meldinger": [{"rolle": "bruker", "tekst": "..."}], "rolle": "..."}')
+            rene = [{"rolle": str(m.get("rolle")), "tekst": str(m.get("tekst", ""))} for m in meldinger if isinstance(m, dict)]
+            if any(m["rolle"] not in ("bruker", "assistent") for m in rene) or rene[-1]["rolle"] != "bruker":
+                raise ValueError("Hver melding må ha rolle bruker eller assistent, og den siste må være fra bruker.")
+            rene = rene[-MAKS_CHAT_TURER:]
+            while rene and rene[0]["rolle"] != "bruker":  # leverandørene vil ha brukeren først
+                rene.pop(0)
+            rolle = str(kropp.get("rolle") or "ukjent rolle")[:80]
+        except (ValueError, TypeError, AttributeError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+            self._json(400, {"error": str(exc)})
+            return
+        if LLM_KONFIG is None:
+            self._json(503, {"error": "KI-laget er ikke slått på. Sett LLM_PROVIDER og LLM_MODEL (og LLM_API_KEY) og start serveren på nytt."})
+            return
+        system = SYSTEM_CHAT.format(dato=date.today().isoformat(), ukedag=UKEDAGER[date.today().weekday()], rolle=rolle)
+        try:
+            svar = llm.chat_med_verktoy(rene, datafinner_api.verktoyskjema(VERKTOY), run_tool, LLM_KONFIG, system,
+                                        begrenser=LLM_BEGRENSER)
+        except llm.LlmFeil as exc:
+            sys.stderr.write(f"[datafinner] KI-feil i chat ({exc.kode}): {exc}\n")
+            status = {"tidsavbrudd": 504, "tak": 429, "for_mange_runder": 502}.get(exc.kode, 502)
+            self._json(status, {"error": str(exc)})
+            return
+        self._json(200, {**svar, "status": "Utkast"})
+
+    def log_message(self, format: str, *args: Any) -> None:
+        sys.stderr.write("[datafinner] " + (format % args) + "\n")
+
+
+def main() -> None:
+    # KI-innstillinger fra .env i prosjektroten, bare ved oppstart (ikke ved import, så testene ikke ser nøkkelen).
+    global LLM_KONFIG, LLM_BEGRENSER
+    from src.kunstpixel.core import miljo
+    satt = miljo.last_env_fil()
+    LLM_KONFIG = llm.fra_miljo(os.environ)
+    LLM_BEGRENSER = llm.Begrenser(LLM_KONFIG.maks_per_time) if LLM_KONFIG else None
+    if satt:
+        print(f"Leste {', '.join(satt)} fra .env")
+    print(f"KI: {LLM_KONFIG.leverandor} {LLM_KONFIG.modell}" if LLM_KONFIG else "KI: av (sett LLM_PROVIDER, LLM_MODEL og LLM_API_KEY i .env)")
+    port = int(os.environ.get("DATAFINNER_PORT", "8010"))
+    host = os.environ.get("DATAFINNER_HOST", "127.0.0.1")
+    server = ThreadingHTTPServer((host, port), DatafinnerHandler)
+    print(f"Datafinner kjører på http://{host}:{port} (Ctrl+C for å stoppe)")
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.server_close()
+
+
+if __name__ == "__main__":
+    main()

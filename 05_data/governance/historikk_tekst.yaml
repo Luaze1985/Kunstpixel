@@ -1,0 +1,209 @@
+klassifisering: syntetisk
+syntetisk: true
+merknad: Treningsdata, ikke rettesnor. Alle frister, terskler og timer er oppdiktet.
+versjon: 1
+historikk:
+- ar: 2010
+  status_ar: endelig
+  tema: oppstart
+  nokkeltall:
+    besok_totalt: 21400
+    resultat_tkr: 120
+    tilsyn_antall: 2
+    avvik_funnet: 5
+    timer_totalt: 134
+    automatiseringsgrad_prosent: 0
+  hendelse: Etablering av felles rutiner for helse, miljø og sikkerhet på tvers av avdelingene.
+  laerdom: Felles standarder gir bedre oversikt og forenkler opplæring av nyansatte.
+- ar: 2011
+  status_ar: endelig
+  tema: vekst
+  nokkeltall:
+    besok_totalt: 23100
+    resultat_tkr: 150
+    tilsyn_antall: 2
+    avvik_funnet: 6
+    timer_totalt: 144
+    automatiseringsgrad_prosent: 0
+  hendelse: Innføring av systematisk registrering av avvik på det fysiske arbeidsmiljøet.
+  laerdom: Tidlig registrering av feil reduserer risikoen for skader på personell.
+- ar: 2012
+  status_ar: endelig
+  tema: vekst
+  nokkeltall:
+    besok_totalt: 24800
+    resultat_tkr: 90
+    tilsyn_antall: 3
+    avvik_funnet: 7
+    timer_totalt: 156
+    automatiseringsgrad_prosent: 0
+  hendelse: Gjennomgang og oppdatering av alle branninstrukser og rømningsplaner i bygget.
+  laerdom: Tydelige instrukser skaper trygghet og sikrer raskere tømming av lokalene.
+- ar: 2013
+  status_ar: endelig
+  tema: vekst
+  nokkeltall:
+    besok_totalt: 26200
+    resultat_tkr: 160
+    tilsyn_antall: 3
+    avvik_funnet: 6
+    timer_totalt: 172
+    automatiseringsgrad_prosent: 0
+  hendelse: Implementering av digitalt system for temperaturkontroll i serveringsområdet.
+  laerdom: Automatisk måling gir bedre kontroll og reduserer faren for matsvinn.
+- ar: 2014
+  status_ar: endelig
+  tema: digital samlingsdatabase
+  nokkeltall:
+    besok_totalt: 28900
+    resultat_tkr: 140
+    tilsyn_antall: 3
+    avvik_funnet: 6
+    timer_totalt: 192
+    automatiseringsgrad_prosent: 0
+  hendelse: Gjennomføring av omfattende ergonomiske tilpasninger på arbeidsplassene.
+  laerdom: Riktig utstyr og varierte arbeidsstillinger reduserer sykefraværet blant ansatte.
+- ar: 2015
+  status_ar: endelig
+  tema: vekst
+  nokkeltall:
+    besok_totalt: 30500
+    resultat_tkr: 210
+    tilsyn_antall: 4
+    avvik_funnet: 5
+    timer_totalt: 206
+    automatiseringsgrad_prosent: 0
+  hendelse: Etablering av faste rutiner for opplæring av verneombud.
+  laerdom: God skolering av tillitsvalgte styrker samarbeidet om et trygt arbeidsmiljø.
+- ar: 2016
+  status_ar: endelig
+  tema: ombygging
+  nokkeltall:
+    besok_totalt: 29800
+    resultat_tkr: -60
+    tilsyn_antall: 3
+    avvik_funnet: 5
+    timer_totalt: 216
+    automatiseringsgrad_prosent: 0
+  hendelse: Gjennomføring av ekstern revisjon av museets internkontrollsystem.
+  laerdom: Eksterne blikk avdekker svakheter i rutinene som vi selv har oversett.
+- ar: 2017
+  status_ar: endelig
+  tema: ny kafé
+  nokkeltall:
+    besok_totalt: 33600
+    resultat_tkr: 180
+    tilsyn_antall: 4
+    avvik_funnet: 4
+    timer_totalt: 230
+    automatiseringsgrad_prosent: 0
+  hendelse: Sertifisering av kafeens rutiner for mathåndtering og hygiene.
+  laerdom: Standardiserte prosesser gir tryggere drift og færre avvik ved tilsyn.
+- ar: 2018
+  status_ar: endelig
+  tema: vekst
+  nokkeltall:
+    besok_totalt: 36200
+    resultat_tkr: 230
+    tilsyn_antall: 4
+    avvik_funnet: 4
+    timer_totalt: 244
+    automatiseringsgrad_prosent: 0
+  hendelse: Oppdatering av risikovurderinger for enslig arbeid og kveldsarbeid.
+  laerdom: Tilpassede sikkerhetstiltak gir økt trygghet for ansatte på kveldstid.
+- ar: 2019
+  status_ar: endelig
+  tema: rekordår
+  nokkeltall:
+    besok_totalt: 38400
+    resultat_tkr: 310
+    tilsyn_antall: 5
+    avvik_funnet: 3
+    timer_totalt: 260
+    automatiseringsgrad_prosent: 0
+  hendelse: Gjennomføring av stor felles brannøvelse med alle ansatte og eksterne aktører.
+  laerdom: Praktisk trening er avgjørende for at alle skal kjenne sine oppgaver i en krise.
+- ar: 2020
+  status_ar: endelig
+  tema: pandemi og stengt
+  nokkeltall:
+    besok_totalt: 11200
+    resultat_tkr: -420
+    tilsyn_antall: 2
+    avvik_funnet: 2
+    timer_totalt: 216
+    automatiseringsgrad_prosent: 0
+  hendelse: Midlertidig stenging av publikumsområder og innføring av strenge smitteverntiltak.
+  laerdom: Smidig omstilling og klare instrukser sikrer kontinuitet under uforutsette kriser.
+- ar: 2021
+  status_ar: endelig
+  tema: pandemi og gjenåpning
+  nokkeltall:
+    besok_totalt: 15900
+    resultat_tkr: -180
+    tilsyn_antall: 3
+    avvik_funnet: 3
+    timer_totalt: 230
+    automatiseringsgrad_prosent: 0
+  hendelse: Gradvis gjenåpning med begrensede besøkstall og økt fokus på hygiene.
+  laerdom: Tydelig kommunikasjon til publikum skaper trygghet og sikrer god flyt i lokalene.
+- ar: 2022
+  status_ar: endelig
+  tema: gjenoppbygging
+  nokkeltall:
+    besok_totalt: 31200
+    resultat_tkr: 60
+    tilsyn_antall: 4
+    avvik_funnet: 4
+    timer_totalt: 274
+    automatiseringsgrad_prosent: 0
+  hendelse: Full gjenåpning og evaluering av de midlertidige rutinene som ble innført.
+  laerdom: Noen av smitteverntiltakene, som hyppigere renhold, er hensiktsmessige å videreføre.
+- ar: 2023
+  status_ar: endelig
+  tema: digital satsing
+  nokkeltall:
+    besok_totalt: 35400
+    resultat_tkr: 140
+    tilsyn_antall: 5
+    avvik_funnet: 3
+    timer_totalt: 286
+    automatiseringsgrad_prosent: 5
+  hendelse: Digitalisering av avvikssystemet for enklere registrering via mobil.
+  laerdom: Lavere terskel for rapportering gir bedre oversikt over mindre utfordringer i hverdagen.
+- ar: 2024
+  status_ar: endelig
+  tema: nye rapporteringsrutiner
+  nokkeltall:
+    besok_totalt: 37900
+    resultat_tkr: 220
+    tilsyn_antall: 5
+    avvik_funnet: 3
+    timer_totalt: 296
+    automatiseringsgrad_prosent: 10
+  hendelse: Revisjon av rutiner for onboarding og opplæring av sesongarbeidere.
+  laerdom: Strukturert opplæring fra første dag sikrer raskere integrering og færre feil.
+- ar: 2025
+  status_ar: endelig
+  tema: første automatisering
+  nokkeltall:
+    besok_totalt: 39800
+    resultat_tkr: 260
+    tilsyn_antall: 6
+    avvik_funnet: 2
+    timer_totalt: 294
+    automatiseringsgrad_prosent: 18
+  hendelse: Innføring av nye retningslinjer for psykososialt arbeidsmiljø og konflikthåndtering.
+  laerdom: Tydelige kjøreregler forebygger misforståelser og fremmer et godt samarbeidsklima.
+- ar: 2026
+  status_ar: foreløpig
+  tema: KI-pilot
+  nokkeltall:
+    besok_totalt: 41200
+    resultat_tkr: 190
+    tilsyn_antall: 6
+    avvik_funnet: 2
+    timer_totalt: 287
+    automatiseringsgrad_prosent: 25
+  hendelse: Evaluering av den interne assistentens funksjonalitet og datakvalitet.
+  laerdom: Strukturert og oppdatert kildedata er en forutsetning for gode og pålitelige svar.

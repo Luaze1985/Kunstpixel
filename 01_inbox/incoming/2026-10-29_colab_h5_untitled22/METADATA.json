@@ -1,0 +1,15 @@
+{
+  "bestilling_id": "2026-10-29_colab_h5_untitled22",
+  "opprettet_tidspunkt": "2026-10-29T15:16:57+01:00",
+  "kilde": "Google Colab Untitled22.ipynb (H5 myndigheter, tilsyn, kalender, maler, tidsbruk, historikk, HR onboarding)",
+  "godkjent_av_validering": true,
+  "integrert_i_05_data": [
+    "h5_myndighetskontakter.csv",
+    "h5_tilsynsbesok_rutine.csv",
+    "h5_rapporteringskalender.csv",
+    "h5_rapportmaler.csv",
+    "h5_arbeidsoppgaver_tidsbruk.csv",
+    "h5_historikk_2010_2026.csv",
+    "hr_opplaering_onboarding.csv"
+  ]
+}

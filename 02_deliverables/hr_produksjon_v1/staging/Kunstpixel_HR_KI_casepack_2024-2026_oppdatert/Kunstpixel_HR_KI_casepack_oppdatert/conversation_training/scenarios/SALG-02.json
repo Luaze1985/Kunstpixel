@@ -1,0 +1,17 @@
+{
+  "id": "SALG-02",
+  "title": "Innvending: \"send meg en e-post\"",
+  "description": "Drill på den avvisende innvendingen \"send meg en mail\" — der kjøperen prøver å avfeie deg høflig uten å egentlig si nei.",
+  "duration_minutes": 7,
+  "conversation_type": "Innvendingshåndtering",
+  "persona_name": "Kristine Moen",
+  "persona_role": "Markedssjef",
+  "tags_visible": [],
+  "hidden_tag_count": 0,
+  "source_status": "metadata_complete",
+  "catalog_group": "Salg og kundedialog",
+  "input_notes": "Katalogmetadata fra brukerens innlimte tekst, ikke komplett rollemanus. +N betyr at flere tagger er skjult i kilden, ikke at de er kjent.",
+  "source": "user_supplied_paste_2026-10-20",
+  "scenario_implemented": false,
+  "persona_is_verified_synthetic": false
+}

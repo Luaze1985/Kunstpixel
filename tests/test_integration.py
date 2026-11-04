@@ -75,7 +75,7 @@ class TestEightScenariosAcrossCategories:
         assert "1914" in text
         assert re.search(r"Sal\s+A\b", text, re.IGNORECASE) or "SAL-A" in text.upper()
         # Provenance indication
-        assert any(term in text.lower() for term in ["proveniens", "gave", "samling", "aura"])
+        assert any(term in text.lower() for term in ["proveniens", "gave", "samling"])
 
     # --- CATEGORY: UTSTILLING (>= 2 scenarios) ---
 

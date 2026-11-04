@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Komplett Katalog: 35 Åpne Norske API-er og Datapunkter for Museumsdrift og Kunst</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .container { max-width: 1020px; }
+    .category-header {
+      background: #0a2540;
+      color: white;
+      padding: 0.8rem 1.2rem;
+      border-radius: 6px;
+      margin-top: 2.5rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    .api-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.8rem;
+      font-size: 0.92rem;
+    }
+    .api-table th {
+      background: #edf2f7;
+      color: #1a202c;
+      font-weight: 700;
+    }
+    .api-table td, .api-table th {
+      padding: 0.7rem 0.9rem;
+      border: 1px solid #cbd5e0;
+      vertical-align: top;
+    }
+    .num-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      font-weight: bold;
+      width: 26px;
+      height: 26px;
+      line-height: 26px;
+      text-align: center;
+      border-radius: 50%;
+      font-size: 0.8rem;
+    }
+    .endpoint {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: #0052cc;
+      background: #f0f4ff;
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      display: inline-block;
+      margin-top: 0.2rem;
+    }
+    .target-tag {
+      display: inline-block;
+      background: #defbe6;
+      color: #0e6245;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="meta-tag">Leksjon 0016 • Komplett Norsk API- og Datapunktkatalog</div>
+    <h1>35 Åpne Norske API-er & Datapunkter for Kunstpixel (Interne Tjenester, Drift & Samling)</h1>
+    
+    <p style="font-size: 1.15rem; line-height: 1.6;">
+      Her er den fullstendige oversikten over <strong>35 konkrete, åpne norske API-er og autoritative datapunkter</strong> som kan tappes direkte inn i Kunstpixels databaser (<code>museum.db</code>, <code>kunstpixel_historikk.db</code> og <code>05_data/governance/</code>) med <strong>0 KI-tokens</strong>. 
+      Katalogen dekker hele verdikjeden: fra kunstner- og verksregistre til intern drift, leverandørkontroll, tilsyn, bygningsvern og økonomi.
+    </p>
+
+    <!-- KATEGORI 1: KUNSTNER & KULTURARV -->
+    <div class="category-header">Kategori A: Kunstner-API-er, Samlingsforvaltning & Proveniens (Punkt 1–9)</div>
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th style="width:40px;">#</th>
+          <th style="width:240px;">Kilde & Åpent API</th>
+          <th>Hva slags datapunkt vi henter ut (0 tokens)</th>
+          <th style="width:180px;">Hvor det fylles inn i Kunstpixel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="num-badge">1</span></td>
+          <td><strong>Norsk kunstnerleksikon (NKL)</strong><br><span class="endpoint">nkl.snl.no/{navn}.json</span></td>
+          <td>Autoritativ kunstnerbiografi, utdanning, stipendier, kollektivutstillinger og offentlige arbeider for norske kunstnere.</td>
+          <td><span class="target-tag">museum.db → kunstnere</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">2</span></td>
+          <td><strong>Store norske leksikon API</strong><br><span class="endpoint">snl.no/api/v1/search</span></td>
+          <td>Epokeartikler (f.eks. nyromantikk, sosialrealisme, Fleskum-kolonien) og fagfellevurderte verksanalyser.</td>
+          <td><span class="target-tag">museum.db → verk.beskrivelse</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">3</span></td>
+          <td><strong>KulturNav API (KulturIT)</strong><br><span class="endpoint">kulturnav.org/api/search</span></td>
+          <td>Autoritetsregister for kunstner-UUID, normerte teknikker (f.eks. tempera, pastell, koldnål) og materialterminologi.</td>
+          <td><span class="target-tag">00_felles/ordliste.yaml</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">4</span></td>
+          <td><strong>DigitaltMuseum (DiMu Solr API)</strong><br><span class="endpoint">api.dimu.org/api/solr/select</span></td>
+          <td>Gjenstandsmetadata, eksakte mål (mm/cm), inventarnumre, påskrifter og historisk proveniens fra norske museer.</td>
+          <td><span class="target-tag">museum.db → verk.proveniens</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">5</span></td>
+          <td><strong>Nasjonalbiblioteket Katalog API</strong><br><span class="endpoint">api.nb.no/catalog/v1/items</span></td>
+          <td>Historiske utstillingskataloger, bøker, ISBN-numre og samtidige avisomtaler (fra 1880-tallet til i dag) for kunstverkene.</td>
+          <td><span class="target-tag">historikk.db → utstillinger</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">6</span></td>
+          <td><strong>Wikidata SPARQL Endpoint</strong><br><span class="endpoint">query.wikidata.org/sparql</span></td>
+          <td>Internasjonale autoritets-ID-er (ULAN, VIAF), ekte fødsels-/dødsdatoer, gravsteder, ektefeller og utenlandske museer som eier søsterverk.</td>
+          <td><span class="target-tag">museum.db → kunstnere</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">7</span></td>
+          <td><strong>Bono (Billedkunst Opphavsrett)</strong><br><em>Tariff- og opphavsrettsdata</em></td>
+          <td>Beregning av vernetid (70 år etter dødsår, åndsverkloven): Sjekker automatisk om kunstner er fri (Munch d. 1944 = fri) eller avgiftsbelagt (Bergman d. 1987 = vernet til 2058).</td>
+          <td><span class="target-tag">museum.db → verk.status</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">8</span></td>
+          <td><strong>Arkivportalen / Riksarkivet</strong><br><span class="endpoint">arkivportalen.no (OAI-PMH)</span></td>
+          <td>Historiske brev, korrespondanse og legatdokumenter knyttet til kunstnerne og gaver til museet.</td>
+          <td><span class="target-tag">04_knowledge/04_domain</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">9</span></td>
+          <td><strong>Norvegiana / Europeana API</strong><br><span class="endpoint">api.europeana.eu/record/v2</span></td>
+          <td>Høyoppløselige bildelenker (IIIF-manifester), fargepaletter og lisensstatus (CC0 / Public Domain) for bruk i kampanjer.</td>
+          <td><span class="target-tag">05_data/samling.json</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- KATEGORI 2: LEVERANDØRER, ØKONOMI & ANSKAFFELSER -->
+    <div class="category-header">Kategori B: Interne Tjenester, Leverandørkontroll & Økonomi (Punkt 10–17)</div>
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th style="width:40px;">#</th>
+          <th style="width:240px;">Kilde & Åpent API</th>
+          <th>Hva slags datapunkt vi henter ut (0 tokens)</th>
+          <th style="width:180px;">Hvor det fylles inn i Kunstpixel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="num-badge">10</span></td>
+          <td><strong>Brønnøysundregistrene (Enhetsreg.)</strong><br><span class="endpoint">data.brreg.no/enhetsregisteret/api</span></td>
+          <td>Sjekker automatisk at alle museets innleide leverandører (Securitas, AV-utleie, kunsttransport) har gyldig org.nr, ikke er under konkurs, og er MVA-registrert.</td>
+          <td><span class="target-tag">historikk.db → hr_innleie</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">11</span></td>
+          <td><strong>Brreg Regnskapsregisteret API</strong><br><span class="endpoint">data.brreg.no/regnskapsregisteret</span></td>
+          <td>Nøkkeltall (omsetning, driftsresultat, egenkapital) for kritiske underleverandører før museet inngår store rammeavtaler.</td>
+          <td><span class="target-tag">04_knowledge/risks</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">12</span></td>
+          <td><strong>SSB Konsumprisindeks (KPI) API</strong><br><span class="endpoint">data.ssb.no/api/v0/no/table/03013</span></td>
+          <td>Eksakt indeksregulering av utstillingsbudsjetter, husleie og billettpriser fra 2010 til 2026 (realkroneberegning).</td>
+          <td><span class="target-tag">museum.db → dagsbesok</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">13</span></td>
+          <td><strong>SSB Museumsstatistikk API</strong><br><span class="endpoint">data.ssb.no/api/v0/no/table/12362</span></td>
+          <td>Nasjonale sammenligningstall (benchmarking): Besøk per årsverk, egeninntektsgrad og offentlig tilskudd per gjest i Norge.</td>
+          <td><span class="target-tag">04_knowledge/research</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">14</span></td>
+          <td><strong>Norges Bank Valutakurs API</strong><br><span class="endpoint">data.norges-bank.no/api/data/EXR</span></td>
+          <td>Eksakte valutakurser (EUR, USD, GBP, CHF) for beregning av forsikringsverdier og innlån av kunst fra utenlandske museer.</td>
+          <td><span class="target-tag">historikk.db → hr_innleie</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">15</span></td>
+          <td><strong>Doffin / Anskaffelser API</strong><br><span class="endpoint">dofin.no / data.norge.no</span></td>
+          <td>Terskelverdier for offentlige anskaffelser (f.eks. 100 000 kr-grensen og EØS-terskler) når museet kjøper scenografi og vakthold.</td>
+          <td><span class="target-tag">04_domain/core/approval</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">16</span></td>
+          <td><strong>Skatteetaten MVA-satser</strong><br><span class="endpoint">data.norge.no (MVA-koder)</span></td>
+          <td>Skiller deterministisk mellom museumsbillett (0 % MVA / unntatt), kafésalg på stedet (25 % MVA), take-away (15 % MVA) og katalogsalg (0 % MVA på bøker).</td>
+          <td><span class="target-tag">museum.db → dagsbesok</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">17</span></td>
+          <td><strong>Kulturdirektoratet Tilskuddsdata</strong><br><span class="endpoint">kulturdirektoratet.no (Åpne data)</span></td>
+          <td>Kravspesifikasjoner, rapporteringsfrister og tildelingskriterier for nasjonale museums- og prosjektmidler.</td>
+          <td><span class="target-tag">02_deliverables/soknader</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- KATEGORI 3: HR, HMS, ARBEIDSMILJØ & VAKTPLAN -->
+    <div class="category-header">Kategori C: HR, HMS, Arbeidsmiljø & Vaktplanlegging (Punkt 18–24)</div>
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th style="width:40px;">#</th>
+          <th style="width:240px;">Kilde & Åpent API</th>
+          <th>Hva slags datapunkt vi henter ut (0 tokens)</th>
+          <th style="width:180px;">Hvor det fylles inn i Kunstpixel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="num-badge">18</span></td>
+          <td><strong>Lovdata Åpent API (Lover & Forskrifter)</strong><br><span class="endpoint">api.lovdata.no / data.norge.no</span></td>
+          <td>Maskinlesbar fulltekst av Arbeidsmiljøloven (kap. 10 arbeidstid, § 10-8 daglig hvile 11 timer), Internkontrollforskriften og Ferieloven.</td>
+          <td><span class="target-tag">05_data/governance/hms</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">19</span></td>
+          <td><strong>Arbeidstilsynet Godkjente Renholdere</strong><br><span class="endpoint">data.norge.no (Renholdsregisteret)</span></td>
+          <td>Automatisk kontroll av at innleid renholdsfirma i museumskaféen og salene har gyldig HMS-kort og offentlig godkjenning.</td>
+          <td><span class="target-tag">historikk.db → hr_innleie</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">20</span></td>
+          <td><strong>SSB Yrkeskatalog (STYRK-08)</strong><br><span class="endpoint">data.ssb.no/api/klass/v1/classifications/7</span></td>
+          <td>Offisielle yrkeskoder for kurator, konservator, museumsvert, museumspedagog og kafémedarbeider.</td>
+          <td><span class="target-tag">historikk.db → hr_ansatte</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">21</span></td>
+          <td><strong>Norske Helligdager & Skoleruta API</strong><br><span class="endpoint">webapi.no / kommunale åpne data</span></td>
+          <td>Eksakte datoer for påske, pinse, 17. mai, høstferie (uke 40) og vinterferie (uke 8) for å dimensjonere helge- og feriebemanning.</td>
+          <td><span class="target-tag">museum.db → dagsbesok</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">22</span></td>
+          <td><strong>SSB Sykefraværsstatistikk API</strong><br><span class="endpoint">data.ssb.no/api/v0/no/table/12441</span></td>
+          <td>Sesongbasert sykefraværsrisiko i kultur- og servicebransjen (høyere i Q1/Q4) for å beregne nødvendig vikarbuffer i kiosken.</td>
+          <td><span class="target-tag">05_data/hr_demo/seed.json</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">23</span></td>
+          <td><strong>STAMI (Statens arbeidsmiljøinstitutt)</strong><br><span class="endpoint">noa.stami.no (Arbeidsmiljødata)</span></td>
+          <td>Normtall for ergonomisk belastning ved stående arbeid på hardt underlag og krav til rotasjon for salverter.</td>
+          <td><span class="target-tag">05_data/governance/hms</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">24</span></td>
+          <td><strong>Virke / Landsoverenskomsten for museer</strong><br><em>Tariffdata og lønnstrinn</em></td>
+          <td>Lønnstrinnstabeller, ubekvemstillegg (lørdag/søndag/kveld etter kl. 17) og overtidsfaktor (50 % / 100 %) for kostnadskalkyler.</td>
+          <td><span class="target-tag">historikk.db → hr_ansatte</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- KATEGORI 4: KAFÉDRIFT, MATTILSYN & ALLERGENER -->
+    <div class="category-header">Kategori D: Museumskafé, Mattilsyn & Ernæring (Punkt 25–28)</div>
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th style="width:40px;">#</th>
+          <th style="width:240px;">Kilde & Åpent API</th>
+          <th>Hva slags datapunkt vi henter ut (0 tokens)</th>
+          <th style="width:180px;">Hvor det fylles inn i Kunstpixel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="num-badge">25</span></td>
+          <td><strong>Mattilsynet Smilefjes API</strong><br><span class="endpoint">data.norge.no (Smilefjestilsyn)</span></td>
+          <td>Alle sjekkpunkter og karakterkrav (0–3) som Mattilsynets inspektører bruker ved uanmeldt tilsyn i kaféer og serveringssteder.</td>
+          <td><span class="target-tag">05_data/governance/ik_mat</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">26</span></td>
+          <td><strong>Matvaretabellen API (Mattilsynet)</strong><br><span class="endpoint">matvaretabellen.no/api</span></td>
+          <td>Eksakt næringsinnhold, ingredienser og allergener for råvarer brukt i museumskaféens bakst og lunsjretter.</td>
+          <td><span class="target-tag">governance/kafe_meny.json</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">27</span></td>
+          <td><strong>Debio Økologisk Register API</strong><br><span class="endpoint">debio.no / data.norge.no</span></td>
+          <td>Verifisering av økologisk sertifisering for kaffeleverandører og lokale matprodusenter til museumskaféen.</td>
+          <td><span class="target-tag">governance/kafe_meny.json</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">28</span></td>
+          <td><strong>Folkehelseinstituttet (FHI) Smittevern</strong><br><em>Norovirus & Hygieneregler</em></td>
+          <td>Autoritative karanteneregler (48-timersregelen ved omgangssyke) for ansatte som håndterer uinnpakket mat i kaféen.</td>
+          <td><span class="target-tag">05_data/governance/ik_mat</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- KATEGORI 5: BYGG, KLIMA, SIKKERHET & PUBLIKUMSFLYT -->
+    <div class="category-header">Kategori E: Bygningsdrift, Klimakontroll, Vær & Beredskap (Punkt 29–35)</div>
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th style="width:40px;">#</th>
+          <th style="width:240px;">Kilde & Åpent API</th>
+          <th>Hva slags datapunkt vi henter ut (0 tokens)</th>
+          <th style="width:180px;">Hvor det fylles inn i Kunstpixel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="num-badge">29</span></td>
+          <td><strong>MET Norway (Meteorologisk institutt)</strong><br><span class="endpoint">api.met.no / frost.met.no</span></td>
+          <td>Historisk og sanntids værdata (regn vs. sol, utetemperatur og luftfuktighet). <em>Regnvær i juli øker museumsbesøket med +35 %, og påvirker relativ luftfuktighet (RF %) inne i salene!</em></td>
+          <td><span class="target-tag">museum.db → dagsbesok</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">30</span></td>
+          <td><strong>Kartverket Adresse & Matrikkel API</strong><br><span class="endpoint">ws.geonorge.no/adresser/v1</span></td>
+          <td>Eksakte koordinater, gårds-/bruksnummer, bygningsnummer og høyde over havet (bruker vår lokale <code>kartverket</code> MCP-server!).</td>
+          <td><span class="target-tag">governance/brann_sikring</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">31</span></td>
+          <td><strong>NVE Flom- og Skredvarsling API</strong><br><span class="endpoint">api01.nve.no/hydrology</span></td>
+          <td>Risikovarsling for kjellermagasin (<code>MAG-1</code>) ved ekstremnedbør og overvann, knyttet til museets restverdiredningsplan (RVR).</td>
+          <td><span class="target-tag">governance/brann_sikring</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">32</span></td>
+          <td><strong>Entur Kollektivtransport API</strong><br><span class="endpoint">api.entur.io/journey-planner/v3</span></td>
+          <td>Sanntids avganger, holdeplasser og reisetid med buss/bane/tog til museet for publikumsveiledning i resepsjonen.</td>
+          <td><span class="target-tag">museum.db → publikum_faq</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">33</span></td>
+          <td><strong>Nord Pool / Hvakosterstrommen API</strong><br><span class="endpoint">hvakosterstrommen.no/api/v1</span></td>
+          <td>Timespriser på strøm (NO1) for å beregne driftskostnader til 24/7 klimaanlegg og avfukting i kunstsalene ($20^\circ\text{C}$ og $50\,\%$ RF).</td>
+          <td><span class="target-tag">04_domain/operations</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">34</span></td>
+          <td><strong>Riksantikvaren Kulturminnesøk API</strong><br><span class="endpoint">kulturminnesok.no / Geonorge</span></td>
+          <td>Fredningsstatus og bygningsvernregler for selve museumsbygningen (hva driftsleder har lov til å bore i eller bygge om).</td>
+          <td><span class="target-tag">04_domain/core/bygning</span></td>
+        </tr>
+        <tr>
+          <td><span class="num-badge">35</span></td>
+          <td><strong>DSB / Brann- og redningsetaten</strong><br><span class="endpoint">data.norge.no (Brannforebygging)</span></td>
+          <td>Krav til rømningsveier, brannklasser, maks persontall per kvadratmeter og intervaller for brannøvelser i publikumsbygg.</td>
+          <td><span class="target-tag">governance/tilsynskalender</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="box box-fasit" style="margin-top:2.5rem;">
+      <h3 style="margin-top:0;">Oppsummering: Hvorfor denne listen på 35 punkter endrer alt</h3>
+      <p style="font-size:1.1rem; margin-bottom:0;">
+        Når du viser denne katalogen til elever eller ledere, forstår de umiddelbart at <strong>en bedrift ikke lever i et vakuum</strong>.<br><br>
+        Ved å hente inn:
+        <br>• <strong>Brønnøysundregistrene</strong> (for å sjekke leverandørene våre),
+        <br>• <strong>Meteorologisk institutt</strong> (for å forstå hvorfor besøket spretter opp på regnværsdager og hvorfor klimaanlegget i Sal D jobber hardere),
+        <br>• <strong>Mattilsynet & Lovdata</strong> (for å låse reglene i kaféen og vaktlistene), og
+        <br>• <strong>KulturNav & Kunstnerleksikonet</strong> (for å berike samlingen),
+        <br><br>
+        ...får du en <strong>levende, selvforsynt digital tvilling</strong> der 95 % av kunnskapen hentes gratis og feilfritt uten å bruke ett eneste KI-token!
+      </p>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 2rem 0;">
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      <a href="0015-apne-api-berikelse-i-praksis.html">← Leksjon 15 (SNL-berikelse i praksis)</a> | 
+      <a href="0012-masterrapport-datakilder-hms-og-teach.html">Leksjon 12 (Masterrapport)</a>
+    </p>
+  </div>
+</body>
+</html>

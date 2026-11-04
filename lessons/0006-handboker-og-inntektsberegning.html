@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leksjon 6: Håndbøker, besøkstall og inntektsberegning</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .kpi-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem;
+      text-align: center;
+    }
+    .kpi-value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin: 0.3rem 0;
+    }
+    .kpi-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .comparison-table td {
+      vertical-align: top;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="meta-tag">Leksjon 0006 • Kunstpixel & KI i drift</div>
+    <h1>Oppslag i håndbøker, besøkstall og inntektsberegning</h1>
+    
+    <p style="font-size: 1.2rem; line-height: 1.5;">
+      Nå treffer vi kjernen av hva ledelsen og gründerne faktisk bryr seg om:
+      <br>
+      <strong>1. Spare tid på regeloppslag i personalhåndbøker.</strong><br>
+      <strong>2. Gjøre presise beregninger av publikumstall og billettinntekter uten synsing.</strong>
+    </p>
+
+    <div class="box box-info">
+      <strong>Dataene ligger allerede i systemet vårt!</strong><br>
+      I Kunstpixel har vi <strong>50 arkivutstillinger</strong> og 16 års historikk liggende klare. Se bare på totalene:
+    </div>
+
+    <!-- KPI ROW -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Totalt registrert besøk</div>
+        <div class="kpi-value">1 025 126</div>
+        <div style="font-size:0.8rem; color:var(--muted);">Over 1 million gjester</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Samlet utstillingsbudsjett</div>
+        <div class="kpi-value">49,2 mill.</div>
+        <div style="font-size:0.8rem; color:var(--muted);">NOK i perioden</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Ordinær billettpris</div>
+        <div class="kpi-value">120 kr</div>
+        <div style="font-size:0.8rem; color:var(--muted);">80 kr for student/honnør</div>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin: 1.5rem 0;">
+      <img src="../assets/besokstall_aar.png" alt="Publikumsbesøk per år" style="max-width: 90%; border: 1px solid var(--border); border-radius: 6px;">
+      <p style="font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem;">Figur: Ekte historiske besøkstall hentet ut fra Kunstpixels arkiv (2021–2026).</p>
+    </div>
+
+    <h2>Case 1: Oppslag i håndbøker og reglement (Uten å bla i permer)</h2>
+    <p>
+      I en travel hverdag orker ingen å lete gjennom en 80-siders PDF for å finne ut: 
+      <em>"Hva er reglene for overtid?"</em> eller <em>"Hva koster et familiepass, og har studenter rabatt?"</em>
+    </p>
+
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Hva lederen / kollegaen spør om</th>
+          <th>Hvordan KI løser det med Kunstpixel-data</th>
+          <th>Gevinsten</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>"Hva koster et familiepass, og når er det gratis inngang?"</strong></td>
+          <td>
+            KI kaller <code>search_faq(query="billett")</code> i databasen og henter fasiten:<br>
+            • Familiepass: <strong>250 kr</strong>.<br>
+            • Første søndag i måneden: <strong>Gratis for alle</strong>.
+          </td>
+          <td>Null venting, 100 % korrekt svar på 2 sekunder.</td>
+        </tr>
+        <tr>
+          <td><strong>"Hva er regelen for alenetid og pauser i kassa?"</strong></td>
+          <td>
+            KI kaller <code>lookup_hr_hms_quality_rules(domain="HMS")</code> og siterer nøyaktig gjeldende prosedyre.
+          </td>
+          <td>Slutt på at folk "tror" eller tolker reglene feil.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Case 2: Beregning av inntekter og publikum (Fasit vs. KI-analyse)</h2>
+    <p>
+      Hvis du spør en vanlig ChatGPT: <em>"Hvor mye tjente vi på billetter i 2024?"</em>, vil den finne på et overbevisende tall. Det er livsfarlig for økonomien.
+    </p>
+    <p>
+      <strong>Slik gjør vi det med skikkelig databruk i Kunstpixel:</strong>
+    </p>
+    <ol>
+      <li><strong>Databasen leverer fasiten:</strong> I 2024 hadde vi <strong>145 156 besøkende</strong> på et budsjett på <strong>7,8 mill. kr</strong>.</li>
+      <li><strong>Koden regner ut de harde tallene:</strong> Hvis 60 % er fullpris (120 kr) og 40 % er rabattert (80 kr), gir det en snittpris på 104 kr → ca. <strong>15,1 millioner kr i brutto billettinntekt</strong>.</li>
+      <li><strong>KI-en gjør analysen og skjønnet:</strong> KI-en sammenstiller dette og forklarer lederen: <em>"Til tross for at budsjettet økte med 2,8 mill. kr i 2024, holdt besøkstallet seg flatt på 145 000. Kostnaden per besøkende gikk opp fra 31 kr til 54 kr. Her bør vi se på markedsføringseffekten."</em></li>
+    </ol>
+
+    <div class="box box-fasit">
+      <strong>Dette er grunnen til at ledere kjøper dette:</strong><br>
+      De vil ikke ha en "chatterobot". De vil ha et system som <strong>slår opp fasit i reglementet på sekunder</strong>, og som <strong>regner ut inntekter og trender uten regnefeil</strong>.
+    </div>
+
+    <div class="interactive-quiz">
+      <h3 style="margin-top:0;">Test deg selv: Hvorfor må inntekts- og besøksberegninger gjøres i kode/database før KI-en slipper til?</h3>
+      
+      <div class="quiz-option" onclick="checkAnswer(1)">
+        <strong>A:</strong> Fordi språkmodeller er laget for å generere tekst og mangler en matematisk regnemotor. Hvis de regner selv, oppstår feilmarginer som kan velte et budsjett.
+      </div>
+      <div class="quiz-option" onclick="checkAnswer(2)">
+        <strong>B:</strong> Fordi databaser bruker mindre strøm enn språkmodeller.
+      </div>
+
+      <div id="quiz-feedback" class="feedback-area"></div>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 2rem 0;">
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      <a href="0005-hvordan-ki-snakker-med-gjestene.html">← Leksjon 5 (Vertskap & Persona)</a> | 
+      <a href="0003-helt-enkelt-api-vs-mcp.html">Leksjon 3 (Enkelt forklart)</a>
+    </p>
+  </div>
+
+  <script>
+    function checkAnswer(choice) {
+      const fb = document.getElementById('quiz-feedback');
+      fb.style.display = 'block';
+      if (choice === 1) {
+        fb.className = 'feedback-area box-fasit';
+        fb.innerHTML = '<strong>Helt korrekt!</strong> Matematikk og regnskap krever 100 % determinisme. La databasen og koden gjøre regnestykket, og la KI-en forklare hva tallene betyr for ledelsen!';
+      } else {
+        fb.className = 'feedback-area box-info';
+        fb.innerHTML = 'Nei, det handler om presisjon og risiko for feil i økonomiske beslutninger.';
+      }
+    }
+  </script>
+</body>
+</html>

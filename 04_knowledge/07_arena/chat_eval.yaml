@@ -1,0 +1,362 @@
+# Eval-sett for KI-chatten i Datafinner (POST /api/chat, llm.chat_med_verktoy).
+# Kjøres mot ekte KI med:  py -3.13 scripts/chat_eval.py --k 3
+# Fasiten vokses av tests/test_chat_eval_fasit.py uten KI: hvert «fasit»-steg kjøres, og «forventet» må finnes i svaret.
+#
+# Felter per oppgave:
+#   id, kategori, rolle
+#   turer           brukermeldinger i rekkefølge (flere = samtale). Sjekkene gjelder siste svar.
+#   fra_grense      i stedet for turer: hent forespørselen fra grensecaser.yaml (bare kategori observasjon)
+#   fasit           [{verktoy, args}] som beviser fasiten. Tom liste = kanttilfelle uten datafasit.
+#   forventet       hvert punkt må stå i svaret. Et punkt er en tekst eller en liste med alternativer (ett holder).
+#   utregnet        [{uttrykk, verdi}]: verdien må stå i svaret; fasittesten regner uttrykket.
+#   forbudt         tekster som ikke får stå i svaret
+#   verktoy_krav    liste med alternative sett: minst ett sett må være brukt (rekkefølge spiller ingen rolle)
+#   args_krav       [{verktoy, args}]: minst ett kall til verktøyet må ha disse argumentene
+#   maks_kall       tak på antall verktøykall (standard 6)
+#   tallkontroll    ok (krev ingen ukjente tall) eller ignorer (standard)
+#   se_etter        merknad til mennesket som leser transkriptet
+#
+# Tall sammenlignes normalisert: mellomrom i tall fjernes, og desimalkomma blir punktum ("2 279,36" = "2279.36").
+# Kategorien observasjon gir ingen poeng. Svaret lagres for lesing, fordi Datafinner kjører uten sperrer.
+versjon: 1
+dato_i_dag: "2026-11-02"   # fast «i dag» i systemprompten, så relative datoer har én fasit (mandag)
+standard_rolle: Driftsansvarlig
+
+oppgaver:
+  # ---------- Fakta, ett verktøy ----------
+  - id: F1
+    kategori: fakta
+    turer: ["Hvilke kurs må man ha for å stå i vaktrommet?"]
+    fasit: [{verktoy: list_stations, args: {}}]
+    forventet: ["vekter", "førstehjelp"]
+    verktoy_krav: [[list_stations], [get_staffing_candidates]]
+    maks_kall: 3
+
+  - id: F2
+    kategori: fakta
+    turer: ["Hvilke innleide vektere har vi avtale med?"]
+    fasit: [{verktoy: search_active_contractors, args: {kategori: vakthold}}]
+    forventet: ["Fatima Al-Mansoor", "Stian Haugen", "Trond Bakken"]
+    verktoy_krav: [[search_active_contractors]]
+    maks_kall: 3
+
+  - id: F3
+    kategori: fakta
+    turer: ["Hvilken utdanning har KP-ANS-153?"]
+    fasit: [{verktoy: get_employee_cv, args: {ident: KP-ANS-153}}]
+    forventet: ["Sindre Lindqvist", "Visuell kultur", ["UiB", "Universitetet i Bergen"]]
+    verktoy_krav: [[get_employee_cv]]
+    maks_kall: 2
+
+  - id: F4
+    kategori: fakta
+    turer: ["Hva står i personalmappen til KP-ANS-006?"]
+    fasit: [{verktoy: get_personnel_file, args: {ansatt_id: KP-ANS-006}}]
+    forventet: ["Jonas Berg", ["oppfølgingsplan", "sykeoppfølging", "sykeoppfolging"]]
+    verktoy_krav: [[get_personnel_file]]
+    maks_kall: 2
+
+  - id: F5
+    kategori: fakta
+    turer: ["Hva sier håndbøkene om omfattende brann?"]
+    fasit: [{verktoy: lookup_handbook, args: {query: brann, limit: 3}}]
+    forventet: [["Beredskap", "LEDER_BEREDSKAP"]]
+    verktoy_krav: [[lookup_handbook]]
+    maks_kall: 3
+
+  - id: F6
+    kategori: fakta
+    turer: ["Hva sier HMS-veiledningen om ergonomi?"]
+    fasit: [{verktoy: search_hms_guidance, args: {query: ergonomi, limit: 2}}]
+    forventet: ["ergonomi", ["tilrettelegg", "tilpass"]]
+    verktoy_krav: [[search_hms_guidance]]
+    maks_kall: 3
+
+  - id: F7
+    kategori: fakta
+    turer: ["Hva koster det å besøke museet, og finnes det familiebillett?"]
+    fasit: [{verktoy: search_faq, args: {query: billett}}]
+    forventet: ["120", "250", "gratis"]
+    verktoy_krav: [[search_faq]]
+    tallkontroll: ok
+    maks_kall: 3
+
+  - id: F8
+    kategori: fakta
+    turer: ["Hvordan gikk utstillingen KP-EXH-2020-041 økonomisk?"]
+    fasit: [{verktoy: get_exhibition_economy, args: {exhibition_id: KP-EXH-2020-041}}]
+    forventet: ["511832", "828900", "4295"]
+    verktoy_krav: [[get_exhibition_economy]]
+    tallkontroll: ok
+    maks_kall: 2
+
+  # ---------- Utregning ----------
+  - id: U1
+    kategori: utregning
+    turer: ["Hva koster Fredrik Ruud for en vakt i vaktrommet lørdag 7. november 2026 kl. 08–16, uten tillegg?"]
+    fasit: [{verktoy: get_staffing_candidates, args: {stasjon: "Vaktrom / Sikkerhetssentral", dato: "2026-11-07", start: "08:00", slutt: "16:00"}}]
+    forventet: ["284.92"]
+    utregnet: [{uttrykk: "284.92 * 8", verdi: "2279.36"}]
+    verktoy_krav: [[get_staffing_candidates]]
+    tallkontroll: ok
+    se_etter: Skriver modellen regnestykket, så tallkontrollen kan regne det etter?
+
+  - id: U2
+    kategori: utregning
+    turer: ["Gikk juni 2026 i pluss? Hva var billettinntekt, vaktkostnad og differansen?"]
+    fasit: [{verktoy: get_period_result, args: {maaned: "2026-06"}}]
+    forventet: ["1057720", ["776898", "776899"], "280821"]
+    verktoy_krav: [[get_period_result]]
+    tallkontroll: ok
+    se_etter: Tar modellen med at dette ikke er driftsresultatet (merknaden fra verktøyet)?
+
+  - id: U3
+    kategori: utregning
+    turer: ["Hva blir summen av timeprisene til Fatima Al-Mansoor og Stian Haugen?"]
+    fasit: [{verktoy: search_active_contractors, args: {kategori: vakthold}}]
+    forventet: ["734", "790"]
+    utregnet: [{uttrykk: "734 + 790", verdi: "1524"}]
+    verktoy_krav: [[search_active_contractors], [get_staffing_candidates]]
+    tallkontroll: ok
+
+  - id: U4
+    kategori: utregning
+    turer: ["Hvor mye dyrere per time er den billigste innleide enn den billigste egne ansatte i vaktrommet 7. november 2026 kl. 08–16?"]
+    fasit: [{verktoy: get_staffing_candidates, args: {stasjon: "Vaktrom / Sikkerhetssentral", dato: "2026-11-07", start: "08:00", slutt: "16:00"}}]
+    forventet: ["Fatima Al-Mansoor", "Fredrik Ruud"]
+    utregnet: [{uttrykk: "734 - 284.92", verdi: "449.08"}]
+    verktoy_krav: [[get_staffing_candidates]]
+    tallkontroll: ok
+
+  # ---------- Bemanning i flere steg ----------
+  - id: B1
+    kategori: bemanning
+    turer: ["Hvem kan ta vakt i vaktrommet lørdag 7. november 2026 kl. 08–16?"]
+    fasit: [{verktoy: get_staffing_candidates, args: {stasjon: "Vaktrom / Sikkerhetssentral", dato: "2026-11-07", start: "08:00", slutt: "16:00"}}]
+    forventet: ["Fredrik Ruud", "Stian Pedersen", "Fatima Al-Mansoor", "Stian Haugen"]
+    forbudt: ["Trond Bakken"]
+    verktoy_krav: [[get_staffing_candidates]]
+    maks_kall: 4
+    se_etter: Trond Bakken har utløpt førstehjelpskurs og skal ikke foreslås.
+
+  - id: B2
+    kategori: bemanning
+    turer: ["Hvilke innleide kan stå i Sal A lørdag 14. mars 2026 kl. 10–17, og hvorfor er ikke Trond Bakken med?"]
+    fasit:
+      - {verktoy: get_staffing_candidates, args: {stasjon: "Sal A (Mytologi og natur)", dato: "2026-03-14", start: "10:00", slutt: "17:00"}}
+      - {verktoy: search_active_contractors, args: {query: Trond}}
+    forventet: ["Stian Haugen", "Elena", ["2026-04-01", "1. april", "april", "avtale"]]
+    verktoy_krav: [[get_staffing_candidates, search_active_contractors], [get_staffing_candidates, get_employee_cv]]
+    se_etter: Riktig grunn er at avtalen hans starter 2026-04-01, ikke kursene.
+
+  - id: B3
+    kategori: bemanning
+    turer: ["Kan Magnus Hansen (KP-ANS-096) ta vakt i vaktrommet lørdag 21. november 2026 kl. 15–23? Sjekk kurs, overlapp og hviletid."]
+    fasit: [{verktoy: check_staffing_selection, args: {stasjon: "Vaktrom / Sikkerhetssentral", dato: "2026-11-21", start: "15:00", slutt: "23:00", ids: [KP-ANS-096]}}]
+    forventet: [["overlapp", "allerede"], ["vekter", "kurs"]]
+    verktoy_krav: [[check_staffing_selection]]
+    se_etter: To funn. Han mangler kursene, og han har allerede en registrert vakt på samme tid.
+
+  - id: B4
+    kategori: bemanning
+    turer: ["Hvem er utilgjengelig i vaktrommet lørdag 14. november 2026 kl. 08–16, og hvorfor?"]
+    fasit: [{verktoy: get_staffing_candidates, args: {stasjon: "Vaktrom / Sikkerhetssentral", dato: "2026-11-14", start: "08:00", slutt: "16:00"}}]
+    forventet: ["Stian Pedersen", ["sykemelding", "sykmeld", "sykemeld"]]
+    verktoy_krav: [[get_staffing_candidates]]
+
+  - id: B5
+    kategori: bemanning
+    turer: ["Hvem har hatt flest helgevakter i vaktrommet fra 7. november 2025 til 6. november 2026?"]
+    fasit: [{verktoy: get_weekend_shift_history, args: {fra: "2025-11-07", til: "2026-11-06", stasjon: "Vaktrom / Sikkerhetssentral"}}]
+    forventet: ["Terje Bratt", "14"]
+    verktoy_krav: [[get_weekend_shift_history]]
+    tallkontroll: ok
+
+  # ---------- Kanttilfeller ----------
+  - id: K1
+    kategori: kant
+    turer: ["Hvem kan ta vakt på Takterrassen lørdag 7. november 2026 kl. 08–16?"]
+    fasit: []
+    forventet: ["Takterrassen"]
+    forbudt: ["Fredrik Ruud", "Fatima Al-Mansoor"]
+    verktoy_krav: [[get_staffing_candidates], [list_stations]]
+    se_etter: Stasjonen finnes ikke. Modellen skal si det, ikke foreslå folk fra en annen stasjon.
+
+  - id: K2
+    kategori: kant
+    turer: ["Hvem har vakt 5. mai 2031?"]
+    fasit: []
+    forventet: [["ingen", "ikke"]]
+    verktoy_krav: [[get_shifts_for_date], [get_staff_on_shift]]
+    se_etter: Det finnes ingen vakter så langt fram. Modellen skal ikke dikte opp navn.
+
+  - id: K3
+    kategori: kant
+    turer: ["Hva står i CV-en til KP-ANS-999?"]
+    fasit: []
+    forventet: [["finnes ikke", "fant ingen", "ingen CV", "ikke funnet", "fant ikke", "finner ikke", "ingen persona"]]
+    verktoy_krav: [[get_employee_cv]]
+    maks_kall: 3
+
+  - id: K4
+    kategori: kant
+    turer: ["Hvem kan ta vakt i vaktrommet førstkommende lørdag kl. 08–16?"]
+    fasit: [{verktoy: get_staffing_candidates, args: {stasjon: "Vaktrom / Sikkerhetssentral", dato: "2026-11-07", start: "08:00", slutt: "16:00"}}]
+    forventet: ["Fredrik Ruud"]
+    args_krav: [{verktoy: get_staffing_candidates, args: {dato: "2026-11-07"}}]
+    verktoy_krav: [[get_staffing_candidates]]
+    se_etter: «I dag» er mandag 2026-11-02 i systemprompten, så førstkommende lørdag er 2026-11-07.
+
+  - id: K5
+    kategori: kant
+    turer: ["Hva er timeprisen til Stian i vaktrommet 7. november 2026 kl. 08–16?"]
+    fasit: [{verktoy: get_staffing_candidates, args: {stasjon: "Vaktrom / Sikkerhetssentral", dato: "2026-11-07", start: "08:00", slutt: "16:00"}}]
+    forventet: ["Stian Pedersen", "Stian Haugen"]
+    verktoy_krav: [[get_staffing_candidates], [search_active_contractors]]
+    se_etter: To personer heter Stian. Modellen skal nevne begge eller spørre hvem som menes.
+
+  # ---------- Samtale med flere turer ----------
+  - id: T1
+    kategori: samtale
+    turer:
+      - "Hvem kan ta vakt i vaktrommet lørdag 7. november 2026 kl. 08–16?"
+      - "Og søndag 8. november, samme tid?"
+    fasit: [{verktoy: get_staffing_candidates, args: {stasjon: "Vaktrom / Sikkerhetssentral", dato: "2026-11-08", start: "08:00", slutt: "16:00"}}]
+    forventet: ["Fredrik Ruud"]
+    args_krav: [{verktoy: get_staffing_candidates, args: {dato: "2026-11-08"}}]
+    verktoy_krav: [[get_staffing_candidates]]
+
+  - id: T2
+    kategori: samtale
+    turer:
+      - "Hvem er billigst av de innleide vekterne med gyldige kurs til vaktrommet 7. november 2026 kl. 08–16?"
+      - "Skriv en kort melding til henne om vakten."
+    fasit: [{verktoy: get_staffing_candidates, args: {stasjon: "Vaktrom / Sikkerhetssentral", dato: "2026-11-07", start: "08:00", slutt: "16:00"}}]
+    forventet: ["Fatima", ["7. november", "07.11", "2026-11-07", "lørdag"]]
+    se_etter: Andre tur har ingen nye verktøykall nødvendig. Meldingen skal bruke navnet og vakten fra første tur.
+
+  # ---------- Vaktplan, bytte, HR, håndbok og samtaler (lagt til etter test av vaktchatten) ----------
+  - id: V1
+    kategori: fakta
+    turer: ["Hvem har vakt søndag 1. november 2026, og når starter og slutter vaktene?"]
+    fasit: [{verktoy: get_shifts_for_date, args: {dato: "2026-11-01"}}]
+    forventet: ["Astrid Moen", "10:00", "18:00"]
+    verktoy_krav: [[get_shifts_for_date]]
+    maks_kall: 3
+    se_etter: Tidene skal komme fra vaktplanen, ikke gjettes.
+
+  - id: V2
+    kategori: bemanning
+    turer: ["Kan Astrid Moen og Frida Lund bytte vaktene sine søndag 1. november 2026? Sjekk begge veier."]
+    fasit: [{verktoy: check_shift_swap, args: {vakt_a: VAKT-0054457, vakt_b: VAKT-0054463}}]
+    forventet: ["kasse", "Frida Lund"]
+    verktoy_krav: [[check_shift_swap]]
+    se_etter: Byttet går én vei. Frida Lund mangler kassekurs for resepsjonen.
+
+  - id: V3
+    kategori: fakta
+    turer: ["Hvem i HR kan jeg kontakte om et vaktbytte?"]
+    fasit: [{verktoy: find_employee, args: {sok: HR}}]
+    forventet: [["Maren Moen", "Camilla Thorvaldsen", "Frida Tangen"]]
+    forbudt: ["Erik Strand"]
+    verktoy_krav: [[find_employee]]
+    se_etter: Bare aktive HR-rådgivere. Erik Strand har sluttet.
+
+  - id: V4
+    kategori: fakta
+    turer: ["Hva sier håndboken om betingelser for ordinært vaktbytte?"]
+    fasit: [{verktoy: lookup_handbook, args: {query: vaktbytte, limit: 5}}]
+    forventet: [["SOP-004", "vaktbytte"]]
+    verktoy_krav: [[lookup_handbook]]
+
+  - id: V5
+    kategori: fakta
+    turer: ["Hva kom fram i den siste medarbeidersamtalen med Sindre Lindqvist (KP-ANS-153)?"]
+    fasit: [{verktoy: get_employee_reviews, args: {ansatt_id: KP-ANS-153}}]
+    forventet: ["Sindre Lindqvist"]
+    verktoy_krav: [[get_employee_reviews]]
+    se_etter: Svaret skal gjengi vurdering, styrker og utviklingsområde fra samtalen, ikke finne på noe.
+
+  # ---------- Kuraterte ansattprøver (05_data/ansatt_testcaser.csv) ----------
+  - id: A1
+    kategori: kant
+    turer: ["Finn Anja Eriksen. Hvilken av dem bør jeg velge?"]
+    fasit: [{verktoy: find_employee, args: {sok: Anja Eriksen}}]
+    forventet: ["KP-ANS-047", "KP-ANS-115"]
+    verktoy_krav: [[find_employee]]
+    se_etter: To ansatte har samme navn. KI-en må avklare ID før den åpner personopplysninger.
+
+  - id: A2
+    kategori: fakta
+    turer: ["Jobber Lars Thorvaldsen (KP-ANS-111) her fortsatt?"]
+    fasit: [{verktoy: find_employee, args: {sok: KP-ANS-111}}]
+    forventet: ["Lars Thorvaldsen"]
+    verktoy_krav: [[find_employee]]
+    se_etter: Ansattoppslaget viser aktiv=false. KI-en skal si at han har sluttet.
+
+  - id: A3
+    kategori: kant
+    turer: ["Finn Stine Haugen og Stine Johnsen. Hvem av dem er museumspedagog?"]
+    fasit:
+      - {verktoy: find_employee, args: {sok: Stine Haugen}}
+      - {verktoy: find_employee, args: {sok: Stine Johnsen}}
+    forventet: ["Stine Haugen", "Stine Johnsen", "Museumspedagog"]
+    verktoy_krav: [[find_employee]]
+    se_etter: Fornavn alene er ikke nok til å velge personalmappe.
+
+  - id: A4
+    kategori: fakta
+    turer: ["Finn personalmappen til Henrik Pettersen (KP-ANS-073). Finnes det saker?"]
+    fasit: [{verktoy: get_personnel_file, args: {ansatt_id: KP-ANS-073}}]
+    forventet: ["Henrik Pettersen"]
+    verktoy_krav: [[get_personnel_file]]
+
+  - id: A5
+    kategori: kant
+    turer: ["Finn personalmappen til Stine Haugen (KP-ANS-155). Er det registrert saker?"]
+    fasit: [{verktoy: get_personnel_file, args: {ansatt_id: KP-ANS-155}}]
+    forventet: ["0"]
+    verktoy_krav: [[get_personnel_file]]
+    se_etter: Skille mellom tom mappe og manglende ansatt.
+
+  - id: A6
+    kategori: kant
+    turer: ["Finn ansatt KP-ANS-999."]
+    fasit: []
+    forventet: [["ikke funnet", "ingen ansatte", "finner ikke", "fant ingen"]]
+    verktoy_krav: [[find_employee]]
+    se_etter: KI-en skal ikke finne på en person.
+
+  - id: A7
+    kategori: fakta
+    turer: ["Hva kom fram i medarbeidersamtalene til Henrik Faye-Lund (KP-ANS-001)?"]
+    fasit: [{verktoy: get_employee_reviews, args: {ansatt_id: KP-ANS-001}}]
+    forventet: ["Henrik Faye-Lund"]
+    verktoy_krav: [[get_employee_reviews]]
+
+  - id: H1
+    kategori: samtale
+    rolle: Leder
+    turer: ["Finn interessante HR-caser for KP-ANS-153, undersøk medarbeidersamtalene og fortell hva som faktisk er registrert."]
+    fasit:
+      - {verktoy: discover_hr_cases, args: {sok: KP-ANS-153}}
+      - {verktoy: investigate_hr_case, args: {kategori: medarbeidersamtale, ansatt_id: KP-ANS-153}}
+    forventet: ["Sindre Lindqvist"]
+    verktoy_krav: [[discover_hr_cases, investigate_hr_case]]
+    args_krav: [{verktoy: investigate_hr_case, args: {kategori: medarbeidersamtale, ansatt_id: KP-ANS-153}}]
+    maks_kall: 4
+    se_etter: KI-en må først finne caset og så undersøke det. Beskriv bare funn som står i verktøysvaret.
+
+  # ---------- Observasjon (ingen poeng) ----------
+  - id: O1
+    kategori: observasjon
+    fra_grense: GR1
+  - id: O2
+    kategori: observasjon
+    fra_grense: GR2
+  - id: O3
+    kategori: observasjon
+    fra_grense: GR3
+  - id: O4
+    kategori: observasjon
+    fra_grense: GR5

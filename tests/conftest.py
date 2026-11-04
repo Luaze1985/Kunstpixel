@@ -1,4 +1,4 @@
-"""Pytest fixtures for Aura Kunstmuseum E2E Test Suite (Tiers 1-4).
+"""Pytest fixtures for Kunstpixel E2E Test Suite (Tiers 1-4).
 
 Provides shared database connection, configuration paths, expected oracle values,
 and optional MCP server and agent fixtures.
@@ -13,6 +13,15 @@ import pytest
 
 # Project root directory
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+
+@pytest.fixture(autouse=True)
+def fixed_today(monkeypatch):
+    """Fest 'i dag' til datoen databasens arrangementer ble laget for.
+
+    Uten dette feiler arrangement-testene så snart kalenderen passerer seed-datoene.
+    """
+    monkeypatch.setenv("AURA_TODAY", "2026-09-14")
 
 
 @pytest.fixture(scope="session")
@@ -46,7 +55,7 @@ def db_path() -> Path:
         return headroom_path
 
     raise FileNotFoundError(
-        "Could not find Aura Kunstmuseum database. Checked AURA_DB_PATH, "
+        "Could not find Kunstpixel database. Checked AURA_DB_PATH, "
         f"{local_path}, and {headroom_path}"
     )
 

@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datafinner</title>
+<link rel="stylesheet" href="/af.css">
+</head>
+<body class="af" style="margin:0;padding:24px 16px;background:var(--canvas)">
+<div class="af">
+  <div class="af-shell">
+    <nav class="af-sidebar" aria-label="Meny">
+      <p class="af-side-heading">Datafinner</p>
+      <div id="meny"></div>
+    </nav>
+
+    <main class="af-main">
+      <div class="af-mobile-nav">
+        <label for="mobilvalg">Meny</label>
+        <select id="mobilvalg"></select>
+      </div>
+
+      <div class="af-alert info" role="status"><strong>Øvingsdata</strong><span>Alle ansatte, vakter og tall i Datafinner er syntetiske.</span></div>
+
+      <section class="af-view" data-step="tom" id="tom">
+        <h1 class="af-title" id="start-tittel" tabindex="-1">Datafinner</h1>
+        <ul class="af-task-board" id="roller"><li><p>Henter roller …</p></li></ul>
+        <h2 class="af-caption">Arbeidsflater</h2>
+        <ul class="af-task-board" id="flater"></ul>
+      </section>
+
+      <section class="af-view" data-step="rolle" id="rolle" hidden>
+        <p class="af-caption">Rolle</p>
+        <h1 class="af-title" id="rolle-tittel" tabindex="-1"></h1>
+        <ul class="af-task-board" id="rolle-sporsmal"></ul>
+        <h2 class="af-caption">Arbeidsflater</h2>
+        <ul class="af-task-board" id="rolle-flater"></ul>
+        <div class="af-actions">
+          <button class="af-btn af-btn-secondary" type="button" id="alle-roller">Alle roller</button>
+        </div>
+      </section>
+
+      <section class="af-view" data-step="sporsmal" id="sporsmal" hidden>
+        <p class="af-caption" id="omrade"></p>
+        <h1 class="af-title" id="tittel" tabindex="-1"></h1>
+        <div class="af-error-summary" id="feil" role="alert" hidden>
+          <h2>Feil</h2>
+          <p id="feil-tekst"></p>
+        </div>
+        <div class="af-filters" id="filtre"></div>
+        <div class="af-actions">
+          <button class="af-btn af-btn-primary" type="button" id="finn">Finn svar</button>
+          <button class="af-btn af-btn-secondary" type="button" id="tilbake-rolle">Tilbake til rollen</button>
+        </div>
+        <div id="kort" aria-live="polite" hidden>
+          <div class="af-outcome">
+            <p class="af-outcome-label" id="kort-label"></p>
+            <p class="af-outcome-value" id="kort-verdi" tabindex="-1"></p>
+          </div>
+          <div class="af-actions">
+            <button class="af-btn af-btn-secondary" type="button" id="lag">Lag rapport</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="af-view" data-step="rapport" id="rapport" hidden>
+        <div class="af-report" id="rapport-innhold">
+          <p class="af-caption">Rapport <span class="af-badge active" id="status">Utkast</span></p>
+          <p class="af-table-meta">Utkast så lenge noe mangler.</p>
+          <h2 class="af-title" id="rapport-tittel" tabindex="-1"></h2>
+          <p id="rapport-formal"></p>
+          <div class="af-kpis" id="nokkeltall"></div>
+          <div class="af-report-block">
+            <span class="af-report-kind">Fakta</span>
+            <div><div class="af-table-wrap"><table class="af-table" id="fakta"><thead></thead><tbody></tbody></table></div><span class="af-source" id="fakta-merke"></span></div>
+          </div>
+          <div class="af-report-block">
+            <span class="af-report-kind">Vurdering</span>
+            <div><p id="vurdering" aria-live="polite"></p><span class="af-source missing" id="vurdering-merke">Mangler</span></div>
+          </div>
+          <div class="af-report-block">
+            <span class="af-report-kind">Forslag</span>
+            <div><p id="forslag" aria-live="polite"></p><span class="af-source missing" id="forslag-merke">Mangler</span></div>
+          </div>
+          <div class="af-report-block">
+            <span class="af-report-kind">Kontroll</span>
+            <div><div id="kontroll"></div><span class="af-source verify" id="kontroll-merke">Bør verifiseres</span></div>
+          </div>
+          <div class="af-report-block">
+            <span class="af-report-kind">Grunnlag</span>
+            <div><p id="grunnlag" style="overflow-wrap:anywhere"></p><span class="af-source" id="grunnlag-merke">Hentet fra system</span></div>
+          </div>
+          <div class="af-report-block" id="ki-blokk" hidden>
+            <span class="af-report-kind">KI-forklaring</span>
+            <div><p id="ki-tekst" aria-live="polite"></p><span class="af-source suggested" id="ki-merke">AI-forslag</span><p id="ki-kontroll"></p></div>
+          </div>
+          <div class="af-actions">
+            <button class="af-btn af-btn-secondary" type="button" id="ki" hidden>Forklar med KI</button>
+            <button class="af-btn af-btn-primary" type="button" id="last">Last ned rapport</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="af-context" aria-label="Kilde">
+      <h2 class="af-context-title">Slik spør LLM-en</h2>
+      <div class="af-context-card">
+        <span class="af-small-label">Verktøy</span>
+        <p id="verktoy" style="overflow-wrap:anywhere">Velg et spørsmål.</p>
+      </div>
+      <div class="af-context-card">
+        <span class="af-small-label">Kilde</span>
+        <p id="kilde" style="overflow-wrap:anywhere">museum.db, kun lesing</p>
+        <p id="db-mangler" style="overflow-wrap:anywhere"></p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function () {
+  // Én kilde til roller og spørsmål. Forside, meny, filtre, verktøykall, kort svar og rapport leser herfra.
+  var kr = function (n) { return Math.round(n).toLocaleString("nb-NO") + " kr"; };
+  var tall = function (n) { return Number(n).toLocaleString("nb-NO"); };
+  var KONTROLL = ["Tallene stemmer med kilden", "Utvalget dekker det jeg spurte om"];
+  // Kolonner med true vises bare når feltet finnes i svaret fra databasen.
+  var VAKTKOLONNER = [["start", "Start", true], ["slutt", "Slutt", true], ["navn", "Navn"], ["stilling", "Stilling"], ["timer", "Timer"], ["stasjon", "Stasjon"], ["avdeling", "Avdeling"], ["telefon", "Telefon", true], ["epost", "E-post", true]];
+
+  // Bare data fra museum.db. Roller og rekkefølge kommer fra list_roles (tabellene roller og
+  // rolle_sporsmal). Vurdering og forslag velges av get_report_assessment fra rapport_regler.
+  // Her står bare hvordan hvert spørsmål kalles og vises, slått opp på sporsmal_id.
+  var SPORSMAL = {
+    versjon: "7",
+    roller: [],
+    sporsmal: [
+        { id: "vakt-i-dag", tekst: "Hvem har vakt i dag?", kort: "Vakt i dag", filtre: [],
+          verktoy: "get_staff_on_shift", args: function () { return {}; },
+          svar: function (d) { return d.antall_pa_jobb !== undefined ? d.antall_pa_jobb + " på jobb nå, " + d.antall_med_vakt + " med vakt i dag" : d.antall_med_vakt + " har vakt i dag"; },
+          nokkeltall: function (d) { var n = [["Med vakt", d.antall_med_vakt], ["Timer", tall(d.timer_totalt)]]; if (d.antall_pa_jobb !== undefined) n.unshift(["På jobb kl. " + d.klokkeslett, d.antall_pa_jobb]); return n; },
+          rader: function (d) { return d.vakter; }, kolonner: VAKTKOLONNER,
+          periode: function (d) { return d.dato; } },
+        { id: "vaktplan", tekst: "Vaktplan for en dag", kort: "Vaktplan",
+          filtre: [{ id: "dato", label: "Dato", type: "date" }],
+          verktoy: "get_shifts_for_date", args: function (f) { return { dato: f.dato }; },
+          svar: function (d) { return d.length + " vakter"; },
+          regelverdier: function (d) { return { antall_vakter: d.length }; },
+          rader: function (d) { return d; }, kolonner: VAKTKOLONNER,
+          periode: function (d, f) { return f.dato; } },
+        { id: "arbeidstid", tekst: "Arbeidstid i perioden", kort: "Arbeidstid",
+          filtre: [{ id: "maaned", label: "Måned", type: "month" }],
+          verktoy: "get_working_hours_report", args: function (f) { return { maaned: f.maaned }; },
+          svar: function (d) { return d.overtid_timer_totalt !== undefined ? tall(d.overtid_timer_totalt) + " timer overtid, " + d.antall_med_overtid + " av " + d.antall_ansatte + " ansatte" : tall(d.timer_totalt) + " timer på " + d.antall_ansatte + " ansatte"; },
+          nokkeltall: function (d) { var n = [["Timer", tall(d.timer_totalt)], ["Ansatte", d.antall_ansatte], ["Høyeste ukesum", tall(d.hoyeste_ukesum) + " t"]]; if (d.overtid_timer_totalt !== undefined) n.unshift(["Overtid", tall(d.overtid_timer_totalt) + " t"]); else n.push(["Høyeste døgnsum", tall(d.hoyeste_dognsum) + " t"]); return n; },
+          rader: function (d) { return d.ansatte; },
+          kolonner: [["navn", "Navn"], ["avdeling", "Avdeling"], ["stillingsprosent", "Stilling %"], ["timer_totalt", "Timer"], ["antall_vakter", "Vakter"], ["hoyeste_ukesum", "Høyeste uke"], ["hoyeste_dognsum", "Høyeste døgn"], ["overtid_timer", "Overtid t", true]],
+          periode: function (d) { return d.maaned; } },
+        { id: "sykefravaer", tekst: "Sykefravær i museet", kort: "Sykefravær",
+          filtre: [{ id: "aar", label: "År", type: "number" }, { id: "kvartal", label: "Kvartal", type: "select", valg: ["1", "2", "3", "4"] }],
+          verktoy: "get_absence_report", args: function (f) { return { aar: Number(f.aar), kvartal: Number(f.kvartal) }; },
+          svar: function (d) { var ssb = d.ssb_sammenligning || {}; return d.mangler ? d.mangler : tall(d.egen_prosent) + " % sykefravær i museet" + (ssb.sykefraver_prosent !== undefined ? " (kultursektoren " + tall(ssb.sykefraver_prosent) + " %)" : ""); },
+          nokkeltall: function (d) { var ssb = d.ssb_sammenligning || {}; return d.mangler ? [] : [["Museet", tall(d.egen_prosent) + " %"], ["Kultursektoren", ssb.sykefraver_prosent !== undefined ? tall(ssb.sykefraver_prosent) + " %" : "Mangler"], ["Egenmeldt", tall(d.egenmeldt_prosent) + " %"], ["Legemeldt", tall(d.legemeldt_prosent) + " %"]]; },
+          // Samme tall som verktøyet gir, stilt side om side: museet (hr_fravaer) og SSB.
+          rader: function (d) { var ssb = d.ssb_sammenligning || {}; return d.mangler ? [] : [
+            { kilde: "Museet (hr_fravaer)", sykefravaer: d.egen_prosent, egenmeldt: d.egenmeldt_prosent, legemeldt: d.legemeldt_prosent, sykedager: d.sykedager_totalt, dagsverk: d.mulige_dagsverk },
+            { kilde: "Kultursektoren (SSB)", sykefravaer: ssb.sykefraver_prosent, egenmeldt: ssb.egenmeldt_prosent, legemeldt: ssb.legemeldt_prosent }]; },
+          kolonner: [["kilde", "Kilde"], ["sykefravaer", "Sykefravær %"], ["egenmeldt", "Egenmeldt %"], ["legemeldt", "Legemeldt %"], ["sykedager", "Sykedager"], ["dagsverk", "Mulige dagsverk"]],
+          periode: function (d) { return d.periode; } },
+        { id: "utstilling", tekst: "Økonomi per utstilling", kort: "Utstillingsøkonomi",
+          filtre: [{ id: "utstilling", label: "Utstilling", type: "select", kilde: { verktoy: "list_exhibitions_with_economy", args: {}, verdi: "utstilling_id", tekst: "tittel" } }],
+          verktoy: "get_exhibition_economy", args: function (f) { return { exhibition_id: f.utstilling }; },
+          svar: function (d) { return d.error ? d.error : "Netto resultat " + kr(d.netto_resultat_nok); },
+          nokkeltall: function (d) { return d.error ? [] : [["Budsjett", kr(d.budsjett_nok)], ["Totalkostnad", kr(d.faktisk_totalkostnad_nok)], ["Billettinntekter", kr(d.billettinntekter_nok)], ["Netto", kr(d.netto_resultat_nok)]]; },
+          rader: function (d) { return d.error ? [] : [d]; },
+          kolonner: [["tittel", "Utstilling"], ["besokstall_total", "Besøk"], ["faktisk_innleie_nok", "Innleie"], ["katalogsalg_nok", "Katalogsalg"], ["sponsorstotte_nok", "Sponsor"]],
+          vurdering: function (d) { return d.error ? null : d.avvik_forklaring; },
+          periode: function (d) { return d.aar; } },
+        { id: "vaktkostnad", tekst: "Kostnad for vakter", kort: "Vaktkostnad",
+          filtre: [{ id: "maaned2", label: "Måned", type: "month" }],
+          verktoy: "get_shift_cost_for_period", args: function (f) { return { maaned: f.maaned2 }; },
+          svar: function (d) { return kr(d.kostnad_nok_totalt) + " for vakter"; },
+          nokkeltall: function (d) { return [["Kostnad", kr(d.kostnad_nok_totalt)], ["Avdelinger", d.avdelinger.length], ["Uten tariff", d.vakter_uten_tariff + " vakter"]]; },
+          rader: function (d) { return d.avdelinger; },
+          kolonner: [["avdeling", "Avdeling"], ["vakter", "Vakter"], ["timer", "Timer"], ["kveldstimer", "Kveldstimer", true], ["kostnad_nok", "Kostnad kr"], ["vakter_uten_tariff", "Uten tariff"]],
+          ufullstendig: function (d) { return d.vakter_uten_tariff > 0; },
+          periode: function (d) { return d.maaned; } },
+        { id: "rapporteringskalender", tekst: "Rapporteringskalender og frister", kort: "Rapporteringskalender",
+          filtre: [{ id: "mottakertype", label: "Mottakertype", type: "select", valg: ["ekstern", "intern"] }],
+          verktoy: "search_rapportering", args: function (f) { return { mottakertype: f.mottakertype }; },
+          svar: function (d) { return d.antall + " rapporter i kalenderen"; },
+          nokkeltall: function (d) { var t = (d.rapporter || []).reduce(function (s, r) { return s + (r.timer_per_ar || 0); }, 0); return [["Rapporter", d.antall], ["Timer per år", tall(t) + " t"]]; },
+          rader: function (d) { return d.rapporter || []; },
+          kolonner: [["id", "ID"], ["rapport", "Rapport"], ["mottaker", "Mottaker"], ["maned", "Måned"], ["eier", "Eier"], ["timer_per_ar", "Timer/år"], ["godkjenning", "Godkjenning"]],
+          periode: function (d, f) { return f.mottakertype; } },
+        { id: "myndighetsoversikt", tekst: "Myndighetskrav og tilsynsorganer", kort: "Myndighetskrav",
+          filtre: [{ id: "intern_eier", label: "Intern eier", type: "select", valg: ["Museumsdirektør", "Driftsansvarlig", "Kafeansvarlig"] }],
+          verktoy: "search_myndighet", args: function (f) { return { intern_eier: f.intern_eier }; },
+          svar: function (d) { return d.antall + " tilsynsmyndigheter"; },
+          nokkeltall: function (d) { return [["Myndigheter", d.antall]]; },
+          rader: function (d) { return d.myndigheter || []; },
+          kolonner: [["id", "ID"], ["myndighet", "Myndighet"], ["omrade", "Område"], ["intern_eier", "Intern eier"], ["hva_de_vil", "Krav"], ["dokumentasjon", "Dokumentasjon"]],
+          periode: function (d, f) { return f.intern_eier; } },
+        { id: "tilsynsrutine", tekst: "Rutine ved tilsynsbesøk", kort: "Tilsynsrutine",
+          filtre: [],
+          verktoy: "get_inspection_routine", args: function () { return {}; },
+          svar: function (d) { return d.antall + " steg (gult avvik: " + d.avvik_frister.gult_avvik_lukkes_innen + ", rødt: " + d.avvik_frister.rodt_avvik_lukkes_innen + ")"; },
+          nokkeltall: function (d) { return [["Steg", d.antall], ["Gult avvik", d.avvik_frister.gult_avvik_lukkes_innen], ["Rødt avvik", d.avvik_frister.rodt_avvik_lukkes_innen]]; },
+          rader: function (d) { return d.steg || []; },
+          kolonner: [["steg_nr", "Steg"], ["navn", "Navn"], ["ansvarlig", "Ansvarlig"], ["handling", "Handling"], ["dokumentasjon", "Dokumentasjon"]],
+          periode: function () { return "6-stegs standardprosedyre"; } },
+        { id: "rapportmaler", tekst: "Offisielle rapportmaler", kort: "Rapportmaler",
+          filtre: [{ id: "mal_id", label: "Rapportmal", type: "select", valg: ["ML-01", "ML-02", "ML-03", "ML-04"] }],
+          verktoy: "search_rapportering", args: function (f) { return { mal_id: f.mal_id }; },
+          svar: function (d) { var m = (d.maler || [])[0]; return m ? m.mal_navn + " (" + m.felt.length + " seksjoner)" : "Ingen mal"; },
+          nokkeltall: function (d) { var m = (d.maler || [])[0]; return m ? [["Mal", m.id], ["Seksjoner", m.felt.length], ["Godkjenning", m.godkjenning], ["Startstatus", m.status_ved_opprettelse]] : []; },
+          rader: function (d) { var m = (d.maler || [])[0]; return m ? m.felt.map(function (fl) { return { felt_rekkefolge: fl.felt_rekkefolge, felt_navn: fl.felt_navn, felt_beskrivelse: fl.felt_beskrivelse, kilde_tekst: (fl.kilde || []).join(", ") }; }) : []; },
+          kolonner: [["felt_rekkefolge", "Nr"], ["felt_navn", "Seksjon"], ["felt_beskrivelse", "Innhold"], ["kilde_tekst", "Kilder"]],
+          periode: function (d, f) { return f.mal_id; } },
+        { id: "onboarding", tekst: "Onboarding og HMS-opplæring", kort: "Onboarding og opplæring",
+          filtre: [{ id: "kategori", label: "Kategori", type: "select", valg: ["kompetanse_matrise", "onboarding_status", "hms_opplaering"] }],
+          verktoy: "search_hr_onboarding", args: function (f) { return { kategori: f.kategori }; },
+          svar: function (d) { return d.antall + " opplæringspunkter"; },
+          nokkeltall: function (d) { return [["Punkter", d.antall]]; },
+          rader: function (d) { return d.opplaering || []; },
+          kolonner: [["opplaering_id", "ID"], ["rolle", "Rolle"], ["tema_eller_sertifisering", "Tema / sertifisering"], ["fase_eller_status", "Fase / status"], ["aktivitet_eller_beskrivelse", "Beskrivelse"], ["ansvarlig_rolle", "Ansvarlig"]],
+          periode: function (d, f) { return f.kategori; } },
+        // Personal og kompetanse, innleide, HMS og håndbøker. Uten rollesperre (spec vaktrom-uten-sperrer).
+        { id: "cv", tekst: "CV og kompetanse for en person", kort: "CV",
+          filtre: [{ id: "ident", label: "Ansatt-ID eller navn", type: "text" }],
+          verktoy: "get_employee_cv", args: function (f) { return { ident: f.ident }; },
+          svar: function (d) { return d ? d.navn + ", " + d.stilling + " (" + d.avdeling + ")" : "Fant ingen CV"; },
+          nokkeltall: function (d) { return d ? [["Avdeling", d.avdeling], ["Stilling", d.stilling], ["Utdanninger", ((d.cv_detaljer || {}).utdanning || []).length]] : []; },
+          rader: function (d) { return d ? ((d.cv_detaljer || {}).utdanning || []) : []; },
+          kolonner: [["grad", "Grad"], ["institusjon", "Institusjon"], ["aar", "År"]],
+          periode: function (d, f) { return f.ident; } },
+        { id: "innleide", tekst: "Aktive innleide", kort: "Innleide",
+          filtre: [{ id: "query", label: "Søk (navn, firma, stilling)", type: "text" }],
+          verktoy: "search_active_contractors", args: function (f) { return { query: f.query, limit: 20 }; },
+          svar: function (d) { return d.length + " aktive innleide"; },
+          nokkeltall: function (d) { return [["Innleide", d.length]]; },
+          rader: function (d) { return d; },
+          kolonner: [["navn", "Navn"], ["firma", "Firma"], ["stilling", "Stilling"], ["timepris_nok", "Timepris kr"], ["avtale_til", "Avtale til"], ["telefon", "Telefon"], ["epost", "E-post"]],
+          periode: function (d, f) { return f.query; } },
+        { id: "personalmappe", tekst: "Personalmappe", kort: "Personalmappe",
+          filtre: [{ id: "ansatt", label: "Ansatt-ID eller navn", type: "text" }],
+          verktoy: "get_personnel_file", args: function (f) { return { ansatt_id: f.ansatt }; },
+          svar: function (d) { return d.antall_saker + " saker i personalmappen"; },
+          nokkeltall: function (d) { return [["Saker", d.antall_saker]]; },
+          rader: function (d) { return d.saker; },
+          kolonner: [["saksnr", "Sak"], ["navn", "Navn"], ["opprettet_dato", "Dato"], ["kategori", "Kategori"], ["tittel", "Tittel"], ["innhold_fortrolig", "Innhold"]],
+          periode: function (d, f) { return f.ansatt; } },
+        { id: "hms", tekst: "HMS-veiledning", kort: "HMS",
+          filtre: [{ id: "hmsq", label: "Søk (f.eks. ergonomi)", type: "text" }],
+          verktoy: "search_hms_guidance", args: function (f) { return { query: f.hmsq, limit: 10 }; },
+          svar: function (d) { return d.length + " veiledningspunkter"; },
+          nokkeltall: function (d) { return [["Treff", d.length]]; },
+          rader: function (d) { return d; },
+          kolonner: [["id", "ID"], ["tema", "Tema"], ["sporsmal", "Spørsmål"], ["kort_svar", "Kort svar"]],
+          periode: function (d, f) { return f.hmsq; } },
+        { id: "handbok", tekst: "Virksomhetshåndbøkene", kort: "Håndbøker",
+          filtre: [{ id: "hbq", label: "Søk (f.eks. brann)", type: "text" }],
+          verktoy: "lookup_handbook", args: function (f) { return { query: f.hbq, limit: 10 }; },
+          svar: function (d) { return d.length + " avsnitt i håndbøkene"; },
+          nokkeltall: function (d) { return [["Treff", d.length]]; },
+          rader: function (d) { return d; },
+          kolonner: [["punkt_id", "Punkt"], ["handbok_navn", "Håndbok"], ["kapittel_tittel", "Kapittel"], ["avsnitt_tittel", "Avsnitt"], ["malgruppe", "Målgruppe"]],
+          periode: function (d, f) { return f.hbq; } }
+    ]
+  };
+
+  // Arbeidsflatene som henger sammen med startsiden. roller: null betyr alle roller.
+  // Rollenavnene kommer fra tabellen roller.
+  // Alle roller ser vaktrommet (spec vaktrom-uten-sperrer). null betyr alle.
+  var VAKTROLLER = null;
+  var ARBEIDSFLATER = [
+    { tekst: "Arbeidsflyter", beskrivelse: "Velg arbeidsrolle, utfør oppgaver og se alle verktøy.", url: "/arbeidsflyt", roller: null },
+    { tekst: "Chat", beskrivelse: "Spør med vanlige ord. KI-en henter data med verktøyene og svarer i tekst.", url: "/chat", medRolle: true, roller: null },
+    { tekst: "Vaktrom", beskrivelse: "Finn folk til én vakt: helgehistorikk, kandidater, kontroll og kontaktutkast.", url: "/vaktrom", medRolle: true, roller: VAKTROLLER },
+    { tekst: "Mine kontaktutkast", beskrivelse: "Utkast lagret i denne nettleseren.", url: "/vaktrom#utkast", roller: VAKTROLLER },
+    { tekst: "Søk", beskrivelse: "Samling, arrangementer, publikumsinformasjon og interne dokumenter.", url: "/sok.html", roller: null },
+    { tekst: "Arena", beskrivelse: "Øvelsescaser, bunnlinje D1–D5 og grensemodus.", url: "/arena", roller: null }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var alle = SPORSMAL.sporsmal;
+
+  function tegnFlater(ul, rolle) {
+    ul.textContent = "";
+    ARBEIDSFLATER.forEach(function (f) {
+      if (rolle && f.roller && f.roller.indexOf(rolle) < 0) return;
+      var li = document.createElement("li");
+      var a = document.createElement("a"); a.className = "af-task-card";
+      a.href = f.url + (f.medRolle && rolle ? "?rolle=" + encodeURIComponent(rolle) : "");
+      var t = document.createElement("span");
+      var s = document.createElement("strong"); s.textContent = f.tekst; t.appendChild(s);
+      var sm = document.createElement("small"); sm.textContent = f.beskrivelse; t.appendChild(sm);
+      a.appendChild(t); li.appendChild(a); ul.appendChild(li);
+    });
+  }
+  tegnFlater($("flater"), null);
+  var regel = { status: "venter" };  // venter | system | mangler: hva Vurdering og Forslag viser nå
+  var gjeldendeRolle = null, sisteSvar = null, sisteFiltre = null, sisteArgs = null;
+
+  function el(tag, cls, tekst) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (tekst !== undefined && tekst !== null) e.textContent = tekst;
+    return e;
+  }
+  function finnSporsmal(id) { return alle.filter(function (s) { return s.id === id; })[0]; }
+  function finnRolle(navn) { return SPORSMAL.roller.filter(function (r) { return r.navn === navn; })[0]; }
+  function kallTekst(navn, args) { return navn + "(" + JSON.stringify(args) + ")"; }
+  function hent(navn, args) {
+    var url = "/api/verktoy?navn=" + encodeURIComponent(navn) + "&args=" + encodeURIComponent(JSON.stringify(args));
+    return fetch(url).then(function (res) {
+      return res.json().then(function (body) {
+        if (!res.ok) throw new Error(body.error || "Ukjent feil");
+        return body.resultat;
+      });
+    });
+  }
+
+  var rolig = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function gaaTil(seksjon, maal) {
+    seksjon.scrollIntoView({ behavior: rolig ? "auto" : "smooth", block: "start" });
+    maal.focus({ preventScroll: true });
+  }
+  function vis(steg) { ["tom", "rolle", "sporsmal", "rapport"].forEach(function (id) { $(id).hidden = id !== steg; }); }
+  function skjulSvar() { $("kort").hidden = true; $("rapport").hidden = true; }
+
+  var mobil = $("mobilvalg");
+  function byggMeny() {
+    var meny = $("meny"); meny.textContent = ""; mobil.textContent = "";
+    var tom = el("option", null, "Velg"); tom.value = ""; mobil.appendChild(tom);
+    var ol = el("ol", "af-flow-list");
+    function punkt(tekst, status, id, klikk) {
+      var li = el("li");
+      var b = el("button", "af-flow-link"); b.type = "button"; b.dataset.id = id;
+      var t = el("span", null, tekst);
+      if (status) t.appendChild(el("span", "af-step-status", status));
+      b.appendChild(t); b.addEventListener("click", klikk);
+      li.appendChild(b); ol.appendChild(li);
+      var op = el("option", null, tekst); op.value = id; mobil.appendChild(op);
+    }
+    if (!gjeldendeRolle) {
+      meny.appendChild(el("p", "af-side-heading", "Roller"));
+      SPORSMAL.roller.forEach(function (r) { punkt(r.navn, r.sporsmal.length + " spørsmål", "rolle:" + r.navn, function () { velgRolle(r.navn); }); });
+    } else {
+      meny.appendChild(el("p", "af-side-heading", gjeldendeRolle.navn));
+      punkt("Alle roller", null, "forside", visForside);
+      gjeldendeRolle.sporsmal.forEach(function (s) { punkt(s.tekst, null, s.id, function () { velg(s.id); }); });
+    }
+    meny.appendChild(ol);
+  }
+  mobil.addEventListener("change", function () {
+    var v = mobil.value;
+    if (!v) return;
+    if (v === "forside") visForside(); else if (v.indexOf("rolle:") === 0) velgRolle(v.slice(6)); else velg(v);
+  });
+  function merkMeny(id) {
+    document.querySelectorAll(".af-flow-link").forEach(function (b) {
+      if (b.dataset.id === id) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+    });
+    mobil.value = id || "";
+  }
+
+  function tegnForside(mangler) {
+    var ul = $("roller"); ul.textContent = "";
+    if (mangler) { var li0 = el("li"); li0.appendChild(el("p", null, mangler)); ul.appendChild(li0); return; }
+    SPORSMAL.roller.forEach(function (r) {
+      var li = el("li");
+      var b = el("button", "af-task-card"); b.type = "button";
+      var t = el("span"); t.appendChild(el("strong", null, r.navn));
+      if (r.beskrivelse) t.appendChild(el("small", null, r.beskrivelse));
+      t.appendChild(el("small", null, r.sporsmal.length + " spørsmål"));
+      b.appendChild(t);
+      b.addEventListener("click", function () { velgRolle(r.navn); });
+      li.appendChild(b); ul.appendChild(li);
+    });
+  }
+
+  // Rollekortene kommer fra museum.db. Roller med spørsmål tas med, og brukerrollene i museet tas alltid med,
+  // også når de bare har arbeidsflater (Kafeansvarlig, Kommunikasjon, Museumsvert har ingen spørsmål ennå).
+  var BRUKERROLLER = ["Museumsdirektør", "Driftsansvarlig", "HR og bemanning", "Kafeansvarlig", "Kommunikasjon", "Museumsvert", "Avdelingsleder"];
+  function lastRoller() {
+    return hent("list_roles", {}).then(function (rader) {
+      SPORSMAL.roller = rader.map(function (r) {
+        return { navn: r.navn, merknad: r.trigger, beskrivelse: r.beskrivelse,
+          sporsmal: r.sporsmal.map(finnSporsmal).filter(Boolean) };
+      }).filter(function (r) { return r.sporsmal.length > 0 || BRUKERROLLER.indexOf(r.navn) >= 0; });
+      SPORSMAL.roller.forEach(function (r) { r.sporsmal.forEach(function (s) { if (!s.rolle) s.rolle = r; }); });
+      tegnForside(SPORSMAL.roller.length ? null : "Mangler: roller med spørsmål finnes ikke i museum.db (tabellene roller og rolle_sporsmal).");
+      byggMeny();
+    }).catch(function (e) { tegnForside("Feil fra databasen: " + e.message); });
+  }
+
+  function visForside() {
+    gjeldendeRolle = null; skjulSvar(); vis("tom");
+    byggMeny(); merkMeny("");
+    $("verktoy").textContent = "Velg et spørsmål.";
+    gaaTil($("tom"), $("start-tittel"));
+  }
+
+  function velgRolle(navn) {
+    gjeldendeRolle = finnRolle(navn); skjulSvar(); vis("rolle");
+    $("rolle-tittel").textContent = gjeldendeRolle.navn;
+    var ul = $("rolle-sporsmal"); ul.textContent = "";
+    gjeldendeRolle.sporsmal.forEach(function (q) {
+      var li = el("li");
+      var b = el("button", "af-task-card"); b.type = "button";
+      var t = el("span"); t.appendChild(el("strong", null, q.tekst));
+      b.appendChild(t);
+      b.addEventListener("click", function () { velg(q.id); });
+      li.appendChild(b); ul.appendChild(li);
+    });
+    tegnFlater($("rolle-flater"), gjeldendeRolle.navn);
+    byggMeny(); merkMeny("");
+    $("verktoy").textContent = "Velg et spørsmål.";
+    gaaTil($("rolle"), $("rolle-tittel"));
+  }
+
+  function lagFilter(fl) {
+    var lbl = el("label", null, fl.label); lbl.htmlFor = "f-" + fl.id;
+    var inp;
+    if (fl.type === "select") {
+      inp = document.createElement("select");
+      if (fl.valg) fl.valg.forEach(function (v) { var o = el("option", null, v); o.value = v; inp.appendChild(o); });
+      if (fl.kilde) {
+        var vent = el("option", null, "Henter …"); vent.value = ""; inp.appendChild(vent);
+        hent(fl.kilde.verktoy, fl.kilde.args).then(function (rader) {
+          inp.textContent = "";
+          var tom = el("option", null, "Velg"); tom.value = ""; inp.appendChild(tom);
+          rader.forEach(function (r) { var o = el("option", null, r[fl.kilde.tekst]); o.value = r[fl.kilde.verdi]; inp.appendChild(o); });
+        }).catch(function (e) { vent.textContent = "Feil: " + e.message; });
+      }
+    } else { inp = document.createElement("input"); inp.type = fl.type; }
+    inp.id = "f-" + fl.id;
+    lbl.appendChild(inp);
+    return lbl;
+  }
+
+  function velg(id) {
+    var s = finnSporsmal(id);
+    if (!gjeldendeRolle || gjeldendeRolle !== s.rolle) { gjeldendeRolle = s.rolle; byggMeny(); }
+    skjulSvar(); vis("sporsmal");
+    $("omrade").textContent = s.rolle.navn;
+    $("tittel").textContent = s.kort;
+    $("verktoy").textContent = s.verktoy;
+    var f = $("filtre"); f.textContent = "";
+    s.filtre.forEach(function (fl) { f.appendChild(lagFilter(fl)); });
+    $("finn").dataset.id = id; $("lag").dataset.id = id;
+    merkMeny(id);
+    $("feil").hidden = true;
+    gaaTil($("sporsmal"), $("tittel"));
+  }
+
+  $("alle-roller").addEventListener("click", visForside);
+  $("tilbake-rolle").addEventListener("click", function () { velgRolle(gjeldendeRolle.navn); });
+
+  function feil(tekst, felt) {
+    $("feil-tekst").textContent = tekst;
+    $("feil").hidden = false; $("kort").hidden = true; $("rapport").hidden = true;
+    if (felt) felt.focus(); else $("feil").focus && $("feil").scrollIntoView();
+  }
+
+  $("finn").addEventListener("click", function () {
+    var s = finnSporsmal($("finn").dataset.id);
+    var verdier = {};
+    s.filtre.forEach(function (fl) { verdier[fl.id] = $("f-" + fl.id).value.trim(); $("f-" + fl.id).removeAttribute("aria-invalid"); });
+    var mangler = s.filtre.filter(function (fl) { return !verdier[fl.id]; });
+    if (mangler.length) {
+      mangler.forEach(function (fl) { $("f-" + fl.id).setAttribute("aria-invalid", "true"); });
+      feil("Fyll inn " + mangler.map(function (fl) { return fl.label.toLowerCase(); }).join(" og ") + " for å fortsette.", $("f-" + mangler[0].id));
+      return;
+    }
+    $("feil").hidden = true;
+    var args = s.args(verdier);
+    $("verktoy").textContent = kallTekst(s.verktoy, args);
+    $("kort-label").textContent = s.tekst;
+    $("kort-verdi").textContent = "Henter …";
+    $("kort").hidden = false; $("rapport").hidden = true;
+    hent(s.verktoy, args).then(function (d) {
+      sisteSvar = d; sisteFiltre = verdier; sisteArgs = args;
+      $("kort-verdi").textContent = s.svar(d);
+      $("db-mangler").textContent = d.mangler || "";
+      $("kort-verdi").focus({ preventScroll: true });
+    }).catch(function (e) { feil("Feil fra databasen: " + e.message); });
+  });
+
+  // Kildemerkene er Arbeidsflyts fem faste ord. Alt systemet fyller ut er Systemforslag
+  // eller Bør verifiseres til en person har godtatt det.
+  var MERKE = {
+    bekreftet: ["confirmed", "Bekreftet"], system: ["system", "Systemforslag"],
+    verifiser: ["verify", "Bør verifiseres"], mangler: ["missing", "Mangler"], aiforslag: ["suggested", "AI-forslag"]
+  };
+
+  function oppdaterStatus() {
+    var bokser = [].slice.call(document.querySelectorAll("#kontroll input"));
+    var faktaBokser = bokser.filter(function (c) { return !c.dataset.godta && !c.dataset.kigodta; });
+    var godtaBoks = bokser.filter(function (c) { return c.dataset.godta; })[0];
+    var kiBoks = bokser.filter(function (c) { return c.dataset.kigodta; })[0];
+    var kiGodtatt = !kiBoks || kiBoks.checked;  // uten KI-forklaring er det ingenting å godta
+    var faktaOk = faktaBokser.length > 0 && faktaBokser.every(function (c) { return c.checked; });
+    var godtatt = !!(godtaBoks && godtaBoks.checked);
+    var s = finnSporsmal($("lag").dataset.id);
+    var ufullstendig = !!(s.ufullstendig && s.ufullstendig(sisteSvar));
+    // Fakta: Bekreftet først når en person har krysset av og databasen ikke melder hull.
+    merk("fakta-merke", faktaOk && !ufullstendig ? MERKE.bekreftet : MERKE.verifiser);
+    if (regel.status === "system") merk("vurdering-merke", godtatt ? MERKE.bekreftet : MERKE.system);
+    if (regel.status === "system") merk("forslag-merke", godtatt ? MERKE.bekreftet : MERKE.system);
+    // KI-forklaringen er AI-forslag til en person har godtatt den. Rapporten er Utkast så lenge den ikke er det.
+    if (kiBoks) merk("ki-merke", kiBoks.checked ? MERKE.bekreftet : MERKE.aiforslag);
+    var alleOk = faktaOk && !ufullstendig && regel.status !== "venter" && (regel.status !== "system" || godtatt) && kiGodtatt;
+    merk("kontroll-merke", alleOk ? MERKE.bekreftet : MERKE.verifiser);
+    // Skjulte blokker (f.eks. KI-forklaringen før den er hentet) teller ikke.
+    var ubekreftet = [].some.call(document.querySelectorAll("#rapport-innhold .af-source.missing, #rapport-innhold .af-source.suggested, #rapport-innhold .af-source.system, #rapport-innhold .af-source.verify"), function (n) { return !n.closest("[hidden]"); });
+    var ok = alleOk && !ubekreftet;
+    $("status").textContent = ok ? "Bekreftet" : "Utkast";
+    $("status").className = "af-badge " + (ok ? "done" : "active");
+  }
+
+  $("lag").addEventListener("click", function () {
+    var s = finnSporsmal($("lag").dataset.id), d = sisteSvar;
+    if (!d) return;
+    $("rapport-tittel").textContent = s.kort;
+    $("rapport-formal").textContent = "Svarer på «" + s.tekst + "» for internt bruk.";
+    var kpi = $("nokkeltall"); kpi.textContent = "";
+    var nt = s.nokkeltall ? s.nokkeltall(d).slice(0, 4) : [];
+    kpi.hidden = nt.length === 0;
+    nt.forEach(function (n) {
+      var k = el("div", "af-kpi");
+      k.appendChild(el("p", "af-kpi-label", n[0]));
+      k.appendChild(el("p", "af-kpi-value", String(n[1])));
+      kpi.appendChild(k);
+    });
+    var thead = $("fakta").tHead, tbody = $("fakta").tBodies[0];
+    thead.textContent = ""; tbody.textContent = "";
+    var rader = s.rader(d);
+    var kolonner = s.kolonner.filter(function (k) { return !k[2] || rader.some(function (r) { return r[k[0]] != null && r[k[0]] !== ""; }); });
+    var hr = el("tr");
+    kolonner.forEach(function (k) { var th = el("th", null, k[1]); th.scope = "col"; hr.appendChild(th); });
+    thead.appendChild(hr);
+    // Tabellen får navn og kan nås med tastatur når den ruller sidelengs.
+    var tabell = $("fakta"), ramme = tabell.parentNode;
+    var cap = tabell.caption || tabell.createCaption();
+    cap.textContent = s.kort + ": " + s.periode(d, sisteFiltre);
+    cap.style.cssText = "position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap";
+    ramme.tabIndex = 0; ramme.setAttribute("role", "region"); ramme.setAttribute("aria-label", cap.textContent);
+    // Tomtilstand: si hvorfor det er tomt og gi én handling.
+    var gammelTom = $("fakta-tom"); if (gammelTom) gammelTom.remove();
+    ramme.hidden = rader.length === 0;
+    if (!rader.length) {
+      var tom = el("div", "af-empty"); tom.id = "fakta-tom";
+      tom.appendChild(el("h3", null, "Ingen rader"));
+      tom.appendChild(el("p", null, "museum.db har ingen rader for " + s.periode(d, sisteFiltre) + "."));
+      var tb = el("button", "af-btn af-btn-secondary", "Endre utvalget"); tb.type = "button";
+      tb.addEventListener("click", function () { var f1 = $("filtre").querySelector("input,select"); gaaTil($("sporsmal"), f1 || $("tittel")); });
+      tom.appendChild(tb); ramme.parentNode.insertBefore(tom, ramme);
+    }
+    rader.forEach(function (r) {
+      var tr = el("tr");
+      kolonner.forEach(function (k) { var v = r[k[0]]; tr.appendChild(el("td", typeof v === "number" ? "num" : null, v == null ? "—" : (typeof v === "number" ? tall(v) : String(v)))); });
+      tbody.appendChild(tr);
+    });
+    var avvik = s.vurdering ? s.vurdering(d) : null;
+    settRegel(null, "Henter regel fra museum.db …");
+    nullstillKi();
+    var k = $("kontroll"); k.textContent = "";
+    KONTROLL.forEach(function (t, i) {
+      var l = el("label", "af-radio");
+      var c = document.createElement("input"); c.type = "checkbox"; c.name = "kontroll" + i;
+      c.addEventListener("change", oppdaterStatus);
+      l.appendChild(c); l.appendChild(document.createTextNode(t)); k.appendChild(l);
+    });
+    var lg = el("label", "af-radio");
+    var cg = document.createElement("input"); cg.type = "checkbox"; cg.name = "godta"; cg.dataset.godta = "1";
+    cg.addEventListener("change", oppdaterStatus);
+    lg.appendChild(cg); lg.appendChild(document.createTextNode("Jeg godtar vurdering og forslag")); k.appendChild(lg);
+    oppdaterStatus();
+    var dk = datakildeTekst(d);
+    var grunnlag = "Kilde: museum.db via " + kallTekst(s.verktoy, sisteArgs) + ". Periode: " + s.periode(d, sisteFiltre) + ". Regelversjon " + SPORSMAL.versjon + "." + (dk ? " Datakilde: " + dk + "." : "") + (d.mangler ? " Mangler i databasen: " + d.mangler : "");
+    $("grunnlag").textContent = grunnlag;
+    $("rapport").hidden = false;
+    gaaTil($("rapport"), $("rapport-tittel"));
+    var vArgs = { sporsmal_id: s.id, verdier: regelverdier(s, d) };
+    hent("get_report_assessment", vArgs).then(function (r) {
+      if (sisteSvar !== d) return;  // et nyere svar har tatt over
+      settRegel(r, null, avvik);
+      if (!r.mangler) $("grunnlag").textContent = grunnlag + " Vurdering og forslag: regel " + r.regel_id + " via " + kallTekst("get_report_assessment", vArgs) + " (kilde " + r.kilde + ", versjon " + r.versjon + ", " + r.datakilde + ").";
+      oppdaterStatus();
+    }).catch(function (e) { settRegel({ mangler: "Feil fra databasen: " + e.message }, null, avvik); oppdaterStatus(); });
+  });
+
+  // Tallfeltene i svaret som regelen kan sammenlignes mot. Sammenligningen skjer i Python.
+  function regelverdier(s, d) {
+    if (s.regelverdier) return s.regelverdier(d);
+    var v = {};
+    if (d && !Array.isArray(d)) Object.keys(d).forEach(function (k) { if (typeof d[k] === "number") v[k] = d[k]; });
+    return v;
+  }
+
+  function datakildeTekst(d) {
+    if (!d) return "";
+    if (d.datakilde) return d.datakilde;
+    var r = Array.isArray(d) ? d.filter(function (x) { return x && x.klokkeslett_datakilde; })[0] : null;
+    return r ? r.klokkeslett_datakilde + " (klokkeslett)" : "";
+  }
+
+  function merk(id, m) { $(id).hidden = false; $(id).className = "af-source " + m[0]; $(id).textContent = m[1]; }
+
+  // Viser regelen fra rapport_regler i Vurdering og Forslag. Teksten er ferdig utfylt av faste
+  // regler, så den er Systemforslag til en person har godtatt den. Uten regel står det Mangler.
+  function settRegel(r, venter, avvik) {
+    if (venter) {
+      regel.status = "venter";
+      $("vurdering").textContent = venter; $("forslag").textContent = venter;
+      $("vurdering-merke").hidden = true; $("forslag-merke").hidden = true;  // ingen merke før svaret er kommet
+      return;
+    }
+    if (!r || r.mangler) {
+      var tekst = (r && r.mangler) || "Databasen har ingen regel for dette spørsmålet.";
+      $("forslag").textContent = tekst; merk("forslag-merke", MERKE.mangler);
+      if (avvik) {
+        $("vurdering").textContent = "Avviksforklaring: " + avvik; merk("vurdering-merke", MERKE.system);
+        regel.status = "system";
+      } else {
+        $("vurdering").textContent = tekst; merk("vurdering-merke", MERKE.mangler);
+        regel.status = "mangler";
+      }
+      return;
+    }
+    regel.status = "system";
+    $("vurdering").textContent = r.vurdering + (avvik ? " Avviksforklaring: " + avvik : "");
+    $("forslag").textContent = r.forslag;
+    merk("vurdering-merke", MERKE.system); merk("forslag-merke", MERKE.system);
+  }
+
+  $("last").addEventListener("click", function () {
+    var tekst = $("rapport-innhold").innerText.replace(/\n{3,}/g, "\n\n");
+    var blob = new Blob([tekst], { type: "text/plain;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "rapport-" + ($("lag").dataset.id || "datafinner") + ".txt";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  // Valgfri KI-forklaring. Knappen vises bare når serveren har slått KI-laget på (LLM_PROVIDER).
+  // Svaret er AI-forslag til en person har godtatt det, og tallene i teksten er kontrollert mot rapporten.
+  function nullstillKi() {
+    $("ki-blokk").hidden = true; $("ki-tekst").textContent = ""; $("ki-kontroll").textContent = "";
+    $("ki").disabled = false; $("ki").textContent = "Forklar med KI";
+  }
+
+  $("ki").addEventListener("click", function () {
+    var s = finnSporsmal($("lag").dataset.id);
+    if (!s || !sisteArgs) return;
+    $("ki").disabled = true; $("ki").textContent = "Henter KI-forklaring …";
+    fetch("/api/forklar", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sporsmal: s.id, args: sisteArgs }) })
+      .then(function (res) { return res.json().then(function (body) { if (!res.ok) throw new Error(body.error || "Ukjent feil"); return body; }); })
+      .then(function (svar) {
+        $("ki-tekst").textContent = svar.tekst;
+        $("ki-blokk").hidden = false;
+        var tk = svar.tallkontroll || { ok: false, ukjente_tall: [] };
+        $("ki-kontroll").textContent = tk.ok ? "Alle tall i teksten finnes i rapporten." : "Tall som ikke finnes i rapporten: " + tk.ukjente_tall.join(", ") + ". Sjekk dem før du bruker teksten.";
+        var boks = document.querySelector("#kontroll input[data-kigodta]");
+        if (!boks) {
+          var l = el("label", "af-radio");
+          boks = document.createElement("input"); boks.type = "checkbox"; boks.name = "kigodta"; boks.dataset.kigodta = "1";
+          boks.addEventListener("change", oppdaterStatus);
+          l.appendChild(boks); l.appendChild(document.createTextNode("Jeg godtar KI-forklaringen")); $("kontroll").appendChild(l);
+        }
+        boks.checked = false;
+        oppdaterStatus();
+      })
+      .catch(function (e) {
+        $("ki-blokk").hidden = false; $("ki-merke").hidden = true;
+        $("ki-tekst").textContent = "Fikk ikke en KI-forklaring: " + e.message; $("ki-kontroll").textContent = "";
+        var gammel = document.querySelector("#kontroll input[data-kigodta]"); if (gammel) gammel.parentNode.remove();
+        oppdaterStatus();
+      })
+      .then(function () { $("ki").disabled = false; $("ki").textContent = "Forklar med KI på nytt"; });
+  });
+
+  fetch("/api/status").then(function (r) { return r.json(); }).then(function (d) { if (d && d.llm) $("ki").hidden = false; }).catch(function () {});
+
+  byggMeny();
+  lastRoller();
+})();
+</script>
+</body>
+</html>

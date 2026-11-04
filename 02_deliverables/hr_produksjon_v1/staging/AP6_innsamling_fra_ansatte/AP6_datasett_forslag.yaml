@@ -1,0 +1,340 @@
+# AP6 – syntetiske skjemaforslag; ingen faktiske personer eller oppdiktede individrader. Kontrollert 20.10.2026
+- tabell: hr_innsamling_katalog
+  omraade: 6
+  beskrivelse: Behandlingsansvar, formål og tilgang før undersøkelse/pulsmåling; ingen individuelle svar i denne
+    tabellen.
+  sektor: &id001
+  - industri
+  - privat
+  - kommune
+  kilde: https://lovdata.no/dokument/NL/lov/2018-06-15-38 | https://www.datatilsynet.no/rettigheter-og-plikter/personvernprinsippene/
+    | https://www.datatilsynet.no/rettigheter-og-plikter/virksomhetenes-plikter/vurdering-av-personvernkonsekvenser/
+  kolonner:
+  - navn: innsamling_id
+    type: tekst
+    unik: true
+  - navn: metode
+    type: tekst
+    tillatte_verdier:
+    - medarbeiderundersokelse
+    - pulsmaling
+    - medarbeidersamtale
+    - hms_avvik
+    - varsling
+    - kompetansekartlegging
+  - navn: formaal
+    type: tekst
+  - navn: behandlingsgrunnlag_art6
+    type: tekst_eller_null
+  - navn: saerlig_kategori_art9
+    type: boolsk
+  - navn: unntak_art9_dokumentert
+    type: boolsk_eller_null
+  - navn: personverninfo_gitt
+    type: boolsk_eller_null
+  - navn: behandlingsansvarlig_rolle
+    type: tekst
+  - navn: databehandleravtale_status
+    type: tekst
+    tillatte_verdier:
+    - ikke_aktuelt
+    - avklart
+    - mangler
+    - ukjent
+  - navn: bevaringsregel_id
+    type: tekst_eller_null
+  - navn: tilgangsrolle
+    type: tekst
+  - navn: sekundaerbruk_tillatt
+    type: boolsk_eller_null
+  - navn: dpia_vurdert
+    type: boolsk_eller_null
+  - navn: dpia_kreves
+    type: boolsk_eller_null
+  - navn: kontrolltiltak_vurdert
+    type: boolsk_eller_null
+  - navn: gyldig_fra
+    type: dato
+- tabell: hr_undersokelse_aggregering
+  omraade: 6
+  beskrivelse: Bare rapporteringsmetadata og publiserbare aggregater; aldri identifiserbare svar.
+  sektor: *id001
+  kilde: https://lovdata.no/dokument/NL/lov/2018-06-15-38 | https://www.ks.no/fagomrader/arbeidsgiverpolitikk/ledelse-og-organisering/et-vellykket-10-faktor-arbeid/om-10-faktor/
+    | https://static.stami.no/files/MUST/NO_MUST_Vilkaar_150124.pdf | https://www.datatilsynet.no/globalassets/global/dokumenter-pdfer-skjema-ol/regelverk/veiledere/anonymisering-veileder-041115.pdf
+  kolonner:
+  - navn: rapport_id
+    type: tekst
+    unik: true
+  - navn: innsamling_id
+    type: tekst
+    kobles_til: hr_innsamling_katalog.innsamling_id
+  - navn: avdeling_id
+    type: tekst
+    kobles_til: hr_avdelinger.avdeling_id
+    merknad: Logisk kobling; kontroller faktisk SQLite-tabellnavn
+  - navn: verktøy
+    type: tekst
+    tillatte_verdier:
+    - 10_faktor
+    - must
+    - lokal_puls
+    - annet
+  - navn: periode
+    type: tekst
+  - navn: antall_inviterte
+    type: heltall_eller_null
+    fordeling: 'Ikke parameterisert: fra syntetisk bemanningsliste'
+  - navn: antall_svar
+    type: heltall_eller_null
+    fordeling: 0 til antall_inviterte; sats må være lokalt dokumentert, ingen nasjonal standard
+  - navn: svarskala
+    type: tekst_eller_null
+  - navn: rapportert_snitt
+    type: tall_eller_null
+    fordeling: Bare innen gjeldende instruments skala
+  - navn: verktøyregel_versjon
+    type: tekst
+  - navn: minimum_svar_lokalt
+    type: heltall_eller_null
+  - navn: indirekte_identifiseringsrisiko
+    type: tekst
+    tillatte_verdier:
+    - lav
+    - middels
+    - hoy
+    - uavklart
+  - navn: kryssfilter_risiko
+    type: boolsk_eller_null
+  - navn: publiseringsstatus
+    type: tekst
+    tillatte_verdier:
+    - ikke_vurdert
+    - sperret
+    - frigitt
+  - navn: dokumentert_kvalitetskontroll
+    type: boolsk_eller_null
+- tabell: hr_samtaleoppfolging
+  omraade: 6
+  beskrivelse: Følg opp avtalt kompetanse- og arbeidsmiljøtiltak, ikke rådialog eller helseopplysninger.
+  sektor: *id001
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/ | https://lovdata.no/dokument/NL/lov/2018-06-15-38
+  kolonner:
+  - navn: oppfolging_id
+    type: tekst
+    unik: true
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: dato
+    type: dato
+  - navn: tiltakstype
+    type: tekst
+    tillatte_verdier:
+    - opplaering
+    - tilrettelegging
+    - oppgaveavklaring
+    - annet
+  - navn: avtalt_tiltak_kode
+    type: tekst
+  - navn: frist
+    type: dato_eller_null
+  - navn: status
+    type: tekst
+    tillatte_verdier:
+    - avtalt
+    - pagar
+    - gjennomfort
+    - utsatt
+  - navn: tilgangsrolle
+    type: tekst
+    tillatte_verdier:
+    - leder_og_ansatt
+    - autoriserte_hr
+  - navn: slett_etter
+    type: dato_eller_null
+- tabell: hr_hms_avvik
+  omraade: 6
+  beskrivelse: Hendelsesdata for forebygging, skiller nestenulykker fra personskader og varslingssaker. Ingen navn
+    på tredjepersoner/diagnoser.
+  sektor: *id001
+  kilde: https://www.arbeidstilsynet.no/regelverk/forskrifter/internkontrollforskriften | https://www.arbeidstilsynet.no/hms/avvik-og-avvikshandtering/
+    | https://www.arbeidstilsynet.no/arbeidsmiljo/vold-og-trusler/ | https://www.arbeidstilsynet.no/hms/roller-i-hms-arbeidet/arbeidsgiver/registrere-skader-og-sykdom/
+  kolonner:
+  - navn: avvik_id
+    type: tekst
+    unik: true
+  - navn: innsamling_id
+    type: tekst
+    kobles_til: hr_innsamling_katalog.innsamling_id
+  - navn: dato_hendelse
+    type: dato
+  - navn: avdeling_id
+    type: tekst
+    kobles_til: hr_avdelinger.avdeling_id
+  - navn: hendelsestype
+    type: tekst
+    tillatte_verdier:
+    - nestenulykke
+    - skade
+    - vold_trussel
+    - teknisk_avvik
+    - rutineavvik
+    - annet
+  - navn: alvorlighet
+    type: tekst
+    tillatte_verdier:
+    - lav
+    - middels
+    - hoy
+    - uavklart
+    merknad: Scenarioverdi, ikke offisiell norsk risikogrense
+  - navn: beskrivelse_kode
+    type: tekst_eller_null
+  - navn: tiltak_status
+    type: tekst
+    tillatte_verdier:
+    - ny
+    - til_vurdering
+    - under_tiltak
+    - lukket
+  - navn: risikovurdering_id
+    type: tekst_eller_null
+  - navn: personskade_indikator
+    type: boolsk
+  - navn: meldeplikt_vurdert
+    type: boolsk_eller_null
+  - navn: tilgangsrolle
+    type: tekst
+- tabell: hr_varsling_administrasjon
+  omraade: 6
+  beskrivelse: Kun prosessmetadata, ikke selve varslingsinnholdet, partenes navn eller identitetskobling. Helt separat
+    saksarkiv med streng tilgang i reell virksomhet.
+  sektor: *id001
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/ | https://www.arbeidstilsynet.no/arbeidsmiljo/varsling/virksomheten-skal-ha-rutiner-for-intern-varsling/
+    | https://www.arbeidstilsynet.no/arbeidsmiljo/varsling/ansvar-rettigheter-og-roller/
+  kolonner:
+  - navn: varslingssak_id
+    type: tekst
+    unik: true
+  - navn: mottatt_dato
+    type: dato
+  - navn: type_bekymring_kode
+    type: tekst
+  - navn: anonym_rapport
+    type: boolsk
+  - navn: etterforskningsstatus
+    type: tekst
+    tillatte_verdier:
+    - mottatt
+    - under_vurdering
+    - under_undersokelse
+    - avsluttet
+  - navn: ansvarlig_rolle
+    type: tekst
+  - navn: tiltak_mot_gjengjeldelse_vurdert
+    type: boolsk_eller_null
+  - navn: rimelig_tid_vurdering
+    type: tekst_eller_null
+    merknad: Ingen lovbestemt fast antall dager
+  - navn: tilgangsrolle
+    type: tekst
+    tillatte_verdier:
+    - dedikert_varslingsmottak
+  - navn: sperret_fra_hr_aggregat
+    type: boolsk
+- tabell: hr_kompetansekrav
+  omraade: 6
+  beskrivelse: Kompetanse som kreves av funksjon og dokumenterte opplæringstyper, ikke evaluering av personlighet.
+  sektor: *id001
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/ | https://www.arbeidstilsynet.no/regelverk/forskrifter/internkontrollforskriften
+  kolonner:
+  - navn: kompetansekrav_id
+    type: tekst
+    unik: true
+  - navn: stilling_kode
+    type: tekst
+    kobles_til: hr_ansatte.stilling
+    merknad: Logisk kobling til eksisterende stillingsfelt
+  - navn: krav_type
+    type: tekst
+    tillatte_verdier:
+    - hms_opplaering
+    - maskinsertifikat
+    - sikkerhetskurs
+    - fagkompetanse
+    - annet
+  - navn: krav_kilde
+    type: tekst
+    merknad: Lov/forskrift, lokal sikkerhetsanalyse eller avtalekrav; må verifiseres per krav
+  - navn: gyldighetsperiode_maneder
+    type: heltall_eller_null
+    fordeling: 'Ikke oppdiktet: følg faktisk sertifikatutsteder/lovkrav'
+  - navn: regel_versjon
+    type: tekst
+- tabell: hr_kompetanse_status
+  omraade: 6
+  beskrivelse: Syntetisk kobling til eksisterende sertifikater, kun dokumentert status.
+  sektor: *id001
+  kilde: https://www.arbeidstilsynet.no/regelverk/lover/arbeidsmiljoloven--aml/ | https://www.arbeidstilsynet.no/regelverk/forskrifter/internkontrollforskriften
+    | https://lovdata.no/dokument/NL/lov/2018-06-15-38
+  kolonner:
+  - navn: status_id
+    type: tekst
+    unik: true
+  - navn: ansatt_id
+    type: tekst
+    kobles_til: hr_ansatte.ansatt_id
+  - navn: kompetansekrav_id
+    type: tekst
+    kobles_til: hr_kompetansekrav.kompetansekrav_id
+  - navn: sertifikat_id
+    type: tekst_eller_null
+    kobles_til: hr_sertifikater.sertifikat_id
+    merknad: Bruk faktisk eksisterende tabellnavn
+  - navn: utlop_dato
+    type: dato_eller_null
+  - navn: dokumentert_status
+    type: tekst
+    tillatte_verdier:
+    - gyldig
+    - utlopt
+    - mangler_dokumentasjon
+    - ikke_pakrevd
+  - navn: sist_bekreftet_dato
+    type: dato_eller_null
+- tabell: hr_svarproveniens
+  omraade: 6
+  beskrivelse: 'Tilgangs- og kildegrunnlag per analyse: kun metadata, ingen svartekst.'
+  sektor: *id001
+  kilde: https://lovdata.no/dokument/NL/lov/2018-06-15-38 | https://www.datatilsynet.no/rettigheter-og-plikter/personvernprinsippene/
+    | https://www.datatilsynet.no/globalassets/global/dokumenter-pdfer-skjema-ol/regelverk/veiledere/anonymisering-veileder-041115.pdf
+  kolonner:
+  - navn: proveniens_id
+    type: tekst
+    unik: true
+  - navn: rapport_id
+    type: tekst
+    kobles_til: hr_undersokelse_aggregering.rapport_id
+  - navn: kildeperiode
+    type: tekst
+  - navn: kildetype
+    type: tekst
+    tillatte_verdier:
+    - lokal_syntetisk
+    - ks_10_faktor
+    - stami_must
+    - ssb_lku_a
+  - navn: enhetsutvalg
+    type: tekst
+  - navn: kryssfiltre
+    type: tekst_eller_null
+  - navn: minimumskrav_kilde
+    type: tekst_eller_null
+  - navn: reidentifikasjonstest
+    type: tekst
+    tillatte_verdier:
+    - bestatt
+    - ikke_bestatt
+    - mangler
+  - navn: frigitt_av_rolle
+    type: tekst_eller_null

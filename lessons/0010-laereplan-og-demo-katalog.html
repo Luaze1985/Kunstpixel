@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Læreplan & Demo-katalog: Data og KI i drift</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .learning-goal {
+      background: #f8f9fa;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .demo-card {
+      background: white;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 4px 12px rgba(15, 98, 254, 0.05);
+    }
+    .tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-right: 0.5rem;
+    }
+    .tag-fasit { background: #defbe6; color: #198038; }
+    .tag-skjonn { background: #fbf1f9; color: #ba4e9b; }
+    .tag-aha { background: #fef7e0; color: #b28600; }
+    .contrast-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .bad-practice {
+      background: #fff1f1;
+      border-left: 4px solid var(--danger);
+      padding: 1rem;
+      border-radius: 4px;
+    }
+    .good-practice {
+      background: #defbe6;
+      border-left: 4px solid var(--success);
+      padding: 1rem;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="meta-tag">Masterplan • Hva elevene må lære & Hvordan demonstrere det</div>
+    <h1>Hva må elevene faktisk kunne og skjønne?</h1>
+    
+    <p style="font-size: 1.2rem; line-height: 1.5;">
+      Dette er fasiten for kurset/opplæringen din. Målet er <strong>ikke</strong> at elevene skal bli programmerere, 
+      men at de skal bli <strong>bestillere og ledere som forstår hva som er trygt å overlate til KI, og hva som MÅ låses i en database</strong>.
+    </p>
+
+    <!-- DEL 1: HVA DE MÅ KUNNE -->
+    <h2>Del 1: De 3 tingene elevene FAKTISK må forstå</h2>
+
+    <div class="learning-goal">
+      <h3 style="margin-top:0;">1. Språkmodeller har ingen kuleramme (De kan ikke telle)</h3>
+      <p>
+        <strong>Kjernen:</strong> En språkmodell genererer ord basert på statistisk sannsynlighet. Hvis du ber den telle billetter, ansatte på vakt eller summere et budsjett, vil den <em>gjette på et tall som høres troverdig ut</em>.
+        <br>👉 <strong>Eleven må skjønne:</strong> All telling, regnskap og datoer må gjøres av kode/database (Fasit). KI-en skal bare forklare resultatet (Skjønn).
+      </p>
+    </div>
+
+    <div class="learning-goal">
+      <h3 style="margin-top:0;">2. Forskjellen på "Likhet" (RAG) og "Fakta" (Database)</h3>
+      <p>
+        <strong>Kjernen:</strong> RAG/vektorsøk finner ting som <em>ligner i betydning</em> (f.eks. "finn dokumenter som handler om fukt og mugg"). En database finner <em>eksakte sannheter</em> (f.eks. "hvor mange verk har vi i Sal A, og hva er billettprisen for studenter?").
+        <br>👉 <strong>Eleven må skjønne:</strong> Bruker du RAG på priser og regler, risikerer du at KI-en gir kunden rabatt fordi teksten "lignet på et tilbud".
+      </p>
+    </div>
+
+    <div class="learning-goal">
+      <h3 style="margin-top:0;">3. MCP: Hvorfor KI må ha "kontrollerte hender"</h3>
+      <p>
+        <strong>Kjernen:</strong> Du gir aldri en KI fri tilgang til å kjøre SQL-kommandoer i databasen din. 
+        <br>👉 <strong>Eleven må skjønne:</strong> MCP (Model Context Protocol) er som en meny med forhåndsgodkjente handlinger (f.eks. "Slå opp billettpris"). KI-en kan bare velge fra menyen, og basen er alltid skrivebeskyttet (read-only).
+      </p>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 2.5rem 0;">
+
+    <!-- DEL 2: DEMO-KATALOG -->
+    <h2>Del 2: Konkrete demo-ideer du kan kjøre live foran elevene</h2>
+    <p>Her er 4 knallsterke "Aha-opplevelser" du kan vise frem med Kunstpixel-dataene:</p>
+
+    <!-- DEMO 1 -->
+    <div class="demo-card">
+      <span class="tag tag-aha">Aha-opplevelse 1</span>
+      <span class="tag tag-fasit">Telle-fellen</span>
+      <h3 style="margin-top: 0.5rem;">"Tellefeilen" live: ChatGPT vs. Kunstpixel SQLite</h3>
+      <p><strong>Hvordan du demonstrerer det:</strong></p>
+      <div class="contrast-box">
+        <div class="bad-practice">
+          <strong>❌ Den naive måten (Ren ChatGPT):</strong><br>
+          Spør: <em>"Her er en liste over verkene våre. Hvor mange henger i Sal A, B og E?"</em><br>
+          👉 <strong>Resultat:</strong> ChatGPT glemmer ofte et verk, eller dikter opp at det er 2 verk i Sal E (som egentlig er tom!).
+        </div>
+        <div class="good-practice">
+          <strong>✅ Kunstpixel-måten (FastMCP):</strong><br>
+          Kjør <code>get_room_artworks(room_id="SAL-E")</code>.<br>
+          👉 <strong>Resultat:</strong> Databasen returnerer <code>[]</code> (0 verk). KI-en sier presist: <em>"Sal E er for øyeblikket tom på grunn av klargjøring til ny utstilling."</em>
+        </div>
+      </div>
+      <p><strong>Læringsutbytte for eleven:</strong> Eleven ser fysisk hvorfor bedrifter aldri kan stole på tekstmodeller alene til varelager eller romtelling.</p>
+    </div>
+
+    <!-- DEMO 2 -->
+    <div class="demo-card">
+      <span class="tag tag-aha">Aha-opplevelse 2</span>
+      <span class="tag tag-fasit">Økonomisk krise</span>
+      <h3 style="margin-top: 0.5rem;">Korona-krasjet: "Hvor mye tapte vi våren 2020?"</h3>
+      <p><strong>Hvordan du demonstrerer det:</strong></p>
+      <ol>
+        <li>Vis diagrammet med de 6 209 dagene der kurven stuper i mars 2020.</li>
+        <li>La systemet slå opp uke 12–14: <strong>0 besøkende, 0 kr inntekt</strong> (et tap på 416 000 kr mot 2019).</li>
+        <li>Be KI-en generere et <strong>styrenotat på 10 sekunder</strong> basert på de nøyaktige tallene.</li>
+      </ol>
+      <p><strong>Læringsutbytte for eleven:</strong> De ser hvordan ledere kan spare dager med manuelt Excel-arbeid og likevel levere 100 % revisjonssikre tall til styret.</p>
+    </div>
+
+    <!-- DEMO 3 -->
+    <div class="demo-card">
+      <span class="tag tag-aha">Aha-opplevelse 3</span>
+      <span class="tag tag-fasit">HR & Sikkerhet</span>
+      <h3 style="margin-top: 0.5rem;">"HMS-fellen": Bemanning i kaféen (L01-L03)</h3>
+      <p><strong>Hvordan du demonstrerer det:</strong></p>
+      <p>
+        Be systemet bemanne kafeen på lørdag. Vis hva som skjer hvis en ansatt mangler gyldig allergenkurs:
+      </p>
+      <ul>
+        <li>Kjør <code>py -3.13 src/hr_cli.py eval E101,E102,E106</code>.</li>
+        <li>Skjermen lyser rødt: <strong>FAIL – Mangler 2 personer for fullt skift</strong> eller <strong>Avvist: Utløpt kurs</strong>.</li>
+      </ul>
+      <p><strong>Læringsutbytte for eleven:</strong> KI kan gjerne <em>foreslå</em> en vaktplan, men en deterministisk regel må ha <strong>vetorett</strong> for å overholde norsk lov og HMS.</p>
+    </div>
+
+    <!-- DEMO 4 -->
+    <div class="demo-card">
+      <span class="tag tag-aha">Aha-opplevelse 4</span>
+      <span class="tag tag-skjonn">Formidling</span>
+      <h3 style="margin-top: 0.5rem;">Samme fakta — To vidt forskjellige målgrupper</h3>
+      <p><strong>Hvordan du demonstrerer det:</strong></p>
+      <p>Ta verkskortet for <em>Nøkken</em> (Theodor Kittelsen, 1904, Sal A) fra databasen:</p>
+      <div class="contrast-box">
+        <div style="background:#f8f9fa; padding:1rem; border-radius:4px;">
+          <strong>Til en 8-åring:</strong><br>
+          <em>"Ser du de to skumle øynene i vannet? Det er Nøkken! Han prøver å lure folk ut i tjernet, så pass på hvor du tråkker!"</em>
+        </div>
+        <div style="background:#f8f9fa; padding:1rem; border-radius:4px;">
+          <strong>Til en kunstinteressert voksen:</strong><br>
+          <em>"Kittelsen benytter pastell og blyant på papir for å fange stemningen i den lyse sommernatten. Verket henger i Sal A og er et hovedverk i norsk nyromantikk."</em>
+        </div>
+      </div>
+      <p><strong>Læringsutbytte for eleven:</strong> Eleven forstår at <strong>faktaene er 100 % like</strong> (låst i databasen), men KI-en gir fantastisk utveksling på språklig formidling tilpasset kunden.</p>
+    </div>
+
+    <div class="box box-fasit">
+      <h3 style="margin-top:0;">Ditt avsluttende "One-Liner" budskap til elevene:</h3>
+      <p style="font-size: 1.2rem; margin:0;">
+        <strong>"Lås sannheten i databasen med MCP.<br>
+        Bruk KI-en til å gi sannheten stemme, innsikt og varme."</strong>
+      </p>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 2rem 0;">
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      <a href="0009-okonomisk-kriseanalyse-korona.html">← Leksjon 9 (Kriseanalyse)</a> | 
+      <a href="0008-realisme-ssb-korona.html">Leksjon 8 (SSB-tall)</a> | 
+      <a href="0003-helt-enkelt-api-vs-mcp.html">Leksjon 3 (Enkelt forklart)</a>
+    </p>
+  </div>
+</body>
+</html>

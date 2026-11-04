@@ -1,0 +1,38 @@
+klassifisering: syntetisk
+syntetisk: true
+merknad: Treningsdata, ikke rettesnor. Alle frister, terskler og timer er oppdiktet.
+versjon: 1
+avvik_frister:
+  gult_avvik_lukkes_innen: 14 dager
+  rodt_avvik_lukkes_innen: 24 timer
+steg:
+- nr: 1
+  navn: Varsel kommer
+  ansvarlig: Driftsansvarlig
+  handling: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som gjøres i dette steget'
+  dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon som trengs'
+- nr: 2
+  navn: Samle dokumentasjon
+  ansvarlig: Driftsansvarlig
+  handling: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som gjøres i dette steget'
+  dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon som trengs'
+- nr: 3
+  navn: Under besøket
+  ansvarlig: Museumsdirektør
+  handling: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som gjøres i dette steget'
+  dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon som trengs'
+- nr: 4
+  navn: Tilbakemelding
+  ansvarlig: Museumsdirektør
+  handling: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som gjøres i dette steget'
+  dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon som trengs'
+- nr: 5
+  navn: Skriftlig svar
+  ansvarlig: Museumsdirektør
+  handling: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som gjøres i dette steget'
+  dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon som trengs'
+- nr: 6
+  navn: Lukke avvik
+  ansvarlig: Driftsansvarlig
+  handling: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hva som gjøres i dette steget'
+  dokumentasjon: 'TODO_FYLL (1 setning, norsk, maks 160 tegn, uten tall): hvilken dokumentasjon som trengs'

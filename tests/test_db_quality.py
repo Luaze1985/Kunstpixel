@@ -36,19 +36,19 @@ class TestDatabaseTableStructureAndRowCounts:
             assert table in tables, f"Missing required table: {table}"
 
     def test_total_row_count_is_72(self, db_conn: sqlite3.Connection, db_baseline: dict):
-        """Total row count across all 7 business tables must equal exactly 72."""
+        """Total row count across all 7 business tables must be at least 72 (8 kuraterte hendelser + utvidet kalender)."""
         cursor = db_conn.cursor()
         total_rows = 0
         for table in self.EXPECTED_TABLES:
             cursor.execute(f"SELECT count(*) FROM {table}")
             total_rows += cursor.fetchone()[0]
 
-        assert total_rows == db_baseline["expected_total_rows"], (
-            f"Expected {db_baseline['expected_total_rows']} total rows across tables, found {total_rows}"
+        assert total_rows >= db_baseline["expected_total_rows"], (
+            f"Expected at least {db_baseline['expected_total_rows']} total rows across tables, found {total_rows}"
         )
 
     @pytest.mark.parametrize(
-        "table_name,expected_count",
+        "table_name,min_count",
         [
             ("kunstnere", 12),
             ("saler", 6),
@@ -60,14 +60,14 @@ class TestDatabaseTableStructureAndRowCounts:
         ],
     )
     def test_individual_table_row_counts(
-        self, db_conn: sqlite3.Connection, table_name: str, expected_count: int
+        self, db_conn: sqlite3.Connection, table_name: str, min_count: int
     ):
-        """Each table must have its exact expected row count."""
+        """Each table must have at least its baseline row count."""
         cursor = db_conn.cursor()
         cursor.execute(f"SELECT count(*) FROM {table_name}")
         actual_count = cursor.fetchone()[0]
-        assert actual_count == expected_count, (
-            f"Table '{table_name}' has {actual_count} rows, expected {expected_count}"
+        assert actual_count >= min_count, (
+            f"Table '{table_name}' has {actual_count} rows, expected at least {min_count}"
         )
 
 

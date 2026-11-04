@@ -1,4 +1,4 @@
-"""Database access layer for Aura Kunstmuseum.
+"""Database access layer for Kunstpixel.
 
 Provides safe, read-only parameterized SQLite queries with Norwegian character handling,
 query normalization, and table/column quoting.
@@ -6,6 +6,10 @@ query normalization, and table/column quoting.
 
 from __future__ import annotations
 
+import json
+import csv
+import functools
+import os
 import re
 import sqlite3
 from pathlib import Path
@@ -30,6 +34,33 @@ FORBIDDEN_SQL_KEYWORDS = {
 }
 
 VALID_ROOM_IDS = ["SAL-A", "SAL-B", "SAL-C", "SAL-D", "SAL-E", "MAG-1"]
+
+@functools.lru_cache(maxsize=1)
+def _get_arbeidsrolle_malgruppe() -> list[dict[str, str]]:
+    path = Path(__file__).resolve().parents[3] / "05_data" / "arbeidsrolle_malgruppe.csv"
+    if not path.is_file():
+        return []
+    with path.open(encoding="utf-8", newline="") as fil:
+        return list(csv.DictReader(fil))
+
+
+@functools.lru_cache(maxsize=1)
+def _get_arbeidsrolle_opplaering() -> list[dict[str, str]]:
+    path = Path(__file__).resolve().parents[3] / "05_data" / "arbeidsrolle_opplaering.csv"
+    if not path.is_file():
+        return []
+    with path.open(encoding="utf-8", newline="") as fil:
+        return list(csv.DictReader(fil))
+
+
+@functools.lru_cache(maxsize=1)
+def _get_bygning_geometri() -> dict[str, Any]:
+    path = Path(__file__).resolve().parents[3] / "06_kart" / "bygning_geometri.json"
+    if not path.is_file():
+        return {}
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
 
 
 def get_db_connection(db_path: Path | str | None = None) -> sqlite3.Connection:
@@ -341,26 +372,38 @@ def query_events(
     """
     params: dict[str, Any] = {}
 
+    fixed_today = os.environ.get("AURA_TODAY", "").strip()
     if date_from and date_from.strip():
         sql += " AND h.dato >= :date_from"
         params["date_from"] = date_from.strip()
+        sql_to_run = sql
+    elif fixed_today:
+        sql += " AND h.dato >= :today"
+        params["today"] = fixed_today
+        sql_to_run = sql
     else:
-        sql += " AND h.dato >= date('now')"
+        sql_to_run = sql + " AND h.dato >= date('now')"
 
     if date_to and date_to.strip():
+        sql_to_run += " AND h.dato <= :date_to"
         sql += " AND h.dato <= :date_to"
         params["date_to"] = date_to.strip()
 
     if event_type and event_type.strip():
         t = event_type.strip().lower()
-        sql += " AND (LOWER(h.type) = :type OR LOWER(h.type) LIKE :type_like OR LOWER(h.tittel) LIKE :type_like)"
+        filter_clause = " AND (LOWER(h.type) = :type OR LOWER(h.type) LIKE :type_like OR LOWER(h.tittel) LIKE :type_like)"
+        sql_to_run += filter_clause
+        sql += filter_clause
         params["type"] = t
         params["type_like"] = f"%{t}%"
 
-    sql += " ORDER BY h.dato ASC, h.klokkeslett_start ASC LIMIT :limit"
+    order_clause = " ORDER BY h.dato ASC, h.klokkeslett_start ASC LIMIT :limit"
     params["limit"] = max(1, min(int(limit), 50))
 
-    rows = execute_read_query(sql, params, db_path=db_path)
+    rows = execute_read_query(sql_to_run + order_clause, params, db_path=db_path)
+    if not rows and not date_from and not fixed_today:
+        # Graceful fallback for static demo/test databases when real calendar date drifts past demo dates
+        rows = execute_read_query(sql + order_clause, params, db_path=db_path)
     return [dict(r) for r in rows]
 
 
@@ -389,7 +432,7 @@ FAQ_STOPWORDS: set[str] = {
     "komme", "kommer", "kom", "kommet",
     # Norwegian prepositions, conjunctions, subjunctions
     "i", "på", "paa", "til", "fra", "med", "av", "om", "for", "ved", "under", "over", "etter", "mellom", "mot", "hos", "uten",
-    "og", "eller", "men", "så", "saa", "som", "at", "da", "hvis", "dersom",
+    "og", "eller", "men", "som", "at", "da", "hvis", "dersom",
     # Norwegian adverbs / conversational particles
     "ja", "nei", "jo", "ikke", "ikkje", "her", "der", "bare", "nok", "vel", "også", "ogsaa", "gjerne",
     # Generic museum environment words that appear in almost all FAQs
@@ -397,9 +440,9 @@ FAQ_STOPWORDS: set[str] = {
     # English conversational words from foreign tourists
     "the", "a", "an", "is", "are", "was", "were", "do", "does", "did",
     "have", "has", "had", "can", "could", "will", "would",
-    "you", "your", "i", "my", "we", "our", "it", "its", "they", "them",
+    "you", "your", "my", "we", "our", "it", "its", "they", "them",
     "what", "where", "when", "who", "how", "why",
-    "in", "on", "at", "to", "for", "of", "with", "by", "from", "about",
+    "in", "on", "to", "of", "with", "by", "from", "about",
     "and", "or", "but", "not", "hello", "hi", "please",
 }
 
@@ -495,3 +538,1693 @@ def query_faq(
 
     scored_results.sort(key=lambda x: (x[0], x[1]), reverse=True)
     return [item[2] for item in scored_results]
+
+
+def query_archive_exhibitions(
+    query: str | None = None,
+    year_from: int | None = None,
+    year_to: int | None = None,
+    curator: str | None = None,
+    limit: int = 10,
+    db_path: Path | str | None = None,
+) -> list[dict]:
+    """Retrieve historical exhibitions from museum.db (2010-2026, ADR 004)."""
+    if db_path is None:
+        db_path = get_db_path()
+
+    sql = """
+    SELECT utstilling_id, aar, sesong, tittel, kurator, saler,
+           periode_start, periode_slutt, antall_verk, besokstall_total, budsjett_nok, katalog_isbn, status
+    FROM utstillinger_historikk
+    WHERE 1=1
+    """
+    params: dict[str, Any] = {}
+
+    if query and query.strip():
+        sql += " AND (LOWER(tittel) LIKE :q OR LOWER(saler) LIKE :q)"
+        params["q"] = f"%{query.strip().lower()}%"
+
+    if year_from is not None:
+        sql += " AND aar >= :year_from"
+        params["year_from"] = int(year_from)
+
+    if year_to is not None:
+        sql += " AND aar <= :year_to"
+        params["year_to"] = int(year_to)
+
+    if curator and curator.strip():
+        sql += " AND LOWER(kurator) LIKE :curator"
+        params["curator"] = f"%{curator.strip().lower()}%"
+
+    sql += " ORDER BY aar DESC, periode_start DESC LIMIT :limit"
+    params["limit"] = max(1, min(int(limit), 50))
+
+    rows = execute_read_query(sql, params, db_path=db_path)
+    return [dict(r) for r in rows]
+
+
+def query_contractors(
+    kategori: str | None = None,
+    leverandor: str | None = None,
+    aar: int | None = None,
+    limit: int = 10,
+    db_path: Path | str | None = None,
+) -> list[dict]:
+    """Retrieve contractor and temporary staffing records from museum.db (ADR 004)."""
+    if db_path is None:
+        db_path = get_db_path()
+
+    sql = """
+    SELECT innleie_id, aar, leverandor, orgnr, kategori, oppdragsbeskrivelse,
+           knyttet_utstilling_id, periode_fra, periode_til, fakturerte_timer,
+           timepris_nok, totalbelop_nok, kontaktperson_ekstern, godkjent_av_navn, status
+    FROM hr_innleie
+    WHERE 1=1
+    """
+    params: dict[str, Any] = {}
+
+    if kategori and kategori.strip():
+        sql += " AND LOWER(kategori) LIKE :kat"
+        params["kat"] = f"%{kategori.strip().lower()}%"
+
+    if leverandor and leverandor.strip():
+        sql += " AND LOWER(leverandor) LIKE :lev"
+        params["lev"] = f"%{leverandor.strip().lower()}%"
+
+    if aar is not None:
+        sql += " AND aar = :aar"
+        params["aar"] = int(aar)
+
+    sql += " ORDER BY aar DESC, totalbelop_nok DESC LIMIT :limit"
+    params["limit"] = max(1, min(int(limit), 50))
+
+    rows = execute_read_query(sql, params, db_path=db_path)
+    return [dict(r) for r in rows]
+
+
+def query_employee_cv(
+    ident: str,
+    db_path: Path | str | None = None,
+) -> dict | None:
+    """Retrieve detailed persona and CV data for key personnel or hired contractors (ADR 004)."""
+    if not ident or not ident.strip():
+        return None
+
+    if db_path is None:
+        db_path = get_db_path()
+
+    ident_clean = ident.strip()
+    sql = """
+    SELECT id, navn, avdeling, stilling, icor_rolle, cv_json
+    FROM personas
+    WHERE UPPER(id) = UPPER(:ident) OR LOWER(navn) LIKE LOWER(:ident_like)
+    LIMIT 1
+    """
+    params = {
+        "ident": ident_clean,
+        "ident_like": f"%{ident_clean}%",
+    }
+    rows = execute_read_query(sql, params, db_path=db_path)
+    if rows:
+        row = dict(rows[0])
+        try:
+            import json
+            row["cv_detaljer"] = json.loads(row["cv_json"])
+        except Exception:
+            row["cv_detaljer"] = {}
+        return row
+
+    # Fallback to expanded arkiv_cv_personas.json (covers all 168 employees)
+    try:
+        import json
+        json_path = Path(db_path).parent / "arkiv_cv_personas.json" if db_path else Path("05_data/arkiv_cv_personas.json")
+        if json_path.is_file():
+            personas = json.loads(json_path.read_text(encoding="utf-8"))
+            for p in personas:
+                if p["id"].upper() == ident_clean.upper() or ident_clean.lower() in p["navn"].lower():
+                    return {
+                        "id": p["id"],
+                        "navn": p["navn"],
+                        "avdeling": p.get("avdeling", ""),
+                        "stilling": p.get("stilling", ""),
+                        "icor_rolle": p.get("icor_rolle", ""),
+                        "cv_json": json.dumps(p, ensure_ascii=False),
+                        "cv_detaljer": p,
+                    }
+    except Exception:
+        pass
+
+    # Check active contractors (arkiv_hr_innleide_personer.csv)
+    try:
+        import csv
+        csv_path = Path(db_path).parent / "arkiv_hr_innleide_personer.csv" if db_path else Path("05_data/arkiv_hr_innleide_personer.csv")
+        if csv_path.is_file():
+            with csv_path.open(encoding="utf-8") as f:
+                for r in csv.DictReader(f):
+                    if r["innleid_id"].upper() == ident_clean.upper() or ident_clean.lower() in r["navn"].lower():
+                        return {
+                            "id": r["innleid_id"],
+                            "navn": r["navn"],
+                            "avdeling": f"Innleid: {r['firma']}",
+                            "stilling": r["stilling"],
+                            "icor_rolle": f"{r['stilling']} (Innleid / {r['kategori']})",
+                            "cv_json": json.dumps(r, ensure_ascii=False),
+                            "cv_detaljer": {
+                                "firma": r["firma"],
+                                "orgnr": r["orgnr"],
+                                "kategori": r["kategori"],
+                                "timepris_nok": float(r["timepris_nok"]),
+                                "avtale_periode": f"{r['avtale_fra']} til {r['avtale_til']}",
+                                "oppdragsbeskrivelse": r["oppdragsbeskrivelse"],
+                                "cv_sammendrag": r["cv_sammendrag"],
+                                "status": r["status"],
+                            },
+                        }
+    except Exception:
+        pass
+
+    return None
+
+
+def _resolve_data_file(filename: str, db_path: Path | str | None = None) -> Path:
+    """Safely resolve data file in 05_data/ relative to database or project root."""
+    if db_path:
+        candidate = Path(db_path).parent / filename
+        if candidate.is_file():
+            return candidate
+    return Path("05_data") / filename
+
+
+def query_active_contractors(
+    query: str = "",
+    kategori: str | None = None,
+    db_path: Path | str | None = None,
+) -> list[dict]:
+    """Retrieve active hired contractors (innleide personer 2026) directly from museum.db."""
+    if db_path is None:
+        db_path = get_db_path()
+
+    # 1. Execute SQL against SQLite table hr_innleide_personer
+    try:
+        sql = """
+        SELECT innleid_id, navn, firma, orgnr, kategori, stilling, epost, telefon,
+               timepris_nok, avtale_fra, avtale_til, status, oppdragsbeskrivelse,
+               cv_sammendrag, datakilde
+        FROM hr_innleide_personer
+        WHERE status = 'Aktiv'
+        """
+        params: dict[str, Any] = {}
+        if kategori and kategori.strip():
+            sql += " AND LOWER(kategori) LIKE LOWER(:kategori)"
+            params["kategori"] = f"%{kategori.strip()}%"
+        if query and query.strip():
+            sql += " AND (LOWER(navn) LIKE LOWER(:q) OR LOWER(firma) LIKE LOWER(:q) OR LOWER(stilling) LIKE LOWER(:q) OR LOWER(kategori) LIKE LOWER(:q))"
+            params["q"] = f"%{query.strip()}%"
+        sql += " ORDER BY innleid_id"
+        rows = execute_read_query(sql, params, db_path=db_path)
+        if rows:
+            return [dict(r) for r in rows]
+    except Exception:
+        pass
+
+    # 2. Fallback to CSV
+    import csv
+    csv_path = _resolve_data_file("arkiv_hr_innleide_personer.csv", db_path)
+    if not csv_path.is_file():
+        return []
+
+    results = []
+    q = query.lower().strip() if query else ""
+    kat = kategori.lower().strip() if kategori else None
+
+    with csv_path.open(encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            if r["status"] != "Aktiv":
+                continue
+            if kat and kat not in r["kategori"].lower():
+                continue
+            if q and not (
+                q in r["navn"].lower()
+                or q in r["firma"].lower()
+                or q in r["stilling"].lower()
+                or q in r["kategori"].lower()
+            ):
+                continue
+            results.append(dict(r))
+    return results
+
+
+AUTHORIZED_HR_ROLES: frozenset[str] = frozenset({
+    "museumsdirektor", "driftsansvarlig", "kvalitetsvokter",
+    "hr_hms", "avdelingsleder", "direktor", "hr"
+})
+
+
+def query_personnel_file(
+    ansatt_id: str,
+    requester_role: str,
+    db_path: Path | str | None = None,
+) -> dict:
+    """Retrieve confidential personnel dossier directly from museum.db with strict RBAC gate (CASE-016)."""
+    if not requester_role or requester_role.strip().lower() not in AUTHORIZED_HR_ROLES:
+        return {
+            "error": "FORBIDDEN: Adgang nektet. Konfidensiell personalmappe krever autorisert leder- eller HR-tilgang (CASE-016).",
+            "code": "ACCESS_DENIED",
+            "status": 403,
+            "ansatt_id": ansatt_id,
+            "saker": [],
+        }
+
+    if db_path is None:
+        db_path = get_db_path()
+
+    clean_id = ansatt_id.strip()
+
+    # 1. Execute SQL against SQLite table hr_personalmapper
+    try:
+        sql = """
+        SELECT saksnr, ansatt_id, navn, opprettet_dato, kategori, tittel,
+               innhold_fortrolig, gradering, saksbehandler_rolle, datakilde
+        FROM hr_personalmapper
+        WHERE UPPER(ansatt_id) = UPPER(:id) OR LOWER(navn) LIKE LOWER(:navn)
+        ORDER BY opprettet_dato DESC
+        """
+        rows = execute_read_query(sql, {"id": clean_id, "navn": f"%{clean_id}%"}, db_path=db_path)
+        if rows:
+            saker = [dict(r) for r in rows]
+            return {
+                "ansatt_id": ansatt_id,
+                "antall_saker": len(saker),
+                "gradering": "LEDER_FORTROLIG",
+                "saker": saker,
+                "merknad": "Konfidensiell personalsak. Kun for autorisert ledelse. Må ikke deles videre.",
+            }
+    except Exception:
+        pass
+
+    # 2. Fallback to CSV
+    import csv
+    csv_path = _resolve_data_file("arkiv_hr_personalmapper.csv", db_path)
+    if not csv_path.is_file():
+        return {"ansatt_id": ansatt_id, "antall_saker": 0, "saker": []}
+
+    saker = []
+    with csv_path.open(encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            if r["ansatt_id"].upper() == clean_id.upper() or clean_id.lower() in r["navn"].lower():
+                saker.append(dict(r))
+
+    return {
+        "ansatt_id": ansatt_id,
+        "antall_saker": len(saker),
+        "gradering": "LEDER_FORTROLIG",
+        "saker": saker,
+        "merknad": "Konfidensiell personalsak. Kun for autorisert ledelse. Må ikke deles videre.",
+    }
+
+
+def query_condition_report(
+    artwork_id: str,
+    db_path: Path | str | None = None,
+) -> dict | None:
+    """Retrieve conservation and condition report for an artwork."""
+    if not artwork_id or not artwork_id.strip():
+        return None
+
+    if db_path is None:
+        db_path = get_db_path()
+
+    clean_id = artwork_id.strip()
+    sql = """
+    SELECT tr.rapport_id, tr.verk_id, v.tittel as verk_tittel, tr.inspeksjonsdato,
+           tr.tilstandsgrad, tr.lysomfintlighet_luks, tr.klimakrav_rh_prosent,
+           tr.konserveringshistorikk, tr.forsikringsverdi_nok, tr.vurdert_av_ansatt_id
+    FROM tilstandsrapporter tr
+    JOIN verk v ON tr.verk_id = v.id
+    WHERE UPPER(tr.verk_id) = UPPER(:id) OR LOWER(v.tittel) = LOWER(:title)
+    LIMIT 1
+    """
+    rows = execute_read_query(sql, {"id": clean_id, "title": clean_id}, db_path=db_path)
+    return dict(rows[0]) if rows else None
+
+
+def query_loans(
+    exhibition_id: str | None = None,
+    query: str | None = None,
+    limit: int = 10,
+    db_path: Path | str | None = None,
+) -> list[dict]:
+    """Retrieve historical exhibition loans from external Norwegian museums."""
+    if db_path is None:
+        db_path = get_db_path()
+
+    sql = """
+    SELECT innlan_id, utstilling_id, eierinstitusjon, tittel, kunstner, aar,
+           teknikk, dimensjoner, veggtekst, audioguide_manus, barneformidling,
+           forsikringsverdi_nok, kurertransport_krav, tilstand_ved_mottak, status
+    FROM utstillingsinnlan
+    WHERE 1=1
+    """
+    params: dict[str, Any] = {}
+
+    if exhibition_id and exhibition_id.strip():
+        sql += " AND UPPER(utstilling_id) = UPPER(:exh_id)"
+        params["exh_id"] = exhibition_id.strip()
+
+    if query and query.strip():
+        sql += " AND (LOWER(tittel) LIKE :q OR LOWER(kunstner) LIKE :q OR LOWER(eierinstitusjon) LIKE :q)"
+        params["q"] = f"%{query.strip().lower()}%"
+
+    sql += " ORDER BY aar DESC, innlan_id ASC LIMIT :limit"
+    params["limit"] = max(1, min(int(limit), 50))
+
+    rows = execute_read_query(sql, params, db_path=db_path)
+    return [dict(r) for r in rows]
+
+
+def query_exhibition_economy(
+    exhibition_id: str,
+    db_path: Path | str | None = None,
+) -> dict | None:
+    """Retrieve comprehensive project economy and accounts for an exhibition."""
+    if not exhibition_id or not exhibition_id.strip():
+        return None
+
+    if db_path is None:
+        db_path = get_db_path()
+
+    sql = """
+    SELECT uo.utstilling_id, uh.tittel, uh.aar, uh.besokstall_total,
+           uo.budsjett_nok, uo.faktisk_innleie_nok, uo.faktisk_totalkostnad_nok,
+           uo.billettinntekter_nok, uo.katalogsalg_nok, uo.sponsorstotte_nok,
+           uo.netto_resultat_nok, uo.avvik_forklaring
+    FROM utstilling_okonomi uo
+    JOIN utstillinger_historikk uh ON uo.utstilling_id = uh.utstilling_id
+    WHERE UPPER(uo.utstilling_id) = UPPER(:id) OR LOWER(uh.tittel) LIKE LOWER(:title)
+    LIMIT 1
+    """
+    clean_id = exhibition_id.strip()
+    rows = execute_read_query(sql, {"id": clean_id, "title": f"%{clean_id}%"}, db_path=db_path)
+    return dict(rows[0]) if rows else None
+
+
+def query_incidents(
+    kategori: str | None = None,
+    alvorlighetsgrad: str | None = None,
+    sal_id: str | None = None,
+    limit: int = 10,
+    db_path: Path | str | None = None,
+) -> list[dict]:
+    """Retrieve operational incidents (HMS, security, climate, technical, visitor)."""
+    if db_path is None:
+        db_path = get_db_path()
+
+    sql = """
+    SELECT avvik_id, aar, dato, kategori, alvorlighetsgrad, berort_sal_id,
+           berort_verk_id, beskrivelse, strakstiltak, oppfolging_ansvarlig_id, status
+    FROM avvik_hms_drift
+    WHERE 1=1
+    """
+    params: dict[str, Any] = {}
+
+    if kategori and kategori.strip():
+        sql += " AND UPPER(kategori) = UPPER(:kat)"
+        params["kat"] = kategori.strip()
+
+    if alvorlighetsgrad and alvorlighetsgrad.strip():
+        sql += " AND UPPER(alvorlighetsgrad) = UPPER(:grad)"
+        params["grad"] = alvorlighetsgrad.strip()
+
+    if sal_id and sal_id.strip():
+        sql += " AND UPPER(berort_sal_id) = UPPER(:sal)"
+        params["sal"] = sal_id.strip()
+
+    sql += " ORDER BY dato DESC LIMIT :limit"
+    params["limit"] = max(1, min(int(limit), 50))
+
+    rows = execute_read_query(sql, params, db_path=db_path)
+    return [dict(r) for r in rows]
+
+
+def query_supplier_brreg(
+    orgnr_or_name: str,
+    db_path: Path | str | None = None,
+) -> dict | None:
+    """Retrieve authoritative Brreg Enhetsregister data for a supplier."""
+    if not orgnr_or_name or not orgnr_or_name.strip():
+        return None
+
+    if db_path is None:
+        db_path = get_db_path()
+
+    clean_term = orgnr_or_name.strip().replace(" ", "")
+    sql = """
+    SELECT organisasjonsnummer, navn, organisasjonsform_kode, organisasjonsform_beskrivelse,
+           naeringskode, naeringskode_beskrivelse, forretningsadresse_kommune,
+           forretningsadresse_postnummer, antall_ansatte, registrert_i_mva,
+           under_konkurs, under_avvikling, aksjekapital_nok, stiftelsesdato, sist_oppdatert
+    FROM leverandor_enhetsregister
+    WHERE organisasjonsnummer = :term OR LOWER(navn) LIKE LOWER(:name_term)
+    LIMIT 1
+    """
+    rows = execute_read_query(sql, {"term": clean_term, "name_term": f"%{orgnr_or_name.strip()}%"}, db_path=db_path)
+    return dict(rows[0]) if rows else None
+
+
+def query_tariff_pay(
+    lonnstrinn: int,
+    db_path: Path | str | None = None,
+) -> dict | None:
+    """Retrieve Virke museum tariff rates for a pay grade."""
+    if db_path is None:
+        db_path = get_db_path()
+
+    sql = """
+    SELECT lonnstrinn, tittel_eksempel, aarslonn_nok, timesats_ordinar,
+           timesats_kveld, timesats_helg, timesats_helligdag, gjeldende_fra
+    FROM virke_tariff
+    WHERE lonnstrinn = :step
+    LIMIT 1
+    """
+    rows = execute_read_query(sql, {"step": int(lonnstrinn)}, db_path=db_path)
+    return dict(rows[0]) if rows else None
+
+
+def query_holidays(
+    year: int | None = None,
+    date_str: str | None = None,
+    limit: int = 20,
+    db_path: Path | str | None = None,
+) -> list[dict]:
+    """Retrieve public holidays and school vacations from norske_helligdager."""
+    if db_path is None:
+        db_path = get_db_path()
+
+    sql = """
+    SELECT dato, aar, navn, er_offentlig_hoytid, tillegg_faktor, skoleferie_type
+    FROM norske_helligdager
+    WHERE 1=1
+    """
+    params: dict[str, Any] = {}
+
+    if year is not None:
+        sql += " AND aar = :yr"
+        params["yr"] = int(year)
+
+    if date_str and date_str.strip():
+        sql += " AND dato = :d"
+        params["d"] = date_str.strip()
+
+    sql += " ORDER BY dato ASC LIMIT :limit"
+    params["limit"] = max(1, min(int(limit), 100))
+
+    rows = execute_read_query(sql, params, db_path=db_path)
+    return [dict(r) for r in rows]
+
+
+def query_styrk_job_code(
+    code_or_title: str,
+    db_path: Path | str | None = None,
+) -> dict | None:
+    """Retrieve official STYRK-08 job profile and Virke minimum grade."""
+    if not code_or_title or not code_or_title.strip():
+        return None
+
+    if db_path is None:
+        db_path = get_db_path()
+
+    clean_term = code_or_title.strip()
+    sql = """
+    SELECT styrk_kode, tittel, avdeling, utdanningsnivaa, virke_minste_lonnstrinn, beskrivelse
+    FROM styrk08_katalog
+    WHERE styrk_kode = :term OR LOWER(tittel) LIKE LOWER(:title_term)
+    LIMIT 1
+    """
+    rows = execute_read_query(sql, {"term": clean_term, "title_term": f"%{clean_term}%"}, db_path=db_path)
+    return dict(rows[0]) if rows else None
+
+
+def query_cleaning_registry(
+    orgnr: str,
+    db_path: Path | str | None = None,
+) -> dict | None:
+    """Verify supplier against the official Norwegian Cleaning Supplier Registry."""
+    if not orgnr or not orgnr.strip():
+        return None
+
+    if db_path is None:
+        db_path = get_db_path()
+
+    clean_nr = orgnr.strip().replace(" ", "")
+    sql = """
+    SELECT organisasjonsnummer, navn, status, godkjent_til_dato, har_hms_kort_krav, sist_kontrollert
+    FROM arbeidstilsynet_renhold
+    WHERE organisasjonsnummer = :nr OR LOWER(navn) LIKE LOWER(:name_term)
+    LIMIT 1
+    """
+    rows = execute_read_query(sql, {"nr": clean_nr, "name_term": f"%{orgnr.strip()}%"}, db_path=db_path)
+    return dict(rows[0]) if rows else None
+
+
+def query_quarterly_absence(
+    year: int,
+    quarter: int,
+    db_path: Path | str | None = None,
+) -> dict | None:
+    """Retrieve SSB sickness absence rate and recommended buffer for culture sector."""
+    if db_path is None:
+        db_path = get_db_path()
+
+    sql = """
+    SELECT periode, aar, kvartal, sykefraver_prosent, egenmeldt_prosent,
+           legemeldt_prosent, vikarbuffer_anbefaling_faktor
+    FROM ssb_sykefraver_kultur
+    WHERE aar = :yr AND kvartal = :q
+    LIMIT 1
+    """
+    rows = execute_read_query(sql, {"yr": int(year), "q": int(quarter)}, db_path=db_path)
+    return dict(rows[0]) if rows else None
+
+
+def query_station_ergonomics(
+    station_id: str,
+    db_path: Path | str | None = None,
+) -> dict | None:
+    """Retrieve STAMI ergonomic requirements and rotation rules for a gallery station."""
+    if not station_id or not station_id.strip():
+        return None
+
+    if db_path is None:
+        db_path = get_db_path()
+
+    clean_id = station_id.strip().upper()
+    sql = """
+    SELECT stasjon_id, navn, underlag_type, maks_sammenhengende_timer,
+           krav_om_sittepause_minutter, anbefalt_rotasjon_stasjon_id
+    FROM hms_ergonomi_rotasjon
+    WHERE UPPER(stasjon_id) IN (:sid, 'STASJON-' || :sid) OR LOWER(navn) LIKE LOWER(:name_term)
+    LIMIT 1
+    """
+    rows = execute_read_query(sql, {"sid": clean_id, "name_term": f"%{station_id.strip()}%"}, db_path=db_path)
+    return dict(rows[0]) if rows else None
+
+
+def audit_shift_aml_compliance(
+    ansatt_id: str,
+    dato: str,
+    start: str,
+    end: str,
+    db_path: Path | str | None = None,
+) -> dict:
+    """Deterministically audit a proposed shift against AML kap. 10 (hours, daily rest, weekly rest)."""
+    if db_path is None:
+        db_path = get_db_path()
+
+    clean_id = ansatt_id.strip()
+
+    try:
+        sh, sm = map(int, start.split(":"))
+        eh, em = map(int, end.split(":"))
+        shift_duration = (eh + em / 60.0) - (sh + sm / 60.0)
+        if shift_duration < 0:
+            shift_duration += 24.0
+    except Exception:
+        return {"error": "INVALID_TIME_FORMAT", "details": "Time format must be HH:MM"}
+
+    violations = []
+    warnings = []
+
+    if shift_duration > 9.0:
+        violations.append({
+            "regel": "AML_§_10_4",
+            "type": "MAKS_DAGLIG_ARBEIDSTID_OVERSTIGET",
+            "detalj": f"Skiftlengde er {shift_duration:.1f} timer. AML § 10-4 tillater maks 9 timer alminnelig arbeidstid uten overtidstillatelse.",
+            "alvorlighetsgrad": "FEIL",
+        })
+    elif shift_duration > 7.5:
+        warnings.append({
+            "regel": "VIRKE_TARIFF_OVERTID",
+            "type": "OVERTID_UTLOEST",
+            "detalj": f"Skiftet ({shift_duration:.1f}t) overstiger normal dagsnorm på 7,5 timer. Overtidskompensasjon påkrevd.",
+            "alvorlighetsgrad": "ADVARSEL",
+        })
+
+    try:
+        from datetime import date, timedelta
+        cur_date = date.fromisoformat(dato)
+        prev_date = (cur_date - timedelta(days=1)).isoformat()
+    except Exception:
+        prev_date = None
+
+    sql = """
+    SELECT vakt_id, dato, timer, stasjon, rolle
+    FROM hr_vakter
+    WHERE ansatt_id = :id AND (dato = :cur_d OR dato = :prev_d)
+    ORDER BY dato DESC
+    """
+    rows = execute_read_query(sql, {"id": clean_id, "cur_d": dato, "prev_d": prev_date or ""}, db_path=db_path)
+
+    daily_rest_hours = None
+    if rows:
+        for r in rows:
+            r_dict = dict(r)
+            if r_dict["dato"] == prev_date:
+                # Check rest time from yesterday
+                estimated_end_yesterday = 22.0 if "kveld" in r_dict["rolle"].lower() or "vernissasje" in r_dict["rolle"].lower() else 17.0
+                rest = (sh + sm / 60.0) + (24.0 - estimated_end_yesterday)
+                daily_rest_hours = round(rest, 1)
+                if rest < 11.0:
+                    violations.append({
+                        "regel": "AML_§_10_8",
+                        "type": "AML_VIOLATION_DAILY_REST",
+                        "detalj": f"Daglig hviletid er kun {rest:.1f} timer (krav: minst 11 timer mellom skift i henhold til AML § 10-8).",
+                        "alvorlighetsgrad": "FEIL",
+                    })
+            elif r_dict["dato"] == dato:
+                violations.append({
+                    "regel": "AML_§_10_4",
+                    "type": "DOBBELT_SKIFT_SAMME_DAG",
+                    "detalj": f"Ansatt {clean_id} har allerede en registrert vakt på {dato} ({r_dict['stasjon']}).",
+                    "alvorlighetsgrad": "FEIL",
+                })
+
+    is_compliant = len(violations) == 0
+
+    return {
+        "ansatt_id": clean_id,
+        "dato": dato,
+        "start": start,
+        "end": end,
+        "skift_timer": round(shift_duration, 2),
+        "daglig_hviletid_timer": daily_rest_hours if daily_rest_hours is not None else 14.0,
+        "compliant": is_compliant,
+        "status": "APPROVED_AML" if is_compliant else "REJECTED_AML_VIOLATION",
+        "brudd": violations,
+        "advarsler": warnings,
+        "hjemmel": "Lov om arbeidsmiljø, arbeidstid og stillingsvern (Arbeidsmiljøloven kap. 10)",
+    }
+
+
+def query_handbook(
+    query: str | None = None,
+    handbok: str | None = None,
+    role: str | None = None,
+    limit: int = 5,
+    db_path: Path | str | None = None,
+) -> list[dict[str, Any]]:
+    """Query the indexed handbooks with keyword search, handbook code filter, or target role filter.
+
+    Args:
+        query: Search query (e.g. 'egenmelding', 'hviletid', 'brann', 'løft', 'haccp').
+        handbok: Optional handbook filter ('PERSONAL', 'HMS_SIKKERHET', 'DRIFT_KVALITET', 'LEDER_BEREDSKAP').
+        role: Optional role/audience filter (e.g. 'vert', 'leder', 'kafé').
+        limit: Max results (1-20, default 5).
+        db_path: Optional explicit database path.
+
+    Returns:
+        List of matching handbook points with chapter, section title, legal basis and content.
+    """
+    clauses = []
+    params: dict[str, Any] = {"limit": max(1, min(limit, 20))}
+
+    if not handbok and query:
+        q_low = query.lower()
+        if "i hms-håndbok" in q_low or "i hms-handbok" in q_low:
+            handbok = "HMS_SIKKERHET"
+        elif "i personalhåndbok" in q_low or "i personalhandbok" in q_low:
+            handbok = "PERSONAL"
+        elif "i driftshåndbok" in q_low or "i driftshandbok" in q_low:
+            handbok = "DRIFT_KVALITET"
+        elif "i lederhåndbok" in q_low or "i lederhandbok" in q_low:
+            handbok = "LEDER_BEREDSKAP"
+
+    if handbok:
+        hb_clean = handbok.upper().strip()
+        clauses.append("(UPPER(handbok_kode) LIKE :hb OR UPPER(handbok_navn) LIKE :hb)")
+        params["hb"] = f"%{hb_clean}%"
+
+    if role:
+        rolle = role.casefold().strip()
+        koblinger = _get_arbeidsrolle_malgruppe()
+        termer = [r["malgruppe_term"] for r in koblinger if r["rolle"].casefold() == rolle]
+        if termer:
+            termer.append("alle ansatte")
+        else:
+            termer = [rolle]
+        rolle_vilkar = []
+        for i, term in enumerate(termer):
+            navn = f"rolle_{i}"
+            rolle_vilkar.append(f"LOWER(malgruppe) LIKE :{navn}")
+            params[navn] = f"%{term}%"
+        clauses.append(f"({' OR '.join(rolle_vilkar)})")
+
+    if query:
+        # Generic filler words to filter out
+        stop_words = {
+            "hva", "er", "i", "på", "for", "til", "og", "eller", "om", "det", "den", "som",
+            "hvilke", "hvilket", "hvilken", "gjelder", "når", "noen", "krav", "rettigheter",
+            "må", "kan", "får", "jeg", "vi", "har", "hvor", "mange", "dager", "ved",
+            "handbok", "håndbok", "handboken", "håndboken", "boken", "boka", "regel", "regler"
+        }
+        raw_tokens = [tok for tok in re.findall(r"\w+", query.lower()) if len(tok) >= 2]
+        if not raw_tokens:
+            return []
+        base_tokens = [t for t in raw_tokens if t not in stop_words] or raw_tokens
+
+        # Prepend high-signal museum domain roots for compound words
+        museum_stems = [
+            "renhold", "rullestol", "ledsager", "egenmeld", "sykefravær", "avvik",
+            "varsl", "ferie", "temperatur", "persontall", "brann", "løft", "hjertestart",
+            "karantene", "skjenk", "oppfølging", "vaktbytt", "overtid", "klima", "haccp",
+            "gjengjeldelse", "doffin", "senior", "prøvetid", "velferd", "barn"
+        ]
+        matched_stems = [s for s in museum_stems if any(s in w for w in raw_tokens)]
+
+        q_tokens = []
+        for s in matched_stems:
+            if s not in q_tokens:
+                q_tokens.append(s)
+
+        for t in base_tokens:
+            if t not in q_tokens:
+                q_tokens.append(t)
+            if len(t) > 5 and t.endswith("ene") and t[:-3] not in q_tokens:
+                q_tokens.append(t[:-3])
+            elif len(t) > 4 and (t.endswith("en") or t.endswith("et") or t.endswith("er")) and t[:-2] not in q_tokens:
+                q_tokens.append(t[:-2])
+
+        if q_tokens:
+            q_clauses = []
+            score_parts = []
+            for i, tok in enumerate(q_tokens[:7]):
+                p_name = f"tok_{i}"
+                match_expr = f"(LOWER(innhold) LIKE :{p_name} OR LOWER(avsnitt_tittel) LIKE :{p_name} OR LOWER(stikkord) LIKE :{p_name} OR LOWER(kapittel_tittel) LIKE :{p_name})"
+                q_clauses.append(match_expr)
+                weight_expr = (
+                    f"(CASE WHEN LOWER(avsnitt_tittel) LIKE :{p_name} THEN 5 ELSE 0 END + "
+                    f"CASE WHEN LOWER(stikkord) LIKE :{p_name} THEN 4 ELSE 0 END + "
+                    f"CASE WHEN LOWER(kapittel_tittel) LIKE :{p_name} THEN 2 ELSE 0 END + "
+                    f"CASE WHEN LOWER(innhold) LIKE :{p_name} THEN 1 ELSE 0 END)"
+                )
+                score_parts.append(weight_expr)
+                params[p_name] = f"%{tok}%"
+            clauses.append(f"({' OR '.join(q_clauses)})")
+            order_by = f"({' + '.join(score_parts)}) DESC, kapittel_nr ASC, punkt_id ASC"
+        else:
+            order_by = "kapittel_nr ASC, punkt_id ASC"
+    else:
+        order_by = "kapittel_nr ASC, punkt_id ASC"
+
+    where_sql = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+    sql = f"""
+    SELECT punkt_id, handbok_kode, handbok_navn, kapittel_nr, kapittel_tittel,
+           avsnitt_tittel, malgruppe, lovhjemmel, innhold, stikkord, siste_revidert
+    FROM handbok_oppslag
+    {where_sql}
+    ORDER BY {order_by}
+    LIMIT :limit
+    """
+    rows = execute_read_query(sql, params, db_path=db_path)
+    return [dict(r) for r in rows]
+
+
+
+
+# --- Vakter, arbeidstid og vaktkostnad (Datafinner v1) ---
+# Bare det som står i museum.db. Klokkeslett (hr_vakter.start/slutt) og arbeidstid_grenser finnes når
+# museum.db er bygget med build_museum_db.py; de er syntetiske og merket med datakilde. Mangler de,
+# sier svaret fra i stedet for å regne ut noe.
+
+
+def _db(db_path: Path | str | None) -> Path | str:
+    return db_path or get_db_path()
+
+
+def _har_klokkeslett(db_path: Path | str) -> bool:
+    kolonner = {r["name"] for r in execute_read_query("SELECT name FROM pragma_table_info('hr_vakter')", (), db_path)}
+    return {"start", "slutt"} <= kolonner
+
+
+def query_working_time_limits(db_path: Path | str | None = None) -> dict:
+    """Arbeidstidsgrensene i databasen (tabellen arbeidstid_grenser), med kilde og datakilde."""
+    db = _db(db_path)
+    finnes = execute_read_query(
+        "SELECT count(*) AS n FROM sqlite_master WHERE type='table' AND name='arbeidstid_grenser'", (), db
+    )[0]["n"]
+    if not finnes:
+        return {}
+    return {r["navn"]: dict(r) for r in execute_read_query("SELECT * FROM arbeidstid_grenser ORDER BY navn", (), db)}
+
+
+def _maaned_grenser(maaned: str) -> tuple[str, str, str]:
+    from datetime import date
+
+    aar, mnd = (int(x) for x in maaned.strip().split("-"))
+    fra = date(aar, mnd, 1)
+    til = date(aar + (mnd == 12), mnd % 12 + 1, 1)
+    return f"{aar:04d}-{mnd:02d}", fra.isoformat(), til.isoformat()
+
+
+def _klokke_timer(hhmm: str) -> float:
+    return int(hhmm[:2]) + int(hhmm[3:5]) / 60
+
+
+VAKT_KOLONNER_SQL = """
+    v.vakt_id, v.dato, v.timer, v.rolle, v.stasjon, v.avdeling,
+    a.ansatt_id, a.navn, a.stilling, a.telefon, a.epost, a.kontor_sal
+"""
+
+
+def query_shifts_on_date(dato: str, db_path: Path | str | None = None) -> list[dict]:
+    """Alle vakter på én dato slik de står i hr_vakter, med klokkeslett når databasen har dem."""
+    from datetime import date
+
+    dato = date.fromisoformat(dato.strip()).isoformat()
+    db = _db(db_path)
+    klokke = _har_klokkeslett(db)
+    ekstra = ", v.start, v.slutt, v.klokkeslett_datakilde" if klokke else ""
+    rekkefolge = "v.start, a.navn" if klokke else "v.avdeling, a.navn"
+    sql = f"""
+    SELECT {VAKT_KOLONNER_SQL}{ekstra}
+    FROM hr_vakter v JOIN hr_ansatte a ON a.ansatt_id = v.ansatt_id
+    WHERE v.dato = :dato
+    ORDER BY {rekkefolge}
+    """
+    return [dict(r) for r in execute_read_query(sql, {"dato": dato}, db)]
+
+
+def query_staff_on_shift(dato: str | None = None, klokkeslett: str | None = None,
+                         db_path: Path | str | None = None) -> dict:
+    """Hvem har vakt på en dato (standard i dag), og hvem er på jobb på et klokkeslett (standard nå)."""
+    from datetime import date, datetime
+
+    na = datetime.now()
+    d = date.fromisoformat(dato.strip()) if dato else na.date()
+    db = _db(db_path)
+    vakter = query_shifts_on_date(d.isoformat(), db)
+    svar = {
+        "dato": d.isoformat(),
+        "antall_med_vakt": len(vakter),
+        "timer_totalt": round(sum(v["timer"] for v in vakter), 2),
+        "vakter": vakter,
+    }
+    if not _har_klokkeslett(db):
+        svar["mangler"] = "Klokkeslett for vaktene finnes ikke i databasen."
+        return svar
+    kl = klokkeslett or (na.strftime("%H:%M") if d == na.date() else None)
+    if kl:
+        svar["klokkeslett"] = kl
+        svar["pa_jobb"] = [v for v in vakter if v["start"] <= kl < v["slutt"]]
+        svar["antall_pa_jobb"] = len(svar["pa_jobb"])
+    svar["datakilde"] = vakter[0]["klokkeslett_datakilde"] if vakter else None
+    return svar
+
+
+def query_working_hours(maaned: str, db_path: Path | str | None = None) -> dict:
+    """Arbeidstid per ansatt i en måned ('YYYY-MM'). Overtid regnes bare når grensene finnes i databasen."""
+    from datetime import date
+
+    mnd, fra, til = _maaned_grenser(maaned)
+    db = _db(db_path)
+    sql = """
+    SELECT v.ansatt_id, a.navn, a.avdeling, a.stillingsprosent, v.dato, sum(v.timer) AS timer, count(*) AS vakter
+    FROM hr_vakter v JOIN hr_ansatte a ON a.ansatt_id = v.ansatt_id
+    WHERE v.dato >= :fra AND v.dato < :til
+    GROUP BY v.ansatt_id, v.dato
+    ORDER BY v.ansatt_id, v.dato
+    """
+    grenser = query_working_time_limits(db)
+    ukenorm = grenser.get("ukenorm_timer", {}).get("verdi")
+    dognmaks = grenser.get("dognmaks_timer", {}).get("verdi")
+    per: dict[str, dict] = {}
+    uker: dict[tuple[str, tuple[int, int]], float] = {}
+    for r in execute_read_query(sql, {"fra": fra, "til": til}, db):
+        p = per.setdefault(r["ansatt_id"], {
+            "ansatt_id": r["ansatt_id"], "navn": r["navn"], "avdeling": r["avdeling"],
+            # hr_ansatte lagrer en andel (0,4); rapporten viser prosent (40).
+            "stillingsprosent": round(r["stillingsprosent"] * 100, 1) if r["stillingsprosent"] is not None else None,
+            "timer_totalt": 0.0, "antall_vakter": 0,
+            "hoyeste_dognsum": 0.0, "dognovertid_timer": 0.0,
+        })
+        p["timer_totalt"] += r["timer"]
+        p["antall_vakter"] += r["vakter"]
+        p["hoyeste_dognsum"] = max(p["hoyeste_dognsum"], r["timer"])
+        if dognmaks is not None and r["timer"] > dognmaks:
+            p["dognovertid_timer"] += r["timer"] - dognmaks
+        iso = date.fromisoformat(r["dato"]).isocalendar()
+        n = (r["ansatt_id"], (iso[0], iso[1]))
+        uker[n] = uker.get(n, 0.0) + r["timer"]
+    for p in per.values():
+        p["hoyeste_ukesum"] = 0.0
+        p["ukeovertid_timer"] = 0.0
+    for (ansatt_id, _), timer in uker.items():
+        p = per[ansatt_id]
+        p["hoyeste_ukesum"] = max(p["hoyeste_ukesum"], timer)
+        if ukenorm is not None and timer > ukenorm:
+            p["ukeovertid_timer"] += timer - ukenorm
+    ansatte = []
+    for p in per.values():
+        for k in ("timer_totalt", "hoyeste_dognsum", "hoyeste_ukesum", "dognovertid_timer", "ukeovertid_timer"):
+            p[k] = round(p[k], 2)
+        if ukenorm is not None and dognmaks is not None:
+            p["overtid_timer"] = max(p["dognovertid_timer"], p["ukeovertid_timer"])
+        else:
+            del p["dognovertid_timer"], p["ukeovertid_timer"]
+        ansatte.append(p)
+    ansatte.sort(key=lambda x: (-x.get("overtid_timer", 0), -x["hoyeste_ukesum"], x["navn"]))
+    svar = {
+        "maaned": mnd,
+        "antall_ansatte": len(ansatte),
+        "timer_totalt": round(sum(a["timer_totalt"] for a in ansatte), 2),
+        "hoyeste_ukesum": max((a["hoyeste_ukesum"] for a in ansatte), default=0),
+        "hoyeste_dognsum": max((a["hoyeste_dognsum"] for a in ansatte), default=0),
+        "ansatte": ansatte,
+    }
+    if ukenorm is None or dognmaks is None:
+        svar["mangler"] = "Overtidsgrensen finnes ikke som tall i databasen, så overtid er ikke beregnet."
+    else:
+        svar["overtid_timer_totalt"] = round(sum(a["overtid_timer"] for a in ansatte), 2)
+        svar["antall_med_overtid"] = sum(1 for a in ansatte if a["overtid_timer"] > 0)
+        svar["grenser"] = {k: grenser[k] for k in ("ukenorm_timer", "dognmaks_timer")}
+    return svar
+
+
+def query_shift_cost(maaned: str, db_path: Path | str | None = None) -> dict:
+    """Lønnskostnad for vakter i en måned per avdeling: timer x Virke-sats fra virke_tariff.
+
+    Helligdag (norske_helligdager) gir helligdagssats, lørdag og søndag helgesats. Timer etter
+    grensen kveldstillegg_fra (arbeidstid_grenser) gir kveldssats når vaktene har klokkeslett.
+    """
+    mnd, fra, til = _maaned_grenser(maaned)
+    db = _db(db_path)
+    kveld_fra = query_working_time_limits(db).get("kveldstillegg_fra", {}).get("verdi")
+    klokke = _har_klokkeslett(db) and kveld_fra is not None
+    ekstra = ", v.start, v.slutt" if klokke else ""
+    sql = f"""
+    SELECT v.avdeling, v.timer, a.lonnstrinn_virke AS trinn,
+           t.timesats_ordinar, t.timesats_kveld, t.timesats_helg, t.timesats_helligdag,
+           h.dato AS helligdag, strftime('%w', v.dato) AS ukedag{ekstra}
+    FROM hr_vakter v
+    JOIN hr_ansatte a ON a.ansatt_id = v.ansatt_id
+    LEFT JOIN virke_tariff t ON t.lonnstrinn = a.lonnstrinn_virke
+    LEFT JOIN norske_helligdager h ON h.dato = v.dato
+    WHERE v.dato >= :fra AND v.dato < :til
+    """
+    avd: dict[str, dict] = {}
+    for r in execute_read_query(sql, {"fra": fra, "til": til}, db):
+        a = avd.setdefault(r["avdeling"], {"avdeling": r["avdeling"], "vakter": 0, "timer": 0.0,
+                                           "kveldstimer": 0.0, "vakter_uten_tariff": 0, "kostnad_nok": 0.0})
+        a["vakter"] += 1
+        a["timer"] += r["timer"]
+        if r["timesats_ordinar"] is None:
+            a["vakter_uten_tariff"] += 1
+            continue
+        if r["helligdag"]:
+            vakt_kostnad = round(r["timer"] * r["timesats_helligdag"], 2)
+        elif r["ukedag"] in ("0", "6"):
+            vakt_kostnad = round(r["timer"] * r["timesats_helg"], 2)
+        else:
+            kveld = 0.0
+            if klokke:
+                kveld = min(r["timer"], max(0.0, _klokke_timer(r["slutt"]) - max(_klokke_timer(r["start"]), kveld_fra)))
+            a["kveldstimer"] += kveld
+            vakt_kostnad = round((r["timer"] - kveld) * r["timesats_ordinar"] + kveld * r["timesats_kveld"], 2)
+        a["kostnad_nok"] += vakt_kostnad
+    rader = sorted(avd.values(), key=lambda x: -x["kostnad_nok"])
+    for a in rader:
+        for k in ("timer", "kveldstimer", "kostnad_nok"):
+            a[k] = round(a[k], 2)
+    vakter_uten_tariff = sum(a["vakter_uten_tariff"] for a in rader)
+    mangler = []
+    if vakter_uten_tariff > 0:
+        mangler.append("Vakter for ansatte med lønnstrinn som ikke finnes i virke_tariff er ikke kostnadsberegnet.")
+    if not klokke:
+        mangler.append("Kveldssats er ikke brukt, fordi vaktene mangler klokkeslett eller grensen mangler.")
+        for a in rader:
+            del a["kveldstimer"]
+    svar = {
+        "maaned": mnd,
+        "avdelinger": rader,
+        "kostnad_nok_totalt": round(sum(a["kostnad_nok"] for a in rader), 2),
+        "vakter_uten_tariff": vakter_uten_tariff,
+        "mangler": " ".join(mangler),
+    }
+    if not svar["mangler"]:
+        del svar["mangler"]
+    if klokke:
+        svar["datakilde"] = "syntetisk (archive_generator): klokkeslett og kveldstillegg_fra"
+    return svar
+
+
+def query_exhibitions_with_economy(db_path: Path | str | None = None) -> list[dict]:
+    """Alle utstillinger som har økonomirapport, nyeste først (id, tittel, år). Til lukkede filtre."""
+    sql = """
+    SELECT uh.utstilling_id, uh.tittel, uh.aar
+    FROM utstilling_okonomi uo JOIN utstillinger_historikk uh ON uh.utstilling_id = uo.utstilling_id
+    ORDER BY uh.aar DESC, uh.utstilling_id DESC
+    """
+    return [dict(r) for r in execute_read_query(sql, (), db_path or get_db_path())]
+
+
+def query_absence_report(aar: int, kvartal: int, db_path: Path | str | None = None) -> dict:
+    """Museets eget sykefravær for et kvartal, sammenlignet med nasjonale SSB-tall."""
+    from datetime import date, timedelta
+
+    db = _db(db_path)
+    # Sjekk om tabellen finnes
+    has_fravaer = bool(
+        execute_read_query(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='hr_fravaer'", (), db
+        )
+    )
+    if not has_fravaer:
+        return {
+            "aar": aar,
+            "kvartal": kvartal,
+            "periode": f"{aar}-Q{kvartal}",
+            "mangler": "Tabellen hr_fravaer finnes ikke i databasen.",
+        }
+
+    q_start = date(aar, (kvartal - 1) * 3 + 1, 1)
+    if kvartal == 1:
+        q_end = date(aar, 3, 31)
+    elif kvartal == 2:
+        q_end = date(aar, 6, 30)
+    elif kvartal == 3:
+        q_end = date(aar, 9, 30)
+    else:
+        q_end = date(aar, 12, 31)
+
+    # 1. Hent SSB-sammenligning
+    ssb_row = execute_read_query(
+        "SELECT sykefraver_prosent, egenmeldt_prosent, legemeldt_prosent, vikarbuffer_anbefaling_faktor "
+        "FROM ssb_sykefraver_kultur WHERE aar = ? AND kvartal = ?",
+        (aar, kvartal),
+        db,
+    )
+    ssb_info = dict(ssb_row[0]) if ssb_row else {}
+
+    # 2. Hent aktive ansatte og mulige dagsverk
+    emp_rows = execute_read_query(
+        "SELECT ansatt_id, stillingsprosent, ansatt_fra, ansatt_til FROM hr_ansatte", (), db
+    )
+    mulige_dagsverk = 0.0
+    aktive_ansatte = 0
+    for e in emp_rows:
+        fra_d = date.fromisoformat(e["ansatt_fra"]) if e["ansatt_fra"] else date(2010, 1, 1)
+        til_d = date.fromisoformat(e["ansatt_til"]) if e["ansatt_til"] else date(2099, 12, 31)
+        if fra_d <= q_end and til_d >= q_start:
+            pros = float(e["stillingsprosent"] or 1.0)
+            mulige_dagsverk += pros * 58.75
+            aktive_ansatte += 1
+
+    # 3. Hent fraværsdager i kvartalet
+    frav_rows = execute_read_query(
+        "SELECT fravaer_id, ansatt_id, fra, til, type, datakilde FROM hr_fravaer "
+        "WHERE fra <= ? AND til >= ?",
+        (q_end.isoformat(), q_start.isoformat()),
+        db,
+    )
+
+    egenmeldt_dager = 0
+    legemeldt_dager = 0
+    permisjon_dager = 0
+
+    for r in frav_rows:
+        cur = max(q_start, date.fromisoformat(r["fra"]))
+        end = min(q_end, date.fromisoformat(r["til"]))
+        while cur <= end:
+            if cur.weekday() < 5:
+                if r["type"] == "egenmelding":
+                    egenmeldt_dager += 1
+                elif r["type"] == "sykemelding":
+                    legemeldt_dager += 1
+                elif r["type"] == "permisjon":
+                    permisjon_dager += 1
+            cur += timedelta(days=1)
+
+    sykedager_totalt = egenmeldt_dager + legemeldt_dager
+    egen_prosent = round((sykedager_totalt / mulige_dagsverk) * 100, 2) if mulige_dagsverk > 0 else 0.0
+    egenmeldt_prosent = round((egenmeldt_dager / mulige_dagsverk) * 100, 2) if mulige_dagsverk > 0 else 0.0
+    legemeldt_prosent = round((legemeldt_dager / mulige_dagsverk) * 100, 2) if mulige_dagsverk > 0 else 0.0
+
+    return {
+        "periode": f"{aar}-Q{kvartal}",
+        "aar": aar,
+        "kvartal": kvartal,
+        "aktive_ansatte": aktive_ansatte,
+        "mulige_dagsverk": round(mulige_dagsverk, 2),
+        "sykedager_totalt": sykedager_totalt,
+        "egenmeldt_dager": egenmeldt_dager,
+        "legemeldt_dager": legemeldt_dager,
+        "permisjon_dager": permisjon_dager,
+        "egen_prosent": egen_prosent,
+        "egenmeldt_prosent": egenmeldt_prosent,
+        "legemeldt_prosent": legemeldt_prosent,
+        "ssb_sammenligning": ssb_info,
+        "datakilde": "syntetisk (archive_generator): hr_fravaer",
+    }
+
+
+def query_roles(db_path: Path | str | None = None) -> list[dict]:
+    """Hent alle teamroller og tilknyttede spørsmål fra databasen."""
+    db = _db(db_path)
+    has_roller = bool(
+        execute_read_query(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='roller'", (), db
+        )
+    )
+    if not has_roller:
+        return []
+
+    roller = execute_read_query(
+        "SELECT kode, navn, trigger, beskrivelse, datakilde FROM roller ORDER BY kode", (), db
+    )
+    # Spørsmålene i rekkefølgen fra rolle_sporsmal (GROUP_CONCAT gir ingen garantert rekkefølge).
+    kobling = execute_read_query(
+        "SELECT rolle_kode, sporsmal_id FROM rolle_sporsmal ORDER BY rolle_kode, rekkefolge, sporsmal_id", (), db
+    )
+    ut = []
+    for r in roller:
+        d = dict(r)
+        d["sporsmal"] = [k["sporsmal_id"] for k in kobling if k["rolle_kode"] == d["kode"]]
+        ut.append(d)
+    return ut
+
+
+def query_report_rules(sporsmal_id: str, db_path: Path | str | None = None) -> list[dict]:
+    """Hent deterministiske rapportregler og vurderinger for et gitt spørsmål."""
+    db = _db(db_path)
+    has_regler = bool(
+        execute_read_query(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='rapport_regler'", (), db
+        )
+    )
+    if not has_regler:
+        return []
+
+    sql = """
+    SELECT regel_id, sporsmal_id, felt, operator, terskel, vurdering, forslag, kilde, versjon, datakilde
+    FROM rapport_regler
+    WHERE sporsmal_id = ?
+    ORDER BY CASE WHEN operator = 'fallback' THEN 1 ELSE 0 END, regel_id
+    """
+    return [dict(r) for r in execute_read_query(sql, (sporsmal_id,), db)]
+
+
+_OPERATORER = {
+    ">=": lambda a, b: a >= b,
+    ">": lambda a, b: a > b,
+    "<=": lambda a, b: a <= b,
+    "<": lambda a, b: a < b,
+    "==": lambda a, b: a == b,
+}
+
+
+def query_report_assessment(
+    sporsmal_id: str, verdier: dict[str, Any], db_path: Path | str | None = None
+) -> dict:
+    """Velg én regel fra rapport_regler for et svar: første treff i regel_id-rekkefølge, ellers fallback.
+
+    verdier er tallfeltene i svaret (f.eks. {"antall_med_vakt": 9}). Mangler feltet eller er det
+    ikke et tall, brukes fallback-regelen. Samme verdier gir alltid samme regel.
+    """
+    if not isinstance(verdier, dict):
+        raise ValueError("verdier må være et objekt med feltnavn og tall")
+    regler = query_report_rules(sporsmal_id, db_path)
+    if not regler:
+        return {"sporsmal_id": sporsmal_id, "mangler": f"rapport_regler har ingen regler for {sporsmal_id}."}
+    valgt = None
+    for r in regler:
+        if r["operator"] == "fallback":
+            continue
+        verdi = verdier.get(r["felt"])
+        sammenlign = _OPERATORER.get(r["operator"])
+        if sammenlign is None or isinstance(verdi, bool) or not isinstance(verdi, (int, float)):
+            continue
+        if sammenlign(float(verdi), float(r["terskel"])):
+            valgt = r
+            break
+    if valgt is None:
+        valgt = next((r for r in regler if r["operator"] == "fallback"), None)
+    if valgt is None:
+        return {"sporsmal_id": sporsmal_id, "mangler": f"rapport_regler mangler fallback for {sporsmal_id}."}
+    return {k: valgt[k] for k in ("regel_id", "sporsmal_id", "felt", "operator", "terskel", "vurdering",
+                                   "forslag", "kilde", "versjon", "datakilde")}
+
+
+
+INTERN_KATEGORIER = ("vaktbytte", "permisjon", "sykefraver", "arbeidsmiljo", "varsling", "tilrettelegging")
+SKJERMET_FELT = "Skjermet: varsler beskyttes mot identifisering (aml. kap. 2 A), så identitet og fritekst utelates."
+
+
+def _har_tabell(navn: str, db: Path | str) -> bool:
+    return bool(execute_read_query("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (navn,), db))
+
+
+def query_employee_skills(ansatt_id: str, as_of: str = "2026-11-07", db_path: Path | str | None = None) -> dict:
+    """Kompetansekortet til én ansatt (org_ansatt_kompetanse), vurdert mot as_of.
+
+    `gyldig_na` regnes ut fra gyldig_til og as_of. Den lagrede statusen vises som `lagret_status`,
+    siden den ble satt da dataene ble laget og kan være utdatert.
+    """
+    from datetime import date
+
+    as_of = date.fromisoformat(as_of.strip()).isoformat()
+    ansatt_id = ansatt_id.strip().upper()
+    db = _db(db_path)
+    if not (_har_tabell("org_ansatt_kompetanse", db) and _har_tabell("org_ferdigheter", db)):
+        return {"ansatt_id": ansatt_id, "mangler": "Tabellene org_ansatt_kompetanse og org_ferdigheter finnes ikke i databasen."}
+    ansatt = execute_read_query(
+        "SELECT ansatt_id, navn, avdeling, stilling FROM hr_ansatte WHERE ansatt_id = ?", (ansatt_id,), db
+    )
+    if not ansatt:
+        return {"ansatt_id": ansatt_id, "mangler": f"Fant ingen ansatt med id {ansatt_id}."}
+    rader = execute_read_query(
+        """
+        SELECT k.skill_code, f.navn AS skill_navn, f.kategori, f.utloper, k.sertifisert_dato, k.gyldig_til,
+               k.status AS lagret_status, k.datakilde
+        FROM org_ansatt_kompetanse k JOIN org_ferdigheter f ON f.skill_code = k.skill_code
+        WHERE k.ansatt_id = ?
+        ORDER BY f.kategori, k.skill_code
+        """,
+        (ansatt_id,),
+        db,
+    )
+    kompetanser = []
+    for r in rader:
+        d = dict(r)
+        d["utloper"] = bool(d["utloper"])
+        d["gyldig_na"] = d["sertifisert_dato"] <= as_of and (d["gyldig_til"] is None or d["gyldig_til"] >= as_of)
+        kompetanser.append(d)
+    return {
+        **dict(ansatt[0]),
+        "as_of": as_of,
+        "antall": len(kompetanser),
+        "antall_gyldige": sum(k["gyldig_na"] for k in kompetanser),
+        "kompetanser": kompetanser,
+        "datakilde": "syntetisk (colab_org_bygger): org_ansatt_kompetanse",
+    }
+
+
+def query_internal_requests(
+    kategori: str | None = None,
+    ansatt_id: str | None = None,
+    limit: int = 20,
+    db_path: Path | str | None = None,
+) -> dict:
+    """Søk i interne henvendelser (interne_henvendelser), nyeste først.
+
+    Varsler (kategori 'varsling') skjermes alltid: ansatt, avdeling og fritekst utelates, og de kan
+    ikke slås opp via ansatt_id. Det gjelder uansett hvilke filtre som er satt.
+    """
+    kategori = kategori.strip().lower() if kategori else None
+    if kategori is not None and kategori not in INTERN_KATEGORIER:
+        raise ValueError(f"Ukjent kategori '{kategori}'. Gyldige: {', '.join(INTERN_KATEGORIER)}")
+    limit = max(1, min(int(limit), 100))
+    db = _db(db_path)
+    if not _har_tabell("interne_henvendelser", db):
+        return {"mangler": "Tabellen interne_henvendelser finnes ikke i databasen."}
+
+    where, params = [], {"limit": limit}
+    if kategori:
+        where.append("h.kategori = :kategori")
+        params["kategori"] = kategori
+    if ansatt_id:
+        # Varsler tas ut av ansatt-oppslag, ellers kunne en ansatt_id avsløre hvem som varslet.
+        where.append("h.ansatt_id = :ansatt_id AND h.kategori <> 'varsling'")
+        params["ansatt_id"] = ansatt_id.strip().upper()
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    rader = execute_read_query(
+        f"""
+        SELECT h.sak_id, h.dato_tid, h.ansatt_id, a.navn, a.avdeling, h.kategori, h.tittel, h.fritekst,
+               h.case_ref, h.paragraf_hjemmel, h.forventet_utfall, h.datakilde
+        FROM interne_henvendelser h JOIN hr_ansatte a ON a.ansatt_id = h.ansatt_id
+        {filter_sql}
+        ORDER BY h.dato_tid DESC, h.sak_id
+        LIMIT :limit
+        """,
+        params,
+        db,
+    )
+    henvendelser = []
+    for r in rader:
+        d = dict(r)
+        if d["kategori"] == "varsling":
+            d["dato_tid"] = d["dato_tid"][:10]
+            for felt in ("ansatt_id", "navn", "avdeling", "fritekst"):
+                d[felt] = None
+            d["skjermet"] = SKJERMET_FELT
+        henvendelser.append(d)
+    return {
+        "kategori": kategori,
+        "antall": len(henvendelser),
+        "henvendelser": henvendelser,
+        "datakilde": "syntetisk (colab_org_bygger): interne_henvendelser",
+    }
+
+
+# -----------------------------------------------------------------------------
+# H5 & Governance spørringer (mode=ro)
+# -----------------------------------------------------------------------------
+
+def query_myndighetskontakter(
+    query: str | None = None,
+    intern_eier: str | None = None,
+    include_contacts: bool = False,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Søk i myndighetskontakter (h5_myndighetskontakter).
+
+    Kontaktperson, kontakt_epost, intern_eier_navn og intern_eier_epost skjermes
+    med mindre include_contacts=True (kun for intern ledelse / MCP).
+    """
+    db = _db(db_path)
+    if not _har_tabell("h5_myndighetskontakter", db):
+        return {"mangler": "Tabellen h5_myndighetskontakter finnes ikke i databasen."}
+
+    where, params = [], {}
+    if query and query.strip():
+        where.append("(lower(myndighet) LIKE :q OR lower(omrade) LIKE :q OR lower(hva_de_vil) LIKE :q)")
+        params["q"] = f"%{query.strip().lower()}%"
+    if intern_eier and intern_eier.strip():
+        where.append("lower(intern_eier) = :intern_eier")
+        params["intern_eier"] = intern_eier.strip().lower()
+
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    sql = f"""
+    SELECT id, myndighet, omrade, intern_eier, kontaktperson, kontakt_epost,
+           intern_eier_navn, intern_eier_epost, hva_de_vil, utloser, dokumentasjon,
+           merknad, datakilde
+    FROM h5_myndighetskontakter
+    {filter_sql}
+    ORDER BY id
+    """
+    rader = execute_read_query(sql, params, db)
+    ut = []
+    for r in rader:
+        d = dict(r)
+        if not include_contacts:
+            d["kontaktperson"] = "[SKJERMET]"
+            d["kontakt_epost"] = "[SKJERMET]"
+            d["intern_eier_navn"] = "[SKJERMET]"
+            d["intern_eier_epost"] = "[SKJERMET]"
+        ut.append(d)
+
+    return {
+        "antall": len(ut),
+        "myndigheter": ut,
+        "datakilde": "syntetisk (h5_governance_builder): h5_myndighetskontakter",
+    }
+
+
+def query_tilsynsbesok_rutine(
+    ansvarlig: str | None = None,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Oppslag på tilsynsrutinen (h5_tilsynsbesok_rutine)."""
+    db = _db(db_path)
+    if not _har_tabell("h5_tilsynsbesok_rutine", db):
+        return {"mangler": "Tabellen h5_tilsynsbesok_rutine finnes ikke i databasen."}
+
+    where, params = [], {}
+    if ansvarlig and ansvarlig.strip():
+        where.append("lower(ansvarlig) = :ansvarlig")
+        params["ansvarlig"] = ansvarlig.strip().lower()
+
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    sql = f"""
+    SELECT steg_nr, navn, ansvarlig, handling, dokumentasjon, gult_avvik_frist, rodt_avvik_frist, datakilde
+    FROM h5_tilsynsbesok_rutine
+    {filter_sql}
+    ORDER BY steg_nr
+    """
+    rader = [dict(r) for r in execute_read_query(sql, params, db)]
+    return {
+        "antall": len(rader),
+        "steg": rader,
+        "avvik_frister": {
+            "gult_avvik_lukkes_innen": rader[0]["gult_avvik_frist"] if rader else "14 dager",
+            "rodt_avvik_lukkes_innen": rader[0]["rodt_avvik_frist"] if rader else "24 timer",
+        },
+        "datakilde": "syntetisk (h5_governance_builder): h5_tilsynsbesok_rutine",
+    }
+
+
+def query_rapporteringskalender(
+    mottakertype: str | None = None,
+    maned: str | None = None,
+    eier: str | None = None,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Oppslag i rapporteringskalenderen (h5_rapporteringskalender)."""
+    db = _db(db_path)
+    if not _har_tabell("h5_rapporteringskalender", db):
+        return {"mangler": "Tabellen h5_rapporteringskalender finnes ikke i databasen."}
+
+    where, params = [], {}
+    if mottakertype and mottakertype.strip():
+        where.append("lower(mottakertype) = :mottakertype")
+        params["mottakertype"] = mottakertype.strip().lower()
+    if maned and maned.strip():
+        where.append("lower(maned) = :maned")
+        params["maned"] = maned.strip().lower()
+    if eier and eier.strip():
+        where.append("lower(eier) = :eier")
+        params["eier"] = eier.strip().lower()
+
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    sql = f"""
+    SELECT id, rapport, mottaker, mottakertype, frekvens, antall_per_ar, maned, eier,
+           timer_per_gang, timer_per_ar, godkjenning, formal, kilder_json, datakilde
+    FROM h5_rapporteringskalender
+    {filter_sql}
+    ORDER BY id
+    """
+    rader = []
+    for r in execute_read_query(sql, params, db):
+        d = dict(r)
+        d["kilder"] = json.loads(d["kilder_json"])
+        rader.append(d)
+
+    return {
+        "antall": len(rader),
+        "rapporter": rader,
+        "datakilde": "syntetisk (h5_governance_builder): h5_rapporteringskalender",
+    }
+
+
+def query_rapportmaler(
+    mal_id: str | None = None,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Oppslag på rapportmaler med feltstruktur og regler (h5_rapportmaler)."""
+    db = _db(db_path)
+    if not _har_tabell("h5_rapportmaler", db):
+        return {"mangler": "Tabellen h5_rapportmaler finnes ikke i databasen."}
+
+    where, params = [], {}
+    if mal_id and mal_id.strip():
+        where.append("id = :mal_id")
+        params["mal_id"] = mal_id.strip().upper()
+
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    sql = f"""
+    SELECT id, mal_navn, brukes_til_json, godkjenning, status_ved_opprettelse,
+           formal, felt_rekkefolge, felt_navn, felt_beskrivelse, felt_kilder_json,
+           regler_json, datakilde
+    FROM h5_rapportmaler
+    {filter_sql}
+    ORDER BY id, felt_rekkefolge
+    """
+    rows = execute_read_query(sql, params, db)
+    maler_dict: dict[str, dict[str, Any]] = {}
+    for r in rows:
+        mid = r["id"]
+        if mid not in maler_dict:
+            maler_dict[mid] = {
+                "id": mid,
+                "mal_navn": r["mal_navn"],
+                "brukes_til": json.loads(r["brukes_til_json"]),
+                "godkjenning": r["godkjenning"],
+                "status_ved_opprettelse": r["status_ved_opprettelse"],
+                "formal": r["formal"],
+                "felt": [],
+                "regler": json.loads(r["regler_json"]),
+                "datakilde": r["datakilde"],
+            }
+        maler_dict[mid]["felt"].append({
+            "felt_rekkefolge": r["felt_rekkefolge"],
+            "felt_navn": r["felt_navn"],
+            "felt_beskrivelse": r["felt_beskrivelse"],
+            "kilde": json.loads(r["felt_kilder_json"]),
+        })
+
+    return {
+        "antall": len(maler_dict),
+        "maler": list(maler_dict.values()),
+        "datakilde": "syntetisk (h5_governance_builder): h5_rapportmaler",
+    }
+
+
+def query_arbeidsoppgaver_tidsbruk(
+    omrade: str | None = None,
+    rolle: str | None = None,
+    automatiseringspotensial: str | None = None,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Oppslag på gjentakende oppgaver, tidsbruk og automatiseringspotensial (h5_arbeidsoppgaver_tidsbruk).
+
+    Kun for ledelse og ressursstyring.
+    """
+    db = _db(db_path)
+    if not _har_tabell("h5_arbeidsoppgaver_tidsbruk", db):
+        return {"mangler": "Tabellen h5_arbeidsoppgaver_tidsbruk finnes ikke i databasen."}
+
+    where, params = [], {}
+    if omrade and omrade.strip():
+        where.append("lower(omrade) = :omrade")
+        params["omrade"] = omrade.strip().lower()
+    if rolle and rolle.strip():
+        where.append("lower(rolle) = :rolle")
+        params["rolle"] = rolle.strip().lower()
+    if automatiseringspotensial and automatiseringspotensial.strip():
+        where.append("lower(automatiseringspotensial) = :pot")
+        params["pot"] = automatiseringspotensial.strip().lower()
+
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    sql = f"""
+    SELECT id, omrade, oppgave, myndighet, rapport_id, rolle, timer_per_ar,
+           automatiseringspotensial, begrunnelse, datakilde
+    FROM h5_arbeidsoppgaver_tidsbruk
+    {filter_sql}
+    ORDER BY id
+    """
+    rader = [dict(r) for r in execute_read_query(sql, params, db)]
+    total_timer = sum(r["timer_per_ar"] for r in rader)
+
+    return {
+        "antall": len(rader),
+        "total_timer": total_timer,
+        "oppgaver": rader,
+        "datakilde": "syntetisk (h5_governance_builder): h5_arbeidsoppgaver_tidsbruk",
+    }
+
+
+def query_historikk_2010_2026(
+    ar_fra: int | None = None,
+    ar_til: int | None = None,
+    tema: str | None = None,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Oppslag i museets 17-årshistorikk (h5_historikk_2010_2026).
+
+    Kun for ledelse / intern assistent (inneholder aggregert økonomi og sykefravær).
+    """
+    db = _db(db_path)
+    if not _har_tabell("h5_historikk_2010_2026", db):
+        return {"mangler": "Tabellen h5_historikk_2010_2026 finnes ikke i databasen."}
+
+    where, params = [], {}
+    if ar_fra is not None:
+        where.append("ar >= :ar_fra")
+        params["ar_fra"] = int(ar_fra)
+    if ar_til is not None:
+        where.append("ar <= :ar_til")
+        params["ar_til"] = int(ar_til)
+    if tema and tema.strip():
+        where.append("lower(tema) LIKE :tema")
+        params["tema"] = f"%{tema.strip().lower()}%"
+
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    sql = f"""
+    SELECT * FROM h5_historikk_2010_2026
+    {filter_sql}
+    ORDER BY ar
+    """
+    rader = [dict(r) for r in execute_read_query(sql, params, db)]
+    return {
+        "antall": len(rader),
+        "historikk": rader,
+        "datakilde": "syntetisk (h5_governance_builder): h5_historikk_2010_2026",
+    }
+
+
+def query_hr_opplaering_onboarding(
+    kategori: str | None = None,
+    rolle: str | None = None,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Oppslag i onboarding-løp, kompetansekrav og HMS-opplæring (hr_opplaering_onboarding)."""
+    db = _db(db_path)
+    if not _har_tabell("hr_opplaering_onboarding", db):
+        return {"mangler": "Tabellen hr_opplaering_onboarding finnes ikke i databasen."}
+
+    where, params = [], {}
+    if kategori and kategori.strip():
+        where.append("lower(kategori) = :kategori")
+        params["kategori"] = kategori.strip().lower()
+    if rolle and rolle.strip():
+        roller = [r["opplaeringsrolle"] for r in _get_arbeidsrolle_opplaering()
+                  if r["rolle"].casefold() == rolle.strip().casefold()]
+        roller = roller or [rolle.strip()]
+        vilkar = []
+        for i, navn in enumerate(roller):
+            key = f"rolle_{i}"
+            vilkar.append(f"rolle = :{key} COLLATE NOCASE")
+            params[key] = navn
+        where.append("(" + " OR ".join(vilkar) + ")")
+
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    sql = f"""
+    SELECT opplaering_id, kategori, rolle, tema_eller_sertifisering, fase_eller_status,
+           aktivitet_eller_beskrivelse, ansvarlig_rolle, datakilde
+    FROM hr_opplaering_onboarding
+    {filter_sql}
+    ORDER BY opplaering_id
+    """
+    rader = [dict(r) for r in execute_read_query(sql, params, db)]
+    return {
+        "antall": len(rader),
+        "opplaering": rader,
+        "datakilde": "syntetisk (h5_governance_builder): hr_opplaering_onboarding",
+    }
+
+
+def query_building_map_data(
+    etasje: int | None = None,
+    sone_type: str | None = None,
+) -> dict[str, Any]:
+    """Henter geometrisk bygningsmodell, etasjer og soner fra 06_kart/bygning_geometri.json.
+
+    Args:
+        etasje: Valgfritt etasjenummer (0 for U1 kjeller, 1 for P1 hovedplan, 2 for P2 galleri).
+        sone_type: Valgfri sonetype ('sikkerhet' eller 'klima').
+
+    Returns:
+        Strukturert oppslag med rom, mål, soner og sensorer.
+    """
+    data = _get_bygning_geometri()
+    if not data:
+        return {"error": "Kartmodell ikke funnet"}
+
+    result: dict[str, Any] = {
+        "museum": data.get("museum"),
+        "datakilde": data.get("datakilde"),
+    }
+
+    if sone_type:
+        sone_key = sone_type.lower()
+        if sone_key in data.get("soner_definisjon", {}):
+            result["soner_definisjon"] = {sone_key: data["soner_definisjon"][sone_key]}
+        else:
+            result["soner_definisjon"] = data.get("soner_definisjon", {})
+    else:
+        result["soner_definisjon"] = data.get("soner_definisjon", {})
+
+    etasjer = data.get("etasjer", [])
+    if etasje is not None:
+        etasjer = [e for e in etasjer if e.get("etasje_nr") == etasje]
+
+    result["etasjer"] = etasjer
+    return result

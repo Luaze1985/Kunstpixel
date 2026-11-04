@@ -33,6 +33,10 @@ try:
         get_room_artworks,
         search_events,
         search_faq,
+        search_archive_exhibitions,
+        search_contractors,
+        get_employee_cv,
+        search_hms_guidance,
     )
 except ImportError as err:
     pytest.fail(f"Could not import MCP tools from src.kunstpixel.core.mcp_server: {err}", pytrace=False)
@@ -244,3 +248,75 @@ class TestSearchFaqTool:
         assert len(results) >= 1
         combined = " ".join([r.get("svar", "") for r in results])
         assert "10:00" in combined
+
+
+class TestArchiveAndDirectorMcpTools:
+    """Verifies extended MCP tools for /direktor and /drift roles."""
+
+    def test_search_archive_exhibitions_returns_records(self):
+        exhs = search_archive_exhibitions(year_from=2020, year_to=2022)
+        assert isinstance(exhs, list)
+        assert len(exhs) >= 1
+        assert "utstilling_id" in exhs[0]
+        assert "aar" in exhs[0]
+        assert "besokstall_total" in exhs[0]
+
+    def test_search_archive_exhibitions_query_filter(self):
+        exhs = search_archive_exhibitions(query="Sal D")
+        assert isinstance(exhs, list)
+        for e in exhs:
+            assert "Sal D" in e.get("saler", "") or "Sal D" in e.get("tittel", "")
+
+    def test_search_contractors_returns_records(self):
+        contracts = search_contractors(kategori="Scenografi")
+        assert isinstance(contracts, list)
+        assert len(contracts) >= 1
+        assert "innleie_id" in contracts[0]
+        assert "leverandor" in contracts[0]
+        assert "totalbelop_nok" in contracts[0]
+        assert contracts[0]["totalbelop_nok"] > 0
+
+    def test_get_employee_cv_director(self):
+        cv = get_employee_cv("Henrik Faye-Lund")
+        assert isinstance(cv, dict)
+        assert cv.get("id") == "KP-ANS-001"
+        assert "Museumsdirektør" in cv.get("stilling", "")
+        assert "cv_detaljer" in cv
+        assert len(cv["cv_detaljer"].get("utdanning", [])) >= 1
+
+    def test_get_employee_cv_not_found(self):
+        res = get_employee_cv("Ikke Eksisterende Person")
+        assert isinstance(res, dict)
+        assert res.get("code") == "NOT_FOUND"
+
+
+class TestSearchHmsGuidanceTool:
+    """Verifies search_hms_guidance tool across 344 national guidance points."""
+
+    def test_search_hms_guidance_query(self):
+        res = search_hms_guidance(query="vernerunde", limit=3)
+        assert isinstance(res, list)
+        assert len(res) >= 1
+        assert "vernerunde" in res[0]["sporsmal"].lower() or "vernerunde" in res[0]["tema"].lower()
+        assert "id" in res[0]
+        assert "kort_svar" in res[0]
+
+    def test_search_hms_guidance_topic_filter(self):
+        res = search_hms_guidance(topic="Lederansvar", limit=5)
+        assert isinstance(res, list)
+        assert len(res) >= 1
+        for item in res:
+            assert "lederansvar" in item["tema"].lower()
+
+class TestMcpReadOnlyCompliance:
+    """Verifies that mcp_server is strictly read-only and does not expose mutating tools."""
+
+    def test_mcp_tools_are_strictly_read_only(self):
+        from src.kunstpixel.core.mcp_server import mcp
+        tool_names = [t.name for t in mcp._tool_manager.list_tools()]
+        assert "dispatch_colab_data_order" not in tool_names
+        assert "ingest_colab_dataset" not in tool_names
+        assert "verify_colab_dataset" in tool_names
+        assert "list_colab_inbox_deliveries" in tool_names
+        assert "get_building_map_data" in tool_names
+

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat</title>
+<link rel="stylesheet" href="/af.css">
+<style>
+  [hidden] { display: none !important; }
+  .ch-logg { display: grid; gap: 10px; margin: 0 0 14px; }
+  .ch-msg { border: 1px solid var(--line); border-radius: var(--radius-field); padding: 10px 12px; background: var(--panel); max-width: 52rem; }
+  .ch-msg.bruker { justify-self: end; background: transparent; }
+  .ch-hvem { font-size: .75rem; font-weight: 650; text-transform: uppercase; letter-spacing: .04em; margin: 0 0 4px; }
+  .ch-tekst { white-space: pre-wrap; margin: 0; }
+  .ch-msg details { margin-top: 6px; font-size: .8rem; }
+  .ch-msg details li { overflow-wrap: anywhere; }
+  .ch-forslag { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+</style>
+</head>
+<body class="af" style="margin:0;padding:24px 16px;background:var(--canvas)">
+<div class="af">
+  <div class="af-shell">
+    <nav class="af-sidebar" aria-label="Steg">
+      <p class="af-side-heading">Datafinner</p>
+      <ol class="af-flow-list">
+        <li><a class="af-flow-link" href="#chat" aria-current="step"><span class="af-step-dot">1</span><span>Chat</span></a></li>
+      </ol>
+      <hr class="af-side-rule">
+      <p class="af-task-hint"><a href="/">Til startsiden</a></p>
+      <p class="af-task-hint"><a href="/arbeidsflyt">Arbeidsflyter og alle verktøy</a></p>
+    </nav>
+
+    <main class="af-main">
+      <section class="af-view" id="chat">
+        <p class="af-caption">Spør med vanlige ord</p>
+        <h1 class="af-title" tabindex="-1">Chat</h1>
+        <div class="af-alert info" role="status"><strong>Øvingsdata</strong><span>Alle data er syntetiske. KI-en henter fakta med verktøyene i Datafinner. Ingen sperrer.</span></div>
+        <div class="af-alert warn" role="status" id="ki-av" hidden><strong>KI er av</strong><span id="ki-av-tekst"></span></div>
+        <div class="af-error-summary" id="feil" role="alert" hidden>
+          <h2>Feil</h2>
+          <p id="feil-tekst"></p>
+        </div>
+        <div class="ch-forslag" id="forslag"></div>
+        <div class="ch-logg" id="logg" aria-live="polite"></div>
+        <div class="af-group">
+          <label class="af-label" for="sporsmal">Spørsmål</label>
+          <textarea class="af-textarea" id="sporsmal" rows="3"></textarea>
+        </div>
+        <div class="af-actions">
+          <button class="af-btn af-btn-primary" type="button" id="send">Send</button>
+          <button class="af-btn af-btn-secondary" type="button" id="ny">Ny samtale</button>
+          <span class="af-save-status" id="status"></span>
+        </div>
+      </section>
+    </main>
+
+    <aside class="af-context" aria-label="Innstillinger">
+      <h2 class="af-context-title">Rolle</h2>
+      <div class="af-context-card">
+        <label class="af-small-label" for="rolle">Du er</label>
+        <select class="af-input" id="rolle"></select>
+      </div>
+      <h2 class="af-context-title">KI</h2>
+      <div class="af-context-card">
+        <p id="ki-status">Sjekker …</p>
+        <p>Hvert svar er merket AI-forslag. Under svaret ser du hvilke verktøy KI-en brukte.</p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function () {
+  var TEKST = {
+    forslag: [
+      "Hvem kan ta vakt i vaktrommet lørdag 7. november 2026 kl. 08–16? Ranger dem.",
+      "Hvem har hatt flest helgevakter i Sal A det siste året?",
+      "Finn innleide vektere med gyldig førstehjelp, og lag en melding til den billigste.",
+      "Hva står i personalmappen til KP-ANS-006?",
+      "Hva sier håndbøkene om brann?"
+    ],
+    kiAv: "Sett LLM_PROVIDER og LLM_MODEL (og LLM_API_KEY for ekstern modell) og start serveren på nytt."
+  };
+  var $ = function (id) { return document.getElementById(id); };
+  var historikk = [];  // [{rolle: "bruker"|"assistent", tekst}]
+  var kiPaa = false;
+
+  function el(tag, cls, tekst) { var e = document.createElement(tag); if (cls) e.className = cls; if (tekst !== undefined && tekst !== null) e.textContent = tekst; return e; }
+  function feil(m) { $("feil-tekst").textContent = m || ""; $("feil").hidden = !m; }
+
+  function visMelding(rolle, tekst, svar) {
+    var m = el("div", "ch-msg " + (rolle === "bruker" ? "bruker" : "assistent"));
+    m.appendChild(el("p", "ch-hvem", rolle === "bruker" ? "Du" : "Datafinner"));
+    m.appendChild(el("p", "ch-tekst", tekst));
+    if (svar) {
+      m.appendChild(el("span", svar.avbrutt ? "af-source system" : "af-source suggested", svar.avbrutt ? "Systemmelding" : "AI-forslag"));
+      if (svar.avkortet) m.appendChild(el("p", null, "KI-en brukte alle rundene og ble bedt om å svare med det den rakk å hente. Svaret kan være ufullstendig."));
+      var tk = svar.tallkontroll || {};
+      if (tk.ukjente_tall && tk.ukjente_tall.length) m.appendChild(el("p", null, "Sjekk tallene: " + tk.ukjente_tall.join(", ") + " står ikke i det verktøyene ga."));
+      if (tk.feil_utregning) m.appendChild(el("p", null, "Feil regnestykke: " + tk.feil_utregning.join("; ") + "."));
+      if (tk.utregnet) m.appendChild(el("p", null, "Regnet etter og stemmer: " + tk.utregnet.join("; ") + "."));
+      var d = el("details"); d.appendChild(el("summary", null, "Verktøy brukt (" + svar.verktoykall.length + ")"));
+      var ul = el("ul");
+      if (!svar.verktoykall.length) ul.appendChild(el("li", null, "Ingen. Svaret bygger ikke på data fra museum.db."));
+      svar.verktoykall.forEach(function (k) { ul.appendChild(el("li", null, k.navn + " " + JSON.stringify(k.args) + (k.ok ? "" : " (feilet)"))); });
+      d.appendChild(ul); m.appendChild(d);
+      if (svar.data_hentet && svar.data_hentet.length) {
+        var dd = el("details"); dd.open = !!svar.avbrutt;
+        dd.appendChild(el("summary", null, "Data hentet (" + svar.data_hentet.length + ")"));
+        svar.data_hentet.forEach(function (x) { dd.appendChild(el("p", null, x.navn + ": " + x.utdrag)); });
+        m.appendChild(dd);
+      }
+    }
+    $("logg").appendChild(m);
+    m.scrollIntoView({ block: "end" });
+  }
+
+  function send() {
+    var tekst = $("sporsmal").value.trim();
+    if (!tekst) return;
+    feil("");
+    if (!kiPaa) { feil("KI er av. " + TEKST.kiAv); return; }
+    historikk.push({ rolle: "bruker", tekst: tekst });
+    visMelding("bruker", tekst);
+    $("sporsmal").value = "";
+    $("send").disabled = true; $("status").textContent = "KI-en henter data …";
+    fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ meldinger: historikk, rolle: $("rolle").value }) })
+      .then(function (r) { return r.json().then(function (b) { if (!r.ok) throw new Error(b.error || "Ukjent feil"); return b; }); })
+      .then(function (s) { historikk.push({ rolle: "assistent", tekst: s.tekst }); visMelding("assistent", s.tekst, s); })
+      .catch(function (e) { historikk.pop(); feil(e.message); })
+      .then(function () { $("send").disabled = false; $("status").textContent = ""; $("sporsmal").focus(); });
+  }
+
+  $("send").addEventListener("click", send);
+  $("sporsmal").addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } });
+  $("ny").addEventListener("click", function () { historikk = []; $("logg").textContent = ""; feil(""); });
+  TEKST.forslag.forEach(function (f) {
+    var b = el("button", "af-btn af-btn-secondary", f); b.type = "button";
+    b.addEventListener("click", function () { $("sporsmal").value = f; $("sporsmal").focus(); });
+    $("forslag").appendChild(b);
+  });
+
+  var param = new URLSearchParams(location.search);
+  fetch("/api/status").then(function (r) { return r.json(); }).then(function (s) {
+    kiPaa = !!s.llm;
+    $("ki-status").textContent = kiPaa ? "På: " + s.llm_modell + "." : "Av.";
+    $("ki-av").hidden = kiPaa; $("ki-av-tekst").textContent = TEKST.kiAv;
+  }).catch(function () { $("ki-av").hidden = false; $("ki-av-tekst").textContent = TEKST.kiAv; });
+  fetch("/api/arbeidsflyt").then(function (r) { return r.json(); }).then(function (b) {
+    [...new Set((b.oppgaver || []).map(function (r) { return r.rolle; }))].forEach(function (r) { var o = el("option", null, r); o.value = r; $("rolle").appendChild(o); });
+    if (param.get("rolle")) $("rolle").value = param.get("rolle");
+  }).catch(function () {});
+})();
+</script>
+</body>
+</html>

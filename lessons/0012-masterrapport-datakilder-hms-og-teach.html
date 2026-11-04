@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Masterrapport: Datakilder som betyr noe — Fra rådata til trygg KI-drift</title>
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --surface: #ffffff;
+      --text: #1a1f36;
+      --muted: #4f566b;
+      --border: #e3e8ee;
+      --accent: #0052cc;
+      --accent-light: #f0f4ff;
+      --success: #0e6245;
+      --success-light: #e6f6ee;
+      --warning: #944000;
+      --warning-light: #fff8f0;
+      --danger: #b31d24;
+      --danger-light: #ffeef0;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: "Fira Code", monospace;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.65;
+      margin: 0;
+      padding: 2rem 1rem;
+    }
+
+    .report-container {
+      max-width: 940px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 4rem 4.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    }
+
+    .report-header {
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .report-meta {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 1rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-primary { background: var(--accent-light); color: var(--accent); }
+    .badge-success { background: var(--success-light); color: var(--success); }
+    .badge-danger { background: var(--danger-light); color: var(--danger); }
+
+    h1 { font-size: 2.3rem; margin: 0.5rem 0; color: #0a2540; line-height: 1.2; }
+    h2 { font-size: 1.6rem; margin-top: 3rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; color: #0a2540; }
+    h3 { font-size: 1.25rem; margin-top: 2rem; color: #0a2540; }
+
+    p, li { font-size: 1.05rem; color: #3c4257; }
+
+    .toc {
+      background: var(--accent-light);
+      border: 1px solid #d0e1fd;
+      border-radius: 8px;
+      padding: 1.8rem 2rem;
+      margin: 2.5rem 0;
+    }
+
+    .toc ul { margin: 0; padding-left: 1.5rem; }
+    .toc li { margin-bottom: 0.5rem; font-weight: 500; }
+    .toc a { color: var(--accent); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+
+    .callout {
+      border-radius: 6px;
+      padding: 1.3rem 1.6rem;
+      margin: 1.8rem 0;
+      font-size: 1.02rem;
+    }
+
+    .callout-info { background: #eef2fa; border-left: 4px solid var(--accent); }
+    .callout-warning { background: var(--warning-light); border-left: 4px solid var(--warning); color: #612500; }
+    .callout-success { background: var(--success-light); border-left: 4px solid var(--success); color: #084c35; }
+    .callout-danger { background: var(--danger-light); border-left: 4px solid var(--danger); color: #7a1419; }
+
+    .data-pill {
+      display: inline-block;
+      font-family: var(--font-mono);
+      background: #f1f3f5;
+      padding: 0.15rem 0.45rem;
+      border-radius: 3px;
+      font-size: 0.88em;
+      border: 1px solid #dee2e6;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.85rem 1rem;
+      text-align: left;
+    }
+
+    th { background: #f7fafc; font-weight: 600; color: #0a2540; }
+
+    pre {
+      background: #1e222d;
+      color: #e6edf3;
+      padding: 1.2rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .page-break {
+      margin: 4rem 0 2rem 0;
+      border: none;
+      border-top: 2px dashed var(--border);
+      position: relative;
+    }
+
+    .page-break::after {
+      content: "AVSNITT SKILLET";
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface);
+      padding: 0 1rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      font-weight: bold;
+    }
+
+    .framework-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+
+    .stat-badge {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="report-container">
+    
+    <!-- DOKUMENTHODE -->
+    <div class="report-header">
+      <span class="badge badge-primary">Dybderapport & Læreplan • Kunstpixel</span>
+      <h1>Datakilder som betyr noe:<br>Fra rådata, HMS og tilsyn til trygg KI-drift</h1>
+      <div class="report-meta">
+        <div><strong>Forfatter:</strong> Antigravity & Lars Erik Brekne Johnsen</div>
+        <div><strong>Status:</strong> Autoritativ kunnskapsbase</div>
+        <div><strong>Gjelder:</strong> Kunstpixel & Eksterne virksomheter</div>
+      </div>
+    </div>
+
+    <!-- INTRODUKSJON & REVISJON -->
+    <div class="callout callout-info">
+      <strong>Hensikten med dette dokumentet:</strong><br>
+      Folk i en bedrift sitter ikke hele dagen og "taster inn priser" eller "teller bilder". Det hverdagen deres <em>faktisk</em> handler om, er å **navigere i lover, tilsyn, HMS-krav, uforutsette kriser, bemanningsavvik og reelle styringsdata**. 
+      <br><br>
+      Dette dokumentet gir deg en **komplett, dyptgående 6-trinns analyse** av alle de 25+ reelle datakildene som allerede ligger bygget i Kunstpixel, og viser nøyaktig hvordan du bruker disse kildene til å demonstrere forskjellen på **amatørmessig KI (ChatGPT)** og **profesjonell KI-drift (Sannhetskilde + MCP + Regelvalidator)**.
+    </div>
+
+    <!-- INNHOLDSFORTEGNELSE -->
+    <div class="toc">
+      <h3 style="margin-top:0;">Innholdsfortegnelse i rapporten:</h3>
+      <ul>
+        <li><a href="#kap1">Kapittel 1: Fullstendig kartlegging av datakildene i Kunstpixel akkurat nå</a></li>
+        <li><a href="#kap2">Kapittel 2: HMS og internkontroll — Hva tilsynsmyndighetene krever</a></li>
+        <li><a href="#kap3">Kapittel 3: De 54 994 vaktene og kvalitetskontrollen — Avvik som koster penger</a></li>
+        <li><a href="#kap4">Kapittel 4: Fra rådata til MCP-verktøy — Hvorfor KI må ha "kontrollerte hender"</a></li>
+        <li><a href="#kap5">Kapittel 5: Den pedagogiske metoden: Hvordan `/teach` skaper varig læring</a></li>
+        <li><a href="#kap6">Kapittel 6: 5 Konkrete, dype demonstrasjoner du kan kjøre foran elever og ledere</a></li>
+      </ul>
+    </div>
+
+    <hr class="page-break" id="kap1">
+
+    <!-- KAPITTEL 1: DATAKILDER -->
+    <h2>Kapittel 1: Fullstendig kartlegging av datakildene i Kunstpixel</h2>
+    <p>
+      For å lære bort hvordan data brukes til KI i drift, må vi vite nøyaktig hva vi sitter på. Kunstpixel inneholder ikke tilfeldige leketall, men en <strong>komplett syntetisk digital tvilling</strong> av en reell norsk kulturinstitusjon.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Datakilde / Filnavn</th>
+          <th>Type & Format</th>
+          <th>Faktisk innhold & Omfang</th>
+          <th>Tilsyn / Lovhjemmel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="data-pill">05_data/governance/hms_arbeidsmiljo.yaml</span></td>
+          <td>YAML (Strukturert)</td>
+          <td>Maks 90 min stående arbeid, løftegrenser (15/40 kg), forbud mot alenearbeid etter 20:00, vernerunder.</td>
+          <td>Arbeidstilsynet / Arbeidsmiljøloven</td>
+        </tr>
+        <tr>
+          <td><span class="data-pill">05_data/governance/ik_mat_kafe.yaml</span></td>
+          <td>YAML (HACCP)</td>
+          <td>Kjølekjede (+4 °C), varmholding (+60 °C), 48t karantene ved magesyke, skylletemp oppvask (85 °C).</td>
+          <td>Mattilsynet / Næringsmiddelhygiene</td>
+        </tr>
+        <tr>
+          <td><span class="data-pill">05_data/governance/brann_sikring_kapasitet.yaml</span></td>
+          <td>YAML (Kapasitet)</td>
+          <td>Maks 250 pers i bygget. Sal A: 50, Sal D: 35. RVR-redningsprioritet: Skrik (Nivå 1, rødt merke).</td>
+          <td>Brannetaten / DSB</td>
+        </tr>
+        <tr>
+          <td><span class="data-pill">05_data/governance/kafe_meny_allergener.json</span></td>
+          <td>JSON (Matrise)</td>
+          <td>Full matrise over 14 lovpålagte allergener for alle kaféretter (gluten, melk, egg, nøtter, osv.).</td>
+          <td>Matinformasjonsforskriften</td>
+        </tr>
+        <tr>
+          <td><span class="data-pill">05_data/governance/tilsynskalender.json</span></td>
+          <td>JSON (Syklus)</td>
+          <td>Årshjul for tilsyn: Q1 Arbeidstilsynet, Q1 Brannøvelse, Q2 Skjenkekontroll, Q2 Mattilsynet, Q4 Klima.</td>
+          <td>Internkontrollforskriften § 5</td>
+        </tr>
+        <tr>
+          <td><span class="data-pill">05_data/arkiv_hr_vakt_historikk.csv</span></td>
+          <td>CSV (Tidsserie)</td>
+          <td><strong>54 994 vakter</strong> fra 2010 til 2026. Roller, timer, stasjoner og utstillingskobling.</td>
+          <td>Arbeidstidsbestemmelsene (AML kap 10)</td>
+        </tr>
+        <tr>
+          <td><span class="data-pill">05_data/arkiv_utstillinger_2010_2026.csv</span></td>
+          <td>CSV (Økonomi)</td>
+          <td><strong>102 utstillinger</strong> (17 år). Besøkstall, budsjetter, kuratorer og saler.</td>
+          <td>Kulturdirektoratet / Museumsregnskap</td>
+        </tr>
+        <tr>
+          <td><span class="data-pill">05_data/dagsbesok_2010_2026.csv</span></td>
+          <td>CSV & SQLite</td>
+          <td><strong>6 209 dager</strong>. Kalibrert mot SSB-tall: Voksne, studenter, barn, dagsinntekt, korona-krakk.</td>
+          <td>SSB Tabell 12362</td>
+        </tr>
+        <tr>
+          <td><span class="data-pill">05_data/kvalitetskontroll_hr/avvik.csv</span></td>
+          <td>CSV (Kvalitetslogg)</td>
+          <td>662 loggførte avvik (blant annet planlagte fremtidige vakter som må kvalitetssjekkes).</td>
+          <td>Internkontroll & Risikostyring</td>
+        </tr>
+        <tr>
+          <td><span class="data-pill">05_data/museum.db</span></td>
+          <td>SQLite (SSOT)</td>
+          <td>Relasjonell sannhetskilde for verk, kunstnere, saler, utstillinger, dagsbesøk og FAQ i <code>mode=ro</code>.</td>
+          <td>Systemarkitektur / Sikkerhet</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr class="page-break" id="kap2">
+
+    <!-- KAPITTEL 2: HMS OG INTERNKONTROLL -->
+    <h2>Kapittel 2: HMS og internkontroll — Hva tilsynsmyndighetene krever</h2>
+    <p>
+      Ingen bedriftsledelse frykter at en nettside har skrivefeil. Det de derimot <strong>frykter</strong>, er at Arbeidstilsynet eller Mattilsynet stenger dørene på grunn av lovbrudd, eller at en gjest får en anafylaktisk reaksjon fordi en vikar ikke visste hva som var i kaka.
+    </p>
+
+    <div class="framework-card">
+      <h3>1. IK-Mat for Museumskaféen: HACCP i praksis</h3>
+      <p>I <span class="data-pill">05_data/governance/ik_mat_kafe.yaml</span> har vi definert de kritiske styringspunktene (CCP):</p>
+      <ul>
+        <li><strong>Kjølekjedebrudd:</strong> Kjøleskap skal holde maks $+4^\circ\text{C}$. Dersom temperaturen overstiger $+8^\circ\text{C}$ i mer enn 2 timer, <em>skal maten kastes og tekniker tilkalles</em>.</li>
+        <li><strong>Varmholding:</strong> Varmretter skal holde minimum $+60^\circ\text{C}$. Mat som faller under grensen kastes umiddelbart.</li>
+        <li><strong>Norovirus-regelen (48 timers karantene):</strong> Ansatte med oppkast eller diaré har streng karantene i 48 timer etter symptomfrihet.</li>
+      </ul>
+      <p><strong>Hvorfor dette betyr noe for KI:</strong> En KI som planlegger skift kan ikke bare spørre "hvem vil jobbe på lørdag?". Den må ha regelen om 48 timers karantene hardkodet som et filter. Hvis en ansatt meldte magesyke torsdag kveld, er det <strong>ulovlig</strong> å sette personen på vakt lørdag formiddag.</p>
+    </div>
+
+    <div class="framework-card">
+      <h3>2. Fysisk arbeidsmiljø og ergonomi (Arbeidstilsynet)</h3>
+      <p>I <span class="data-pill">05_data/governance/hms_arbeidsmiljo.yaml</span> finner vi de operative HMS-reglene:</p>
+      <ul>
+        <li><strong>Ergonomi for museumsverter:</strong> Maks 90 minutter sammenhengende stående arbeid på steingulv. Påbud om rotasjon hver 2. time mellom salsoppsyn, sittende skranke og kafé.</li>
+        <li><strong>Løftegrenser:</strong> 
+          <ul>
+            <li>Under 15 kg: Én person.</li>
+            <li>15–40 kg: Obligatorisk to personer med planlagt løfteteknikk.</li>
+            <li>Over 40 kg: Strengt forbudt manuelt — krever mekanisk løftehjelpemiddel (jekketralle/traverkran).</li>
+          </ul>
+        </li>
+        <li><strong>Forbud mot alenearbeid:</strong> Alenearbeid er strengt forbudt ved store arrangementer (> 80 gjester) og etter kl. 20:00.</li>
+      </ul>
+      <p><strong>Hvorfor dette betyr noe for KI:</strong> Hvis en leder ber KI-en legge en plan for flytting av en 50 kg marmorskulptur, og KI-en foreslår "sett opp to sterke verter", har KI-en foreslått et <strong>lovbrudd</strong>. KI-en må kjenne til 40 kg-grensen og hente inn jekketralle.</p>
+    </div>
+
+    <hr class="page-break" id="kap3">
+
+    <!-- KAPITTEL 3: 54 994 VAKTER OG AVVIK -->
+    <h2>Kapittel 3: De 54 994 vaktene og kvalitetskontrollen</h2>
+    <p>
+      I <span class="data-pill">05_data/arkiv_hr_vakt_historikk.csv</span> har vi en massiv tidsserie på nesten 55 000 vakter. 
+      Men som i alle ekte virksomheter: <strong>Rådata inneholder feil og avvik!</strong>
+    </p>
+
+    <div class="callout callout-warning">
+      <strong>Funn fra vår egen lokale kvalitetskontroll (<span class="data-pill">05_data/kvalitetskontroll_hr/SAMMENDRAG.md</span>):</strong><br>
+      • Av 54 994 vakter er <strong>662 vakter merket som avvik/fremtidige vakter</strong> i <span class="data-pill">avvik.csv</span>.<br>
+      • Persondager over 24 timer er fysisk umulige.<br>
+      • Persondager over 13 timer krever dispensasjon eller kontroll etter Arbeidsmiljøloven § 10-4.<br>
+      • Rådataene mangler eksakte klokkeslett (kun timer og dato).
+    </div>
+
+    <h3>Hva skjer når en amatør-KI leser slike data?</h3>
+    <p>
+      Hvis du mater denne filen inn i en standard språkmodell og spør: <em>"Har vi overholdt hviletidsbestemmelsene i 2024?"</em>, vil modellen gjøre en av to feil:
+    </p>
+    <ol>
+      <li><strong>Den "hallusinerer godkjenning":</strong> Modellen skummer teksten, ser at de fleste jobber 7,5 timer, og svarer skråsikkert: <em>"Ja, alt er i tråd med loven."</em> Den overser de 662 avvikene.</li>
+      <li><strong>Den "dikter opp klokkeslett":</strong> Siden dataene mangler start- og sluttidspunkt (kun dato og 7,5t), hender det at modellen gjetter at folk jobbet fra 08:00 til 16:00, og konkluderer med at ingen jobbet natt.</li>
+    </ol>
+
+    <div class="callout callout-success">
+      <strong>Den profesjonelle måten (Kunstpixel):</strong><br>
+      Vi bruker en <strong>deterministisk datarenser</strong> først (<span class="data-pill">vakter_arbeidskopi.csv</span>). 
+      Her merkes rader som <code>sperret</code>, <code>manuell_kontroll</code> eller <code>ingen_funn</code>. 
+      Først <em>etter</em> at koden har klassifisert avvikene, slipper vi KI-en til for å skrive rapporten. <strong>Null gjetting, full sporbarhet.</strong>
+    </div>
+
+    <hr class="page-break" id="kap4">
+
+    <!-- KAPITTEL 4: FASTMCP OG KONTROLLERTE HENDER -->
+    <h2>Kapittel 4: Fra rådata til FastMCP — Hvorfor KI må ha "kontrollerte hender"</h2>
+    <p>
+      Dette er det viktigste skillet du må lære elevene dine: <strong>Hvordan kobler vi KI-en på disse 25 filene uten at systemet krasjer eller lekker data?</strong>
+    </p>
+
+    <div class="framework-card">
+      <h3>De 3 nivåene av datatilgang for KI:</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Nivå</th>
+            <th>Metode</th>
+            <th>Sikkerhet & Risiko</th>
+            <th>Egnethet for drift</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Nivå 1 (Uforsvarlig)</strong></td>
+            <td>Rå SQL-tilgang (LLM skriver egne SQL-spørringer)</td>
+            <td><strong>Livsfarlig:</strong> Risiko for SQL-injeksjon, sletting av data, og spørringer som henger serveren.</td>
+            <td>0 % egnet for produksjon.</td>
+          </tr>
+          <tr>
+            <td><strong>Nivå 2 (Ustabilt)</strong></td>
+            <td>Ren Vektor-RAG (Chunker og tekstsøk)</td>
+            <td><strong>Svak på logikk:</strong> Finner tekst som ligner, men feiler på telling, datoer og matematiske summer.</td>
+            <td>Kun for fritekstdokumenter.</td>
+          </tr>
+          <tr>
+            <td><strong>Nivå 3 (Kunstpixel-standarden)</strong></td>
+            <td><strong>FastMCP over stdio + Read-Only SQLite</strong></td>
+            <td><strong>Maksimal sikkerhet:</strong> Type-trygge verktøy med JSON Schema, fastlåst `mode=ro`, deterministiske filtre.</td>
+            <td><strong>100 % produksjonsklar standard.</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Slik ser arkitekturen ut i drift:</h3>
+    <pre><code>[ Bruker / Ansatt / Leder ]
+           │
+           ▼
+[ Språkmodell (LLM / Persona) ]
+           │
+           │ (1. Forstår intensjon, velger verktøy fra menyen)
+           ▼
+[ FastMCP Server (src/kunstpixel/core/mcp_server.py) ]
+           │
+           │ (2. Kjører forhåndsgodkjent, parameterisert oppslag)
+           ▼
+[ SQLite & Governance (museum.db?mode=ro, YAML, JSON) ]
+           │
+           │ (3. Returnerer eksakte, verifiserte fakta)
+           ▼
+[ FastMCP Server ]
+           │
+           │ (4. Leverer JSON-data tilbake til LLM)
+           ▼
+[ Språkmodell (Formulerer et varmt, pedagogisk svar på feilfritt norsk) ]</code></pre>
+
+    <hr class="page-break" id="kap5">
+
+    <!-- KAPITTEL 5: TEACH-METODIKKEN -->
+    <h2>Kapittel 5: Den pedagogiske metoden: Hvordan `/teach` fungerer</h2>
+    <p>
+      Når du skal lære bort dette til andre, kan du ikke bare holde et tradisjonelt foredrag. Voksne mennesker glemmer 80 % av det de hører innen to dager (illusjon om mestring / <em>fluency strength</em>). 
+      For at kunnskapen skal sitte permanent (<em>storage strength</em>), bruker vi Matt Pococks `/teach`-arkitektur.
+    </p>
+
+    <div class="framework-card">
+      <h3>De 5 byggesteinene i et profesjonelt læringsløp:</h3>
+      <ol style="line-height: 1.8;">
+        <li><strong>MISSION.md (Kompasset):</strong> Hver elev eller organisasjon må ha en tydelig formulert misjon. Hvorfor lærer de dette? Hva skal de kunne gjøre på mandag morgen som de ikke kunne på fredag?</li>
+        <li><strong>Learning Records (ADR for læring):</strong> Hver gang en elev oppdager en dyp innsikt (f.eks. <em>"Aha, RAG kan ikke telle!"</em>), skrives et læringsnotat i <span class="data-pill">learning-records/0001-...md</span>. Dette hindrer at vi lærer bort samme ting to ganger.</li>
+        <li><strong>Selvstendige leksjoner (.html):</strong> Korte, vakre, Tufte-inspirerte dokumenter som åpnes direkte i nettleseren med interaktive sjekkpunkter.</li>
+        <li><strong>Desirable Difficulty (Ønsket motstand):</strong> Elevene må tvinges til å reflektere og svare på quizer <em>før</em> de får fasiten. Det er hjernens anstrengelse for å hente frem kunnskap som bygger varig forståelse.</li>
+        <li><strong>Reference Documents (Oppslagsverk):</strong> Hurtigguider og jukselapper som eleven kan ta med seg tilbake til sin egen arbeidsplass.</li>
+      </ol>
+    </div>
+
+    <hr class="page-break" id="kap6">
+
+    <!-- KAPITTEL 6: 5 KONKRETE DEMOER -->
+    <h2>Kapittel 6: 5 Konkrete, dype demonstrasjoner du kan kjøre live</h2>
+    <p>
+      Her er de fem ferdigregisserte demonstrasjonene du kan kjøre på storskjerm foran elever, kolleger eller ledergrupper. Hver demo tar under 3 minutter og gir en umiddelbar "Aha-opplevelse":
+    </p>
+
+    <!-- DEMO 1 -->
+    <div class="framework-card" style="border-left: 5px solid var(--danger);">
+      <span class="badge badge-danger">Demo 1: Tilsynssjokket</span>
+      <h3 style="margin-top:0.5rem;">"Hvem har lov til å stå i kafeen på lørdag?"</h3>
+      <p><strong>Utfordringen:</strong> Kafeen har stort besøk i helgen. Lederen trenger 5 personer.</p>
+      <p><strong>Hva du viser:</strong></p>
+      <ol>
+        <li>Kjør evaluering av et foreslått skift i terminalen:<br>
+            <code>py -3.13 src/hr_cli.py eval E101,E102,E106</code></li>
+        <li>Vis at systemet spytter ut <strong>FAIL</strong>: Skiftet mangler 2 personer, og én av kandidatene mangler gyldig allergenkurs i henhold til <span class="data-pill">ik_mat_kafe.yaml</span>.</li>
+        <li>Vis hvordan verktøyet <code>propose_kiosk_staffing</code> henter ut de 5 optimalt kvalifiserte kandidatene som har gyldig kurs og full tilgjengelighet.</li>
+      </ol>
+      <p><strong>Hva elevene lærer:</strong> Forskjellen på å "håpe at vaktplanen er lovlig" og å ha et system som <em>garanterer at Mattilsynets og Arbeidstilsynets krav er oppfylt</em>.</p>
+    </div>
+
+    <!-- DEMO 2 -->
+    <div class="framework-card" style="border-left: 5px solid var(--accent);">
+      <span class="badge badge-primary">Demo 2: Brann og RVR-evakuering</span>
+      <h3 style="margin-top:0.5rem;">"Brannalarmen går i 2. etasje — Hva redder vi først?"</h3>
+      <p><strong>Utfordringen:</strong> Røykutvikling i Sal D. Publikum er evakuert. Brannvesenet spør etter restverdiredningsplanen (RVR).</p>
+      <p><strong>Hva du viser:</strong></p>
+      <ol>
+        <li>Slå opp i <span class="data-pill">brann_sikring_kapasitet.yaml</span> via MCP:</li>
+        <li>Vis at systemet umiddelbart returnerer prioritering <strong>Nivå 1 (Kritisk, rødt merke bak ramme)</strong>:  
+            👉 <em>Edvard Munchs "Skrik" (AURA-2026-009), henger på Sal D, vestvegg.</em></li>
+        <li>Vis at Nivå 2 (Gult merke, <em>Nøkken</em>) henger trygt i 1. etasje (Sal A).</li>
+      </ol>
+      <p><strong>Hva elevene lærer:</strong> I en krisesituasjon har ingen tid til å bla i permer. Strukturert metadata redder verdier for hundretalls millioner kroner.</p>
+    </div>
+
+    <!-- DEMO 3 -->
+    <div class="framework-card" style="border-left: 5px solid var(--warning);">
+      <span class="badge" style="background:var(--warning-light); color:var(--warning);">Demo 3: Koronakrisen og økonomistyring</span>
+      <h3 style="margin-top:0.5rem;">"Hva kostet nedstengningen oss, krone for krone?"</h3>
+      <p><strong>Utfordringen:</strong> Styret skal vurdere om museet tåler en ny krise, og ber om en analyse av tapet våren 2020.</p>
+      <p><strong>Hva du viser:</strong></p>
+      <ol>
+        <li>Kjør oppslag mot de 6 209 dagene i <span class="data-pill">dagsbesok</span>:
+            <ul>
+              <li>2019: 142 984 besøk → 8,66 mill. kr i billettinntekt.</li>
+              <li>2020: 45 847 besøk → 3,12 mill. kr i billettinntekt.</li>
+              <li>Faktisk tap: <strong>5,54 millioner kroner</strong>.</li>
+            </ul>
+        </li>
+        <li>Vis uke 12–14 (12. mars 2020): Nøyaktig 0 besøk og 0 kr i kassa.</li>
+        <li>La KI-en skrive et <strong>revisjonssikkert styrenotat</strong> på 10 sekunder basert på de nøyaktige tallene.</li>
+      </ol>
+      <p><strong>Hva elevene lærer:</strong> KI er ikke en kalkulator — KI er en <em>analytiker</em> som forvandler harde SQL-fakta til beslutningsgrunnlag for toppledelsen.</p>
+    </div>
+
+    <!-- DEMO 4 -->
+    <div class="framework-card" style="border-left: 5px solid var(--success);">
+      <span class="badge badge-success">Demo 4: Ergonomi og forbud mot alenearbeid</span>
+      <h3 style="margin-top:0.5rem;">"Hvorfor kan vi ikke spare penger på å ha én person på vakt?"</h3>
+      <p><strong>Utfordringen:</strong> En økonomisjef foreslår å kutte bemanningen på åpningskvelden for en utstilling med 150 gjester til 1 person.</p>
+      <p><strong>Hva du viser:</strong></p>
+      <ol>
+        <li>Be KI sjekke forslaget opp mot reglementet via <code>lookup_hr_hms_quality_rules(domain="HMS")</code>.</li>
+        <li>KI slår opp i <span class="data-pill">hms_arbeidsmiljo.yaml</span> og siterer ordrett:  
+            <em>"Alenearbeid er strengt forbudt ved åpningskvelder og store arrangementer over 80 gjester, samt etter kl. 20:00."</em></li>
+        <li>KI-en advarer om at forslaget bryter Internkontrollforskriften og vil føre til pålegg ved tilsyn fra Arbeidstilsynet.</li>
+      </ol>
+      <p><strong>Hva elevene lærer:</strong> KI koblet på styringsdata fungerer som en <strong>innebygd compliance-vakt</strong> som beskytter ledelsen mot ulovlige innsparinger.</p>
+    </div>
+
+    <!-- DEMO 5 -->
+    <div class="framework-card" style="border-left: 5px solid #6b778c;">
+      <span class="badge" style="background:#f4f5f7; color:#42526e;">Demo 5: Den årlige tilsynskalenderen</span>
+      <h3 style="margin-top:0.5rem;">"Hva må vi forberede til juni?"</h3>
+      <p><strong>Utfordringen:</strong> Lederen vil vite hva som kreves av internkontroll de neste to månedene.</p>
+      <p><strong>Hva du viser:</strong></p>
+      <ol>
+        <li>Kjør oppslag i <span class="data-pill">tilsynskalender.json</span> for Q2 (Juni):</li>
+        <li>Vis kravene: <em>Mattilsynet krever hovedrengjøring, mikrobiologisk vanntest og kalibrering av termometre før sommersesongen starter. Ansvarlig: Kaféleder.</em></li>
+        <li>KI-en genererer automatisk sjekklisten for kjøkkenpersonalet basert på <span class="data-pill">ik_mat_kafe.yaml</span>.</li>
+      </ol>
+      <p><strong>Hva elevene lærer:</strong> Fra fragmentert perm-arkivering til en <strong>helautomatisert, proaktiv årshjul-assistent</strong>.</p>
+    </div>
+
+    <!-- KONKLUSJON -->
+    <div class="callout callout-info" style="margin-top:3rem;">
+      <h3 style="margin-top:0;">Konklusjon for deg som skal lære bort dette:</h3>
+      <p style="font-size:1.15rem; margin-bottom:0;">
+        Når du lærer bort data og KI i drift, handler det ikke om "hvordan chatte med en PDF".<br>
+        Det handler om å vise at <strong>når en bedrifts interne lover, avvik, HMS-krav, priser og tidsserier settes i et strukturert system med MCP</strong>, slutter KI-en å være et usikkert leketøy — og blir i stedet bedriftens mest pålitelige og verdifulle styringsverktøy.
+      </p>
+    </div>
+
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 3rem 0;">
+    <p style="font-size: 0.9rem; color: var(--muted); text-align: center;">
+      Kunstpixel Masterrapport • Produsert etter <code>/teach</code>- og <code>AGENTS.md</code>-standardene.<br>
+      Alle refererte filer ligger lokalt under <code>05_data/</code> og <code>04_knowledge/</code>.
+    </p>
+  </div>
+</body>
+</html>

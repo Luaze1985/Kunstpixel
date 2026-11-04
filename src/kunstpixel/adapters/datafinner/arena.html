@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arena</title>
+<link rel="stylesheet" href="/af.css">
+<style>
+  body { margin: 0; background: #f3f6f8; padding: 24px 16px; }
+  .ar-omrade { margin: 22px 0 8px; font-size: 1rem; }
+  .ar-omrade:first-of-type { margin-top: 4px; }
+  .ar-pre { font-family: ui-monospace, Consolas, monospace; font-size: .8rem; white-space: pre-wrap; word-break: break-word; margin: 6px 0 10px; max-height: 40vh; overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-field); padding: 8px 10px; }
+  .ar-steg-hode { font-weight: 650; margin: 0 0 2px; }
+  .ar-merker { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 4px; }
+  .ar-saksnavn { font-size: 1.1rem; font-weight: 700; margin: 0 0 6px; }
+  .ar-gevinst { margin-top: 18px; }
+  #regler { table-layout: fixed; width: 100%; font-size: .78rem; }
+  #regler th:first-child { width: 3.2em; }
+  #regler td { overflow-wrap: anywhere; vertical-align: top; }
+  .ar-gevinst output { display: block; font-weight: 700; margin-top: 6px; }
+  @media (max-width: 1050px) {
+    .af-context { display: block; grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<div class="af">
+  <div class="af-shell">
+    <nav class="af-sidebar" aria-label="Steg">
+      <p class="af-side-heading">Arena</p>
+      <ol class="af-flow-list">
+        <li><a class="af-flow-link" href="#caser" id="lenke-caser" aria-current="step"><span class="af-step-dot">1</span><span>Caser</span></a></li>
+        <li><a class="af-flow-link" href="#case" id="lenke-case"><span class="af-step-dot">2</span><span>Case</span></a></li>
+        <li><a class="af-flow-link" href="#grense" id="lenke-grense"><span class="af-step-dot">!</span><span>Grensemodus</span></a></li>
+      </ol>
+      <hr class="af-side-rule">
+      <p class="af-task-hint">Kun lesing. Alle personer er syntetiske.</p>
+    </nav>
+
+    <main class="af-main">
+      <section class="af-view" id="caser">
+        <p class="af-caption">Steg 1 av 2</p>
+        <h1 class="af-title">Caser</h1>
+        <div class="af-error-summary" id="feil-liste" role="alert" hidden>
+          <h2>Feil</h2>
+          <p id="feil-liste-tekst"></p>
+        </div>
+        <div id="tavle"></div>
+      </section>
+
+      <section class="af-view" id="case" hidden>
+        <p class="af-caption" id="case-steg">Steg 2 av 2</p>
+        <h2 class="af-title">Case</h2>
+        <p class="ar-saksnavn" id="case-navn"></p>
+        <p id="case-oppdrag"></p>
+        <div class="af-error-summary" id="feil" role="alert" hidden>
+          <h2>Feil</h2>
+          <p id="feil-tekst"></p>
+        </div>
+        <div class="af-actions">
+          <button class="af-btn af-btn-primary" type="button" id="kjor">Kjør casen</button>
+          <button class="af-btn af-btn-secondary" type="button" id="tilbake">Tilbake</button>
+          <span class="af-save-status" id="status"></span>
+        </div>
+
+        <div class="af-report" id="rapport" hidden>
+          <p><span class="af-badge active">Utkast</span></p>
+          <div class="af-report-block">
+            <span class="af-report-kind">Fakta</span>
+            <div>
+              <div id="fakta"></div>
+              <span class="af-source verify">Bør verifiseres</span>
+            </div>
+          </div>
+          <div class="af-report-block">
+            <span class="af-report-kind">Vurdering</span>
+            <div>
+              <ul id="kontroll"></ul>
+              <div class="af-outcome" id="utfall">
+                <p class="af-outcome-label">Ekstern KI</p>
+                <p class="af-outcome-value" id="utfall-verdi"></p>
+                <dl id="utfall-liste"></dl>
+              </div>
+              <p><span class="af-source system">Regel og datamerke fra museum.db</span></p>
+            </div>
+          </div>
+          <div class="af-report-block">
+            <span class="af-report-kind">Forslag</span>
+            <div>
+              <p id="gdpr"></p>
+              <p id="se-etter"></p>
+              <p id="lenke"></p>
+              <span class="af-source system">Fra casefilen</span>
+            </div>
+          </div>
+          <div class="af-report-block">
+            <span class="af-report-kind">Grunnlag</span>
+            <div>
+              <p id="grunnlag"></p>
+              <span class="af-source system">04_knowledge/07_arena/caser.yaml</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ar-gevinst" id="gevinst-del" hidden>
+          <p id="gevinst-tekst"></p>
+          <div class="af-group" id="grp-andel">
+            <label class="af-label" for="andel">Andel KI tar, i prosent</label>
+            <input class="af-input" id="andel" type="number" min="0" max="100" step="5" inputmode="numeric">
+          </div>
+          <output id="spart" for="andel"></output>
+        </div>
+      </section>
+
+      <section class="af-view" id="grense" hidden>
+        <p class="af-caption">Grensemodus</p>
+        <h2 class="af-title">Grensemodus</h2>
+        <div class="af-alert error" role="note"><strong id="grense-fast">Ulovlig i dag. Kun syntetiske data. Ingenting lagres.</strong><span>Modellen får forespørselen og de syntetiske dataene casen gjelder. Ingen sperrer.</span></div>
+        <p id="grense-ki"></p>
+        <div class="af-error-summary" id="grense-feil" role="alert" hidden>
+          <h2>Feil</h2>
+          <p id="grense-feil-tekst"></p>
+        </div>
+        <div id="grense-liste"></div>
+      </section>
+    </main>
+
+    <aside class="af-context">
+      <h2 class="af-context-title">Datamerke</h2>
+      <div class="af-context-card">
+        <table class="af-table af-rules" id="regler">
+          <thead><tr><th>Regel</th><th>Merke</th><th>Utfall</th></tr></thead>
+          <tbody><tr><td>R5</td><td>Ellers</td><td>Avklar manuelt</td></tr></tbody>
+        </table>
+      </div>
+      <p><span class="af-source system">Datapolicy: fail-closed</span></p>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function () {
+  // Én kilde til regeltekst: datamerke -> utfall, og policy -> utfall. Ellers -> avklar manuelt.
+  var REGLER = {
+    versjon: "1",
+    merker: [
+      { id: "R1", merke: "syntetisk", navn: "Syntetisk", utfall: "Kan sendes til ekstern KI" },
+      { id: "R2", merke: "umerket", navn: "Mangler merking", utfall: "Behandles som ekte, bare deterministisk" },
+      { id: "R3", merke: "offentlig", navn: "Ekte, offentlig", utfall: "Ingen persondata, men bare lokal modell" },
+      { id: "R4", merke: "ekte", navn: "Ekte", utfall: "Bare lokal modell" }
+    ],
+    ellers: { id: "R5", navn: "Ellers", utfall: "Avklar manuelt" },
+    policy: { tillatt: "Tillatt", stoppet: "Stoppet", ingen: "Ingen data brukt" },
+    kontroll: { ok: "Stemmer med fasit", avvik: "Avvik, mangler: " }
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var data = null;
+  var valgt = null;
+
+  function el(tag, tekst, klasse) {
+    var e = document.createElement(tag);
+    if (tekst !== undefined && tekst !== null) e.textContent = tekst;
+    if (klasse) e.className = klasse;
+    return e;
+  }
+
+  function regelFor(merke) {
+    for (var i = 0; i < REGLER.merker.length; i++) if (REGLER.merker[i].merke === merke) return REGLER.merker[i];
+    return REGLER.ellers;
+  }
+
+  function tegnRegler() {
+    var tb = $("regler").tBodies[0];
+    tb.textContent = "";
+    REGLER.merker.concat([REGLER.ellers]).forEach(function (r) {
+      var tr = el("tr");
+      tr.appendChild(el("td", r.id));
+      tr.appendChild(el("td", r.navn));
+      tr.appendChild(el("td", r.utfall));
+      tb.appendChild(tr);
+    });
+  }
+
+  function visSteg(id) {
+    ["caser", "case", "grense"].forEach(function (s) {
+      $(s).hidden = id !== s;
+      if (id === s) $("lenke-" + s).setAttribute("aria-current", "step");
+      else $("lenke-" + s).removeAttribute("aria-current");
+    });
+    window.scrollTo(0, 0);
+  }
+
+  // Grensemodus: forespørsel, faktisk modellrespons og regel side om side. Ingenting lagres.
+  var grense = null;
+  function grenseKort(c) {
+    var kort = el("div", null, "af-report");
+    kort.appendChild(el("p", c.id + " " + c.tittel + " (" + c.case + ")", "ar-saksnavn"));
+    var blokk = function (navn, innhold, merke, klasse) {
+      var b = el("div", null, "af-report-block"), d = el("div");
+      b.appendChild(el("span", navn, "af-report-kind"));
+      d.appendChild(innhold);
+      if (merke) d.appendChild(el("span", merke, "af-source " + klasse));
+      b.appendChild(d); return b;
+    };
+    var data = (c.data || []).map(function (d) { return d.verktoy + " " + JSON.stringify(d.args || {}); }).join("; ");
+    kort.appendChild(blokk("Forespørsel", el("p", c.foresporsel), data ? "Data som sendes med: " + data : "Ingen data sendes med", "system"));
+    var svar = el("p", grense.llm ? "Ikke kjørt ennå." : "KI er av. Les forespørselen og regelen, og diskuter hva en modell ville svart.");
+    svar.style.whiteSpace = "pre-wrap";
+    var svarBlokk = blokk("Modellens svar", svar, grense.llm ? "AI-forslag" : null, "suggested");
+    kort.appendChild(svarBlokk);
+    kort.appendChild(blokk("Regel", el("p", c.regel), "Fra " + c.case, "system"));
+    kort.appendChild(el("p", "Se etter: " + c.se_etter));
+    if (grense.llm) {
+      var akt = el("div", null, "af-actions");
+      var b = el("button", "Send til modellen", "af-btn af-btn-primary"); b.type = "button";
+      b.addEventListener("click", function () {
+        b.disabled = true; svar.textContent = "Venter på modellen …";
+        fetch("/api/grense/kjor", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: c.id }) })
+          .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || "Ukjent feil"); return j; }); })
+          .then(function (j) { svar.textContent = j.tekst + "\n\n(" + j.modell + ")"; })
+          .catch(function (e) { svar.textContent = "Ingen modellrespons: " + e.message; })
+          .then(function () { b.disabled = false; });
+      });
+      akt.appendChild(b); kort.appendChild(akt);
+    }
+    return kort;
+  }
+  function visGrense() {
+    visSteg("grense");
+    if (grense) return;
+    fetch("/api/grense/caser")
+      .then(function (r) { if (!r.ok) throw new Error("Fikk ikke hentet grensecasene."); return r.json(); })
+      .then(function (j) {
+        grense = j;
+        $("grense-fast").textContent = j.tekst_fast;
+        $("grense-ki").textContent = j.llm ? "KI er på. Hvert svar er den faktiske modellresponsen." : "KI er av. Ingen ferdigskrevne svar vises.";
+        var l = $("grense-liste"); l.textContent = "";
+        j.caser.forEach(function (c) { l.appendChild(grenseKort(c)); });
+      })
+      .catch(function (e) { feil("grense-feil", "grense-feil-tekst", e.message); });
+  }
+
+  function feil(boks, tekstId, melding) {
+    $(tekstId).textContent = melding;
+    $(boks).hidden = !melding;
+  }
+
+  function tegnTavle() {
+    var tavle = $("tavle");
+    tavle.textContent = "";
+    data.omrader.forEach(function (o) {
+      var caser = data.caser.filter(function (c) { return c.omrade === o.id; });
+      if (!caser.length) return;
+      tavle.appendChild(el("h2", o.navn, "ar-omrade"));
+      var ul = el("ul", null, "af-task-board");
+      caser.forEach(function (c) {
+        var li = el("li");
+        var b = el("button", null, "af-task-card");
+        b.type = "button";
+        var tekst = el("span");
+        tekst.appendChild(el("strong", c.id + " " + c.tittel));
+        tekst.appendChild(el("small", c.oppdrag));
+        b.appendChild(tekst);
+        b.appendChild(el("span", c.kjoring.type === "lesecase" ? "Lesecase" : "Live", "af-badge"));
+        b.addEventListener("click", function () { aapne(c); });
+        li.appendChild(b);
+        ul.appendChild(li);
+      });
+      tavle.appendChild(ul);
+    });
+  }
+
+  function aapne(c) {
+    valgt = c;
+    $("case-navn").textContent = c.id + " " + c.tittel;
+    $("case-oppdrag").textContent = c.oppdrag;
+    $("kjor").hidden = c.kjoring.type === "lesecase";
+    $("status").textContent = "";
+    feil("feil", "feil-tekst", "");
+    $("rapport").hidden = true;
+    $("gevinst-del").hidden = true;
+    if (c.kjoring.type === "lesecase") tegnRapport(c, { ok: true, steg: [], datamerke: [], policy: { ekstern_ki: null } });
+    visSteg("case");
+  }
+
+  function tegnFakta(res) {
+    var f = $("fakta");
+    f.textContent = "";
+    if (!res.steg.length) {
+      f.appendChild(el("p", valgt.kjoring.type === "datapolicy" ? "Ingen spørsmål. Bare datamerket under." : "Lesecase. Ingen kjøring."));
+      return;
+    }
+    res.steg.forEach(function (s) {
+      var hode = s.verktoy ? s.verktoy + " " + JSON.stringify(s.args) : "Som " + s.rolle + ": «" + s.sporsmal + "»";
+      f.appendChild(el("p", hode, "ar-steg-hode"));
+      if (s.kategori) f.appendChild(el("p", "Kategori: " + s.kategori + ". Verktøy: " + (s.verktoy_brukt.join(", ") || "ingen")));
+      f.appendChild(el("pre", typeof s.svar === "string" ? s.svar : JSON.stringify(s.svar, null, 2), "ar-pre"));
+    });
+  }
+
+  function tegnVurdering(res) {
+    var k = $("kontroll");
+    k.textContent = "";
+    res.steg.forEach(function (s, i) {
+      k.appendChild(el("li", "Steg " + (i + 1) + ": " + (s.ok ? REGLER.kontroll.ok : REGLER.kontroll.avvik + s.mangler.join(", "))));
+    });
+    var p = res.policy.ekstern_ki;
+    $("utfall-verdi").textContent = p === true ? REGLER.policy.tillatt : p === false ? REGLER.policy.stoppet : REGLER.policy.ingen;
+    var dl = $("utfall-liste");
+    dl.textContent = "";
+    res.datamerke.forEach(function (m) {
+      var r = regelFor(m.merke);
+      dl.appendChild(el("dt", m.tabell));
+      dl.appendChild(el("dd", r.id + " " + r.navn + ": " + r.utfall));
+    });
+    if (res.policy.grunn) {
+      dl.appendChild(el("dt", "Grunn"));
+      dl.appendChild(el("dd", res.policy.grunn));
+    }
+  }
+
+  function tegnRapport(c, res) {
+    tegnFakta(res);
+    tegnVurdering(res);
+    $("gdpr").textContent = "GDPR: " + c.gdpr;
+    $("se-etter").textContent = "Se etter: " + c.se_etter;
+    $("lenke").textContent = c.lenke ? "Les mer: " + c.lenke : "";
+    var kilder = res.datamerke.map(function (m) { return m.tabell; });
+    $("grunnlag").textContent = "Kilder: " + (kilder.join(", ") || "ingen") +
+      ". Casefil versjon " + data.versjon + ", regelversjon " + REGLER.versjon + ".";
+    $("rapport").hidden = false;
+    $("gevinst-tekst").textContent = "Gevinst: " + c.gevinst.tekst;
+    $("grp-andel").hidden = !c.gevinst.timer;
+    $("andel").value = "";
+    regnGevinst();
+    $("gevinst-del").hidden = false;
+  }
+
+  function regnGevinst() {
+    var timer = valgt && valgt.gevinst.timer;
+    var andel = parseFloat($("andel").value);
+    if (!timer || isNaN(andel)) { $("spart").textContent = timer ? timer + " timer i året fra dataene." : ""; return; }
+    andel = Math.max(0, Math.min(100, andel));
+    var spart = Math.round(timer * andel / 10) / 10;
+    $("spart").textContent = "Antakelse: " + spart.toLocaleString("nb-NO") + " av " + timer + " timer spart i året.";
+  }
+
+  function kjor() {
+    if (!valgt) return;
+    $("kjor").disabled = true;
+    $("status").textContent = "Kjører …";
+    feil("feil", "feil-tekst", "");
+    fetch("/api/arena/kjor", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: valgt.id }) })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (svar) {
+        if (!svar.ok) throw new Error(svar.j.error || "Ukjent feil");
+        tegnRapport(valgt, svar.j);
+        $("status").textContent = svar.j.ok ? "Ferdig" : "Ferdig, med avvik";
+      })
+      .catch(function (e) { feil("feil", "feil-tekst", e.message); $("status").textContent = ""; })
+      .then(function () { $("kjor").disabled = false; });
+  }
+
+  $("kjor").addEventListener("click", kjor);
+  $("tilbake").addEventListener("click", function () { visSteg("caser"); });
+  $("lenke-caser").addEventListener("click", function (e) { e.preventDefault(); visSteg("caser"); });
+  $("lenke-case").addEventListener("click", function (e) { e.preventDefault(); if (valgt) visSteg("case"); });
+  $("andel").addEventListener("input", regnGevinst);
+  $("lenke-grense").addEventListener("click", function (e) { e.preventDefault(); visGrense(); });
+  if (location.hash === "#grense") visGrense();
+
+  tegnRegler();
+  fetch("/api/arena/caser")
+    .then(function (r) { if (!r.ok) throw new Error("Fikk ikke hentet casene."); return r.json(); })
+    .then(function (j) { data = j; tegnTavle(); })
+    .catch(function (e) { feil("feil-liste", "feil-liste-tekst", e.message); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 680" width="100%" height="100%" class="blueprint-svg">
+  <defs>
+    <!-- NS 8351 Skravurmønstre (Hatch Patterns) -->
+    <pattern id="hatch-tegl-400" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.2"/>
+    </pattern>
+    <pattern id="hatch-betong-300" width="10" height="10" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="10" y2="10" stroke="rgba(56, 189, 248, 0.3)" stroke-width="0.8"/>
+      <line x1="10" y1="0" x2="0" y2="10" stroke="rgba(56, 189, 248, 0.3)" stroke-width="0.8"/>
+      <circle cx="5" cy="5" r="1.2" fill="rgba(56, 189, 248, 0.3)"/>
+    </pattern>
+    <pattern id="hatch-baerevegg-200" width="4" height="4" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="0" y2="4" stroke="rgba(2, 132, 199, 0.5)" stroke-width="1.2"/>
+    </pattern>
+    <marker id="tick-45" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <line x1="1" y1="9" x2="9" y2="1" stroke="#38bdf8" stroke-width="1.8" class="arch-tick"/>
+    </marker>
+  </defs>
+
+  <!-- Ren, minimalistisk mørk bakgrunn -->
+  <rect width="100%" height="100%" fill="#0a0f1d"/>
+
+  <!-- Diskret etasjekote over bygget -->
+  <text x="105" y="65" font-family="sans-serif" font-size="11" font-weight="600" fill="#38bdf8">KOTE FG: +6.300 m (+19.80 moh / 19.80 moh) | GESIMS: +11.400 m (+24.90 moh)</text>
+
+  <!-- Bygningsvegger med skravur iht. NS 8351 -->
+  <g class="architectural-walls">
+    <!-- Hovedfløy 400 mm Yttervegg i tegl/mur -->
+    <rect x="101" y="136" width="4" height="248" fill="url(#hatch-tegl-400)" stroke="#38bdf8" stroke-width="1.2"/>
+    <rect x="101" y="136" width="344" height="4" fill="url(#hatch-tegl-400)" stroke="#38bdf8" stroke-width="1.2"/>
+    <rect x="101" y="380" width="344" height="4" fill="url(#hatch-tegl-400)" stroke="#38bdf8" stroke-width="1.2"/>
+    <!-- Tilbygg Øst 300 mm Yttervegg i slipt betong -->
+    <rect x="585" y="137" width="3" height="246" fill="url(#hatch-betong-300)" stroke="#38bdf8" stroke-width="1.2"/>
+    <rect x="445" y="137" width="143" height="3" fill="url(#hatch-betong-300)" stroke="#38bdf8" stroke-width="1.2"/>
+    <rect x="445" y="380" width="143" height="3" fill="url(#hatch-betong-300)" stroke="#38bdf8" stroke-width="1.2"/>
+    <rect x="444" y="140" width="2" height="240" fill="url(#hatch-baerevegg-200)" stroke="#38bdf8" stroke-width="1"/>
+    <rect x="304" y="140" width="2" height="120" fill="url(#hatch-baerevegg-200)" stroke="#38bdf8" stroke-width="1"/>
+    <rect x="504" y="140" width="2" height="120" fill="url(#hatch-baerevegg-200)" stroke="#38bdf8" stroke-width="1"/>
+  </g>
+
+  <!-- Bygningskropp underlag -->
+  <rect x="105" y="140" width="480" height="240" fill="rgba(15, 23, 42, 0.45)" stroke="#38bdf8" stroke-width="1"/>
+  <g class="blueprint-room" data-room-id="SAL-C" style="cursor: pointer;">
+    <desc>H: 4.8 m | BRA 240 m² | EI-60 | S2/K2</desc>
+    <rect x="105" y="140" width="200" height="120" fill="rgba(245, 158, 11, 0.20)" stroke="#f59e0b" stroke-width="1.8"/>
+    <!-- Minimalistisk romtekst -->
+    <text x="205.0" y="198.0" font-family="sans-serif" font-size="12" font-weight="bold" fill="#fef08a" text-anchor="middle">SAL C</text>
+    <text x="205.0" y="213.0" font-family="sans-serif" font-size="9.0" font-weight="500" fill="#cbd5e1" text-anchor="middle">240 m²</text>
+  </g>
+  <line x1="197.0" y1="260" x2="213.0" y2="260" stroke="#0a0f1d" stroke-width="3"/>
+  <line x1="197.0" y1="260" x2="213.0" y2="250" stroke="#f59e0b" stroke-width="1.2"/>
+  <g class="blueprint-room" data-room-id="SAL-D" style="cursor: pointer;">
+    <desc>H: 4.8 m | BRA 216 m² | EI-60 | S2/K1</desc>
+    <rect x="325" y="140" width="180" height="120" fill="rgba(245, 158, 11, 0.20)" stroke="#f59e0b" stroke-width="1.8"/>
+    <!-- Minimalistisk romtekst -->
+    <text x="415.0" y="198.0" font-family="sans-serif" font-size="12" font-weight="bold" fill="#fef08a" text-anchor="middle">SAL D</text>
+    <text x="415.0" y="213.0" font-family="sans-serif" font-size="9.0" font-weight="500" fill="#cbd5e1" text-anchor="middle">216 m²</text>
+  </g>
+  <line x1="407.0" y1="260" x2="423.0" y2="260" stroke="#0a0f1d" stroke-width="3"/>
+  <line x1="407.0" y1="260" x2="423.0" y2="250" stroke="#f59e0b" stroke-width="1.2"/>
+  <g class="blueprint-room" data-room-id="VAK-1" style="cursor: pointer;">
+    <desc>H: 3.2 m | BRA 140 m² | EI-60 | S3/K3</desc>
+    <rect x="445" y="280" width="140" height="100" fill="rgba(51, 65, 85, 0.30)" stroke="#64748b" stroke-width="1.8"/>
+    <!-- Minimalistisk romtekst -->
+    <text x="515.0" y="328.0" font-family="sans-serif" font-size="12" font-weight="bold" fill="#f8fafc" text-anchor="middle">VAKTROM</text>
+    <text x="515.0" y="343.0" font-family="sans-serif" font-size="9.0" font-weight="500" fill="#cbd5e1" text-anchor="middle">140 m²</text>
+  </g>
+  <line x1="507.0" y1="280" x2="523.0" y2="280" stroke="#0a0f1d" stroke-width="3"/>
+  <line x1="507.0" y1="280" x2="523.0" y2="290" stroke="#64748b" stroke-width="1.2"/>
+  <g class="blueprint-room" data-room-id="PAU-1" style="cursor: pointer;">
+    <desc>H: 3.2 m | BRA 180 m² | EI-30 | S3/K3</desc>
+    <rect x="105" y="280" width="180" height="100" fill="rgba(51, 65, 85, 0.30)" stroke="#64748b" stroke-width="1.8"/>
+    <!-- Minimalistisk romtekst -->
+    <text x="195.0" y="328.0" font-family="sans-serif" font-size="12" font-weight="bold" fill="#f8fafc" text-anchor="middle">PERSONALROM</text>
+    <text x="195.0" y="343.0" font-family="sans-serif" font-size="9.0" font-weight="500" fill="#cbd5e1" text-anchor="middle">180 m²</text>
+  </g>
+  <line x1="187.0" y1="280" x2="203.0" y2="280" stroke="#0a0f1d" stroke-width="3"/>
+  <line x1="187.0" y1="280" x2="203.0" y2="290" stroke="#64748b" stroke-width="1.2"/>
+  <g class="blueprint-room" data-room-id="HEIS-P2" style="cursor: pointer;">
+    <desc>H: 4.8 m | BRA 16 m² | REI-120 | S1/K3</desc>
+    <rect x="305" y="280" width="40" height="40" fill="rgba(100, 116, 139, 0.35)" stroke="#94a3b8" stroke-width="1.8"/>
+    <!-- Minimalistisk romtekst -->
+    <text x="325.0" y="298.0" font-family="sans-serif" font-size="9.5" font-weight="bold" fill="#ffffff" text-anchor="middle">HEIS</text>
+    <text x="325.0" y="313.0" font-family="sans-serif" font-size="7.1" font-weight="500" fill="#cbd5e1" text-anchor="middle">16 m²</text>
+  </g>
+  <line x1="309" y1="284" x2="341" y2="316" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
+  <line x1="341" y1="284" x2="309" y2="316" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
+  <line x1="317.0" y1="320" x2="333.0" y2="320" stroke="#0a0f1d" stroke-width="3"/>
+  <line x1="317.0" y1="320" x2="333.0" y2="310" stroke="#94a3b8" stroke-width="1.2"/>
+  <g class="blueprint-room" data-room-id="TRAPP-P2" style="cursor: pointer;">
+    <desc>H: 4.8 m | BRA 25 m² | EI-60 | S1/K3</desc>
+    <rect x="355" y="280" width="50" height="50" fill="rgba(100, 116, 139, 0.35)" stroke="#94a3b8" stroke-width="1.8"/>
+    <!-- Minimalistisk romtekst -->
+    <text x="380.0" y="303.0" font-family="sans-serif" font-size="9.5" font-weight="bold" fill="#ffffff" text-anchor="middle">TRAPP</text>
+    <text x="380.0" y="318.0" font-family="sans-serif" font-size="7.1" font-weight="500" fill="#cbd5e1" text-anchor="middle">25 m²</text>
+  </g>
+  <line x1="359" y1="286" x2="401" y2="286" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
+  <line x1="359" y1="291" x2="401" y2="291" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
+  <line x1="359" y1="296" x2="401" y2="296" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
+  <line x1="359" y1="301" x2="401" y2="301" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
+  <line x1="359" y1="306" x2="401" y2="306" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
+  <line x1="359" y1="311" x2="401" y2="311" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
+  <line x1="359" y1="316" x2="401" y2="316" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
+  <line x1="359" y1="321" x2="401" y2="321" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
+  <line x1="355" y1="297.0" x2="355" y2="313.0" stroke="#0a0f1d" stroke-width="3"/>
+  <line x1="355" y1="297.0" x2="365" y2="313.0" stroke="#94a3b8" stroke-width="1.2"/>
+  <!-- Diskrete arkitektoniske målekjeder iht. NS 8351 -->
+  <g class="dimension-chain" style="opacity: 0.7;">
+    <line x1="105" y1="115" x2="585" y2="115" stroke="#64748b" stroke-width="0.8" marker-start="url(#tick-45)" marker-end="url(#tick-45)"/>
+    <line x1="105" y1="110" x2="105" y2="120" stroke="#38bdf8" stroke-width="1.2" class="arch-tick" transform="rotate(45 105 115)"/>
+    <line x1="585" y1="110" x2="585" y2="120" stroke="#38bdf8" stroke-width="1.2" class="arch-tick" transform="rotate(45 585 115)"/>
+    <text x="345" y="108" font-family="sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">48 000 mm (48 m)</text>
+    <line x1="85" y1="140" x2="85" y2="380" stroke="#64748b" stroke-width="0.8" marker-start="url(#tick-45)" marker-end="url(#tick-45)"/>
+    <line x1="85" y1="135" x2="85" y2="145" stroke="#38bdf8" stroke-width="1.2" class="arch-tick" transform="rotate(45 85 140)"/>
+    <line x1="85" y1="375" x2="85" y2="385" stroke="#38bdf8" stroke-width="1.2" class="arch-tick" transform="rotate(45 85 380)"/>
+    <text x="75" y="260" font-family="sans-serif" font-size="9" fill="#94a3b8" text-anchor="end">24 000 mm</text>
+  </g>
+  <!-- Elegant skandinavisk planoversikt og romguide -->
+  <g class="title-block" transform="translate(680, 80)">
+    <text x="0" y="0" font-family="sans-serif" font-size="20" font-weight="bold" fill="#ffffff" letter-spacing="1">AURA MUSEUM</text>
+    <text x="0" y="24" font-family="sans-serif" font-size="13" font-weight="600" fill="#38bdf8">PLAN P2 • 2. ETASJE / GALLERI &amp; SIKKERHET</text>
+    <text x="0" y="44" font-family="sans-serif" font-size="10" fill="#94a3b8">Bispegata 9B, 7012 Trondheim • Gnr 401 / Bnr 12</text>
+    <line x1="0" y1="60" x2="280" y2="60" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+    <text x="0" y="85" font-family="sans-serif" font-size="10" font-weight="bold" fill="#64748b" letter-spacing="1">ROMLISTE &amp; AREALER (BRA)</text>
+    <circle cx="6" cy="106" r="4" fill="#f59e0b"/>
+    <text x="18" y="110" font-family="sans-serif" font-size="11" font-weight="500" fill="#f8fafc">Sal C</text>
+    <text x="280" y="110" font-family="sans-serif" font-size="11" font-weight="600" fill="#cbd5e1" text-anchor="end">240 m²</text>
+    <circle cx="6" cy="130" r="4" fill="#f59e0b"/>
+    <text x="18" y="134" font-family="sans-serif" font-size="11" font-weight="500" fill="#f8fafc">Sal D</text>
+    <text x="280" y="134" font-family="sans-serif" font-size="11" font-weight="600" fill="#cbd5e1" text-anchor="end">216 m²</text>
+    <circle cx="6" cy="154" r="4" fill="#94a3b8"/>
+    <text x="18" y="158" font-family="sans-serif" font-size="11" font-weight="500" fill="#f8fafc">Vaktrom &amp; Sikkerhetssentral</text>
+    <text x="280" y="158" font-family="sans-serif" font-size="11" font-weight="600" fill="#cbd5e1" text-anchor="end">140 m²</text>
+    <circle cx="6" cy="178" r="4" fill="#94a3b8"/>
+    <text x="18" y="182" font-family="sans-serif" font-size="11" font-weight="500" fill="#f8fafc">Personalrom &amp; Garderobe</text>
+    <text x="280" y="182" font-family="sans-serif" font-size="11" font-weight="600" fill="#cbd5e1" text-anchor="end">180 m²</text>
+    <circle cx="6" cy="202" r="4" fill="#94a3b8"/>
+    <text x="18" y="206" font-family="sans-serif" font-size="11" font-weight="500" fill="#f8fafc">Heis Repos P2</text>
+    <text x="280" y="206" font-family="sans-serif" font-size="11" font-weight="600" fill="#cbd5e1" text-anchor="end">16 m²</text>
+    <circle cx="6" cy="226" r="4" fill="#94a3b8"/>
+    <text x="18" y="230" font-family="sans-serif" font-size="11" font-weight="500" fill="#f8fafc">Trappeløp Repos P2</text>
+    <text x="280" y="230" font-family="sans-serif" font-size="11" font-weight="600" fill="#cbd5e1" text-anchor="end">25 m²</text>
+    <line x1="0" y1="264" x2="280" y2="264" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+    <text x="0" y="286" font-family="sans-serif" font-size="10" fill="#94a3b8">BTA: 4 350 m² (4350) • BRA: 3 920 m² (3920) • BYA: 1 450 m² (1450)</text>
+    <text x="0" y="304" font-family="sans-serif" font-size="10" fill="#94a3b8">Kote FG: +19.80 moh (+6.30m)</text>
+    <text x="0" y="322" font-family="sans-serif" font-size="9" fill="#64748b">Brannklasse BKL 3 / Risikoklasse RKL 5 • 401/12</text>
+    <text x="0" y="340" font-family="sans-serif" font-size="10" font-weight="bold" fill="#38bdf8">MÅLESTOKK 1:100</text>
+  </g>
+</svg>

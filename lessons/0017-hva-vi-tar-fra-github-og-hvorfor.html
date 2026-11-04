@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leksjon 17: Hva stjeler vi fra GitHub? (Og hva lar vi ligge)</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .comp-card {
+      border-radius: 8px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      background: white;
+    }
+    .comp-card.legacy {
+      border-top: 4px solid var(--danger);
+    }
+    .comp-card.modern {
+      border-top: 4px solid var(--success);
+      background: #fcfdfc;
+    }
+    .comp-card h3 {
+      margin-top: 0;
+      font-size: 1.2rem;
+    }
+    .pill {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+    .pill-danger { background: #fff1f1; color: var(--danger); }
+    .pill-success { background: var(--success-light); color: var(--success); }
+    .quiz-container {
+      background: #fdfdfd;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    .quiz-option {
+      display: block;
+      padding: 0.75rem 1rem;
+      margin: 0.5rem 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      background: white;
+      transition: all 0.2s ease;
+    }
+    .quiz-option:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="meta-tag">Leksjon 0017 • Kunstpixel & Fremtidsrettet Arkitektur</div>
+    <h1>Hva stjeler vi fra GitHub? (Og hva lar vi ligge)</h1>
+    
+    <p class="lead" style="font-size: 1.15rem; line-height: 1.6; color: #2d3748;">
+      Når du skal bygge en AI-native plattform som gründer, er GitHub fullt av store, etablerte open-source-prosjekter. 
+      Fristelsen er stor til å klone hele repoet og starte en klynge med Docker-containere. 
+      I denne leksjonen lærer du <strong>gründerens hemmelige superkraft</strong>: Å stjele de geniale arkitekturmønstrene og datastrukturene, 
+      mens du lar 45 MB med gammel kode ligge igjen.
+    </p>
+
+    <div class="box box-info">
+      <strong>Kjernen i hva du lærer:</strong><br>
+      <em>«Ikke importer andres tekniske gjeld. Hent konseptene, prompt-strukturene og reglene fra GitHub, og realiser dem i ren, deterministisk Python med FastMCP og SQLite.»</em>
+    </div>
+
+    <h2>1. Fellen: Den tradisjonelle open-source-monolitten</h2>
+    <p>
+      I oppdragsmappen vår lå en komplett GitHub-kodedump av <strong>MintHCM</strong> (45 MB tekst, over 1 500 filer). 
+      MintHCM er bygget på SuiteCRM og SugarCRM i PHP. Hvis du installerer dette for å drive en moderne KI-pilot, 
+      får du umiddelbart store utfordringer:
+    </p>
+
+    <div class="comparison-grid">
+      <div class="comp-card legacy">
+        <span class="pill pill-danger">Hva vi lot ligge (Legacy gjeld)</span>
+        <h3>Den tunge PHP-monolitten</h3>
+        <ul style="padding-left: 1.2rem; font-size: 0.95rem;">
+          <li><strong>45 MB PHP-kode:</strong> Skrevet for 2012–2018 med web-forms og tung session-tilstand.</li>
+          <li><strong>Apache & MySQL:</strong> Krever separate servere, tuning, databasedrivere og sky-vedlikehold.</li>
+          <li><strong>Treg testkjøring:</strong> Å kjøre full suite tar minutter eller krever eksterne databaser.</li>
+          <li><strong>Lukket for KI:</strong> Modellen må presses gjennom gamle CRUD-skjemaer.</li>
+        </ul>
+      </div>
+
+      <div class="comp-card modern">
+        <span class="pill pill-success">Hva vi tok med (Fremtidsrettet)</span>
+        <h3>Kunstpixel AI-Native Kjerne</h3>
+        <ul style="padding-left: 1.2rem; font-size: 0.95rem;">
+          <li><strong>Ren Python 3.13:</strong> 100 % moderne kode, 0 eksterne sky-avhengigheter.</li>
+          <li><strong>SQLite i mode=ro:</strong> Én lokal fil (<code>museum.db</code>), 0 driftskostnader, lynrask.</li>
+          <li><strong>Ekstrem testbarhet:</strong> 361 tester kjører på under 40 sekunder (100 % grønt).</li>
+          <li><strong>Født for KI:</strong> FastMCP-protokoll direkte eksponert for Claude og agenter.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>2. De tre gullklumpene vi stjal fra GitHub</h2>
+    <p>
+      Selv om vi forkastet koden, var det tre arkitektoniske konsepter i GitHub-dumpen som var gull verdt for oss:
+    </p>
+
+    <div style="margin: 1.5rem 0;">
+      <div style="background: white; border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 6px; padding: 1.2rem; margin-bottom: 1rem;">
+        <h4 style="margin: 0 0 0.5rem 0; color: var(--accent);">Gullklump 1: <code>AIPromptTemplates</code> &rarr; Strukturerte Masterprompter</h4>
+        <p style="margin: 0; font-size: 0.95rem;">
+          MintHCM hadde oppdaget at man må lagre systemprompter strukturert per rolle og formål. Vi stjal denne ideen og videreutviklet den til våre 
+          <a href="../04_knowledge/06_hr_caser/README.md">14 etiske caser i kunnskapsbasen</a>, hvor hver prompt har en innebygd <em>Red Team Trap</em> 
+          som sperrer modellen mot lovbrudd og manipulasjon.
+        </p>
+      </div>
+
+      <div style="background: white; border: 1px solid var(--border); border-left: 4px solid var(--success); border-radius: 6px; padding: 1.2rem; margin-bottom: 1rem;">
+        <h4 style="margin: 0 0 0.5rem 0; color: var(--success);">Gullklump 2: <code>McpController</code> &rarr; Python FastMCP Gateway</h4>
+        <p style="margin: 0; font-size: 0.95rem;">
+          MintHCM forsøkte å lage en kontroller for <em>Model Context Protocol</em>. Vi tok idéen om en sentral agent-gateway, men bygget den i 
+          <a href="../src/mcp_server.py"><code>src/mcp_server.py</code></a> ved hjelp av Anthropic og OpenAIs offisielle FastMCP-standard i Python.
+        </p>
+      </div>
+
+      <div style="background: white; border: 1px solid var(--border); border-left: 4px solid #6f42c1; border-radius: 6px; padding: 1.2rem;">
+        <h4 style="margin: 0 0 0.5rem 0; color: #6f42c1;">Gullklump 3: Relasjonsskjemaet &rarr; <code>data_contract.yaml</code></h4>
+        <p style="margin: 0; font-size: 0.95rem;">
+          I stedet for å gjette på hvilke felter en HR-plattform trenger for stillinger, skift, lønnsarter og permisjoner, hentet vi feltene og koblingene fra 
+          GitHub-koden og standardiserte dem i vår <a href="../02_deliverables/hr_produksjon_v1/data_contract.yaml"><code>data_contract.yaml</code></a>.
+        </p>
+      </div>
+    </div>
+
+    <h2>3. Huskeregel for Fasit vs. Skjønn</h2>
+    <p>
+      Når du forklarer denne arkitekturen til andre gründere eller kunder, bruker du denne enkle 3-trinns modellen:
+    </p>
+    <ol style="line-height: 1.7;">
+      <li><strong>Fasit i bunn (Python & SQLite):</strong> Tall, lovparagrafer, hviletid og k-anonymitet beregnes med 100 % determinisme. KI-en får aldri lov til å regne eller gjette.</li>
+      <li><strong>FastMCP i midten:</strong> Det åpne grensesnittet som lar språkmodellen spørre om fakta på en kontrollert, skrivebeskyttet måte.</li>
+      <li><strong>Skjønn og språk på toppen (LLM):</strong> Språkmodellen (f.eks. Claude eller GPT-4o) brukes kun til å formidle, forklare og veilede brukeren i et varmt og pedagogisk språk.</li>
+    </ol>
+
+    <!-- INTERAKTIV RETRIEVAL QUIZ -->
+    <div class="quiz-container">
+      <h3 style="margin-top:0;">Sjekk din forståelse (Retrieval Practice)</h3>
+      <p style="font-size:0.95rem; color:var(--muted);">
+        Hvorfor bør en gründer unngå å installere hele den 45 MB store PHP-monolitten fra GitHub i en moderne KI-pilot?
+      </p>
+
+      <div class="quiz-option" onclick="alert('Riktig! Du stjeler datamodellen og prompt-idéene, men bygger selve kjernefunksjonaliteten i lettvekts Python og FastMCP for full kontroll og null driftskostnad.');">
+        <strong>A:</strong> For å unngå unødig teknisk gjeld og heller implementere kjernekonseptene i ren, moderne Python.
+      </div>
+
+      <div class="quiz-option" onclick="alert('Feil. Språkmodeller forstår PHP utmerket godt, men driftsriggen og systemet blir unødvendig tungt og tregt.');">
+        <strong>B:</strong> Fordi språkmodeller aldri kan forstå PHP-kode når de gjør verktøykall mot et API.
+      </div>
+
+      <div class="quiz-option" onclick="alert('Feil. SQLite håndterer relasjoner og tabeller helt suverent, og støtter standard SQL fullt ut.');">
+        <strong>C:</strong> Fordi relasjonsdatabaser som SQLite aldri er i stand til å lagre tabeller med fremmednøkler.
+      </div>
+    </div>
+
+    <h2>Anbefalt primærkilde for dypere forståelse</h2>
+    <p>
+      Les Simon Willisons artikkelserie om agent-arkitektur og verktøystøtte:<br>
+      &rarr; <a href="https://simonwillison.net/2024/Nov/25/model-context-protocol/" target="_blank" rel="noopener">
+        <strong>Simon Willison: The Model Context Protocol (MCP) and Tool-Driven AI</strong>
+      </a>.<br>
+      <em>Hvorfor:</em> Willison forklarer hvorfor standardiserte protokoller over lokale verktøy utkonkurrerer proprietære skyløsninger for agenter.
+    </p>
+
+    <div class="box box-info" style="margin-top: 2rem;">
+      <strong>Spør agenten din:</strong><br>
+      Har du spørsmål om hvordan FastMCP-verktøyene kalles fra terminalen, eller hvordan <code>data_contract.yaml</code> definerer de 58 tabellene? 
+      Skriv direkte i chatten, så viser vi deg koden linje for linje.
+    </div>
+
+    <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.9rem; color: var(--muted);">
+      Relaterte leksjoner: 
+      <a href="0001-sqlite-vs-rag-samlingsdata.html">Leksjon 0001 (SQLite vs RAG)</a> • 
+      <a href="0002-mcp-vs-api-koblinger.html">Leksjon 0002 (MCP vs API)</a> • 
+      <a href="0014-deterministisk-kartlegging-og-0-tokens.html">Leksjon 0014 (0-Token audit)</a> • 
+      <a href="../reference/fasit-vs-skjonn-guide.md">Referanseguide: Fasit vs. Skjønn</a>
+    </div>
+  </div>
+</body>
+</html>

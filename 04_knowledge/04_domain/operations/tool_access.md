@@ -10,6 +10,8 @@ For å opprettholde sikkerhet og ryddighet gjelder prinsippet om **minste privil
 | **Formidler** | `sqlite_read`, `file_read`, `file_write` | Lese verksfakta, skrive veggtekster/audiomanus | Dikte opp biografiske data / årstall |
 | **Museumsvert** | `sqlite_read_public`, `faq_search` | Søke åpne verk, vise salplassering, besvare FAQ | Skrive til samlingsdatabase, endre priser |
 | **Driftsansvarlig** | `calendar_*`, `ticket_read`, `plane_*` | Se kapasitet, logge driftsoppgaver | Slette historiske logger |
+| **Kafeansvarlig** | `sqlite_read`, `file_read` | Lese kafémeny, allergener, salg og kaféanmeldelser, skrive svarutkast | Endre allergenlisten uten godkjenning, publisere svar utad |
+| **Kommunikasjon** | `sqlite_read`, `file_read`, `file_write` | Lese anmeldelser og omtale, skrive svarutkast og pressemeldinger | Publisere uten godkjenning, se personopplysninger om ansatte |
 
 ## Sikkerhetsregler for plugins
 1. **Skrivebeskyttelse av samling:** Skrivekall mot samlingsdatabasen krever validering av obligatoriske felt (inventarnummer, tittel, kunstner, datering).
