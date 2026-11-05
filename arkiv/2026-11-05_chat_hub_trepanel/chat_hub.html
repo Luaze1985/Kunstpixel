@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kunstpixel – Datafinner</title>
+<link rel="stylesheet" href="/bundle.css">
+<style>
+  body { margin: 0; padding: 24px 16px; background: var(--canvas); }
+  .kp-log { list-style: none; margin: 0 0 var(--space-23); padding: 0; max-width: var(--form-width); }
+  .kp-turn { padding: 14px 0; border-top: 1px solid var(--line); }
+  .kp-who { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-10); font-size: .78rem; font-weight: 700; color: var(--muted); margin: 0 0 6px; }
+  .kp-text { margin: 0; white-space: pre-wrap; }
+  .kp-examples { display: flex; flex-wrap: wrap; gap: var(--space-8); margin: 0 0 var(--space-23); padding: 0; list-style: none; }
+  .kp-facts { margin: 0; font-size: .82rem; }
+  .kp-facts dt { color: var(--muted); font-size: .72rem; margin-top: 8px; }
+  .kp-facts dd { margin: 0; }
+  .af-context .af-rules { font-size: .78rem; }
+  .af-context .af-rules th, .af-context .af-rules td { padding: 6px; }
+</style>
+</head>
+<body>
+<div class="af">
+  <div class="af-shell">
+    <nav class="af-sidebar" aria-label="Roller">
+      <p class="af-side-heading">Roller</p>
+      <ol class="af-flow-list" id="roller"></ol>
+      <hr class="af-side-rule">
+      <p class="af-task-hint">Rollen velges med faste regler.</p>
+    </nav>
+
+    <main class="af-main">
+      <div class="af-mobile-nav">
+        <label for="rolle-mobil">Rolle som svarte</label>
+        <select id="rolle-mobil" disabled></select>
+      </div>
+      <p class="af-caption">Kunstpixel internt</p>
+      <h1 class="af-title">Spør samlingen</h1>
+
+      <ol class="kp-log" id="logg" aria-live="polite"></ol>
+
+      <ul class="kp-examples" id="eksempler"></ul>
+
+      <form id="skjema" class="af-group">
+        <label class="af-label" for="sporsmal">Spørsmål</label>
+        <input class="af-input" id="sporsmal" name="sporsmal" autocomplete="off" required>
+        <div class="af-actions">
+          <button type="submit" class="af-btn af-btn-primary">Spør</button>
+          <span class="af-save-status" id="status"></span>
+        </div>
+      </form>
+    </main>
+
+    <aside class="af-context" aria-label="Datafinner">
+      <h2 class="af-context-title">Datafinner</h2>
+      <div class="af-context-card">
+        <span class="af-small-label">Siste oppslag</span>
+        <dl class="kp-facts" id="fakta"><dt>Status</dt><dd>Ingen oppslag ennå</dd></dl>
+      </div>
+      <table class="af-rules" id="regeltabell">
+        <caption>Rollevalg</caption>
+        <thead><tr><th>ID</th><th>Kategori</th><th>Rolle</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </aside>
+  </div>
+</div>
+
+<script>
+  // Én kilde for regeltekst. Endres bare her.
+  const REGLER = {
+    versjon: "v1",
+    roller: ["Direktør", "Museumsvert", "Samlingsforvalter", "Kurator", "Formidler", "Drift"],
+    regler: [
+      { id: "R1", kategorier: ["samling"], rolle: "Samlingsforvalter" },
+      { id: "R2", kategorier: ["utstilling"], rolle: "Kurator" },
+      { id: "R3", kategorier: ["praktisk", "billett", "hendelse"], rolle: "Museumsvert" },
+      { id: "R4", kategorier: ["sikkerhet"], rolle: "Direktør" },
+      { id: "R5", kategorier: [], rolle: "Direktør", fallback: "Ellers -> Avklar manuelt" }
+    ],
+    eksempler: [
+      "Hvor henger Skrik?",
+      "Hvilke verk er i Sal D?",
+      "Hvilke utstillinger vises nå?",
+      "Hvilke omvisninger kommer?"
+    ]
+  };
+
+  const $ = (id) => document.getElementById(id);
+
+  function velgRegel(kategori) {
+    return REGLER.regler.find(r => r.kategorier.includes(kategori))
+      || REGLER.regler.find(r => r.fallback);
+  }
+
+  function tegnRoller(aktiv) {
+    $("roller").innerHTML = REGLER.roller.map((r, i) =>
+      `<li><span class="af-flow-link"${r === aktiv ? ' aria-current="true"' : ""}>` +
+      `<span class="af-step-dot">${i + 1}</span>${r}</span></li>`).join("");
+    $("rolle-mobil").innerHTML = `<option>${aktiv || "Ingen ennå"}</option>`;
+  }
+
+  function tegnRegler(treff) {
+    $("regeltabell").querySelector("tbody").innerHTML = REGLER.regler.map(r =>
+      `<tr${treff && r.id === treff.id ? ' class="hit"' : ""}>` +
+      `<td class="af-rule-id">${r.id}</td>` +
+      `<td>${r.fallback || r.kategorier.join(", ")}</td><td>${r.rolle}</td></tr>`).join("");
+    $("regeltabell").querySelector("caption").textContent = `Rollevalg ${REGLER.versjon}`;
+  }
+
+  function tegnFakta(d, regel) {
+    const rad = (t, v) => `<dt>${t}</dt><dd>${v && v.length ? esc(Array.isArray(v) ? v.join(", ") : v) : "–"}</dd>`;
+    $("fakta").innerHTML =
+      rad("Verktøy", d.tools_used) + rad("Verk", d.artworks_referenced) +
+      rad("Saler", d.rooms_referenced) + rad("Kategori", d.category) +
+      rad("Regel", `${regel.id} ${REGLER.versjon}`);
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function leggTil(hvem, tekst, kilde) {
+    const li = document.createElement("li");
+    li.className = "kp-turn";
+    li.innerHTML = `<p class="kp-who">${esc(hvem)}${kilde || ""}</p><p class="kp-text">${esc(tekst)}</p>`;
+    $("logg").appendChild(li);
+    li.scrollIntoView({ block: "nearest" });
+  }
+
+  async function spor(tekst) {
+    leggTil("Du", tekst);
+    $("status").textContent = "Søker i databasen";
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json; charset=utf-8" },
+        body: JSON.stringify({ message: tekst })
+      });
+      const d = await res.json();
+      const regel = velgRegel(d.category);
+      const kilde = d.tools_used && d.tools_used.length
+        ? '<span class="af-source confirmed">Fra databasen</span>'
+        : '<span class="af-source system">Fast svar</span>';
+      leggTil(regel.rolle, d.text.replace(/\*\*?/g, ""), kilde);
+      tegnRoller(regel.rolle);
+      tegnRegler(regel);
+      tegnFakta(d, regel);
+      $("status").textContent = "";
+    } catch (e) {
+      $("status").textContent = "Fikk ikke svar. Sjekk at chat_hub.py kjører, og prøv igjen.";
+    }
+  }
+
+  $("eksempler").innerHTML = REGLER.eksempler.map(e =>
+    `<li><button type="button" class="af-btn af-btn-secondary">${e}</button></li>`).join("");
+  $("eksempler").addEventListener("click", ev => {
+    if (ev.target.matches("button")) spor(ev.target.textContent);
+  });
+  $("skjema").addEventListener("submit", ev => {
+    ev.preventDefault();
+    const t = $("sporsmal").value.trim();
+    if (!t) return;
+    $("sporsmal").value = "";
+    spor(t);
+  });
+
+  tegnRoller(null);
+  tegnRegler(null);
+</script>
+</body>
+</html>
