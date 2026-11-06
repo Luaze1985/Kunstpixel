@@ -416,7 +416,7 @@
     hent("/api/arena/caser").catch(function () { return { omrader: [], caser: [] }; })
   ]).then(function (d) {
     KI = !!d[0].llm;
-    $("f-ki").textContent = KI ? "På (" + d[0].llm_modell + "). Svarene merkes KI-forslag." : "Av. Alle svar er hentet rett fra databasen.";
+    $("f-ki").textContent = KI ? "På (" + d[0].llm_modell + "). KI-svar merkes AI-forslag til en person har godtatt dem." : "Av. Alle svar er hentet rett fra databasen.";
     ROLLER = d[1].resultat || [];
     SPORSMAL = d[2].sporsmal || {};
     (d[2].verktoy || []).forEach(function (v) { SKJEMA[v.navn] = v; });
