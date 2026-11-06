@@ -5,7 +5,7 @@ description = "Kunstpixel (kunstpixel.com) MCP Server and Demo-Prototype"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "mcp>=1.29.1",
+    "mcp==1.29.1",
     "fastmcp>=3.4.2",
     "pydantic>=2.12.5",
     "pyyaml>=6.0",
