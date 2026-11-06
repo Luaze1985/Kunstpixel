@@ -232,7 +232,10 @@
       return rader.length < 2 || rader.some(function (r) { return r[k] !== rader[0][k]; });
     });
     // Kolonner som er kopi av en tidligere kolonne (rolle = stilling) vises én gang.
-    kol = kol.filter(function (k, i) { return !kol.slice(0, i).some(function (f) { return rader.every(function (r) { return r[f] === r[k]; }); }); }).slice(0, 6);
+    kol = kol.filter(function (k, i) { return !kol.slice(0, i).some(function (f) { return rader.every(function (r) { return r[f] === r[k]; }); }); });
+    // Hvem/hva først (navn, tittel), og maks 5 kolonner så tabellen får plass i midten uten sidelengs rulling (F6).
+    var forst = kol.filter(function (k) { return /^(navn|tittel)$/.test(k); });
+    kol = forst.concat(kol.filter(function (k) { return forst.indexOf(k) < 0; })).slice(0, 5);
     var wrap = el("div", "af-table-wrap"), t = el("table", "af-table"), th = el("thead"), tr = el("tr"), tb = el("tbody");
     kol.forEach(function (k) { tr.appendChild(el("th", null, etikett(k))); }); th.appendChild(tr);
     rader.slice(0, 50).forEach(function (r) { var x = el("tr"); kol.forEach(function (k) { x.appendChild(el("td", null, verdi(r[k], k))); }); tb.appendChild(x); });
@@ -265,29 +268,72 @@
     n.forEach(function (k) { var c = el("div", "af-kpi"); c.appendChild(el("p", "af-kpi-label", etikett(k))); c.appendChild(el("p", "af-kpi-value", verdi(obj[k], k))); d.appendChild(c); });
     return d;
   }
-  function blokk(type, innhold, merke, merkeKlasse) {
+  // Samme merker og kontrollpunkter som rapporten i index.html, så begrepene er like i hele appen.
+  var MERKE = { bekreftet: ["confirmed", "Bekreftet"], system: ["system", "Systemforslag"], verifiser: ["verify", "Bør verifiseres"], mangler: ["missing", "Mangler"] };
+  var KONTROLL = ["Tallene stemmer med kilden", "Utvalget dekker det jeg spurte om"];
+  function blokk(type, innhold, merke) {
     var b = el("div", "af-report-block"); b.appendChild(el("span", "af-report-kind", type));
     var d = el("div"); d.appendChild(typeof innhold === "string" ? el("p", null, innhold) : innhold);
-    if (merke) d.appendChild(el("span", "af-source " + (merkeKlasse || ""), merke));
-    b.appendChild(d); return b;
+    var m = null;
+    if (merke) { m = el("span"); settMerke(m, merke); d.appendChild(m); }
+    b.appendChild(d); b.merke = m; return b;
   }
+  function settMerke(node, m) { node.className = "af-source " + m[0]; node.textContent = m[1]; }
 
   function tegnRapport(ut, r) {
     ut.textContent = "";
     var rap = el("div", "af-report");
-    rap.appendChild(el("p", "af-caption", "Rapport")).appendChild(el("span", "af-badge active", r.status || "Utkast"));
+    var status = el("span", "af-badge active", "Utkast");
+    rap.appendChild(el("p", "af-caption", "Rapport ")).appendChild(status);
     var tall = r.regelverdier && Object.keys(r.regelverdier).length ? r.regelverdier : (!Array.isArray(r.fakta) ? r.fakta : null);
     var kp = nokkeltall(tall, r.args); if (kp) rap.appendChild(kp);
     var liste = forsteListe(r.fakta);
     var faktaVisning = liste ? tabell(liste) : Array.isArray(r.fakta) ? "Ingen treff." : r.fakta && typeof r.fakta === "object" ? objektTabell(r.fakta) : String(r.fakta);
-    rap.appendChild(blokk("Fakta", faktaVisning, (r.merker || {}).fakta || "Hentet fra databasen", "verify"));
-    var v = r.vurdering || {};
-    if (v.vurdering) rap.appendChild(blokk("Vurdering", v.vurdering, "Systemforslag", "suggested"));
-    if (v.forslag) rap.appendChild(blokk("Forslag", v.forslag, "Systemforslag", "suggested"));
-    var det = el("details"); det.appendChild(el("summary", null, "Grunnlag"));
-    det.appendChild(el("p", null, "Verktøy " + r.verktoy + " med " + JSON.stringify(r.args || {}) + "." + (v.regel_id ? " Regel " + v.regel_id + " (" + v.kilde + ", versjon " + v.versjon + ")." : "")));
+    var fakta = blokk("Fakta", faktaVisning, MERKE.verifiser); rap.appendChild(fakta);
+    var v = r.vurdering || {}, harRegel = !!(v.vurdering || v.forslag);
+    var vurdering = blokk("Vurdering", v.vurdering || v.mangler || "Databasen har ingen regel for dette spørsmålet.", harRegel ? MERKE.system : MERKE.mangler);
+    var forslag = blokk("Forslag", v.forslag || "—", harRegel ? MERKE.system : MERKE.mangler);
+    rap.appendChild(vurdering); rap.appendChild(forslag);
+
+    // Kontroll: rapporten er Utkast til en person har huket av fakta og godtatt vurdering og forslag.
+    var boks = el("div");
+    boks.appendChild(el("p", "af-hint", "Huk av kontrollpunktene for å gjøre rapporten bekreftet."));
+    var faktaBokser = KONTROLL.map(function (t) { return avkrysning(boks, t); });
+    var godta = harRegel ? avkrysning(boks, "Jeg godtar vurdering og forslag") : null;
+    var kontroll = blokk("Kontroll", boks, MERKE.verifiser); rap.appendChild(kontroll);
+    function oppdater() {
+      var faktaOk = faktaBokser.every(function (c) { return c.checked; });
+      var godtatt = !!(godta && godta.checked);
+      settMerke(fakta.merke, faktaOk ? MERKE.bekreftet : MERKE.verifiser);
+      if (harRegel) { settMerke(vurdering.merke, godtatt ? MERKE.bekreftet : MERKE.system); settMerke(forslag.merke, godtatt ? MERKE.bekreftet : MERKE.system); }
+      var ok = faktaOk && harRegel && godtatt;  // Uten regel står det Mangler, og da kan rapporten ikke bekreftes.
+      settMerke(kontroll.merke, ok ? MERKE.bekreftet : MERKE.verifiser);
+      status.textContent = ok ? "Bekreftet" : "Utkast"; status.className = "af-badge " + (ok ? "done" : "active");
+    }
+    function avkrysning(forelder, tekst) {
+      var l = el("label", "af-radio"), c = document.createElement("input"); c.type = "checkbox";
+      c.addEventListener("change", oppdater); l.appendChild(c); l.appendChild(document.createTextNode(tekst)); forelder.appendChild(l);
+      return c;
+    }
+
+    var det = el("details"); det.appendChild(el("summary", null, "Vis grunnlag"));
+    det.appendChild(el("p", null, "Kilde: museum.db via " + r.verktoy + "(" + JSON.stringify(r.args || {}) + ")." + (v.regel_id ? " Vurdering og forslag: regel " + v.regel_id + " (" + v.kilde + ", versjon " + v.versjon + ", " + v.datakilde + ")." : "")));
     rap.appendChild(blokk("Grunnlag", det));
+
+    // Last ned: samme format som index.html (synlig rapporttekst som .txt). Grunnlaget tas med selv om det er lukket.
+    var a = el("div", "af-actions"), last = el("button", "af-btn af-btn-primary", "Last ned rapport"); last.type = "button";
+    last.addEventListener("click", function () {
+      var varApen = det.open; det.open = true;
+      var tekst = rap.innerText.replace(/\n{3,}/g, "\n\n");
+      det.open = varApen;
+      var lenke = document.createElement("a");
+      lenke.href = URL.createObjectURL(new Blob([tekst], { type: "text/plain;charset=utf-8" }));
+      lenke.download = "rapport-" + (r.sporsmal_id || "datafinner") + ".txt";
+      lenke.click(); URL.revokeObjectURL(lenke.href);
+    });
+    a.appendChild(last); rap.appendChild(a);
     ut.appendChild(rap);
+    oppdater();
     fasit(r.verktoy, r.args, "museum.db, kun lesing", v.regel_id ? v.regel_id + ": " + v.felt + " " + v.operator + " " + v.terskel : null);
   }
 
