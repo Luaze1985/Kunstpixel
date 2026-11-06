@@ -8,6 +8,9 @@ deploy/demo/*.yaml text eol=lf
 # Git-hooks kjøres av sh, også på Windows
 scripts/githooks/* text eol=lf
 
+# cmd.exe forventer CRLF i .cmd-filer
+*.cmd text eol=crlf
+
 # Datafiler og Colab-pakken genereres med LF og sammenlignes byte for byte i testene.
 # Uten dette gir core.autocrlf=true CRLF ved utsjekk, og testene feiler i en ny mappe.
 *.csv text eol=lf

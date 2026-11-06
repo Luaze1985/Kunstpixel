@@ -31,8 +31,10 @@ Slik beviser vi i praksis hvordan vi sammen kan hjelpe virksomheter med å gå f
 
 ### ▶️ Start demoen
 
+Dobbeltklikk på **`start_demo.cmd`** i prosjektmappen. Fra terminalen:
+
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts/start_demo.ps1
+.\start_demo.cmd          # eller: powershell -ExecutionPolicy Bypass -File scripts/start_demo.ps1
 ```
 
 Skriptet sjekker Python 3.13, `mcp` 1.29.1, at port 8010 er ledig, sjekksummen til `museum.db`, datakvaliteten og en selvtest (16 verk, 12 kunstnere, 6 saler). Deretter åpner det Datafinner på `http://127.0.0.1:8010`. Stopp med Ctrl+C.
