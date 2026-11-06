@@ -126,6 +126,10 @@
           klikk: function () { VAKTROM.api.gaa(s[0]); } };
       }));
     }
+    // Mens Arbeidsflyter er åpent, står arbeidsrollene øverst i menyen.
+    if (ARBEID.oppgaver && (valgt || "").indexOf("flate:arbeidsflyt") === 0) {
+      gruppe("Arbeidsroller", arbeidsroller().map(function (a) { return { id: arbeidId(a), navn: a }; }));
+    }
     var r = rolle(aktivRolle);
     var rollePunkter = synligeRoller().map(function (x) { return { id: "rolle:" + x.navn, navn: x.navn, status: antall(x.sporsmal.length, "rapport", "rapporter") }; });
     // Med rolle: rollens egne rapporter øverst. Uten rolle: rollelisten, så man velger først.
@@ -674,10 +678,111 @@
     });
   }
 
-  function visFlate(id, under) {
+  // ---------- Arbeidsflyter (oppgaver per arbeidsrolle) ----------
+  // Arbeidsrolle (Salvert …) er et arbeidsområde og er ikke det samme som «Jeg er» (B5: to lister, ingen kobling).
+  // Felt og verktøykall er de samme som i arbeidsflyt.html.
+  var ARBEID = { oppgaver: null, nokkel: "kunstpixel-arbeidsflyt-utkast-v1" };
+  var OPPGAVE = {
+    ansatt: { felt: [["sok", "Navn eller ansatt-ID"]], kall: function (f) { return { navn: "find_employee", args: { sok: f.sok } }; } },
+    handbok: { felt: [["query", "Hva vil du finne i håndboken?"]], kall: function (f) { return { navn: "lookup_handbook", args: { query: f.query, limit: 10 } }; } },
+    hms: { felt: [["query", "HMS-tema"]], kall: function (f) { return { navn: "search_hms_guidance", args: { query: f.query, limit: 10 } }; } },
+    onboarding: { felt: [], kall: function (f, rolle) { return { navn: "search_hr_onboarding", args: { rolle: rolle } }; } },
+    bytte: { felt: [["vakt_a", "Første vakt-ID"], ["vakt_b", "Andre vakt-ID"]], kall: function (f) { return { navn: "check_shift_swap", args: f }; } },
+    tiltak: { felt: [["query", "Rutine eller tema"], ["tiltakstekst", "Beskriv et mulig tiltak"]], kall: function (f) { return { navn: "lookup_handbook", args: { query: f.query, limit: 10 } }; } }
+  };
+  function arbeidsroller() { var s = []; (ARBEID.oppgaver || []).forEach(function (o) { if (s.indexOf(o.rolle) < 0) s.push(o.rolle); }); return s; }
+  // Rollenavn kan ha skråstrek (Montør/drift), så de kodes for seg i adressen.
+  function arbeidId(rolle, oppgave) { return "flate:arbeidsflyt" + (rolle ? "/" + encodeURIComponent(rolle) + (oppgave ? "/" + oppgave : "") : ""); }
+  function lesUtkast() { try { return JSON.parse(localStorage.getItem(ARBEID.nokkel) || "[]"); } catch (e) { return []; } }
+  function feilBoks(tittel, tekst) { var f = el("div", "af-error-summary"); f.setAttribute("role", "alert"); f.appendChild(el("h2", null, tittel)); f.appendChild(el("p", null, tekst)); return f; }
+
+  function visArbeidsflyt(rolleKode, oppgaveId) {
+    var m = $("midt"); m.textContent = ""; m.appendChild(el("p", "af-task-hint", "Henter oppgaver …"));
+    fasit(null);
+    var klar = ARBEID.oppgaver ? Promise.resolve() : hent("/api/arbeidsflyt").then(function (d) { ARBEID.oppgaver = d.oppgaver || []; });
+    klar.then(function () {
+      if ((valgt || "").indexOf("flate:arbeidsflyt") !== 0) return;
+      var rolle = rolleKode ? decodeURIComponent(rolleKode) : null;
+      if (rolle && arbeidsroller().indexOf(rolle) < 0) rolle = null;
+      var o = rolle && oppgaveId ? ARBEID.oppgaver.filter(function (x) { return x.rolle === rolle && x.oppgave_id === oppgaveId; })[0] : null;
+      // Vaktsjekken er vaktrommet fra 06. replace, så tilbakeknappen ikke sender deg hit igjen.
+      if (o && o.oppgave_id === "vakt") return location.replace("#" + encodeURIComponent("flate:vaktrom"));
+      if (o && OPPGAVE[o.oppgave_id]) visOppgave(rolle, o);
+      else if (rolle) visArbeidsrolle(rolle);
+      else visArbeidsroller();
+      tegnMeny();
+    }).catch(function (e) { m.textContent = ""; m.appendChild(feilBoks("Fikk ikke hentet oppgavene", e.message)); });
+  }
+  function visArbeidsroller() {
+    var m = tom("Flate · Arbeidsflyter", "Velg arbeidsrolle", "Arbeidsrollen er et arbeidsområde, ikke stillingen du har valgt i «Jeg er».");
+    kort(m, arbeidsroller().map(function (r) {
+      var n = ARBEID.oppgaver.filter(function (o) { return o.rolle === r; }).length;
+      return { navn: r, merke: antall(n, "oppgave", "oppgaver"), klikk: function () { vis(arbeidId(r)); } };
+    }));
+    var u = lesUtkast();
+    m.appendChild(el("h2", null, "Lokale utkast"));
+    if (!u.length) m.appendChild(el("p", "af-task-hint", "Ingen utkast lagret. Utkast lagres bare i denne nettleseren."));
+    else {
+      var ol = el("ul", "af-task-board");
+      u.slice(0, 10).forEach(function (x) { var li = el("li", "af-context-card"); li.appendChild(el("strong", null, x.oppgave + " · " + x.rolle)); li.appendChild(el("p", "af-task-hint", x.tid + (x.tekst ? " · " + x.tekst : ""))); ol.appendChild(li); });
+      m.appendChild(ol);
+    }
+  }
+  function visArbeidsrolle(rolle) {
+    var m = tom("Arbeidsrolle", rolle, "Velg en oppgave. Svaret hentes fra databasen.");
+    kort(m, ARBEID.oppgaver.filter(function (o) { return o.rolle === rolle; }).map(function (o) {
+      var tilVakt = o.oppgave_id === "vakt";
+      return { navn: o.tittel, tekst: o.beskrivelse, merke: tilVakt ? "Vaktrom" : null, klikk: function () { vis(tilVakt ? "flate:vaktrom" : arbeidId(rolle, o.oppgave_id)); } };
+    }));
+  }
+  function visOppgave(rolle, o) {
+    var d = OPPGAVE[o.oppgave_id], m = tom(rolle, o.tittel, o.beskrivelse), form = el("form");
+    form.noValidate = true;
+    d.felt.forEach(function (f) {
+      var g = el("div", "af-group"), l = el("label", "af-label", f[1]), i = el("input", "af-input");
+      i.id = "a-" + f[0]; i.name = f[0]; l.htmlFor = i.id; g.appendChild(l); g.appendChild(i); form.appendChild(g);
+    });
+    var a = el("div", "af-actions"), b = el("button", "af-btn af-btn-primary", "Finn svar"), lagre = el("button", "af-btn af-btn-secondary", "Lagre lokalt utkast");
+    b.type = "submit"; lagre.type = "button"; lagre.style.display = "none";  // display, fordi af.css overstyrer hidden.
+    a.appendChild(b); a.appendChild(lagre); form.appendChild(a); m.appendChild(form);
+    var ut = el("div"); m.appendChild(ut);
+    var siste = null;
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var f = {};
+      for (var i = 0; i < d.felt.length; i++) {
+        var v = form.elements[d.felt[i][0]].value.trim();
+        if (!v) { ut.textContent = ""; ut.appendChild(feilBoks("Mangler felt", "Fyll ut: " + d.felt[i][1])); return; }
+        f[d.felt[i][0]] = v;
+      }
+      var k = d.kall(f, rolle);
+      fasit(k.navn, k.args);
+      b.disabled = true; lagre.style.display = "none"; ut.textContent = ""; ut.appendChild(el("p", "af-task-hint", "Henter …"));
+      hent("/api/verktoy?navn=" + encodeURIComponent(k.navn) + "&args=" + encodeURIComponent(JSON.stringify(k.args)))
+        .then(function (r) {
+          var svar = r.resultat, liste = forsteListe(svar);
+          ut.textContent = "";
+          var vis_ = liste ? (liste.length ? tabell(liste) : el("p", null, "Ingen treff i datagrunnlaget.")) : Array.isArray(svar) ? el("p", null, "Ingen treff i datagrunnlaget.") : svar && typeof svar === "object" ? objektTabell(svar) : el("p", null, String(svar));
+          ut.appendChild(blokk("Fakta", vis_, MERKE.verifiser));
+          siste = { rolle: rolle, oppgave: o.tittel, tekst: f.tiltakstekst || "", verktoy: k.navn, inngang: f };
+          lagre.textContent = "Lagre lokalt utkast"; lagre.style.display = "";
+        })
+        .catch(function (err) { ut.textContent = ""; ut.appendChild(feilBoks("Fant ikke svar", err.message)); })
+        .then(function () { b.disabled = false; });
+    });
+    lagre.addEventListener("click", function () {
+      if (!siste) return;
+      var u = lesUtkast(); u.unshift(Object.assign({ tid: new Date().toLocaleString("nb-NO") }, siste));
+      try { localStorage.setItem(ARBEID.nokkel, JSON.stringify(u.slice(0, 30))); lagre.textContent = "Lagret lokalt"; } catch (e) { lagre.textContent = "Kunne ikke lagre"; }
+    });
+    if (!d.felt.length) form.requestSubmit();  // Oppgaver uten felt (opplæring) gir svar med en gang.
+  }
+
+  function visFlate(id, under, under2) {
     if (id === "chat") return visChat();
     if (id === "sok") return visSok();
     if (id === "vaktrom") return visVaktrom(under);
+    if (id === "arbeidsflyt") return visArbeidsflyt(under, under2);
     var f = FLATER.filter(function (x) { return x.id === id; })[0]; if (!f) return visStart();
     var m = tom("Flate", f.navn, f.tekst);
     if (f.krevKI && !KI) m.appendChild(el("p", "af-panel-message", "KI er av i denne demoen. Start med -KI for å slå den på."));
@@ -697,7 +802,7 @@
     else if (type === "rolle") visRolle(navn);
     else if (type === "arena" && deler[1]) visCase(navn, deler[1]);
     else if (type === "arena") visArena(navn);
-    else if (type === "flate") visFlate(navn, deler[1]);
+    else if (type === "flate") visFlate(navn, deler[1], deler[2]);
     else visStart();
     tegnMeny();
   }

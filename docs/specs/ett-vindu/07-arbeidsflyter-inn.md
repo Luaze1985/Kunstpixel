@@ -2,7 +2,14 @@
 
 **Hva:** Arbeidsflyter (oppgaver per arbeidsrolle) vises i midten.
 **Gren:** `ux/arbeidsflyt-inn` fra tuppen av `ux/ett-vindu` etter 06 · **Må gjøres først:** 06 (samme fil)
-**Status:** trenger-avklaring (B5): hvordan skal de 7 arbeidsrollene (Salvert …) henge sammen med «Jeg er»-rollene (Museumsdirektør …)?
+**Status:** done 2026-11-06 på `ux/arbeidsflyt-inn`, ikke merget
+
+> **Beslutninger under byggingen:**
+> - B5 (Lars, 2026-11-06): to lister uten kobling. Arbeidsrollen velges inne i Arbeidsflyter, og datamodellen er uendret.
+> - Adressene er `#flate:arbeidsflyt`, `…/<arbeidsrolle>` og `…/<arbeidsrolle>/<oppgave>`. Rollenavnet kodes for seg fordi navnene har skråstrek (Montør/drift).
+> - «Sjekk vakt» og «Sjekk bemanning» åpner vaktrommet fra 06. Det skjemaet med fritekst-kandidat-ID fra `arbeidsflyt.html` er ikke tatt med. En dyplenke til vaktoppgaven bruker `location.replace`, så tilbakeknappen ikke havner i en løkke.
+> - Felt og verktøykall er kopiert fra `arbeidsflyt.html`. Svaret vises med samme tabell som rapportene. Lokale utkast bruker samme nøkkel som før.
+> - Verktøykatalogen fra `arbeidsflyt.html` er ikke tatt med. Høyre panel viser bare verktøyet som faktisk ble brukt.
 
 ## Avklaring Lars må gjøre før start
 - **(Anbefalt) To lister, tydelige navn.** «Jeg er» velger stillingsrolle, og «Arbeidsrolle» velges inne i Arbeidsflyter. Ingen endring i datamodellen.
