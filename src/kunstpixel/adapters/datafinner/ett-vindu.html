@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datafinner – ett vindu</title>
+<link rel="stylesheet" href="/af.css">
+</head>
+<body class="af" style="margin:0;padding:24px 16px;background:var(--canvas)">
+<div class="af">
+  <div class="af-shell">
+    <!-- Venstre: alt som kan velges. Midten: arbeidet. Høyre: fasit (verktøy, kilde, KI). -->
+    <nav class="af-sidebar" aria-label="Innhold">
+      <p class="af-side-heading">Datafinner</p>
+      <div id="meny"><p class="af-task-hint">Henter …</p></div>
+    </nav>
+
+    <main class="af-main">
+      <div class="af-mobile-nav">
+        <label for="mobilvalg">Gå til</label>
+        <select id="mobilvalg"></select>
+      </div>
+      <div class="af-alert info" role="status"><strong>Øvingsdata</strong><span>Alle navn og tall er syntetiske.</span></div>
+      <div id="midt" aria-live="polite"></div>
+    </main>
+
+    <aside class="af-context" aria-label="Fasit">
+      <h2 class="af-context-title">Fasit</h2>
+      <p class="af-task-hint" style="margin:0 0 12px">Tallene kommer fra databasen. KI formulerer bare.</p>
+      <div class="af-context-card">
+        <span class="af-small-label">Verktøy</span>
+        <p id="f-verktoy" style="overflow-wrap:anywhere">Ingen ennå</p>
+      </div>
+      <div class="af-context-card">
+        <span class="af-small-label">Kilde</span>
+        <p id="f-kilde" style="overflow-wrap:anywhere">museum.db, kun lesing</p>
+      </div>
+      <div class="af-context-card" id="f-regel-kort" hidden>
+        <span class="af-small-label">Regel</span>
+        <p id="f-regel" style="overflow-wrap:anywhere"></p>
+      </div>
+      <div class="af-context-card">
+        <span class="af-small-label">KI</span>
+        <p id="f-ki">Sjekker …</p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  function el(tag, cls, tekst) { var e = document.createElement(tag); if (cls) e.className = cls; if (tekst !== undefined && tekst !== null) e.textContent = tekst; return e; }
+  function hent(url, opts) { return fetch(url, opts).then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || ("HTTP " + r.status)); return d; }); }); }
+  function post(url, body) { return hent(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }); }
+
+  var KI = false, ROLLER = [], SPORSMAL = {}, SKJEMA = {}, AREA = { omrader: [], caser: [] };
+  var valgt = null;
+
+  // Flater som ennå ikke er flyttet inn i vinduet. De åpnes som før til de er bygd om.
+  var FLATER = [
+    { id: "chat", navn: "Chat", url: "/chat", krevKI: true, tekst: "Spør med vanlige ord. KI-en henter fakta med verktøyene." },
+    { id: "vaktrom", navn: "Vaktrom", url: "/vaktrom", tekst: "Finn folk til én vakt: historikk, kandidater, kontroll og utkast." },
+    { id: "sok", navn: "Søk", url: "/sok.html", tekst: "Samling, arrangementer, publikumsinformasjon og interne sider." },
+    { id: "arbeidsflyt", navn: "Arbeidsflyter", url: "/arbeidsflyt", tekst: "Oppgaver per arbeidsrolle." }
+  ];
+
+  // Felt som ikke hører hjemme i en demotabell (kontaktinfo, interne nøkler, datamerker).
+  var SKJULT = /(^|_)(id|datakilde|telefon|epost)$|^(telefon|epost|kontor_sal|klokkeslett_datakilde)$/;
+  var STANDARD = { dato: function () { return new Date().toISOString().slice(0, 10); }, maaned: function () { return new Date().toISOString().slice(0, 7); },
+    aar: function () { return 2025; }, kvartal: function () { return 2; }, exhibition_id: function () { return "KP-EXH-2020-041"; },
+    ident: function () { return "KP-ANS-001"; }, ansatt_id: function () { return "KP-ANS-001"; }, mottakertype: function () { return "ekstern"; },
+    mal_id: function () { return "ML-01"; }, kategori: function () { return "hms_opplaering"; }, intern_eier: function () { return "Museumsdirektør"; } };
+  var ETIKETT = { dato: "Dato", maaned: "Måned", aar: "År", kvartal: "Kvartal", exhibition_id: "Utstilling", ident: "Ansatt", ansatt_id: "Ansatt",
+    query: "Søk", mottakertype: "Mottaker", mal_id: "Rapportmal", kategori: "Kategori", intern_eier: "Intern eier" };
+
+  // ---------- Høyre panel ----------
+  function fasit(verktoy, args, kilde, regel) {
+    $("f-verktoy").textContent = verktoy ? verktoy + "(" + (args && Object.keys(args).length ? JSON.stringify(args) : "") + ")" : "Ingen ennå";
+    $("f-kilde").textContent = kilde || "museum.db, kun lesing";
+    $("f-regel-kort").hidden = !regel;
+    $("f-regel").textContent = regel || "";
+  }
+
+  // ---------- Venstre meny ----------
+  function tegnMeny() {
+    var meny = $("meny"), mobil = $("mobilvalg");
+    meny.textContent = ""; mobil.textContent = "";
+    function gruppe(tittel, punkter) {
+      meny.appendChild(el("p", "af-side-heading", tittel));
+      var og = el("optgroup"); og.label = tittel;
+      var ol = el("ol", "af-flow-list");
+      punkter.forEach(function (p) {
+        var li = el("li"), b = el("button", "af-flow-link"); b.type = "button"; b.dataset.id = p.id;
+        var t = el("span", null, p.navn); if (p.status) t.appendChild(el("span", "af-step-status", p.status));
+        b.appendChild(t); b.addEventListener("click", function () { vis(p.id); });
+        if (valgt === p.id || (valgt && valgt.indexOf(p.id + "/") === 0)) b.setAttribute("aria-current", "page");
+        li.appendChild(b); ol.appendChild(li);
+        var op = el("option", null, p.navn); op.value = p.id; og.appendChild(op);
+      });
+      meny.appendChild(ol); mobil.appendChild(og);
+    }
+    gruppe("Arena", AREA.omrader.map(function (o) {
+      var n = AREA.caser.filter(function (c) { return c.omrade === o.id; }).length;
+      return { id: "arena:" + o.id, navn: o.navn, status: n + (n === 1 ? " case" : " caser") };
+    }));
+    gruppe("Roller", ROLLER.filter(function (r) { return r.sporsmal.length; }).map(function (r) {
+      return { id: "rolle:" + r.navn, navn: r.navn, status: r.sporsmal.length + " spørsmål" };
+    }));
+    gruppe("Flater", FLATER.map(function (f) { return { id: "flate:" + f.id, navn: f.navn, status: f.krevKI && !KI ? "Krever KI" : null }; }));
+    mobil.value = (valgt || "").split("/")[0];  // Valget kjenner bare toppnivået (rolle, område, flate).
+  }
+  $("mobilvalg").addEventListener("change", function () { vis(this.value); });
+
+  // ---------- Midten ----------
+  function tom(caption, tittel, ingress) {
+    var m = $("midt"); m.textContent = "";
+    if (caption) m.appendChild(el("p", "af-caption", caption));
+    var h = el("h1", "af-title", tittel); h.tabIndex = -1; m.appendChild(h);
+    if (ingress) m.appendChild(el("p", "af-lead", ingress));
+    h.focus({ preventScroll: true });
+    return m;
+  }
+  function kort(liste, punkter) {
+    var ul = el("ul", "af-task-board");
+    punkter.forEach(function (p) {
+      // Samme oppbygging som kortene på forsiden: tekst til venstre, merke til høyre.
+      var li = el("li"), b = el("button", "af-task-card"); b.type = "button";
+      var t = el("span"); t.appendChild(el("strong", null, p.navn));
+      if (p.tekst) t.appendChild(el("small", null, p.tekst));
+      b.appendChild(t);
+      if (p.merke) b.appendChild(el("span", "af-badge", p.merke));
+      b.addEventListener("click", p.klikk); li.appendChild(b); ul.appendChild(li);
+    });
+    liste.appendChild(ul);
+  }
+
+  function visStart() {
+    var m = tom(null, "Datafinner", "Velg en case, en rolle eller en flate til venstre. Svaret kommer i midten, og fasiten (verktøy og kilde) står til høyre.");
+    kort(m, [
+      { navn: "Arena", tekst: "Øvelsescaser som viser hvor fasit slutter og skjønn begynner.", klikk: function () { vis("arena:" + (AREA.omrader[0] || {}).id); } },
+      { navn: "Roller", tekst: "Faste spørsmål per rolle. Ett klikk gir rapport.", klikk: function () { var r = ROLLER.filter(function (x) { return x.sporsmal.length; })[0]; if (r) vis("rolle:" + r.navn); } },
+      { navn: "Chat", tekst: KI ? "Spør med vanlige ord." : "Krever KI. Start demoen med -KI.", merke: KI ? null : "Krever KI", klikk: function () { vis("flate:chat"); } }
+    ]);
+    fasit(null);
+  }
+
+  function visRolle(navn) {
+    var r = ROLLER.filter(function (x) { return x.navn === navn; })[0]; if (!r) return visStart();
+    var m = tom("Rolle", r.navn, r.beskrivelse);
+    kort(m, r.sporsmal.map(function (id) {
+      var s = SPORSMAL[id] || { tekst: id };
+      return { navn: s.tekst, klikk: function () { vis("rolle:" + navn + "/" + id); } };
+    }));
+    fasit(null);
+  }
+
+  function parametre(id) {
+    var s = SPORSMAL[id] || {}, t = SKJEMA[s.verktoy] || {}, p = t.parametre || {}, krav = p.required || [];
+    var navn = krav.slice(); if (!krav.length && p.properties && p.properties.query) navn.push("query");
+    return navn.map(function (n) { return { navn: n, type: (p.properties[n] || {}).type, hjelp: (p.properties[n] || {}).description }; });
+  }
+
+  function visSporsmal(rolle, id) {
+    var s = SPORSMAL[id] || { tekst: id };
+    var m = tom(rolle, s.tekst);
+    var felt = parametre(id), form = el("form");
+    form.noValidate = true;
+    felt.forEach(function (f) {
+      var g = el("div", "af-group"), l = el("label", "af-label", ETIKETT[f.navn] || f.navn), i = el("input", "af-input");
+      i.id = "p-" + f.navn; l.htmlFor = i.id; i.name = f.navn;
+      i.type = f.navn === "dato" ? "date" : f.navn === "maaned" ? "month" : f.type === "integer" ? "number" : "text";
+      i.value = STANDARD[f.navn] ? STANDARD[f.navn]() : "";
+      g.appendChild(l); if (f.hjelp) g.appendChild(el("span", "af-hint", f.hjelp)); g.appendChild(i); form.appendChild(g);
+    });
+    var a = el("div", "af-actions"), b = el("button", "af-btn af-btn-secondary", "Oppdater"); b.type = "submit";
+    a.appendChild(b); form.appendChild(a); m.appendChild(form);
+    // Svaret hentes med en gang med standardverdiene. Knappen trengs bare når det finnes felt å endre.
+    // (display, fordi af.css overstyrer hidden.)
+    if (!felt.length) a.style.display = "none";
+    var ut = el("div"); m.appendChild(ut);
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var args = {};
+      felt.forEach(function (f) { var v = form.elements[f.navn].value.trim(); if (v !== "") args[f.navn] = f.type === "integer" ? Number(v) : v; });
+      b.disabled = true; ut.textContent = ""; ut.appendChild(el("p", "af-task-hint", "Henter …"));
+      hent("/api/rapport?sporsmal=" + encodeURIComponent(id) + "&args=" + encodeURIComponent(JSON.stringify(args)))
+        .then(function (r) { tegnRapport(ut, r); })
+        .catch(function (err) { ut.textContent = ""; var f = el("div", "af-error-summary"); f.setAttribute("role", "alert"); f.appendChild(el("h2", null, "Fant ikke svar")); f.appendChild(el("p", null, err.message)); ut.appendChild(f); })
+        .then(function () { b.disabled = false; });
+    });
+    fasit(s.verktoy, null);
+    form.requestSubmit();  // Ett klikk i menyen gir rapporten.
+  }
+
+  // Generisk visning av et verktøysvar: nøkkeltall, én tabell, resten som liste.
+  // Feltnavn til lesbar etikett: antall_pa_jobb → «Antall på jobb».
+  function etikett(k) { var s = k.replace(/_/g, " ").replace(/\bpa\b/g, "på").replace(/\bnok\b/g, "kr").replace(/aa/g, "å").replace(/\bbesok/g, "besøk"); return s.charAt(0).toUpperCase() + s.slice(1); }
+  function tabell(rader) {
+    // Kolonner der alle rader har samme verdi (f.eks. dato) sier ingenting i tabellen.
+    var kol = Object.keys(rader[0] || {}).filter(function (k) {
+      if (SKJULT.test(k) || typeof rader[0][k] === "object") return false;
+      return rader.length < 2 || rader.some(function (r) { return r[k] !== rader[0][k]; });
+    });
+    // Kolonner som er kopi av en tidligere kolonne (rolle = stilling) vises én gang.
+    kol = kol.filter(function (k, i) { return !kol.slice(0, i).some(function (f) { return rader.every(function (r) { return r[f] === r[k]; }); }); }).slice(0, 6);
+    var wrap = el("div", "af-table-wrap"), t = el("table", "af-table"), th = el("thead"), tr = el("tr"), tb = el("tbody");
+    kol.forEach(function (k) { tr.appendChild(el("th", null, etikett(k))); }); th.appendChild(tr);
+    rader.slice(0, 50).forEach(function (r) { var x = el("tr"); kol.forEach(function (k) { x.appendChild(el("td", null, verdi(r[k], k))); }); tb.appendChild(x); });
+    t.appendChild(th); t.appendChild(tb); wrap.appendChild(t);
+    return wrap;
+  }
+  // Årstall uten tusenskille (2025, ikke 2 025). Andre tall på norsk.
+  function verdi(v, k) { return typeof v === "number" ? (/(^|_)aar$|^ar$/.test(k || "") ? String(v) : v.toLocaleString("nb-NO")) : v === null || v === undefined ? "" : String(v); }
+  function forsteListe(f) { if (Array.isArray(f)) return f; if (f && typeof f === "object") { for (var k in f) if (Array.isArray(f[k]) && f[k].length && typeof f[k][0] === "object") return f[k]; } return null; }
+  // Objekt uten liste: én rad per felt, nestede objekter ett nivå ned («SSB · sykefravær prosent»).
+  function objektTabell(obj) {
+    var rader = [];
+    Object.keys(obj || {}).forEach(function (k) {
+      if (SKJULT.test(k)) return;
+      var v = obj[k];
+      if (v && typeof v === "object" && !Array.isArray(v)) Object.keys(v).forEach(function (u) { if (!SKJULT.test(u) && (v[u] === null || typeof v[u] !== "object")) rader.push([etikett(k) + " · " + etikett(u).toLowerCase(), v[u], u]); });
+      else if (!Array.isArray(v)) rader.push([etikett(k), v, k]);
+    });
+    var wrap = el("div", "af-table-wrap"), t = el("table", "af-table"), tb = el("tbody");
+    rader.forEach(function (r) { var x = el("tr"); x.appendChild(el("th", null, r[0])); x.appendChild(el("td", null, verdi(r[1], r[2]))); tb.appendChild(x); });
+    t.appendChild(tb); wrap.appendChild(t); return wrap;
+  }
+  function nokkeltall(obj, args) {
+    var n = Object.keys(obj || {}).filter(function (k) {
+      if (args && k in args) return false;  // Inndata (år, kvartal) er ikke svar.
+      return typeof obj[k] === "number" || (typeof obj[k] === "string" && obj[k].length < 30 && !SKJULT.test(k));
+    }).slice(0, 4);
+    if (!n.length) return null;
+    var d = el("div", "af-kpis");
+    n.forEach(function (k) { var c = el("div", "af-kpi"); c.appendChild(el("p", "af-kpi-label", etikett(k))); c.appendChild(el("p", "af-kpi-value", verdi(obj[k], k))); d.appendChild(c); });
+    return d;
+  }
+  function blokk(type, innhold, merke, merkeKlasse) {
+    var b = el("div", "af-report-block"); b.appendChild(el("span", "af-report-kind", type));
+    var d = el("div"); d.appendChild(typeof innhold === "string" ? el("p", null, innhold) : innhold);
+    if (merke) d.appendChild(el("span", "af-source " + (merkeKlasse || ""), merke));
+    b.appendChild(d); return b;
+  }
+
+  function tegnRapport(ut, r) {
+    ut.textContent = "";
+    var rap = el("div", "af-report");
+    rap.appendChild(el("p", "af-caption", "Rapport")).appendChild(el("span", "af-badge active", r.status || "Utkast"));
+    var tall = r.regelverdier && Object.keys(r.regelverdier).length ? r.regelverdier : (!Array.isArray(r.fakta) ? r.fakta : null);
+    var kp = nokkeltall(tall, r.args); if (kp) rap.appendChild(kp);
+    var liste = forsteListe(r.fakta);
+    var faktaVisning = liste ? tabell(liste) : Array.isArray(r.fakta) ? "Ingen treff." : r.fakta && typeof r.fakta === "object" ? objektTabell(r.fakta) : String(r.fakta);
+    rap.appendChild(blokk("Fakta", faktaVisning, (r.merker || {}).fakta || "Hentet fra databasen", "verify"));
+    var v = r.vurdering || {};
+    if (v.vurdering) rap.appendChild(blokk("Vurdering", v.vurdering, "Systemforslag", "suggested"));
+    if (v.forslag) rap.appendChild(blokk("Forslag", v.forslag, "Systemforslag", "suggested"));
+    var det = el("details"); det.appendChild(el("summary", null, "Grunnlag"));
+    det.appendChild(el("p", null, "Verktøy " + r.verktoy + " med " + JSON.stringify(r.args || {}) + "." + (v.regel_id ? " Regel " + v.regel_id + " (" + v.kilde + ", versjon " + v.versjon + ")." : "")));
+    rap.appendChild(blokk("Grunnlag", det));
+    ut.appendChild(rap);
+    fasit(r.verktoy, r.args, "museum.db, kun lesing", v.regel_id ? v.regel_id + ": " + v.felt + " " + v.operator + " " + v.terskel : null);
+  }
+
+  function visArena(omrade) {
+    var o = AREA.omrader.filter(function (x) { return x.id === omrade; })[0]; if (!o) return visStart();
+    var m = tom("Arena", o.navn);
+    kort(m, AREA.caser.filter(function (c) { return c.omrade === omrade; }).map(function (c) {
+      var t = (c.kjoring || {}).type;
+      return { navn: c.id + " " + c.tittel, tekst: (c.oppdrag || "").trim().split("\n")[0], merke: t === "lesecase" ? "Lesecase" : null,
+        klikk: function () { vis("arena:" + omrade + "/" + c.id); } };
+    }));
+    fasit(null);
+  }
+
+  function visCase(omrade, id) {
+    var c = AREA.caser.filter(function (x) { return x.id === id; })[0]; if (!c) return visArena(omrade);
+    var m = tom("Arena · " + c.id, c.tittel, (c.oppdrag || "").trim());
+    if ((c.kjoring || {}).type === "lesecase") { m.appendChild(el("p", "af-panel-message", "Lesecase. Les og diskuter, ingenting kjøres.")); fasit(null); return; }
+    var ut = el("div"); ut.appendChild(el("p", "af-task-hint", "Kjører …")); m.appendChild(ut);
+    post("/api/arena/kjor", { id: id }).then(function (k) {
+      ut.textContent = "";
+      (k.steg || []).forEach(function (s, i) {
+        var rap = el("div", "af-report");
+        rap.appendChild(el("p", "af-caption", "Steg " + (i + 1) + " · " + (s.verktoy || s.rolle || "")));
+        if (s.sporsmal) rap.appendChild(el("p", "af-lead", s.sporsmal));
+        var svar = s.svar, liste = forsteListe(svar);
+        if (liste) rap.appendChild(tabell(liste));
+        else if (svar && typeof svar === "object") { var kp = nokkeltall(svar); if (kp) rap.appendChild(kp); if (svar.merknad) rap.appendChild(el("p", "af-table-meta", svar.merknad)); }
+        else if (svar) { var p = el("p", null, String(svar).replace(/\*\*/g, "")); p.style.whiteSpace = "pre-line"; rap.appendChild(p); }
+        if (s.mangler && s.mangler.length) rap.appendChild(el("p", "af-panel-message", "Mangler: " + s.mangler.join(", ")));
+        ut.appendChild(rap);
+      });
+      // Datapolicy-caser (G4) har ingen steg, bare hvilke tabeller som er merket og hva policyen sier.
+      if (!(k.steg || []).length && (k.datamerke || []).length) {
+        var rap = el("div", "af-report");
+        rap.appendChild(el("p", "af-caption", "Datamerking per tabell"));
+        rap.appendChild(tabell(k.datamerke));
+        if (k.policy) rap.appendChild(el("p", "af-panel-message", "Ekstern KI tillatt: " + (k.policy.ekstern_ki ? "ja" : "nei") + ". " + (k.policy.grunn || "")));
+        ut.appendChild(rap);
+      }
+      var steg = k.steg || [], siste = steg[steg.length - 1] || {};
+      var verktoy = [].concat.apply([], steg.map(function (s) { return s.verktoy ? [s.verktoy] : (s.verktoy_brukt || []); }));
+      var kilder = [].concat.apply([], steg.map(function (s) { return s.kilder || []; }));
+      fasit(verktoy.filter(function (v, i) { return v && verktoy.indexOf(v) === i; }).join(", ") || null, siste.args,
+        (k.datamerke || []).map(function (d) { return d.tabell; }).concat(kilder.map(String)).join(", ") || "museum.db");
+    }).catch(function (e) { ut.textContent = ""; ut.appendChild(el("p", "af-panel-message", "Kunne ikke kjøre casen: " + e.message)); });
+  }
+
+  function visFlate(id) {
+    var f = FLATER.filter(function (x) { return x.id === id; })[0]; if (!f) return visStart();
+    var m = tom("Flate", f.navn, f.tekst);
+    if (f.krevKI && !KI) m.appendChild(el("p", "af-panel-message", "KI er av i denne demoen. Start med -KI for å slå den på."));
+    m.appendChild(el("p", "af-task-hint", "Denne flaten flyttes inn i vinduet i neste steg. Til da åpnes den på egen side."));
+    var a = el("div", "af-actions"), l = el("a", "af-btn af-btn-secondary", "Åpne " + f.navn); l.href = f.url;
+    a.appendChild(l); m.appendChild(a);
+    fasit(null);
+  }
+
+  // ---------- Ruting (lenkbar: #rolle:HR og bemanning/vakt-i-dag) ----------
+  function vis(id) { if (id && location.hash.slice(1) !== encodeURIComponent(id)) { location.hash = encodeURIComponent(id); return; } ruter(); }
+  function ruter() {
+    valgt = decodeURIComponent(location.hash.slice(1)) || null;
+    var deler = (valgt || "").split("/"), hode = deler[0], type = hode.split(":")[0], navn = hode.slice(type.length + 1);
+    if (type === "rolle" && deler[1]) visSporsmal(navn, deler[1]);
+    else if (type === "rolle") visRolle(navn);
+    else if (type === "arena" && deler[1]) visCase(navn, deler[1]);
+    else if (type === "arena") visArena(navn);
+    else if (type === "flate") visFlate(navn);
+    else visStart();
+    tegnMeny();
+  }
+  window.addEventListener("hashchange", ruter);
+
+  // ---------- Oppstart ----------
+  Promise.all([
+    hent("/api/status").catch(function () { return {}; }),
+    hent("/api/verktoy?navn=list_roles"),
+    hent("/api/verktoyskjema"),
+    hent("/api/arena/caser").catch(function () { return { omrader: [], caser: [] }; })
+  ]).then(function (d) {
+    KI = !!d[0].llm;
+    $("f-ki").textContent = KI ? "På (" + d[0].llm_modell + "). Svarene merkes KI-forslag." : "Av. Alle svar er hentet rett fra databasen.";
+    ROLLER = d[1].resultat || [];
+    SPORSMAL = d[2].sporsmal || {};
+    (d[2].verktoy || []).forEach(function (v) { SKJEMA[v.navn] = v; });
+    AREA = d[3];
+    ruter();
+  }).catch(function (e) {
+    $("meny").textContent = ""; $("midt").textContent = "";
+    var f = el("div", "af-error-summary"); f.setAttribute("role", "alert");
+    f.appendChild(el("h2", null, "Datafinner svarer ikke")); f.appendChild(el("p", null, e.message)); $("midt").appendChild(f);
+  });
+})();
+</script>
+</body>
+</html>

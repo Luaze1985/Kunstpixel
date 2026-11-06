@@ -38,8 +38,8 @@ Arenaen (øvelsescaser, se 04_knowledge/07_arena/caser.yaml):
 
 from __future__ import annotations
 
-import json
 import csv
+import json
 import os
 import sys
 from collections.abc import Callable
@@ -57,13 +57,17 @@ import yaml
 
 from src.kunstpixel.adapters import datafinner_api
 from src.kunstpixel.core import arena, llm, vaktrom
-from src.kunstpixel.core.hr_cases import discover_hr_cases, investigate_hr_case, resolve_employee
 from src.kunstpixel.core.bunnlinje import (
     get_day_overview,
     get_exhibition_ranking,
     get_period_result,
     get_result_trend,
     get_team_efficiency,
+)
+from src.kunstpixel.core.hr_cases import (
+    discover_hr_cases,
+    investigate_hr_case,
+    resolve_employee,
 )
 from src.kunstpixel.core.mcp_server import (
     get_absence_report,
@@ -102,6 +106,7 @@ ASSETS = {
     "/vaktrom": ("vaktrom.html", "text/html; charset=utf-8"),
     "/chat": ("chat.html", "text/html; charset=utf-8"),
     "/arbeidsflyt": ("arbeidsflyt.html", "text/html; charset=utf-8"),
+    "/ett-vindu": ("ett-vindu.html", "text/html; charset=utf-8"),  # prototype: alt i ett vindu med tre paneler
     "/af.css": ("af.css", "text/css; charset=utf-8"),
 }
 
