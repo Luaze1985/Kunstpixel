@@ -463,8 +463,152 @@
     chatFasit(CHAT.svar[CHAT.svar.length - 1]);
   }
 
+  // ---------- Søk (oppgave 05) ----------
+  // Samme regler som sok.html (kategori -> verktøy, argumenter og kolonner), men ett felt i stedet for tre steg.
+  var SOK = {
+    valg: [
+      { verdi: "verk", navn: "Verk", verktoy: "search_collection", sok: "Tittel, tema eller teknikk", filter: { navn: "Sal", kilde: "saler" },
+        args: function (s, f) { return { query: s, room_id: f, limit: 50 }; },
+        kolonner: [["tittel", "Tittel"], ["kunstner", "Kunstner"], ["aar", "År"], ["sal_id", "Sal"], ["id", "Verkskort"]] },
+      { verdi: "kunstner", navn: "Kunstnere", verktoy: "search_collection", sok: "Kunstnerens navn", kreverSok: true,
+        args: function (s) { return { artist: s, limit: 50 }; },
+        kolonner: [["kunstner", "Kunstner"], ["tittel", "Verk"], ["aar", "År"], ["sal_id", "Sal"], ["id", "Verkskort"]] },
+      { verdi: "sal", navn: "Saler", verktoy: "get_room_artworks", filter: { navn: "Sal", kilde: "saler", pakrevd: true },
+        args: function (s, f) { return { room_id: f }; },
+        kolonner: [["rekkefoelge", "Nr"], ["tittel", "Tittel"], ["kunstner", "Kunstner"], ["sal_plassering", "Plassering"], ["id", "Verkskort"]] },
+      { verdi: "arrangement", navn: "Arrangementer", verktoy: "search_events", dato: true, filter: { navn: "Type", kilde: "typer" },
+        args: function (s, f, d) { return { event_type: f, date_from: d, limit: 50 }; },
+        kolonner: [["dato", "Dato"], ["klokkeslett_start", "Start"], ["type", "Type"], ["tittel", "Tittel"], ["sal_id", "Sal"]] },
+      { verdi: "faq", navn: "Vanlige spørsmål", verktoy: "search_faq", sok: "Søkeord, f.eks. pris", kreverSok: true, filter: { navn: "Kategori", kilde: "kategorier" },
+        args: function (s, f) { return { query: s, category: f }; },
+        kolonner: [["spoersmaal", "Spørsmål"], ["svar", "Svar"], ["kategori", "Kategori"]] },
+      { verdi: "mappe", navn: "Interne sider", verktoy: "grep_mappe", sok: "Ord eller uttrykk", kreverSok: true, filter: { navn: "Mappe", kilde: "mapper" },
+        args: function (s, f) { return { query: s, mappe: f, limit: 50 }; },
+        kolonner: [["sti", "Fil"], ["linje", "Linje"], ["treff", "Treff"]] }
+    ],
+    lister: {
+      saler: ["SAL-A", "SAL-B", "SAL-C", "SAL-D", "SAL-E", "MAG-1"],
+      typer: ["omvisning", "verksted", "foredrag", "konsert", "barnearrangement", "aaapning"],
+      kategorier: ["billett", "praktisk", "fasiliteter", "formidling", "tilgjengelighet", "utleie", "samling", "butikk"],
+      mapper: ["00_felles", "01_inbox", "02_deliverables", "03_team", "04_knowledge", "05_data/governance"]
+    },
+    detalj: [["kunstner", "Kunstner"], ["aar", "År"], ["teknikk", "Teknikk"], ["dimensjoner", "Mål"], ["sal_navn", "Sal"], ["status", "Status"], ["tilstand", "Tilstand"], ["proveniens", "Proveniens"], ["veggtekst", "Veggtekst"]],
+    sist: "verk"  // husker kategorien mens siden er åpen
+  };
+  function verktoy(navn, args) {
+    var rene = {}; Object.keys(args).forEach(function (k) { if (args[k] !== "" && args[k] != null) rene[k] = args[k]; });
+    return hent("/api/verktoy?navn=" + encodeURIComponent(navn) + "&args=" + encodeURIComponent(JSON.stringify(rene))).then(function (b) { return { args: rene, resultat: b.resultat }; });
+  }
+
+  function visSok() {
+    var m = tom("Flate", "Søk", "Samling, arrangementer, publikumsinformasjon og interne sider.");
+    var form = el("form"); form.noValidate = true; m.appendChild(form);
+
+    // Kategori: radioknapper på én rad.
+    var hva = el("fieldset", "af-group"); hva.appendChild(el("legend", "af-label", "Hva vil du finne?"));
+    var rad = el("div"); rad.style.cssText = "display:flex;flex-wrap:wrap;gap:8px";
+    SOK.valg.forEach(function (v) {
+      var l = el("label", "af-radio"), i = document.createElement("input"); i.type = "radio"; i.name = "sok-hva"; i.value = v.verdi; i.checked = v.verdi === SOK.sist;
+      i.addEventListener("change", function () { SOK.sist = v.verdi; tilpass(); });
+      l.appendChild(i); l.appendChild(document.createTextNode(v.navn)); rad.appendChild(l);
+    });
+    hva.appendChild(rad); form.appendChild(hva);
+
+    function felt(id, etikettTekst, node) { var g = el("div", "af-group"), l = el("label", "af-label", etikettTekst); node.id = id; l.htmlFor = id; g.appendChild(l); g.appendChild(node); form.appendChild(g); return { gruppe: g, etikett: l, felt: node }; }
+    var sok = felt("sok-felt", "Søk", el("input", "af-input")); sok.felt.type = "search";
+    var filter = felt("sok-filter", "Filter", el("select", "af-input"));
+    var dato = felt("sok-dato", "Fra dato", el("input", "af-input")); dato.felt.type = "date";
+    var a = el("div", "af-actions"), finn = el("button", "af-btn af-btn-primary", "Søk"); finn.type = "submit"; a.appendChild(finn); form.appendChild(a);
+
+    var feil = el("div", "af-error-summary"); feil.setAttribute("role", "alert"); feil.style.display = "none";
+    feil.appendChild(el("h2", null, "Kan ikke søke ennå")); var feilTekst = el("p"); feil.appendChild(feilTekst); m.appendChild(feil);
+    function visFeil(t) { feilTekst.textContent = t || ""; feil.style.display = t ? "" : "none"; }
+    var ut = el("div"); ut.setAttribute("aria-live", "polite"); m.appendChild(ut);
+    var detalj = el("div"); m.appendChild(detalj);
+
+    function regel() { return SOK.valg.filter(function (v) { return v.verdi === SOK.sist; })[0]; }
+    function skjul(g, av) { g.gruppe.style.display = av ? "none" : ""; }  // af-group har display i af.css
+    function tilpass() {
+      var r = regel();
+      skjul(sok, !r.sok); sok.etikett.textContent = r.sok || "Søk"; sok.felt.value = "";
+      skjul(filter, !r.filter); filter.felt.textContent = "";
+      if (r.filter) {
+        filter.etikett.textContent = r.filter.navn;
+        var o0 = el("option", null, r.filter.pakrevd ? "Velg" : "Alle"); o0.value = ""; filter.felt.appendChild(o0);
+        SOK.lister[r.filter.kilde].forEach(function (v) { var o = el("option", null, v); o.value = v; filter.felt.appendChild(o); });
+      }
+      skjul(dato, !r.dato); dato.felt.value = "";
+      ut.textContent = ""; detalj.textContent = ""; visFeil("");
+      fasit(r.verktoy, null);
+      (r.sok ? sok.felt : filter.felt).focus({ preventScroll: true });
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var r = regel(), s = sok.felt.value.trim(), f = filter.felt.value;
+      if (r.kreverSok && !s) { visFeil("Skriv et søkeord. " + r.navn + " kan ikke søkes uten."); sok.felt.focus(); return; }
+      if (r.filter && r.filter.pakrevd && !f) { visFeil("Velg " + r.filter.navn.toLowerCase() + "."); filter.felt.focus(); return; }
+      visFeil(""); detalj.textContent = ""; ut.textContent = ""; ut.appendChild(el("p", "af-task-hint", "Henter …"));
+      verktoy(r.verktoy, r.args(s, f, dato.felt.value)).then(function (svar) {
+        var rader = Array.isArray(svar.resultat) ? svar.resultat : svar.resultat && !svar.resultat.error ? [svar.resultat] : [];
+        tegnSokTabell(r, rader);
+        fasit(r.verktoy, svar.args, "museum.db, kun lesing");
+      }).catch(function (err) { ut.textContent = ""; visFeil("Feil fra databasen: " + err.message); });
+    });
+
+    function tegnSokTabell(r, rader) {
+      ut.textContent = "";
+      ut.appendChild(el("p", "af-table-meta", rader.length ? rader.length + " treff" : "Ingen treff. Prøv et annet søkeord eller filter."));
+      if (!rader.length) return;
+      var wrap = el("div", "af-table-wrap"), t = el("table", "af-table"), th = el("thead"), hr = el("tr"), tb = el("tbody");
+      r.kolonner.forEach(function (k) { hr.appendChild(el("th", null, k[1])); }); th.appendChild(hr);
+      rader.forEach(function (rd) {
+        var tr = el("tr");
+        r.kolonner.forEach(function (k) {
+          var td = el("td"), v = rd[k[0]];
+          // Verk-ID åpner verkskort, filsti åpner filen. Begge vises under tabellen, i samme vindu.
+          if ((k[0] === "id" && typeof v === "string" && v.indexOf("AURA-") === 0) || k[0] === "sti") {
+            var b = el("button", "af-btn af-btn-secondary", k[0] === "id" ? "Åpne" : v); b.type = "button";
+            b.addEventListener("click", function () { k[0] === "id" ? visVerk(v) : visFil(v); });
+            td.appendChild(b);
+          } else td.textContent = verdi(v, k[0]);
+          tr.appendChild(td);
+        });
+        tb.appendChild(tr);
+      });
+      t.appendChild(th); t.appendChild(tb); wrap.appendChild(t); ut.appendChild(wrap);
+    }
+
+    function visVerk(id) {
+      detalj.textContent = ""; var rap = el("div", "af-report"); detalj.appendChild(rap);
+      rap.appendChild(el("p", "af-caption", "Verkskort"));
+      verktoy("get_artwork_details", { artwork_id: id }).then(function (svar) {
+        var d = svar.resultat || {};
+        var h = el("h2", "af-title", d.tittel || id); h.tabIndex = -1; rap.appendChild(h);
+        var rader = SOK.detalj.filter(function (f) { return d[f[0]] != null && d[f[0]] !== ""; }).map(function (f) { return [f[1], d[f[0]], f[0]]; });
+        var wrap = el("div", "af-table-wrap"), t = el("table", "af-table"), tb = el("tbody");
+        rader.forEach(function (r2) { var tr = el("tr"); tr.appendChild(el("th", null, r2[0])); tr.appendChild(el("td", null, verdi(r2[1], r2[2]))); tb.appendChild(tr); });
+        t.appendChild(tb); wrap.appendChild(t); rap.appendChild(wrap);
+        fasit("get_artwork_details", svar.args, "museum.db, kun lesing");
+        h.focus();
+      }).catch(function (e) { rap.appendChild(el("p", "af-panel-message", "Feil: " + e.message)); });
+    }
+    function visFil(sti) {
+      detalj.textContent = ""; var rap = el("div", "af-report"); detalj.appendChild(rap);
+      rap.appendChild(el("p", "af-caption", "Fil"));
+      var h = el("h2", "af-title", sti); h.tabIndex = -1; rap.appendChild(h);
+      verktoy("les_fil", { sti: sti }).then(function (svar) {
+        var p = el("p", null, (svar.resultat || {}).tekst || ""); p.style.whiteSpace = "pre-wrap"; rap.appendChild(p);
+        fasit("les_fil", svar.args, sti);
+        h.focus();
+      }).catch(function (e) { rap.appendChild(el("p", "af-panel-message", "Feil: " + e.message)); });
+    }
+    tilpass();
+  }
+
   function visFlate(id) {
     if (id === "chat") return visChat();
+    if (id === "sok") return visSok();
     var f = FLATER.filter(function (x) { return x.id === id; })[0]; if (!f) return visStart();
     var m = tom("Flate", f.navn, f.tekst);
     if (f.krevKI && !KI) m.appendChild(el("p", "af-panel-message", "KI er av i denne demoen. Start med -KI for å slå den på."));
