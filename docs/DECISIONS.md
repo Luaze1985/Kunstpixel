@@ -34,6 +34,7 @@ Lars: «alt i ett vindu, med tre paneler». Gjelder `02_deliverables/arbeidsflyt
 | Data | Bare eksisterende API-er (`/api/rapport`, `/api/arena/kjor`, `list_roles`, `/api/verktoyskjema`). Ingen ny Python-logikk. | Én kilde til spørsmål og roller. |
 | Visning | Generisk: nøkkeltall, én tabell uten kontaktinfo, ID-er eller kolonner med lik verdi | Løser F6 for skallet. Alle 16 spørsmål og 21 caser vises uten egen kode. |
 | Flater som ikke er flyttet inn | Kort med «Åpne» og merket «Krever KI» for Chat | De flyttes inn én om gangen etter at Lars har godkjent skallet. |
+| Forside (oppgave 08, Lars 2026-11-06) | `/` serverer skallet. De gamle sidene ligger i `arkiv/2026-11-datafinner-gamle-sider/`, og de gamle adressene gir 302 til riktig visning. | Én inngang. Gamle lenker virker fortsatt. Ingenting er slettet. |
 | Arbeidsrolle og «Jeg er» (B5, Lars 2026-11-06) | To lister uten kobling. Arbeidsrollen velges inne i Arbeidsflyter. | Ingen endring i datamodellen, og Lars trenger ikke bygge. En kobling kan legges til senere som egen tabell. |
 
 ## Linjeskift i en ny utsjekk (funnet og rettet 2026-11-06, Lars valgte å rette)

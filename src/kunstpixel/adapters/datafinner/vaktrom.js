@@ -1,5 +1,5 @@
 // Vaktrommet: fem steg (vakt, historikk, kandidater, kontroll, kontakt og utkast).
-// Brukes av vaktrom.html (hele siden) og av ett-vindu.html (midten av vinduet). Logikken er den samme begge steder.
+// Brukes av vaktrom-innhold.html (hele siden) og av ett-vindu.html (midten av vinduet). Logikken er den samme begge steder.
 //
 // Vaktrom.start(opt) returnerer { gaa(stegId), steg: [[id, navn], ...] }. Alle valg er frivillige:
 //   rot        element som inneholder vaktrom-markupen (standard: document)

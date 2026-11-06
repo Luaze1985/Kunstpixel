@@ -64,12 +64,12 @@
   var valgt = null, aktivRolle = null;
   try { aktivRolle = sessionStorage.getItem("datafinner-rolle") || null; } catch (e) {}
 
-  // Flater som ennå ikke er flyttet inn i vinduet. De åpnes som før til de er bygd om.
+  // Flatene i venstre meny. Alle vises i midten av vinduet.
   var FLATER = [
-    { id: "chat", navn: "Chat", url: "/chat", krevKI: true, tekst: "Spør med vanlige ord. KI-en henter fakta med verktøyene." },
-    { id: "vaktrom", navn: "Vaktrom", url: "/vaktrom", tekst: "Finn folk til én vakt: historikk, kandidater, kontroll og utkast." },
-    { id: "sok", navn: "Søk", url: "/sok.html", tekst: "Samling, arrangementer, publikumsinformasjon og interne sider." },
-    { id: "arbeidsflyt", navn: "Arbeidsflyter", url: "/arbeidsflyt", tekst: "Oppgaver per arbeidsrolle." }
+    { id: "chat", navn: "Chat", krevKI: true },
+    { id: "vaktrom", navn: "Vaktrom" },
+    { id: "sok", navn: "Søk" },
+    { id: "arbeidsflyt", navn: "Arbeidsflyter" }
   ];
 
   // Felt som ikke hører hjemme i en demotabell (kontaktinfo, interne nøkler, datamerker).
@@ -623,11 +623,11 @@
   }
 
   // ---------- Vaktrom (oppgave 06) ----------
-  // Logikken ligger i vaktrom.js og deles med vaktrom.html. Markupen hentes fra /vaktrom, så den finnes ett sted.
+  // Logikken ligger i vaktrom.js. Markupen hentes fra /vaktrom-innhold, så den finnes ett sted.
   var VAKTROM = { api: null, steg: "vakt", vakt: null, deler: null };
   function hentVaktromMarkup() {
     if (VAKTROM.deler) return Promise.resolve(VAKTROM.deler);
-    return fetch("/vaktrom").then(function (r) { return r.text(); }).then(function (html) {
+    return fetch("/vaktrom-innhold").then(function (r) { return r.text(); }).then(function (html) {
       var doc = new DOMParser().parseFromString(html, "text/html");
       // Stilene gjelder bare midten av vinduet (#midt), så de ikke påvirker resten av skallet.
       var stil = doc.querySelector("style");
@@ -783,13 +783,7 @@
     if (id === "sok") return visSok();
     if (id === "vaktrom") return visVaktrom(under);
     if (id === "arbeidsflyt") return visArbeidsflyt(under, under2);
-    var f = FLATER.filter(function (x) { return x.id === id; })[0]; if (!f) return visStart();
-    var m = tom("Flate", f.navn, f.tekst);
-    if (f.krevKI && !KI) m.appendChild(el("p", "af-panel-message", "KI er av i denne demoen. Start med -KI for å slå den på."));
-    m.appendChild(el("p", "af-task-hint", "Denne flaten flyttes inn i vinduet i neste steg. Til da åpnes den på egen side."));
-    var a = el("div", "af-actions"), l = el("a", "af-btn af-btn-secondary", "Åpne " + f.navn); l.href = f.url;
-    a.appendChild(l); m.appendChild(a);
-    fasit(null);
+    visStart();
   }
 
   // ---------- Ruting (lenkbar: #rolle:HR og bemanning/vakt-i-dag) ----------

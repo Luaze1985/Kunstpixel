@@ -21,5 +21,5 @@ Hvilke 2–3 rapporter per rolle? Forslag:
 
 ## Done når
 1. `build_museum_db.py --check` gir ingen byggefeil (bare `ULIK` før bygget).
-2. Etter at Lars har bygget: «Jeg er: Samlingsforvalter» og «Jeg er: Formidler» viser hver sine rapporter i `/ett-vindu`, og hver gir svar med ett klikk.
+2. Etter at Lars har bygget: «Jeg er: Samlingsforvalter» og «Jeg er: Formidler» viser hver sine rapporter på forsiden (`/`), og hver gir svar med ett klikk.
 3. `tests/test_datafinner_api.py` og hele pytest er grønne.

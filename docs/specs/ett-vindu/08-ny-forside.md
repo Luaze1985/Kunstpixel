@@ -1,7 +1,15 @@
 # 08: Ett vindu blir forsiden
 
 **Hva:** `/` serverer skallet. De gamle sidene (`index.html`, `chat.html`, `sok.html`, `vaktrom.html`, `arbeidsflyt.html`) flyttes til `arkiv/`. Gamle adresser videresendes til riktig visning (`/chat` → `/#flate:chat`).
-**Gren:** `ux/forside` fra tuppen av `ux/ett-vindu` · **Må gjøres først:** 03, 04, 05, 06, 07 · **Status:** venter på Lars' godkjenning av skallet med alle flatene
+**Gren:** `ux/ny-forside` fra tuppen av `ux/ett-vindu` · **Må gjøres først:** 03, 04, 05, 06, 07 · **Status:** done 2026-11-06 på `ux/ny-forside`, ikke merget
+
+> **Beslutninger under byggingen:**
+> - Lars godkjente skallet («merge og 08») og de tre testendringene, 2026-11-06.
+> - `vaktrom.html` er ikke arkivert. Den har fått navnet `vaktrom-innhold.html` og serveres på `/vaktrom-innhold`, fordi skallet henter vaktrommets markup derfra (06). De fire andre sidene ligger i `arkiv/2026-11-datafinner-gamle-sider/`.
+> - `/ett-vindu` og `/index.html` sendes til `/`. Videresendingene står i `VIDERESEND` i `datafinner.py`.
+> - `/arena` er ikke en del av oppgaven og står uendret.
+> - Testendringer: spørsmålstesten sjekker API == `rolle_sporsmal` == `rapport_regler`, uten HTML-kopi. Sidetesten sjekker `/vaktrom-innhold` og at `/` er skallet. Arbeidsflyttesten sjekker 302 fra `/arbeidsflyt`.
+> - Avvik som ikke er rettet: `deploy/demo/README.md:104` sier at `/sok.html` gir 404, men `scripts/test_demo_container.ps1:98` sjekker 200. Nå gir adressen 302 og så 200. Containertesten er ikke kjørt.
 
 ## Indre sløyfe (0 tokens)
 1. `rg -n "index.html|chat.html|sok.html|vaktrom.html|arbeidsflyt.html|/chat\b|/vaktrom\b" tests/ src/ deploy/`: liste over alt som peker på de gamle sidene.

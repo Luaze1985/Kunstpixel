@@ -19,4 +19,4 @@
 ## Done når
 1. Lars har bygget, og `--check` gir `LIK`.
 2. `py -3.13 -m pytest -q` er grønn etter bygget.
-3. I `/ett-vindu` med «Jeg er: Museumsvert» står «Hvem har vakt i dag?» øverst, og «Personalmappe» finnes ikke.
+3. På forsiden (`/`) med «Jeg er: Museumsvert» står «Hvem har vakt i dag?» øverst, og «Personalmappe» finnes ikke.

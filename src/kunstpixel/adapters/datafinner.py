@@ -99,16 +99,22 @@ from src.kunstpixel.core.mcp_server import (
 
 ASSET_DIR = Path(__file__).resolve().parent / "datafinner"
 ASSETS = {
-    "/": ("index.html", "text/html; charset=utf-8"),
-    "/index.html": ("index.html", "text/html; charset=utf-8"),
-    "/sok.html": ("sok.html", "text/html; charset=utf-8"),
+    "/": ("ett-vindu.html", "text/html; charset=utf-8"),  # alt i ett vindu med tre paneler (oppgave 08)
     "/arena": ("arena.html", "text/html; charset=utf-8"),
-    "/vaktrom": ("vaktrom.html", "text/html; charset=utf-8"),
-    "/chat": ("chat.html", "text/html; charset=utf-8"),
-    "/arbeidsflyt": ("arbeidsflyt.html", "text/html; charset=utf-8"),
-    "/ett-vindu": ("ett-vindu.html", "text/html; charset=utf-8"),  # prototype: alt i ett vindu med tre paneler
-    "/vaktrom.js": ("vaktrom.js", "text/javascript; charset=utf-8"),  # brukes av vaktrom.html og ett-vindu.html
+    # Markupen til vaktrommet. Skallet henter stegene herfra, så de finnes ett sted.
+    "/vaktrom-innhold": ("vaktrom-innhold.html", "text/html; charset=utf-8"),
+    "/vaktrom.js": ("vaktrom.js", "text/javascript; charset=utf-8"),
     "/af.css": ("af.css", "text/css; charset=utf-8"),
+}
+
+# De gamle sidene ligger i arkiv/2026-11-datafinner-gamle-sider/. Gamle lenker sendes til riktig visning i skallet.
+VIDERESEND = {
+    "/index.html": "/",
+    "/ett-vindu": "/",
+    "/chat": "/#flate:chat",
+    "/vaktrom": "/#flate:vaktrom",
+    "/sok.html": "/#flate:sok",
+    "/arbeidsflyt": "/#flate:arbeidsflyt",
 }
 
 # Interne mapper siden kan lese. Bare tekstfiler, aldri skriving.
@@ -309,6 +315,14 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
         if url.path in ASSETS:
             filename, ctype = ASSETS[url.path]
             self._send(200, (ASSET_DIR / filename).read_bytes(), ctype)
+            return
+        if url.path in VIDERESEND:
+            self.send_response(302)
+            self.send_header("Location", VIDERESEND[url.path])
+            self.send_header("Content-Length", "0")
+            for navn, verdi in SIKKERHETSHODER.items():
+                self.send_header(navn, verdi)
+            self.end_headers()
             return
         if url.path == "/api/status":
             self._json(200, {

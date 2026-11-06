@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import re
 import threading
 import urllib.error
 import urllib.parse
@@ -120,17 +119,16 @@ def test_forklar_gir_503_nar_kilaget_er_av(server: str) -> None:
 
 # ---------- vokter mot at listene glir fra hverandre ----------
 
-def test_sporsmalene_i_api_hjemmesiden_og_databasen_er_de_samme() -> None:
+def test_sporsmalene_i_api_og_databasen_er_de_samme() -> None:
+    # Forsiden (ett-vindu.html) henter spørsmålene fra API-et og har ingen egen liste (oppgave 08, Lars 2026-11-06).
     import sqlite3
-    html = (ROOT / "src/kunstpixel/adapters/datafinner/index.html").read_text(encoding="utf-8")
-    i_html = set(re.findall(r'\{ id: "([a-z-]+)", tekst:', html))
     con = sqlite3.connect((ROOT / "05_data/museum.db").resolve().as_uri() + "?mode=ro", uri=True)
     try:
         i_db = {r[0] for r in con.execute("SELECT sporsmal_id FROM rolle_sporsmal")}
         i_regler = {r[0] for r in con.execute("SELECT DISTINCT sporsmal_id FROM rapport_regler")}
     finally:
         con.close()
-    assert set(datafinner_api.SPORSMAL) == i_html == i_db == i_regler
+    assert set(datafinner_api.SPORSMAL) == i_db == i_regler
 
 
 def test_hvert_sporsmal_peker_pa_et_hvitelistet_verktoy() -> None:
