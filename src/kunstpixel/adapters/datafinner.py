@@ -107,6 +107,7 @@ ASSETS = {
     "/chat": ("chat.html", "text/html; charset=utf-8"),
     "/arbeidsflyt": ("arbeidsflyt.html", "text/html; charset=utf-8"),
     "/ett-vindu": ("ett-vindu.html", "text/html; charset=utf-8"),  # prototype: alt i ett vindu med tre paneler
+    "/vaktrom.js": ("vaktrom.js", "text/javascript; charset=utf-8"),  # brukes av vaktrom.html og ett-vindu.html
     "/af.css": ("af.css", "text/css; charset=utf-8"),
 }
 

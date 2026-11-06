@@ -108,14 +108,23 @@
       meny.appendChild(el("p", "af-side-heading", tittel));
       var ol = el("ol", "af-flow-list");
       punkter.forEach(function (p) {
-        var li = el("li"), b = el("button", "af-flow-link"); b.type = "button"; b.dataset.id = p.id;
+        // p.klikk og p.dataId brukes av vaktrom-stegene, som styres av vaktrom.js og ikke av adressen.
+        var li = el("li"), b = el("button", "af-flow-link"); b.type = "button"; b.dataset.id = p.dataId || p.id;
         var t = el("span", null, p.navn); if (p.status) t.appendChild(el("span", "af-step-status", p.status));
-        b.appendChild(t); b.addEventListener("click", function () { vis(p.id); });
-        if (valgt === p.id || (valgt && valgt.indexOf(p.id + "/") === 0)) b.setAttribute("aria-current", "page");
+        b.appendChild(t); b.addEventListener("click", p.klikk || function () { vis(p.id); });
+        if (p.aktiv) b.setAttribute("aria-current", "step");
+        else if (!p.klikk && (valgt === p.id || (valgt && valgt.indexOf(p.id + "/") === 0))) b.setAttribute("aria-current", "page");
         li.appendChild(b); ol.appendChild(li);
         var op = el("option", null, p.navn); op.value = p.id; og.appendChild(op);
       });
       meny.appendChild(ol); mobil.appendChild(og);
+    }
+    // Mens vaktrommet er åpent, står stegene øverst i menyen.
+    if (VAKTROM.api && (valgt || "").indexOf("flate:vaktrom") === 0) {
+      gruppe("Vaktrom", VAKTROM.api.steg.map(function (s, i) {
+        return { id: "vaktrom-steg:" + s[0], dataId: s[0], navn: (i + 1) + ". " + s[1], aktiv: VAKTROM.steg === s[0],
+          klikk: function () { VAKTROM.api.gaa(s[0]); } };
+      }));
     }
     var r = rolle(aktivRolle);
     var rollePunkter = synligeRoller().map(function (x) { return { id: "rolle:" + x.navn, navn: x.navn, status: antall(x.sporsmal.length, "rapport", "rapporter") }; });
@@ -130,7 +139,10 @@
     if (r) gruppe("Bytt rolle", rollePunkter, true);  // I mobilvisning finnes ikke rollevalget i sidemenyen.
     mobil.value = (valgt || "").split("/")[0];  // Valget kjenner bare toppnivået (rolle, område, flate).
   }
-  $("mobilvalg").addEventListener("change", function () { vis(this.value); });
+  $("mobilvalg").addEventListener("change", function () {
+    if (this.value.indexOf("vaktrom-steg:") === 0 && VAKTROM.api) return VAKTROM.api.gaa(this.value.slice(13));
+    vis(this.value);
+  });
   $("rollevalg").addEventListener("change", function () {
     husk(this.value || null);
     if (this.value) return vis("rolle:" + this.value);
@@ -606,9 +618,66 @@
     tilpass();
   }
 
-  function visFlate(id) {
+  // ---------- Vaktrom (oppgave 06) ----------
+  // Logikken ligger i vaktrom.js og deles med vaktrom.html. Markupen hentes fra /vaktrom, så den finnes ett sted.
+  var VAKTROM = { api: null, steg: "vakt", vakt: null, deler: null };
+  function hentVaktromMarkup() {
+    if (VAKTROM.deler) return Promise.resolve(VAKTROM.deler);
+    return fetch("/vaktrom").then(function (r) { return r.text(); }).then(function (html) {
+      var doc = new DOMParser().parseFromString(html, "text/html");
+      // Stilene gjelder bare midten av vinduet (#midt), så de ikke påvirker resten av skallet.
+      var stil = doc.querySelector("style");
+      if (stil && !$("vaktrom-stil")) {
+        var s = document.createElement("style"); s.id = "vaktrom-stil";
+        s.textContent = stil.textContent.replace(/(^|\})\s*([^{}]+)\{/g, function (m, slutt, sel) {
+          return slutt + "\n" + sel.split(",").map(function (x) { return "#midt " + x.trim(); }).join(", ") + " {";
+        });
+        document.head.appendChild(s);
+      }
+      // Bare stegene og feilboksen. Mobilmeny og øvingsdata-banner har skallet selv.
+      VAKTROM.deler = [].slice.call(doc.querySelector("main").children).filter(function (n) {
+        return !n.classList.contains("af-mobile-nav") && !n.classList.contains("af-alert");
+      });
+      return VAKTROM.deler;
+    });
+  }
+  function lastVaktromSkript() {
+    if (window.Vaktrom) return Promise.resolve();
+    return new Promise(function (ok, feil) {
+      var s = document.createElement("script"); s.src = "/vaktrom.js";
+      s.onload = ok; s.onerror = function () { feil(new Error("Fikk ikke lastet vaktrom.js")); };
+      document.head.appendChild(s);
+    });
+  }
+  function visVaktrom(under) {
+    VAKTROM.api = null; VAKTROM.steg = "vakt";
+    var m = $("midt"); m.textContent = ""; m.appendChild(el("p", "af-task-hint", "Henter vaktrommet …"));
+    fasit(null);
+    Promise.all([hentVaktromMarkup(), lastVaktromSkript()]).then(function (svar) {
+      if ((valgt || "").indexOf("flate:vaktrom") !== 0) return;  // brukeren har gått videre
+      m.textContent = "";
+      m.appendChild(el("p", "af-caption", "Flate · Vaktrom"));
+      svar[0].forEach(function (n) { m.appendChild(document.importNode(n, true)); });
+      VAKTROM.api = window.Vaktrom.start({
+        rot: m, stegliste: null, mobilvalg: null, navRot: $("meny"),
+        rolle: function () { return aktivRolle || "ukjent rolle"; },
+        startSteg: under === "utkast" ? "kontakt" : "vakt",
+        vedSteg: function (id) { VAKTROM.steg = id; tegnMeny(); },
+        vedVakt: function (t) { VAKTROM.vakt = t; },
+        vedKall: function (navn, args) { fasit(navn, args, "museum.db, kun lesing" + (VAKTROM.vakt ? ". Vakt: " + VAKTROM.vakt : "")); }
+      });
+      tegnMeny();
+    }).catch(function (e) {
+      m.textContent = "";
+      var f = el("div", "af-error-summary"); f.setAttribute("role", "alert");
+      f.appendChild(el("h2", null, "Vaktrommet kunne ikke åpnes")); f.appendChild(el("p", null, e.message)); m.appendChild(f);
+    });
+  }
+
+  function visFlate(id, under) {
     if (id === "chat") return visChat();
     if (id === "sok") return visSok();
+    if (id === "vaktrom") return visVaktrom(under);
     var f = FLATER.filter(function (x) { return x.id === id; })[0]; if (!f) return visStart();
     var m = tom("Flate", f.navn, f.tekst);
     if (f.krevKI && !KI) m.appendChild(el("p", "af-panel-message", "KI er av i denne demoen. Start med -KI for å slå den på."));
@@ -628,7 +697,7 @@
     else if (type === "rolle") visRolle(navn);
     else if (type === "arena" && deler[1]) visCase(navn, deler[1]);
     else if (type === "arena") visArena(navn);
-    else if (type === "flate") visFlate(navn);
+    else if (type === "flate") visFlate(navn, deler[1]);
     else visStart();
     tegnMeny();
   }

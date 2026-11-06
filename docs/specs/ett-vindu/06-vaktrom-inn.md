@@ -2,7 +2,13 @@
 
 **Hva:** Vaktrommets fem steg (Vakt, Historikk, Kandidater, Kontroll, Kontakt og utkast) vises i midten. Stegene står i venstre meny mens vaktrommet er åpent.
 **Gren:** `ux/vaktrom-inn` fra tuppen av `ux/ett-vindu` etter 05 · **Må gjøres først:** 05 (samme fil)
-**Status:** ready-for-agent
+**Status:** done 2026-11-06 på `ux/vaktrom-inn`, ikke merget
+
+> **Beslutninger under byggingen:**
+> - Skriptet er flyttet fra `vaktrom.html` til `vaktrom.js`, nesten uendret. Begge sider bruker det. `Vaktrom.start(opt)` tar et rot-element og valgfrie tilbakekall (`rolle`, `vedSteg`, `vedVakt`, `vedKall`). Den eneste endringen i Python er én linje i `ASSETS`.
+> - Skallet henter markupen fra `/vaktrom`, så den finnes ett sted. `<style>` fra siden gjelder bare `#midt`.
+> - Rollen i vaktrommet er «Jeg er»-rollen. Velgeren «Du er» fra `vaktrom.html` brukes ikke i skallet.
+> - `#flate:vaktrom/utkast` åpner rett på «Mine kontaktutkast». Avkrysninger og utkast deles med `vaktrom.html`, fordi de bruker samme lagringsnøkkel.
 
 ## Indre sløyfe (0 tokens)
 1. Les `vaktrom.html` L148–L474: stegene, verktøyene som kalles, og hvordan utkast lagres i nettleseren.
