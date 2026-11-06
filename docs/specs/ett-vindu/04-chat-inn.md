@@ -2,7 +2,12 @@
 
 **Hva:** «Flater → Chat» viser chatten i midten av skallet i stedet for et «Åpne»-kort. Fasitpanelet viser verktøyene chatten brukte.
 **Gren:** `ux/chat-inn` fra tuppen av `ux/ett-vindu` etter at 02 er merget dit · **Må gjøres først:** 02 (samme fil)
-**Status:** ready-for-agent
+**Status:** done 2026-11-06 på `ux/chat-inn`, ikke merget. Krav 2 er testet med simulert `/api/chat`-svar. Ekte KI er STATUS: UNTESTED, fordi det ikke finnes noen `.env`.
+
+> **Beslutninger under byggingen:**
+> - Rollen fra «Jeg er» sendes som `rolle`. `/api/chat` setter den inn i systemteksten («Brukeren har rollen …»).
+> - Samtalen holdes i minnet mens siden er åpen, så den er der når man går ut og inn av chatten. «Ny samtale» tømmer den.
+> - Eksempelet «Hva står i personalmappen til KP-ANS-006?» fra `chat.html` er ikke med. Det passer ikke i en rollestyrt demo (se 01).
 
 ## Indre sløyfe (0 tokens)
 1. Les `chat.html` L72–L156: kallet mot `/api/chat`, meldingsformatet og eksempelspørsmålene.

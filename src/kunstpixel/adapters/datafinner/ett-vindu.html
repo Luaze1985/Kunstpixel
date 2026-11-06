@@ -382,7 +382,89 @@
     }).catch(function (e) { ut.textContent = ""; ut.appendChild(el("p", "af-panel-message", "Kunne ikke kjøre casen: " + e.message)); });
   }
 
+  // ---------- Chat (oppgave 04) ----------
+  // Samtalen ligger i minnet så den er der når man går ut og inn av chatten. «Ny samtale» tømmer den.
+  var CHAT = { historikk: [], svar: [] };  // historikk: [{rolle: "bruker"|"assistent", tekst}]; svar: assistentsvarene i samme rekkefølge
+  var KI_AV = "Denne demoen kjører uten KI. Start med -KI for å slå den på.";
+  var CHAT_FORSLAG = [
+    "Hvem kan ta vakt i vaktrommet lørdag 7. november 2026 kl. 08–16? Ranger dem.",
+    "Hvem har hatt flest helgevakter i Sal A det siste året?",
+    "Finn innleide vektere med gyldig førstehjelp, og lag en melding til den billigste.",
+    "Hva sier håndbøkene om brann?"
+  ];
+
+  function chatMelding(logg, rolle, tekst, svar) {
+    var m = el("div", "af-report");
+    m.appendChild(el("p", "af-caption", rolle === "bruker" ? "Du" : "Datafinner"));
+    var p = el("p", null, tekst); p.style.whiteSpace = "pre-line"; m.appendChild(p);
+    if (svar) {
+      m.appendChild(el("span", "af-source " + (svar.avbrutt ? "system" : "suggested"), svar.avbrutt ? "Systemmelding" : "AI-forslag"));
+      if (svar.avkortet) m.appendChild(el("p", "af-table-meta", "KI-en brukte alle rundene. Svaret kan være ufullstendig."));
+      var tk = svar.tallkontroll || {};
+      if (tk.ukjente_tall && tk.ukjente_tall.length) m.appendChild(el("p", "af-panel-message", "Sjekk tallene: " + tk.ukjente_tall.join(", ") + " står ikke i det verktøyene ga."));
+      if (tk.feil_utregning && tk.feil_utregning.length) m.appendChild(el("p", "af-panel-message", "Feil regnestykke: " + tk.feil_utregning.join("; ") + "."));
+      if (tk.utregnet && tk.utregnet.length) m.appendChild(el("p", "af-table-meta", "Regnet etter og stemmer: " + tk.utregnet.join("; ") + "."));
+    }
+    logg.appendChild(m);
+  }
+
+  function chatFasit(svar) {
+    if (!svar) return fasit(null, null, "Ingen data hentet ennå");
+    var kall = svar.verktoykall || [];
+    var navn = kall.map(function (k) { return k.navn + (k.ok ? "" : " (feilet)"); });
+    var siste = kall[kall.length - 1] || {};
+    var kilde = kall.length ? "museum.db via " + kall.length + " verktøykall" + ((svar.data_hentet || []).length ? ", " + svar.data_hentet.length + " datasett" : "") : "Ingen. Svaret bygger ikke på data fra museum.db.";
+    fasit(navn.join(", ") || null, siste.args, kilde);
+  }
+
+  function visChat() {
+    var m = tom("Flate", "Chat", "Spør med vanlige ord. KI-en henter fakta med verktøyene og svarer. Hvert svar er et AI-forslag.");
+    if (!KI) m.appendChild(el("p", "af-panel-message", KI_AV));
+    var feil = el("div", "af-error-summary"); feil.setAttribute("role", "alert"); feil.style.display = "none";
+    feil.appendChild(el("h2", null, "Feil")); var feilTekst = el("p"); feil.appendChild(feilTekst); m.appendChild(feil);
+    function visFeil(t) { feilTekst.textContent = t || ""; feil.style.display = t ? "" : "none"; }
+
+    var logg = el("div"); logg.setAttribute("aria-live", "polite"); m.appendChild(logg);
+    var svarIndeks = 0;
+    CHAT.historikk.forEach(function (h) { chatMelding(logg, h.rolle, h.tekst, h.rolle === "assistent" ? CHAT.svar[svarIndeks++] : null); });
+
+    // Eksempelspørsmål bare før samtalen har startet.
+    if (!CHAT.historikk.length) {
+      var ex = el("ul", "af-task-board");
+      CHAT_FORSLAG.forEach(function (f) {
+        var li = el("li"), b = el("button", "af-task-card"); b.type = "button";
+        var t = el("span"); t.appendChild(el("strong", null, f)); b.appendChild(t);
+        b.addEventListener("click", function () { felt.value = f; felt.focus(); });
+        li.appendChild(b); ex.appendChild(li);
+      });
+      m.appendChild(ex);
+    }
+
+    var g = el("div", "af-group"), l = el("label", "af-label", "Spørsmål"), felt = el("textarea", "af-textarea");
+    felt.id = "chat-felt"; l.htmlFor = felt.id; felt.rows = 3; felt.disabled = !KI;
+    g.appendChild(l); g.appendChild(felt); m.appendChild(g);
+    var a = el("div", "af-actions"), send = el("button", "af-btn af-btn-primary", "Send"), ny = el("button", "af-btn af-btn-secondary", "Ny samtale"), status = el("span", "af-save-status");
+    send.type = "button"; ny.type = "button"; send.disabled = !KI;
+    a.appendChild(send); a.appendChild(ny); a.appendChild(status); m.appendChild(a);
+
+    function sendNa() {
+      var tekst = felt.value.trim(); if (!tekst || !KI) return;
+      visFeil("");
+      CHAT.historikk.push({ rolle: "bruker", tekst: tekst }); chatMelding(logg, "bruker", tekst);
+      felt.value = ""; send.disabled = true; status.textContent = "KI-en henter data …";
+      post("/api/chat", { meldinger: CHAT.historikk, rolle: aktivRolle || "ukjent rolle" })
+        .then(function (s) { CHAT.historikk.push({ rolle: "assistent", tekst: s.tekst }); CHAT.svar.push(s); chatMelding(logg, "assistent", s.tekst, s); chatFasit(s); })
+        .catch(function (e) { CHAT.historikk.pop(); logg.removeChild(logg.lastChild); felt.value = tekst; visFeil(e.message); })
+        .then(function () { send.disabled = !KI; status.textContent = ""; felt.focus(); });
+    }
+    send.addEventListener("click", sendNa);
+    felt.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendNa(); } });
+    ny.addEventListener("click", function () { CHAT.historikk = []; CHAT.svar = []; visChat(); });
+    chatFasit(CHAT.svar[CHAT.svar.length - 1]);
+  }
+
   function visFlate(id) {
+    if (id === "chat") return visChat();
     var f = FLATER.filter(function (x) { return x.id === id; })[0]; if (!f) return visStart();
     var m = tom("Flate", f.navn, f.tekst);
     if (f.krevKI && !KI) m.appendChild(el("p", "af-panel-message", "KI er av i denne demoen. Start med -KI for å slå den på."));
