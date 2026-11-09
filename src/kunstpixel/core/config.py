@@ -16,16 +16,16 @@ EXTERNAL_FALLBACK_DB_PATH = Path(r"C:\Users\larse\Documents\.headroom\memory.db"
 
 def get_db_path() -> Path:
     """Resolve the SQLite database path using strict precedence:
-    1. AURA_DB_PATH environment variable (if set and exists)
+    1. KUNSTPIXEL_DB_PATH environment variable (if set and exists)
     2. Repository local copy at data/museum.db
     3. External fallback at C:\\Users\\larse\\Documents\\.headroom\\memory.db
     """
-    env_path = os.environ.get("KUNSTPIXEL_DB_PATH") or os.environ.get("AURA_DB_PATH")
+    env_path = os.environ.get("KUNSTPIXEL_DB_PATH")
     if env_path:
         p = Path(env_path)
         if p.is_file():
             return p
-        raise FileNotFoundError(f"AURA_DB_PATH was set to '{env_path}', but file does not exist.")
+        raise FileNotFoundError(f"KUNSTPIXEL_DB_PATH was set to '{env_path}', but file does not exist.")
 
     if LOCAL_DB_PATH.is_file():
         return LOCAL_DB_PATH
@@ -35,7 +35,7 @@ def get_db_path() -> Path:
 
     raise FileNotFoundError(
         "Kunstpixel database not found. Checked:\n"
-        f"  1. AURA_DB_PATH env var: {env_path}\n"
+        f"  1. KUNSTPIXEL_DB_PATH env var: {env_path}\n"
         f"  2. Local repo copy: {LOCAL_DB_PATH}\n"
         f"  3. External fallback: {EXTERNAL_FALLBACK_DB_PATH}"
     )

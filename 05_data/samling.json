@@ -1,6 +1,6 @@
 [
   {
-    "id": "AURA-2026-001",
+    "id": "KP-2026-001",
     "tittel": "Nøkken",
     "kunstner": "Theodor Kittelsen",
     "aar": 1904,
@@ -13,7 +13,7 @@
     "veggtekst_status": "approved"
   },
   {
-    "id": "AURA-2026-002",
+    "id": "KP-2026-002",
     "tittel": "Soria Moria slott",
     "kunstner": "Theodor Kittelsen",
     "aar": 1900,
@@ -26,7 +26,7 @@
     "veggtekst_status": "approved"
   },
   {
-    "id": "AURA-2026-003",
+    "id": "KP-2026-003",
     "tittel": "Kampen for tilværelsen",
     "kunstner": "Christian Krohg",
     "aar": 1889,
@@ -39,7 +39,7 @@
     "veggtekst_status": "approved"
   },
   {
-    "id": "AURA-2026-004",
+    "id": "KP-2026-004",
     "tittel": "Albertine i politilægens venteværelse",
     "kunstner": "Christian Krohg",
     "aar": 1887,
@@ -52,7 +52,7 @@
     "veggtekst_status": "approved"
   },
   {
-    "id": "AURA-2026-005",
+    "id": "KP-2026-005",
     "tittel": "Blått interiør",
     "kunstner": "Harriet Backer",
     "aar": 1883,
@@ -65,7 +65,7 @@
     "veggtekst_status": "approved"
   },
   {
-    "id": "AURA-2026-006",
+    "id": "KP-2026-006",
     "tittel": "Barnedåp i Tanum kirke",
     "kunstner": "Harriet Backer",
     "aar": 1892,
@@ -78,7 +78,7 @@
     "veggtekst_status": "approved"
   },
   {
-    "id": "AURA-2026-007",
+    "id": "KP-2026-007",
     "tittel": "Vinternatt i Rondane",
     "kunstner": "Harald Sohlberg",
     "aar": 1914,
@@ -91,7 +91,7 @@
     "veggtekst_status": "approved"
   },
   {
-    "id": "AURA-2026-008",
+    "id": "KP-2026-008",
     "tittel": "Jonsokbål",
     "kunstner": "Nikolai Astrup",
     "aar": 1926,
@@ -104,7 +104,7 @@
     "veggtekst_status": "approved"
   },
   {
-    "id": "AURA-2026-009",
+    "id": "KP-2026-009",
     "tittel": "Skrik",
     "kunstner": "Edvard Munch",
     "aar": 1893,
@@ -117,7 +117,7 @@
     "veggtekst_status": "approved"
   },
   {
-    "id": "AURA-2026-010",
+    "id": "KP-2026-010",
     "tittel": "Pikene på broen",
     "kunstner": "Edvard Munch",
     "aar": 1901,
@@ -130,7 +130,7 @@
     "veggtekst_status": "approved"
   },
   {
-    "id": "AURA-2026-011",
+    "id": "KP-2026-011",
     "tittel": "Brudeferd i Hardanger",
     "kunstner": "Adolph Tidemand og Hans Gude",
     "aar": 1848,
@@ -143,7 +143,7 @@
     "veggtekst_status": "draft"
   },
   {
-    "id": "AURA-2026-012",
+    "id": "KP-2026-012",
     "tittel": "Selvportrett med sigarett",
     "kunstner": "Edvard Munch",
     "aar": 1895,

@@ -20,8 +20,8 @@ print(f"SAL-C query returned {len(res_sal_c)} works: {[w['tittel'] for w in res_
 res_mag = query_room_artworks("MAG-1")
 print(f"MAG-1 query returned {len(res_mag)} works (exhibited filter)")
 
-res_details = query_artwork_details("AURA-2026-005")
-print(f"AURA-2026-005 details: {res_details['tittel']} by {res_details['kunstner']}, room: {res_details['sal_id']}")
+res_details = query_artwork_details("KP-2026-005")
+print(f"KP-2026-005 details: {res_details['tittel']} by {res_details['kunstner']}, room: {res_details['sal_id']}")
 
 res_faq = query_faq("garderobe")
 print(f"FAQ garderobe query returned: {[f['spoersmaal'] for f in res_faq]}")

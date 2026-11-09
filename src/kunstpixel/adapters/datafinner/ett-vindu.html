@@ -583,7 +583,7 @@
         r.kolonner.forEach(function (k) {
           var td = el("td"), v = rd[k[0]];
           // Verk-ID åpner verkskort, filsti åpner filen. Begge vises under tabellen, i samme vindu.
-          if ((k[0] === "id" && typeof v === "string" && v.indexOf("AURA-") === 0) || k[0] === "sti") {
+          if ((k[0] === "id" && typeof v === "string" && v.indexOf("KP-") === 0) || k[0] === "sti") {
             var b = el("button", "af-btn af-btn-secondary", k[0] === "id" ? "Åpne" : v); b.type = "button";
             b.addEventListener("click", function () { k[0] === "id" ? visVerk(v) : visFil(v); });
             td.appendChild(b);

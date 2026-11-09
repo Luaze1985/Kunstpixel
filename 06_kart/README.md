@@ -1,6 +1,6 @@
-# 06_kart — 2.5D Isometrisk Bygnings- og Sonekart for Aura Museum
+# 06_kart — 2.5D Isometrisk Bygnings- og Sonekart for Kunstpixel
 
-Dette er en dedikert og isolert kart- og geometrimodul for Aura Museum, bygget som et **2.5D isometrisk bygningskart** med full soneinndeling.
+Dette er en dedikert og isolert kart- og geometrimodul for Kunstpixel, bygget som et **2.5D isometrisk bygningskart** med full soneinndeling.
 
 ---
 

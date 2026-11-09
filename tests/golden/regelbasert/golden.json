@@ -8,7 +8,7 @@
       "get_room_artworks"
     ],
     "artworks_referenced": [
-      "AURA-2026-009"
+      "KP-2026-009"
     ],
     "rooms_referenced": [
       "SAL-D"
@@ -23,8 +23,8 @@
       "get_room_artworks"
     ],
     "artworks_referenced": [
-      "AURA-2026-002",
-      "AURA-2026-001"
+      "KP-2026-002",
+      "KP-2026-001"
     ],
     "rooms_referenced": [
       "SAL-A"
@@ -39,7 +39,7 @@
       "get_room_artworks"
     ],
     "artworks_referenced": [
-      "AURA-2026-001"
+      "KP-2026-001"
     ],
     "rooms_referenced": [
       "SAL-A"
@@ -97,10 +97,10 @@
       "get_room_artworks"
     ],
     "artworks_referenced": [
-      "AURA-2026-001",
-      "AURA-2026-007",
-      "AURA-2026-009",
-      "AURA-2026-010"
+      "KP-2026-001",
+      "KP-2026-007",
+      "KP-2026-009",
+      "KP-2026-010"
     ],
     "rooms_referenced": [
       "SAL-A",
@@ -115,9 +115,9 @@
       "get_room_artworks"
     ],
     "artworks_referenced": [
-      "AURA-2026-009",
-      "AURA-2026-010",
-      "AURA-2026-016"
+      "KP-2026-009",
+      "KP-2026-010",
+      "KP-2026-016"
     ],
     "rooms_referenced": [
       "SAL-D"
@@ -131,10 +131,10 @@
       "get_room_artworks"
     ],
     "artworks_referenced": [
-      "AURA-2026-001",
-      "AURA-2026-002",
-      "AURA-2026-007",
-      "AURA-2026-008"
+      "KP-2026-001",
+      "KP-2026-002",
+      "KP-2026-007",
+      "KP-2026-008"
     ],
     "rooms_referenced": [
       "SAL-A"
@@ -260,8 +260,8 @@
       "get_room_artworks"
     ],
     "artworks_referenced": [
-      "AURA-2026-005",
-      "AURA-2026-006"
+      "KP-2026-005",
+      "KP-2026-006"
     ],
     "rooms_referenced": [
       "SAL-C"
@@ -276,7 +276,7 @@
       "get_room_artworks"
     ],
     "artworks_referenced": [
-      "AURA-2026-016"
+      "KP-2026-016"
     ],
     "rooms_referenced": [
       "SAL-D"

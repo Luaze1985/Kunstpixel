@@ -34,7 +34,7 @@ Hva utstillingen handler om og hvorfor den er relevant nå.
 ## Verk (rangert etter foreslått rekkefølge)
 | # | Verk-ID | Tittel | Kunstner | Hvorfor dette verket? |
 |---|---------|--------|----------|----------------------|
-| 1 | AURA-2026-007 | Vinternatt i Rondane | Sohlberg | Åpner med stillhet og storhet ... |
+| 1 | KP-2026-007 | Vinternatt i Rondane | Sohlberg | Åpner med stillhet og storhet ... |
 
 ## Romplan
 Hvilke saler, hvilken vandring, hvilke visuelle overganger.

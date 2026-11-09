@@ -57,7 +57,7 @@ TEST_QUERIES = [
 
 def run_benchmark():
     print("=" * 100)
-    print("🏛️  BENCHMARK: 30 REALISTISKE SØKETESTER I AURA KUNSTMUSEUMS HÅNDBØKER OG RUTINER")
+    print("🏛️  BENCHMARK: 30 REALISTISKE SØKETESTER I KUNSTPIXELS HÅNDBØKER OG RUTINER")
     print("=" * 100)
 
     success_count = 0

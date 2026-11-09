@@ -73,6 +73,8 @@ Beslutninger:
 11. **Minst mulig støy.** Forsiden er rapportene. Datakatalogen (alle 56 tabeller, 85 000 rader) ligger skjult bak en diskret lenke i rapportvinduet, og Lars oppsøker den selv.
 12. **LLM som egen inngang: chat.** Chatten ligger på samme side, men som eget sted ved siden av rapportene, ikke oppå dem. Den svarer gjennom de 45 hvitelistede verktøyene. Uten nøkkel er den slått av, og rapportene virker uansett (jf. punkt 5).
 
+10a. **Utført 2026-11-09** med `scripts/fjern_aura.py` og vakttest `tests/test_ingen_aura.py`. Bytter utover punkt 10 (valgt av agenten): «Aura Museumsvert/Bokhandel/MCP Server» → «Kunstpixel …», «AURA MUSEUM» → «KUNSTPIXEL», `aura-museum`/`aura-kunstmuseum` (MCP-navn i `.codex/config.toml`) → `kunstpixel`, `src/aura_museum/` → `arkiv/kunstpixel_legacy/`, `aura_museum_komplett.json` → `kunstpixel_komplett.json`, små/blandede ID-er beholder skrivemåten (`kp-`, `Kp-`). `museum_base.db` endret via SQL (136 celler, «Laura» urørt). `museum.db` bygget én gang av agenten med `build_museum_db.py` etter Lars' ja i økten.
+
 Rekkefølge: (1) slå `ux/ett-vindu` inn i main, (2) Aura-skriptet + vakttest, (3) skjult datakatalog, (4) chat-inngang, (5) én startkommando.
 
 Åpent / ikke avgjort:

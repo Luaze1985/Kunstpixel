@@ -1,14 +1,14 @@
 ﻿# BRIEFING — 2026-09-14T15:10:00Z
 
 ## Mission
-Investigate SQLite database and data files for Aura Kunstmuseum demo-prototype, test exact SQL queries for the 5 MCP tools, and verify data quality against acceptance criteria.
+Investigate SQLite database and data files for Kunstpixel demo-prototype, test exact SQL queries for the 5 MCP tools, and verify data quality against acceptance criteria.
 
 ## 🔒 My Identity
 - Archetype: explorer
 - Roles: investigation, synthesis
 - Working directory: g:/Min disk/Fellesprosjekt KI/.agents/explorer_survey_db
 - Original parent: 7a113f74-d69a-4786-89b6-4115c75be748
-- Milestone: SQLite Database and Data Layer Survey for Aura Kunstmuseum Demo-Prototype
+- Milestone: SQLite Database and Data Layer Survey for Kunstpixel Demo-Prototype
 
 ## 🔒 Key Constraints
 - Read-only investigation — do NOT implement

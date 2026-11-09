@@ -1,4 +1,4 @@
-# Final Orchestrator Handoff Report: Aura Kunstmuseum Demo-Prototype (Gen 2)
+# Final Orchestrator Handoff Report: Kunstpixel Demo-Prototype (Gen 2)
 
 **Date:** 2026-09-14  
 **Orchestrator:** Project Orchestrator Generation 2 (`orchestrator_2`)  
@@ -70,4 +70,4 @@
 - FastMCP tools are invoked in-process via `InProcessMCPClient`, providing full MCP protocol compatibility without external background daemons.
 
 ### Conclusion
-The Aura Kunstmuseum prototype is complete, 100% genuine, fully tested, and ready for post-victory audit.
+The Kunstpixel prototype is complete, 100% genuine, fully tested, and ready for post-victory audit.

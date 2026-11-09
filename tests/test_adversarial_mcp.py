@@ -2,7 +2,7 @@
 
 Empirically challenges:
 1. Extreme boundary conditions: empty, whitespace, and very long inputs.
-2. Case variations: sAl-D, sal d, d, KITTELSEN, SKRIK, aura-2026-009.
+2. Case variations: sAl-D, sal d, d, KITTELSEN, SKRIK, kp-2026-009.
 3. SQL injection vectors across all parameters.
 4. Special and Norwegian characters (æ, ø, å, aa, oe).
 5. Invalid and boundary limits (-1, 0, 10000).
@@ -161,9 +161,9 @@ class TestCaseVariations:
             assert res[0]["tittel"] == "Skrik"
 
     def test_artwork_id_case_insensitivity(self):
-        for ident in ["AURA-2026-009", "aura-2026-009", "AuRa-2026-009"]:
+        for ident in ["KP-2026-009", "kp-2026-009", "Kp-2026-009"]:
             res = get_artwork_details(ident)
-            assert res.get("id") == "AURA-2026-009"
+            assert res.get("id") == "KP-2026-009"
             assert res.get("tittel") == "Skrik"
 
 
@@ -180,7 +180,7 @@ class TestSqlInjectionVectors:
         "'; DELETE FROM verk; --",
         "'; INSERT INTO verk VALUES ('x'); --",
         "SAL-D' OR '1'='1",
-        "AURA-2026-009' OR '1'='1",
+        "KP-2026-009' OR '1'='1",
     ]
 
     def test_sqli_in_search_collection(self):
@@ -301,7 +301,7 @@ class TestLatencyAndConnectionLeaks:
             assert (time.perf_counter() - t0) * 1000 < 50.0
 
             t0 = time.perf_counter()
-            get_artwork_details("AURA-2026-009")
+            get_artwork_details("KP-2026-009")
             assert (time.perf_counter() - t0) * 1000 < 50.0
 
             t0 = time.perf_counter()

@@ -1,14 +1,14 @@
 ﻿# BRIEFING — 2026-09-14T17:34:00+02:00
 
 ## Mission
-Perform an objective, rigorous code and architecture review of the Aura Kunstmuseum demo-prototype (R1 MCP server, R2 Museumsvert agent, R3 test suite), stress-testing edge cases and verifying domain compliance and test suite validity.
+Perform an objective, rigorous code and architecture review of the Kunstpixel demo-prototype (R1 MCP server, R2 Museumsvert agent, R3 test suite), stress-testing edge cases and verifying domain compliance and test suite validity.
 
 ## 🔒 My Identity
 - Archetype: reviewer_critic
 - Roles: reviewer, critic
 - Working directory: g:/Min disk/Fellesprosjekt KI/.agents/reviewer_1
 - Original parent: 7a113f74-d69a-4786-89b6-4115c75be748
-- Milestone: Code and Architecture Review (Aura Kunstmuseum)
+- Milestone: Code and Architecture Review (Kunstpixel)
 - Instance: 1 of 1
 
 ## 🔒 Key Constraints

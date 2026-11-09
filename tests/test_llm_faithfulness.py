@@ -62,7 +62,7 @@ BAD_ANSWERS = [
     ("Hva koster det?", "Voksne betaler hundre og tjue kroner.", "bokstaver"),
     ("Hvor finner jeg Skrik?", "Skrik henger i Sal B.", "Sal B"),
     ("Hvor finner jeg Skrik?", "Skrik ble malt i 1925 og henger i Sal D.", "årstall"),
-    ("Hvor finner jeg Skrik?", "Skrik av Edvard Munch finnes som AURA-2026-099.", "AURA-2026-099"),
+    ("Hvor finner jeg Skrik?", "Skrik av Edvard Munch finnes som KP-2026-099.", "KP-2026-099"),
     ("Hvor henger bildene til Theodor Kittelsen?", "Kittelsen henger sammen med Edvard Munch.", "Munch"),
     (
         "Hva anbefaler du hvis jeg har 30 minutter?",
@@ -88,7 +88,7 @@ def test_invented_facts_are_rejected_and_rule_based_text_is_shown(db_path, quest
 
 def test_changed_database_price_beats_stale_llm_answer(tmp_path, db_path, monkeypatch):
     """Databasen får ny pris. Modellen 'husker' gammel pris og må avvises."""
-    monkeypatch.setenv("AURA_DB_PATH", str(db_path))  # agent overstyrer env; monkeypatch rydder opp
+    monkeypatch.setenv("KUNSTPIXEL_DB_PATH", str(db_path))  # agent overstyrer env; monkeypatch rydder opp
     mutated = tmp_path / "museum_mutert.db"
     shutil.copyfile(db_path, mutated)
     conn = sqlite3.connect(mutated)

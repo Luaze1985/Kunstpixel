@@ -1,9 +1,9 @@
-# Sentinel Final Handoff Report — Aura Kunstmuseum Demo-Prototype
+# Sentinel Final Handoff Report — Kunstpixel Demo-Prototype
 
 **Date:** 2026-09-14  
 **Agent:** Project Sentinel  
 **Working Directory:** `g:/Min disk/Fellesprosjekt KI/.agents/sentinel`  
-**Target Project:** Aura Kunstmuseum Demo-Prototype  
+**Target Project:** Kunstpixel Demo-Prototype  
 **Authoritative Reference:** `g:/Min disk/Fellesprosjekt KI/.agents/ORIGINAL_REQUEST.md`  
 **Victory Audit Report:** `g:/Min disk/Fellesprosjekt KI/.agents/victory_auditor_1/handoff.md`  
 
@@ -32,7 +32,7 @@
 
 ## 2. Logic Chain
 
-1. **Premise 1:** The user requested an operational demo-prototype of Aura Kunstmuseum verifying the domain context, MCP server with 5 collection tools (R1), an interactive museumsvert agent (R2), and an automated test suite verifying "Bedriften virker" (R3).
+1. **Premise 1:** The user requested an operational demo-prototype of Kunstpixel verifying the domain context, MCP server with 5 collection tools (R1), an interactive museumsvert agent (R2), and an automated test suite verifying "Bedriften virker" (R3).
 2. **Premise 2:** The sentinel protocol requires non-trivial progress monitoring, zero tolerance for hardcoded facades, and independent post-victory verification before reporting success.
 3. **Premise 3:** The implementation team achieved 112 green automated tests, removed all static answer paths, and enforced least-privilege read-only database connections.
 4. **Premise 4:** The independent Post-Victory Auditor conducted isolated testing and mutation verification, confirming all 14 acceptance criteria with zero anomalies and issued `VICTORY CONFIRMED`.

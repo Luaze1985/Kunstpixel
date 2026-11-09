@@ -1,7 +1,7 @@
-# Master Execution Plan: Aura Kunstmuseum Demo-Prototype
+# Master Execution Plan: Kunstpixel Demo-Prototype
 
 ## Overview
-Build and verify an executable demo-prototype proving that the Aura Kunstmuseum synthetic SMB enterprise operates seamlessly:
+Build and verify an executable demo-prototype proving that the Kunstpixel synthetic SMB enterprise operates seamlessly:
 1. R1: FastMCP / standard MCP server exposing 5 tools for SQLite museum data.
 2. R2: Interactive museumsvert agent connecting masterprompt (`prompts/museumsvert.md`) with the MCP tools, adhering to domain rules and tone.
 3. R3: Comprehensive integration test suite verifying that all 8+ scenarios pass and "Bedriften virker" as a coherent cultural institution.

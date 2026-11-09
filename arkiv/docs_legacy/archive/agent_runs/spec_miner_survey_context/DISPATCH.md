@@ -1,6 +1,6 @@
 ﻿## 2026-09-14T15:04:20Z
 
-You are a Specification Miner subagent for the Aura Kunstmuseum project.
+You are a Specification Miner subagent for the Kunstpixel project.
 Your working directory is: g:/Min disk/Fellesprosjekt KI/.agents/spec_miner_survey_context
 Authoritative original request path: g:/Min disk/Fellesprosjekt KI/.agents/ORIGINAL_REQUEST.md
 You MUST read ORIGINAL_REQUEST.md first.

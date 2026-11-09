@@ -1,4 +1,4 @@
-# Personalhåndbok for Aura Kunstmuseum (Kunstpixel)
+# Personalhåndbok for Kunstpixel
 
 > **Dokument-ID:** `HB-PERS-2026`  
 > **Gjelder for:** Alle ansatte, deltidsansatte, tilkallingsvikarer og praktikanter  
@@ -25,7 +25,7 @@
 ## Kapittel 1: Velkommen og overordnede verdier
 
 ### 1.1 Vårt oppdrag
-Aura Kunstmuseum er en levende møteplass for kunst, kulturarv og samfunnsdialog. Museet forvalter en betydelig samling av norsk og internasjonal kunst, formidler kunnskap til allmennheten og drifter faste og temporære utstillinger, kafé og arrangementsvirksomhet.
+Kunstpixel er en levende møteplass for kunst, kulturarv og samfunnsdialog. Museet forvalter en betydelig samling av norsk og internasjonal kunst, formidler kunnskap til allmennheten og drifter faste og temporære utstillinger, kafé og arrangementsvirksomhet.
 
 ### 1.2 Arbeidsmiljø og inkludering
 Vi forplikter oss til et åpent, inkluderende og likeverdig arbeidsfellesskap preget av respekt, faglig integritet og samarbeid på tvers av fagområder. Trakassering, diskriminering og mobbing aksepteres under ingen omstendigheter (jf. AML § 4-3).

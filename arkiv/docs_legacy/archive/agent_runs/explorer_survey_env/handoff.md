@@ -1,9 +1,9 @@
-# Environment & Runtime Survey Handoff Report — Aura Kunstmuseum
+# Environment & Runtime Survey Handoff Report — Kunstpixel
 
 **Agent:** Environment & Runtime Explorer (`explorer_survey_env`)  
 **Milestone:** S01-survey  
 **Timestamp:** 2026-09-14T17:11:00+02:00  
-**Target Project:** Aura Kunstmuseum Demo-Prototype (R1, R2, R3)  
+**Target Project:** Kunstpixel Demo-Prototype (R1, R2, R3)  
 **Working Directory:** `g:/Min disk/Fellesprosjekt KI/.agents/explorer_survey_env`
 
 ---
@@ -105,7 +105,7 @@
    - The authoritative populated database is currently located at `C:\Users\larse\Documents\.headroom\memory.db`.
    - Hardcoding an absolute path outside the repository would make the repository non-portable.
    - The recommended design is a database configuration helper in `src/config.py` that resolves the database path using precedence:
-     1. Environment variable `AURA_DB_PATH`
+     1. Environment variable `KUNSTPIXEL_DB_PATH`
      2. Repository-local file `g:/Min disk/Fellesprosjekt KI/data/museum.db` (if present)
      3. Default fallback to `C:\Users\larse\Documents\.headroom\memory.db`
    - The implementer can optionally copy `C:\Users\larse\Documents\.headroom\memory.db` to `data/museum.db` to make the repository completely self-contained.
@@ -136,8 +136,8 @@
    - A naive SQL search `WHERE spoersmaal LIKE '%åpningstider%'` will return 0 rows.
    - The `faq_oppslag` tool MUST search both `spoersmaal` and `svar`, and apply Norwegian character normalization (`å` <-> `aa`, `ø` <-> `oe`) or keyword synonym mapping.
 2. **Veggtekst Quality Rules:**
-   - Two works in the database (`AURA-2026-011` Brudeferd i Hardanger and `AURA-2026-012` Selvportrett med sigarett) have `veggtekst_status = 'draft'` and empty veggtekst.
-   - The remaining 14 works have approved veggtekster with 49–60 words, strictly complying with the 50–90 word rule (with `AURA-2026-014` at 49 words).
+   - Two works in the database (`KP-2026-011` Brudeferd i Hardanger and `KP-2026-012` Selvportrett med sigarett) have `veggtekst_status = 'draft'` and empty veggtekst.
+   - The remaining 14 works have approved veggtekster with 49–60 words, strictly complying with the 50–90 word rule (with `KP-2026-014` at 49 words).
    - Test assertions should filter on `veggtekst_status = 'approved'`.
 3. **Subagent Read-Only Constraint:**
    - This survey was performed strictly read-only. No files outside `.agents/explorer_survey_env` were written or modified.
@@ -148,7 +148,7 @@
 
 - The execution environment is fully capable and ready for immediate implementation of R1, R2, and R3.
 - **Python Runtime:** Use `py -3.13` (Python 3.13.12). All dependencies (`mcp` 1.29.1, `fastmcp` 3.4.2, `pytest` 9.0.2, `pydantic` 2.12.5, `rich` 15.0.0) are already installed.
-- **Database:** Authoritative SQLite database with all 72 rows is at `C:\Users\larse\Documents\.headroom\memory.db`. Implementer should make path configurable via `AURA_DB_PATH` with fallback to this location or a local copy at `data/museum.db`.
+- **Database:** Authoritative SQLite database with all 72 rows is at `C:\Users\larse\Documents\.headroom\memory.db`. Implementer should make path configurable via `KUNSTPIXEL_DB_PATH` with fallback to this location or a local copy at `data/museum.db`.
 - **MCP Framework:** Use `from mcp.server.fastmcp import FastMCP`.
 - **Testing:** `pytest` runs directly and seamlessly.
 
@@ -188,7 +188,7 @@ To independently verify these findings, run the following commands in PowerShell
    ```
 2. **Verify FastMCP initialization:**
    ```powershell
-   py -3.13 -c "from mcp.server.fastmcp import FastMCP; s = FastMCP('Aura'); print(s)"
+   py -3.13 -c "from mcp.server.fastmcp import FastMCP; s = FastMCP('Kunstpixel'); print(s)"
    ```
 3. **Verify Pytest installation and version:**
    ```powershell

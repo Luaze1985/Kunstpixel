@@ -680,7 +680,7 @@ def chat_med_verktoy(
 # ---------- håndboksvar med kildekontroll (oppgave 04) ----------
 
 HANDBOK_SYSTEMPROMPT = (
-    "Du svarer på ett spørsmål fra en ansatt ved Aura Kunstmuseum, ut fra håndbokpunkter som følger med.\n"
+    "Du svarer på ett spørsmål fra en ansatt ved Kunstpixel, ut fra håndbokpunkter som følger med.\n"
     "Regler:\n"
     "1. Bruk bare punktene som er sendt. Ikke legg til fakta, tall, regler eller kilder som ikke står der.\n"
     "2. Nevn punkt-ID-ene svaret bygger på, for eksempel (PERSONAL-5.2). Bruk bare ID-er fra punktene.\n"

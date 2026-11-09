@@ -3,7 +3,7 @@
 **Agent:** Worker 2 (`worker_m2`)  
 **Milestone:** M2 (R2 - Museumsvert Agent)  
 **Status:** Hard Handoff (Task Complete)  
-**Target Project:** Aura Kunstmuseum Demo-Prototype  
+**Target Project:** Kunstpixel Demo-Prototype  
 **Working Directory:** `g:/Min disk/Fellesprosjekt KI/.agents/worker_m2`  
 **Timestamp:** 2026-09-14T17:29:30+02:00  
 

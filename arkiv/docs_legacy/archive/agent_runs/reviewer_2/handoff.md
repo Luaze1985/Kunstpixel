@@ -1,7 +1,7 @@
 # Independent Security, Edge-Case, and Operational Reliability Review Report
 
 **Reviewer:** Reviewer 2 (`reviewer_2`)  
-**Target Project:** Aura Kunstmuseum Demo-Prototype  
+**Target Project:** Kunstpixel Demo-Prototype  
 **Working Directory:** `g:/Min disk/Fellesprosjekt KI/.agents/reviewer_2`  
 **Date:** 2026-09-14  
 **Integrity Mode:** Benchmark  
@@ -97,15 +97,15 @@ architecture_judgement:
 
 ### 1.4 Edge Case Behavior
 - **Unknown Artwork ID:**
-  - `get_artwork_details("AURA-2026-999")` -> returns structured dict:
-    `{'error': "Verk med ID eller tittel 'AURA-2026-999' ble ikke funnet i samlingsdatabasen.", 'artwork_id': 'AURA-2026-999', 'code': 'NOT_FOUND'}`
+  - `get_artwork_details("KP-2026-999")` -> returns structured dict:
+    `{'error': "Verk med ID eller tittel 'KP-2026-999' ble ikke funnet i samlingsdatabasen.", 'artwork_id': 'KP-2026-999', 'code': 'NOT_FOUND'}`
   - `get_artwork_details("Ikke-eksisterende maleri")` -> returns dict with `code: 'NOT_FOUND'`.
 - **Unknown Room ID:**
   - `get_room_artworks("SAL-Z")` -> returns structured dict:
     `{'error': "Ukjent sal-ID 'SAL-Z'", 'valid_rooms': ['SAL-A', 'SAL-B', 'SAL-C', 'SAL-D', 'SAL-E', 'MAG-1'], 'code': 'INVALID_ROOM'}`
   - `get_room_artworks("ROM-404")` -> returns dict with `code: 'INVALID_ROOM'`.
 - **Missing / Unregistered Information (Anti-Hallucination):**
-  - Query: `"Har dere malerier av Vincent van Gogh?"` -> Agent response clarifies: `"Det verket har vi dessverre ikke i museets samling. Aura Kunstmuseum har en spesialisert samling med fokus på norsk visuell kunst fra 1800- og 1900-tallet..."`
+  - Query: `"Har dere malerier av Vincent van Gogh?"` -> Agent response clarifies: `"Det verket har vi dessverre ikke i museets samling. Kunstpixel har en spesialisert samling med fokus på norsk visuell kunst fra 1800- og 1900-tallet..."`
   - Query: `"Hvor henger Guernica av Pablo Picasso?"` -> Clarifies Picasso is not in collection; no hallucinated accession ID or room placement.
   - Query: `"Når ble Skrik malt og hvilken teknikk ble brukt?"` -> Returns exact DB date `1893` and technique `Tempera og oljekritt på papp` without fabricating alternative years (1895, 1910).
 
@@ -140,7 +140,7 @@ architecture_judgement:
 ## 4. Conclusion
 
 **Final Assessment:** APPROVE.  
-The implementation of Aura Kunstmuseum achieves exceptional quality, strict security posture, robust edge-case handling, and 100% test pass rate across all tiers. No integrity violations, facade implementations, or bypasses were detected.
+The implementation of Kunstpixel achieves exceptional quality, strict security posture, robust edge-case handling, and 100% test pass rate across all tiers. No integrity violations, facade implementations, or bypasses were detected.
 
 ---
 
@@ -198,7 +198,7 @@ py -3.13 src/cli.py "Hvor finner jeg Skrik?"
 | Read-only boundary blocks INSERT, UPDATE, DELETE, DROP, ALTER | Python script testing `agent.db_conn`, `execute_read_query`, and raw connection | **PASS** (`PermissionError` & `OperationalError`) |
 | Museumsvert has zero write tools | Reflection audit of `dir(agent)` against forbidden keywords | **PASS** (0 write tools found) |
 | SQL injection immunity across all 5 tools | Malicious payloads (`DROP`, `UNION SELECT`, `1=1`) tested against each tool | **PASS** (All defused, 72 rows intact) |
-| Unknown artwork ID structured error | `get_artwork_details("AURA-2026-999")` | **PASS** (`code='NOT_FOUND'`) |
+| Unknown artwork ID structured error | `get_artwork_details("KP-2026-999")` | **PASS** (`code='NOT_FOUND'`) |
 | Unknown room ID structured error | `get_room_artworks("SAL-Z")` | **PASS** (`code='INVALID_ROOM'`) |
 | Anti-hallucination on unknown artworks/artists | Queries for Van Gogh, Picasso, Mona Lisa | **PASS** (Honest negative response) |
 | Factual fidelity on Skrik and Kittelsen | Year 1893, tempera/oljekritt, lifespan 1857–1914 | **PASS** (Matches DB exactly) |

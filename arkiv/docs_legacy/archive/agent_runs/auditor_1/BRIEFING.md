@@ -1,7 +1,7 @@
 ﻿# BRIEFING — 2026-09-14T17:33:30+02:00
 
 ## Mission
-Perform forensic integrity verification of all code, data, and tests in the repository for Aura Kunstmuseum.
+Perform forensic integrity verification of all code, data, and tests in the repository for Kunstpixel.
 
 ## 🔒 My Identity
 - Archetype: forensic_auditor
@@ -21,7 +21,7 @@ Perform forensic integrity verification of all code, data, and tests in the repo
 - Updated: 2026-09-14T17:33:30+02:00
 
 ## Audit Scope
-- **Work product**: Aura Kunstmuseum project (src/, data/, 	ests/, PROJECT.md, TEST_READY.md)
+- **Work product**: Kunstpixel project (src/, data/, 	ests/, PROJECT.md, TEST_READY.md)
 - **Profile loaded**: General Project
 - **Audit type**: forensic integrity check
 

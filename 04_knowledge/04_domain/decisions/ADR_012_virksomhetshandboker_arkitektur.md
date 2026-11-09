@@ -4,7 +4,7 @@
 Godkjent (2026-10-19)
 
 ## Kontekst
-Aura Kunstmuseum / Kunstpixel har etablert omfattende datastrukturer i `museum.db` og operative retningslinjer spredt i enkeltfiler (`KVALITETS_OG_STYRINGSSYSTEM.md`, `museumsrutiner.md`, `hms_veiledning_nasjonal.yaml`, ADR-ene 001–011). 
+Kunstpixel / Kunstpixel har etablert omfattende datastrukturer i `museum.db` og operative retningslinjer spredt i enkeltfiler (`KVALITETS_OG_STYRINGSSYSTEM.md`, `museumsrutiner.md`, `hms_veiledning_nasjonal.yaml`, ADR-ene 001–011). 
 For at virksomheten skal fungere realistisk i hverdagen for både mennesker (ansatte, verter, kafépersonale, ledelse) og KI-assistenter, er det behov for en autoritativ håndbokpakke. 
 
 Tradisjonelle PDF-håndbøker blir passive hyllevarmere som verken kan vedlikeholdes smidig eller konsumeres effektivt av språkmodeller og CLI-verktøy uten å overbelaste kontekstvinduet.

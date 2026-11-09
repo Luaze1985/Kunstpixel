@@ -37,7 +37,7 @@ Direct empirical observations from source inspection and execution via `py -3.13
 - Room ID variations: `SAL-A`, `sal-a`, `Sal A`, `sal a`, `a`, `A` returned 4 works in Sal A.
 - Artist ASCII case variations: `Kittelsen`, `KITTELSEN`, `kittelsen`, `kItTeLsEn`, `Theodor Kittelsen`, `THEODOR KITTELSEN` all returned >= 2 artworks for Kittelsen.
 - Title ASCII case variations: `Skrik`, `SKRIK`, `skrik`, `sKrIk` all returned *Skrik*.
-- Artwork ID case variations: `aura-2026-009`, `AURA-2026-009`, `AuRa-2026-009` all returned *Skrik*.
+- Artwork ID case variations: `kp-2026-009`, `KP-2026-009`, `Kp-2026-009` all returned *Skrik*.
 
 ### 1.5 Boundary Condition 4: SQL Injection Resistance
 - Tested 10 SQL injection payloads across all parameters:
@@ -50,7 +50,7 @@ Direct empirical observations from source inspection and execution via `py -3.13
   - `'; DELETE FROM verk; --`
   - `'; INSERT INTO verk VALUES ('x'); --`
   - `SAL-D' OR '1'='1`
-  - `AURA-2026-009' OR '1'='1`
+  - `KP-2026-009' OR '1'='1`
 - Results:
   - Zero SQL syntax errors or data corruption occurred.
   - Table `verk` row count remained exactly 16 before and after the attacks.

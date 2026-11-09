@@ -1,4 +1,4 @@
-# Leder- og Beredskapshåndbok for Aura Kunstmuseum (Kunstpixel)
+# Leder- og Beredskapshåndbok for Kunstpixel
 
 > **Dokument-ID:** `HB-LED-2026`  
 > **Gjelder for:** Museumsdirektør, kurator, driftsleder, kaféleder, arrangementssjef og vaktledere  
@@ -25,7 +25,7 @@
 ## Kapittel 1: Lederansvar og styringsprinsipper
 
 ### 1.1 Ledelsens oppdrag
-Ledere ved Aura Kunstmuseum skal utøve et tydelig, tillitsbasert og inkluderende lederskap. Ledere forplikter seg til å balansere god personalomsorg, høy museumsfaglig kvalitet, streng etterlevelse av lover og forskrifter, samt økonomisk bærekraft.
+Ledere ved Kunstpixel skal utøve et tydelig, tillitsbasert og inkluderende lederskap. Ledere forplikter seg til å balansere god personalomsorg, høy museumsfaglig kvalitet, streng etterlevelse av lover og forskrifter, samt økonomisk bærekraft.
 
 ### 1.2 Tydelig oppfølging og tilgjengelighet
 Ledere skal være tilgjengelige for sine medarbeidere, gi løpende konstruktiv tilbakemelding og ta tak i utfordringer i arbeidsmiljøet på et tidlig stadium.

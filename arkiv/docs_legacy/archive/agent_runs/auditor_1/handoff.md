@@ -1,4 +1,4 @@
-﻿# Forensic Audit Report: Aura Kunstmuseum
+﻿# Forensic Audit Report: Kunstpixel
 
 **Work Product:** Full Repository (`src/`, `data/`, `tests/`, `PROJECT.md`, `TEST_READY.md`)  
 **Integrity Mode:** Benchmark Mode (as mandated in `ORIGINAL_REQUEST.md`)  
@@ -39,7 +39,7 @@ Direct inspection executed via `.agents/auditor_1/audit_db.py`:
   - **Total:** Exactly 72 business rows (plus internal `sqlite_sequence`: 3 rows).
 - **Curatorial Quality Rules:**
   - 14 exhibited artworks have status `'utstilt'` and `'approved'` wall texts ranging between 49 and 60 words (target: 48–90 words).
-  - 2 storage artworks (`AURA-2026-011` *Brudeferd i Hardanger*, `AURA-2026-012` *Selvportrett med sigarett*) have status `'magasin'` and `'draft'` wall texts in `MAG-1`.
+  - 2 storage artworks (`KP-2026-011` *Brudeferd i Hardanger*, `KP-2026-012` *Selvportrett med sigarett*) have status `'magasin'` and `'draft'` wall texts in `MAG-1`.
   - All 14 approved wall texts feature strict 2-line headers: Line 1 with artist lifespan in parens, Line 2 with italicized title, year, technique, dimensions, and artwork ID.
 
 ### 1.2 Genuine Query Execution vs Hardcoding
@@ -142,7 +142,7 @@ tests\test_mcp_server.py ..................                              [100%]
 
 ## 4. Conclusion
 
-The Aura Kunstmuseum codebase, SQLite database, MCP server, and Museumsvert agent demonstrate authentic, robust, and secure engineering:
+The Kunstpixel codebase, SQLite database, MCP server, and Museumsvert agent demonstrate authentic, robust, and secure engineering:
 - **No hardcoded test mocks or facade shortcuts exist.**
 - **Database `data/museum.db` is 100% authentic (72 rows, 7 tables, pristine referential integrity).**
 - **Read-only security protections are active and cannot be bypassed.**

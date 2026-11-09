@@ -25,4 +25,4 @@ For **hvert eneste verk** i samlingen innføres en obligatorisk **3-lags formidl
 - **Hva fremtidige agenter låses til:**  
   Ingen verk kan registreres med `NULL` eller tomme strenger i `veggtekst`, `audioguide_manus` eller `barneformidling`.
 - **Integritet og kvalitet:**  
-  Samlingen skal fordeles logisk på museets 5 saler (`SAL-A` til `SAL-E`) og magasin (`MAG-1`), med korrekte inventarnumre (`AURA-2026-xxx`).
+  Samlingen skal fordeles logisk på museets 5 saler (`SAL-A` til `SAL-E`) og magasin (`MAG-1`), med korrekte inventarnumre (`KP-2026-xxx`).

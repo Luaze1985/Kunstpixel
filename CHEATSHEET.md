@@ -1,8 +1,8 @@
 # HUSKELAPP FOR LARS (CHEATSHEET)
-*Prosjekt: Kunstpixel / Aura Museum | Sist oppdatert: 2026-11-01 00:20*
+*Prosjekt: Kunstpixel / Kunstpixel | Sist oppdatert: 2026-11-01 00:20*
 
 ## 1. Hva vi gjorde sist
-- **Minimalistiske plantegninger for Aura Museum:** Bygget helt rene, enkle og lesbare SVG-tegninger (U1, P1, P2) for Bispegata 9B i Trondheim uten teknisk støy, med fargekodede rom og romliste.
+- **Minimalistiske plantegninger for Kunstpixel:** Bygget helt rene, enkle og lesbare SVG-tegninger (U1, P1, P2) for Bispegata 9B i Trondheim uten teknisk støy, med fargekodede rom og romliste.
 - **2.5D Kartviser og SSOT:** `06_kart/index.html` og `bygning_geometri.json` v2.0 er koblet sammen. 44 av 44 tester er 100 % grønne i `tests/test_building_map.py`.
 
 ## 2. Hvor vi slapp

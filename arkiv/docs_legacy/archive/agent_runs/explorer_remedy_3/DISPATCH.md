@@ -1,5 +1,5 @@
 ## 2026-09-14T15:37:04Z
-You are Explorer Remedy 3 (explorer_remedy_3) for the Aura Kunstmuseum project.
+You are Explorer Remedy 3 (explorer_remedy_3) for the Kunstpixel project.
 Your working directory is: g:/Min disk/Fellesprosjekt KI/.agents/explorer_remedy_3
 Authoritative original request path: g:/Min disk/Fellesprosjekt KI/.agents/ORIGINAL_REQUEST.md
 You MUST read ORIGINAL_REQUEST.md first.

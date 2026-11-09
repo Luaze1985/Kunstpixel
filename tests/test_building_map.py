@@ -1,6 +1,6 @@
 """Tester for 06_kart/ bygningsmodell, geometri, plantegninger og FastMCP-oppslag.
 
-E2E Testpakke for Aura Museum i henhold til NS 8351, NS 3940, DiBK brannkonsept
+E2E Testpakke for Kunstpixel i henhold til NS 8351, NS 3940, DiBK brannkonsept
 og Kartverket MCP. Dekker alle 4 tiers:
 - Tier 1: Feature Coverage (atomære krav)
 - Tier 2: Boundary & Corner Cases (arealsummer, koteterskler, veggtykkelser)
@@ -57,7 +57,7 @@ def test_bygning_geometri_json_exists_and_valid():
 
     assert "datakilde" in data and "syntetisk" in data["datakilde"]
     assert "museum" in data
-    assert data["museum"]["navn"] == "Aura Museum"
+    assert data["museum"]["navn"] == "Kunstpixel"
     assert "eksterior" in data["museum"]
     assert "hovedfløy" in data["museum"]["eksterior"]
     assert "tilbygg_ost" in data["museum"]["eksterior"]
@@ -323,7 +323,7 @@ def test_tier1_svg_fullverdig_tegningshode():
     """Tier 1: Verifiserer tegningshode med matrikkel, arealoppstilling og brannkonsept."""
     for fn in SVG_FILES:
         svg = _load_svg(fn)
-        assert "AURA MUSEUM" in svg, f"{fn} mangler institusjonsnavn i tegningshode"
+        assert "KUNSTPIXEL" in svg, f"{fn} mangler institusjonsnavn i tegningshode"
         assert "Bispegata 9B" in svg, f"{fn} mangler adresse Bispegata 9B i tegningshode"
         assert "401" in svg and "12" in svg, f"{fn} mangler Gnr 401 / Bnr 12 i tegningshode"
         assert "4 350" in svg or "4350" in svg, f"{fn} mangler BTA 4 350 m²"

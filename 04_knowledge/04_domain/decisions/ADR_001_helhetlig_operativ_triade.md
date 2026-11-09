@@ -7,7 +7,7 @@
 ---
 
 ## Kontekst
-Kunstpixel er treningsarena og digital tvilling for Aura Kunstmuseum. Databasene har hittil vært fragmenterte og delvis tynne på faglige og administrative realiteter. For at datagrunnlaget skal fungere sømløst mot museets masterprompt og gi maksimal overføringsverdi til reell virksomhetsdrift, måtte vi avklare styringsformålet for databasene.
+Kunstpixel er treningsarena og digital tvilling for Kunstpixel. Databasene har hittil vært fragmenterte og delvis tynne på faglige og administrative realiteter. For at datagrunnlaget skal fungere sømløst mot museets masterprompt og gi maksimal overføringsverdi til reell virksomhetsdrift, måtte vi avklare styringsformålet for databasene.
 
 ---
 

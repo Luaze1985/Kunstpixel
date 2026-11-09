@@ -1,16 +1,16 @@
-# Test Suite Readiness Report: Aura Museum Bygningsmodell & Kartpakke
+# Test Suite Readiness Report: Kunstpixel Bygningsmodell & Kartpakke
 
 **Dato:** 2026-10-31  
 **Forfatter:** E2E Test Writer (`test_writer_e2e`)  
 **Status:** TEST READY (Milestone M-E2E Fullført)  
-**Mål:** Omfattende 4-lags testinfrastruktur for Aura Museum bygningsmodell, plantegninger og kartpakke iht. NS 8351, NS 3940, DiBK brannkonsept og Kartverket MCP.  
+**Mål:** Omfattende 4-lags testinfrastruktur for Kunstpixel bygningsmodell, plantegninger og kartpakke iht. NS 8351, NS 3940, DiBK brannkonsept og Kartverket MCP.  
 **Testfil:** `tests/test_building_map.py`  
 
 ---
 
 ## 1. Executive Summary
 
-Den helhetlige 4-lags E2E-testsuiten for Aura Museum bygningsmodell og kartpakke er etablert og aktiv i `tests/test_building_map.py`.
+Den helhetlige 4-lags E2E-testsuiten for Kunstpixel bygningsmodell og kartpakke er etablert og aktiv i `tests/test_building_map.py`.
 
 Testsuiten består av **42 automatiserte tester** (langt over terskelkravet på 35 tester i `TEST_INFRA.md`). Testsuiten opprettholder 100 % bakoverkompatibilitet med de 5 opprinnelige testene, og tester nådeløst alle akseptansekriterier fra `ORIGINAL_REQUEST.md`, `PROJECT.md` og `TEST_INFRA.md`.
 

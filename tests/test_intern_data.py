@@ -77,7 +77,7 @@ def test_calendar_list_gives_one_finding_per_month(data):
 
 
 def test_nested_lists_inherit_parent_context(data):
-    skrik = next(f for f in data.findings if "AURA-2026-009" in f.sti)
+    skrik = next(f for f in data.findings if "KP-2026-009" in f.sti)
     assert "Rødt klistremerke" in skrik.kontekst
     assert "tittel: Skrik" in skrik.tekst
 

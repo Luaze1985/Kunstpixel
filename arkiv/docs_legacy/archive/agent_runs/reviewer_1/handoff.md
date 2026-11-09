@@ -1,4 +1,4 @@
-﻿# Code and Architecture Review Report: Aura Kunstmuseum
+﻿# Code and Architecture Review Report: Kunstpixel
 
 **Date:** 2026-09-14  
 **Reviewer:** Reviewer 1 (`reviewer_1`) — Roles: Reviewer & Adversarial Critic  
@@ -25,7 +25,7 @@ architecture_judgement:
 ```
 
 ```yaml
-target_project: "Aura Kunstmuseum Demo-Prototype"
+target_project: "Kunstpixel Demo-Prototype"
 target_repo: "g:/Min disk/Fellesprosjekt KI"
 review_scope: "R1 MCP server, R2 Museumsvert agent, R3 test suite, and domain data"
 current_plan: "PROJECT.md"
@@ -137,7 +137,7 @@ Directly observed evidence from running verification tools and source inspection
            text=text,
            category="praktisk",
            tools_used=["search_collection", "get_room_artworks"],
-           artworks_referenced=["AURA-2026-001", "AURA-2026-007", "AURA-2026-009", "AURA-2026-010"],
+           artworks_referenced=["KP-2026-001", "KP-2026-007", "KP-2026-009", "KP-2026-010"],
            rooms_referenced=["SAL-A", "SAL-D"],
        )
    ```
@@ -214,8 +214,8 @@ Directly observed evidence from running verification tools and source inspection
 
 8. **Curatorial Wall Texts in DB**:
    All 14 exhibited artworks have approved status and word counts between 49 and 60 words:
-   `AURA-2026-001: 56`, `AURA-2026-002: 53`, `AURA-2026-003: 52`, `AURA-2026-004: 56`, `AURA-2026-005: 59`, `AURA-2026-006: 51`, `AURA-2026-007: 56`, `AURA-2026-008: 55`, `AURA-2026-009: 54`, `AURA-2026-010: 59`, `AURA-2026-013: 58`, `AURA-2026-014: 49`, `AURA-2026-015: 53`, `AURA-2026-016: 60`.
-   Both storage works (`AURA-2026-011`, `AURA-2026-012`) have status `magasin` and `draft` wall text.
+   `KP-2026-001: 56`, `KP-2026-002: 53`, `KP-2026-003: 52`, `KP-2026-004: 56`, `KP-2026-005: 59`, `KP-2026-006: 51`, `KP-2026-007: 56`, `KP-2026-008: 55`, `KP-2026-009: 54`, `KP-2026-010: 59`, `KP-2026-013: 58`, `KP-2026-014: 49`, `KP-2026-015: 53`, `KP-2026-016: 60`.
+   Both storage works (`KP-2026-011`, `KP-2026-012`) have status `magasin` and `draft` wall text.
 
 ---
 
@@ -322,7 +322,7 @@ To independently verify these findings:
 
 ### Challenge 2 (High): Artwork Rotation Inconsistency
 - **Assumption challenged**: The 30-minute recommendation only recommends currently exhibited artworks.
-- **Attack scenario**: Curators move *Nøkken* (AURA-2026-001) from Sal A to storage (`MAG-1`) for conservation.
+- **Attack scenario**: Curators move *Nøkken* (KP-2026-001) from Sal A to storage (`MAG-1`) for conservation.
 - **Blast radius**: The agent's 30-minute recommendation in `_handle_recommendation_30min` continues to recommend *Nøkken* in Sal A because the itinerary is a hardcoded string.
 - **Mitigation**: Query `get_room_artworks("SAL-A")` and dynamically pick from works returned with `status == 'utstilt'`.
 

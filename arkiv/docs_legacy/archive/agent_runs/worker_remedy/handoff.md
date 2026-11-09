@@ -1,10 +1,10 @@
-﻿# Remediation Handoff Report: Aura Kunstmuseum (Iteration 2)
+﻿# Remediation Handoff Report: Kunstpixel (Iteration 2)
 
 **Agent:** Remediation Worker (`worker_remedy`)  
 **Roles:** implementer, qa, specialist  
 **Working Directory:** `g:/Min disk/Fellesprosjekt KI/.agents/worker_remedy`  
 **Date:** 2026-09-14  
-**Target Project:** Aura Kunstmuseum Demo-Prototype  
+**Target Project:** Kunstpixel Demo-Prototype  
 **Authoritative Contracts:** `ORIGINAL_REQUEST.md`, `PROJECT.md`, `TEST_READY.md`, `reviewer_1/handoff.md`  
 
 ---

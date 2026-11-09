@@ -1,4 +1,4 @@
-# QA Final Verification Report — Aura Kunstmuseum Demo-Prototype
+# QA Final Verification Report — Kunstpixel Demo-Prototype
 
 **Date:** 2026-09-14  
 **Agent:** QA Verification Worker (`worker_final_verify`)  
@@ -96,7 +96,7 @@ FAQ token precision verified!
   - **Exit Code:** `0`
   - **Output:**
 ```
-┌──────────────────────────── 🏛️ Aura Museumsvert ────────────────────────────┐
+┌──────────────────────────── 🏛️ Kunstpixel Museumsvert ────────────────────────────┐
 │ Edvard Munchs mesterverk *Skrik* (1893) henger utstilt i **Sal D –          │
 │ Eksistens og modernisme** (SAL-D) i 2. etasje. Verket er utført i Tempera   │
 │ og oljekritt på papp.                                                       │

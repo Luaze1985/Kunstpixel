@@ -1,4 +1,4 @@
-"""Aura Kunstmuseum — Gründer Chat Hub.
+"""Kunstpixel — Gründer Chat Hub.
 
 Superenkel lokal web-chat for de to gründerne.
 100 % standardbibliotek (ingen eksterne pakker kreves, null dependencies).
@@ -97,7 +97,7 @@ def main() -> None:
     httpd = HTTPServer(server_address, ChatHubHandler)
 
     print("=" * 65)
-    print("🏛️  Aura Kunstmuseum — Gründer Chat Hub")
+    print("🏛️  Kunstpixel — Gründer Chat Hub")
     print("=" * 65)
     print(f"👉 Kjører på: http://localhost:{port}")
     print("✨ Null eksterne pakker kreves. Koblet rett på FastMCP og SQLite.")

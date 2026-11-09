@@ -1,7 +1,7 @@
 ﻿# BRIEFING — 2026-09-14T18:02:00+02:00
 
 ## Mission
-Perform rigorous final gate re-review of Aura Kunstmuseum codebase to verify whether Reviewer 1's critical issues are completely and genuinely resolved in src/agent.py and src/db.py.
+Perform rigorous final gate re-review of Kunstpixel codebase to verify whether Reviewer 1's critical issues are completely and genuinely resolved in src/agent.py and src/db.py.
 
 ## 🔒 My Identity
 - Archetype: reviewer & critic

@@ -1,6 +1,6 @@
 ## 2026-09-14T15:30:12Z
 
-You are Reviewer 2 (reviewer_2) for the Aura Kunstmuseum project.
+You are Reviewer 2 (reviewer_2) for the Kunstpixel project.
 Your working directory is: g:/Min disk/Fellesprosjekt KI/.agents/reviewer_2
 Authoritative original request path: g:/Min disk/Fellesprosjekt KI/.agents/ORIGINAL_REQUEST.md
 You MUST read ORIGINAL_REQUEST.md first.

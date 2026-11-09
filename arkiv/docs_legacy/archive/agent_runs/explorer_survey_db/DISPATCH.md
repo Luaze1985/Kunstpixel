@@ -1,12 +1,12 @@
 ﻿## 2026-09-14T15:04:20Z
 
-You are an Explorer subagent for the Aura Kunstmuseum project.
+You are an Explorer subagent for the Kunstpixel project.
 Your working directory is: g:/Min disk/Fellesprosjekt KI/.agents/explorer_survey_db
 Authoritative original request path: g:/Min disk/Fellesprosjekt KI/.agents/ORIGINAL_REQUEST.md
 You MUST read ORIGINAL_REQUEST.md first.
 
 Objective:
-Investigate the SQLite database and data files for Aura Kunstmuseum demo-prototype.
+Investigate the SQLite database and data files for Kunstpixel demo-prototype.
 Specifically:
 1. Locate the SQLite database file in the workspace (check data/, root, etc.) and examine data/samling.json.
 2. Inspect the SQLite database tables (schema, columns, types, row counts):

@@ -19,7 +19,7 @@
 Inspection of `src/mcp_server.py` (lines 22–144) demonstrates that all 5 tools are declared with `@mcp.tool()`:
 ```python
 22: # Initialize FastMCP application
-23: mcp = FastMCP("Aura Kunstmuseum")
+23: mcp = FastMCP("Kunstpixel")
 24: 
 25: 
 26: @mcp.tool()
@@ -39,7 +39,7 @@ Inspection of `src/mcp_server.py` (lines 22–144) demonstrates that all 5 tools
 ```
 Direct verification via Python interactive test:
 ```powershell
-py -3.13 -c "from src.mcp_server import search_collection, get_artwork_details, get_room_artworks, search_events, search_faq; print('search_collection:', len(search_collection(artist='Kittelsen'))); print('get_artwork_details:', get_artwork_details('AURA-2026-009')['tittel']); print('get_room_artworks:', len(get_room_artworks('SAL-D'))); print('search_events:', len(search_events())); print('search_faq:', len(search_faq('åpningstider')))"
+py -3.13 -c "from src.mcp_server import search_collection, get_artwork_details, get_room_artworks, search_events, search_faq; print('search_collection:', len(search_collection(artist='Kittelsen'))); print('get_artwork_details:', get_artwork_details('KP-2026-009')['tittel']); print('get_room_artworks:', len(get_room_artworks('SAL-D'))); print('search_events:', len(search_events())); print('search_faq:', len(search_faq('åpningstider')))"
 ```
 **Output:**
 ```
@@ -114,7 +114,7 @@ The database already contains the exact factual strings. The hardcoding in `src/
 ## 3. Caveats
 
 1. **Asynchronous Stdio MCP Client**: In a multi-process deployment where `src/mcp_server.py` runs in an external process communicating over stdio JSON-RPC, an async client session (`mcp.client.stdio`) would be required. Reviewer 1 explicitly designated this under `allowed_to_wait`. The in-process client approach is fully compatible with the single-process demo prototype.
-2. **Read-Only Database Fixtures**: `tests/conftest.py` resolves `db_path` following config precedence (`AURA_DB_PATH` -> `data/museum.db`). Because `src/mcp_server.py` relies on `src.db` which calls `get_db_path()`, calling FastMCP tools in-process automatically resolves to the authoritative test database.
+2. **Read-Only Database Fixtures**: `tests/conftest.py` resolves `db_path` following config precedence (`KUNSTPIXEL_DB_PATH` -> `data/museum.db`). Because `src/mcp_server.py` relies on `src.db` which calls `get_db_path()`, calling FastMCP tools in-process automatically resolves to the authoritative test database.
 3. **Internal Helper Queries**: Handlers such as `_handle_exhibitions` query `utstillinger` table metadata, which is not exposed as one of the 5 collection tools in R1. If an internal read query is used for exhibitions without invoking any of the 5 MCP tools, `tools_used` MUST be reported as `[]` (empty list) rather than fabricating `["search_collection"]`.
 
 ---

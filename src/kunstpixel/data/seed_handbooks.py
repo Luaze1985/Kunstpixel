@@ -1,4 +1,4 @@
-"""Seed and indexing script for Aura Kunstmuseum Virksomhetshåndbøker og SOP-er.
+"""Seed and indexing script for Kunstpixel Virksomhetshåndbøker og SOP-er.
 
 Parses Markdown handbooks from 04_knowledge/01_governance/handboker/ and SOPs from
 04_knowledge/02_sops/ into table `handbok_oppslag`.

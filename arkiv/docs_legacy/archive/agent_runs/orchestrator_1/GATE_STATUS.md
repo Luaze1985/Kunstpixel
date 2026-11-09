@@ -1,4 +1,4 @@
-# Gate Status: Aura Kunstmuseum Demo-Prototype
+# Gate Status: Kunstpixel Demo-Prototype
 
 ## Gate — Iteration 1
 | Agent | Role | Verdict | Source | Notes |

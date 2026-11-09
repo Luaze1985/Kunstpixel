@@ -204,7 +204,7 @@ class MuseumsvertAgent:
         else:
             self.db_path = get_db_path()
 
-        os.environ["AURA_DB_PATH"] = str(self.db_path)
+        os.environ["KUNSTPIXEL_DB_PATH"] = str(self.db_path)
 
         self.mcp_client = mcp_client if mcp_client is not None else InProcessMCPClient()
         self._turn_tools_used: list[str] = []
@@ -585,9 +585,9 @@ class MuseumsvertAgent:
         a_highlights = [w for w in sal_a if w.get("tittel") in ["Nøkken", "Vinternatt i Rondane"]] or sal_a[:2]
         d_highlights = [w for w in sal_d if w.get("tittel") in ["Skrik", "Pikene på broen"]] or sal_d[:2]
 
-        w1 = a_highlights[0] if a_highlights else {"kunstner": "Theodor Kittelsen", "tittel": "Nøkken", "aar": 1904, "id": "AURA-2026-001"}
+        w1 = a_highlights[0] if a_highlights else {"kunstner": "Theodor Kittelsen", "tittel": "Nøkken", "aar": 1904, "id": "KP-2026-001"}
         w2 = a_highlights[1] if len(a_highlights) > 1 else w1
-        w3 = d_highlights[0] if d_highlights else {"kunstner": "Edvard Munch", "tittel": "Skrik", "aar": 1893, "id": "AURA-2026-009"}
+        w3 = d_highlights[0] if d_highlights else {"kunstner": "Edvard Munch", "tittel": "Skrik", "aar": 1893, "id": "KP-2026-009"}
         w4 = d_highlights[1] if len(d_highlights) > 1 else w3
 
         text = (
@@ -854,39 +854,39 @@ class MuseumsvertAgent:
     def _match_artwork_title(self, raw: str, norm: str) -> str | None:
         """Match artwork title in user query and return its ID."""
         mapping = {
-            "skrik": "AURA-2026-009",
-            "nokken": "AURA-2026-001",
-            "nøkken": "AURA-2026-001",
-            "soria moria": "AURA-2026-002",
-            "kampen for tilvaerelsen": "AURA-2026-003",
-            "kampen for tilværelsen": "AURA-2026-003",
-            "albertine": "AURA-2026-004",
-            "blaatt interior": "AURA-2026-005",
-            "blått interiør": "AURA-2026-005",
-            "barnedaap": "AURA-2026-006",
-            "barnedåp": "AURA-2026-006",
-            "vinternatt": "AURA-2026-007",
-            "rondane": "AURA-2026-007",
-            "jonsokbaal": "AURA-2026-008",
-            "jonsokbål": "AURA-2026-008",
-            "pikene paa broen": "AURA-2026-010",
-            "pikene på broen": "AURA-2026-010",
-            "brudeferd": "AURA-2026-011",
-            "selvportrett med sigarett": "AURA-2026-012",
-            "sommernatt ved kysten": "AURA-2026-013",
-            "bondebegravelse": "AURA-2026-014",
-            "vinter paa simoa": "AURA-2026-015",
-            "vinter på simoa": "AURA-2026-015",
-            "blaa fjellform": "AURA-2026-016",
-            "blå fjellform": "AURA-2026-016",
-            "stor blå fjellform": "AURA-2026-016",
+            "skrik": "KP-2026-009",
+            "nokken": "KP-2026-001",
+            "nøkken": "KP-2026-001",
+            "soria moria": "KP-2026-002",
+            "kampen for tilvaerelsen": "KP-2026-003",
+            "kampen for tilværelsen": "KP-2026-003",
+            "albertine": "KP-2026-004",
+            "blaatt interior": "KP-2026-005",
+            "blått interiør": "KP-2026-005",
+            "barnedaap": "KP-2026-006",
+            "barnedåp": "KP-2026-006",
+            "vinternatt": "KP-2026-007",
+            "rondane": "KP-2026-007",
+            "jonsokbaal": "KP-2026-008",
+            "jonsokbål": "KP-2026-008",
+            "pikene paa broen": "KP-2026-010",
+            "pikene på broen": "KP-2026-010",
+            "brudeferd": "KP-2026-011",
+            "selvportrett med sigarett": "KP-2026-012",
+            "sommernatt ved kysten": "KP-2026-013",
+            "bondebegravelse": "KP-2026-014",
+            "vinter paa simoa": "KP-2026-015",
+            "vinter på simoa": "KP-2026-015",
+            "blaa fjellform": "KP-2026-016",
+            "blå fjellform": "KP-2026-016",
+            "stor blå fjellform": "KP-2026-016",
         }
         for key, art_id in mapping.items():
             if key in norm or key in raw.lower():
                 return art_id
 
         # Also check accession ID pattern
-        match = re.search(r"\b(AURA-2026-\d{3})\b", raw, re.IGNORECASE)
+        match = re.search(r"\b(KP-2026-\d{3})\b", raw, re.IGNORECASE)
         if match:
             return match.group(1).upper()
 

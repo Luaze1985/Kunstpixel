@@ -64,7 +64,7 @@ Hver kilde får en klassifisering, og hver modell får en plassering:
 2. **Kildehenvisning som del av verktøyresultatet.** Hvert funn har `kilde` (fil) og `sti` (avsnitt i filen). Kontrollen krever at hvert LLM-svar sitter igjen med minst én gyldig kilde.
 3. **Faktakontroll v2** (utvider `verify_facts`): alle tall med enhet (90 minutter, 15 kg, 14 dager, +4 °C, kl. 20:00), måneder, myndigheter, roller og lovnavn i svaret må finnes i verktøyresultatet. Ingen juridiske råd utover det dataene sier.
 4. **Rollestyring.** Spørsmålet følger med en rolle. Verktøyene filtrerer etter `tool_access.md`. En rolle uten tilgang får avslag, ikke LLM-svar.
-5. **Fast dato** gjennom `AURA_TODAY`, slik at «hva er neste tilsyn?» gir samme svar i testene hver dag.
+5. **Fast dato** gjennom `KUNSTPIXEL_TODAY`, slik at «hva er neste tilsyn?» gir samme svar i testene hver dag.
 
 ## Faseplan
 

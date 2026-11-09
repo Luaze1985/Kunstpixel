@@ -3,7 +3,7 @@
 **Agent:** E2E Test Writer (`test_writer_e2e`)  
 **Milestone:** E2E Testing Track (Tiers 1–4)  
 **Status:** Hard Handoff (Task Complete)  
-**Target Project:** Aura Kunstmuseum Demo-Prototype  
+**Target Project:** Kunstpixel Demo-Prototype  
 **Working Directory:** `g:/Min disk/Fellesprosjekt KI/.agents/test_writer_e2e`  
 **Timestamp:** 2026-09-14T17:20:30+02:00  
 
@@ -19,7 +19,7 @@ Under the designated write boundary, the following 8 artifacts were created and 
 2. **`tests/__init__.py`** (2 lines):  
    Initializes the `tests` Python package.
 3. **`tests/conftest.py`** (66 lines):  
-   Provides session and function fixtures: `project_root`, `db_path` (3-tier resolution: `AURA_DB_PATH` -> `data/museum.db` -> fallback `memory.db`), `db_conn` (URI `?mode=ro` with `sqlite3.Row`), `db_baseline` constants dict, and `agent_instance`.
+   Provides session and function fixtures: `project_root`, `db_path` (3-tier resolution: `KUNSTPIXEL_DB_PATH` -> `data/museum.db` -> fallback `memory.db`), `db_conn` (URI `?mode=ro` with `sqlite3.Row`), `db_baseline` constants dict, and `agent_instance`.
 4. **`tests/test_db_quality.py`** (223 lines, 23 tests):  
    - Verifies all 7 tables exist (`kunstnere`, `saler`, `verk`, `utstillinger`, `utstilling_verk`, `hendelser`, `publikum_faq`).
    - Verifies exact total row count of 72 rows, and individual table counts (12, 6, 16, 3, 15, 8, 12).
@@ -30,7 +30,7 @@ Under the designated write boundary, the following 8 artifacts were created and 
 5. **`tests/test_mcp_server.py`** (178 lines, 18 tests):  
    - Verifies all 5 FastMCP tools against SQLite data meeting R1 criteria:
      - `search_collection`: "Kittelsen" returns 2 artworks with metadata (*Nøkken*, *Soria Moria slott*); filters on room, technique, and query; SQL injection immunity.
-     - `get_artwork_details`: "Skrik" (AURA-2026-009) returns complete metadata, wall text, provenance; unknown IDs return structured `NOT_FOUND` error.
+     - `get_artwork_details`: "Skrik" (KP-2026-009) returns complete metadata, wall text, provenance; unknown IDs return structured `NOT_FOUND` error.
      - `get_room_artworks`: "SAL-D" returns 3 exhibited artworks in display sequence order (`rekkefølge`).
      - `search_events`: Upcoming events return date, times, room, prices; filter by `omvisning` / `verksted`.
      - `search_faq`: "åpningstider" returns concrete hours ("10:00" and "17:00"); "pris" returns ticket prices in NOK.
@@ -109,7 +109,7 @@ Under the designated write boundary, the following 8 artifacts were created and 
 
 ## 4. Conclusion
 
-- The comprehensive E2E test suite for Aura Kunstmuseum is 100% complete, verified, and ready.
+- The comprehensive E2E test suite for Kunstpixel is 100% complete, verified, and ready.
 - **65 total tests** across 4 tiers cover R1, R2, R3, and curatorial DB quality requirements.
 - Currently, **41 / 41 active tests pass** in 0.22 seconds.
 - `TEST_INFRA.md` and `TEST_READY.md` are published at project root.

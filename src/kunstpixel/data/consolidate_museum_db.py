@@ -1,4 +1,4 @@
-"""Consolidation and enrichment script for Aura Kunstmuseum (05_data/museum.db).
+"""Consolidation and enrichment script for Kunstpixel (05_data/museum.db).
 
 Merges historical tables from kunstpixel_historikk.db into museum.db to establish
 a Single Source of Truth (SSOT) according to ADR 004, ADR 005, ADR 006, and ADR 007.
@@ -358,21 +358,21 @@ def consolidate_and_enrich() -> dict[str, int]:
     """)
 
     incidents = [
-        ("AVV-2010-001", 2010, "2010-03-14", "KLIMA", "GUL", "MAG-1", "AURA-2026-011", "Klimaanlegg i Magasin 1 varslet relativ fuktighet på 62% RH (terskel 55%). Skyldes svikt i avfukterfilter.", "Filter skiftet manuelt, mobil kondensavfukter satt inn innen 2 timer. Ingen fuktskade på Brudeferd i Hardanger.", "KP-ANS-005", "LUKKET"),
-        ("AVV-2011-002", 2011, "2011-06-22", "SIKKERHET", "GUL", "SAL-D", "AURA-2026-009", "Publikummer trådte over avsperringstau foran Skrik for å ta nærbilde med blits.", "Vakt grep inn umiddelbart. Gjest vist bort fra salen. Verksinspeksjon utført av kurator uten anmerkning.", "KP-ANS-005", "LUKKET"),
+        ("AVV-2010-001", 2010, "2010-03-14", "KLIMA", "GUL", "MAG-1", "KP-2026-011", "Klimaanlegg i Magasin 1 varslet relativ fuktighet på 62% RH (terskel 55%). Skyldes svikt i avfukterfilter.", "Filter skiftet manuelt, mobil kondensavfukter satt inn innen 2 timer. Ingen fuktskade på Brudeferd i Hardanger.", "KP-ANS-005", "LUKKET"),
+        ("AVV-2011-002", 2011, "2011-06-22", "SIKKERHET", "GUL", "SAL-D", "KP-2026-009", "Publikummer trådte over avsperringstau foran Skrik for å ta nærbilde med blits.", "Vakt grep inn umiddelbart. Gjest vist bort fra salen. Verksinspeksjon utført av kurator uten anmerkning.", "KP-ANS-005", "LUKKET"),
         ("AVV-2012-003", 2012, "2012-11-04", "TEKNISK", "GRØNN", "SAL-A", None, "Spotbelysning i skinnegang over Theodor Kittelsens Nøkken flimret og slo seg av.", "Pære og trafo skiftet samme formiddag av Caverion. Luks-måling kontrollert til 48 lux.", "KP-ANS-005", "LUKKET"),
         ("AVV-2013-004", 2013, "2013-02-18", "HMS", "GRØNN", "SAL-B", None, "Publikummer snublet i overgangslist mellom Sal A og Sal B. Mindre skrubbsår på kne.", "Førstehjelp gitt av vaktleder med plaster og ispose. Terskel listet og markert med kontrasttape.", "KP-ANS-007", "LUKKET"),
-        ("AVV-2014-005", 2014, "2014-08-11", "KLIMA", "RØD", "SAL-C", "AURA-2026-005", "Vanninnsig fra taksluk etter ekstremnedbør i Oslo. Drypp 1,5 meter fra Harriet Backers Blått interiør.", "Verk evakuert umiddelbart til Magasin 1 i tråd med beredskapsplan RVR. Taksluk renset og taktekker rekvirert.", "KP-ANS-003", "LUKKET"),
+        ("AVV-2014-005", 2014, "2014-08-11", "KLIMA", "RØD", "SAL-C", "KP-2026-005", "Vanninnsig fra taksluk etter ekstremnedbør i Oslo. Drypp 1,5 meter fra Harriet Backers Blått interiør.", "Verk evakuert umiddelbart til Magasin 1 i tråd med beredskapsplan RVR. Taksluk renset og taktekker rekvirert.", "KP-ANS-003", "LUKKET"),
         ("AVV-2015-006", 2015, "2015-10-30", "PUBLIKUM", "GUL", "SAL-E", None, "Kapasitetsoverskridelse under vernissasje. 240 personer i Sal E (brannvesenets grense er 180).", "Innslipp stanset ved hoveddør. Vektere dirigerte gjester til kafé og foajé til antall var normalisert.", "KP-ANS-005", "LUKKET"),
-        ("AVV-2016-007", 2016, "2016-04-05", "SIKKERHET", "RØD", "SAL-D", "AURA-2026-009", "Vibrasjonssensor bak Skrik utløste stille alarm kl. 03:14 under nattlig vaskerunde.", "Securitas og utrykningsvekter på stedet innen 4 minutter. Avdekket at vaskepersonell kom borti sokkel.", "KP-ANS-005", "LUKKET"),
+        ("AVV-2016-007", 2016, "2016-04-05", "SIKKERHET", "RØD", "SAL-D", "KP-2026-009", "Vibrasjonssensor bak Skrik utløste stille alarm kl. 03:14 under nattlig vaskerunde.", "Securitas og utrykningsvekter på stedet innen 4 minutter. Avdekket at vaskepersonell kom borti sokkel.", "KP-ANS-005", "LUKKET"),
         ("AVV-2017-008", 2017, "2017-09-19", "HMS", "GUL", "SAL-E", None, "Montør klemte tommel under opphenging av stålskulptur. Mistanke om brist.", "Legevakt oppsøkt. Sykmeldt i 4 dager. Verneutstyr og løftebukk innført som fast rutine for tunge verk.", "KP-ANS-005", "LUKKET"),
         ("AVV-2018-009", 2018, "2018-01-12", "KLIMA", "GRØNN", "MAG-1", None, "Temperaturfall til 16,8°C etter kuldebølge ute (-21°C). Målverdi er 20±2°C.", "Varmebatteri oppjustert, ekstra sirkulasjonsvifte aktivert. Stabilisert på 19,5°C innen 6 timer.", "KP-ANS-005", "LUKKET"),
         ("AVV-2019-010", 2019, "2019-05-24", "TEKNISK", "GRØNN", "SAL-E", None, "Projektor for videoverk overopphetet og slo seg av under skoleomvisning.", "Reserveprojektor montert. Vifter renset for støv.", "KP-ANS-005", "LUKKET"),
         ("AVV-2020-011", 2020, "2020-03-12", "HMS", "RØD", "SAL-A", None, "Nasjonal nedstengning grunnet covid-19. Museet stengt for ordinært publikum.", "Beredskapsplan for nedstengning iverksatt. Daglig teknisk tilsyn og klimaovervåking etablert.", "KP-ANS-001", "LUKKET"),
         ("AVV-2021-012", 2021, "2021-08-14", "PUBLIKUM", "GRØNN", "SAL-C", None, "Gjest nektet å bruke munnbind i tråd med gjeldende smittevernkrav.", "Publikumsvert forklarte reglene rolig. Gjest aksepterte munnbind utdelt i skranken.", "KP-ANS-007", "LUKKET"),
-        ("AVV-2022-013", 2022, "2022-11-15", "SIKKERHET", "GUL", "SAL-D", "AURA-2026-009", "Aktivister forsøkte å lime seg fast til glassmonter foran Skrik.", "Alarm utløst av museumsvert, Securitas grep inn på 45 sekunder. Ingen skade på ramme eller verk.", "KP-ANS-005", "LUKKET"),
+        ("AVV-2022-013", 2022, "2022-11-15", "SIKKERHET", "GUL", "SAL-D", "KP-2026-009", "Aktivister forsøkte å lime seg fast til glassmonter foran Skrik.", "Alarm utløst av museumsvert, Securitas grep inn på 45 sekunder. Ingen skade på ramme eller verk.", "KP-ANS-005", "LUKKET"),
         ("AVV-2023-014", 2023, "2023-03-08", "TEKNISK", "GRØNN", "SAL-B", None, "Heis mellom 1. og 2. etasje stoppet mellom etasjer uten passasjerer.", "Heismontør fra Schindler tilkalt. Sikring skiftet og heis godkjent etter 3 timer.", "KP-ANS-005", "LUKKET"),
-        ("AVV-2024-015", 2024, "2024-06-10", "KLIMA", "GUL", "SAL-A", "AURA-2026-001", "Høy luftfuktighet (59% RH) etter 4 dager med sammenhengende regnvær.", "Salens ventilasjon satt i intensiv avfukting. Fuktnivå logget hver time til 51% RH ble nådd.", "KP-ANS-003", "LUKKET"),
+        ("AVV-2024-015", 2024, "2024-06-10", "KLIMA", "GUL", "SAL-A", "KP-2026-001", "Høy luftfuktighet (59% RH) etter 4 dager med sammenhengende regnvær.", "Salens ventilasjon satt i intensiv avfukting. Fuktnivå logget hver time til 51% RH ble nådd.", "KP-ANS-003", "LUKKET"),
         ("AVV-2025-016", 2025, "2025-02-03", "HMS", "GRØNN", "SAL-E", None, "Glatte trappetrinn ved personalinngang etter underkjølt regn.", "Området saltet og strødd med singel. Varselskilt satt opp.", "KP-ANS-005", "LUKKET"),
         ("AVV-2026-017", 2026, "2026-09-02", "SIKKERHET", "GRØNN", "SAL-C", None, "Gjenglemt ryggsekk plassert under benk i Sal C uten eier til stede.", "Sal midlertidig avsperret. Eier sporet opp via tapt gjenstand-skranke innen 15 minutter.", "KP-ANS-005", "LUKKET"),
     ]
@@ -421,22 +421,22 @@ def consolidate_and_enrich() -> dict[str, int]:
     """)
 
     condition_data = [
-        ("TIL-2026-001", "AURA-2026-001", "2026-01-15", 1, 50, "50±5% RH, 20±2°C", "Renovert ramme og festemekanisme i 2018. Overflate stabil, ingen krakeleringer.", 35000000, "KP-ANS-003"),
-        ("TIL-2026-002", "AURA-2026-002", "2026-01-15", 2, 80, "50±5% RH, 20±2°C", "Mindre overflatestøv fjernet i 2021. Blindramme etterspent.", 18000000, "KP-ANS-003"),
-        ("TIL-2026-003", "AURA-2026-003", "2026-02-10", 2, 150, "50±5% RH, 20±2°C", "Overflate renset for eldre ferniss i 2015. Lerret intakt med god elastisitet.", 28000000, "KP-ANS-003"),
-        ("TIL-2026-004", "AURA-2026-004", "2026-02-10", 1, 150, "50±5% RH, 20±2°C", "Meget god stand. Montert bak refleksfritt UV-beskyttende museumsglass.", 45000000, "KP-ANS-003"),
-        ("TIL-2026-005", "AURA-2026-005", "2026-03-05", 1, 120, "50±5% RH, 20±2°C", "Perfekt tilstand. Konservert og tilstandsrapport fornyet etter takslukhendelsen i 2014.", 22000000, "KP-ANS-003"),
-        ("TIL-2026-006", "AURA-2026-006", "2026-03-05", 2, 120, "50±5% RH, 20±2°C", "Gammel retusj i øvre venstre hjørne stabil. Ingen løse fargeflak.", 19000000, "KP-ANS-003"),
-        ("TIL-2026-007", "AURA-2026-007", "2026-04-12", 1, 150, "50±5% RH, 20±2°C", "Hovedverk i utmerket stand. Originalramme bevart og sikret med syrefri bakplate.", 65000000, "KP-ANS-003"),
-        ("TIL-2026-008", "AURA-2026-008", "2026-04-12", 2, 100, "50±5% RH, 20±2°C", "Noe spor av tidlig fuktpåvirkning på blindramme fra før 1980, nå fullstendig stabilisert.", 24000000, "KP-ANS-003"),
-        ("TIL-2026-009", "AURA-2026-009", "2026-05-01", 1, 50, "50±3% RH, 19±1°C", "Munchs Skrik. Ekstremt lysømfintlig pastell/kartong. Montert i hermetisk forseglet klimaramme.", 450000000, "KP-ANS-003"),
-        ("TIL-2026-010", "AURA-2026-010", "2026-05-01", 1, 120, "50±5% RH, 20±2°C", "Olje på lerret. Tilstandsgrad 1. Full undersøkelse med røntgen og UV utført 2023.", 85000000, "KP-ANS-003"),
-        ("TIL-2026-011", "AURA-2026-011", "2026-06-18", 2, 150, "50±5% RH, 20±2°C", "Plassert i Magasin 1. Tidligere konservering dokumentert av NIKU. Klar for temporære lån.", 40000000, "KP-ANS-003"),
-        ("TIL-2026-012", "AURA-2026-012", "2026-06-18", 2, 120, "50±5% RH, 20±2°C", "Munch selvportrett. Lette krakeleringer i mørke partier, stabilt under gjeldende magasinforhold.", 55000000, "KP-ANS-003"),
-        ("TIL-2026-013", "AURA-2026-013", "2026-07-02", 1, 150, "50±5% RH, 20±2°C", "Utmerket tilstand. Nydelig fargemetning, ingen deformasjoner i lerret.", 14000000, "KP-ANS-003"),
-        ("TIL-2026-014", "AURA-2026-014", "2026-07-02", 2, 150, "50±5% RH, 20±2°C", "Bondebegravelse av Werenskiold. Noe overflatesmuss renset 2019. Stabil bindemiddelstruktur.", 32000000, "KP-ANS-003"),
-        ("TIL-2026-015", "AURA-2026-015", "2026-08-14", 1, 120, "50±5% RH, 20±2°C", "Thaulows vintermotiv. Perfekt spenst i duk, ingen tegn til avskalling eller mikrosprekker.", 16000000, "KP-ANS-003"),
-        ("TIL-2026-016", "AURA-2026-016", "2026-08-14", 1, 200, "50±5% RH, 20±2°C", "Anna-Eva Bergman. Tempera og metallfolie på plate. Eksepsjonelt velbevart metallskikt.", 21000000, "KP-ANS-003"),
+        ("TIL-2026-001", "KP-2026-001", "2026-01-15", 1, 50, "50±5% RH, 20±2°C", "Renovert ramme og festemekanisme i 2018. Overflate stabil, ingen krakeleringer.", 35000000, "KP-ANS-003"),
+        ("TIL-2026-002", "KP-2026-002", "2026-01-15", 2, 80, "50±5% RH, 20±2°C", "Mindre overflatestøv fjernet i 2021. Blindramme etterspent.", 18000000, "KP-ANS-003"),
+        ("TIL-2026-003", "KP-2026-003", "2026-02-10", 2, 150, "50±5% RH, 20±2°C", "Overflate renset for eldre ferniss i 2015. Lerret intakt med god elastisitet.", 28000000, "KP-ANS-003"),
+        ("TIL-2026-004", "KP-2026-004", "2026-02-10", 1, 150, "50±5% RH, 20±2°C", "Meget god stand. Montert bak refleksfritt UV-beskyttende museumsglass.", 45000000, "KP-ANS-003"),
+        ("TIL-2026-005", "KP-2026-005", "2026-03-05", 1, 120, "50±5% RH, 20±2°C", "Perfekt tilstand. Konservert og tilstandsrapport fornyet etter takslukhendelsen i 2014.", 22000000, "KP-ANS-003"),
+        ("TIL-2026-006", "KP-2026-006", "2026-03-05", 2, 120, "50±5% RH, 20±2°C", "Gammel retusj i øvre venstre hjørne stabil. Ingen løse fargeflak.", 19000000, "KP-ANS-003"),
+        ("TIL-2026-007", "KP-2026-007", "2026-04-12", 1, 150, "50±5% RH, 20±2°C", "Hovedverk i utmerket stand. Originalramme bevart og sikret med syrefri bakplate.", 65000000, "KP-ANS-003"),
+        ("TIL-2026-008", "KP-2026-008", "2026-04-12", 2, 100, "50±5% RH, 20±2°C", "Noe spor av tidlig fuktpåvirkning på blindramme fra før 1980, nå fullstendig stabilisert.", 24000000, "KP-ANS-003"),
+        ("TIL-2026-009", "KP-2026-009", "2026-05-01", 1, 50, "50±3% RH, 19±1°C", "Munchs Skrik. Ekstremt lysømfintlig pastell/kartong. Montert i hermetisk forseglet klimaramme.", 450000000, "KP-ANS-003"),
+        ("TIL-2026-010", "KP-2026-010", "2026-05-01", 1, 120, "50±5% RH, 20±2°C", "Olje på lerret. Tilstandsgrad 1. Full undersøkelse med røntgen og UV utført 2023.", 85000000, "KP-ANS-003"),
+        ("TIL-2026-011", "KP-2026-011", "2026-06-18", 2, 150, "50±5% RH, 20±2°C", "Plassert i Magasin 1. Tidligere konservering dokumentert av NIKU. Klar for temporære lån.", 40000000, "KP-ANS-003"),
+        ("TIL-2026-012", "KP-2026-012", "2026-06-18", 2, 120, "50±5% RH, 20±2°C", "Munch selvportrett. Lette krakeleringer i mørke partier, stabilt under gjeldende magasinforhold.", 55000000, "KP-ANS-003"),
+        ("TIL-2026-013", "KP-2026-013", "2026-07-02", 1, 150, "50±5% RH, 20±2°C", "Utmerket tilstand. Nydelig fargemetning, ingen deformasjoner i lerret.", 14000000, "KP-ANS-003"),
+        ("TIL-2026-014", "KP-2026-014", "2026-07-02", 2, 150, "50±5% RH, 20±2°C", "Bondebegravelse av Werenskiold. Noe overflatesmuss renset 2019. Stabil bindemiddelstruktur.", 32000000, "KP-ANS-003"),
+        ("TIL-2026-015", "KP-2026-015", "2026-08-14", 1, 120, "50±5% RH, 20±2°C", "Thaulows vintermotiv. Perfekt spenst i duk, ingen tegn til avskalling eller mikrosprekker.", 16000000, "KP-ANS-003"),
+        ("TIL-2026-016", "KP-2026-016", "2026-08-14", 1, 200, "50±5% RH, 20±2°C", "Anna-Eva Bergman. Tempera og metallfolie på plate. Eksepsjonelt velbevart metallskikt.", 21000000, "KP-ANS-003"),
     ]
 
     cur.executemany("""
@@ -524,7 +524,7 @@ def consolidate_and_enrich() -> dict[str, int]:
             f"_{m_title_full}_, {m_year}. {m_tech}, {m_dims}. Utlån fra {inst}.\n\n"
             f"Verket fanger betrakteren med en intens tilstedeværelse der penselstrøk og lysspill "
             f"åpner for dype stemninger. Kunstneren forener naturalistisk presisjon med symbolsk "
-            f"kraft. Lånt inn eksklusivt til Auras tematiske utstilling fra {inst} for å belyse "
+            f"kraft. Lånt inn eksklusivt til Kunstpixels tematiske utstilling fra {inst} for å belyse "
             f"norsk kunsthistorisk brytningstid."
         )
 
@@ -564,60 +564,60 @@ def consolidate_and_enrich() -> dict[str, int]:
 
     # 9. Complete 3-layer texts for all 16 permanent artworks in `verk`
     curated_texts = {
-        "AURA-2026-002": (
+        "KP-2026-002": (
             "Velkommen til Soria Moria slott av Theodor Kittelsen fra 1900. Se den lille gutten Askeladden som står helt alene i det enorme, gylne fjellandskapet med vandringsstaven sin og skuer mot det glitrende slottet i det fjerne. Lyset bak fjellene er malt med varme toner av gull og oker som skaper en magisk, nesten overjordisk glød. Kittelsen formidler lengselen etter det uoppnåelige og troen på at den minste og mest uanselige kan nå frem til det største målet. Ta deg tid til å kjenne på stillheten og den store avstanden mellom gutten og drømmeslottet.",
             "Oi, se på slottet som lyser som ekte gull langt der borte på fjellet! Ser du den lille gutten med sekk på ryggen som står og kikker? Det er Askeladden! Tror du han klarer å gå helt bort til gullslottet før det blir mørkt? Hva ville du gjort hvis du fant et hemmelig slott midt oppe på fjellet?"
         ),
-        "AURA-2026-003": (
+        "KP-2026-003": (
             "Dette er Christian Krohgs monumentale verk Kampen for tilværelsen fra 1889. Du ser en tettpakket folkemengde av fattige kvinner og barn i en kald, snødekt Kristiania-gate som kjemper for å få utdelt gratis brød fra en bakerbutikk. Krohg maler med hard realisme; se de forfrosne ansiktene, de tynne sjalene og den brutale trengselen. Maleriet var et krasst sosialt anklageskrift mot samfunnets likegyldighet overfor fattigdommen i hovedstaden. Legg merke til hvordan kunstneren stiller deg rett i øyehøyde med menneskene i køen.",
             "Se så mange mennesker som står tett i tett i snøen! De fryser på hendene og venter på å få ferskt brød fordi de er kjempesultne. Hvis du ser nøye etter, kan du se et lite barn som holder moren sin i hånden. Hvordan tror du det føles å stå ute i kulden og vente så lenge?"
         ),
-        "AURA-2026-004": (
+        "KP-2026-004": (
             "Foran deg ser du Albertine i politilægens venteværelse, malt av Christian Krohg i 1887. Se den unge syersken Albertine i enkel, mørk kjole som sitter skamfull med bøyd hode i midten av rommet, omgitt av eldre, prangende kledde prostituerte som venter på tvungen medisinsk undersøkelse. Krohg bruker fargene som en moralsk kontrast; de fargesprakende kjolene mot Albertines sårbare stillhet. Maleriet skapte en voldsom debatt om dobbeltmoral og fattigdom da boken og maleriet ble beslaglagt av myndighetene.",
             "Her ser du mange damer i fine kjoler med store hatter som venter i en stue. Men se på jenta i den mørke kjolen som ser ned i gulvet. Hvorfor tror du hun er så trist og sjenert mens de andre damene prater og ler? Noen ganger forteller bilder historier om folk som trenger hjelp og trøst."
         ),
-        "AURA-2026-005": (
+        "KP-2026-005": (
             "Dette er Harriet Backers berømte Blått interiør fra 1883. Legg merke til det vidunderlige, kjølige dagslyset som strømmer inn gjennom vinduet og fyller hele stuen med blåtoner. En kvinne sitter fredelig og syr ved vinduskarmen, omgitt av frodige grønne potteplanter. Backer var en mester i å skildre hvordan lys forandrer fargene i et rom; se de myke refleksjonene på stolbena, i speilet og på gulvteppet. Rommet puster av ro, konsentrasjon og hverdagens stille poesi.",
             "Se det koselige blå rommet! Det ser nesten ut som sollyset danser på veggene og plantene. Ser du damen som sitter helt rolig og syr ved vinduet? Hva slags hemmelighet tror du hun tenker på mens hun sitter der i det blå lyset?"
         ),
-        "AURA-2026-006": (
+        "KP-2026-006": (
             "Her ser du Harriet Backers mesterverk Barnedåp i Tanum kirke fra 1892. Se hvordan det varme, gylne sollyset faller skrått inn gjennom den åpne kirkedøren og kaster lysflekker over det rustikke tregulvet og dåpsfølget. Moren og det lille dåpsbarnet står badet i det klare lyset, mens kirkens kalkhvite vegger gir en sakral og høytidelig ramme rundt begivenheten. Backer tilbrakte flere måneder inne i den gamle middelalderkirken i Bærum for å fange det nøyaktige samspillet mellom det blendende utendørslyset og det svale, dempede kirkemørket. Legg merke til de fint utpenslede bunadsstoffene, de myke skyggene i ansiktene og hvordan lyset glitrer i messingfatet ved døpefonten. Maleriets atmosfære puster av dyp verdighet, ro og fellesskap i et av norsk kunsthistories vakreste interiørmalerier.",
             "Se, kirkedøren står vidåpen og solen skinner rett inn på gulvet! En baby skal døpes med vann på hodet, og alle i kirken har pyntet seg i fine festklær. Synes du det ser varmt eller svalt ut inne i den gamle kirken?"
         ),
-        "AURA-2026-007": (
+        "KP-2026-007": (
             "Du står nå foran Harald Sohlbergs ikoniske Vinternatt i Rondane fra 1914. Se den mektige, snøkledde fjellkjeden som reiser seg mot den dype, mørkeblå nattehimmelen med en enslig, lysende stjerne over toppene. Det hvite lyset fra snøen virker nesten fosforescerende i nattemørket. Sohlberg arbeidet i fjorten år med dette motivet for å skape det han kalte en katedral av stillhet og evighet. Kjenn på kulden, majesteten og den totale roen som strømmer ut fra lerretet.",
             "Brr, se på de spisse fjellene som er helt dekket av kald, hvit snø! Himmelen bak er kjempeblå, og en liten stjerne blinker helt øverst. Hvis du sto oppe på den fjelltoppen midt på natten, tror du at du ville hørt vinden suse, eller ville det vært musestille?"
         ),
-        "AURA-2026-008": (
+        "KP-2026-008": (
             "Dette er Jonsokbål av Nikolai Astrup fra 1912. Se den intense flammen fra det mektige sankthansbålet som lyser opp de bratte, mørke Vestlandsfjellene og speiler seg med flakkende lysglimt i vannet. Menneskene danser og feirer den lyseste natten i året med en rå, livsbejaende kraft midt i den frodige naturen. Astrup maler med tykke, saftige farger og fanger en magisk blanding av kristen tradisjon og eldgammel hedensk naturmystikk fra Jølster. Legg merke til hvordan røykdottene stiger opp mot den lyse sommernattshimmelen. Kjenn på varmen fra ilden, klangen fra felemusikken og lukten av fuktig einer og brennende bjørkeved.",
             "Oi, for et kjempebål som brenner midt på fjellet! Menneskene danser rundt ilden og feirer sommeren. Se hvordan flammene lyser opp fjellet og gresset. Har du noen gang vært ved et stort bål på sankthansaften og grillet pølser?"
         ),
-        "AURA-2026-010": (
+        "KP-2026-010": (
             "Her ser du Edvard Munchs Pikene på broen fra 1901. Tre unge jenter i fargerike kjoler og hatter lener seg over rekkverket på bryggen i Åsgårdstrand og ser ned i det mørke, speilblanke vannet. I bakgrunnen ser du det store huset og det mektige tuntreet med sin svulmende, mystiske krone. Munch fanger overgangen mellom barndom og voksenliv; jentenes samhold mot den hemmelighetsfulle, lokkende verdenen som venter. Fargene er mettede og klinger som en melankolsk sommertone.",
             "Se på de tre jentene som står på broen og kikker ned i vannet! De har på seg røde, hvite og grønne kjoler. Hva tror du de kikker etter nede i sjøen? Kanskje en liten fisk, eller kanskje speilbildet av den store, runde hatten?"
         ),
-        "AURA-2026-011": (
+        "KP-2026-011": (
             "Dette er Brudeferd i Hardanger fra 1848, malt i fellesskap av Adolph Tidemand og Hans Gude. Se den staselige brudebåten som glir sakte over den speilblanke Hardangerfjorden, omkranset av majestetiske vestlandsfjell og en snøkledd isbre i bakgrunnen. Tidemand malte de høytidelige, bunadskledde menneskene med bruden i spissen bærende på sin skinnende sølvkrone, mens den unge Gude malte det storslåtte, romantiske fjordlandskapet badet i gyllent sommerlys. Verket står som selve symbolet på den norske nasjonalromantikken, en feiring av norsk natur, tradisjon og fellesskap som har rørt generasjoner.",
             "Se for en staselig båt! Oppi båten sitter en brud med en skinnende gullkrone på hodet, og en mann skyter med salutt for å feire bryllupet. Fjellene bak er kjempestore og fjorden er helt stille. Har du lyst til å sitte på i den båten og høre felespilleren spille en munter bryllupslåt?"
         ),
-        "AURA-2026-012": (
+        "KP-2026-012": (
             "Foran deg ser du Edvard Munchs Selvportrett med sigarett fra 1895. Munch fremstiller seg selv som en moderne, mystisk bohem som stiger frem fra en drømmeaktig, blågrå tåke. Gløden fra sigaretten og den tynne røyken som stiger opp, symboliserer den nervøse, skapende energien som preget fin-de-siècle-tidens kunstnere i Berlin og Paris. Munch ser direkte på deg med et intenst, granskende blikk som utfordrer betrakteren til å møte kunstnerens innerste sjel.",
             "Se på mannen med det strenge, lure blikket som titter rett på deg! Han holder en sigarett i hånden, og røyken svever opp i luften som en liten sky. Det ser nesten ut som han dukker opp fra magisk trylletåke. Hva tror du han skal male neste gang?"
         ),
-        "AURA-2026-013": (
+        "KP-2026-013": (
             "Dette er Sommernatt ved Kysten av Kitty Kielland fra 1886. Se det stille kystlandskapet på Jæren der den lave kveldssolen kaster et gyllent og melankolsk skinn over svabergene og den langstrakte horisonten. Kielland var en pioner blant kvinnelige norske friluftsmalere, og evnet å fange den særegne jærske atmosfæren der lyset og det åpne havet møtes i uendelig ro. Legg merke til de presise valørene i vannflaten og de dempede jordtonene langs stranden.",
             "Se så fint kveldslyset er over havet og steinene! Bølgene har nesten lagt seg helt til ro for kvelden. Hvis du gikk barbeint på de glatte svabergene her, tror du steinene ville vært varme etter solskinnet hele dagen?"
         ),
-        "AURA-2026-014": (
+        "KP-2026-014": (
             "Her ser du Erik Werenskiolds mesterverk En bondebegravelse fra 1885. En gruppe bønder og sambygdinger står samlet rundt en åpen grav på en enkel kirkegård på landet. En eldre bonde kaster jord på kisten mens de fremmøtte bøyer hodene i stille andakt. Werenskiold skildrer hendelsen uten sentimentalitet eller pompøsitet, men med dyp respekt for det harde, nøkterne livet til norske arbeidsfolk. Ansiktene er individuelle portretter preget av slit, verdighet og samhold.",
             "Her står mange folk samlet ute på kirkegården for å ta et siste farvel med en god nabo. Se så alvorlige og stille alle sammen er. De holder luene sine i hendene for å vise respekt. Noen ganger samles mennesker for å trøste hverandre og passe på hverandre."
         ),
-        "AURA-2026-015": (
+        "KP-2026-015": (
             "Dette er Vinter på Simoa av Frits Thaulow fra 1892. Se hvordan det mørke, rennende elvevannet bukter seg elegant mellom snøtunge elvebredder, frosne siv og glitrende issvuller. Thaulow oppnådde enorm internasjonal berømmelse i Paris og London for sin unike evne til å male rennende vann; se hvordan den blanke elveflaten speiler den kalde vinterhimmelen med myke virvler, skumtopper og fargenyanser. Den urørte, myke puddersnøen danner en slående kontrast til elvens uopphørlige bevegelse, liv og sildrende kraft i det frosne vinterlandskapet.",
             "Se på elven som renner fort, fort gjennom den hvite snøen! Ser du hvordan vannet virvler rundt de kalde isklumpene? Hvis du kastet en liten barkebåt ut i vannet her, tror du den ville seilt kjempefort nedover Simoa-elven?"
         ),
 
-        "AURA-2026-016": (
+        "KP-2026-016": (
             "Du står foran Anna-Eva Bergmans N. 7 – Stor blå fjellform fra 1973. Verket er utført i tempera og ekte metallfolie på treplate. Se hvordan den monumentale, mørkeblå formen reiser seg som et arktisk fjell eller en mektig katedral mot det glitrende metallunderlaget. Bergman forener abstraksjon med sanselige minner fra nordnorsk natur, lys og geologi. Metallfolien reflekterer rommets lys ulikt avhengig av hvor du står, og gir verket en skiftende, tidløs energi.",
             "Oi, dette ser nesten ut som et digert, hemmelig fjell i verdensrommet! Ser du at det glinser som ekte sølv og gull bak den mørkeblå klossen? Hvis du flytter deg litt til siden, ser du hvordan lyset forandrer seg og glitrer?"
         ),
@@ -642,7 +642,7 @@ def consolidate_and_enrich() -> dict[str, int]:
 
 
 if __name__ == "__main__":
-    print("Consolidating and enriching Aura Kunstmuseum SSOT database...")
+    print("Consolidating and enriching Kunstpixel SSOT database...")
     result = consolidate_and_enrich()
     for k, v in result.items():
         print(f"  {k}: {v:,}")

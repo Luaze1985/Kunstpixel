@@ -1,10 +1,10 @@
-# Test Infrastructure & Quality Assurance Specification: Aura Kunstmuseum
+# Test Infrastructure & Quality Assurance Specification: Kunstpixel
 
 ## 1. Executive Summary
 
-This document formalizes the End-to-End (E2E) testing methodology, architectural test pyramid, fixture lifecycle, and coverage matrix for the **Aura Kunstmuseum Demo-Prototype**.
+This document formalizes the End-to-End (E2E) testing methodology, architectural test pyramid, fixture lifecycle, and coverage matrix for the **Kunstpixel Demo-Prototype**.
 
-Aura Kunstmuseum is an operational synthetic SMB cultural institution serving as an AI-founder training arena. To verify that the enterprise is fully operational ("Bedriften virker"), the test infrastructure validates the complete stack:
+Kunstpixel is an operational synthetic SMB cultural institution serving as an AI-founder training arena. To verify that the enterprise is fully operational ("Bedriften virker"), the test infrastructure validates the complete stack:
 1. **SQLite Database Layer** (72 records, 7 relational tables)
 2. **FastMCP Collection Server** (5 domain tools, parameterized SQL, read-only security)
 3. **Museumsvert Host Agent** (Masterprompt compliance, anti-hallucination guardrails, 4-step response synthesis)
@@ -65,8 +65,8 @@ Aura Kunstmuseum is an operational synthetic SMB cultural institution serving as
     - Empty query handling and pagination limit.
     - Non-matching query returns `[]` without error.
   - `get_artwork_details`:
-    - Valid ID lookup: `AURA-2026-009` ("Skrik") returns Edvard Munch, Sal D, wall text, provenance.
-    - Invalid ID lookup: `AURA-2026-999` returns structured error `{"error": "Verk ikke funnet", "code": "NOT_FOUND"}`.
+    - Valid ID lookup: `KP-2026-009` ("Skrik") returns Edvard Munch, Sal D, wall text, provenance.
+    - Invalid ID lookup: `KP-2026-999` returns structured error `{"error": "Verk ikke funnet", "code": "NOT_FOUND"}`.
   - `get_room_artworks`:
     - Room `SAL-D` returns >= 3 exhibited artworks in display sequence order (`rekkefølge`).
     - Excludes non-exhibited works (e.g. magazine).

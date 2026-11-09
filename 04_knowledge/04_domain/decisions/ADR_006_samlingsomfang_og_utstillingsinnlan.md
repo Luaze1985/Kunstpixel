@@ -7,13 +7,13 @@
 ---
 
 ## Kontekst
-Tidligere hadde Aura Kunstmuseum kun 16 registrerte verk i `museum.db`, hvorav kun to (*Skrik* og *Nøkken*) hadde fullstendige formidlingstekster. For å speile et fullverdig mellomstort museum med reell variasjon for kuratorer og formidlere, trengs et større volum forankret i ekte norsk kunsthistorie.
+Tidligere hadde Kunstpixel kun 16 registrerte verk i `museum.db`, hvorav kun to (*Skrik* og *Nøkken*) hadde fullstendige formidlingstekster. For å speile et fullverdig mellomstort museum med reell variasjon for kuratorer og formidlere, trengs et større volum forankret i ekte norsk kunsthistorie.
 
 ---
 
 ## Beslutning
 Samlingen utvides til **100 registrerte verk**, delt i to kategorier:
-1. **50 faste verk i Aura Kunstmuseum:**  
+1. **50 faste verk i Kunstpixel:**  
    Fordelt på Sal A, Sal B, Sal C, Sal D og Magasin 1. Representerer de 12 norske mesterne (Kittelsen, Munch, Krohg, Backer, Sohlberg, Astrup, Kielland, Werenskiold, Thaulow, Bergman, Tidemand, Gude).
 2. **50 historiske utstillingsinnlån (2010–2026):**  
    Innlånt til de 102 temporære utstillingene i Sal E fra reelle norske institusjoner (Nasjonalmuseet, KODE, Lillehammer Kunstmuseum, Haugar, Stavanger kunstmuseum, Henie Onstad).

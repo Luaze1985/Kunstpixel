@@ -1,6 +1,6 @@
-# Hvordan bruke ChatGPT Codex med Aura Kunstmuseum
+# Hvordan bruke ChatGPT Codex med Kunstpixel
 
-Dette dokumentet forklarer hvordan de to gründerne kan bruke **OpenAI Codex** (i ChatGPT Desktop-appen eller via Codex CLI) til å jobbe, eksperimentere og kode videre på Aura Kunstmuseum.
+Dette dokumentet forklarer hvordan de to gründerne kan bruke **OpenAI Codex** (i ChatGPT Desktop-appen eller via Codex CLI) til å jobbe, eksperimentere og kode videre på Kunstpixel.
 
 ---
 
@@ -20,7 +20,7 @@ Codex trenger ingen kompliserte sky-oppsett eller OpenAPI-tunneler for å funger
 - **Instruksjonsfil:** [`AGENTS.md`](../AGENTS.md) i roten blir automatisk lest av Codex ved oppstart.
 - **MCP-konfigurasjon:** [`.codex/config.toml`](../.codex/config.toml) peker direkte til museets MCP-server:
   ```toml
-  [mcp.servers.aura-museum]
+  [mcp.servers.kunstpixel]
   command = "py"
   args = ["-3.13", "-m", "src.kunstpixel.core.mcp_server"]
   ```
@@ -33,7 +33,7 @@ Codex trenger ingen kompliserte sky-oppsett eller OpenAPI-tunneler for å funger
 1. Åpne **ChatGPT Desktop App** på maskinen din.
 2. Åpne **Codex / Workspaces**-fanen.
 3. Velg prosjektmappen: `g:\Min disk\Fellesprosjekt KI`.
-4. Codex vil umiddelbart registrere `AGENTS.md` og `[mcp.servers.aura-museum]`.
+4. Codex vil umiddelbart registrere `AGENTS.md` og `[mcp.servers.kunstpixel]`.
 
 ### Alternativ 2: Fra Terminalen (Codex CLI)
 Dersom du har installert OpenAI Codex CLI:

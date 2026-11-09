@@ -77,7 +77,7 @@ def test_bad_llm_answer_shows_rule_based_text_and_reason(serve, db_path):
 
 
 def test_changed_price_in_database_reaches_the_web_chat(serve, db_path, tmp_path, monkeypatch):
-    monkeypatch.setenv("AURA_DB_PATH", str(db_path))
+    monkeypatch.setenv("KUNSTPIXEL_DB_PATH", str(db_path))
     mutated = tmp_path / "museum_mutert.db"
     shutil.copyfile(db_path, mutated)
     conn = sqlite3.connect(mutated)

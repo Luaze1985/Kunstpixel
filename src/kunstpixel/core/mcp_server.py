@@ -113,7 +113,7 @@ def get_artwork_details(artwork_id: str) -> dict[str, Any]:
     """Hent komplette og autoritative metadata for et spesifikt kunstverk, inkludert veggtekst og proveniens.
 
     Args:
-        artwork_id: Kunstverkets unike inventarnummer (f.eks. 'AURA-2026-009') eller eksakt tittel.
+        artwork_id: Kunstverkets unike inventarnummer (f.eks. 'KP-2026-009') eller eksakt tittel.
 
     Returns:
         Fullstendig verkskort med kunstnerbiografi, teknikk, sal, tilstand, veggtekst og proveniens.
@@ -312,7 +312,7 @@ def get_condition_report(artwork_id: str) -> dict[str, Any]:
     """Hent verkskonservering og tilstandsrapport med luks-krav, fuktighetskrav og forsikringsverdi (for samlingsforvalter/kurator).
 
     Args:
-        artwork_id: Kunstverkets ID (f.eks. 'AURA-2026-009') eller tittel ('Skrik').
+        artwork_id: Kunstverkets ID (f.eks. 'KP-2026-009') eller tittel ('Skrik').
 
     Returns:
         Tilstandsrapport med tilstandsgrad (1-4), maks lux, klimakrav, konserveringslogg og forsikringsverdi i NOK.
@@ -917,7 +917,7 @@ def get_building_map_data(
     etasje: int | None = None,
     sone_type: str | None = None,
 ) -> dict[str, Any]:
-    """Hent geometrisk bygningsmodell, etasjer og soner for Aura Museum (06_kart).
+    """Hent geometrisk bygningsmodell, etasjer og soner for Kunstpixel (06_kart).
 
     Args:
         etasje: Valgfritt etasjenummer (0 for U1 kjeller, 1 for P1 hovedplan, 2 for P2 galleri).

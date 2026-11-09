@@ -218,7 +218,7 @@ class TestDatabaseDomainConstraints:
         assert conditions.issubset(allowed_conditions), f"Unexpected tilstand values: {conditions - allowed_conditions}"
 
     def test_skrik_location_and_metadata(self, db_conn: sqlite3.Connection, db_baseline: dict):
-        """Edvard Munch's 'Skrik' (AURA-2026-009) must be exhibited in Sal D."""
+        """Edvard Munch's 'Skrik' (KP-2026-009) must be exhibited in Sal D."""
         cursor = db_conn.cursor()
         cursor.execute("""
             SELECT v.id, v.tittel, v.sal_id, v.status, k.navn as kunstner, v.aar

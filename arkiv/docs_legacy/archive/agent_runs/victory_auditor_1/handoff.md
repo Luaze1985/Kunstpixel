@@ -1,9 +1,9 @@
-﻿# Independent Post-Victory Audit Report — Aura Kunstmuseum Demo-Prototype
+﻿# Independent Post-Victory Audit Report — Kunstpixel Demo-Prototype
 
 **Date:** 2026-09-14  
 **Auditor:** Independent Victory Auditor (`victory_auditor_1`)  
 **Workspace:** `g:/Min disk/Fellesprosjekt KI`  
-**Target Project:** Aura Kunstmuseum Demo-Prototype  
+**Target Project:** Kunstpixel Demo-Prototype  
 **Authoritative Reference:** `g:/Min disk/Fellesprosjekt KI/.agents/ORIGINAL_REQUEST.md`  
 
 ---
@@ -37,7 +37,7 @@ All audit checks were executed independently from a clean subagent context with 
   - Zero write tools/methods exposed on `MuseumsvertAgent`.
 - **Quality Rules & Curatorial Standards:**
   - All 14 exhibited artworks have approved wall texts between 49 and 60 words (meeting the 50–90 word quality standard) with structured headers.
-  - Magazine storage artworks (AURA-2026-011 and AURA-2026-012) are never recommended in public tours or stated as exhibited.
+  - Magazine storage artworks (KP-2026-011 and KP-2026-012) are never recommended in public tours or stated as exhibited.
 
 ### 1.3 Phase C: Independent Test Suite Re-Execution
 - **Command:** `py -3.13 -m pytest -v`
@@ -90,7 +90,7 @@ tests\test_mcp_server.py ..................                              [100%]
 
 **Verdict: VICTORY CONFIRMED**
 
-The Aura Kunstmuseum Demo-Prototype represents an authentic, robust, and complete implementation:
+The Kunstpixel Demo-Prototype represents an authentic, robust, and complete implementation:
 - **R1:** FastMCP server exposing 5 collection and visitor tools operating directly on SQLite.
 - **R2:** Museumsvert agent and CLI adhering faithfully to persona, host tone, and curatorial standards.
 - **R3:** Comprehensive 112-test suite providing rigorous regression and adversarial verification.

@@ -1,8 +1,8 @@
 {
-  "datakilde": "syntetisk (Aura Museum bygningsgeometri, NS 8351, NS 3940 og DiBK brannkonsept)",
+  "datakilde": "syntetisk (Kunstpixel bygningsgeometri, NS 8351, NS 3940 og DiBK brannkonsept)",
   "versjon": "2.0",
   "museum": {
-    "navn": "Aura Museum",
+    "navn": "Kunstpixel",
     "adresse": "Bispegata 9B, 7012 Trondheim",
     "fiktiv_adresse": "Bispegata 9B, 7012 Trondheim",
     "kommune": "Trondheim (5001)",

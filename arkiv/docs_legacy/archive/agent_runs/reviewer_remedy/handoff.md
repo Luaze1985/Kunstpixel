@@ -1,4 +1,4 @@
-﻿# Final Gate Review Report: Aura Kunstmuseum (Remediation Verification)
+﻿# Final Gate Review Report: Kunstpixel (Remediation Verification)
 
 **Date:** 2026-09-14  
 **Reviewer:** Final Gate Reviewer (`reviewer_remedy`) — Roles: Reviewer & Adversarial Critic  
@@ -22,7 +22,7 @@ architecture_judgement:
 ```
 
 ```yaml
-target_project: "Aura Kunstmuseum Demo-Prototype"
+target_project: "Kunstpixel Demo-Prototype"
 target_repo: "g:/Min disk/Fellesprosjekt KI"
 review_scope: "R1 FastMCP collection tools, R2 Museumsvert agent, R3 integration test suite, and curatorial database"
 current_plan: "PROJECT.md"
@@ -155,7 +155,7 @@ Directly observed evidence from testing, source inspection, and dynamic mutation
    - Invokes `self._call_tool("get_room_artworks", room_id="SAL-A")` and `self._call_tool("get_room_artworks", room_id="SAL-D")`.
    - Filters `status == "utstilt"`.
    - Dynamically formats highlights from returned records: `w.get('kunstner')`, `w.get('tittel')`, `w.get('aar')`.
-   - Dynamic artwork rotation verification: When *Nøkken* (AURA-2026-001) was updated in SQLite to `status = 'magasin', sal_id = 'MAG-1'`, `handle_message("Hva anbefaler du hvis jeg har 30 minutter?")` dynamically excluded *Nøkken* and recommended *Vinternatt i Rondane* instead.
+   - Dynamic artwork rotation verification: When *Nøkken* (KP-2026-001) was updated in SQLite to `status = 'magasin', sal_id = 'MAG-1'`, `handle_message("Hva anbefaler du hvis jeg har 30 minutter?")` dynamically excluded *Nøkken* and recommended *Vinternatt i Rondane* instead.
 
 6. **Dynamic FAQ Formatting in `src/agent.py` (lines 933–963)**:
    - All static `if faq_id == ...` branches have been eliminated.
@@ -215,7 +215,7 @@ Directly observed evidence from testing, source inspection, and dynamic mutation
 
 ### 2.4 Conclusion
 
-The Aura Kunstmuseum prototype has reached full compliance with `ORIGINAL_REQUEST.md`, `PROJECT.md`, and curatorial quality standards. All acceptance criteria for R1 (MCP Server), R2 (Museumsvert Agent), and R3 (E2E Integration Test Suite) are fully satisfied by genuine, reproducible code.
+The Kunstpixel prototype has reached full compliance with `ORIGINAL_REQUEST.md`, `PROJECT.md`, and curatorial quality standards. All acceptance criteria for R1 (MCP Server), R2 (Museumsvert Agent), and R3 (E2E Integration Test Suite) are fully satisfied by genuine, reproducible code.
 
 **Verdict:** `APPROVE`
 

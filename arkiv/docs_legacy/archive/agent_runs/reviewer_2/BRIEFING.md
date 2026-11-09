@@ -1,7 +1,7 @@
 # BRIEFING — 2026-09-14T17:34:00+02:00
 
 ## Mission
-Perform independent security, edge-case, and operational reliability review for Aura Kunstmuseum project.
+Perform independent security, edge-case, and operational reliability review for Kunstpixel project.
 
 ## 🔒 My Identity
 - Archetype: reviewer

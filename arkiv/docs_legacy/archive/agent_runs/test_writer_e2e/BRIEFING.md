@@ -1,7 +1,7 @@
 # BRIEFING — 2026-09-14T17:20:15+02:00
 
 ## Mission
-Authoritative comprehensive E2E test suite (Tiers 1-4) for Aura Kunstmuseum project covering MCP server tools, agent behaviors, integration scenarios, and DB quality.
+Authoritative comprehensive E2E test suite (Tiers 1-4) for Kunstpixel project covering MCP server tools, agent behaviors, integration scenarios, and DB quality.
 
 ## 🔒 My Identity
 - Archetype: test_writer_e2e

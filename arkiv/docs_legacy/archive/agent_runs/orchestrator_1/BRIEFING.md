@@ -1,7 +1,7 @@
 # BRIEFING — 2026-09-14T18:12:30+02:00
 
 ## Mission
-Orchestrate the development and verification of Aura Kunstmuseum demo-prototype (R1: MCP Server with 5 tools, R2: Interactive museumsvert agent, R3: Integration test suite verifying "Bedriften virker").
+Orchestrate the development and verification of Kunstpixel demo-prototype (R1: MCP Server with 5 tools, R2: Interactive museumsvert agent, R3: Integration test suite verifying "Bedriften virker").
 
 ## 🔒 My Identity
 - Archetype: Project Orchestrator

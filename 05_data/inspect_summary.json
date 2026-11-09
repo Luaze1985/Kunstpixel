@@ -237,8 +237,8 @@
           "null_count": 28,
           "distinct_count": 4,
           "samples": [
-            "AURA-2026-011",
-            "AURA-2026-009"
+            "KP-2026-011",
+            "KP-2026-009"
           ]
         },
         {
@@ -571,7 +571,7 @@
           "null_count": 0,
           "distinct_count": 99,
           "samples": [
-            "Aura Kunstmuseum er en levende møteplass for kunst, kulturarv og samfunnsdialog. Museet forvalter en betydelig samling av norsk og internasjonal kunst, formidler kunnskap til allmennheten og drifter faste og temporære utstillinger, kafé og arrangementsvirksomhet.",
+            "Kunstpixel er en levende møteplass for kunst, kulturarv og samfunnsdialog. Museet forvalter en betydelig samling av norsk og internasjonal kunst, formidler kunnskap til allmennheten og drifter faste og temporære utstillinger, kafé og arrangementsvirksomhet.",
             "Vi forplikter oss til et åpent, inkluderende og likeverdig arbeidsfellesskap preget av respekt, faglig integritet og samarbeid på tvers av fagområder. Trakassering, diskriminering og mobbing aksepteres under ingen omstendigheter (jf. AML § 4-3).\n\n---"
           ]
         },
@@ -2691,7 +2691,7 @@
           "null_count": 0,
           "distinct_count": 12,
           "samples": [
-            "Orkestrator og leder for Aura Kunstmuseum",
+            "Orkestrator og leder for Kunstpixel",
             "Registrar og ansvarlig for samling og metadata"
           ]
         },
@@ -2987,8 +2987,8 @@
           "null_count": 0,
           "distinct_count": 16,
           "samples": [
-            "AURA-2026-001",
-            "AURA-2026-002"
+            "KP-2026-001",
+            "KP-2026-002"
           ]
         },
         {
@@ -3213,8 +3213,8 @@
           "null_count": 0,
           "distinct_count": 15,
           "samples": [
-            "AURA-2026-001",
-            "AURA-2026-002"
+            "KP-2026-001",
+            "KP-2026-002"
           ]
         },
         {
@@ -3636,8 +3636,8 @@
           "null_count": 0,
           "distinct_count": 50,
           "samples": [
-            "Edvard Munch (1894–1934), norsk.\n_Madonna_, 1894. Olje på lerret, 90 x 68 cm. Utlån fra Nasjonalmuseet for kunst, arkitektur og design.\n\nVerket fanger betrakteren med en intens tilstedeværelse der penselstrøk og lysspill åpner for dype stemninger. Kunstneren forener naturalistisk presisjon med symbolsk kraft. Lånt inn eksklusivt til Auras tematiske utstilling fra Nasjonalmuseet for kunst, arkitektur og design for å belyse norsk kunsthistorisk brytningstid.",
-            "Edvard Munch (1886–1926), norsk.\n_Syk pike_, 1886. Olje på lerret, 120 x 118 cm. Utlån fra KODE Kunstmuseer i Bergen.\n\nVerket fanger betrakteren med en intens tilstedeværelse der penselstrøk og lysspill åpner for dype stemninger. Kunstneren forener naturalistisk presisjon med symbolsk kraft. Lånt inn eksklusivt til Auras tematiske utstilling fra KODE Kunstmuseer i Bergen for å belyse norsk kunsthistorisk brytningstid."
+            "Edvard Munch (1894–1934), norsk.\n_Madonna_, 1894. Olje på lerret, 90 x 68 cm. Utlån fra Nasjonalmuseet for kunst, arkitektur og design.\n\nVerket fanger betrakteren med en intens tilstedeværelse der penselstrøk og lysspill åpner for dype stemninger. Kunstneren forener naturalistisk presisjon med symbolsk kraft. Lånt inn eksklusivt til Kunstpixels tematiske utstilling fra Nasjonalmuseet for kunst, arkitektur og design for å belyse norsk kunsthistorisk brytningstid.",
+            "Edvard Munch (1886–1926), norsk.\n_Syk pike_, 1886. Olje på lerret, 120 x 118 cm. Utlån fra KODE Kunstmuseer i Bergen.\n\nVerket fanger betrakteren med en intens tilstedeværelse der penselstrøk og lysspill åpner for dype stemninger. Kunstneren forener naturalistisk presisjon med symbolsk kraft. Lånt inn eksklusivt til Kunstpixels tematiske utstilling fra KODE Kunstmuseer i Bergen for å belyse norsk kunsthistorisk brytningstid."
           ]
         },
         {
@@ -3725,8 +3725,8 @@
           "null_count": 0,
           "distinct_count": 16,
           "samples": [
-            "AURA-2026-001",
-            "AURA-2026-002"
+            "KP-2026-001",
+            "KP-2026-002"
           ]
         },
         {
@@ -3833,8 +3833,8 @@
           "null_count": 0,
           "distinct_count": 16,
           "samples": [
-            "Privat samling, Kragerø → Nasjonalgalleriet 1908 → Aura Kunstmuseum (langtidslaan)",
-            "Kunstnerens bo → Privat samler, Oslo → Aura Kunstmuseum 2020"
+            "Privat samling, Kragerø → Nasjonalgalleriet 1908 → Kunstpixel (langtidslaan)",
+            "Kunstnerens bo → Privat samler, Oslo → Kunstpixel 2020"
           ]
         },
         {
@@ -3869,8 +3869,8 @@
           "null_count": 2,
           "distinct_count": 14,
           "samples": [
-            "Theodor Kittelsen (1857–1914), norsk.\n_Nøkken_, 1904. Pastell og blyant på papir. AURA-2026-001.\n\nTo øyne stirrer opp fra et mørkt skogstjern i sommernatten. Det er Nøkken – den farlige vannvætten fra norsk folketro – som smelter sammen med vannliljer og mørkt vann. Kittelsen gjør det overnaturlige troverdig: her er det naturen selv som truer, stille og ubevegelig.",
-            "Theodor Kittelsen (1857–1914), norsk.\n_Soria Moria slott_, 1900. Olje på lerret. AURA-2026-002.\n\nEn liten skikkelse står på en fjellkant og ser mot et gyllent slott langt borte over skyene. Det er Askeladden – folkeeventyrets evige optimist – på vei mot det umulige. Bildet er blitt Norges mest gjenkjennelige symbol på lengsel og håp."
+            "Theodor Kittelsen (1857–1914), norsk.\n_Nøkken_, 1904. Pastell og blyant på papir. KP-2026-001.\n\nTo øyne stirrer opp fra et mørkt skogstjern i sommernatten. Det er Nøkken – den farlige vannvætten fra norsk folketro – som smelter sammen med vannliljer og mørkt vann. Kittelsen gjør det overnaturlige troverdig: her er det naturen selv som truer, stille og ubevegelig.",
+            "Theodor Kittelsen (1857–1914), norsk.\n_Soria Moria slott_, 1900. Olje på lerret. KP-2026-002.\n\nEn liten skikkelse står på en fjellkant og ser mot et gyllent slott langt borte over skyene. Det er Askeladden – folkeeventyrets evige optimist – på vei mot det umulige. Bildet er blitt Norges mest gjenkjennelige symbol på lengsel og håp."
           ]
         },
         {

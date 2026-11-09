@@ -1,7 +1,7 @@
 # BRIEFING — 2026-09-14T17:11:00+02:00
 
 ## Mission
-Investigate the development and execution environment, runtime capabilities, repo structure, MCP and test setup for Aura Kunstmuseum.
+Investigate the development and execution environment, runtime capabilities, repo structure, MCP and test setup for Kunstpixel.
 
 ## 🔒 My Identity
 - Archetype: explorer
@@ -32,7 +32,7 @@ Investigate the development and execution environment, runtime capabilities, rep
 - **Key findings**:
   - Python 3.13 (`py -3.13`) has all necessary libraries pre-installed. Default `python` (3.11) lacks them.
   - MCP server should use `from mcp.server.fastmcp import FastMCP` or `fastmcp`.
-  - Database path must be configurable (`AURA_DB_PATH`, `data/museum.db`, fallback `C:\Users\larse\Documents\.headroom\memory.db`).
+  - Database path must be configurable (`KUNSTPIXEL_DB_PATH`, `data/museum.db`, fallback `C:\Users\larse\Documents\.headroom\memory.db`).
   - Museumsvert agent should have a deterministic test-friendly engine plus optional LLM/Ollama adapter.
   - `pytest` runs directly and seamlessly.
 - **Unexplored areas**: None for survey milestone. Ready for builder implementation.

@@ -7,7 +7,7 @@ Verifies:
      - Filter by technique, room_id, title, theme.
      - Empty result handling and limits.
   2. get_artwork_details:
-     - 'AURA-2026-009' (Skrik) returns Munch, Sal D, wall text, provenance.
+     - 'KP-2026-009' (Skrik) returns Munch, Sal D, wall text, provenance.
      - Unknown artwork ID returns structured error or handles gracefully.
   3. get_room_artworks:
      - 'SAL-D' returns >= 3 exhibited artworks in display sequence order.
@@ -57,7 +57,7 @@ class TestSearchCollectionTool:
 
         # Verify metadata completeness
         for item in results:
-            assert "id" in item and item["id"].startswith("AURA-2026-")
+            assert "id" in item and item["id"].startswith("KP-2026-")
             assert "tittel" in item
             assert "kunstner" in item and "Kittelsen" in item["kunstner"]
             assert "aar" in item and isinstance(item["aar"], int)
@@ -104,10 +104,10 @@ class TestGetArtworkDetailsTool:
     """Verifies tool 2: get_artwork_details."""
 
     def test_get_artwork_details_skrik(self):
-        """Lookup for 'AURA-2026-009' (Skrik) returns complete metadata."""
-        details = get_artwork_details(artwork_id="AURA-2026-009")
+        """Lookup for 'KP-2026-009' (Skrik) returns complete metadata."""
+        details = get_artwork_details(artwork_id="KP-2026-009")
         assert isinstance(details, dict)
-        assert details.get("id") == "AURA-2026-009"
+        assert details.get("id") == "KP-2026-009"
         assert details.get("tittel") == "Skrik"
         assert "Munch" in details.get("kunstner", "") or "Munch" in details.get("kunstner_navn", "")
         assert details.get("sal_id") == "SAL-D"
@@ -122,9 +122,9 @@ class TestGetArtworkDetailsTool:
         assert proveniens is not None and len(proveniens) > 0, "Missing provenance in details"
 
     def test_get_artwork_details_vinternatt(self):
-        """Lookup for 'AURA-2026-007' (Vinternatt i Rondane) returns Sohlberg and provenance."""
-        details = get_artwork_details(artwork_id="AURA-2026-007")
-        assert details.get("id") == "AURA-2026-007"
+        """Lookup for 'KP-2026-007' (Vinternatt i Rondane) returns Sohlberg and provenance."""
+        details = get_artwork_details(artwork_id="KP-2026-007")
+        assert details.get("id") == "KP-2026-007"
         assert details.get("tittel") == "Vinternatt i Rondane"
         assert "Sohlberg" in details.get("kunstner", "") or "Sohlberg" in details.get("kunstner_navn", "")
         assert details.get("sal_id") == "SAL-A"
@@ -133,7 +133,7 @@ class TestGetArtworkDetailsTool:
 
     def test_get_artwork_details_unknown_id(self):
         """Lookup for non-existent artwork ID returns structured error or error dict."""
-        details = get_artwork_details(artwork_id="AURA-2026-999")
+        details = get_artwork_details(artwork_id="KP-2026-999")
         assert isinstance(details, dict)
         assert "error" in details or details.get("code") == "NOT_FOUND" or details.get("id") is None
 

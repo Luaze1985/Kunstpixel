@@ -1,7 +1,7 @@
 # BRIEFING — 2026-09-14T19:10:00+02:00
 
 ## Mission
-Monitor and govern the execution of building the Aura Kunstmuseum demo-prototype (MCP server, museumsvert agent, and integration test suite).
+Monitor and govern the execution of building the Kunstpixel demo-prototype (MCP server, museumsvert agent, and integration test suite).
 
 ## 🔒 My Identity
 - Archetype: sentinel
@@ -25,7 +25,7 @@ Monitor and govern the execution of building the Aura Kunstmuseum demo-prototype
 - **Cron 2 (Liveness Check)**: Cancelled upon victory confirmation
 
 ## User Context
-- **Last user request**: Build an executable demo prototype for Aura Kunstmuseum verifying domain context, MCP server with 5 tools, interactive museumsvert agent, and integration test suite (R1-R3).
+- **Last user request**: Build an executable demo prototype for Kunstpixel verifying domain context, MCP server with 5 tools, interactive museumsvert agent, and integration test suite (R1-R3).
 - **Pending clarifications**: none
 - **Delivered results**: Complete demo prototype with FastMCP server, interactive museumsvert agent, CLI, and 112 automated tests.
 

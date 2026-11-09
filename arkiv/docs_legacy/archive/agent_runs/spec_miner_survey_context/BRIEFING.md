@@ -1,7 +1,7 @@
 ﻿# BRIEFING — 2026-09-14T17:11:00+02:00
 
 ## Mission
-Mine and extract exact specifications, rules, constraints, and contracts from Aura Kunstmuseum context and prompts files.
+Mine and extract exact specifications, rules, constraints, and contracts from Kunstpixel context and prompts files.
 
 ## 🔒 My Identity
 - Archetype: Specification Miner

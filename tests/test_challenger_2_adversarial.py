@@ -86,7 +86,7 @@ class TestNonExistentArtworks:
         assert resp.category == "samling"
         assert any(phrase in text.lower() for phrase in ["har vi dessverre ikke", "ikke i museets samling", "ikke i samlingen"])
         assert "louvre" in text.lower() or "internasjonale" in text.lower()
-        assert not re.search(r"AURA-2026-\d{3}", text)
+        assert not re.search(r"KP-2026-\d{3}", text)
 
     def test_demand_leonardo_da_vinci(self, agent):
         """Querying Leonardo da Vinci must state he is not in the collection."""
@@ -156,8 +156,8 @@ class TestStorageArtworksIntegrity:
 
         assert "Brudeferd" not in text
         assert "Selvportrett med sigarett" not in text
-        assert "AURA-2026-011" not in text
-        assert "AURA-2026-012" not in text
+        assert "KP-2026-011" not in text
+        assert "KP-2026-012" not in text
         assert "MAG-1" not in resp.rooms_referenced
 
 

@@ -1,6 +1,6 @@
 ﻿## 2026-09-14T15:30:12Z
 
-You are Reviewer 1 (reviewer_1) for the Aura Kunstmuseum project.
+You are Reviewer 1 (reviewer_1) for the Kunstpixel project.
 Your working directory is: g:/Min disk/Fellesprosjekt KI/.agents/reviewer_1
 Authoritative original request path: g:/Min disk/Fellesprosjekt KI/.agents/ORIGINAL_REQUEST.md
 You MUST read ORIGINAL_REQUEST.md first.
@@ -9,7 +9,7 @@ Project specification: g:/Min disk/Fellesprosjekt KI/PROJECT.md
 Test suite readiness: g:/Min disk/Fellesprosjekt KI/TEST_READY.md
 
 Objective:
-Perform an objective, rigorous code and architecture review of the entire Aura Kunstmuseum demo-prototype (R1 MCP server, R2 Museumsvert agent, R3 test suite).
+Perform an objective, rigorous code and architecture review of the entire Kunstpixel demo-prototype (R1 MCP server, R2 Museumsvert agent, R3 test suite).
 Specifically:
 1. Run `py -3.13 -m pytest -v` using PowerShell / command execution to independently verify the 65 tests.
 2. Review implementation files: `src/config.py`, `src/db.py`, `src/mcp_server.py`, `src/agent.py`, `src/cli.py`, `README.md`.

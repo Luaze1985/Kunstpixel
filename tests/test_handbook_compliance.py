@@ -1,4 +1,4 @@
-"""Test suite for Aura Kunstmuseum Virksomhetshåndbøker (To-lags arkitektur).
+"""Test suite for Kunstpixel Virksomhetshåndbøker (To-lags arkitektur).
 
 Verifies:
 1. Existence and completeness of the 4 markdown handbooks.

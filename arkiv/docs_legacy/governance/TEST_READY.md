@@ -1,15 +1,15 @@
-# Test Suite Readiness Report: Aura Kunstmuseum
+# Test Suite Readiness Report: Kunstpixel
 
 **Date:** 2026-09-14  
 **Author:** E2E Test Writer (`test_writer_e2e`)  
 **Status:** READY FOR VERIFICATION  
-**Target Project:** Aura Kunstmuseum Demo-Prototype  
+**Target Project:** Kunstpixel Demo-Prototype  
 
 ---
 
 ## 1. Executive Summary
 
-The complete 4-tier automated test suite for the Aura Kunstmuseum project is implemented, verified, and active under `tests/`.
+The complete 4-tier automated test suite for the Kunstpixel project is implemented, verified, and active under `tests/`.
 
 The suite provides 100% genuine, verifiable assertions against the authoritative SQLite database (`data/museum.db` / `C:\Users\larse\Documents\.headroom\memory.db`), FastMCP server tools (`src/mcp_server.py`), curatorial quality standards (`context/core/quality_rules.md`), and the Museumsvert host agent persona (`prompts/museumsvert.md`).
 
@@ -31,7 +31,7 @@ The suite provides 100% genuine, verifiable assertions against the authoritative
 
 ### R1. MCP Server Acceptance Criteria
 - [x] **All 5 tools return correct, verifiable results from SQLite:** Covered in `TestSearchCollectionTool`, `TestGetArtworkDetailsTool`, `TestGetRoomArtworksTool`, `TestSearchEventsTool`, `TestSearchFaqTool`.
-- [x] **Search 'Kittelsen' returns >= 2 artworks with metadata:** Tested in `test_search_collection_kittelsen_returns_at_least_two_artworks` (returns *Nøkken* AURA-2026-001 and *Soria Moria slott* AURA-2026-002).
+- [x] **Search 'Kittelsen' returns >= 2 artworks with metadata:** Tested in `test_search_collection_kittelsen_returns_at_least_two_artworks` (returns *Nøkken* KP-2026-001 and *Soria Moria slott* KP-2026-002).
 - [x] **Search room 'SAL-D' returns >= 3 exhibited artworks in order:** Tested in `test_get_room_artworks_sal_d_returns_at_least_three_in_order` (returns *Skrik*, *Pikene på broen*, *N. 7 – Stor blå fjellform* sorted by `rekkefølge`).
 - [x] **Search events returns upcoming events with date and type:** Tested in `test_search_events_upcoming_with_date_and_type` and `test_search_events_filter_by_type_omvisning`.
 - [x] **Search FAQ for 'åpningstider' returns concrete hours:** Tested in `test_search_faq_opening_hours_returns_concrete_hours` (verifies "10:00" and "17:00").

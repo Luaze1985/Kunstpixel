@@ -46,15 +46,15 @@ Directly observed evidence from examining the codebase, database, test assertion
           text=text,
           category="praktisk",
           tools_used=["search_collection", "get_room_artworks"],
-          artworks_referenced=["AURA-2026-001", "AURA-2026-007", "AURA-2026-009", "AURA-2026-010"],
+          artworks_referenced=["KP-2026-001", "KP-2026-007", "KP-2026-009", "KP-2026-010"],
           rooms_referenced=["SAL-A", "SAL-D"],
       )
   ```
 - **Observed fact:** Zero database queries and zero MCP tool calls occur. `tools_used` reports `["search_collection", "get_room_artworks"]`, which is a fabricated claim.
 - **Database reality:** Querying `get_room_artworks("SAL-A")` and `get_room_artworks("SAL-D")` dynamically yields:
-  - Sal A (exhibited): `AURA-2026-001` (Nøkken, 1904, Kittelsen), `AURA-2026-002` (Soria Moria slott, 1900, Kittelsen), `AURA-2026-007` (Vinternatt i Rondane, 1914, Sohlberg), `AURA-2026-008` (Jonsokbål, 1926, Astrup).
-  - Sal D (exhibited): `AURA-2026-009` (Skrik, 1893, Munch), `AURA-2026-010` (Pikene på broen, 1901, Munch), `AURA-2026-016` (N. 7 – Stor blå fjellform, 1967, Bergman).
-  - Storage works (`AURA-2026-011` Brudeferd i Hardanger, `AURA-2026-012` Selvportrett med sigarett) have `sal_id='MAG-1'` and `status='magasin'`.
+  - Sal A (exhibited): `KP-2026-001` (Nøkken, 1904, Kittelsen), `KP-2026-002` (Soria Moria slott, 1900, Kittelsen), `KP-2026-007` (Vinternatt i Rondane, 1914, Sohlberg), `KP-2026-008` (Jonsokbål, 1926, Astrup).
+  - Sal D (exhibited): `KP-2026-009` (Skrik, 1893, Munch), `KP-2026-010` (Pikene på broen, 1901, Munch), `KP-2026-016` (N. 7 – Stor blå fjellform, 1967, Bergman).
+  - Storage works (`KP-2026-011` Brudeferd i Hardanger, `KP-2026-012` Selvportrett med sigarett) have `sal_id='MAG-1'` and `status='magasin'`.
 
 ### 1.3 Discarding Database `svar` in `_handle_faq_result` (`src/agent.py`, lines 780–825 & line 210)
 - **Current implementation:**
@@ -373,7 +373,7 @@ Replace lines 433–505 with:
                 f"- **{ev['tittel']}** ({ev['type']}): {ev['dato']} kl. {ev['klokkeslett_start']}–{ev['klokkeslett_slutt']} i {ev.get('sal_navn', ev['sal_id'])}"
             )
         text = (
-            "Her er kommende hendelser på Aura Kunstmuseum:\n\n"
+            "Her er kommende hendelser på Kunstpixel:\n\n"
             + "\n".join(event_lines)
             + "\n\nVelkommen til spennende opplevelser hos oss!"
         )

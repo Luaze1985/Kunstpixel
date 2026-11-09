@@ -9,7 +9,7 @@ Kunstpixel har tre kjerneflyter som er designet spesifikt for å gi praktisk ver
 ```text
 Rådata mottas (Tittel, kunstner, foto)
   ↓
-Samlingsforvalter tildeler inventarnummer (f.eks. AURA-2026-050)
+Samlingsforvalter tildeler inventarnummer (f.eks. KP-2026-050)
   ↓
 MCP-verktøy beriker med strukturert metadata (teknikk, periode, farge/motiv-tags)
   ↓

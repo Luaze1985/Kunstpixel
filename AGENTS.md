@@ -143,7 +143,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode man
 
 ### Kart & Dataleveranser (3 read-only verktøy i `src/mcp_server.py`):
 34. `get_building_map_data(etasje, sone_type)`
-    - Geometrisk bygningsmodell, etasjer og soner for Aura Museum (06_kart).
+    - Geometrisk bygningsmodell, etasjer og soner for Kunstpixel (06_kart).
 35. `list_colab_inbox_deliveries()`
     - Lister innkommende leveranser og notatblokker fra Google Colab i `01_inbox/incoming`.
 36. `verify_colab_dataset(delivery_name)`

@@ -1,7 +1,7 @@
 # BRIEFING — 2026-09-14T17:18:00+02:00
 
 ## Mission
-Implement Milestone 1 (R1 - MCP Server) for Aura Kunstmuseum: setup configuration, read-only DB access layer, FastMCP server with 5 collection tools, copy database, and verify against real SQLite database.
+Implement Milestone 1 (R1 - MCP Server) for Kunstpixel: setup configuration, read-only DB access layer, FastMCP server with 5 collection tools, copy database, and verify against real SQLite database.
 
 ## 🔒 My Identity
 - Archetype: worker_m1
@@ -28,12 +28,12 @@ Implement Milestone 1 (R1 - MCP Server) for Aura Kunstmuseum: setup configuratio
   1. `pyproject.toml` with pytest settings (`pythonpath = ["."]`)
   2. `data/museum.db` copied from `C:\Users\larse\Documents\.headroom\memory.db`
   3. `src/__init__.py`
-  4. `src/config.py`: DB path resolution (`AURA_DB_PATH` -> `data/museum.db` -> fallback `C:\Users\larse\Documents\.headroom\memory.db`)
+  4. `src/config.py`: DB path resolution (`KUNSTPIXEL_DB_PATH` -> `data/museum.db` -> fallback `C:\Users\larse\Documents\.headroom\memory.db`)
   5. `src/db.py`: Read-only connection, dict-like rows, parameterized queries, Norwegian char normalization, sequence ordering
   6. `src/mcp_server.py`: FastMCP server registering 5 collection tools (`search_collection`, `get_artwork_details`, `get_room_artworks`, `search_events`, `search_faq`)
 - **Success criteria**:
   - `search_collection`: Kittelsen returns >= 2 artworks (verified: 2 returned)
-  - `get_artwork_details`: complete metadata, wall text, provenance; structured error on missing (verified: Skrik 54 words, provenance, error on AURA-2026-999)
+  - `get_artwork_details`: complete metadata, wall text, provenance; structured error on missing (verified: Skrik 54 words, provenance, error on KP-2026-999)
   - `get_room_artworks`: artworks in room in sequence order; SAL-D returns >= 3 artworks (verified: 3 returned in sequence)
   - `search_events`: upcoming events filtered by type/date (verified: 5 upcoming events returned)
   - `search_faq`: 'åpningstider' returns concrete opening hours (10:00-17:00, etc.); prices in NOK (verified: 10:00-17:00 and 120 kr returned)

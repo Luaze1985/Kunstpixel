@@ -1,5 +1,5 @@
 """
-Byggeskript for interaktivt 2.5D isometrisk bygningskart, 2D-plantegninger og Trondheim-galleri for Aura Museum.
+Byggeskript for interaktivt 2.5D isometrisk bygningskart, 2D-plantegninger og Trondheim-galleri for Kunstpixel.
 Leser 06_kart/bygning_geometri.json og genererer:
 - 06_kart/index.html (Interaktiv 2.5D og 2D-viser med Trondheim-galleri)
 - 06_kart/plantegning_u1.svg (2D Blueprint Kjeller)
@@ -249,7 +249,7 @@ def generate_blueprint_svg(floor_data: dict, model_data: dict) -> str:
     svg_parts.extend([
         '  <!-- Elegant skandinavisk planoversikt og romguide -->',
         '  <g class="title-block" transform="translate(680, 80)">',
-        '    <text x="0" y="0" font-family="sans-serif" font-size="20" font-weight="bold" fill="#ffffff" letter-spacing="1">AURA MUSEUM</text>',
+        '    <text x="0" y="0" font-family="sans-serif" font-size="20" font-weight="bold" fill="#ffffff" letter-spacing="1">KUNSTPIXEL</text>',
         f'    <text x="0" y="24" font-family="sans-serif" font-size="13" font-weight="600" fill="#38bdf8">PLAN {html.escape(kode)} • {html.escape(navn.upper())}</text>',
         '    <text x="0" y="44" font-family="sans-serif" font-size="10" fill="#94a3b8">Bispegata 9B, 7012 Trondheim • Gnr 401 / Bnr 12</text>',
         '    <line x1="0" y1="60" x2="280" y2="60" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>',
@@ -312,11 +312,11 @@ def generate_html(data: dict) -> str:
     room_images_json = json.dumps(room_images)
 
     gallery_items = [
-        {"file": "bilder/01_eksterior_hovedfasade.jpg", "title": "01. Hovedfasade fra Bispegata", "cat": "Eksteriør", "desc": "Aura Museum i Bispegata. Hovedfløy fra 1912 i rød håndbanket tegl, trondhjemitt-granittsokkel, irrgrønt kobbertak og Nidarosdomens spir i bakgrunnen."},
+        {"file": "bilder/01_eksterior_hovedfasade.jpg", "title": "01. Hovedfasade fra Bispegata", "cat": "Eksteriør", "desc": "Kunstpixel i Bispegata. Hovedfløy fra 1912 i rød håndbanket tegl, trondhjemitt-granittsokkel, irrgrønt kobbertak og Nidarosdomens spir i bakgrunnen."},
         {"file": "bilder/02_eksterior_tilbygg_nidelva.jpg", "title": "02. Tilbygg Øst ved Nidelva", "cat": "Eksteriør", "desc": "2016-fløyen i strukturelt glass med vertikale spiler i lys eik og slipt betong, med de historiske trebryggene i Trondheim langs elvebredden."},
         {"file": "bilder/03_eksterior_skulpturhage.jpg", "title": "03. Skulpturhage i atriet", "cat": "Eksteriør", "desc": "Skjermet indre museumshage med granittheller, vannspeil, bronseskulpturer og åpen siktlinje mot Marinen-parken."},
-        {"file": "bilder/04_vestibyle_resepsjon.jpg", "title": "04. Vestibyle & Resepsjon (P1)", "cat": "Publikum", "desc": "Ankomsthall med overlys fra glasstaket, lys grå terrazzo, minimalistisk skranke i mørk røkt eik med 'AURA MUSEUM'-tekst og adgangsporter."},
-        {"file": "bilder/05_museumsbutikk.jpg", "title": "05. Museumsbutikk / Aura Bokhandel (P1)", "cat": "Publikum", "desc": "Kunstbøker, utstillingskataloger og skandinavisk formgivning i spesialbygde eikehyller med integrert LED-lys."},
+        {"file": "bilder/04_vestibyle_resepsjon.jpg", "title": "04. Vestibyle & Resepsjon (P1)", "cat": "Publikum", "desc": "Ankomsthall med overlys fra glasstaket, lys grå terrazzo, minimalistisk skranke i mørk røkt eik med 'KUNSTPIXEL'-tekst og adgangsporter."},
+        {"file": "bilder/05_museumsbutikk.jpg", "title": "05. Museumsbutikk / Kunstpixel Bokhandel (P1)", "cat": "Publikum", "desc": "Kunstbøker, utstillingskataloger og skandinavisk formgivning i spesialbygde eikehyller med integrert LED-lys."},
         {"file": "bilder/06_museumskafe.jpg", "title": "06. Museumskafé mot Nidelva (P1)", "cat": "Publikum", "desc": "Kafé med 60 sitteplasser, skandinaviske designstoler i lys eik og panoramavinduer mot skulpturhagen, Nidelva og trebryggene."},
         {"file": "bilder/07_sal_a_mytologi.jpg", "title": "07. Sal A – Mytologi & Natur (P1)", "cat": "Utstilling", "desc": "Museets største sal med 6 meters takhøyde, matte antrasittgrå vegger, fiskebensparkett og spotbelysning over Kittelsen og Sohlberg."},
         {"file": "bilder/11_sal_d_munch.jpg", "title": "08. Sal D – Eksistens & Modernisme (P2)", "cat": "Utstilling", "desc": "Dype karmosinrøde vegger med dempet belysning for Edvard Munch, og frittstående klimastyrte glassmontre med 50 luks for papirverk."},
@@ -329,7 +329,7 @@ def generate_html(data: dict) -> str:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aura Museum Trondheim – 2.5D Bygningskart &amp; Galleri</title>
+  <title>Kunstpixel Trondheim – 2.5D Bygningskart &amp; Galleri</title>
   <style>
     :root {{
       --bg: #0b0f19;
@@ -854,7 +854,7 @@ def generate_html(data: dict) -> str:
     <div id="gallery-container">
       <div class="gallery-header">
         <div>
-          <h2>Aura Museum Trondheim – Arkitektonisk Fotoserie</h2>
+          <h2>Kunstpixel Trondheim – Arkitektonisk Fotoserie</h2>
           <p>Forankret i Bispegata ved Nidelva og Nidarosdomen. 100% konsistent materialpalett og arkitekturfotografi.</p>
         </div>
       </div>

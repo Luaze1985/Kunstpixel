@@ -3,7 +3,7 @@
 **Agent:** Worker 1 (`worker_m1`)  
 **Milestone:** M1 (R1 - MCP Server)  
 **Status:** Hard Handoff (Task Complete)  
-**Target Project:** Aura Kunstmuseum Demo-Prototype  
+**Target Project:** Kunstpixel Demo-Prototype  
 **Working Directory:** `g:/Min disk/Fellesprosjekt KI/.agents/worker_m1`  
 **Timestamp:** 2026-09-14T17:19:00+02:00  
 
@@ -35,7 +35,7 @@ Under the designated write boundary, the following files were implemented and ve
 
 4. **`src/config.py`** (52 lines):
    - Implements `get_db_path() -> Path` resolving with precedence:
-     1. `os.environ.get("AURA_DB_PATH")`
+     1. `os.environ.get("KUNSTPIXEL_DB_PATH")`
      2. Local repository copy `data/museum.db`
      3. External fallback `C:\Users\larse\Documents\.headroom\memory.db`
    - Implements `ensure_local_db() -> Path` which copies from fallback if missing.
@@ -57,7 +57,7 @@ Under the designated write boundary, the following files were implemented and ve
 
 6. **`src/mcp_server.py`** (127 lines):
    - `from mcp.server.fastmcp import FastMCP`
-   - `mcp = FastMCP("Aura Kunstmuseum")`
+   - `mcp = FastMCP("Kunstpixel")`
    - Exposes the 5 registered tools via `@mcp.tool()`:
      - `search_collection(...) -> list[dict[str, Any]]`
      - `get_artwork_details(artwork_id: str) -> dict[str, Any]` (returns `{"error": ..., "code": "NOT_FOUND"}` on missing)
@@ -79,9 +79,9 @@ Under the designated write boundary, the following files were implemented and ve
    Command: py -3.13 (test script invoking mcp_server tools directly)
    Output:
    - Registered tools (5): ['search_collection', 'get_artwork_details', 'get_room_artworks', 'search_events', 'search_faq']
-   - Kittelsen count: 2 (AURA-2026-002: Soria Moria slott, AURA-2026-001: Nøkken)
+   - Kittelsen count: 2 (KP-2026-002: Soria Moria slott, KP-2026-001: Nøkken)
    - Skrik details: Edvard Munch, Sal SAL-D, Veggtekst ordantall: 54, Proveniens: present
-   - Missing artwork AURA-2026-999: {'error': "Verk med ID eller tittel 'AURA-2026-999' ble ikke funnet i samlingsdatabasen.", 'artwork_id': 'AURA-2026-999', 'code': 'NOT_FOUND'}
+   - Missing artwork KP-2026-999: {'error': "Verk med ID eller tittel 'KP-2026-999' ble ikke funnet i samlingsdatabasen.", 'artwork_id': 'KP-2026-999', 'code': 'NOT_FOUND'}
    - SAL-D artworks count: 3 (Rekkefoelge 5: Skrik, Rekkefoelge 6: Pikene på broen, Rekkefoelge 7: N. 7 – Stor blå fjellform)
    - Invalid room SAL-XYZ: {'error': "Ukjent sal-ID 'SAL-XYZ'", 'valid_rooms': ['SAL-A', 'SAL-B', 'SAL-C', 'SAL-D', 'SAL-E', 'MAG-1'], 'code': 'INVALID_ROOM'}
    - Upcoming events count: 5 (Guidet omvisning, Trolljakt, Mal som Munch, Kveldskafeen)
@@ -106,7 +106,7 @@ Under the designated write boundary, the following files were implemented and ve
 1. **Self-Contained Portability:**
    - Observation: `C:\Users\larse\Documents\.headroom\memory.db` was external to the repo.
    - Inference: Moving or cloning the repository elsewhere would break without a local database.
-   - Action: Copied database to `data/museum.db` and implemented a 3-tier precedence in `src/config.py` (`AURA_DB_PATH` -> local `data/museum.db` -> external `memory.db`).
+   - Action: Copied database to `data/museum.db` and implemented a 3-tier precedence in `src/config.py` (`KUNSTPIXEL_DB_PATH` -> local `data/museum.db` -> external `memory.db`).
    - Verified: Both `data/museum.db` and external fallback contain exactly 72 rows.
 
 2. **Security & Read-Only Enforcement:**
@@ -166,7 +166,7 @@ To independently verify this milestone, run the following commands in PowerShell
 
 2. **Verify 5 tools directly with Python 3.13:**
    ```powershell
-   py -3.13 -c "from src.mcp_server import search_collection, get_artwork_details, get_room_artworks, search_events, search_faq; assert len(search_collection(artist='Kittelsen')) >= 2; assert get_artwork_details('AURA-2026-009')['sal_id'] == 'SAL-D'; assert len(get_room_artworks('SAL-D')) >= 3; assert len(search_events()) >= 1; assert '10:00' in search_faq('åpningstider')[0]['svar']; print('All 5 tools verified against live database!')"
+   py -3.13 -c "from src.mcp_server import search_collection, get_artwork_details, get_room_artworks, search_events, search_faq; assert len(search_collection(artist='Kittelsen')) >= 2; assert get_artwork_details('KP-2026-009')['sal_id'] == 'SAL-D'; assert len(get_room_artworks('SAL-D')) >= 3; assert len(search_events()) >= 1; assert '10:00' in search_faq('åpningstider')[0]['svar']; print('All 5 tools verified against live database!')"
    ```
    *Expected output:* `All 5 tools verified against live database!`.
 

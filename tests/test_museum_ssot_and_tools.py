@@ -126,9 +126,9 @@ class TestConsolidatedFastMCPTools:
 
     def test_get_condition_report_skrik(self):
         """Condition report for Skrik must return max 50 lux and hermetic climate frame."""
-        res = get_condition_report("AURA-2026-009")
+        res = get_condition_report("KP-2026-009")
         assert "error" not in res
-        assert res["verk_id"] == "AURA-2026-009"
+        assert res["verk_id"] == "KP-2026-009"
         assert res["tilstandsgrad"] == 1
         assert res["lysomfintlighet_luks"] == 50
         assert res["forsikringsverdi_nok"] == 450000000

@@ -372,7 +372,7 @@ def query_events(
     """
     params: dict[str, Any] = {}
 
-    fixed_today = os.environ.get("AURA_TODAY", "").strip()
+    fixed_today = os.environ.get("KUNSTPIXEL_TODAY", "").strip()
     if date_from and date_from.strip():
         sql += " AND h.dato >= :date_from"
         params["date_from"] = date_from.strip()

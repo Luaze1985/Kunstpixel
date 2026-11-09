@@ -1,7 +1,7 @@
-# Project: Aura Kunstmuseum Demo-Prototype
+# Project: Kunstpixel Demo-Prototype
 
 ## Architecture
-Aura Kunstmuseum is an operational synthetic SMB cultural institution serving as an AI-founder training arena.
+Kunstpixel is an operational synthetic SMB cultural institution serving as an AI-founder training arena.
 The software system consists of:
 1. **Data Layer**: SQLite database (`memory.db` / `data/museum.db`) with 72 records across 7 tables (`kunstnere`, `saler`, `verk`, `utstillinger`, `utstilling_verk`, `hendelser`, `publikum_faq`).
 2. **MCP Server (`src/mcp_server.py`)**: FastMCP-based Model Context Protocol server exposing 5 collection tools (`search_collection`, `get_artwork_details`, `get_room_artworks`, `search_events`, `search_faq`), strictly read-only and SQL-injection safe.
@@ -24,7 +24,7 @@ The software system consists of:
                                │ Parameterized tool calls (Read-only)
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
-│            Aura MCP Server (`src/mcp_server.py`)            │
+│            Kunstpixel MCP Server (`src/mcp_server.py`)            │
 │  1. `search_collection`   2. `get_artwork_details`          │
 │  3. `get_room_artworks`   4. `search_events`                │
 │  5. `search_faq`                                            │
@@ -33,7 +33,7 @@ The software system consists of:
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
 │             Database Helper (`src/db.py`)                   │
-│  - Config precedence: `AURA_DB_PATH` -> local -> fallback   │
+│  - Config precedence: `KUNSTPIXEL_DB_PATH` -> local -> fallback   │
 │  - Norwegian character handling & safe query execution      │
 └──────────────────────────────┬──────────────────────────────┘
                                │ SQLite connection
@@ -48,7 +48,7 @@ The software system consists of:
 ## Feature Inventory
 | # | Feature | Description | Milestone | Source |
 |---|---------|-------------|-----------|--------|
-| 1 | DB Configuration & Local Mirror | Config loader with precedence (`AURA_DB_PATH` -> `data/museum.db` -> `C:\Users\larse\Documents\.headroom\memory.db`) | M1 (R1) | Survey DB & Env |
+| 1 | DB Configuration & Local Mirror | Config loader with precedence (`KUNSTPIXEL_DB_PATH` -> `data/museum.db` -> `C:\Users\larse\Documents\.headroom\memory.db`) | M1 (R1) | Survey DB & Env |
 | 2 | DB Access Layer & Safe Queries | Parameterized query execution, column quoting (`[rekkefølge]`), Norwegian character normalization | M1 (R1) | Survey DB |
 | 3 | Tool: `search_collection` | Search artworks by artist, title, technique, theme, room_id. Case-insensitive, partial matching. "Kittelsen" returns >= 2 | M1 (R1) | ORIGINAL_REQUEST R1 |
 | 4 | Tool: `get_artwork_details` | Full metadata, curated wall text (50-90 words), and provenance for given `artwork_id`. 404 error on missing | M1 (R1) | ORIGINAL_REQUEST R1 |
@@ -75,7 +75,7 @@ The software system consists of:
 ## Interface Contracts
 
 ### `src/config.py`
-- `get_db_path() -> Path`: Resolves database path checking `AURA_DB_PATH` env var, `data/museum.db`, and `C:\Users\larse\Documents\.headroom\memory.db`.
+- `get_db_path() -> Path`: Resolves database path checking `KUNSTPIXEL_DB_PATH` env var, `data/museum.db`, and `C:\Users\larse\Documents\.headroom\memory.db`.
 - `ensure_local_db() -> Path`: Ensures local mirror exists for zero-dependency standalone execution.
 
 ### `src/db.py`
@@ -88,7 +88,7 @@ The software system consists of:
   - `query_faq(query: str, category=None) -> list[dict]`
 
 ### `src/mcp_server.py`
-- FastMCP instance named `"Aura Kunstmuseum"`.
+- FastMCP instance named `"Kunstpixel"`.
 - Tools registered with `@mcp.tool()`:
   - `search_collection(query: str = None, artist: str = None, title: str = None, technique: str = None, theme: str = None, room_id: str = None, limit: int = 10) -> list[dict]`
   - `get_artwork_details(artwork_id: str) -> dict`

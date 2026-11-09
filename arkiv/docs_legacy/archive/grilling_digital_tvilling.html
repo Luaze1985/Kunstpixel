@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grill Me With Forms — Digital Tvilling & Aura Kunstmuseum</title>
+<title>Grill Me With Forms — Digital Tvilling & Kunstpixel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -203,7 +203,7 @@ a,button,[role="button"]{transition:color var(--transition),background var(--tra
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="Grill Me">
         <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
       </svg>
-      Aura Kunstmuseum — Digital Tvilling Arkitektur
+      Kunstpixel — Digital Tvilling Arkitektur
     </div>
     <div class="header-actions">
       <div class="progress-pill">
@@ -221,7 +221,7 @@ a,button,[role="button"]{transition:color var(--transition),background var(--tra
 
 <main class="main">
   <div class="intro-banner">
-    <h1>Digital Tvilling for Aura Kunstmuseum 🔥</h1>
+    <h1>Digital Tvilling for Kunstpixel 🔥</h1>
     <p>Dette spørreskjemaet låser arkitekturen for deres egen syntetiske bedrift: Hva skal være hovedmotoren for samhandling mellom dere og agentene, hva henter vi fra TheAgentCompany, og hvilke AI-arbeidsflyter skal bedriften operere?</p>
     <div class="legend">
       <div class="legend-item"><div class="legend-dot" style="background:var(--color-primary)"></div>Anbefalt valg (forhåndsmerket)</div>
@@ -275,7 +275,7 @@ a,button,[role="button"]{transition:color var(--transition),background var(--tra
 
 <script>
 // ============================================================
-// SPØRSMÅL-DATA (Aura Kunstmuseum Digital Tvilling)
+// SPØRSMÅL-DATA (Kunstpixel Digital Tvilling)
 // ============================================================
 const QUESTIONS = [
   {
@@ -331,12 +331,12 @@ const QUESTIONS = [
       },
       {
         id: "B2",
-        text: "Hvordan skal TheAgentCompany-infrastrukturen kjøres opp mot Aura-prosjektet?",
+        text: "Hvordan skal TheAgentCompany-infrastrukturen kjøres opp mot Kunstpixel-prosjektet?",
         type: "radio",
         rec: 0,
         options: [
-          "Sidecar / uendret: Kjøre TACs docker-compose som et eksternt simulert kontor, og koble Aura-agentene på via våre egne MCP-adaptere (anbefalt)",
-          "Fork-lite: Rense ut benchmark- og OpenHands-filer, og sitte igjen med en renset Compose-fil kun for Aura Kunstmuseum",
+          "Sidecar / uendret: Kjøre TACs docker-compose som et eksternt simulert kontor, og koble Kunstpixel-agentene på via våre egne MCP-adaptere (anbefalt)",
+          "Fork-lite: Rense ut benchmark- og OpenHands-filer, og sitte igjen med en renset Compose-fil kun for Kunstpixel",
           "Gradvis migrering: Starte lokalt i Python/SQLite (som nå) og koble på én og én TAC-tjeneste etter behov"
         ],
         freetext: true
@@ -512,7 +512,7 @@ function updateProgress() {
 // ============================================================
 function generateOutput() {
   const now = new Date().toISOString().slice(0,10);
-  let md = `---\ntitle: "Grilling: Digital Tvilling for Aura Kunstmuseum"\ndate: ${now}\nstatus: filled\ntags: [grilling, decisions, digital_tvilling]\n---\n\n# Svar fra grill-me-with-forms\n\n`;
+  let md = `---\ntitle: "Grilling: Digital Tvilling for Kunstpixel"\ndate: ${now}\nstatus: filled\ntags: [grilling, decisions, digital_tvilling]\n---\n\n# Svar fra grill-me-with-forms\n\n`;
   let unanswered = [];
   let uncertain = [];
 

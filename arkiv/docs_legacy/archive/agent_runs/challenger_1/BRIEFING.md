@@ -1,7 +1,7 @@
 ﻿# BRIEFING — 2026-09-14T17:36:00+02:00
 
 ## Mission
-Adversarially challenge and empirically verify the R1 MCP Server tools and Data Layer for Aura Kunstmuseum.
+Adversarially challenge and empirically verify the R1 MCP Server tools and Data Layer for Kunstpixel.
 
 ## 🔒 My Identity
 - Archetype: empirical_challenger

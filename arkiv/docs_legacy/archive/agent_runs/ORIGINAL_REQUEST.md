@@ -2,7 +2,7 @@
 
 ## 2026-09-14T15:02:39Z
 
-Aura Kunstmuseum er en syntetisk SMB-kulturinstitusjon som brukes som treningsarena for AI-gründere. Vi har allerede bygget komplett domenekontekst (glossar, roller, kvalitetsregler, godkjenningsporter), 6 masterprompter for agentroller, og en SQLite-database med 72 rader realistiske museumsdata (12 kunstnere, 16 verk med veggtekster, 6 saler, 3 utstillinger, 8 arrangementer, 12 FAQ-oppslag).
+Kunstpixel er en syntetisk SMB-kulturinstitusjon som brukes som treningsarena for AI-gründere. Vi har allerede bygget komplett domenekontekst (glossar, roller, kvalitetsregler, godkjenningsporter), 6 masterprompter for agentroller, og en SQLite-database med 72 rader realistiske museumsdata (12 kunstnere, 16 verk med veggtekster, 6 saler, 3 utstillinger, 8 arrangementer, 12 FAQ-oppslag).
 
 **Oppdraget:** Bygg en kjørbar demo-prototype som verifiserer at hele denne bedriftskonteksten faktisk *fungerer* — at agentene kan bruke verktøyene, at dataen er realistisk nok, og at det føles som en ekte liten museumsbedrift i drift.
 

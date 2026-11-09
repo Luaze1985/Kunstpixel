@@ -7,7 +7,7 @@ Status: Empirical verification completed, compiling handoff report
 - [x] Ran full baseline test suite (65/65 tests PASS)
 - [x] Developed comprehensive empirical adversarial test suite (tests/test_adversarial_mcp.py: 30/30 PASS)
 - [x] Tested empty and whitespace inputs across all 5 MCP tools
-- [x] Tested case variations (sAl-D, sal d, d, KITTELSEN, skrik, aura-2026-009)
+- [x] Tested case variations (sAl-D, sal d, d, KITTELSEN, skrik, kp-2026-009)
 - [x] Tested SQL injection attacks across all tool parameters and verified DB integrity
 - [x] Tested Norwegian and special characters (FAQ normalizes æ/ø/å, identified SQLite LIKE non-ASCII upper limitation)
 - [x] Tested limit clamping (-1 -> 1, 10000 -> 50)

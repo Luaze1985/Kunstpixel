@@ -1,7 +1,7 @@
 ## 2026-09-14T15:15:03Z
 
 <USER_REQUEST>
-You are Worker 1 (worker_m1) for the Aura Kunstmuseum project.
+You are Worker 1 (worker_m1) for the Kunstpixel project.
 Your working directory is: g:/Min disk/Fellesprosjekt KI/.agents/worker_m1
 Authoritative original request path: g:/Min disk/Fellesprosjekt KI/.agents/ORIGINAL_REQUEST.md
 You MUST read ORIGINAL_REQUEST.md first.
@@ -27,7 +27,7 @@ DO NOT CHEAT. All implementations must be genuine. DO NOT hardcode test results,
 Your tasks for Milestone 1 (R1 - MCP Server):
 1. Setup `pyproject.toml` configured with pytest settings (pythonpath = ["."]).
 2. Copy `C:\Users\larse\Documents\.headroom\memory.db` to `data/museum.db` so the repo has a self-contained local copy, while keeping fallback logic in `src/config.py`.
-3. Implement `src/config.py` to resolve DB path checking `AURA_DB_PATH`, `data/museum.db`, then `C:\Users\larse\Documents\.headroom\memory.db`.
+3. Implement `src/config.py` to resolve DB path checking `KUNSTPIXEL_DB_PATH`, `data/museum.db`, then `C:\Users\larse\Documents\.headroom\memory.db`.
 4. Implement `src/db.py` with read-only SQLite connection (`sqlite3.Row`), parameterized queries, Norwegian character handling (normalization for FAQ: 'åpningstider' -> 'aapent' / 'åpen' to match "Naar har museet aapent?"), quoting `[rekkefølge]` in `utstilling_verk`.
 5. Implement `src/mcp_server.py` using `from mcp.server.fastmcp import FastMCP`, registering the 5 collection tools:
    - `search_collection`: search by query, artist, title, technique, theme, room_id. Kittelsen returns >= 2 artworks.

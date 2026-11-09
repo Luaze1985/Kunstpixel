@@ -1,4 +1,4 @@
-# Progress Tracker — Aura Kunstmuseum Demo-Prototype
+# Progress Tracker — Kunstpixel Demo-Prototype
 
 Last visited: 2026-09-14T18:12:00+02:00
 

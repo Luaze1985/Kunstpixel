@@ -1,7 +1,7 @@
 # BRIEFING — 2026-09-14T18:35:00+02:00
 
 ## Mission
-Perform comprehensive, honest final QA verification for Aura Kunstmuseum demo-prototype across all milestones, checks, and layouts.
+Perform comprehensive, honest final QA verification for Kunstpixel demo-prototype across all milestones, checks, and layouts.
 
 ## 🔒 My Identity
 - Archetype: QA Verification Worker

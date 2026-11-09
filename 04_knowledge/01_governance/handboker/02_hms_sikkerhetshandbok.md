@@ -1,4 +1,4 @@
-# HMS- og Sikkerhetshåndbok for Aura Kunstmuseum (Kunstpixel)
+# HMS- og Sikkerhetshåndbok for Kunstpixel
 
 > **Dokument-ID:** `HB-HMS-2026`  
 > **Gjelder for:** Alle ansatte, verneombud, montører, teknisk drift, verter og innleide håndverkere  
@@ -25,7 +25,7 @@
 ## Kapittel 1: HMS-erklæring og organisering
 
 ### 1.1 Målsetting
-Aura Kunstmuseum skal ha et fullt forsvarlig arbeidsmiljø som fremmer trivsel, god helse og trygghet for alle medarbeidere, samtidig som museets uerstattelige kulturskatter og besøkende er maksimalt beskyttet.
+Kunstpixel skal ha et fullt forsvarlig arbeidsmiljø som fremmer trivsel, god helse og trygghet for alle medarbeidere, samtidig som museets uerstattelige kulturskatter og besøkende er maksimalt beskyttet.
 
 ### 1.2 Ansvarsfordeling
 * **Museumsdirektøren:** Har det overordnede juridiske og økonomiske ansvaret for systematisk helse-, miljø- og sikkerhetsarbeid (Internkontrollforskriften § 3).

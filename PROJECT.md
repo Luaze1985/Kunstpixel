@@ -1,4 +1,4 @@
-# Project: Aura Museum Bygningsmodell, Sonebeskrivelser & Kartpakke
+# Project: Kunstpixel Bygningsmodell, Sonebeskrivelser & Kartpakke
 
 ## Architecture
 - **SSOT (Single Source of Truth)**: `06_kart/bygning_geometri.json` inneholder autoritativ bygningsgeometri, rominndeling, soner, veggtykkelser, materialer og standardiserte metadata.

@@ -112,8 +112,8 @@ class TestMuseumsvertRecommendations:
         # Must NOT recommend artworks in magazine
         assert "Brudeferd i Hardanger" not in text, "Agent recommended magazine artwork 'Brudeferd i Hardanger'!"
         assert "Selvportrett med sigarett" not in text, "Agent recommended magazine artwork 'Selvportrett med sigarett'!"
-        assert "AURA-2026-011" not in text
-        assert "AURA-2026-012" not in text
+        assert "KP-2026-011" not in text
+        assert "KP-2026-012" not in text
 
         # Must recommend at least one genuine exhibited work
         exhibited_titles = ["Skrik", "Nøkken", "Soria Moria slott", "Vinternatt i Rondane", "Pikene på broen"]
@@ -137,7 +137,7 @@ class TestMuseumsvertAntiHallucination:
             f"Expected agent to decline having Mona Lisa: '{text}'"
         )
         # Must not fabricate accession ID
-        assert "AURA-2026-9" not in text
+        assert "KP-2026-9" not in text
 
     def test_anti_hallucination_skrik_year_and_facts(self, agent):
         """Historical facts for Skrik must match DB exactly (1893, tempera/oljekritt)."""

@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-os.environ["AURA_TODAY"] = "2026-09-14"
+os.environ["KUNSTPIXEL_TODAY"] = "2026-09-14"
 
 from tests.canonical_questions import CANONICAL_QUESTIONS  # noqa: E402
 from src.kunstpixel.core.agent import MuseumsvertAgent  # noqa: E402

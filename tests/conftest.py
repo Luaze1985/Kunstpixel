@@ -21,7 +21,7 @@ def fixed_today(monkeypatch):
 
     Uten dette feiler arrangement-testene så snart kalenderen passerer seed-datoene.
     """
-    monkeypatch.setenv("AURA_TODAY", "2026-09-14")
+    monkeypatch.setenv("KUNSTPIXEL_TODAY", "2026-09-14")
 
 
 @pytest.fixture(scope="session")
@@ -34,11 +34,11 @@ def project_root() -> Path:
 def db_path() -> Path:
     """Resolve database path following config precedence:
 
-    1. AURA_DB_PATH environment variable
+    1. KUNSTPIXEL_DB_PATH environment variable
     2. data/museum.db (project local mirror)
     3. C:\\Users\\larse\\Documents\\.headroom\\memory.db (fallback original)
     """
-    env_path = os.environ.get("AURA_DB_PATH")
+    env_path = os.environ.get("KUNSTPIXEL_DB_PATH")
     if env_path and Path(env_path).exists():
         return Path(env_path)
 
@@ -55,7 +55,7 @@ def db_path() -> Path:
         return headroom_path
 
     raise FileNotFoundError(
-        "Could not find Kunstpixel database. Checked AURA_DB_PATH, "
+        "Could not find Kunstpixel database. Checked KUNSTPIXEL_DB_PATH, "
         f"{local_path}, and {headroom_path}"
     )
 
@@ -100,7 +100,7 @@ def db_baseline() -> dict:
         },
         "opening_hours_fragment": "10:00–17:00",
         "skrik_room_id": "SAL-D",
-        "skrik_artwork_id": "AURA-2026-009",
+        "skrik_artwork_id": "KP-2026-009",
     }
 
 

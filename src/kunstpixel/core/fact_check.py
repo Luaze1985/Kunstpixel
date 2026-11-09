@@ -15,7 +15,7 @@ from typing import Any
 
 from src.kunstpixel.core.db import execute_read_query
 
-AURA_ID_RE = re.compile(r"AURA-\d{4}-\d{3}")
+KP_ID_RE = re.compile(r"KP-\d{4}-\d{3}")
 ROOM_ID_RE = re.compile(r"\b(?:SAL-[A-Z]|MAG-\d)\b")
 SAL_NAME_RE = re.compile(r"\bSal ([A-E])\b")
 YEAR_RE = re.compile(r"\b(1[5-9]\d{2}|20\d{2})\b")
@@ -78,9 +78,9 @@ def verify_facts(
     lower = text.lower()
 
     # 1. ID-er først, så fjernes de fra teksten før årstallsjekk.
-    for aura_id in sorted(set(AURA_ID_RE.findall(text))):
-        if aura_id.lower() not in corpus:
-            violations.append(f"verks-ID ikke i verktøyresultat: {aura_id}")
+    for kp_id in sorted(set(KP_ID_RE.findall(text))):
+        if kp_id.lower() not in corpus:
+            violations.append(f"verks-ID ikke i verktøyresultat: {kp_id}")
     for room_id in sorted(set(ROOM_ID_RE.findall(text))):
         if room_id.lower() not in corpus:
             violations.append(f"sal-ID ikke i verktøyresultat: {room_id}")
@@ -89,7 +89,7 @@ def verify_facts(
             violations.append(f"Sal {letter} ikke i verktøyresultat")
 
     # 2. Årstall (hopp over "1800- og 1900-tallet").
-    stripped = AURA_ID_RE.sub(" ", text)
+    stripped = KP_ID_RE.sub(" ", text)
     for m in YEAR_RE.finditer(stripped):
         year = m.group(1)
         if CENTURY_TAIL_RE.match(stripped[m.end() : m.end() + 25]):

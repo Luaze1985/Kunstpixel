@@ -191,7 +191,7 @@
   ],
   "verk": [
     {
-      "id": "AURA-2026-001",
+      "id": "KP-2026-001",
       "tittel": "Nøkken",
       "kunstner_id": 1,
       "aar": 1904,
@@ -200,10 +200,10 @@
       "sal_id": "SAL-A",
       "status": "utstilt",
       "beskrivelse": "Et mørkt, blikkstille skogstjern i skumringen hvor Nøkken titter opp over vannflaten forkledd som vannliljer og to stirrende øyne. Skaper en stemning av mystikk og urovekkende stillhet. Kittelsen gir det overnaturlige en overbevisende fysisk tilstedeværelse i naturen.",
-      "proveniens": "Privat samling, Kragerø → Nasjonalgalleriet 1908 → Aura Kunstmuseum (langtidslaan)",
+      "proveniens": "Privat samling, Kragerø → Nasjonalgalleriet 1908 → Kunstpixel (langtidslaan)",
       "tilstand": "god",
       "temaer": "mytologi, folketro, natur, stemningskunst",
-      "veggtekst": "Theodor Kittelsen (1857–1914), norsk.\n_Nøkken_, 1904. Pastell og blyant på papir. AURA-2026-001.\n\nTo øyne stirrer opp fra et mørkt skogstjern i sommernatten. Det er Nøkken – den farlige vannvætten fra norsk folketro – som smelter sammen med vannliljer og mørkt vann. Kittelsen gjør det overnaturlige troverdig: her er det naturen selv som truer, stille og ubevegelig.",
+      "veggtekst": "Theodor Kittelsen (1857–1914), norsk.\n_Nøkken_, 1904. Pastell og blyant på papir. KP-2026-001.\n\nTo øyne stirrer opp fra et mørkt skogstjern i sommernatten. Det er Nøkken – den farlige vannvætten fra norsk folketro – som smelter sammen med vannliljer og mørkt vann. Kittelsen gjør det overnaturlige troverdig: her er det naturen selv som truer, stille og ubevegelig.",
       "veggtekst_status": "approved",
       "audioguide_manus": null,
       "audioguide_status": "draft",
@@ -213,7 +213,7 @@
       "kilde": "Nasjonalmuseet / DigitaltMuseum"
     },
     {
-      "id": "AURA-2026-002",
+      "id": "KP-2026-002",
       "tittel": "Soria Moria slott",
       "kunstner_id": 1,
       "aar": 1900,
@@ -222,10 +222,10 @@
       "sal_id": "SAL-A",
       "status": "utstilt",
       "beskrivelse": "Askeladden står med ryggen til betrakteren på en fjellknaus og skuer mot det lysende, gylne slottet i det fjerne over et gyllent skylag. En visuell fortelling om lengsel, eventyr og det umulige målet.",
-      "proveniens": "Kunstnerens bo → Privat samler, Oslo → Aura Kunstmuseum 2020",
+      "proveniens": "Kunstnerens bo → Privat samler, Oslo → Kunstpixel 2020",
       "tilstand": "god",
       "temaer": "eventyr, lengsel, reise, håp",
-      "veggtekst": "Theodor Kittelsen (1857–1914), norsk.\n_Soria Moria slott_, 1900. Olje på lerret. AURA-2026-002.\n\nEn liten skikkelse står på en fjellkant og ser mot et gyllent slott langt borte over skyene. Det er Askeladden – folkeeventyrets evige optimist – på vei mot det umulige. Bildet er blitt Norges mest gjenkjennelige symbol på lengsel og håp.",
+      "veggtekst": "Theodor Kittelsen (1857–1914), norsk.\n_Soria Moria slott_, 1900. Olje på lerret. KP-2026-002.\n\nEn liten skikkelse står på en fjellkant og ser mot et gyllent slott langt borte over skyene. Det er Askeladden – folkeeventyrets evige optimist – på vei mot det umulige. Bildet er blitt Norges mest gjenkjennelige symbol på lengsel og håp.",
       "veggtekst_status": "approved",
       "audioguide_manus": null,
       "audioguide_status": "draft",
@@ -235,7 +235,7 @@
       "kilde": "Nasjonalmuseet / DigitaltMuseum"
     },
     {
-      "id": "AURA-2026-003",
+      "id": "KP-2026-003",
       "tittel": "Kampen for tilværelsen",
       "kunstner_id": 2,
       "aar": 1889,
@@ -244,10 +244,10 @@
       "sal_id": "SAL-B",
       "status": "utstilt",
       "beskrivelse": "Fattige kvinner og barn samlet i en kald gate i Kristiania en vintermorgen for å motta utdeling av brød fra en bakerbutikk. Realistisk, nærmest fotografisk skildring av sosial nød i 1880-årenes Norge.",
-      "proveniens": "Kunstneren → Nasjonalgalleriet 1890 → Aura Kunstmuseum (langtidslaan)",
+      "proveniens": "Kunstneren → Nasjonalgalleriet 1890 → Kunstpixel (langtidslaan)",
       "tilstand": "utmerket",
       "temaer": "realisme, fattigdom, samfunnskritikk, historie",
-      "veggtekst": "Christian Krohg (1852–1925), norsk.\n_Kampen for tilværelsen_, 1889. Olje på lerret, 300 x 225 cm. AURA-2026-003.\n\nEn kald vintermorgen i Kristiania. Kvinner og barn presser seg sammen foran en bakerbutikk som deler ut brød. Krohg maler ikke medlidenhet – han maler virkeligheten så nær og ubarmhjertig at betrakteren tvinges til å se.",
+      "veggtekst": "Christian Krohg (1852–1925), norsk.\n_Kampen for tilværelsen_, 1889. Olje på lerret, 300 x 225 cm. KP-2026-003.\n\nEn kald vintermorgen i Kristiania. Kvinner og barn presser seg sammen foran en bakerbutikk som deler ut brød. Krohg maler ikke medlidenhet – han maler virkeligheten så nær og ubarmhjertig at betrakteren tvinges til å se.",
       "veggtekst_status": "approved",
       "audioguide_manus": null,
       "audioguide_status": "draft",
@@ -257,7 +257,7 @@
       "kilde": "Nasjonalmuseet / DigitaltMuseum"
     },
     {
-      "id": "AURA-2026-004",
+      "id": "KP-2026-004",
       "tittel": "Albertine i politilægens venteværelse",
       "kunstner_id": 2,
       "aar": 1887,
@@ -266,10 +266,10 @@
       "sal_id": "SAL-B",
       "status": "utstilt",
       "beskrivelse": "Albertine venter i en trang forstue blant andre prostituerte foran politilegens dør. Krohg skildrer ydmykelsen og den systematiske umenneskeliggjøringen av kvinner i fattigdom med skarp, journalistisk presisjon.",
-      "proveniens": "Kunstneren → Nasjonalgalleriet 1888 → Aura Kunstmuseum (langtidslaan)",
+      "proveniens": "Kunstneren → Nasjonalgalleriet 1888 → Kunstpixel (langtidslaan)",
       "tilstand": "utmerket",
       "temaer": "realisme, sosiale forhold, rettferdighet, kvinnehistorie",
-      "veggtekst": "Christian Krohg (1852–1925), norsk.\n_Albertine i politilægens venteværelse_, 1887. Olje på lerret, 211 x 326 cm. AURA-2026-004.\n\nEn ung kvinne sitter blant andre prostituerte i et overfylt venteværelse. Krohg malte bildet som illustrasjon til sin egen roman «Albertine», som ble beslaglagt av politiet. Både boken og maleriet var et frontalangrep på det regulerte prostitusjonssystemet i Kristiania.",
+      "veggtekst": "Christian Krohg (1852–1925), norsk.\n_Albertine i politilægens venteværelse_, 1887. Olje på lerret, 211 x 326 cm. KP-2026-004.\n\nEn ung kvinne sitter blant andre prostituerte i et overfylt venteværelse. Krohg malte bildet som illustrasjon til sin egen roman «Albertine», som ble beslaglagt av politiet. Både boken og maleriet var et frontalangrep på det regulerte prostitusjonssystemet i Kristiania.",
       "veggtekst_status": "approved",
       "audioguide_manus": null,
       "audioguide_status": "draft",
@@ -279,7 +279,7 @@
       "kilde": "Nasjonalmuseet / DigitaltMuseum"
     },
     {
-      "id": "AURA-2026-005",
+      "id": "KP-2026-005",
       "tittel": "Blått interiør",
       "kunstner_id": 3,
       "aar": 1883,
@@ -288,10 +288,10 @@
       "sal_id": "SAL-C",
       "status": "utstilt",
       "beskrivelse": "En kvinne i profil som syr i en stue badet i kjølig, blålig dagslys fra et vindu. Mesterlig studie i lysets refleksjon og fargespill i et interiør. Backer overfører impresjonismens friluftsoppmerksomhet på lys til det intime inneområdet.",
-      "proveniens": "Privat samling, Christiania → Aura Kunstmuseum 2018",
+      "proveniens": "Privat samling, Christiania → Kunstpixel 2018",
       "tilstand": "utmerket",
       "temaer": "lysstudie, interiør, hverdagsliv, fargetone",
-      "veggtekst": "Harriet Backer (1845–1932), norsk.\n_Blått interiør_, 1883. Olje på lerret, 84 x 66 cm. AURA-2026-005.\n\nEn kvinne sitter i profil og syr i dagslyset fra et vindu. Hele rommet er tonet i kjølig blått, men innenfor denne tilsynelatende enhetlige fargetonen finner Backer et utall nyanser og reflekser. Det er lyset – ikke kvinnen – som er det egentlige motivet.",
+      "veggtekst": "Harriet Backer (1845–1932), norsk.\n_Blått interiør_, 1883. Olje på lerret, 84 x 66 cm. KP-2026-005.\n\nEn kvinne sitter i profil og syr i dagslyset fra et vindu. Hele rommet er tonet i kjølig blått, men innenfor denne tilsynelatende enhetlige fargetonen finner Backer et utall nyanser og reflekser. Det er lyset – ikke kvinnen – som er det egentlige motivet.",
       "veggtekst_status": "approved",
       "audioguide_manus": null,
       "audioguide_status": "draft",
@@ -301,7 +301,7 @@
       "kilde": "Nasjonalmuseet / DigitaltMuseum"
     },
     {
-      "id": "AURA-2026-006",
+      "id": "KP-2026-006",
       "tittel": "Barnedåp i Tanum kirke",
       "kunstner_id": 3,
       "aar": 1892,
@@ -310,10 +310,10 @@
       "sal_id": "SAL-C",
       "status": "utstilt",
       "beskrivelse": "Solen flommer inn gjennom kirkevinduene i den gamle steinkirken under en dåpshandling. Kontrasten mellom det varme sollyset og det kjølige kirkerommet er sentral. Backer formidler en stille høytid gjennom ren lysbehandling.",
-      "proveniens": "Nasjonalgalleriet 1893 → Aura Kunstmuseum (langtidslaan)",
+      "proveniens": "Nasjonalgalleriet 1893 → Kunstpixel (langtidslaan)",
       "tilstand": "god",
       "temaer": "lys, tradisjon, arkitektur, åndelighet",
-      "veggtekst": "Harriet Backer (1845–1932), norsk.\n_Barnedåp i Tanum kirke_, 1892. Olje på lerret, 109 x 142 cm. AURA-2026-006.\n\nSollyset strømmer inn gjennom de små vinduene i den middelalderske steinkirken og treffer dåpsfølget i en varm, gyllen stråle. Backer maler høytid uten sentimentalitet – det er det guddommelige lyset selv som bærer seremonien.",
+      "veggtekst": "Harriet Backer (1845–1932), norsk.\n_Barnedåp i Tanum kirke_, 1892. Olje på lerret, 109 x 142 cm. KP-2026-006.\n\nSollyset strømmer inn gjennom de små vinduene i den middelalderske steinkirken og treffer dåpsfølget i en varm, gyllen stråle. Backer maler høytid uten sentimentalitet – det er det guddommelige lyset selv som bærer seremonien.",
       "veggtekst_status": "approved",
       "audioguide_manus": null,
       "audioguide_status": "draft",
@@ -323,7 +323,7 @@
       "kilde": "Nasjonalmuseet / DigitaltMuseum"
     },
     {
-      "id": "AURA-2026-007",
+      "id": "KP-2026-007",
       "tittel": "Vinternatt i Rondane",
       "kunstner_id": 4,
       "aar": 1914,
@@ -332,10 +332,10 @@
       "sal_id": "SAL-A",
       "status": "utstilt",
       "beskrivelse": "De snøkledde Rondane-toppene under en dyp, mørkeblå stjernehimmel med en lysende korsstjerne over fjellmassivet. Sohlberg arbeidet med dette motivet i over 14 år. Verket regnes som Norges uoffisielle nasjonalmaleri.",
-      "proveniens": "Kunstneren → Nasjonalgalleriet 1918 → Aura Kunstmuseum (langtidslaan)",
+      "proveniens": "Kunstneren → Nasjonalgalleriet 1918 → Kunstpixel (langtidslaan)",
       "tilstand": "utmerket",
       "temaer": "høyfjell, natt, stillhet, symbolisme, vinter",
-      "veggtekst": "Harald Sohlberg (1869–1935), norsk.\n_Vinternatt i Rondane_, 1914. Olje på lerret, 160 x 180 cm. AURA-2026-007.\n\nSnødekte fjelltopper reiser seg under en uendelig blå nattehimmel. En ensom stjerne lyser over landskapet. Sohlberg arbeidet med dette motivet i over 14 år – resultatet er et bilde der stillheten nærmest føles fysisk. Mange kaller det Norges vakreste maleri.",
+      "veggtekst": "Harald Sohlberg (1869–1935), norsk.\n_Vinternatt i Rondane_, 1914. Olje på lerret, 160 x 180 cm. KP-2026-007.\n\nSnødekte fjelltopper reiser seg under en uendelig blå nattehimmel. En ensom stjerne lyser over landskapet. Sohlberg arbeidet med dette motivet i over 14 år – resultatet er et bilde der stillheten nærmest føles fysisk. Mange kaller det Norges vakreste maleri.",
       "veggtekst_status": "approved",
       "audioguide_manus": null,
       "audioguide_status": "draft",
@@ -345,7 +345,7 @@
       "kilde": "Nasjonalmuseet / DigitaltMuseum"
     },
     {
-      "id": "AURA-2026-008",
+      "id": "KP-2026-008",
       "tittel": "Jonsokbål",
       "kunstner_id": 5,
       "aar": 1926,
@@ -354,10 +354,10 @@
       "sal_id": "SAL-A",
       "status": "utstilt",
       "beskrivelse": "Folk som danser rundt flammende sankthansbål på Jølster med bratte vestlandsfjell i bakgrunnen. Intense, nærmest gloende farger og flat, dekorativ komposisjon. Bålet lyser opp menneskene og landskapet i en hedensk feiring av den lengste natten.",
-      "proveniens": "Astrup-samlerne, Jølster → KODE Bergen → Aura Kunstmuseum (deponering)",
+      "proveniens": "Astrup-samlerne, Jølster → KODE Bergen → Kunstpixel (deponering)",
       "tilstand": "god",
       "temaer": "vestlandet, tradisjon, bål, naturkraft, fargeeksplosjon",
-      "veggtekst": "Nikolai Astrup (1880–1928), norsk.\n_Jonsokbål_, 1926. Olje på lerret, 134 x 197 cm. AURA-2026-008.\n\nEn midtsommernatt på Jølster. Bålet flammer høyt mot de bratte fjellsidene mens folk danser i ringene av rødt, oransje og gult lys. Astrup maler Vestlandet som et sted der natur og folketro glir inn i hverandre – magisk, levende og intenst.",
+      "veggtekst": "Nikolai Astrup (1880–1928), norsk.\n_Jonsokbål_, 1926. Olje på lerret, 134 x 197 cm. KP-2026-008.\n\nEn midtsommernatt på Jølster. Bålet flammer høyt mot de bratte fjellsidene mens folk danser i ringene av rødt, oransje og gult lys. Astrup maler Vestlandet som et sted der natur og folketro glir inn i hverandre – magisk, levende og intenst.",
       "veggtekst_status": "approved",
       "audioguide_manus": null,
       "audioguide_status": "draft",
@@ -367,7 +367,7 @@
       "kilde": "KODE Bergen / DigitaltMuseum"
     },
     {
-      "id": "AURA-2026-009",
+      "id": "KP-2026-009",
       "tittel": "Skrik",
       "kunstner_id": 6,
       "aar": 1893,
@@ -376,10 +376,10 @@
       "sal_id": "SAL-D",
       "status": "utstilt",
       "beskrivelse": "En skikkelse som holder seg for ørene på en bro under en blodrodt himmel, overveldet av det store uendelige skriket gjennom naturen. Ikonisk ekspresjonistisk mesterverk og et av verdens mest gjenkjennelige kunstverk.",
-      "proveniens": "Munch selv → Oslo kommune 1944 (testamentarisk gave) → Aura Kunstmuseum (langtidslaan fra Munchmuseet)",
+      "proveniens": "Munch selv → Oslo kommune 1944 (testamentarisk gave) → Kunstpixel (langtidslaan fra Munchmuseet)",
       "tilstand": "god",
       "temaer": "angst, eksistens, ekspresjonisme, modernitet",
-      "veggtekst": "Edvard Munch (1863–1944), norsk.\n_Skrik_, 1893. Tempera og oljekritt på papp, 91 x 73.5 cm. AURA-2026-009.\n\nEn skikkelse på en bro griper seg til hodet under en blodrød himmel. Munch selv beskrev opplevelsen: «Jeg følte det store uendelige skrik gjennom naturen.» Bildet har blitt et universelt symbol på den moderne menneskets angst og fremmedgjøring.",
+      "veggtekst": "Edvard Munch (1863–1944), norsk.\n_Skrik_, 1893. Tempera og oljekritt på papp, 91 x 73.5 cm. KP-2026-009.\n\nEn skikkelse på en bro griper seg til hodet under en blodrød himmel. Munch selv beskrev opplevelsen: «Jeg følte det store uendelige skrik gjennom naturen.» Bildet har blitt et universelt symbol på den moderne menneskets angst og fremmedgjøring.",
       "veggtekst_status": "approved",
       "audioguide_manus": null,
       "audioguide_status": "draft",
@@ -389,7 +389,7 @@
       "kilde": "Munchmuseet / Store norske leksikon"
     },
     {
-      "id": "AURA-2026-010",
+      "id": "KP-2026-010",
       "tittel": "Pikene på broen",
       "kunstner_id": 6,
       "aar": 1901,
@@ -398,10 +398,10 @@
       "sal_id": "SAL-D",
       "status": "utstilt",
       "beskrivelse": "Tre unge kvinner lener seg over rekkverket på bryggen i Åsgaardstrand en lys sommernatt, speilet i det mørke vannet. Et av Munchs mest harmoniske og lyriske motiver, malt i en rekke versjoner.",
-      "proveniens": "Privat samling → Auksjon Oslo 2015 → Aura Kunstmuseum 2016",
+      "proveniens": "Privat samling → Auksjon Oslo 2015 → Kunstpixel 2016",
       "tilstand": "utmerket",
       "temaer": "sommernatt, ungdom, stemning, melankoli",
-      "veggtekst": "Edvard Munch (1863–1944), norsk.\n_Pikene på broen_, 1901. Olje på lerret, 136 x 125 cm. AURA-2026-010.\n\nTre unge kvinner lener seg over brorekkverket i Åsgaardstrand en lys sommernatt. Ansiktene er vendt ned mot det mørke vannet. Munch malte dette motivet mange ganger – det var ett av de sjeldne bildene hans fylt av ro, lengsel og en forsiktig varme.",
+      "veggtekst": "Edvard Munch (1863–1944), norsk.\n_Pikene på broen_, 1901. Olje på lerret, 136 x 125 cm. KP-2026-010.\n\nTre unge kvinner lener seg over brorekkverket i Åsgaardstrand en lys sommernatt. Ansiktene er vendt ned mot det mørke vannet. Munch malte dette motivet mange ganger – det var ett av de sjeldne bildene hans fylt av ro, lengsel og en forsiktig varme.",
       "veggtekst_status": "approved",
       "audioguide_manus": null,
       "audioguide_status": "draft",
@@ -411,7 +411,7 @@
       "kilde": "Munchmuseet / DigitaltMuseum"
     },
     {
-      "id": "AURA-2026-011",
+      "id": "KP-2026-011",
       "tittel": "Brudeferd i Hardanger",
       "kunstner_id": 7,
       "aar": 1848,
@@ -420,7 +420,7 @@
       "sal_id": "MAG-1",
       "status": "magasin",
       "beskrivelse": "Et brudefølge i båt over en speilblank fjord med bunader, spillemann og dramatisk fjellandskap. Samarbeid mellom Adolph Tidemand (figurene) og Hans Gude (landskapet). Hovedverket i norsk nasjonalromantikk.",
-      "proveniens": "Kunstfondets samling 1849 → Nasjonalgalleriet → Aura Kunstmuseum (langtidslaan, i magasin for klimatilpasning)",
+      "proveniens": "Kunstfondets samling 1849 → Nasjonalgalleriet → Kunstpixel (langtidslaan, i magasin for klimatilpasning)",
       "tilstand": "akseptabel",
       "temaer": "nasjonalromantikk, folkedrakter, fjord, bryllup",
       "veggtekst": null,
@@ -433,7 +433,7 @@
       "kilde": "Nasjonalmuseet / DigitaltMuseum"
     },
     {
-      "id": "AURA-2026-012",
+      "id": "KP-2026-012",
       "tittel": "Selvportrett med sigarett",
       "kunstner_id": 6,
       "aar": 1895,
@@ -442,7 +442,7 @@
       "sal_id": "MAG-1",
       "status": "magasin",
       "beskrivelse": "Kunstneren trer frem fra et mørkt, blåaktig røykfylt mørke med en tent sigarett i hånden. Et psykologisk selvportrett der Munch søker å fange sitt eget indre liv gjennom dramatisk chiaroscuro.",
-      "proveniens": "Munchs testamentariske gave til Oslo kommune 1944 → Aura Kunstmuseum (langtidslaan)",
+      "proveniens": "Munchs testamentariske gave til Oslo kommune 1944 → Kunstpixel (langtidslaan)",
       "tilstand": "god",
       "temaer": "selvportrett, bohem, psykologi, skygge",
       "veggtekst": null,
@@ -455,7 +455,7 @@
       "kilde": "Munchmuseet / DigitaltMuseum"
     },
     {
-      "id": "AURA-2026-013",
+      "id": "KP-2026-013",
       "tittel": "Sommernatt ved Kysten",
       "kunstner_id": 9,
       "aar": 1886,
@@ -464,10 +464,10 @@
       "sal_id": "SAL-C",
       "status": "utstilt",
       "beskrivelse": "Et stille kystlandskap fra Jæren badet i nordisk sommerlys. Kielland fanger den karakteristiske flate horisontlinjen og det myke lyset som gir Vestlandets kystlinje et droemmeaktig preg. Maleriet markerer overgangen fra akademisk landskapsmaleri til plein air-realisme i norsk kunst.",
-      "proveniens": "Privat samling, Stavanger → Stavanger kunstmuseum → Aura Kunstmuseum (deponering 2022)",
+      "proveniens": "Privat samling, Stavanger → Stavanger kunstmuseum → Kunstpixel (deponering 2022)",
       "tilstand": "god",
       "temaer": "kystlandskap, sommerlys, plein air, Jæren",
-      "veggtekst": "Kitty Kielland (1843–1914), norsk.\n_Sommernatt ved Kysten_, 1886. Olje på lerret, 100 x 136 cm. AURA-2026-013.\n\nJærkysten bader i blå-lilla sommernattlys. Horisontlinjen løper flat og uavbrutt gjennom bildet. Kielland var blant de første norske kvinnene som malte utendørs på stedet, og dette bildet er et bevis på at den rolige observasjonen kan være like kraftfull som det dramatiske.",
+      "veggtekst": "Kitty Kielland (1843–1914), norsk.\n_Sommernatt ved Kysten_, 1886. Olje på lerret, 100 x 136 cm. KP-2026-013.\n\nJærkysten bader i blå-lilla sommernattlys. Horisontlinjen løper flat og uavbrutt gjennom bildet. Kielland var blant de første norske kvinnene som malte utendørs på stedet, og dette bildet er et bevis på at den rolige observasjonen kan være like kraftfull som det dramatiske.",
       "veggtekst_status": "approved",
       "audioguide_manus": null,
       "audioguide_status": "draft",
@@ -477,7 +477,7 @@
       "kilde": "Stavanger kunstmuseum / DigitaltMuseum"
     },
     {
-      "id": "AURA-2026-014",
+      "id": "KP-2026-014",
       "tittel": "En bondebegravelse",
       "kunstner_id": 10,
       "aar": 1885,
@@ -486,10 +486,10 @@
       "sal_id": "SAL-B",
       "status": "utstilt",
       "beskrivelse": "Et begravelsesfylge med hest og vogn i et stillferdig norsk kulturlandskap. Werenskiold skildrer bygdelivets alvor uten sentimentalitet – menneskene er små mot landskapet, men verdigheten er uhyre stor.",
-      "proveniens": "Nasjonalgalleriet → Aura Kunstmuseum (langtidslaan)",
+      "proveniens": "Nasjonalgalleriet → Kunstpixel (langtidslaan)",
       "tilstand": "god",
       "temaer": "realisme, bygdeliv, høytid, landskap",
-      "veggtekst": "Erik Werenskiold (1855–1938), norsk.\n_En bondebegravelse_, 1885. Olje på lerret, 102 x 150 cm. AURA-2026-014.\n\nEt begravelsesfylge beveger seg gjennom et norsk sommerlandskap. Werenskiold maler ingen tungsind – bare stille, verdig alvor. Menneskene er små i landskapet, men det er nettopp denne beskjedenheten som gir scenen sin uimotståelige verdighet.",
+      "veggtekst": "Erik Werenskiold (1855–1938), norsk.\n_En bondebegravelse_, 1885. Olje på lerret, 102 x 150 cm. KP-2026-014.\n\nEt begravelsesfylge beveger seg gjennom et norsk sommerlandskap. Werenskiold maler ingen tungsind – bare stille, verdig alvor. Menneskene er små i landskapet, men det er nettopp denne beskjedenheten som gir scenen sin uimotståelige verdighet.",
       "veggtekst_status": "approved",
       "audioguide_manus": null,
       "audioguide_status": "draft",
@@ -499,7 +499,7 @@
       "kilde": "Nasjonalmuseet / DigitaltMuseum"
     },
     {
-      "id": "AURA-2026-015",
+      "id": "KP-2026-015",
       "tittel": "Vinter på Simoa",
       "kunstner_id": 11,
       "aar": 1883,
@@ -508,10 +508,10 @@
       "sal_id": "SAL-C",
       "status": "utstilt",
       "beskrivelse": "En frossen elv med snødekte trear langs bredden, malt med Thaulows karakteristiske virtuose penselføring der vannet og isen glitrer i blå-hvitt vinterlys. Thaulow er særlig kjent for sine bekkemotiver og vinterscener.",
-      "proveniens": "Privat samling, Paris → Auksjon London 2010 → Aura Kunstmuseum 2011",
+      "proveniens": "Privat samling, Paris → Auksjon London 2010 → Kunstpixel 2011",
       "tilstand": "utmerket",
       "temaer": "vinter, vann, is, plein air, virtuositet",
-      "veggtekst": "Frits Thaulow (1847–1906), norsk.\n_Vinter på Simoa_, 1883. Olje på lerret, 60 x 100 cm. AURA-2026-015.\n\nEn frossen elv glitrer i vintersolen. Thaulow hadde et nærmest magisk grep om å male vann i alle aggregattilstander – rennende, stille, frossent. Her får isen og snøen en krystallklar skjønnhet som gjør vinteren til noe vakkert.",
+      "veggtekst": "Frits Thaulow (1847–1906), norsk.\n_Vinter på Simoa_, 1883. Olje på lerret, 60 x 100 cm. KP-2026-015.\n\nEn frossen elv glitrer i vintersolen. Thaulow hadde et nærmest magisk grep om å male vann i alle aggregattilstander – rennende, stille, frossent. Her får isen og snøen en krystallklar skjønnhet som gjør vinteren til noe vakkert.",
       "veggtekst_status": "approved",
       "audioguide_manus": null,
       "audioguide_status": "draft",
@@ -521,7 +521,7 @@
       "kilde": "Nasjonalmuseet / DigitaltMuseum"
     },
     {
-      "id": "AURA-2026-016",
+      "id": "KP-2026-016",
       "tittel": "N. 7 – Stor blå fjellform",
       "kunstner_id": 12,
       "aar": 1967,
@@ -530,10 +530,10 @@
       "sal_id": "SAL-D",
       "status": "utstilt",
       "beskrivelse": "En monumental, abstrakt fjellform i dype blåtoner med solvblad som gir en indre luminositet. Bergman forener arktisk norsk natur med abstrakt modernisme på en måte som er unik i europeisk kunst.",
-      "proveniens": "Fondation Hartung-Bergman, Antibes → Aura Kunstmuseum (langtidslaan 2023)",
+      "proveniens": "Fondation Hartung-Bergman, Antibes → Kunstpixel (langtidslaan 2023)",
       "tilstand": "utmerket",
       "temaer": "abstraksjon, fjell, lys, metallblad, modernisme",
-      "veggtekst": "Anna-Eva Bergman (1909–1987), norsk.\n_N. 7 – Stor blå fjellform_, 1967. Olje og metallblad på lerret, 162 x 200 cm. AURA-2026-016.\n\nEn enorm, dypblå fjellform stiger opp fra bildets bunn. Under malingens overflate skimtes solvblad som gir fjellet et indre lys. Bergman tok det norske fjellandskapet med seg til Sør-Frankrike og forente det med europeisk abstraksjon til noe helt eget.",
+      "veggtekst": "Anna-Eva Bergman (1909–1987), norsk.\n_N. 7 – Stor blå fjellform_, 1967. Olje og metallblad på lerret, 162 x 200 cm. KP-2026-016.\n\nEn enorm, dypblå fjellform stiger opp fra bildets bunn. Under malingens overflate skimtes solvblad som gir fjellet et indre lys. Bergman tok det norske fjellandskapet med seg til Sør-Frankrike og forente det med europeisk abstraksjon til noe helt eget.",
       "veggtekst_status": "approved",
       "audioguide_manus": null,
       "audioguide_status": "draft",
@@ -584,91 +584,91 @@
   "utstilling_verk": [
     {
       "utstilling_id": "UTST-2026-H",
-      "verk_id": "AURA-2026-001",
+      "verk_id": "KP-2026-001",
       "sal_plassering": "SAL-A venstre vegg",
       "rekkefølge": 1
     },
     {
       "utstilling_id": "UTST-2026-H",
-      "verk_id": "AURA-2026-002",
+      "verk_id": "KP-2026-002",
       "sal_plassering": "SAL-A venstre vegg",
       "rekkefølge": 2
     },
     {
       "utstilling_id": "UTST-2026-H",
-      "verk_id": "AURA-2026-007",
+      "verk_id": "KP-2026-007",
       "sal_plassering": "SAL-A hovedvegg",
       "rekkefølge": 3
     },
     {
       "utstilling_id": "UTST-2026-H",
-      "verk_id": "AURA-2026-008",
+      "verk_id": "KP-2026-008",
       "sal_plassering": "SAL-A hoeyre vegg",
       "rekkefølge": 4
     },
     {
       "utstilling_id": "UTST-2026-H",
-      "verk_id": "AURA-2026-009",
+      "verk_id": "KP-2026-009",
       "sal_plassering": "SAL-D hovedvegg",
       "rekkefølge": 5
     },
     {
       "utstilling_id": "UTST-2026-H",
-      "verk_id": "AURA-2026-010",
+      "verk_id": "KP-2026-010",
       "sal_plassering": "SAL-D venstre vegg",
       "rekkefølge": 6
     },
     {
       "utstilling_id": "UTST-2026-H",
-      "verk_id": "AURA-2026-016",
+      "verk_id": "KP-2026-016",
       "sal_plassering": "SAL-D hoeyre vegg",
       "rekkefølge": 7
     },
     {
       "utstilling_id": "UTST-2026-H",
-      "verk_id": "AURA-2026-012",
+      "verk_id": "KP-2026-012",
       "sal_plassering": "SAL-D bakvegg",
       "rekkefølge": 8
     },
     {
       "utstilling_id": "UTST-2026-S",
-      "verk_id": "AURA-2026-005",
+      "verk_id": "KP-2026-005",
       "sal_plassering": "SAL-C venstre vegg",
       "rekkefølge": 1
     },
     {
       "utstilling_id": "UTST-2026-S",
-      "verk_id": "AURA-2026-006",
+      "verk_id": "KP-2026-006",
       "sal_plassering": "SAL-C hovedvegg",
       "rekkefølge": 2
     },
     {
       "utstilling_id": "UTST-2026-S",
-      "verk_id": "AURA-2026-013",
+      "verk_id": "KP-2026-013",
       "sal_plassering": "SAL-C hoeyre vegg",
       "rekkefølge": 3
     },
     {
       "utstilling_id": "UTST-2026-S",
-      "verk_id": "AURA-2026-015",
+      "verk_id": "KP-2026-015",
       "sal_plassering": "SAL-C bakvegg",
       "rekkefølge": 4
     },
     {
       "utstilling_id": "UTST-2027-V",
-      "verk_id": "AURA-2026-003",
+      "verk_id": "KP-2026-003",
       "sal_plassering": "SAL-B hovedvegg",
       "rekkefølge": 1
     },
     {
       "utstilling_id": "UTST-2027-V",
-      "verk_id": "AURA-2026-004",
+      "verk_id": "KP-2026-004",
       "sal_plassering": "SAL-B venstre vegg",
       "rekkefølge": 2
     },
     {
       "utstilling_id": "UTST-2027-V",
-      "verk_id": "AURA-2026-014",
+      "verk_id": "KP-2026-014",
       "sal_plassering": "SAL-B hoeyre vegg",
       "rekkefølge": 3
     }

@@ -1,4 +1,4 @@
-# E2E Test Infra: Aura Museum Bygningsmodell & Kartpakke
+# E2E Test Infra: Kunstpixel Bygningsmodell & Kartpakke
 
 ## Test Philosophy
 - **Opaque-box, requirement-driven**: Testene verifiserer at de produserte artefaktene (`bygning_geometri.json`, `plantegning_u1.svg`, `plantegning_p1.svg`, `plantegning_p2.svg`, `index.html`) oppfyller alle krav i NS 8351, NS 3940, DiBK brannkonsept og Kartverket MCP uavhengig av intern implementering.

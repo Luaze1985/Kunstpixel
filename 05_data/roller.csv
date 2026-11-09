@@ -1,5 +1,5 @@
 kode,navn,trigger,beskrivelse,datakilde
-A,Museumsdirektør,/direktor,Orkestrator og leder for Aura Kunstmuseum,syntetisk (team_roster)
+A,Museumsdirektør,/direktor,Orkestrator og leder for Kunstpixel,syntetisk (team_roster)
 B,Samlingsforvalter,/samlingsforvalter,Registrar og ansvarlig for samling og metadata,syntetisk (team_roster)
 C,Kurator,/kurator,Faglig skaper og utstillingsansvarlig,syntetisk (team_roster)
 D,Formidler,/formidler,Publikumstekst og formidlingsopplegg,syntetisk (team_roster)

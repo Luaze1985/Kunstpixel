@@ -1,6 +1,6 @@
 ## 2026-09-14T16:20:31Z
 
-You are the QA Verification Worker for Aura Kunstmuseum demo-prototype.
+You are the QA Verification Worker for Kunstpixel demo-prototype.
 Your working directory is: g:/Min disk/Fellesprosjekt KI/.agents/worker_final_verify
 
 The authoritative original user request is at: g:/Min disk/Fellesprosjekt KI/.agents/ORIGINAL_REQUEST.md

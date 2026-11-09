@@ -39,7 +39,7 @@ Alvorlighetsgrad: **H** = synlig feil i demo, **M** = forvirrer publikum, **L** 
 | F12 | L | `arena.html:265` | «Live» betyr «kan kjøres» (uten KI), men ordet sier ikke det. Nummereringen hopper også (D5 før D4, P1 mangler). | Sidetekst `/arena`, kall mot `/api/arena/kjor` |
 | F15 | H | `arena.html:219` (grensemodus) | De fem grensecasene viser ikke at de krever KI. Med KI av gir kjøringen feil 503. | `/api/grense/kjor` → 503 |
 | F13 | L | Rapport | GRUNNLAG viser rå JSON (`get_report_assessment({"sporsmal_id":…})`) uten å være foldet inn. | Sidetekst |
-| F14 | L | Forsiden | Museet heter «Aura Kunstmuseum» i appen og «Kunstpixel» i README. | Grep |
+| F14 | L | Forsiden | Museet heter «Kunstpixel» i appen og «Kunstpixel» i README. | Grep |
 
 ---
 
@@ -52,7 +52,7 @@ Disse endrer hva appen viser eller for hvem. Lars avgjør dem, agentene gjør de
 | B1 | Skal forsiden starte med demoflatene over rollene? (F9) | Ja, med Arena først (virker uten KI). Chat og grensemodus merkes «krever KI», fordi demoen starter med KI av. |
 | B2 | Skal «Finn svar» gå rett til full rapport? (F3) | Ja, med svarsetningen som ingress i rapporten. |
 | B3 | Ett ord for KI i UI-et? (F5) | «KI» overalt. «AI-forslag» blir «KI-forslag». |
-| B4 | Navnet på museet i UI-et? (F14) | Behold «Aura Kunstmuseum», det er datagrunnlaget. Lars skriver én setning i README (ingen gren). |
+| B4 | Navnet på museet i UI-et? (F14) | Behold «Kunstpixel», det er datagrunnlaget. Lars skriver én setning i README (ingen gren). |
 | B5 | Slå sammen rollesettene? (F10) | Nei, ikke nå. Det er en datamodellendring. Vi gir dem ulike navn i stedet. |
 
 ---

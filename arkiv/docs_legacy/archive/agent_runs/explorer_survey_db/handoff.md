@@ -1,9 +1,9 @@
-# Handoff Report: SQLite Database and Data Layer Survey for Aura Kunstmuseum
+# Handoff Report: SQLite Database and Data Layer Survey for Kunstpixel
 
 **Date:** 2026-09-14  
 **Agent:** Explorer (explorer_survey_db)  
 **Status:** Hard Handoff (Investigation Complete)  
-**Target Project:** Aura Kunstmuseum Demo-Prototype  
+**Target Project:** Kunstpixel Demo-Prototype  
 
 ---
 
@@ -32,7 +32,7 @@ The SQLite database contains 7 business tables (and `sqlite_sequence`), with a t
 | `kunstnere` | 12 | `id` (INTEGER AUTOINCREMENT) | Artists with biographical metadata, movement, and techniques |
 | `saler` | 6 | `id` (TEXT) | Exhibition halls and storage (`SAL-A` to `SAL-E`, `MAG-1`) |
 | `utstillinger` | 3 | `id` (TEXT) | Exhibitions (`UTST-2026-H`, `UTST-2026-S`, `UTST-2027-V`) |
-| `verk` | 16 | `id` (TEXT) | Artworks (`AURA-2026-001` to `016`), status, wall text, provenance |
+| `verk` | 16 | `id` (TEXT) | Artworks (`KP-2026-001` to `016`), status, wall text, provenance |
 | `utstilling_verk` | 15 | `(utstilling_id, verk_id)` | Link table with `sal_plassering` and `rekkefølge` |
 | `hendelser` | 8 | `id` (INTEGER AUTOINCREMENT) | Events (tours, workshops, lectures, children events) |
 | `publikum_faq` | 12 | `id` (INTEGER AUTOINCREMENT) | Visitor FAQ with questions, answers, category, and frequency |
@@ -145,13 +145,13 @@ The SQLite database contains 7 business tables (and `sqlite_sequence`), with a t
   ```
 
 ### 1.3 `data/samling.json` vs SQLite `verk`
-- `data/samling.json` contains 12 items (`AURA-2026-001` through `AURA-2026-012`).
-- The SQLite table `verk` contains 16 items (`AURA-2026-001` through `AURA-2026-016`).
+- `data/samling.json` contains 12 items (`KP-2026-001` through `KP-2026-012`).
+- The SQLite table `verk` contains 16 items (`KP-2026-001` through `KP-2026-016`).
 - The 4 additional artworks in SQLite are:
-  - `AURA-2026-013`: Kitty Kielland, _Sommernatt ved Kysten_ (1886), SAL-C, utstilt
-  - `AURA-2026-014`: Erik Werenskiold, _En bondebegravelse_ (1885), SAL-B, utstilt
-  - `AURA-2026-015`: Frits Thaulow, _Vinter p? Simoa_ (1883), SAL-C, utstilt
-  - `AURA-2026-016`: Anna-Eva Bergman, _N. 7 ? Stor bl? fjellform_ (1967), SAL-D, utstilt
+  - `KP-2026-013`: Kitty Kielland, _Sommernatt ved Kysten_ (1886), SAL-C, utstilt
+  - `KP-2026-014`: Erik Werenskiold, _En bondebegravelse_ (1885), SAL-B, utstilt
+  - `KP-2026-015`: Frits Thaulow, _Vinter p? Simoa_ (1883), SAL-C, utstilt
+  - `KP-2026-016`: Anna-Eva Bergman, _N. 7 ? Stor bl? fjellform_ (1967), SAL-D, utstilt
 - All 12 items in `data/samling.json` match their SQLite counterparts in `id`, `tittel`, `aar`, and artist attribution.
 
 ---
@@ -188,8 +188,8 @@ The SQLite database contains 7 business tables (and `sqlite_sequence`), with a t
   ORDER BY v.aar ASC;
   ```
 - **Execution Result for "Kittelsen":**
-  1. `AURA-2026-002`: _Soria Moria slott_ | Theodor Kittelsen | 1900 | Olje p? lerret | Sal A ? Mytologi og natur | Status: utstilt
-  2. `AURA-2026-001`: _N?kken_ | Theodor Kittelsen | 1904 | Pastell og blyant p? papir | Sal A ? Mytologi og natur | Status: utstilt
+  1. `KP-2026-002`: _Soria Moria slott_ | Theodor Kittelsen | 1900 | Olje p? lerret | Sal A ? Mytologi og natur | Status: utstilt
+  2. `KP-2026-001`: _N?kken_ | Theodor Kittelsen | 1904 | Pastell og blyant p? papir | Sal A ? Mytologi og natur | Status: utstilt
 - **Passes Acceptance Criteria:** Exactly 2 artworks returned with full metadata (>= 2 required).
 
 ### 2.2 Tool 2: Verksdetaljer (Artwork Details)
@@ -231,12 +231,12 @@ The SQLite database contains 7 business tables (and `sqlite_sequence`), with a t
   LEFT JOIN utstillinger u ON uv.utstilling_id = u.id AND u.status = 'aktiv'
   WHERE v.id = :identifier OR LOWER(v.tittel) = LOWER(:identifier);
   ```
-- **Execution Result for "Skrik" (`AURA-2026-009`):**
+- **Execution Result for "Skrik" (`KP-2026-009`):**
   - Artist: Edvard Munch (1863?1944), norsk.
   - Technique: Tempera og oljekritt p? papp, 91 x 73.5 cm (1893).
   - Room: Sal D ? Eksistens og modernisme (2. etasje), `sal_plassering`: "SAL-D hovedvegg", Order: 5.
   - Exhibition: Active in `UTST-2026-H` (_Stille kraft_).
-  - Proveniens: "Munch selv ? Oslo kommune 1944 (testamentarisk gave) ? Aura Kunstmuseum (langtidslaan fra Munchmuseet)"
+  - Proveniens: "Munch selv ? Oslo kommune 1944 (testamentarisk gave) ? Kunstpixel (langtidslaan fra Munchmuseet)"
   - Veggtekst: Approved, 54 words, strictly adheres to quality rules.
 - **Passes Acceptance Criteria:** All metadata fields are present and verified.
 
@@ -260,9 +260,9 @@ The SQLite database contains 7 business tables (and `sqlite_sequence`), with a t
   ORDER BY visningsrekkefølge ASC;
   ```
 - **Execution Result for "SAL-D":**
-  1. `AURA-2026-009`: _Skrik_ | Edvard Munch (1893) | Plassering: `SAL-D hovedvegg` | Rekkefølge: 5
-  2. `AURA-2026-010`: _Pikene på broen_ | Edvard Munch (1901) | Plassering: `SAL-D venstre vegg` | Rekkefølge: 6
-  3. `AURA-2026-016`: _N. 7 – Stor blå fjellform_ | Anna-Eva Bergman (1967) | Plassering: `SAL-D hoeyre vegg` | Rekkefølge: 7
+  1. `KP-2026-009`: _Skrik_ | Edvard Munch (1893) | Plassering: `SAL-D hovedvegg` | Rekkefølge: 5
+  2. `KP-2026-010`: _Pikene på broen_ | Edvard Munch (1901) | Plassering: `SAL-D venstre vegg` | Rekkefølge: 6
+  3. `KP-2026-016`: _N. 7 – Stor blå fjellform_ | Anna-Eva Bergman (1967) | Plassering: `SAL-D hoeyre vegg` | Rekkefølge: 7
 - **Passes Acceptance Criteria:** Returns exactly 3 exhibited artworks in SAL-D with specific placements and sequential order.
 
 ### 2.4 Tool 4: Arrangementssøk (Event Search)
@@ -326,27 +326,27 @@ Quality rule (`context/core/quality_rules.md`): 50–90 words, standard 2-line h
 
 | Artwork ID | Title | Artist | Room | Word Count | Status & Compliance |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `AURA-2026-001` | Nøkken | Theodor Kittelsen | SAL-A | 56 | PASS (50–90 ord, korrekt format) |
-| `AURA-2026-002` | Soria Moria slott | Theodor Kittelsen | SAL-A | 53 | PASS (50–90 ord, korrekt format) |
-| `AURA-2026-003` | Kampen for tilværelsen | Christian Krohg | SAL-B | 52 | PASS (50–90 ord, korrekt format) |
-| `AURA-2026-004` | Albertine i politilægens venteværelse | Christian Krohg | SAL-B | 56 | PASS (50–90 ord, korrekt format) |
-| `AURA-2026-005` | Blått interiør | Harriet Backer | SAL-C | 59 | PASS (50–90 ord, korrekt format) |
-| `AURA-2026-006` | Barnedåp i Tanum kirke | Harriet Backer | SAL-C | 51 | PASS (50–90 ord, korrekt format) |
-| `AURA-2026-007` | Vinternatt i Rondane | Harald Sohlberg | SAL-A | 56 | PASS (50–90 ord, korrekt format) |
-| `AURA-2026-008` | Jonsokbål | Nikolai Astrup | SAL-A | 55 | PASS (50–90 ord, korrekt format) |
-| `AURA-2026-009` | Skrik | Edvard Munch | SAL-D | 54 | PASS (50–90 ord, korrekt format) |
-| `AURA-2026-010` | Pikene på broen | Edvard Munch | SAL-D | 59 | PASS (50–90 ord, korrekt format) |
-| `AURA-2026-011` | Brudeferd i Hardanger | Adolph Tidemand | MAG-1 | 0 | Magasin (utkast, ingen offentlig tekst) |
-| `AURA-2026-012` | Selvportrett med sigarett | Edvard Munch | MAG-1 | 0 | Magasin (utkast, ingen offentlig tekst) |
-| `AURA-2026-013` | Sommernatt ved Kysten | Kitty Kielland | SAL-C | 58 | PASS (50–90 ord, korrekt format) |
-| `AURA-2026-014` | En bondebegravelse | Erik Werenskiold | SAL-B | 49 | PASS (50–90 ord, korrekt format) |
-| `AURA-2026-015` | Vinter på Simoa | Frits Thaulow | SAL-C | 53 | PASS (50–90 ord, korrekt format) |
-| `AURA-2026-016` | N. 7 – Stor blå fjellform | Anna-Eva Bergman | SAL-D | 60 | PASS (50–90 ord, korrekt format) |
+| `KP-2026-001` | Nøkken | Theodor Kittelsen | SAL-A | 56 | PASS (50–90 ord, korrekt format) |
+| `KP-2026-002` | Soria Moria slott | Theodor Kittelsen | SAL-A | 53 | PASS (50–90 ord, korrekt format) |
+| `KP-2026-003` | Kampen for tilværelsen | Christian Krohg | SAL-B | 52 | PASS (50–90 ord, korrekt format) |
+| `KP-2026-004` | Albertine i politilægens venteværelse | Christian Krohg | SAL-B | 56 | PASS (50–90 ord, korrekt format) |
+| `KP-2026-005` | Blått interiør | Harriet Backer | SAL-C | 59 | PASS (50–90 ord, korrekt format) |
+| `KP-2026-006` | Barnedåp i Tanum kirke | Harriet Backer | SAL-C | 51 | PASS (50–90 ord, korrekt format) |
+| `KP-2026-007` | Vinternatt i Rondane | Harald Sohlberg | SAL-A | 56 | PASS (50–90 ord, korrekt format) |
+| `KP-2026-008` | Jonsokbål | Nikolai Astrup | SAL-A | 55 | PASS (50–90 ord, korrekt format) |
+| `KP-2026-009` | Skrik | Edvard Munch | SAL-D | 54 | PASS (50–90 ord, korrekt format) |
+| `KP-2026-010` | Pikene på broen | Edvard Munch | SAL-D | 59 | PASS (50–90 ord, korrekt format) |
+| `KP-2026-011` | Brudeferd i Hardanger | Adolph Tidemand | MAG-1 | 0 | Magasin (utkast, ingen offentlig tekst) |
+| `KP-2026-012` | Selvportrett med sigarett | Edvard Munch | MAG-1 | 0 | Magasin (utkast, ingen offentlig tekst) |
+| `KP-2026-013` | Sommernatt ved Kysten | Kitty Kielland | SAL-C | 58 | PASS (50–90 ord, korrekt format) |
+| `KP-2026-014` | En bondebegravelse | Erik Werenskiold | SAL-B | 49 | PASS (50–90 ord, korrekt format) |
+| `KP-2026-015` | Vinter på Simoa | Frits Thaulow | SAL-C | 53 | PASS (50–90 ord, korrekt format) |
+| `KP-2026-016` | N. 7 – Stor blå fjellform | Anna-Eva Bergman | SAL-D | 60 | PASS (50–90 ord, korrekt format) |
 
 All 14 exhibited works have wall texts strictly between 49 and 60 words (average: 55.1 words), matching all structural guidelines.
 
 #### B. Location of "Skrik"
-- In table `verk`: `AURA-2026-009` has `sal_id = 'SAL-D'`, `status = 'utstilt'`.
+- In table `verk`: `KP-2026-009` has `sal_id = 'SAL-D'`, `status = 'utstilt'`.
 - In table `utstilling_verk`: Placed in `SAL-D hovedvegg`, `rekkefølge = 5`.
 - In table `publikum_faq`: Row 8 explicitly states: "Edvard Munchs Skrik henger i Sal D – Eksistens og modernisme paa 2. etasje."
 
@@ -361,16 +361,16 @@ All 14 exhibited works have wall texts strictly between 49 and 60 words (average
 #### D. 30-Minute Visit Recommendation
 - Recommended by `prompts/museumsvert.md`: "Har du 30 minutter? Start med Sal A."
 - Concrete highlights for a 30-minute visit:
-  - **Option 1 (The Classics in Sal A, 1st floor):** Theodor Kittelsen's _Nøkken_ (AURA-2026-001), _Soria Moria slott_ (AURA-2026-002), and Harald Sohlberg's _Vinternatt i Rondane_ (AURA-2026-007).
-  - **Option 2 (The Masterworks in Sal D, 2nd floor):** Edvard Munch's _Skrik_ (AURA-2026-009) and _Pikene på broen_ (AURA-2026-010).
+  - **Option 1 (The Classics in Sal A, 1st floor):** Theodor Kittelsen's _Nøkken_ (KP-2026-001), _Soria Moria slott_ (KP-2026-002), and Harald Sohlberg's _Vinternatt i Rondane_ (KP-2026-007).
+  - **Option 2 (The Masterworks in Sal D, 2nd floor):** Edvard Munch's _Skrik_ (KP-2026-009) and _Pikene på broen_ (KP-2026-010).
 
 ---
 
 ## 3. Caveats
 
 1. **Database Path Configuration:** The SQLite database currently resides at `C:\Users\larse\Documents\.headroom\memory.db`. When deploying the demo-prototype or MCP server within the project workspace (`g:\Min disk\Fellesprosjekt KI`), the implementer should either:
-   - Make the database path configurable via environment variable `AURA_DB_PATH` (defaulting to `C:\Users\larse\Documents\.headroom\memory.db`), OR
-   - Provide a copy/export to `g:\Min disk\Fellesprosjekt KI\data\aura.db` so the repository can be fully self-contained.
+   - Make the database path configurable via environment variable `KUNSTPIXEL_DB_PATH` (defaulting to `C:\Users\larse\Documents\.headroom\memory.db`), OR
+   - Provide a copy/export to `g:\Min disk\Fellesprosjekt KI\data\kunstpixel.db` so the repository can be fully self-contained.
 2. **Column Name Encoding (`rekkefølge`):** The column name in table `utstilling_verk` contains the Norwegian character `ø`. When querying via SQLite drivers in Python or Node.js, wrap the column name in brackets (`[rekkefølge]`) or double quotes to avoid syntax or encoding errors.
 3. **FAQ Search Strategy:** Naive exact string matching (`WHERE spoersmaal LIKE '%åpningstider%'`) will not match row 2 because the database uses `"Naar har museet aapent?"` and uses `aa` instead of `å`. The implementer must add synonym mapping or query tokenization (e.g. mapping "åpningstider" to "åpen", "aapent", "tid").
 
@@ -419,7 +419,7 @@ assert len(sald) >= 3, f'Expected >= 3, got {len(sald)}'
 print(f'SAL-D check PASSED: {len(sald)} works found')
 
 # 4. Skrik location check
-skrik = c.execute("SELECT v.tittel, v.sal_id FROM verk v WHERE v.id = 'AURA-2026-009'").fetchone()
+skrik = c.execute("SELECT v.tittel, v.sal_id FROM verk v WHERE v.id = 'KP-2026-009'").fetchone()
 assert skrik['sal_id'] == 'SAL-D', f"Expected SAL-D, got {skrik['sal_id']}"
 print('Skrik in SAL-D check PASSED')
 

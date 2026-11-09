@@ -1,4 +1,4 @@
-# Drifts- og Kvalitetshåndbok for Aura Kunstmuseum (Kunstpixel)
+# Drifts- og Kvalitetshåndbok for Kunstpixel
 
 > **Dokument-ID:** `HB-DRIFT-2026`  
 > **Gjelder for:** Salverter, resepsjonister, kafépersonale, butikkmedarbeidere og driftsteknikere  

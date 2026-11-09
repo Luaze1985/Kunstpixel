@@ -143,7 +143,7 @@
   </g>
   <!-- Elegant skandinavisk planoversikt og romguide -->
   <g class="title-block" transform="translate(680, 80)">
-    <text x="0" y="0" font-family="sans-serif" font-size="20" font-weight="bold" fill="#ffffff" letter-spacing="1">AURA MUSEUM</text>
+    <text x="0" y="0" font-family="sans-serif" font-size="20" font-weight="bold" fill="#ffffff" letter-spacing="1">KUNSTPIXEL</text>
     <text x="0" y="24" font-family="sans-serif" font-size="13" font-weight="600" fill="#38bdf8">PLAN P1 • 1. ETASJE / HOVEDPLAN</text>
     <text x="0" y="44" font-family="sans-serif" font-size="10" fill="#94a3b8">Bispegata 9B, 7012 Trondheim • Gnr 401 / Bnr 12</text>
     <line x1="0" y1="60" x2="280" y2="60" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>

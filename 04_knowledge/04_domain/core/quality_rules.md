@@ -18,5 +18,5 @@
 - **Språk:** Enkel syntaks, nysgjerrighetsdrevet, fri for tørre årstallrekker.
 
 ## 4. Dataintegritet og teknisk kvalitet
-- Alle verksoppslag må inkludere unikt inventarnummer (f.eks. `AURA-2026-042`).
+- Alle verksoppslag må inkludere unikt inventarnummer (f.eks. `KP-2026-042`).
 - Alle JSON-strukturer og API-kall fra plugins skal typesjekkes og valideres mot definert schema før persistens.

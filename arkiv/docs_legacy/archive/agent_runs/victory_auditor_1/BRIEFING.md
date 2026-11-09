@@ -1,14 +1,14 @@
 ﻿# BRIEFING — 2026-09-14T19:07:00+02:00
 
 ## Mission
-Independent 3-phase post-victory audit of Aura Kunstmuseum Demo-Prototype to confirm or reject victory.
+Independent 3-phase post-victory audit of Kunstpixel Demo-Prototype to confirm or reject victory.
 
 ## 🔒 My Identity
 - Archetype: victory_auditor
 - Roles: critic, specialist, auditor, victory_verifier
 - Working directory: g:/Min disk/Fellesprosjekt KI/.agents/victory_auditor_1
 - Original parent: ed6829ed-391f-4c21-9931-ee363a4606bb
-- Target: full project (Aura Kunstmuseum Demo-Prototype)
+- Target: full project (Kunstpixel Demo-Prototype)
 
 ## 🔒 Key Constraints
 - Audit-only — do NOT modify implementation code
@@ -21,7 +21,7 @@ Independent 3-phase post-victory audit of Aura Kunstmuseum Demo-Prototype to con
 - Updated: 2026-09-14T19:07:00+02:00
 
 ## Audit Scope
-- **Work product**: Aura Kunstmuseum Demo-Prototype (src/mcp_server.py, src/agent.py, src/cli.py, tests/, context/, prompts/, data/)
+- **Work product**: Kunstpixel Demo-Prototype (src/mcp_server.py, src/agent.py, src/cli.py, tests/, context/, prompts/, data/)
 - **Profile loaded**: General Project (Anti-Cheating Forensics & Victory Audit)
 - **Audit type**: victory audit (Phases A, B, C)
 

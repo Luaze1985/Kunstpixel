@@ -2,7 +2,7 @@
 
 ## 2026-09-14T15:03:34Z
 
-You are the Project Orchestrator for Aura Kunstmuseum demo-prototype.
+You are the Project Orchestrator for Kunstpixel demo-prototype.
 Your working directory is: g:/Min disk/Fellesprosjekt KI/.agents/orchestrator_1
 The authoritative original user request is at: g:/Min disk/Fellesprosjekt KI/.agents/ORIGINAL_REQUEST.md
 The workspace root is: g:/Min disk/Fellesprosjekt KI/

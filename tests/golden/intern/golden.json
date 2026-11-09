@@ -266,28 +266,28 @@
   {
     "sporsmal": "Hvilke verk skal evakueres umiddelbart?",
     "rolle": "museumsvert",
-    "text": "Dette sier de interne dataene:\n\n- **AURA-2026-009**: id: AURA-2026-009; tittel: Skrik; kunstner: Edvard Munch; plassering: Sal D, vestvegg\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › AURA-2026-009\n- **AURA-2026-007**: id: AURA-2026-007; tittel: Vinternatt i Rondane; kunstner: Harald Sohlberg; plassering: Sal A, nordvegg\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › AURA-2026-007",
+    "text": "Dette sier de interne dataene:\n\n- **KP-2026-009**: id: KP-2026-009; tittel: Skrik; kunstner: Edvard Munch; plassering: Sal D, vestvegg\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › KP-2026-009\n- **KP-2026-007**: id: KP-2026-007; tittel: Vinternatt i Rondane; kunstner: Harald Sohlberg; plassering: Sal A, nordvegg\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › KP-2026-007",
     "category": "brann",
     "tools_used": [
       "search_brann_sikring"
     ],
     "kilder": [
-      "05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › AURA-2026-009",
-      "05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › AURA-2026-007"
+      "05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › KP-2026-009",
+      "05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › KP-2026-007"
     ],
     "funnet": true
   },
   {
     "sporsmal": "Hva betyr rødt klistremerke bak en ramme?",
     "rolle": "museumsvert",
-    "text": "Dette sier de interne dataene:\n\n- **niva 1 kritisk**: fargekode: Rødt klistremerke bak ramme; handling: Evakueres umiddelbart ved fare dersom mannskapets sikkerhet tillater det\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk\n- **AURA-2026-009**: id: AURA-2026-009; tittel: Skrik; kunstner: Edvard Munch; plassering: Sal D, vestvegg\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › AURA-2026-009",
+    "text": "Dette sier de interne dataene:\n\n- **niva 1 kritisk**: fargekode: Rødt klistremerke bak ramme; handling: Evakueres umiddelbart ved fare dersom mannskapets sikkerhet tillater det\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk\n- **KP-2026-009**: id: KP-2026-009; tittel: Skrik; kunstner: Edvard Munch; plassering: Sal D, vestvegg\n  Kilde: 05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › KP-2026-009",
     "category": "brann",
     "tools_used": [
       "search_brann_sikring"
     ],
     "kilder": [
       "05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk",
-      "05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › AURA-2026-009"
+      "05_data/governance/brann_sikring_kapasitet.yaml › rvr kunstevakuering prioritering › niva 1 kritisk › verk › KP-2026-009"
     ],
     "funnet": true
   },

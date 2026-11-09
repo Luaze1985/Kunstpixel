@@ -1,4 +1,4 @@
-# Final Orchestrator Handoff Report: Aura Kunstmuseum Demo-Prototype
+# Final Orchestrator Handoff Report: Kunstpixel Demo-Prototype
 
 **Orchestrator:** Project Orchestrator (`orchestrator_1`)  
 **Parent / Sentinel Conv ID:** `ed6829ed-391f-4c21-9931-ee363a4606bb`  
@@ -34,7 +34,7 @@ All 16 subagents spawned across Survey (3), Track Setup & Implementation (3), Ga
 
 ### MCP Server (R1)
 - [x] **All 5 collection tools return correct, verifiable results from SQLite**: `search_collection`, `get_artwork_details`, `get_room_artworks`, `search_events`, `search_faq`.
-- [x] **Search "Kittelsen" returns >= 2 artworks with metadata**: Returns *Nøkken* (AURA-2026-001) and *Soria Moria slott* (AURA-2026-002).
+- [x] **Search "Kittelsen" returns >= 2 artworks with metadata**: Returns *Nøkken* (KP-2026-001) and *Soria Moria slott* (KP-2026-002).
 - [x] **Search room "SAL-D" returns >= 3 exhibited artworks in order**: Returns *Skrik* (order 5), *Pikene på broen* (order 6), *N. 7 – Stor blå fjellform* (order 7).
 - [x] **Upcoming events returned with date and type**: Omvisning (*Stille kraft*), Trolljakt, Mal som Munch, Kveldskafé.
 - [x] **FAQ search for "åpningstider" returns concrete hours**: Tirsdag–fredag 10:00–17:00, Lørdag–søndag 11:00–16:00, Mandag stengt.

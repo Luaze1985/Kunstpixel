@@ -1,4 +1,4 @@
-# Handoff Report: Domene- og Kontekstspesifikasjon for Aura Kunstmuseum
+# Handoff Report: Domene- og Kontekstspesifikasjon for Kunstpixel
 
 **Dato:** 2026-09-14  
 **Agent:** spec_miner_survey_context (Specification Miner Archetype)  
@@ -23,7 +23,7 @@ Vi har utført en systematisk, kildekritisk undersøkelse av alle relevante styr
    - **Proveniens** (_Avoid_: Transaksjonshistorikk, opprinnelseslogg)
 
 2. `context/core/company.md` (linje 1–20): Fastsetter virksomhetskontekst:
-   - Navn: Aura Kunstmuseum (syntetisk SMB-kulturinstitusjon)
+   - Navn: Kunstpixel (syntetisk SMB-kulturinstitusjon)
    - Status: Operativ, uavhengig ideell stiftelse / SMB-foretak med flate beslutningslinjer.
    - Formål: Forvalte, bevare og formidle visuell kunst; operativ treningsarena og testbenk for AI-gründere til å utvikle plugins, MCP-verktøy, automatiseringer og undervisningsopplegg.
    - Omfang: Mellomstort kunstmuseum, 12–15 kjernefunksjoner, ca. 2 500 katalogiserte verk, 4 sesongutstillinger per år + fast samling.
@@ -44,7 +44,7 @@ Vi har utført en systematisk, kildekritisk undersøkelse av alle relevante styr
    - Faglige tekster og veggtekster: Lengdebegrensning mellom 50 og 90 ord (aldri over 120 ord). Fast struktur: Linje 1: Kunstnernavn, nasjonalitet, levetid; Linje 2: Tittel (kursiv), datering, teknikk, samlings-ID; Avsnitt 1: Hva betrakteren ser (blikkfang / visuell inngang); Avsnitt 2: Kontekst / betydning / hvorfor verket er vesentlig. Språk: Klart, tilgjengelig, unngå uforklart sjargong.
    - Audioguider og muntlige manus: Maks 60–90 sekunder per verk (ca. 130–180 ord opplest). Fortellende, varm, veiledende tone.
    - Barne- og familieformidling: Inkluder en sanselig observasjon eller åpent spørsmål («Hva tror du personen tenker på?», «Finn tre dyr i bildet»). Enkel syntaks, nysgjerrighetsdrevet, fri for tørre årstallrekker.
-   - Dataintegritet og teknisk kvalitet: Alle verksoppslag må inkludere unikt inventarnummer (f.eks. `AURA-2026-042`). Alle JSON-strukturer og API-kall typesjekkes og valideres mot skjema før persistens.
+   - Dataintegritet og teknisk kvalitet: Alle verksoppslag må inkludere unikt inventarnummer (f.eks. `KP-2026-042`). Alle JSON-strukturer og API-kall typesjekkes og valideres mot skjema før persistens.
 
 6. `context/core/approval_boundaries.md` (linje 1–24): Tredelt risikokontrollmatrise:
    - Nivå 1 (Full agentautonomi): Søke og lese i samlingsdatabase via MCP, analysere metadata, generere utkast, besvare interne henvendelser, kjøre tester.
@@ -55,7 +55,7 @@ Vi har utført en systematisk, kildekritisk undersøkelse av alle relevante styr
 
 8. `context/roles/` (6 filer):
    - `museumsdirektor.md`: Operasjonell leder, delegere oppgaver, godkjenne utkast, eskalere Nivå 3.
-   - `samlingsforvalter.md`: Registrar, accessioning (`AURA-YYYY-NNN`), 9 obligatoriske felt, proveniensformat, 5 tilstander.
+   - `samlingsforvalter.md`: Registrar, accessioning (`KP-YYYY-NNN`), 9 obligatoriske felt, proveniensformat, 5 tilstander.
    - `kurator.md`: Kunstfaglig profil, utstillingsideer, verkutvalg, kunsthistoriske tekster uten artspeak.
    - `formidler.md`: Veggtekster (50–90 ord), audioguide (60–90 sek, 130–180 ord), barneformidling.
    - `museumsvert.md`: Frontoffice publikumsvert, kun lesetilgang, veilede, anbefale, besvare FAQ.
@@ -81,7 +81,7 @@ Vi har utført en systematisk, kildekritisk undersøkelse av alle relevante styr
 
 12. `prompts/samlingsforvalter.md` (linje 23–46):
    - 9 obligatoriske felt ved nyregistrering: `id`, `tittel`, `kunstner_id`, `aar`, `teknikk`, `dimensjoner`, `sal_id`, `status`, `tilstand`.
-   - Inventarnummer: `AURA-YYYY-NNN`.
+   - Inventarnummer: `KP-YYYY-NNN`.
    - Tilstandsverdier (enum): `utmerket`, `god`, `akseptabel`, `skadet`, `ukjent`.
 
 13. `context/projects/samling_til_publikum/brief.md` (linje 8–12):
@@ -93,7 +93,7 @@ Vi har utført en systematisk, kildekritisk undersøkelse av alle relevante styr
 
 ## 2. Logic Chain
 
-1. **SMB-institusjonell forankring og formål:** Aura Kunstmuseum er en uavhengig ideell SMB-institusjon etablert som treningsarena for AI-gründere (ADR-0001, `company.md`). Løsningen skal være smidig, lokal og lettbeint (lokal SQLite/JSON og MCP), men samtidig ha streng faglig integritet.
+1. **SMB-institusjonell forankring og formål:** Kunstpixel er en uavhengig ideell SMB-institusjon etablert som treningsarena for AI-gründere (ADR-0001, `company.md`). Løsningen skal være smidig, lokal og lettbeint (lokal SQLite/JSON og MCP), men samtidig ha streng faglig integritet.
 2. **Kildetrohet og nulltoleranse for hallusinasjoner:** Kjerneverdi 1 (`values.md`), beslutningsregel 1 (`decision_rules.md`) og risikopost RSK-001 krever at all verksinformasjon som formidles til publikum skal være 100 % forankret i verifiserte data fra samlingsdatabasen. Dersom et årstall, en teknikk eller en biografisk detalj ikke finnes i databasen, er det forbudt å dikte opp svaret; agenten skal da eksplisitt opplyse om at informasjonen er ukjent eller henvise til godkjent formidlingstekst.
 3. **Sikkerhet, minste privilegium og rå SQL-forbud:** `tool_access.md` og `prompts/museumsvert.md` slår fast at museumsverten er et eksternt/publikumsrettet kontaktpunkt. For å forhindre SQL-injeksjon og datamanipulasjon tillates **ingen rå SQL** fra åpne promptflater. Datatilgang skal utelukkende skje via forhåndsdefinerte, parameteriserte MCP-verktøykall. Museumsverten tildeles **strikt lesetilgang** (`sqlite_read_public`, `faq_search`).
 4. **Verktøykrav for de 5 samlingsfunksjonene:** For å realisere arbeidsflytene i `workflows.md` og innfri kravene i `ORIGINAL_REQUEST.md` (R1 & R2), må de fem MCP-verktøyene dekke:
@@ -146,7 +146,7 @@ Verktøyene eksponeres via en standard MCP-server (stdio/JSON-RPC). Alle paramet
   ```json
   [
     {
-      "id": "AURA-2026-001",
+      "id": "KP-2026-001",
       "tittel": "Nøkken",
       "kunstner": "Theodor Kittelsen",
       "aar": 1904,
@@ -169,11 +169,11 @@ Verktøyene eksponeres via en standard MCP-server (stdio/JSON-RPC). Alle paramet
 #### Verktøy 2: `get_artwork_details` (Verksdetaljer)
 - **Hensikt:** Hente komplette og autoritative metadata for ett enkelt verk, inkludert kuratert veggtekst og proveniens.
 - **Input Parametere:**
-  - `artwork_id` *(påkrevd, string)*: Unik inventar-ID (format: `AURA-YYYY-NNN`, f.eks. `AURA-2026-009`).
+  - `artwork_id` *(påkrevd, string)*: Unik inventar-ID (format: `KP-YYYY-NNN`, f.eks. `KP-2026-009`).
 - **Output Schema (JSON Object):**
   ```json
   {
-    "id": "AURA-2026-009",
+    "id": "KP-2026-009",
     "tittel": "Skrik",
     "kunstner": "Edvard Munch",
     "kunstner_levetid": "1863–1944",
@@ -188,9 +188,9 @@ Verktøyene eksponeres via en standard MCP-server (stdio/JSON-RPC). Alle paramet
     "tilstand": "utmerket",
     "beskrivelse": "En skikkelse som holder seg for ørene på en bro under en blodrød himmel...",
     "tema": ["angst", "eksistens", "ekspresjonisme", "modernitet"],
-    "veggtekst": "Edvard Munch (1863–1944), Norsk.\nSkrik, 1893. Tempera og oljekritt på papp, 91 x 73.5 cm. AURA-2026-009.\n\nEn fortvilet skikkelse holder hendene mot hodet i en åpen munn av angst under en brennende oransjerød kveldshimmel over Oslofjorden.\n\nMunchs mest berømte verk regnes som selve ur-ikonet for det moderne menneskets eksistensielle uro. Bildet formidler ikke bare en ytre scene, men et indre skrik som runger gjennom hele naturen.",
+    "veggtekst": "Edvard Munch (1863–1944), Norsk.\nSkrik, 1893. Tempera og oljekritt på papp, 91 x 73.5 cm. KP-2026-009.\n\nEn fortvilet skikkelse holder hendene mot hodet i en åpen munn av angst under en brennende oransjerød kveldshimmel over Oslofjorden.\n\nMunchs mest berømte verk regnes som selve ur-ikonet for det moderne menneskets eksistensielle uro. Bildet formidler ikke bare en ytre scene, men et indre skrik som runger gjennom hele naturen.",
     "veggtekst_ordantall": 72,
-    "proveniens": "Kunstneren → Olaf Schou 1893 → Nasjonalgalleriet 1910 → Aura Kunstmuseum (deponert)"
+    "proveniens": "Kunstneren → Olaf Schou 1893 → Nasjonalgalleriet 1910 → Kunstpixel (deponert)"
   }
   ```
 - **Valideringsregler:**
@@ -206,7 +206,7 @@ Verktøyene eksponeres via en standard MCP-server (stdio/JSON-RPC). Alle paramet
   ```json
   [
     {
-      "id": "AURA-2026-009",
+      "id": "KP-2026-009",
       "rekkefoelge": 1,
       "tittel": "Skrik",
       "kunstner": "Edvard Munch",
@@ -268,7 +268,7 @@ Verktøyene eksponeres via en standard MCP-server (stdio/JSON-RPC). Alle paramet
     {
       "id": "FAQ-001",
       "spoersmaal": "Hva er museets åpningstider?",
-      "svar": "Aura Kunstmuseum er åpent tirsdag til søndag fra kl. 10:00 til 17:00. Torsdager er det kveldsåpent til kl. 20:00. Mandager holder vi stengt for konservering og monteringsarbeid.",
+      "svar": "Kunstpixel er åpent tirsdag til søndag fra kl. 10:00 til 17:00. Torsdager er det kveldsåpent til kl. 20:00. Mandager holder vi stengt for konservering og monteringsarbeid.",
       "kategori": "tider"
     }
   ]
@@ -339,7 +339,7 @@ I henhold til `context/operations/tool_access.md` og `context/core/approval_boun
    - **Lengde:** Strengt 50 til 90 ord (aldri over 120 ord, eksklusive overskriftslinjene).
    - **Struktur:**
      * *Linje 1 (Metadata):* `[Kunstnernavn] ([fødselsår]–[dødsår]), [nasjonalitet].`
-     * *Linje 2 (Verksdata):* `_[Tittel]_, [år]. [Teknikk], [dimensjoner]. [Unikt inventarnummer, f.eks. AURA-2026-001].`
+     * *Linje 2 (Verksdata):* `_[Tittel]_, [år]. [Teknikk], [dimensjoner]. [Unikt inventarnummer, f.eks. KP-2026-001].`
      * *Avsnitt 1 (Visuell inngang):* Hva betrakteren ser foran seg akkurat nå (1–2 setninger, blikkfang).
      * *Avsnitt 2 (Kontekst & betydning):* Hvorfor verket er vesentlig, historisk betydning (2–3 setninger).
    - **Språk:** Klart, tilgjengelig, aktive verb («Krohg viser...», «Munch maler...»). Aldri passive fyllfraser som «dette verket er interessant fordi».
@@ -358,9 +358,9 @@ I henhold til `context/operations/tool_access.md` og `context/core/approval_boun
 
 | # | Kategori | Scenario & Brukerprompt | Forventet Verktøykall | Pass-kriterier (Må oppfylles) | Fail-kriterier (Underkjenning) |
 |---|----------|------------------------|----------------------|-------------------------------|--------------------------------|
-| **1** | `samling` | «Har dere noen verker av Theodor Kittelsen, og hvor henger de?» | `search_collection(artist="Theodor Kittelsen")` | Returnerer minst 2 verk (*Nøkken* AURA-2026-001 og *Soria Moria slott* AURA-2026-002). Agenten oppgir Sal A, nevner tittel, årstall og gir en varm formidlingsdetalj. | Færre enn 2 verk; feil sal; dikter opp verker; hallusinerer årstall; tomt svar. |
-| **2** | `samling` | «Hvor finner jeg Skrik, og hva forestiller bildet?» | `search_collection(title="Skrik")` eller `get_artwork_details(artwork_id="AURA-2026-009")` | Identifiserer Edvard Munch (1893), plassert i **Sal D** (Eksistens og modernisme, 2. etasje). Beskriver angstmotivet/himmelen og gir salanvisning. | Henviser til feil sal (ikke Sal D); påstår verket er i magasin; mangler tittel/kunstner. |
-| **3** | `samling` | «Kan jeg få se detaljer og proveniens for Vinternatt i Rondane?» | `get_artwork_details(artwork_id="AURA-2026-007")` | Returnerer Harald Sohlberg (1914), olje på lerret, 160 x 180 cm, Sal A, samt fullstendig provenienskjede (opprinnelse → eier → Aura Kunstmuseum). | Krasjer på ID-oppslag; mangler proveniens eller veggtekst; feil format. |
+| **1** | `samling` | «Har dere noen verker av Theodor Kittelsen, og hvor henger de?» | `search_collection(artist="Theodor Kittelsen")` | Returnerer minst 2 verk (*Nøkken* KP-2026-001 og *Soria Moria slott* KP-2026-002). Agenten oppgir Sal A, nevner tittel, årstall og gir en varm formidlingsdetalj. | Færre enn 2 verk; feil sal; dikter opp verker; hallusinerer årstall; tomt svar. |
+| **2** | `samling` | «Hvor finner jeg Skrik, og hva forestiller bildet?» | `search_collection(title="Skrik")` eller `get_artwork_details(artwork_id="KP-2026-009")` | Identifiserer Edvard Munch (1893), plassert i **Sal D** (Eksistens og modernisme, 2. etasje). Beskriver angstmotivet/himmelen og gir salanvisning. | Henviser til feil sal (ikke Sal D); påstår verket er i magasin; mangler tittel/kunstner. |
+| **3** | `samling` | «Kan jeg få se detaljer og proveniens for Vinternatt i Rondane?» | `get_artwork_details(artwork_id="KP-2026-007")` | Returnerer Harald Sohlberg (1914), olje på lerret, 160 x 180 cm, Sal A, samt fullstendig provenienskjede (opprinnelse → eier → Kunstpixel). | Krasjer på ID-oppslag; mangler proveniens eller veggtekst; feil format. |
 | **4** | `utstilling` | «Hvilke verker kan jeg se i Sal D?» | `get_room_artworks(room_id="SAL-D")` | Returnerer minst 3 utstilte verk i Sal D med titler, kunstner og teknikk (inkl. Edvard Munchs verker). | Færre enn 3 verk i Sal D; returnerer verk fra andre saler; viser verk som har status 'magasin'. |
 | **5** | `utstilling` | «Hvilke faste og midlertidige utstillinger vises på museet nå?» | `search_collection` / utstillingsoppslag | Presenterer aktuelle utstillinger (f.eks. samlingsutstillingene fordelt på salene A–D) med overordnet tema. | Viser fiktive utstillinger som ikke eksisterer i databasen; tomt svar. |
 | **6** | `hendelse` | «Når arrangeres det neste guidet omvisning?» | `search_events(event_type="omvisning")` | Returnerer kommende omvisning med dato (>= dagens dato), klokkeslett, sal, pris og kort beskrivelse. Utelukker avlyste arrangementer. | Returnerer passert arrangement; returnerer avlyst hendelse; hallusinerer tid/sted. |
@@ -376,14 +376,14 @@ I henhold til `context/operations/tool_access.md` og `context/core/approval_boun
 | # | Kategori | Funksjon (Feature) | Beskrivelse | Inputs | Outputs | Feilhåndtering / Error Behavior | Discovered Via |
 |---|----------|--------------------|-------------|--------|---------|--------------------------------|----------------|
 | 1 | Samlingsverktøy | `search_collection` | Parameterisert søk i samlingsdatabase etter verk på tittel, kunstner, teknikk, tema og sal. | `query?: str`, `artist?: str`, `title?: str`, `technique?: str`, `theme?: str`, `room_id?: str`, `limit?: int` | JSON Array med verkskort (`id`, `tittel`, `kunstner`, `aar`, `teknikk`, `sal_id`, `status`, `tema`) | Returnerer tom liste `[]` ved ingen treff; parameterisert SQL hindrer injeksjon. | `workflows.md:54`, `brief.md:9`, `ORIGINAL_REQUEST.md:31` |
-| 2 | Samlingsverktøy | `get_artwork_details` | Henter fullstendige metadata, inkludert godkjent veggtekst og provenienshistorikk for ett verk. | `artwork_id: str` (format: `AURA-YYYY-NNN`) | JSON Objekt med alle verksdata, dimensjoner, tilstand, veggtekst, ordantall og proveniens. | Returnerer strukturert feilobjekt `{"error": "Verk ikke funnet", "code": "NOT_FOUND"}` ved ukjent ID. | `brief.md:10`, `ORIGINAL_REQUEST.md:32`, `quality_rules.md:21` |
+| 2 | Samlingsverktøy | `get_artwork_details` | Henter fullstendige metadata, inkludert godkjent veggtekst og provenienshistorikk for ett verk. | `artwork_id: str` (format: `KP-YYYY-NNN`) | JSON Objekt med alle verksdata, dimensjoner, tilstand, veggtekst, ordantall og proveniens. | Returnerer strukturert feilobjekt `{"error": "Verk ikke funnet", "code": "NOT_FOUND"}` ved ukjent ID. | `brief.md:10`, `ORIGINAL_REQUEST.md:32`, `quality_rules.md:21` |
 | 3 | Samlingsverktøy | `get_room_artworks` | Henter liste over alle verk som for tiden stilles ut i en gitt sal, ordnet etter rekkefølge/plassering. | `room_id: str` (f.eks. `SAL-A` til `SAL-F`, `MAG-1`) | JSON Array over utstilte verk med rekkefølge, tittel, kunstner, år og veggplassering. | Returnerer tom liste `[]` hvis salen er tom; returnerer liste over gyldige saler hvis `room_id` er ukjent. | `brief.md:11`, `ORIGINAL_REQUEST.md:33`, `prompts/museumsvert.md:52` |
 | 4 | Arrangementsverktøy | `search_events` | Henter kommende arrangementer (omvisninger, verksteder, foredrag) filtrert på type og tidsrom. | `event_type?: str`, `date_from?: str`, `date_to?: str`, `limit?: int` | JSON Array med hendelser (`id`, `tittel`, `type`, `dato`, `klokkeslett`, `sal`, `pris`, `kapasitet`). | Returnerer tom liste `[]` ved ingen treff; validerer ISO-dato; ekskluderer avlyste (`status != 'avlyst'`). | `ORIGINAL_REQUEST.md:34`, `prompts/museumsvert.md:57`, `driftsansvarlig.md:19` |
 | 5 | FAQ-verktøy | `search_faq` | Søker etter autoritative svar på praktiske spørsmål om åpningstider, priser, fasiliteter og adkomst. | `query: str`, `category?: str` | JSON Array med FAQ-poster (`id`, `spoersmaal`, `svar`, `kategori`). | Returnerer tom liste `[]` ved ingen treff; avviser tomme søkestrenger med valideringsfeil. | `ORIGINAL_REQUEST.md:35`, `prompts/museumsvert.md:62`, `tool_access.md:11` |
 | 6 | Sikkerhet & Rettighet | Skrivebeskyttelse for Museumsvert | Museumsvert-agenten tildeles utelukkende lesetilgang (`sqlite_read_public`, `faq_search`). | N/A (RBAC / konfigurasjon) | Avviser skrivekall (`sqlite_write`, `write_query`, `UPDATE`, `INSERT`). | Kaster tilgangsnektet-unntak (`PermissionDeniedError`) ved forsøk på skriving. | `tool_access.md:11`, `prompts/museumsvert.md:18`, `approval_boundaries.md:21` |
 | 7 | Sikkerhet & Rettighet | Parameterisert SQL-barriere | Forbud mot fri/rå SQL fra åpne agentflater; kun faste, typesikre parametere tillates. | Parameteriserte funksjonskall | Validerte SQL-spørringer med bundne variable | Forespørsler med rå SQL avvises umiddelbart før databasetilgang. | `tool_access.md:16` |
 | 8 | Styring & Beslutning | Tredelt Godkjenningsmatrise | Håndhever autonomigrenser: Nivå 1 (Full agentautonomi), Nivå 2 (Faglig leder), Nivå 3 (Menneskelig eier). | Forespurt handling og rolle | Godkjent / Eskalert til leder / Eskalert til eier | Blokkerer utførelse av handlinger som mangler påkrevd godkjenningsnivå. | `approval_boundaries.md:1-24`, `owner_intent.md:10` |
-| 9 | Samlingsforvaltning | Accessioning & ID-validering | Tildeling av unikt inventarnummer `AURA-YYYY-NNN` og validering av 9 obligatoriske felt. | `id`, `tittel`, `kunstner_id`, `aar`, `teknikk`, `dimensjoner`, `sal_id`, `status`, `tilstand` | Registrert verkskort i database med revisjonslogg | Avviser registrering dersom noen obligatoriske felt mangler; feilmelding spesifiserer mangel. | `samlingsforvalter.md:23-46`, `quality_rules.md:21` |
+| 9 | Samlingsforvaltning | Accessioning & ID-validering | Tildeling av unikt inventarnummer `KP-YYYY-NNN` og validering av 9 obligatoriske felt. | `id`, `tittel`, `kunstner_id`, `aar`, `teknikk`, `dimensjoner`, `sal_id`, `status`, `tilstand` | Registrert verkskort i database med revisjonslogg | Avviser registrering dersom noen obligatoriske felt mangler; feilmelding spesifiserer mangel. | `samlingsforvalter.md:23-46`, `quality_rules.md:21` |
 | 10 | Samlingsforvaltning | Tilstands- og Plasseringsstyring | Håndhever de 5 gyldige tilstandsverdiene og kontrollerer flytting mellom sal og magasin. | `tilstand: enum`, `sal_id: str` | Oppdatert lokasjon og tilstand med versjonsdato | Fritekst i tilstandsfeltet avvises; ukjent sal-ID avvises. | `samlingsforvalter.md:37,53` |
 | 11 | Kuratering | Kuratorpakke for Utstillinger | Utvikling av utstillingskonsept med tittel, undertittel, 100–150 ord konsept og rangert verksliste. | Utstillingstittel, konsept, verkutvalg | Strukturert Markdown-utstillingsplan med romfordeling | Blokkerer sletting eller fysisk flytting uten samlingsforvalter; kildekreves for påstander. | `kurator.md:23-46`, `workflows.md:28` |
 | 12 | Formidling | Standard Veggtekstgenerator | Produserer kuratert veggtekst etter 4-delt mal på nøyaktig 50–90 ord (maks 120 ord). | `artwork_id: str`, verksmetadata | Formatert tekst (metadata, visuell inngang, kontekst/betydning) | Tekster under 50 ord eller over 90 ord avvises i automatisk kvalitetskontroll. | `quality_rules.md:4-10`, `formidler.md:22-41` |
@@ -398,7 +398,7 @@ I henhold til `context/operations/tool_access.md` og `context/core/approval_boun
 
 | # | Funksjon / Område | Inndata (Input / Scenario) | Observert / Spesifisert Adferd | Regel / Kildehenvisning |
 |---|---|---|---|---|
-| 1 | `get_artwork_details` | Spørsmål om verk med ukjent ID (f.eks. `AURA-2026-999`). | Returnerer eksplisitt feilobjekt `{"error": "Verk ikke funnet", "code": "NOT_FOUND"}`; agenten svarer at verket ikke finnes i samlingen. | `quality_rules.md:21`, `samlingsforvalter.md:72` |
+| 1 | `get_artwork_details` | Spørsmål om verk med ukjent ID (f.eks. `KP-2026-999`). | Returnerer eksplisitt feilobjekt `{"error": "Verk ikke funnet", "code": "NOT_FOUND"}`; agenten svarer at verket ikke finnes i samlingen. | `quality_rules.md:21`, `samlingsforvalter.md:72` |
 | 2 | `get_room_artworks` | Forespørsel om sal med blandet status (f.eks. noen verk utstilt, noen i magasin). | Filtrerer strengt på `status = 'utstilt'`. Verk med status `magasin` eller `konservering` ekskluderes fra publikumsoversikten. | `prompts/museumsvert.md:45,55`, `data/samling.json:140` |
 | 3 | `search_collection` | Søk etter kunstner med skrivefeil eller delvis navn (f.eks. «kittelsen», «Munch», «Harriet»). | Utfører case-insensitive delvis matching (`LIKE '%søkeord%'`); returnerer alle relevante treff uten å krasje. | `prompts/museumsvert.md:50`, `ORIGINAL_REQUEST.md:49` |
 | 4 | `search_events` | Søk etter arrangementer hvor noen er avlyst (`status: 'avlyst'`) eller i fortiden. | Utfører `dato >= date('now') AND status != 'avlyst'`; avlyste og historiske hendelser vises aldri til publikum. | `prompts/museumsvert.md:59`, `driftsansvarlig.md:20` |
@@ -421,7 +421,7 @@ I henhold til `context/operations/tool_access.md` og `context/core/approval_boun
 
 ## 7. Conclusion
 
-Spesifikasjonen for Aura Kunstmuseum er entydig, helhetlig og konsistent på tvers av alle kildedokumenter:
+Spesifikasjonen for Kunstpixel er entydig, helhetlig og konsistent på tvers av alle kildedokumenter:
 - De 5 samlingsverktøyene (`search_collection`, `get_artwork_details`, `get_room_artworks`, `search_events`, `search_faq`) danner et komplett, funksjonelt grensesnitt som tilfredsstiller både kjernearbeidsflytene (WF1, WF2, WF3) og samtlige akseptansekriterier i `ORIGINAL_REQUEST.md`.
 - Sikkerhetsarkitekturen er kompromissløs: Museumsverten har strikt read-only tilgang uten mulighet for skriving til databasen eller kjøring av fri SQL.
 - Formidlingskvaliteten er strengt regulert av målbare regler: veggtekster skal ha 50–90 ord, priser skal være faktiske, og anbefalinger skal kun basere seg på reelt utstilte verk.
