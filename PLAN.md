@@ -17,11 +17,13 @@
 - Skjult datakatalog i rapportvinduet (`/api/katalog`).
 - «Spør KI» som egen inngang øverst i menyen.
 - Startkommandoen `start_demo.cmd` er kjørt og virker etter byttet.
+- `.mcp.json`: din egen Claude får Kunstpixel-verktøyene via MCP (venter på godkjenning).
 - Beslutningene står i `docs/DECISIONS.md`, punkt 1–12a.
 
 ## Neste (rekkefølge fra DECISIONS 2026-11-09)
-1. Test «Spør KI» med ekte nøkkel (koster noen øre): `start_demo.cmd -KI`.
-2. Senere: kart og leksjoner som faner, oppgave 09 (Lars velger rapporter), kopi av designsystemet, G:-stier i skriptene, slette Drive-kopien (bare etter Lars' ja).
+1. Lars godkjenner MCP-serveren `kunstpixel` i Claude Code (kjør `claude` i Kunstpixel-mappa og svar ja), og tester et spørsmål.
+2. Valgfritt: koble samme server til Claude Desktop.
+3. Senere: kart og leksjoner som faner, oppgave 09 (Lars velger rapporter), kopi av designsystemet, G:-stier i skriptene, slette Drive-kopien (bare etter Lars' ja).
 
 ## Neste (eldre, fra 2026-11-06)
 1. Lars merger grenen `claude/kunstpixel-demo-database-fb3af9` til main.
