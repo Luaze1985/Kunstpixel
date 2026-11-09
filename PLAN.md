@@ -13,7 +13,7 @@
 ## Gjort (2026-11-09)
 - Flyttet fra Drive. Alle Drive-grener er hentet inn som `drive/*`.
 - `ux/ett-vindu` er slått inn i main.
-- Navnet Aura er fjernet (`scripts/fjern_aura.py` og vakttesten `tests/test_ingen_aura.py`). `museum.db` er bygget på nytt.
+- Det gamle museumsnavnet er byttet til Kunstpixel og `KP-` (DECISIONS punkt 10 og 10a, med vakttest). `museum.db` er bygget på nytt.
 - Skjult datakatalog i rapportvinduet (`/api/katalog`).
 - «Spør KI» som egen inngang øverst i menyen.
 - Beslutningene står i `docs/DECISIONS.md`, punkt 1–12a.
