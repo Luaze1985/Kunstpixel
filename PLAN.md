@@ -10,7 +10,20 @@
 
 - Datafinner i ett vindu ([spec](docs/specs/ett-vindu.md)): oppgave 02–08 er ferdige på `ux/ett-vindu`, og 08 ligger på `ux/ny-forside`. `/` er nå skallet med rapporter, Arena, Chat, Søk, Vaktrom og Arbeidsflyter. Oppgave 01 (Lars bygger `rolle_sporsmal`) og 09 (Lars velger samlingsrapporter) venter.
 
-## Neste
+## Gjort (2026-11-09)
+- Flyttet fra Drive. Alle Drive-grener er hentet inn som `drive/*`.
+- `ux/ett-vindu` er slått inn i main.
+- Navnet Aura er fjernet (`scripts/fjern_aura.py` og vakttesten `tests/test_ingen_aura.py`). `museum.db` er bygget på nytt.
+- Skjult datakatalog i rapportvinduet (`/api/katalog`).
+- «Spør KI» som egen inngang øverst i menyen.
+- Beslutningene står i `docs/DECISIONS.md`, punkt 1–12a.
+
+## Neste (rekkefølge fra DECISIONS 2026-11-09)
+1. Én startkommando.
+2. Test «Spør KI» med ekte nøkkel (koster noen øre).
+3. Senere: kart og leksjoner som faner, oppgave 09 (Lars velger rapporter), kopi av designsystemet, G:-stier i skriptene, slette Drive-kopien (bare etter Lars' ja).
+
+## Neste (eldre, fra 2026-11-06)
 1. Lars merger grenen `claude/kunstpixel-demo-database-fb3af9` til main.
 2. Lars godkjenner taggen `demo-v1` og sjekker den ut i sin egen demomappe.
 3. Senere: commit de 18 ventende endringene og lag `demo-v2`.
