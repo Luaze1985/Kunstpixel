@@ -3,7 +3,7 @@ Start Kunstpixel-demoen: sjekker miljø og database, og åpner Datafinner i nett
 
 Bruk (fra hvor som helst):
     powershell -ExecutionPolicy Bypass -File scripts/start_demo.ps1        # uten KI (standard)
-    powershell -ExecutionPolicy Bypass -File scripts/start_demo.ps1 -KI    # KI-forklaring på, krever .env
+    powershell -ExecutionPolicy Bypass -File scripts/start_demo.ps1 -KI    # KI på: .env med nøkkel, ellers din egen Claude
 
 Skriptet leser bare. Det skriver aldri til 05_data/museum.db og installerer ingenting.
 Stopp demoen med Ctrl+C.
@@ -85,8 +85,12 @@ if ($KI) {
         $navn = Get-Content $envfil | Where-Object { $_ -match '^\s*([A-Z_]+)\s*=\s*\S' } | ForEach-Object { ($_ -split '=')[0].Trim() }
     }
     $mangler = @('LLM_PROVIDER', 'LLM_MODEL', 'LLM_API_KEY') | Where-Object { $_ -notin $navn }
-    if ($mangler) {
-        Write-Host "[!!] KI er ikke satt opp (mangler i .env: $($mangler -join ', ')). Fortsetter uten KI." -ForegroundColor Yellow
+    if ($mangler -and (Get-Command claude -ErrorAction SilentlyContinue)) {
+        # Ingen API-nøkkel: bruk din egen Claude (Claude Code på abonnementet). Se src/kunstpixel/core/claude_cli.py.
+        $env:LLM_PROVIDER = 'claude-cli'
+        Ok "KI på via din egen Claude (claude-kommandoen, ingen API-nøkkel)"
+    } elseif ($mangler) {
+        Write-Host "[!!] KI er ikke satt opp (mangler i .env: $($mangler -join ', '), og claude-kommandoen finnes ikke). Fortsetter uten KI." -ForegroundColor Yellow
         $env:LLM_PROVIDER = ' '
     } else {
         Ok "KI på (fra .env)"

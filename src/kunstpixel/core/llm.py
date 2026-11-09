@@ -22,6 +22,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
 
+from src.kunstpixel.core import claude_cli
+
 DEFAULT_MODEL = "claude-opus-5-5"  # overstyres med KUNSTPIXEL_MODEL, for eksempel claude-haiku-5-5 for lavere pris
 DEFAULT_TIMEOUT_S = 60.0
 DEFAULT_MAX_TOKENS = 4000  # tanketokens teller med, så et lavt tak ville kuttet svaret
@@ -216,7 +218,8 @@ def build_llm(kind: str | None = None) -> LLMClient | None:
 # ---------- Valgfritt KI-lag for Datafinner-rapporter (urllib, 0 ekstra avhengigheter) ----------
 
 STANDARD_URL = {"openai": "https://api.openai.com/v1", "anthropic": "https://api.anthropic.com"}
-LEVERANDORER = tuple(STANDARD_URL)
+# claude-cli: din egen Claude via claude-kommandoen (abonnement, ingen nøkkel). Se core/claude_cli.py.
+LEVERANDORER = (*STANDARD_URL, "claude-cli")
 ANTHROPIC_VERSJON = "2023-06-01"
 # Datafinner kjører uten sperrer på syntetiske data (spec vaktrom-uten-sperrer, 2026-10-31).
 # Ingen felt fjernes før sending. Den interne assistenten (port 8001) bruker ikke denne funksjonen.
@@ -275,6 +278,8 @@ def fra_miljo(miljo: dict[str, str]) -> LlmKonfig | None:
     if leverandor not in LEVERANDORER:
         raise ValueError(f"LLM_PROVIDER må være {' eller '.join(LEVERANDORER)}, ikke «{leverandor}».")
     modell = (miljo.get("LLM_MODEL") or "").strip()
+    if not modell and leverandor == "claude-cli":
+        modell = "sonnet"  # raskt nok for oppslag, og sparer abonnementskvoten
     if not modell:
         raise ValueError("LLM_MODEL må settes når LLM_PROVIDER er satt.")
     return LlmKonfig(
@@ -283,7 +288,8 @@ def fra_miljo(miljo: dict[str, str]) -> LlmKonfig | None:
         api_key=(miljo.get("LLM_API_KEY") or "").strip(),
         base_url=(miljo.get("LLM_BASE_URL") or "").strip(),
         max_tokens=int(miljo.get("LLM_MAX_TOKENS") or 600),
-        timeout=float(miljo.get("LLM_TIMEOUT") or 30),
+        # claude-cli starter en egen prosess og MCP-server per spørsmål, så den får lengre tid.
+        timeout=float(miljo.get("LLM_TIMEOUT") or (180 if leverandor == "claude-cli" else 30)),
         maks_per_time=_tak(miljo.get("LLM_MAKS_PER_TIME")),
     )
 
@@ -489,9 +495,12 @@ def _post_json(konfig: LlmKonfig, adresse: str, hoder: dict[str, str], kropp: by
 
 def utfor(bruker_tekst: str, grunnlag: Any, konfig: LlmKonfig, system: str, apne=urllib.request.urlopen) -> dict[str, Any]:
     """Send én oppgave til språkmodellen. Tallene i svaret kontrolleres mot grunnlaget. Svaret er alltid AI-forslag."""
-    adresse, hoder, kropp = bygg_foresporsel(konfig, bruker_tekst, system)
-    data = _post_json(konfig, adresse, hoder, kropp, apne)
-    tekst = les_svar(konfig.leverandor, data)
+    if konfig.leverandor == "claude-cli":
+        tekst = claude_cli.tekst(bruker_tekst, konfig, system)
+    else:
+        adresse, hoder, kropp = bygg_foresporsel(konfig, bruker_tekst, system)
+        data = _post_json(konfig, adresse, hoder, kropp, apne)
+        tekst = les_svar(konfig.leverandor, data)
     if not tekst:
         raise LlmFeil("leverandorfeil", "KI-leverandøren ga et tomt svar.")
     return {
@@ -561,6 +570,11 @@ def chat_med_verktoy(
     verktoy:   [{"navn", "beskrivelse", "parametre"}] fra Datafinners verktøyskjema.
     kjor:      serverens run_tool (hvitelistet). Hver runde teller mot `begrenser`.
     """
+    if konfig.leverandor == "claude-cli":
+        # Claude kaller verktøyene selv via MCP. Én tur teller én gang mot timetaket.
+        if begrenser is not None and not begrenser.tillat():
+            raise LlmFeil("tak", "For mange KI-kall den siste timen. Prøv igjen senere.")
+        return claude_cli.chat(meldinger, verktoy, konfig, system)
     kall: list[dict[str, Any]] = []
     resultater: list[str] = []
     if konfig.leverandor == "openai":

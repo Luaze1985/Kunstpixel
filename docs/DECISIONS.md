@@ -83,6 +83,8 @@ Beslutninger:
 
 13. **Din egen Claude via MCP, ikke API-nøkkel (2026-11-09, Lars' valg).** Poenget er at Lars øver med sin egen Claude på abonnementet. `.mcp.json` i prosjektroten registrerer serveren `kunstpixel` (`src/kunstpixel/core/mcp_server.py`, 51 verktøy, lesing mot museum.db) for Claude Code. Ingen nøkkel og ingen ekstra regning. Inngangsfila `src/mcp_server.py` fant ikke pakken `src` og er rettet. «Spør KI» på nettsiden krever fortsatt en API-nøkkel (betales per bruk) og blir stående av. Ingen `.env` finnes, verken lokalt eller på Drive.
 
+14. **«Spør KI» på nettsiden går via din egen Claude (2026-11-09, Lars' valg).** Ny KI-leverandør `claude-cli` (`src/kunstpixel/core/claude_cli.py`): siden kaller den lokale claude-kommandoen på abonnementet, uten API-nøkkel. Låst: ingen innebygde verktøy (`--tools ""`), bare Kunstpixel-MCP og bare Datafinners hvitelistede verktøy (`--allowedTools`), ingen brukerinnstillinger eller hooks (`--setting-sources ""`), ingen lagret økt, tom arbeidsmappe, spørsmålet på stdin. `start_demo.cmd -KI` bruker dette når `.env` mangler nøkkel. Testet med to ekte spørsmål (Sal A, brann). Svartid ca. 10–20 sekunder.
+
 Rekkefølge: (1) slå `ux/ett-vindu` inn i main, (2) Aura-skriptet + vakttest, (3) skjult datakatalog, (4) chat-inngang, (5) én startkommando.
 
 Åpent / ikke avgjort:
