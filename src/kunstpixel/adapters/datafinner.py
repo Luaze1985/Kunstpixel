@@ -24,6 +24,7 @@ Serveren har ingen innlogging selv. Den skal alltid ligge bak noe som krever det
     GET  /api/verktoyskjema    verktøyene med parametere (JSON Schema), klare for en språkmodell
     GET  /api/rapport          deterministisk rapport: fakta + vurdering/forslag fra faste regler
     GET  /api/status           hva som er slått på (KI-lag)
+    GET  /api/katalog          alle tabeller med antall rader (?tabell=navn gir de 25 første radene)
     POST /api/forklar          valgfritt: KI forklarer rapporten, merket AI-forslag (av som standard)
 
 Arenaen (øvelsescaser, se 04_knowledge/07_arena/caser.yaml):
@@ -296,6 +297,48 @@ def run_tool(name: str, args: dict[str, Any]) -> Any:
     return fn(**clean)
 
 
+KATALOG_UTDRAG = 25  # rader i utdraget av én tabell
+
+
+def _tabellnavn(con: Any) -> list[str]:
+    return [r[0] for r in con.execute(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%' ORDER BY name")]
+
+
+def datakatalog() -> dict[str, Any]:
+    """Alle tabeller i museum.db med antall rader og kolonner. Skrivebeskyttet (mode=ro)."""
+    from src.kunstpixel.core.db import get_db_connection
+
+    con = get_db_connection()
+    try:
+        tabeller = []
+        for navn in _tabellnavn(con):
+            # Navnet kommer fra sqlite_master, ikke fra brukeren.
+            kolonner = [r[1] for r in con.execute(f'PRAGMA table_info("{navn}")')]
+            rader = con.execute(f'SELECT COUNT(*) FROM "{navn}"').fetchone()[0]
+            tabeller.append({"navn": navn, "rader": rader, "kolonner": kolonner})
+    finally:
+        con.close()
+    return {"tabeller": tabeller, "totalt_rader": sum(t["rader"] for t in tabeller)}
+
+
+def tabellutdrag(navn: str) -> dict[str, Any] | None:
+    """De første radene i én tabell. None hvis navnet ikke er en tabell i databasen."""
+    from src.kunstpixel.core.db import get_db_connection
+
+    con = get_db_connection()
+    try:
+        # Hvitelisten er tabellene som finnes. Bare et eksakt treff slipper gjennom til SQL.
+        if navn not in _tabellnavn(con):
+            return None
+        kolonner = [r[1] for r in con.execute(f'PRAGMA table_info("{navn}")')]
+        totalt = con.execute(f'SELECT COUNT(*) FROM "{navn}"').fetchone()[0]
+        rader = [dict(r) for r in con.execute(f'SELECT * FROM "{navn}" LIMIT ?', (KATALOG_UTDRAG,))]
+    finally:
+        con.close()
+    return {"tabell": navn, "kolonner": kolonner, "totalt": totalt, "rader": rader}
+
+
 class DatafinnerHandler(BaseHTTPRequestHandler):
     def _send(self, status: int, body: bytes, content_type: str) -> None:
         self.send_response(status)
@@ -344,6 +387,17 @@ class DatafinnerHandler(BaseHTTPRequestHandler):
                 {"navn": navn, "beskrivelse": beskrivelser[navn],
                  "status": "I chat" if navn in chat_verktoy else "I Datafinner"}
                 for navn in VERKTOY]})
+            return
+        if url.path == "/api/katalog":
+            navn = parse_qs(url.query, keep_blank_values=True).get("tabell")
+            if navn is None:
+                self._json(200, datakatalog())
+                return
+            utdrag = tabellutdrag(navn[0])
+            if utdrag is None:
+                self._json(404, {"error": "Fant ingen tabell med det navnet."})
+                return
+            self._json(200, utdrag)
             return
         if url.path == "/api/arena/caser":
             self._json(200, arena.last_caser())

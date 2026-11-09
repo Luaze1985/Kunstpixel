@@ -334,6 +334,9 @@
 
     var det = el("details"); det.appendChild(el("summary", null, "Vis grunnlag"));
     det.appendChild(el("p", null, "Kilde: museum.db via " + r.verktoy + "(" + JSON.stringify(r.args || {}) + ")." + (v.regel_id ? " Vurdering og forslag: regel " + v.regel_id + " (" + v.kilde + ", versjon " + v.versjon + ", " + v.datakilde + ")." : "")));
+    // Datakatalogen ligger bevisst bare her, inne i grunnlaget (DECISIONS punkt 11: minst mulig støy).
+    var tilKatalog = el("p", "af-hint"), lenke = el("a", null, "Se alle tabellene i databasen");
+    lenke.href = "#katalog"; tilKatalog.appendChild(lenke); det.appendChild(tilKatalog);
     rap.appendChild(blokk("Grunnlag", det));
 
     // Last ned: samme format som index.html (synlig rapporttekst som .txt). Grunnlaget tas med selv om det er lukket.
@@ -778,6 +781,54 @@
     if (!d.felt.length) form.requestSubmit();  // Oppgaver uten felt (opplæring) gir svar med en gang.
   }
 
+  // ---------- Datakatalog (skjult: nås bare fra «Vis grunnlag» i en rapport) ----------
+  function feilMelding(m, tittel, err) {
+    var f = el("div", "af-error-summary"); f.setAttribute("role", "alert");
+    f.appendChild(el("h2", null, tittel)); f.appendChild(el("p", null, err.message)); m.appendChild(f);
+  }
+  function visKatalog() {
+    var m = tom("Datakatalog", "Alle tabellene i databasen", "Rådata fra museum.db, kun lesing. Velg en tabell for å se de første radene.");
+    var ut = el("div"); ut.appendChild(el("p", "af-task-hint", "Henter …")); m.appendChild(ut);
+    fasit(null, null, "museum.db, kun lesing");
+    hent("/api/katalog").then(function (d) {
+      ut.textContent = "";
+      ut.appendChild(el("p", "af-hint", antall(d.tabeller.length, "tabell", "tabeller") + ", " + d.totalt_rader.toLocaleString("nb-NO") + " rader."));
+      var wrap = el("div", "af-table-wrap"), t = el("table", "af-table"), th = el("thead"), tr = el("tr"), tb = el("tbody");
+      ["Tabell", "Rader", "Kolonner"].forEach(function (k) { tr.appendChild(el("th", null, k)); }); th.appendChild(tr);
+      d.tabeller.forEach(function (x) {
+        var r = el("tr"), c = el("td"), a = el("a", null, x.navn);
+        a.href = "#" + encodeURIComponent("katalog/" + x.navn); c.appendChild(a); r.appendChild(c);
+        r.appendChild(el("td", null, x.rader.toLocaleString("nb-NO")));
+        r.appendChild(el("td", null, String(x.kolonner.length)));
+        tb.appendChild(r);
+      });
+      t.appendChild(th); t.appendChild(tb); wrap.appendChild(t); ut.appendChild(wrap);
+    }).catch(function (err) { ut.textContent = ""; feilMelding(ut, "Fant ikke katalogen", err); });
+  }
+  function visTabell(navn) {
+    var m = tom("Datakatalog", navn);
+    var tilbake = el("p", "af-hint"), a = el("a", null, "Tilbake til alle tabellene"); a.href = "#katalog"; tilbake.appendChild(a); m.appendChild(tilbake);
+    var ut = el("div"); ut.appendChild(el("p", "af-task-hint", "Henter …")); m.appendChild(ut);
+    fasit(null, null, "museum.db, tabell " + navn + ", kun lesing");
+    hent("/api/katalog?tabell=" + encodeURIComponent(navn)).then(function (d) {
+      ut.textContent = "";
+      ut.appendChild(el("p", "af-hint", "Viser " + d.rader.length + " av " + d.totalt.toLocaleString("nb-NO") + " rader. Alle kolonner: " + d.kolonner.join(", ") + "."));
+      var wrap = el("div", "af-table-wrap"), t = el("table", "af-table"), th = el("thead"), tr = el("tr"), tb = el("tbody");
+      d.kolonner.forEach(function (k) { tr.appendChild(el("th", null, k)); }); th.appendChild(tr);
+      d.rader.forEach(function (r) {
+        var x = el("tr");
+        // Rådata: én linje per celle, lange tekster kuttes. Hele tabellen rulles sidelengs i af-table-wrap.
+        d.kolonner.forEach(function (k) {
+          var v = r[k], s = v === null || v === undefined ? "" : String(v).replace(/\s+/g, " ");
+          var td = el("td", null, s.length > 60 ? s.slice(0, 59) + "…" : s); td.style.whiteSpace = "nowrap"; if (s.length > 60) td.title = s.slice(0, 500);
+          x.appendChild(td);
+        });
+        tb.appendChild(x);
+      });
+      t.appendChild(th); t.appendChild(tb); wrap.appendChild(t); ut.appendChild(wrap);
+    }).catch(function (err) { ut.textContent = ""; feilMelding(ut, "Fant ikke tabellen", err); });
+  }
+
   function visFlate(id, under, under2) {
     if (id === "chat") return visChat();
     if (id === "sok") return visSok();
@@ -797,6 +848,8 @@
     else if (type === "arena" && deler[1]) visCase(navn, deler[1]);
     else if (type === "arena") visArena(navn);
     else if (type === "flate") visFlate(navn, deler[1], deler[2]);
+    else if (hode === "katalog" && deler[1]) visTabell(deler.slice(1).join("/"));
+    else if (hode === "katalog") visKatalog();
     else visStart();
     tegnMeny();
   }
