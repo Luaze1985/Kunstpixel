@@ -21,6 +21,7 @@
 - Beslutningene står i `docs/DECISIONS.md`, punkt 1–12a.
 
 ## Neste (rekkefølge fra DECISIONS 2026-11-09)
+0. Mål (DECISIONS 15): smoothe rapporter og en LLM som krysskobler data. Grunnlag: `docs/design/2026-11-09-designkritikk-datafinner.md`. Neste steg er å avklare hvordan.
 1. Bruk «Spør KI» på nettsiden: start med skrivebordssnarveien (kjører `start_demo.cmd -KI`).
 2. Lars godkjenner MCP-serveren `kunstpixel` i Claude Code (kjør `claude` i Kunstpixel-mappa og svar ja), og tester et spørsmål.
 3. Valgfritt: koble samme server til Claude Desktop.
