@@ -21,7 +21,8 @@ from collections.abc import Callable
 from typing import Any
 
 # Hvert spørsmål peker på ett verktøy. Reglene i museum.db (rapport_regler) velger vurdering og forslag.
-# Denne listen må stemme med spørsmålene i museum.db (rolle_sporsmal) og med index.html. Det vokter en test.
+# Denne listen må stemme med spørsmålene i museum.db (rolle_sporsmal og rapport_regler). Det vokter en test.
+# Forsiden henter spørsmålene herfra via /api/verktoyskjema.
 SPORSMAL: dict[str, dict[str, Any]] = {
     "vakt-i-dag": {"tekst": "Hvem har vakt i dag?", "verktoy": "get_staff_on_shift"},
     "vaktplan": {"tekst": "Vaktplan for en dag", "verktoy": "get_shifts_for_date"},

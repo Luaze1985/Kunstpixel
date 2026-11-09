@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vaktrom</title>
+<link rel="stylesheet" href="/af.css">
+<style>
+  .vr-kort { border: 1px solid var(--line); border-radius: var(--radius-field); padding: 10px 12px; margin: 0 0 10px; background: var(--panel); }
+  .vr-kort h3 { margin: 0 0 4px; font-size: 1rem; }
+  .vr-kort p { margin: 2px 0; }
+  .vr-velg { display: flex; gap: 8px; align-items: flex-start; }
+  .vr-velg input { margin-top: 4px; }
+  .vr-gruppe { margin: 16px 0 6px; font-size: 1rem; }
+  .vr-lag { font-size: .75rem; font-weight: 650; text-transform: uppercase; letter-spacing: .04em; }
+  .vr-ki { white-space: pre-wrap; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body class="af" style="margin:0;padding:24px 16px;background:var(--canvas)">
+<div class="af">
+  <div class="af-shell">
+    <nav class="af-sidebar" aria-label="Steg">
+      <p class="af-side-heading">Vaktrom</p>
+      <ol class="af-flow-list" id="stegliste"></ol>
+      <hr class="af-side-rule">
+      <p class="af-task-hint"><a href="/">Til startsiden</a></p>
+    </nav>
+
+    <main class="af-main">
+      <div class="af-mobile-nav">
+        <label for="mobilvalg">Steg</label>
+        <select id="mobilvalg"></select>
+      </div>
+      <div class="af-alert info" role="status"><strong>Øvingsdata</strong><span>Alle ansatte, innleide og vakter er syntetiske. Ingenting sendes automatisk.</span></div>
+      <div class="af-error-summary" id="feil" role="alert" hidden>
+        <h2>Feil</h2>
+        <p id="feil-tekst"></p>
+      </div>
+
+      <section class="af-view" id="vakt">
+        <p class="af-caption">Steg 1 av 5 · <span class="vr-lag">Rapport</span></p>
+        <h1 class="af-title" tabindex="-1">Vakt</h1>
+        <div class="af-filters">
+          <div class="af-group"><label class="af-label" for="stasjon">Stasjon</label><select class="af-input" id="stasjon"></select></div>
+          <div class="af-group"><label class="af-label" for="dato">Dato</label><input class="af-input" id="dato" type="date"></div>
+          <div class="af-group"><label class="af-label" for="start">Start</label><input class="af-input" id="start" type="time" value="10:00"></div>
+          <div class="af-group"><label class="af-label" for="slutt">Slutt</label><input class="af-input" id="slutt" type="time" value="17:00"></div>
+        </div>
+        <p id="krav"></p>
+        <p id="ingen-tilgang" hidden></p>
+        <div class="af-actions">
+          <button class="af-btn af-btn-primary" type="button" id="til-historikk">Neste: historikk</button>
+        </div>
+      </section>
+
+      <section class="af-view" id="historikk" hidden>
+        <p class="af-caption">Steg 2 av 5 · <span class="vr-lag">Rapport</span></p>
+        <h2 class="af-title" tabindex="-1">Tidligere helgevakter</h2>
+        <div class="af-filters">
+          <div class="af-group"><label class="af-label" for="fra">Fra</label><input class="af-input" id="fra" type="date"></div>
+          <div class="af-group"><label class="af-label" for="til">Til</label><input class="af-input" id="til" type="date"></div>
+          <div class="af-group"><label class="af-label" for="hist-stasjon">Stasjon</label>
+            <select class="af-input" id="hist-stasjon"><option value="valgt">Valgt stasjon</option><option value="">Alle stasjoner</option></select></div>
+        </div>
+        <div class="af-actions">
+          <button class="af-btn af-btn-secondary" type="button" id="vis-historikk">Oppdater</button>
+          <button class="af-btn af-btn-primary" type="button" id="til-kandidater">Neste: kandidater</button>
+        </div>
+        <div class="af-kpis" id="hist-tall"></div>
+        <div class="af-table-wrap"><table class="af-table" id="hist-tabell"><thead><tr><th>Navn</th><th>Stilling</th><th>Stasjon</th><th>Helgevakter</th><th>Timer</th><th>Siste</th></tr></thead><tbody></tbody></table></div>
+        <span class="af-source system">Fra hr_vakter (lørdag og søndag)</span>
+      </section>
+
+      <section class="af-view" id="kandidater" hidden>
+        <p class="af-caption">Steg 3 av 5 · <span class="vr-lag">Rapport</span></p>
+        <h2 class="af-title" tabindex="-1">Kandidater</h2>
+        <p id="sortering"></p>
+        <div id="kand-liste"></div>
+        <span class="af-source verify">Bør verifiseres</span>
+        <div class="af-actions">
+          <button class="af-btn af-btn-primary" type="button" id="til-kontroll">Kontroller valgte</button>
+        </div>
+      </section>
+
+      <section class="af-view" id="kontroll" hidden>
+        <p class="af-caption">Steg 4 av 5 · <span class="vr-lag">Rapport</span> og <span class="vr-lag">Handling</span></p>
+        <h2 class="af-title" tabindex="-1">Kontroll</h2>
+        <div class="af-report">
+          <div class="af-report-block">
+            <span class="af-report-kind">Fakta</span>
+            <div><div id="kontroll-liste"></div><span class="af-source system">Regler fra arbeidstid_grenser og stasjon_krav</span></div>
+          </div>
+          <div class="af-report-block">
+            <span class="af-report-kind">Vurdering</span>
+            <div><p id="kontroll-merknad"></p><span class="af-source verify">Bør verifiseres</span></div>
+          </div>
+          <div class="af-report-block">
+            <span class="af-report-kind">Forslag</span>
+            <div>
+              <p>Ledelsen velger selv. KI kan forklare forskjellene, men endrer ikke rekkefølgen.</p>
+              <div class="af-actions" id="sml-blokk"><button class="af-btn af-btn-secondary" type="button" id="sammenlign">Sammenlign med KI</button></div>
+              <p class="vr-ki" id="sml-tekst" aria-live="polite"></p>
+              <span class="af-source suggested" id="sml-merke" hidden>AI-forslag</span>
+            </div>
+          </div>
+        </div>
+        <div class="af-actions">
+          <button class="af-btn af-btn-primary" type="button" id="til-kontakt">Neste: vurdering og kontakt</button>
+        </div>
+      </section>
+
+      <section class="af-view" id="kontakt" hidden>
+        <p class="af-caption">Steg 5 av 5 · <span class="vr-lag">Handling</span></p>
+        <h2 class="af-title" tabindex="-1">Vurdering og kontakt</h2>
+        <p>Å åpne e-post eller ringe betyr ikke at kontakt er gjennomført. Et lagret utkast oppretter ingen vakt eller avtale.</p>
+        <div id="kontakt-liste"></div>
+        <h3 class="vr-gruppe" id="utkast" tabindex="-1">Mine kontaktutkast</h3>
+        <p>Lagret i denne nettleseren.</p>
+        <div id="utkast-liste"></div>
+      </section>
+    </main>
+
+    <aside class="af-context" aria-label="Forklaring">
+      <h2 class="af-context-title">Rolle</h2>
+      <div class="af-context-card">
+        <label class="af-small-label" for="rolle">Du er</label>
+        <select class="af-input" id="rolle"></select>
+      </div>
+      <h2 class="af-context-title">To lag</h2>
+      <div class="af-context-card">
+        <span class="af-small-label">Rapport</span>
+        <p>Fakta, lister og kontroller fra museum.db. Samme valg gir samme svar.</p>
+      </div>
+      <div class="af-context-card">
+        <span class="af-small-label">Handling</span>
+        <p>KI forklarer og skriver utkast oppå rapporten. Alltid merket AI-forslag.</p>
+        <p id="ki-status">Sjekker KI …</p>
+      </div>
+      <div class="af-context-card">
+        <span class="af-small-label">Vakt</span>
+        <p id="vakt-oppsummert">Ikke valgt ennå.</p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script src="/vaktrom.js"></script>
+<script>Vaktrom.start();</script>
+</body>
+</html>

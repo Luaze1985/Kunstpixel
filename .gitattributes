@@ -1,4 +1,4 @@
-
+﻿
 # Hosting: linjeskift må være LF for filer som kjøres på Linux-serveren
 deploy/demo/*.sh text eol=lf
 deploy/demo/Dockerfile text eol=lf
@@ -8,5 +8,13 @@ deploy/demo/*.yaml text eol=lf
 # Git-hooks kjøres av sh, også på Windows
 scripts/githooks/* text eol=lf
 
-# Genererte CSV-er sammenlignes byte for byte med skriptet (test_publikum_data), som skriver LF
+# cmd.exe forventer CRLF i .cmd-filer
+*.cmd text eol=crlf
+
+# Datafiler og Colab-pakken genereres med LF og sammenlignes byte for byte i testene.
+# Uten dette gir core.autocrlf=true CRLF ved utsjekk, og testene feiler i en ny mappe.
+*.csv text eol=lf
+# (SJEKKSUM.txt er unntatt: den skrives med plattformens linjeskift av skriv_colab_pakke.)
+01_inbox/h5_colab/*.py text eol=lf
+src/kunstpixel/core/intern/leveranse*.py text eol=lf
 05_data/*.csv text eol=lf

@@ -115,7 +115,7 @@
       <section class="af-view" id="grense" hidden>
         <p class="af-caption">Grensemodus</p>
         <h2 class="af-title">Grensemodus</h2>
-        <div class="af-alert error" role="note"><strong id="grense-fast">Ulovlig i dag. Kun syntetiske data. Ingenting lagres.</strong><span>Modellen får forespørselen og de syntetiske dataene casen gjelder. Ingen sperrer.</span></div>
+        <div class="af-alert error" role="note"><strong id="grense-fast">Ulovlig i dag. Kun syntetiske data. Ingenting lagres.</strong><span>Modellen får forespørselen og de syntetiske dataene casen gjelder.</span></div>
         <p id="grense-ki"></p>
         <div class="af-error-summary" id="grense-feil" role="alert" hidden>
           <h2>Feil</h2>
@@ -262,7 +262,7 @@
         tekst.appendChild(el("strong", c.id + " " + c.tittel));
         tekst.appendChild(el("small", c.oppdrag));
         b.appendChild(tekst);
-        b.appendChild(el("span", c.kjoring.type === "lesecase" ? "Lesecase" : "Live", "af-badge"));
+        b.appendChild(el("span", c.kjoring.type === "lesecase" ? "Lesecase" : "Kan kjøres", "af-badge"));
         b.addEventListener("click", function () { aapne(c); });
         li.appendChild(b);
         ul.appendChild(li);
@@ -371,6 +371,10 @@
   if (location.hash === "#grense") visGrense();
 
   tegnRegler();
+  // Grensemodus sender til en modell. Med KI av merkes lenken, så ingen venter et modellsvar.
+  fetch("/api/status").then(function (r) { return r.json(); }).then(function (s) {
+    if (!s.llm) $("lenke-grense").lastChild.appendChild(el("span", "Krever KI", "af-step-status"));
+  }).catch(function () {});
   fetch("/api/arena/caser")
     .then(function (r) { if (!r.ok) throw new Error("Fikk ikke hentet casene."); return r.json(); })
     .then(function (j) { data = j; tegnTavle(); })

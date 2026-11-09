@@ -1,13 +1,15 @@
 """Rolleoppgaver kommer fra data og kan utføres gjennom Datafinner."""
 
+import http.client
 import json
 import threading
 from http.server import ThreadingHTTPServer
 from urllib.parse import quote
 from urllib.request import urlopen
 
-from src.kunstpixel.adapters.datafinner import DatafinnerHandler, VERKTOY
 import pytest
+
+from src.kunstpixel.adapters.datafinner import VERKTOY, DatafinnerHandler
 
 
 @pytest.mark.parametrize("rolle, forventede", [
@@ -35,9 +37,15 @@ def test_rolleflyt_og_verktoykatalog():
         with urlopen(base + "/api/verktoykatalog") as response:
             katalog = json.load(response)["verktoy"]
         assert {r["navn"] for r in katalog} == set(VERKTOY)
-        with urlopen(base + "/arbeidsflyt") as response:
+        # Arbeidsflyter ligger i skallet (oppgave 08). Den gamle adressen sendes dit med 302.
+        con = http.client.HTTPConnection("127.0.0.1", server.server_address[1], timeout=10)
+        con.request("GET", "/arbeidsflyt")
+        svar = con.getresponse()
+        assert svar.status == 302 and svar.getheader("Location") == "/#flate:arbeidsflyt"
+        con.close()
+        with urlopen(base + "/") as response:
             side = response.read().decode("utf-8")
-        assert "Velg en arbeidsrolle" in side
+        assert "Velg arbeidsrolle" in side
         assert "localStorage" in side
         args = quote(json.dumps({"query": "brann", "limit": 2}))
         with urlopen(base + f"/api/verktoy?navn=lookup_handbook&args={args}") as response:

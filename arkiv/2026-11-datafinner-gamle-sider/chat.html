@@ -34,7 +34,7 @@
       <section class="af-view" id="chat">
         <p class="af-caption">Spør med vanlige ord</p>
         <h1 class="af-title" tabindex="-1">Chat</h1>
-        <div class="af-alert info" role="status"><strong>Øvingsdata</strong><span>Alle data er syntetiske. KI-en henter fakta med verktøyene i Datafinner. Ingen sperrer.</span></div>
+        <div class="af-alert info" role="status"><strong>Øvingsdata</strong><span>Alle data er syntetiske. KI-en henter fakta med verktøyene i Datafinner.</span></div>
         <div class="af-alert warn" role="status" id="ki-av" hidden><strong>KI er av</strong><span id="ki-av-tekst"></span></div>
         <div class="af-error-summary" id="feil" role="alert" hidden>
           <h2>Feil</h2>
@@ -79,7 +79,7 @@
       "Hva står i personalmappen til KP-ANS-006?",
       "Hva sier håndbøkene om brann?"
     ],
-    kiAv: "Sett LLM_PROVIDER og LLM_MODEL (og LLM_API_KEY for ekstern modell) og start serveren på nytt."
+    kiAv: "Denne demoen kjører uten KI. Start med -KI for å slå den på."
   };
   var $ = function (id) { return document.getElementById(id); };
   var historikk = [];  // [{rolle: "bruker"|"assistent", tekst}]
@@ -128,7 +128,7 @@
       .then(function (r) { return r.json().then(function (b) { if (!r.ok) throw new Error(b.error || "Ukjent feil"); return b; }); })
       .then(function (s) { historikk.push({ rolle: "assistent", tekst: s.tekst }); visMelding("assistent", s.tekst, s); })
       .catch(function (e) { historikk.pop(); feil(e.message); })
-      .then(function () { $("send").disabled = false; $("status").textContent = ""; $("sporsmal").focus(); });
+      .then(function () { $("send").disabled = !kiPaa; $("status").textContent = ""; $("sporsmal").focus(); });
   }
 
   $("send").addEventListener("click", send);
@@ -141,11 +141,18 @@
   });
 
   var param = new URLSearchParams(location.search);
+  // Uten KI kan ingenting sendes: feltet og knappen slås av, og varselet vises.
+  // style.display, fordi .af-alert i af.css har display: grid som overstyrer hidden.
+  function settKi(paa) {
+    kiPaa = paa;
+    $("ki-av").hidden = paa; $("ki-av").style.display = paa ? "none" : "";
+    $("ki-av-tekst").textContent = TEKST.kiAv;
+    $("send").disabled = !paa; $("sporsmal").disabled = !paa;
+  }
   fetch("/api/status").then(function (r) { return r.json(); }).then(function (s) {
-    kiPaa = !!s.llm;
+    settKi(!!s.llm);
     $("ki-status").textContent = kiPaa ? "På: " + s.llm_modell + "." : "Av.";
-    $("ki-av").hidden = kiPaa; $("ki-av-tekst").textContent = TEKST.kiAv;
-  }).catch(function () { $("ki-av").hidden = false; $("ki-av-tekst").textContent = TEKST.kiAv; });
+  }).catch(function () { settKi(false); });
   fetch("/api/arbeidsflyt").then(function (r) { return r.json(); }).then(function (b) {
     [...new Set((b.oppgaver || []).map(function (r) { return r.rolle; }))].forEach(function (r) { var o = el("option", null, r); o.value = r; $("rolle").appendChild(o); });
     if (param.get("rolle")) $("rolle").value = param.get("rolle");

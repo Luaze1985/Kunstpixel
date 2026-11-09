@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datafinner – ett vindu</title>
+<link rel="stylesheet" href="/af.css">
+</head>
+<body class="af" style="margin:0;padding:24px 16px;background:var(--canvas)">
+<div class="af">
+  <div class="af-shell">
+    <!-- Venstre: alt som kan velges. Midten: arbeidet. Høyre: fasit (verktøy, kilde, KI). -->
+    <nav class="af-sidebar" aria-label="Innhold">
+      <p class="af-side-heading">Datafinner</p>
+      <!-- Rollen styrer hvilke rapporter som foreslås. Valget huskes i fanen. -->
+      <div class="af-group" style="margin:0 8px 14px">
+        <label class="af-label" for="rollevalg">Jeg er</label>
+        <select class="af-input" id="rollevalg"><option value="">Velg rolle</option></select>
+      </div>
+      <div id="meny"><p class="af-task-hint">Henter …</p></div>
+    </nav>
+
+    <main class="af-main">
+      <div class="af-mobile-nav">
+        <label for="mobilvalg">Gå til</label>
+        <select id="mobilvalg"></select>
+      </div>
+      <div class="af-alert info" role="status"><strong>Øvingsdata</strong><span>Alle navn og tall er syntetiske.</span></div>
+      <div id="midt" aria-live="polite"></div>
+    </main>
+
+    <aside class="af-context" aria-label="Fasit">
+      <h2 class="af-context-title">Fasit</h2>
+      <p class="af-task-hint" style="margin:0 0 12px">Tallene kommer fra databasen. KI formulerer bare.</p>
+      <div class="af-context-card">
+        <span class="af-small-label">Verktøy</span>
+        <p id="f-verktoy" style="overflow-wrap:anywhere">Ingen ennå</p>
+      </div>
+      <div class="af-context-card">
+        <span class="af-small-label">Kilde</span>
+        <p id="f-kilde" style="overflow-wrap:anywhere">museum.db, kun lesing</p>
+      </div>
+      <div class="af-context-card" id="f-regel-kort" hidden>
+        <span class="af-small-label">Regel</span>
+        <p id="f-regel" style="overflow-wrap:anywhere"></p>
+      </div>
+      <div class="af-context-card">
+        <span class="af-small-label">KI</span>
+        <p id="f-ki">Sjekker …</p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  function el(tag, cls, tekst) { var e = document.createElement(tag); if (cls) e.className = cls; if (tekst !== undefined && tekst !== null) e.textContent = tekst; return e; }
+  function hent(url, opts) { return fetch(url, opts).then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || ("HTTP " + r.status)); return d; }); }); }
+  function post(url, body) { return hent(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }); }
+
+  var KI = false, ROLLER = [], SPORSMAL = {}, SKJEMA = {}, AREA = { omrader: [], caser: [] };
+  var valgt = null, aktivRolle = null;
+  try { aktivRolle = sessionStorage.getItem("datafinner-rolle") || null; } catch (e) {}
+
+  // Flatene i venstre meny. Alle vises i midten av vinduet.
+  var FLATER = [
+    { id: "chat", navn: "Chat", krevKI: true },
+    { id: "vaktrom", navn: "Vaktrom" },
+    { id: "sok", navn: "Søk" },
+    { id: "arbeidsflyt", navn: "Arbeidsflyter" }
+  ];
+
+  // Felt som ikke hører hjemme i en demotabell (kontaktinfo, interne nøkler, datamerker).
+  var SKJULT = /(^|_)(id|datakilde|telefon|epost)$|^(telefon|epost|kontor_sal|klokkeslett_datakilde)$/;
+  var STANDARD = { dato: function () { return new Date().toISOString().slice(0, 10); }, maaned: function () { return new Date().toISOString().slice(0, 7); },
+    aar: function () { return 2025; }, kvartal: function () { return 2; }, exhibition_id: function () { return "KP-EXH-2020-041"; },
+    ident: function () { return "KP-ANS-001"; }, ansatt_id: function () { return "KP-ANS-001"; }, mottakertype: function () { return "ekstern"; },
+    mal_id: function () { return "ML-01"; }, kategori: function () { return "hms_opplaering"; }, intern_eier: function () { return "Museumsdirektør"; } };
+  var ETIKETT = { dato: "Dato", maaned: "Måned", aar: "År", kvartal: "Kvartal", exhibition_id: "Utstilling", ident: "Ansatt", ansatt_id: "Ansatt",
+    query: "Søk", mottakertype: "Mottaker", mal_id: "Rapportmal", kategori: "Kategori", intern_eier: "Intern eier" };
+
+  // ---------- Høyre panel ----------
+  function fasit(verktoy, args, kilde, regel) {
+    $("f-verktoy").textContent = verktoy ? verktoy + "(" + (args && Object.keys(args).length ? JSON.stringify(args) : "") + ")" : "Ingen ennå";
+    $("f-kilde").textContent = kilde || "museum.db, kun lesing";
+    $("f-regel-kort").hidden = !regel;
+    $("f-regel").textContent = regel || "";
+  }
+
+  // ---------- Venstre meny ----------
+  function antall(n, en, flere) { return n + " " + (n === 1 ? en : flere); }
+  function rolle(navn) { return ROLLER.filter(function (r) { return r.navn === navn; })[0] || null; }
+  // Bare roller med rapporter vises. Utviklerrollene (Repo, Kontekst, MCP) har ingen og faller bort av seg selv.
+  function synligeRoller() { return ROLLER.filter(function (r) { return r.sporsmal.length; }); }
+  function husk(navn) { aktivRolle = navn; try { sessionStorage.setItem("datafinner-rolle", navn || ""); } catch (e) {} }
+
+  function tegnMeny() {
+    var meny = $("meny"), mobil = $("mobilvalg"), rv = $("rollevalg");
+    meny.textContent = ""; mobil.textContent = "";
+    rv.length = 1;
+    synligeRoller().forEach(function (r) { var o = el("option", null, r.navn); o.value = r.navn; rv.appendChild(o); });
+    rv.value = aktivRolle || "";
+    function gruppe(tittel, punkter, kunMobil) {
+      var og = el("optgroup"); og.label = tittel;
+      if (kunMobil) { punkter.forEach(function (p) { var op = el("option", null, p.navn); op.value = p.id; og.appendChild(op); }); mobil.appendChild(og); return; }
+      meny.appendChild(el("p", "af-side-heading", tittel));
+      var ol = el("ol", "af-flow-list");
+      punkter.forEach(function (p) {
+        // p.klikk og p.dataId brukes av vaktrom-stegene, som styres av vaktrom.js og ikke av adressen.
+        var li = el("li"), b = el("button", "af-flow-link"); b.type = "button"; b.dataset.id = p.dataId || p.id;
+        var t = el("span", null, p.navn); if (p.status) t.appendChild(el("span", "af-step-status", p.status));
+        b.appendChild(t); b.addEventListener("click", p.klikk || function () { vis(p.id); });
+        if (p.aktiv) b.setAttribute("aria-current", "step");
+        else if (!p.klikk && (valgt === p.id || (valgt && valgt.indexOf(p.id + "/") === 0))) b.setAttribute("aria-current", "page");
+        li.appendChild(b); ol.appendChild(li);
+        var op = el("option", null, p.navn); op.value = p.id; og.appendChild(op);
+      });
+      meny.appendChild(ol); mobil.appendChild(og);
+    }
+    // Mens vaktrommet er åpent, står stegene øverst i menyen.
+    if (VAKTROM.api && (valgt || "").indexOf("flate:vaktrom") === 0) {
+      gruppe("Vaktrom", VAKTROM.api.steg.map(function (s, i) {
+        return { id: "vaktrom-steg:" + s[0], dataId: s[0], navn: (i + 1) + ". " + s[1], aktiv: VAKTROM.steg === s[0],
+          klikk: function () { VAKTROM.api.gaa(s[0]); } };
+      }));
+    }
+    // Mens Arbeidsflyter er åpent, står arbeidsrollene øverst i menyen.
+    if (ARBEID.oppgaver && (valgt || "").indexOf("flate:arbeidsflyt") === 0) {
+      gruppe("Arbeidsroller", arbeidsroller().map(function (a) { return { id: arbeidId(a), navn: a }; }));
+    }
+    var r = rolle(aktivRolle);
+    var rollePunkter = synligeRoller().map(function (x) { return { id: "rolle:" + x.navn, navn: x.navn, status: antall(x.sporsmal.length, "rapport", "rapporter") }; });
+    // Med rolle: rollens egne rapporter øverst. Uten rolle: rollelisten, så man velger først.
+    if (r) gruppe("Rapporter for " + r.navn.toLowerCase(), r.sporsmal.map(function (id) { return { id: "rolle:" + r.navn + "/" + id, navn: (SPORSMAL[id] || { tekst: id }).tekst }; }));
+    else gruppe("Velg rolle", rollePunkter);
+    gruppe("Arena", AREA.omrader.map(function (o) {
+      var n = AREA.caser.filter(function (c) { return c.omrade === o.id; }).length;
+      return { id: "arena:" + o.id, navn: o.navn, status: n + (n === 1 ? " case" : " caser") };
+    }));
+    gruppe("Flater", FLATER.map(function (f) { return { id: "flate:" + f.id, navn: f.navn, status: f.krevKI && !KI ? "Krever KI" : null }; }));
+    if (r) gruppe("Bytt rolle", rollePunkter, true);  // I mobilvisning finnes ikke rollevalget i sidemenyen.
+    mobil.value = (valgt || "").split("/")[0];  // Valget kjenner bare toppnivået (rolle, område, flate).
+  }
+  $("mobilvalg").addEventListener("change", function () {
+    if (this.value.indexOf("vaktrom-steg:") === 0 && VAKTROM.api) return VAKTROM.api.gaa(this.value.slice(13));
+    vis(this.value);
+  });
+  $("rollevalg").addEventListener("change", function () {
+    husk(this.value || null);
+    if (this.value) return vis("rolle:" + this.value);
+    if (location.hash) location.hash = ""; else ruter();  // Uten rolle: tilbake til «Hvem er du?».
+  });
+
+  // ---------- Midten ----------
+  function tom(caption, tittel, ingress) {
+    var m = $("midt"); m.textContent = "";
+    if (caption) m.appendChild(el("p", "af-caption", caption));
+    var h = el("h1", "af-title", tittel); h.tabIndex = -1; m.appendChild(h);
+    if (ingress) m.appendChild(el("p", "af-lead", ingress));
+    h.focus({ preventScroll: true });
+    return m;
+  }
+  function kort(liste, punkter) {
+    var ul = el("ul", "af-task-board");
+    punkter.forEach(function (p) {
+      // Samme oppbygging som kortene på forsiden: tekst til venstre, merke til høyre.
+      var li = el("li"), b = el("button", "af-task-card"); b.type = "button";
+      var t = el("span"); t.appendChild(el("strong", null, p.navn));
+      if (p.tekst) t.appendChild(el("small", null, p.tekst));
+      b.appendChild(t);
+      if (p.merke) b.appendChild(el("span", "af-badge", p.merke));
+      b.addEventListener("click", p.klikk); li.appendChild(b); ul.appendChild(li);
+    });
+    liste.appendChild(ul);
+  }
+
+  function visStart() {
+    if (aktivRolle && rolle(aktivRolle)) return visRolle(aktivRolle);
+    var m = tom(null, "Hvem er du?", "Velg rolle, så foreslår Datafinner rapportene som passer. Svaret kommer i midten, og fasiten (verktøy og kilde) står til høyre.");
+    kort(m, synligeRoller().map(function (r) {
+      return { navn: r.navn, tekst: r.beskrivelse, merke: antall(r.sporsmal.length, "rapport", "rapporter"), klikk: function () { vis("rolle:" + r.navn); } };
+    }));
+    fasit(null);
+  }
+
+  function visRolle(navn) {
+    var r = rolle(navn); if (!r) { husk(null); return visStart(); }
+    husk(navn);
+    var m = tom("Rapporter for", r.navn, r.beskrivelse);
+    kort(m, r.sporsmal.map(function (id) {
+      var s = SPORSMAL[id] || { tekst: id };
+      // Vis hva svaret gjelder når man klikker: «Standard: År 2025, Kvartal 2». Fritekstsøk uten verdi gir de første treffene.
+      var std = parametre(id).map(function (p) { var v = STANDARD[p.navn] ? STANDARD[p.navn]() : ""; return v === "" ? null : (ETIKETT[p.navn] || p.navn) + " " + v; }).filter(Boolean);
+      var harSok = parametre(id).some(function (p) { return p.navn === "query"; });
+      var tekst = std.length ? "Standard: " + std.join(", ") + ". Kan endres." : harSok ? "Viser de første treffene. Du kan søke." : "Ett klikk gir svaret.";
+      return { navn: s.tekst, tekst: tekst, klikk: function () { vis("rolle:" + navn + "/" + id); } };
+    }));
+    fasit(null);
+  }
+
+  function parametre(id) {
+    var s = SPORSMAL[id] || {}, t = SKJEMA[s.verktoy] || {}, p = t.parametre || {}, krav = p.required || [];
+    var navn = krav.slice(); if (!krav.length && p.properties && p.properties.query) navn.push("query");
+    return navn.map(function (n) { return { navn: n, type: (p.properties[n] || {}).type, hjelp: (p.properties[n] || {}).description }; });
+  }
+
+  function visSporsmal(rolle, id) {
+    var s = SPORSMAL[id] || { tekst: id };
+    var m = tom(rolle, s.tekst);
+    var felt = parametre(id), form = el("form");
+    form.noValidate = true;
+    felt.forEach(function (f) {
+      var g = el("div", "af-group"), l = el("label", "af-label", ETIKETT[f.navn] || f.navn), i = el("input", "af-input");
+      i.id = "p-" + f.navn; l.htmlFor = i.id; i.name = f.navn;
+      i.type = f.navn === "dato" ? "date" : f.navn === "maaned" ? "month" : f.type === "integer" ? "number" : "text";
+      i.value = STANDARD[f.navn] ? STANDARD[f.navn]() : "";
+      g.appendChild(l); if (f.hjelp) g.appendChild(el("span", "af-hint", f.hjelp)); g.appendChild(i); form.appendChild(g);
+    });
+    var a = el("div", "af-actions"), b = el("button", "af-btn af-btn-secondary", "Oppdater"); b.type = "submit";
+    a.appendChild(b); form.appendChild(a); m.appendChild(form);
+    // Svaret hentes med en gang med standardverdiene. Knappen trengs bare når det finnes felt å endre.
+    // (display, fordi af.css overstyrer hidden.)
+    if (!felt.length) a.style.display = "none";
+    var ut = el("div"); m.appendChild(ut);
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var args = {};
+      felt.forEach(function (f) { var v = form.elements[f.navn].value.trim(); if (v !== "") args[f.navn] = f.type === "integer" ? Number(v) : v; });
+      b.disabled = true; ut.textContent = ""; ut.appendChild(el("p", "af-task-hint", "Henter …"));
+      hent("/api/rapport?sporsmal=" + encodeURIComponent(id) + "&args=" + encodeURIComponent(JSON.stringify(args)))
+        .then(function (r) { tegnRapport(ut, r); })
+        .catch(function (err) { ut.textContent = ""; var f = el("div", "af-error-summary"); f.setAttribute("role", "alert"); f.appendChild(el("h2", null, "Fant ikke svar")); f.appendChild(el("p", null, err.message)); ut.appendChild(f); })
+        .then(function () { b.disabled = false; });
+    });
+    fasit(s.verktoy, null);
+    form.requestSubmit();  // Ett klikk i menyen gir rapporten.
+  }
+
+  // Generisk visning av et verktøysvar: nøkkeltall, én tabell, resten som liste.
+  // Feltnavn til lesbar etikett: antall_pa_jobb → «Antall på jobb».
+  function etikett(k) { var s = k.replace(/_/g, " ").replace(/\bpa\b/g, "på").replace(/\bnok\b/g, "kr").replace(/aa/g, "å").replace(/\bbesok/g, "besøk"); return s.charAt(0).toUpperCase() + s.slice(1); }
+  function tabell(rader) {
+    // Kolonner der alle rader har samme verdi (f.eks. dato) sier ingenting i tabellen.
+    var kol = Object.keys(rader[0] || {}).filter(function (k) {
+      if (SKJULT.test(k) || typeof rader[0][k] === "object") return false;
+      return rader.length < 2 || rader.some(function (r) { return r[k] !== rader[0][k]; });
+    });
+    // Kolonner som er kopi av en tidligere kolonne (rolle = stilling) vises én gang.
+    kol = kol.filter(function (k, i) { return !kol.slice(0, i).some(function (f) { return rader.every(function (r) { return r[f] === r[k]; }); }); });
+    // Hvem/hva først (navn, tittel), og maks 5 kolonner så tabellen får plass i midten uten sidelengs rulling (F6).
+    var forst = kol.filter(function (k) { return /^(navn|tittel)$/.test(k); });
+    kol = forst.concat(kol.filter(function (k) { return forst.indexOf(k) < 0; })).slice(0, 5);
+    var wrap = el("div", "af-table-wrap"), t = el("table", "af-table"), th = el("thead"), tr = el("tr"), tb = el("tbody");
+    kol.forEach(function (k) { tr.appendChild(el("th", null, etikett(k))); }); th.appendChild(tr);
+    rader.slice(0, 50).forEach(function (r) { var x = el("tr"); kol.forEach(function (k) { x.appendChild(el("td", null, verdi(r[k], k))); }); tb.appendChild(x); });
+    t.appendChild(th); t.appendChild(tb); wrap.appendChild(t);
+    return wrap;
+  }
+  // Årstall uten tusenskille (2025, ikke 2 025). Andre tall på norsk.
+  function verdi(v, k) { return typeof v === "number" ? (/(^|_)aar$|^ar$/.test(k || "") ? String(v) : v.toLocaleString("nb-NO")) : v === null || v === undefined ? "" : String(v); }
+  function forsteListe(f) { if (Array.isArray(f)) return f; if (f && typeof f === "object") { for (var k in f) if (Array.isArray(f[k]) && f[k].length && typeof f[k][0] === "object") return f[k]; } return null; }
+  // Objekt uten liste: én rad per felt, nestede objekter ett nivå ned («SSB · sykefravær prosent»).
+  function objektTabell(obj) {
+    var rader = [];
+    Object.keys(obj || {}).forEach(function (k) {
+      if (SKJULT.test(k)) return;
+      var v = obj[k];
+      if (v && typeof v === "object" && !Array.isArray(v)) Object.keys(v).forEach(function (u) { if (!SKJULT.test(u) && (v[u] === null || typeof v[u] !== "object")) rader.push([etikett(k) + " · " + etikett(u).toLowerCase(), v[u], u]); });
+      else if (!Array.isArray(v)) rader.push([etikett(k), v, k]);
+    });
+    var wrap = el("div", "af-table-wrap"), t = el("table", "af-table"), tb = el("tbody");
+    rader.forEach(function (r) { var x = el("tr"); x.appendChild(el("th", null, r[0])); x.appendChild(el("td", null, verdi(r[1], r[2]))); tb.appendChild(x); });
+    t.appendChild(tb); wrap.appendChild(t); return wrap;
+  }
+  function nokkeltall(obj, args) {
+    var n = Object.keys(obj || {}).filter(function (k) {
+      if (args && k in args) return false;  // Inndata (år, kvartal) er ikke svar.
+      return typeof obj[k] === "number" || (typeof obj[k] === "string" && obj[k].length < 30 && !SKJULT.test(k));
+    }).slice(0, 4);
+    if (!n.length) return null;
+    var d = el("div", "af-kpis");
+    n.forEach(function (k) { var c = el("div", "af-kpi"); c.appendChild(el("p", "af-kpi-label", etikett(k))); c.appendChild(el("p", "af-kpi-value", verdi(obj[k], k))); d.appendChild(c); });
+    return d;
+  }
+  // Samme merker og kontrollpunkter som rapporten i index.html, så begrepene er like i hele appen.
+  var MERKE = { bekreftet: ["confirmed", "Bekreftet"], system: ["system", "Systemforslag"], verifiser: ["verify", "Bør verifiseres"], mangler: ["missing", "Mangler"] };
+  var KONTROLL = ["Tallene stemmer med kilden", "Utvalget dekker det jeg spurte om"];
+  function blokk(type, innhold, merke) {
+    var b = el("div", "af-report-block"); b.appendChild(el("span", "af-report-kind", type));
+    var d = el("div"); d.appendChild(typeof innhold === "string" ? el("p", null, innhold) : innhold);
+    var m = null;
+    if (merke) { m = el("span"); settMerke(m, merke); d.appendChild(m); }
+    b.appendChild(d); b.merke = m; return b;
+  }
+  function settMerke(node, m) { node.className = "af-source " + m[0]; node.textContent = m[1]; }
+
+  function tegnRapport(ut, r) {
+    ut.textContent = "";
+    var rap = el("div", "af-report");
+    var status = el("span", "af-badge active", "Utkast");
+    rap.appendChild(el("p", "af-caption", "Rapport ")).appendChild(status);
+    var tall = r.regelverdier && Object.keys(r.regelverdier).length ? r.regelverdier : (!Array.isArray(r.fakta) ? r.fakta : null);
+    var kp = nokkeltall(tall, r.args); if (kp) rap.appendChild(kp);
+    var liste = forsteListe(r.fakta);
+    var faktaVisning = liste ? tabell(liste) : Array.isArray(r.fakta) ? "Ingen treff." : r.fakta && typeof r.fakta === "object" ? objektTabell(r.fakta) : String(r.fakta);
+    var fakta = blokk("Fakta", faktaVisning, MERKE.verifiser); rap.appendChild(fakta);
+    var v = r.vurdering || {}, harRegel = !!(v.vurdering || v.forslag);
+    var vurdering = blokk("Vurdering", v.vurdering || v.mangler || "Databasen har ingen regel for dette spørsmålet.", harRegel ? MERKE.system : MERKE.mangler);
+    var forslag = blokk("Forslag", v.forslag || "—", harRegel ? MERKE.system : MERKE.mangler);
+    rap.appendChild(vurdering); rap.appendChild(forslag);
+
+    // Kontroll: rapporten er Utkast til en person har huket av fakta og godtatt vurdering og forslag.
+    var boks = el("div");
+    boks.appendChild(el("p", "af-hint", "Huk av kontrollpunktene for å gjøre rapporten bekreftet."));
+    var faktaBokser = KONTROLL.map(function (t) { return avkrysning(boks, t); });
+    var godta = harRegel ? avkrysning(boks, "Jeg godtar vurdering og forslag") : null;
+    var kontroll = blokk("Kontroll", boks, MERKE.verifiser); rap.appendChild(kontroll);
+    function oppdater() {
+      var faktaOk = faktaBokser.every(function (c) { return c.checked; });
+      var godtatt = !!(godta && godta.checked);
+      settMerke(fakta.merke, faktaOk ? MERKE.bekreftet : MERKE.verifiser);
+      if (harRegel) { settMerke(vurdering.merke, godtatt ? MERKE.bekreftet : MERKE.system); settMerke(forslag.merke, godtatt ? MERKE.bekreftet : MERKE.system); }
+      var ok = faktaOk && harRegel && godtatt;  // Uten regel står det Mangler, og da kan rapporten ikke bekreftes.
+      settMerke(kontroll.merke, ok ? MERKE.bekreftet : MERKE.verifiser);
+      status.textContent = ok ? "Bekreftet" : "Utkast"; status.className = "af-badge " + (ok ? "done" : "active");
+    }
+    function avkrysning(forelder, tekst) {
+      var l = el("label", "af-radio"), c = document.createElement("input"); c.type = "checkbox";
+      c.addEventListener("change", oppdater); l.appendChild(c); l.appendChild(document.createTextNode(tekst)); forelder.appendChild(l);
+      return c;
+    }
+
+    var det = el("details"); det.appendChild(el("summary", null, "Vis grunnlag"));
+    det.appendChild(el("p", null, "Kilde: museum.db via " + r.verktoy + "(" + JSON.stringify(r.args || {}) + ")." + (v.regel_id ? " Vurdering og forslag: regel " + v.regel_id + " (" + v.kilde + ", versjon " + v.versjon + ", " + v.datakilde + ")." : "")));
+    rap.appendChild(blokk("Grunnlag", det));
+
+    // Last ned: samme format som index.html (synlig rapporttekst som .txt). Grunnlaget tas med selv om det er lukket.
+    var a = el("div", "af-actions"), last = el("button", "af-btn af-btn-primary", "Last ned rapport"); last.type = "button";
+    last.addEventListener("click", function () {
+      var varApen = det.open; det.open = true;
+      var tekst = rap.innerText.replace(/\n{3,}/g, "\n\n");
+      det.open = varApen;
+      var lenke = document.createElement("a");
+      lenke.href = URL.createObjectURL(new Blob([tekst], { type: "text/plain;charset=utf-8" }));
+      lenke.download = "rapport-" + (r.sporsmal_id || "datafinner") + ".txt";
+      lenke.click(); URL.revokeObjectURL(lenke.href);
+    });
+    a.appendChild(last); rap.appendChild(a);
+    ut.appendChild(rap);
+    oppdater();
+    fasit(r.verktoy, r.args, "museum.db, kun lesing", v.regel_id ? v.regel_id + ": " + v.felt + " " + v.operator + " " + v.terskel : null);
+  }
+
+  function visArena(omrade) {
+    var o = AREA.omrader.filter(function (x) { return x.id === omrade; })[0]; if (!o) return visStart();
+    var m = tom("Arena", o.navn);
+    kort(m, AREA.caser.filter(function (c) { return c.omrade === omrade; }).map(function (c) {
+      var t = (c.kjoring || {}).type;
+      return { navn: c.id + " " + c.tittel, tekst: (c.oppdrag || "").trim().split("\n")[0], merke: t === "lesecase" ? "Lesecase" : null,
+        klikk: function () { vis("arena:" + omrade + "/" + c.id); } };
+    }));
+    fasit(null);
+  }
+
+  function visCase(omrade, id) {
+    var c = AREA.caser.filter(function (x) { return x.id === id; })[0]; if (!c) return visArena(omrade);
+    var m = tom("Arena · " + c.id, c.tittel, (c.oppdrag || "").trim());
+    if ((c.kjoring || {}).type === "lesecase") { m.appendChild(el("p", "af-panel-message", "Lesecase. Les og diskuter, ingenting kjøres.")); fasit(null); return; }
+    var ut = el("div"); ut.appendChild(el("p", "af-task-hint", "Kjører …")); m.appendChild(ut);
+    post("/api/arena/kjor", { id: id }).then(function (k) {
+      ut.textContent = "";
+      (k.steg || []).forEach(function (s, i) {
+        var rap = el("div", "af-report");
+        rap.appendChild(el("p", "af-caption", "Steg " + (i + 1) + " · " + (s.verktoy || s.rolle || "")));
+        if (s.sporsmal) rap.appendChild(el("p", "af-lead", s.sporsmal));
+        var svar = s.svar, liste = forsteListe(svar);
+        if (liste) rap.appendChild(tabell(liste));
+        else if (svar && typeof svar === "object") { var kp = nokkeltall(svar); if (kp) rap.appendChild(kp); if (svar.merknad) rap.appendChild(el("p", "af-table-meta", svar.merknad)); }
+        else if (svar) { var p = el("p", null, String(svar).replace(/\*\*/g, "")); p.style.whiteSpace = "pre-line"; rap.appendChild(p); }
+        if (s.mangler && s.mangler.length) rap.appendChild(el("p", "af-panel-message", "Mangler: " + s.mangler.join(", ")));
+        ut.appendChild(rap);
+      });
+      // Datapolicy-caser (G4) har ingen steg, bare hvilke tabeller som er merket og hva policyen sier.
+      if (!(k.steg || []).length && (k.datamerke || []).length) {
+        var rap = el("div", "af-report");
+        rap.appendChild(el("p", "af-caption", "Datamerking per tabell"));
+        rap.appendChild(tabell(k.datamerke));
+        if (k.policy) rap.appendChild(el("p", "af-panel-message", "Ekstern KI tillatt: " + (k.policy.ekstern_ki ? "ja" : "nei") + ". " + (k.policy.grunn || "")));
+        ut.appendChild(rap);
+      }
+      var steg = k.steg || [], siste = steg[steg.length - 1] || {};
+      var verktoy = [].concat.apply([], steg.map(function (s) { return s.verktoy ? [s.verktoy] : (s.verktoy_brukt || []); }));
+      var kilder = [].concat.apply([], steg.map(function (s) { return s.kilder || []; }));
+      fasit(verktoy.filter(function (v, i) { return v && verktoy.indexOf(v) === i; }).join(", ") || null, siste.args,
+        (k.datamerke || []).map(function (d) { return d.tabell; }).concat(kilder.map(String)).join(", ") || "museum.db");
+    }).catch(function (e) { ut.textContent = ""; ut.appendChild(el("p", "af-panel-message", "Kunne ikke kjøre casen: " + e.message)); });
+  }
+
+  // ---------- Chat (oppgave 04) ----------
+  // Samtalen ligger i minnet så den er der når man går ut og inn av chatten. «Ny samtale» tømmer den.
+  var CHAT = { historikk: [], svar: [] };  // historikk: [{rolle: "bruker"|"assistent", tekst}]; svar: assistentsvarene i samme rekkefølge
+  var KI_AV = "Denne demoen kjører uten KI. Start med -KI for å slå den på.";
+  var CHAT_FORSLAG = [
+    "Hvem kan ta vakt i vaktrommet lørdag 7. november 2026 kl. 08–16? Ranger dem.",
+    "Hvem har hatt flest helgevakter i Sal A det siste året?",
+    "Finn innleide vektere med gyldig førstehjelp, og lag en melding til den billigste.",
+    "Hva sier håndbøkene om brann?"
+  ];
+
+  function chatMelding(logg, rolle, tekst, svar) {
+    var m = el("div", "af-report");
+    m.appendChild(el("p", "af-caption", rolle === "bruker" ? "Du" : "Datafinner"));
+    var p = el("p", null, tekst); p.style.whiteSpace = "pre-line"; m.appendChild(p);
+    if (svar) {
+      m.appendChild(el("span", "af-source " + (svar.avbrutt ? "system" : "suggested"), svar.avbrutt ? "Systemmelding" : "AI-forslag"));
+      if (svar.avkortet) m.appendChild(el("p", "af-table-meta", "KI-en brukte alle rundene. Svaret kan være ufullstendig."));
+      var tk = svar.tallkontroll || {};
+      if (tk.ukjente_tall && tk.ukjente_tall.length) m.appendChild(el("p", "af-panel-message", "Sjekk tallene: " + tk.ukjente_tall.join(", ") + " står ikke i det verktøyene ga."));
+      if (tk.feil_utregning && tk.feil_utregning.length) m.appendChild(el("p", "af-panel-message", "Feil regnestykke: " + tk.feil_utregning.join("; ") + "."));
+      if (tk.utregnet && tk.utregnet.length) m.appendChild(el("p", "af-table-meta", "Regnet etter og stemmer: " + tk.utregnet.join("; ") + "."));
+    }
+    logg.appendChild(m);
+  }
+
+  function chatFasit(svar) {
+    if (!svar) return fasit(null, null, "Ingen data hentet ennå");
+    var kall = svar.verktoykall || [];
+    var navn = kall.map(function (k) { return k.navn + (k.ok ? "" : " (feilet)"); });
+    var siste = kall[kall.length - 1] || {};
+    var kilde = kall.length ? "museum.db via " + kall.length + " verktøykall" + ((svar.data_hentet || []).length ? ", " + svar.data_hentet.length + " datasett" : "") : "Ingen. Svaret bygger ikke på data fra museum.db.";
+    fasit(navn.join(", ") || null, siste.args, kilde);
+  }
+
+  function visChat() {
+    var m = tom("Flate", "Chat", "Spør med vanlige ord. KI-en henter fakta med verktøyene og svarer. Hvert svar er et AI-forslag.");
+    if (!KI) m.appendChild(el("p", "af-panel-message", KI_AV));
+    var feil = el("div", "af-error-summary"); feil.setAttribute("role", "alert"); feil.style.display = "none";
+    feil.appendChild(el("h2", null, "Feil")); var feilTekst = el("p"); feil.appendChild(feilTekst); m.appendChild(feil);
+    function visFeil(t) { feilTekst.textContent = t || ""; feil.style.display = t ? "" : "none"; }
+
+    var logg = el("div"); logg.setAttribute("aria-live", "polite"); m.appendChild(logg);
+    var svarIndeks = 0;
+    CHAT.historikk.forEach(function (h) { chatMelding(logg, h.rolle, h.tekst, h.rolle === "assistent" ? CHAT.svar[svarIndeks++] : null); });
+
+    // Eksempelspørsmål bare før samtalen har startet.
+    if (!CHAT.historikk.length) {
+      var ex = el("ul", "af-task-board");
+      CHAT_FORSLAG.forEach(function (f) {
+        var li = el("li"), b = el("button", "af-task-card"); b.type = "button";
+        var t = el("span"); t.appendChild(el("strong", null, f)); b.appendChild(t);
+        b.addEventListener("click", function () { felt.value = f; felt.focus(); });
+        li.appendChild(b); ex.appendChild(li);
+      });
+      m.appendChild(ex);
+    }
+
+    var g = el("div", "af-group"), l = el("label", "af-label", "Spørsmål"), felt = el("textarea", "af-textarea");
+    felt.id = "chat-felt"; l.htmlFor = felt.id; felt.rows = 3; felt.disabled = !KI;
+    g.appendChild(l); g.appendChild(felt); m.appendChild(g);
+    var a = el("div", "af-actions"), send = el("button", "af-btn af-btn-primary", "Send"), ny = el("button", "af-btn af-btn-secondary", "Ny samtale"), status = el("span", "af-save-status");
+    send.type = "button"; ny.type = "button"; send.disabled = !KI;
+    a.appendChild(send); a.appendChild(ny); a.appendChild(status); m.appendChild(a);
+
+    function sendNa() {
+      var tekst = felt.value.trim(); if (!tekst || !KI) return;
+      visFeil("");
+      CHAT.historikk.push({ rolle: "bruker", tekst: tekst }); chatMelding(logg, "bruker", tekst);
+      felt.value = ""; send.disabled = true; status.textContent = "KI-en henter data …";
+      post("/api/chat", { meldinger: CHAT.historikk, rolle: aktivRolle || "ukjent rolle" })
+        .then(function (s) { CHAT.historikk.push({ rolle: "assistent", tekst: s.tekst }); CHAT.svar.push(s); chatMelding(logg, "assistent", s.tekst, s); chatFasit(s); })
+        .catch(function (e) { CHAT.historikk.pop(); logg.removeChild(logg.lastChild); felt.value = tekst; visFeil(e.message); })
+        .then(function () { send.disabled = !KI; status.textContent = ""; felt.focus(); });
+    }
+    send.addEventListener("click", sendNa);
+    felt.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendNa(); } });
+    ny.addEventListener("click", function () { CHAT.historikk = []; CHAT.svar = []; visChat(); });
+    chatFasit(CHAT.svar[CHAT.svar.length - 1]);
+  }
+
+  // ---------- Søk (oppgave 05) ----------
+  // Samme regler som sok.html (kategori -> verktøy, argumenter og kolonner), men ett felt i stedet for tre steg.
+  var SOK = {
+    valg: [
+      { verdi: "verk", navn: "Verk", verktoy: "search_collection", sok: "Tittel, tema eller teknikk", filter: { navn: "Sal", kilde: "saler" },
+        args: function (s, f) { return { query: s, room_id: f, limit: 50 }; },
+        kolonner: [["tittel", "Tittel"], ["kunstner", "Kunstner"], ["aar", "År"], ["sal_id", "Sal"], ["id", "Verkskort"]] },
+      { verdi: "kunstner", navn: "Kunstnere", verktoy: "search_collection", sok: "Kunstnerens navn", kreverSok: true,
+        args: function (s) { return { artist: s, limit: 50 }; },
+        kolonner: [["kunstner", "Kunstner"], ["tittel", "Verk"], ["aar", "År"], ["sal_id", "Sal"], ["id", "Verkskort"]] },
+      { verdi: "sal", navn: "Saler", verktoy: "get_room_artworks", filter: { navn: "Sal", kilde: "saler", pakrevd: true },
+        args: function (s, f) { return { room_id: f }; },
+        kolonner: [["rekkefoelge", "Nr"], ["tittel", "Tittel"], ["kunstner", "Kunstner"], ["sal_plassering", "Plassering"], ["id", "Verkskort"]] },
+      { verdi: "arrangement", navn: "Arrangementer", verktoy: "search_events", dato: true, filter: { navn: "Type", kilde: "typer" },
+        args: function (s, f, d) { return { event_type: f, date_from: d, limit: 50 }; },
+        kolonner: [["dato", "Dato"], ["klokkeslett_start", "Start"], ["type", "Type"], ["tittel", "Tittel"], ["sal_id", "Sal"]] },
+      { verdi: "faq", navn: "Vanlige spørsmål", verktoy: "search_faq", sok: "Søkeord, f.eks. pris", kreverSok: true, filter: { navn: "Kategori", kilde: "kategorier" },
+        args: function (s, f) { return { query: s, category: f }; },
+        kolonner: [["spoersmaal", "Spørsmål"], ["svar", "Svar"], ["kategori", "Kategori"]] },
+      { verdi: "mappe", navn: "Interne sider", verktoy: "grep_mappe", sok: "Ord eller uttrykk", kreverSok: true, filter: { navn: "Mappe", kilde: "mapper" },
+        args: function (s, f) { return { query: s, mappe: f, limit: 50 }; },
+        kolonner: [["sti", "Fil"], ["linje", "Linje"], ["treff", "Treff"]] }
+    ],
+    lister: {
+      saler: ["SAL-A", "SAL-B", "SAL-C", "SAL-D", "SAL-E", "MAG-1"],
+      typer: ["omvisning", "verksted", "foredrag", "konsert", "barnearrangement", "aaapning"],
+      kategorier: ["billett", "praktisk", "fasiliteter", "formidling", "tilgjengelighet", "utleie", "samling", "butikk"],
+      mapper: ["00_felles", "01_inbox", "02_deliverables", "03_team", "04_knowledge", "05_data/governance"]
+    },
+    detalj: [["kunstner", "Kunstner"], ["aar", "År"], ["teknikk", "Teknikk"], ["dimensjoner", "Mål"], ["sal_navn", "Sal"], ["status", "Status"], ["tilstand", "Tilstand"], ["proveniens", "Proveniens"], ["veggtekst", "Veggtekst"]],
+    sist: "verk"  // husker kategorien mens siden er åpen
+  };
+  function verktoy(navn, args) {
+    var rene = {}; Object.keys(args).forEach(function (k) { if (args[k] !== "" && args[k] != null) rene[k] = args[k]; });
+    return hent("/api/verktoy?navn=" + encodeURIComponent(navn) + "&args=" + encodeURIComponent(JSON.stringify(rene))).then(function (b) { return { args: rene, resultat: b.resultat }; });
+  }
+
+  function visSok() {
+    var m = tom("Flate", "Søk", "Samling, arrangementer, publikumsinformasjon og interne sider.");
+    var form = el("form"); form.noValidate = true; m.appendChild(form);
+
+    // Kategori: radioknapper på én rad.
+    var hva = el("fieldset", "af-group"); hva.appendChild(el("legend", "af-label", "Hva vil du finne?"));
+    var rad = el("div"); rad.style.cssText = "display:flex;flex-wrap:wrap;gap:8px";
+    SOK.valg.forEach(function (v) {
+      var l = el("label", "af-radio"), i = document.createElement("input"); i.type = "radio"; i.name = "sok-hva"; i.value = v.verdi; i.checked = v.verdi === SOK.sist;
+      i.addEventListener("change", function () { SOK.sist = v.verdi; tilpass(); });
+      l.appendChild(i); l.appendChild(document.createTextNode(v.navn)); rad.appendChild(l);
+    });
+    hva.appendChild(rad); form.appendChild(hva);
+
+    function felt(id, etikettTekst, node) { var g = el("div", "af-group"), l = el("label", "af-label", etikettTekst); node.id = id; l.htmlFor = id; g.appendChild(l); g.appendChild(node); form.appendChild(g); return { gruppe: g, etikett: l, felt: node }; }
+    var sok = felt("sok-felt", "Søk", el("input", "af-input")); sok.felt.type = "search";
+    var filter = felt("sok-filter", "Filter", el("select", "af-input"));
+    var dato = felt("sok-dato", "Fra dato", el("input", "af-input")); dato.felt.type = "date";
+    var a = el("div", "af-actions"), finn = el("button", "af-btn af-btn-primary", "Søk"); finn.type = "submit"; a.appendChild(finn); form.appendChild(a);
+
+    var feil = el("div", "af-error-summary"); feil.setAttribute("role", "alert"); feil.style.display = "none";
+    feil.appendChild(el("h2", null, "Kan ikke søke ennå")); var feilTekst = el("p"); feil.appendChild(feilTekst); m.appendChild(feil);
+    function visFeil(t) { feilTekst.textContent = t || ""; feil.style.display = t ? "" : "none"; }
+    var ut = el("div"); ut.setAttribute("aria-live", "polite"); m.appendChild(ut);
+    var detalj = el("div"); m.appendChild(detalj);
+
+    function regel() { return SOK.valg.filter(function (v) { return v.verdi === SOK.sist; })[0]; }
+    function skjul(g, av) { g.gruppe.style.display = av ? "none" : ""; }  // af-group har display i af.css
+    function tilpass() {
+      var r = regel();
+      skjul(sok, !r.sok); sok.etikett.textContent = r.sok || "Søk"; sok.felt.value = "";
+      skjul(filter, !r.filter); filter.felt.textContent = "";
+      if (r.filter) {
+        filter.etikett.textContent = r.filter.navn;
+        var o0 = el("option", null, r.filter.pakrevd ? "Velg" : "Alle"); o0.value = ""; filter.felt.appendChild(o0);
+        SOK.lister[r.filter.kilde].forEach(function (v) { var o = el("option", null, v); o.value = v; filter.felt.appendChild(o); });
+      }
+      skjul(dato, !r.dato); dato.felt.value = "";
+      ut.textContent = ""; detalj.textContent = ""; visFeil("");
+      fasit(r.verktoy, null);
+      (r.sok ? sok.felt : filter.felt).focus({ preventScroll: true });
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var r = regel(), s = sok.felt.value.trim(), f = filter.felt.value;
+      if (r.kreverSok && !s) { visFeil("Skriv et søkeord. " + r.navn + " kan ikke søkes uten."); sok.felt.focus(); return; }
+      if (r.filter && r.filter.pakrevd && !f) { visFeil("Velg " + r.filter.navn.toLowerCase() + "."); filter.felt.focus(); return; }
+      visFeil(""); detalj.textContent = ""; ut.textContent = ""; ut.appendChild(el("p", "af-task-hint", "Henter …"));
+      verktoy(r.verktoy, r.args(s, f, dato.felt.value)).then(function (svar) {
+        var rader = Array.isArray(svar.resultat) ? svar.resultat : svar.resultat && !svar.resultat.error ? [svar.resultat] : [];
+        tegnSokTabell(r, rader);
+        fasit(r.verktoy, svar.args, "museum.db, kun lesing");
+      }).catch(function (err) { ut.textContent = ""; visFeil("Feil fra databasen: " + err.message); });
+    });
+
+    function tegnSokTabell(r, rader) {
+      ut.textContent = "";
+      ut.appendChild(el("p", "af-table-meta", rader.length ? rader.length + " treff" : "Ingen treff. Prøv et annet søkeord eller filter."));
+      if (!rader.length) return;
+      var wrap = el("div", "af-table-wrap"), t = el("table", "af-table"), th = el("thead"), hr = el("tr"), tb = el("tbody");
+      r.kolonner.forEach(function (k) { hr.appendChild(el("th", null, k[1])); }); th.appendChild(hr);
+      rader.forEach(function (rd) {
+        var tr = el("tr");
+        r.kolonner.forEach(function (k) {
+          var td = el("td"), v = rd[k[0]];
+          // Verk-ID åpner verkskort, filsti åpner filen. Begge vises under tabellen, i samme vindu.
+          if ((k[0] === "id" && typeof v === "string" && v.indexOf("AURA-") === 0) || k[0] === "sti") {
+            var b = el("button", "af-btn af-btn-secondary", k[0] === "id" ? "Åpne" : v); b.type = "button";
+            b.addEventListener("click", function () { k[0] === "id" ? visVerk(v) : visFil(v); });
+            td.appendChild(b);
+          } else td.textContent = verdi(v, k[0]);
+          tr.appendChild(td);
+        });
+        tb.appendChild(tr);
+      });
+      t.appendChild(th); t.appendChild(tb); wrap.appendChild(t); ut.appendChild(wrap);
+    }
+
+    function visVerk(id) {
+      detalj.textContent = ""; var rap = el("div", "af-report"); detalj.appendChild(rap);
+      rap.appendChild(el("p", "af-caption", "Verkskort"));
+      verktoy("get_artwork_details", { artwork_id: id }).then(function (svar) {
+        var d = svar.resultat || {};
+        var h = el("h2", "af-title", d.tittel || id); h.tabIndex = -1; rap.appendChild(h);
+        var rader = SOK.detalj.filter(function (f) { return d[f[0]] != null && d[f[0]] !== ""; }).map(function (f) { return [f[1], d[f[0]], f[0]]; });
+        var wrap = el("div", "af-table-wrap"), t = el("table", "af-table"), tb = el("tbody");
+        rader.forEach(function (r2) { var tr = el("tr"); tr.appendChild(el("th", null, r2[0])); tr.appendChild(el("td", null, verdi(r2[1], r2[2]))); tb.appendChild(tr); });
+        t.appendChild(tb); wrap.appendChild(t); rap.appendChild(wrap);
+        fasit("get_artwork_details", svar.args, "museum.db, kun lesing");
+        h.focus();
+      }).catch(function (e) { rap.appendChild(el("p", "af-panel-message", "Feil: " + e.message)); });
+    }
+    function visFil(sti) {
+      detalj.textContent = ""; var rap = el("div", "af-report"); detalj.appendChild(rap);
+      rap.appendChild(el("p", "af-caption", "Fil"));
+      var h = el("h2", "af-title", sti); h.tabIndex = -1; rap.appendChild(h);
+      verktoy("les_fil", { sti: sti }).then(function (svar) {
+        var p = el("p", null, (svar.resultat || {}).tekst || ""); p.style.whiteSpace = "pre-wrap"; rap.appendChild(p);
+        fasit("les_fil", svar.args, sti);
+        h.focus();
+      }).catch(function (e) { rap.appendChild(el("p", "af-panel-message", "Feil: " + e.message)); });
+    }
+    tilpass();
+  }
+
+  // ---------- Vaktrom (oppgave 06) ----------
+  // Logikken ligger i vaktrom.js. Markupen hentes fra /vaktrom-innhold, så den finnes ett sted.
+  var VAKTROM = { api: null, steg: "vakt", vakt: null, deler: null };
+  function hentVaktromMarkup() {
+    if (VAKTROM.deler) return Promise.resolve(VAKTROM.deler);
+    return fetch("/vaktrom-innhold").then(function (r) { return r.text(); }).then(function (html) {
+      var doc = new DOMParser().parseFromString(html, "text/html");
+      // Stilene gjelder bare midten av vinduet (#midt), så de ikke påvirker resten av skallet.
+      var stil = doc.querySelector("style");
+      if (stil && !$("vaktrom-stil")) {
+        var s = document.createElement("style"); s.id = "vaktrom-stil";
+        s.textContent = stil.textContent.replace(/(^|\})\s*([^{}]+)\{/g, function (m, slutt, sel) {
+          return slutt + "\n" + sel.split(",").map(function (x) { return "#midt " + x.trim(); }).join(", ") + " {";
+        });
+        document.head.appendChild(s);
+      }
+      // Bare stegene og feilboksen. Mobilmeny og øvingsdata-banner har skallet selv.
+      VAKTROM.deler = [].slice.call(doc.querySelector("main").children).filter(function (n) {
+        return !n.classList.contains("af-mobile-nav") && !n.classList.contains("af-alert");
+      });
+      return VAKTROM.deler;
+    });
+  }
+  function lastVaktromSkript() {
+    if (window.Vaktrom) return Promise.resolve();
+    return new Promise(function (ok, feil) {
+      var s = document.createElement("script"); s.src = "/vaktrom.js";
+      s.onload = ok; s.onerror = function () { feil(new Error("Fikk ikke lastet vaktrom.js")); };
+      document.head.appendChild(s);
+    });
+  }
+  function visVaktrom(under) {
+    VAKTROM.api = null; VAKTROM.steg = "vakt";
+    var m = $("midt"); m.textContent = ""; m.appendChild(el("p", "af-task-hint", "Henter vaktrommet …"));
+    fasit(null);
+    Promise.all([hentVaktromMarkup(), lastVaktromSkript()]).then(function (svar) {
+      if ((valgt || "").indexOf("flate:vaktrom") !== 0) return;  // brukeren har gått videre
+      m.textContent = "";
+      m.appendChild(el("p", "af-caption", "Flate · Vaktrom"));
+      svar[0].forEach(function (n) { m.appendChild(document.importNode(n, true)); });
+      VAKTROM.api = window.Vaktrom.start({
+        rot: m, stegliste: null, mobilvalg: null, navRot: $("meny"),
+        rolle: function () { return aktivRolle || "ukjent rolle"; },
+        startSteg: under === "utkast" ? "kontakt" : "vakt",
+        vedSteg: function (id) { VAKTROM.steg = id; tegnMeny(); },
+        vedVakt: function (t) { VAKTROM.vakt = t; },
+        vedKall: function (navn, args) { fasit(navn, args, "museum.db, kun lesing" + (VAKTROM.vakt ? ". Vakt: " + VAKTROM.vakt : "")); }
+      });
+      tegnMeny();
+    }).catch(function (e) {
+      m.textContent = "";
+      var f = el("div", "af-error-summary"); f.setAttribute("role", "alert");
+      f.appendChild(el("h2", null, "Vaktrommet kunne ikke åpnes")); f.appendChild(el("p", null, e.message)); m.appendChild(f);
+    });
+  }
+
+  // ---------- Arbeidsflyter (oppgaver per arbeidsrolle) ----------
+  // Arbeidsrolle (Salvert …) er et arbeidsområde og er ikke det samme som «Jeg er» (B5: to lister, ingen kobling).
+  // Felt og verktøykall er de samme som i arbeidsflyt.html.
+  var ARBEID = { oppgaver: null, nokkel: "kunstpixel-arbeidsflyt-utkast-v1" };
+  var OPPGAVE = {
+    ansatt: { felt: [["sok", "Navn eller ansatt-ID"]], kall: function (f) { return { navn: "find_employee", args: { sok: f.sok } }; } },
+    handbok: { felt: [["query", "Hva vil du finne i håndboken?"]], kall: function (f) { return { navn: "lookup_handbook", args: { query: f.query, limit: 10 } }; } },
+    hms: { felt: [["query", "HMS-tema"]], kall: function (f) { return { navn: "search_hms_guidance", args: { query: f.query, limit: 10 } }; } },
+    onboarding: { felt: [], kall: function (f, rolle) { return { navn: "search_hr_onboarding", args: { rolle: rolle } }; } },
+    bytte: { felt: [["vakt_a", "Første vakt-ID"], ["vakt_b", "Andre vakt-ID"]], kall: function (f) { return { navn: "check_shift_swap", args: f }; } },
+    tiltak: { felt: [["query", "Rutine eller tema"], ["tiltakstekst", "Beskriv et mulig tiltak"]], kall: function (f) { return { navn: "lookup_handbook", args: { query: f.query, limit: 10 } }; } }
+  };
+  function arbeidsroller() { var s = []; (ARBEID.oppgaver || []).forEach(function (o) { if (s.indexOf(o.rolle) < 0) s.push(o.rolle); }); return s; }
+  // Rollenavn kan ha skråstrek (Montør/drift), så de kodes for seg i adressen.
+  function arbeidId(rolle, oppgave) { return "flate:arbeidsflyt" + (rolle ? "/" + encodeURIComponent(rolle) + (oppgave ? "/" + oppgave : "") : ""); }
+  function lesUtkast() { try { return JSON.parse(localStorage.getItem(ARBEID.nokkel) || "[]"); } catch (e) { return []; } }
+  function feilBoks(tittel, tekst) { var f = el("div", "af-error-summary"); f.setAttribute("role", "alert"); f.appendChild(el("h2", null, tittel)); f.appendChild(el("p", null, tekst)); return f; }
+
+  function visArbeidsflyt(rolleKode, oppgaveId) {
+    var m = $("midt"); m.textContent = ""; m.appendChild(el("p", "af-task-hint", "Henter oppgaver …"));
+    fasit(null);
+    var klar = ARBEID.oppgaver ? Promise.resolve() : hent("/api/arbeidsflyt").then(function (d) { ARBEID.oppgaver = d.oppgaver || []; });
+    klar.then(function () {
+      if ((valgt || "").indexOf("flate:arbeidsflyt") !== 0) return;
+      var rolle = rolleKode ? decodeURIComponent(rolleKode) : null;
+      if (rolle && arbeidsroller().indexOf(rolle) < 0) rolle = null;
+      var o = rolle && oppgaveId ? ARBEID.oppgaver.filter(function (x) { return x.rolle === rolle && x.oppgave_id === oppgaveId; })[0] : null;
+      // Vaktsjekken er vaktrommet fra 06. replace, så tilbakeknappen ikke sender deg hit igjen.
+      if (o && o.oppgave_id === "vakt") return location.replace("#" + encodeURIComponent("flate:vaktrom"));
+      if (o && OPPGAVE[o.oppgave_id]) visOppgave(rolle, o);
+      else if (rolle) visArbeidsrolle(rolle);
+      else visArbeidsroller();
+      tegnMeny();
+    }).catch(function (e) { m.textContent = ""; m.appendChild(feilBoks("Fikk ikke hentet oppgavene", e.message)); });
+  }
+  function visArbeidsroller() {
+    var m = tom("Flate · Arbeidsflyter", "Velg arbeidsrolle", "Arbeidsrollen er et arbeidsområde, ikke stillingen du har valgt i «Jeg er».");
+    kort(m, arbeidsroller().map(function (r) {
+      var n = ARBEID.oppgaver.filter(function (o) { return o.rolle === r; }).length;
+      return { navn: r, merke: antall(n, "oppgave", "oppgaver"), klikk: function () { vis(arbeidId(r)); } };
+    }));
+    var u = lesUtkast();
+    m.appendChild(el("h2", null, "Lokale utkast"));
+    if (!u.length) m.appendChild(el("p", "af-task-hint", "Ingen utkast lagret. Utkast lagres bare i denne nettleseren."));
+    else {
+      var ol = el("ul", "af-task-board");
+      u.slice(0, 10).forEach(function (x) { var li = el("li", "af-context-card"); li.appendChild(el("strong", null, x.oppgave + " · " + x.rolle)); li.appendChild(el("p", "af-task-hint", x.tid + (x.tekst ? " · " + x.tekst : ""))); ol.appendChild(li); });
+      m.appendChild(ol);
+    }
+  }
+  function visArbeidsrolle(rolle) {
+    var m = tom("Arbeidsrolle", rolle, "Velg en oppgave. Svaret hentes fra databasen.");
+    kort(m, ARBEID.oppgaver.filter(function (o) { return o.rolle === rolle; }).map(function (o) {
+      var tilVakt = o.oppgave_id === "vakt";
+      return { navn: o.tittel, tekst: o.beskrivelse, merke: tilVakt ? "Vaktrom" : null, klikk: function () { vis(tilVakt ? "flate:vaktrom" : arbeidId(rolle, o.oppgave_id)); } };
+    }));
+  }
+  function visOppgave(rolle, o) {
+    var d = OPPGAVE[o.oppgave_id], m = tom(rolle, o.tittel, o.beskrivelse), form = el("form");
+    form.noValidate = true;
+    d.felt.forEach(function (f) {
+      var g = el("div", "af-group"), l = el("label", "af-label", f[1]), i = el("input", "af-input");
+      i.id = "a-" + f[0]; i.name = f[0]; l.htmlFor = i.id; g.appendChild(l); g.appendChild(i); form.appendChild(g);
+    });
+    var a = el("div", "af-actions"), b = el("button", "af-btn af-btn-primary", "Finn svar"), lagre = el("button", "af-btn af-btn-secondary", "Lagre lokalt utkast");
+    b.type = "submit"; lagre.type = "button"; lagre.style.display = "none";  // display, fordi af.css overstyrer hidden.
+    a.appendChild(b); a.appendChild(lagre); form.appendChild(a); m.appendChild(form);
+    var ut = el("div"); m.appendChild(ut);
+    var siste = null;
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var f = {};
+      for (var i = 0; i < d.felt.length; i++) {
+        var v = form.elements[d.felt[i][0]].value.trim();
+        if (!v) { ut.textContent = ""; ut.appendChild(feilBoks("Mangler felt", "Fyll ut: " + d.felt[i][1])); return; }
+        f[d.felt[i][0]] = v;
+      }
+      var k = d.kall(f, rolle);
+      fasit(k.navn, k.args);
+      b.disabled = true; lagre.style.display = "none"; ut.textContent = ""; ut.appendChild(el("p", "af-task-hint", "Henter …"));
+      hent("/api/verktoy?navn=" + encodeURIComponent(k.navn) + "&args=" + encodeURIComponent(JSON.stringify(k.args)))
+        .then(function (r) {
+          var svar = r.resultat, liste = forsteListe(svar);
+          ut.textContent = "";
+          var vis_ = liste ? (liste.length ? tabell(liste) : el("p", null, "Ingen treff i datagrunnlaget.")) : Array.isArray(svar) ? el("p", null, "Ingen treff i datagrunnlaget.") : svar && typeof svar === "object" ? objektTabell(svar) : el("p", null, String(svar));
+          ut.appendChild(blokk("Fakta", vis_, MERKE.verifiser));
+          siste = { rolle: rolle, oppgave: o.tittel, tekst: f.tiltakstekst || "", verktoy: k.navn, inngang: f };
+          lagre.textContent = "Lagre lokalt utkast"; lagre.style.display = "";
+        })
+        .catch(function (err) { ut.textContent = ""; ut.appendChild(feilBoks("Fant ikke svar", err.message)); })
+        .then(function () { b.disabled = false; });
+    });
+    lagre.addEventListener("click", function () {
+      if (!siste) return;
+      var u = lesUtkast(); u.unshift(Object.assign({ tid: new Date().toLocaleString("nb-NO") }, siste));
+      try { localStorage.setItem(ARBEID.nokkel, JSON.stringify(u.slice(0, 30))); lagre.textContent = "Lagret lokalt"; } catch (e) { lagre.textContent = "Kunne ikke lagre"; }
+    });
+    if (!d.felt.length) form.requestSubmit();  // Oppgaver uten felt (opplæring) gir svar med en gang.
+  }
+
+  function visFlate(id, under, under2) {
+    if (id === "chat") return visChat();
+    if (id === "sok") return visSok();
+    if (id === "vaktrom") return visVaktrom(under);
+    if (id === "arbeidsflyt") return visArbeidsflyt(under, under2);
+    visStart();
+  }
+
+  // ---------- Ruting (lenkbar: #rolle:HR og bemanning/vakt-i-dag) ----------
+  function vis(id) { if (id && location.hash.slice(1) !== encodeURIComponent(id)) { location.hash = encodeURIComponent(id); return; } ruter(); }
+  function ruter() {
+    valgt = decodeURIComponent(location.hash.slice(1)) || null;
+    var deler = (valgt || "").split("/"), hode = deler[0], type = hode.split(":")[0], navn = hode.slice(type.length + 1);
+    if (type === "rolle" && rolle(navn)) husk(navn);
+    if (type === "rolle" && deler[1]) visSporsmal(navn, deler[1]);
+    else if (type === "rolle") visRolle(navn);
+    else if (type === "arena" && deler[1]) visCase(navn, deler[1]);
+    else if (type === "arena") visArena(navn);
+    else if (type === "flate") visFlate(navn, deler[1], deler[2]);
+    else visStart();
+    tegnMeny();
+  }
+  window.addEventListener("hashchange", ruter);
+
+  // ---------- Oppstart ----------
+  Promise.all([
+    hent("/api/status").catch(function () { return {}; }),
+    hent("/api/verktoy?navn=list_roles"),
+    hent("/api/verktoyskjema"),
+    hent("/api/arena/caser").catch(function () { return { omrader: [], caser: [] }; })
+  ]).then(function (d) {
+    KI = !!d[0].llm;
+    $("f-ki").textContent = KI ? "På (" + d[0].llm_modell + "). KI-svar merkes AI-forslag til en person har godtatt dem." : "Av. Alle svar er hentet rett fra databasen.";
+    ROLLER = d[1].resultat || [];
+    SPORSMAL = d[2].sporsmal || {};
+    (d[2].verktoy || []).forEach(function (v) { SKJEMA[v.navn] = v; });
+    AREA = d[3];
+    ruter();
+  }).catch(function (e) {
+    $("meny").textContent = ""; $("midt").textContent = "";
+    var f = el("div", "af-error-summary"); f.setAttribute("role", "alert");
+    f.appendChild(el("h2", null, "Datafinner svarer ikke")); f.appendChild(el("p", null, e.message)); $("midt").appendChild(f);
+  });
+})();
+</script>
+</body>
+</html>
