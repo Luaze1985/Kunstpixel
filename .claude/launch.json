@@ -4,14 +4,23 @@
     {
       "name": "datafinner",
       "runtimeExecutable": "py",
-      "runtimeArgs": ["-3.13", "src/kunstpixel/adapters/datafinner.py"],
+      "runtimeArgs": [
+        "-3.13",
+        "src/kunstpixel/adapters/datafinner.py"
+      ],
       "port": 8010
     },
     {
       "name": "datafinner-demo",
-      "runtimeExecutable": "py",
-      "runtimeArgs": ["-3.13", "scripts/start_demo.py"],
-      "port": 8011
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "scripts/start_demo.ps1"
+      ],
+      "port": 8010
     }
   ]
 }

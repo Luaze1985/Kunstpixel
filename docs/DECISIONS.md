@@ -79,6 +79,8 @@ Beslutninger:
 
 12a. **Utført 2026-11-09:** Chatten fantes alt (`/api/chat`, alle 45 verktøy, tallkontroll, av uten nøkkel). Lars valgte en egen knapp øverst i menyen: «Spør KI» står over rapportene og er tatt ut av «Flater». Chatten åpnes i midten og erstatter rapporten mens den er åpen. Chatpanel i høyre kolonne ble valgt bort. Ikke testet med ekte nøkkel i denne økten.
 
+12b. **Startkommando (2026-11-09):** Den fantes alt: `start_demo.cmd` → `scripts/start_demo.ps1` (sjekker Python, mcp, port 8010, sjekksum, datakvalitet og selvtest, og åpner siden). Kjørt fra ende til ende etter Aura-byttet: alle sjekker OK. Den døde oppføringen `datafinner-demo` i `.claude/launch.json` peker nå på dette skriptet.
+
 Rekkefølge: (1) slå `ux/ett-vindu` inn i main, (2) Aura-skriptet + vakttest, (3) skjult datakatalog, (4) chat-inngang, (5) én startkommando.
 
 Åpent / ikke avgjort:

@@ -16,12 +16,12 @@
 - Det gamle museumsnavnet er byttet til Kunstpixel og `KP-` (DECISIONS punkt 10 og 10a, med vakttest). `museum.db` er bygget på nytt.
 - Skjult datakatalog i rapportvinduet (`/api/katalog`).
 - «Spør KI» som egen inngang øverst i menyen.
+- Startkommandoen `start_demo.cmd` er kjørt og virker etter byttet.
 - Beslutningene står i `docs/DECISIONS.md`, punkt 1–12a.
 
 ## Neste (rekkefølge fra DECISIONS 2026-11-09)
-1. Én startkommando.
-2. Test «Spør KI» med ekte nøkkel (koster noen øre).
-3. Senere: kart og leksjoner som faner, oppgave 09 (Lars velger rapporter), kopi av designsystemet, G:-stier i skriptene, slette Drive-kopien (bare etter Lars' ja).
+1. Test «Spør KI» med ekte nøkkel (koster noen øre): `start_demo.cmd -KI`.
+2. Senere: kart og leksjoner som faner, oppgave 09 (Lars velger rapporter), kopi av designsystemet, G:-stier i skriptene, slette Drive-kopien (bare etter Lars' ja).
 
 ## Neste (eldre, fra 2026-11-06)
 1. Lars merger grenen `claude/kunstpixel-demo-database-fb3af9` til main.
