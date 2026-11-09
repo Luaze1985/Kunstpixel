@@ -1,18 +1,19 @@
 # HUSKELAPP FOR LARS (CHEATSHEET)
-*Prosjekt: Kunstpixel / Kunstpixel | Sist oppdatert: 2026-11-01 00:20*
+*Prosjekt: Kunstpixel | Sist oppdatert: 2026-11-09 22:20*
 
 ## 1. Hva vi gjorde sist
-- **Minimalistiske plantegninger for Kunstpixel:** Bygget helt rene, enkle og lesbare SVG-tegninger (U1, P1, P2) for Bispegata 9B i Trondheim uten teknisk støy, med fargekodede rom og romliste.
-- **2.5D Kartviser og SSOT:** `06_kart/index.html` og `bygning_geometri.json` v2.0 er koblet sammen. 44 av 44 tester er 100 % grønne i `tests/test_building_map.py`.
+- Flyttet fra Drive til lokalt, slo ett-vindu inn i main og byttet det gamle navnet til Kunstpixel/`KP-` overalt (også i databasen).
+- Bygget en skjult datakatalog (under «Vis grunnlag» i rapporten) og «Spør KI» som svarer via **din egen Claude**, uten API-nøkkel.
+- Designkritikk lagret i `docs/design/2026-11-09-designkritikk-datafinner.md`. Målet ditt (DECISIONS 15): smoothe rapporter og en LLM som krysskobler data.
 
 ## 2. Hvor vi slapp
-- Alt i `06_kart/` er ferdigstilt, minimalistisk og verifisert. Webviseren kjører lokalt på port 8085 (`http://localhost:8085`).
+- Ingenting er halvferdig. Alt ligger på main (`e410059`) og er ikke pushet. 2190 tester er grønne.
+- Neste jobb: **rette opp design og tekst med minst 5 agenter**. Briefen står i `.scratch/handoffs/HANDOFF-2026-11-09T2220.md`.
 
 ## 3. Første oppgave neste gang du setter deg ned
-- **Inspiser i nettleser:** Åpne `http://localhost:8085` (fanen «2D Blueprint») og sjekk at layouten føles like rolig og enkel som ønsket.
-- **Commit i git:** Lagre endringene i `06_kart/`, `tests/test_building_map.py` og `build_map.py` til git på en ryddig commit.
+- **Start en ny Claude-økt i Kunstpixel-mappa og skriv:** «Les .scratch/handoffs/HANDOFF-2026-11-09T2220.md og kjør den.»
 
 ## 4. Nyttige snarveier for dette prosjektet
-- Start kartviser: `py -3.13 -m http.server 8085 --directory 06_kart`
-- Re-kompiler kart & tegninger: `py -3.13 06_kart/build_map.py`
-- Kjør karttester: `py -3.13 -m pytest tests/test_building_map.py -q`
+- Nettsiden med KI: skrivebordssnarveien **Kunstpixel** (= `start_demo.cmd -KI`)
+- Din egen Claude med dataene: `start_claude.cmd`
+- Alle tester: `py -3.13 -m pytest -q`
