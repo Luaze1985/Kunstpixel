@@ -53,6 +53,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.kunstpixel.core.hrdemo import SEED, load_seed
+from src.kunstpixel.data.seed_handbooks import bygg_handboker
 
 DATA_DIR = PROJECT_ROOT / "05_data"
 BASE_DB = DATA_DIR / "kilde" / "museum_base.db"
@@ -1224,6 +1225,7 @@ def bygg(til: Path) -> dict:
             antall_innleide_kompetanse = bygg_innleide_kompetanse(con)
             antall_medarbeidersamtaler = bygg_medarbeidersamtaler(con)
             antall_personalmapper = bygg_personalmapper(con)
+            antall_handboker = bygg_handboker(con)
             oppgrader_fremmednokler(con)
             koble_ansattregistre(con)
             for sql in INDEXES:

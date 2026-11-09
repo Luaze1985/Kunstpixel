@@ -137,7 +137,7 @@ Museet innrømmer lønnet permisjon i inntil:
 * **Eksamen:** Eksamensdag + 1 lesedag for fag relevant for stillingen.
 
 ### 7.2 Lovfestede ulønnede permisjoner
-Permisjon ved foreldrepermisjon, militærtjeneste og offentlige verv gis i tråd med AML §§ 12-1 til 12-13.
+Permisjon ved svangerskap, fødsel og foreldrepermisjon (AML §§ 12-2 til 12-6), utdanningspermisjon etter 2 års ansettelse (AML § 12-11, varslingsfrist 4 uker), militærtjeneste (AML § 12-12) og offentlige verv (AML § 12-13) innvilges etter skriftlig søknad til HR og nærmeste leder.
 
 ### 7.3 Personalfordeler
 * Fri adgang til museets utstillinger og arrangementer for ansatt med én ledsager.

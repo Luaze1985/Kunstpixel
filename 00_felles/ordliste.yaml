@@ -271,3 +271,13 @@ begreper:
       og pressehenvendelser. Ingen av dem er ledelse, så de ser ikke tiltak, tidsbruk eller historikk.
     synonymer: ["kafeleder", "kommunikasjonsansvarlig"]
     i_praksis: "Velg rollen Kommunikasjon i den interne assistenten for å se hva en kommunikasjonsmedarbeider får lov til."
+
+
+  informasjonsjeger_og_funnkontroll:
+    forklaring: >
+      Morgensløyfens første trinn som finner kunnskapshull i håndbøker, SOP-er og tabeller, henter inn
+      autoritative kilder utenfra (lover, forskrifter, standarder og åpne registre), og skriver direkte til
+      håndbøker og CSV-filer. Kontrollsteget kjører umiddelbart pytest og statusport, og ruller automatisk
+      tilbake endringen dersom en eneste test eller integritetssjekk feiler. Låst 2026-11-04 (grilling).
+    synonymer: ["faktaspeider", "gap-søker", "kildekontroll"]
+    i_praksis: "Finner jegeren riktig lovhjemmel for universell utforming (LDO § 17 / TEK17), oppdateres håndboken direkte og beholdes kun hvis alle tester er grønne."

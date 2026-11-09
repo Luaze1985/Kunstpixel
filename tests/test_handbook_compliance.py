@@ -154,3 +154,58 @@ def test_sop_queries_whistleblowing_and_sick_leave():
     sick = query_handbook(query="oppfølgingsplan dialogmøte", handbok="SOP")
     assert len(sick) > 0
     assert any("Uke 4" in r["innhold"] and "Uke 7" in r["innhold"] for r in sick)
+
+
+
+def test_all_8_sops_exist_and_cover_hms_brann_ikmat_drift():
+    """Verify SOP-001 through SOP-008 exist on disk and are indexed in handbok_oppslag."""
+    sops_dir = ROOT / "04_knowledge" / "02_sops"
+    expected_sops = [
+        "SOP-001_rutine_varsling.md",
+        "SOP-002_rutine_ferie.md",
+        "SOP-003_rutine_fravaer_og_sykefravar.md",
+        "SOP-004_rutine_vaktbytte.md",
+        "SOP-005_rutine_hms_avvik_og_vernerunde.md",
+        "SOP-006_rutine_brann_og_rvr_kunstevakuering.md",
+        "SOP-007_rutine_ik_mat_haccp_og_allergener.md",
+        "SOP-008_rutine_apne_stenge_og_klimatilsyn.md",
+    ]
+    for s_name in expected_sops:
+        assert (sops_dir / s_name).exists(), f"Mangler SOP-fil: {s_name}"
+
+    db_path = get_db_path()
+    conn = sqlite3.connect(f"file:{db_path.resolve().as_posix()}?mode=ro", uri=True)
+    try:
+        sop_count = conn.execute(
+            "SELECT count(*) FROM handbok_oppslag WHERE handbok_kode = 'RUTINER_SOP'"
+        ).fetchone()[0]
+        assert sop_count == 30, f"Forventet 30 indekserte SOP-punkter fra SOP-001..008, fant {sop_count}"
+    finally:
+        conn.close()
+
+
+def test_no_generic_copy_paste_lovhjemmel_in_handbok_oppslag():
+    """ADR 014: Forbud mot kopierte generiske samlehjemler i handbok_oppslag."""
+    forbudte_samlehjemler = {
+        "Matloven / Mattilsynet / Renholdsregisteret",
+        "Internkontrollforskriften / AML kap. 3-4 / DSB",
+        "AML kap. 2 A (Varsling) / LOA / Beredskapsplan",
+        "Arbeidsmiljøloven (AML) / Virke Landsoverenskomst",
+    }
+    db_path = get_db_path()
+    conn = sqlite3.connect(f"file:{db_path.resolve().as_posix()}?mode=ro", uri=True)
+    try:
+        rows = conn.execute("SELECT punkt_id, lovhjemmel FROM handbok_oppslag").fetchall()
+        assert len(rows) == 115, f"Forventet 115 totalt indekserte punkter (85 håndbok + 30 SOP), fant {len(rows)}"
+        for punkt_id, hjemmel in rows:
+            assert hjemmel and hjemmel.strip(), f"{punkt_id} mangler lovhjemmel"
+            assert hjemmel not in forbudte_samlehjemler, (
+                f"{punkt_id} bruker forbudt generisk samlehjemmel: {hjemmel}"
+            )
+        by_id = dict(rows)
+        assert "TEK17" in by_id["DRIFT_KVALITET-2.1"]
+        assert "NS-EN 15757" in by_id["DRIFT_KVALITET-4.1"]
+        assert "Bokføringsloven" in by_id["DRIFT_KVALITET-5.2"]
+        assert "SPECTRUM 5.0" in by_id["DRIFT_KVALITET-10.2"]
+    finally:
+        conn.close()
