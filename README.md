@@ -29,6 +29,10 @@ Slik beviser vi i praksis hvordan vi sammen kan hjelpe virksomheter med å gå f
 
 ---
 
+### 🤖 Snakk med din egen Claude
+
+Dobbeltklikk på **`start_claude.cmd`**. Claude Code åpnes i prosjektmappen med Kunstpixel-verktøyene (MCP-serveren `kunstpixel` i `.mcp.json`, kun lesing mot `museum.db`). Første gang spør Claude om du vil godkjenne serveren. Svar ja. Ingen API-nøkkel trengs; det går på Claude-abonnementet.
+
 ### ▶️ Start demoen
 
 Dobbeltklikk på **`start_demo.cmd`** i prosjektmappen. Fra terminalen:
