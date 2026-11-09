@@ -7,3 +7,6 @@ deploy/demo/*.yaml text eol=lf
 
 # Git-hooks kjøres av sh, også på Windows
 scripts/githooks/* text eol=lf
+
+# Genererte CSV-er sammenlignes byte for byte med skriptet (test_publikum_data), som skriver LF
+05_data/*.csv text eol=lf
