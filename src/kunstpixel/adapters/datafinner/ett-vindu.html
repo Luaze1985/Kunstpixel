@@ -66,7 +66,6 @@
 
   // Flatene i venstre meny. Alle vises i midten av vinduet.
   var FLATER = [
-    { id: "chat", navn: "Chat", krevKI: true },
     { id: "vaktrom", navn: "Vaktrom" },
     { id: "sok", navn: "Søk" },
     { id: "arbeidsflyt", navn: "Arbeidsflyter" }
@@ -130,6 +129,8 @@
     if (ARBEID.oppgaver && (valgt || "").indexOf("flate:arbeidsflyt") === 0) {
       gruppe("Arbeidsroller", arbeidsroller().map(function (a) { return { id: arbeidId(a), navn: a }; }));
     }
+    // Chatten er en egen inngang over rapportene (DECISIONS punkt 12), ikke en av flatene.
+    gruppe("KI", [{ id: "flate:chat", navn: "Spør KI", status: KI ? null : "Krever KI" }]);
     var r = rolle(aktivRolle);
     var rollePunkter = synligeRoller().map(function (x) { return { id: "rolle:" + x.navn, navn: x.navn, status: antall(x.sporsmal.length, "rapport", "rapporter") }; });
     // Med rolle: rollens egne rapporter øverst. Uten rolle: rollelisten, så man velger først.
@@ -437,7 +438,7 @@
   }
 
   function visChat() {
-    var m = tom("Flate", "Chat", "Spør med vanlige ord. KI-en henter fakta med verktøyene og svarer. Hvert svar er et AI-forslag.");
+    var m = tom("KI", "Spør KI", "Spør med vanlige ord. KI-en henter fakta med verktøyene og svarer. Hvert svar er et AI-forslag.");
     if (!KI) m.appendChild(el("p", "af-panel-message", KI_AV));
     var feil = el("div", "af-error-summary"); feil.setAttribute("role", "alert"); feil.style.display = "none";
     feil.appendChild(el("h2", null, "Feil")); var feilTekst = el("p"); feil.appendChild(feilTekst); m.appendChild(feil);

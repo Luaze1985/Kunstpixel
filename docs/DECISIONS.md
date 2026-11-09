@@ -77,6 +77,8 @@ Beslutninger:
 
 11a. **Utført 2026-11-09:** `GET /api/katalog` (alle tabeller, antall rader og kolonner) og `GET /api/katalog?tabell=navn` (de 25 første radene). Skrivebeskyttet, og bare et eksakt tabellnavn fra `sqlite_master` slipper gjennom til SQL. Katalogen er ikke et verktøy for språkmodellen og står ikke i menyen. Den nås bare fra lenken «Se alle tabellene i databasen» inne i «Vis grunnlag» i en rapport.
 
+12a. **Utført 2026-11-09:** Chatten fantes alt (`/api/chat`, alle 45 verktøy, tallkontroll, av uten nøkkel). Lars valgte en egen knapp øverst i menyen: «Spør KI» står over rapportene og er tatt ut av «Flater». Chatten åpnes i midten og erstatter rapporten mens den er åpen. Chatpanel i høyre kolonne ble valgt bort. Ikke testet med ekte nøkkel i denne økten.
+
 Rekkefølge: (1) slå `ux/ett-vindu` inn i main, (2) Aura-skriptet + vakttest, (3) skjult datakatalog, (4) chat-inngang, (5) én startkommando.
 
 Åpent / ikke avgjort:
