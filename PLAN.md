@@ -5,7 +5,8 @@
 **Pågår i `main`:** [Revisjonsfunnene](docs/plans/2026-11-10-revisjonsfunn.md), 17 funn fra ekstern gjennomgang.
 - Pakke 1 er ferdig (2026-11-10): funn 6, 7, 9, 11, 13 og 14. Hele pytest: 2220 bestått, 9 hoppet over, 2 ventede feil. Også grønn i en ren utsjekk for de berørte testene.
 - Pakke 2 er ferdig (2026-11-10): funn 3, 4 og 5. Colab-databasen og MintHCM-dumpen spores ikke lenger. Last opp de nye Colab-filene til Drive selv.
-- Neste: pakke 3 (navn og merking), 4 (Datafinner-sperre) og 5 (innholdshash og dokumenter).
+- Pakke 3 er ferdig i koden (2026-11-10): funn 1, 10 og 12. **Lars må bygge:** `py -3.13 src/kunstpixel/data/build_museum_db.py`, og `museum.db` må committes etterpå.
+- Neste: pakke 4 (Datafinner-sperre) og 5 (innholdshash og dokumenter).
 - Funn 2 (rolle fra klienten) er utsatt, og funn 16 (domene og telefon) gjøres ikke. Se `docs/DECISIONS.md`.
 
 ## Gjort (2026-11-06)
