@@ -11,8 +11,10 @@ Verifiserer regelpakke:
 from __future__ import annotations
 
 import sqlite3
-import pandas as pd
+
 import pytest
+
+pd = pytest.importorskip("pandas")  # valgfri pakke (pyproject: data)
 from pathlib import Path
 
 DB_PATH = Path("05_data/museum.db")

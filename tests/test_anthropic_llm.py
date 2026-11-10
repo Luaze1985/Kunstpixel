@@ -196,7 +196,7 @@ def test_missing_usage_in_response_does_not_crash_the_counter():
 
 
 def test_real_client_is_built_with_timeout_and_key_comes_from_environment(monkeypatch):
-    import anthropic
+    anthropic = pytest.importorskip("anthropic")  # valgfri pakke (pyproject: llm)
 
     seen = {}
 

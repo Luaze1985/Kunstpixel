@@ -6,7 +6,6 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "mcp==1.29.1",
-    "fastmcp>=3.4.2",
     "pydantic>=2.12.5",
     "pyyaml>=6.0",
     "rich>=15.0.0",
@@ -14,6 +13,8 @@ dependencies = [
 
 [project.optional-dependencies]
 llm = ["anthropic"]
+# Trengs bare av datageneratorene og Telegram-broen, ikke av Datafinner eller MCP-serveren.
+data = ["pandas", "numpy", "duckdb", "requests"]
 
 [tool.pytest.ini_options]
 markers = ["llm_live: kjører mot ekte modell (krever ANTHROPIC_API_KEY), hoppes over som standard"]

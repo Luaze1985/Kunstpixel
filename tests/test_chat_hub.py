@@ -9,7 +9,11 @@ from http.server import HTTPServer
 
 import pytest
 
-from src.kunstpixel.adapters.chat_hub import MAX_BODY_BYTES, ChatHubHandler, create_agent
+from src.kunstpixel.adapters.chat_hub import (
+    MAX_BODY_BYTES,
+    ChatHubHandler,
+    create_agent,
+)
 from src.kunstpixel.core.agent import MuseumsvertAgent
 from src.kunstpixel.core.llm import FakeLLM
 
@@ -177,13 +181,13 @@ def test_create_agent_follows_env_switch(monkeypatch):
 def test_missing_credentials_never_break_a_message(monkeypatch):
     """Manglende nøkkel er ikke nødvendigvis manglende legitimasjon (en ant-profil kan finnes),
     så feilen kommer ved første kall. Da skal brukeren likevel få det regelbaserte svaret."""
-    import anthropic
+    anthropic = pytest.importorskip("anthropic")  # valgfri pakke (pyproject: llm)
 
     class NoAuth:
         def __init__(self, *a, **k):
             pass
 
-        class messages:  # noqa: N801 - etterligner SDK-ets form
+        class messages:
             @staticmethod
             def create(**kwargs):
                 raise TypeError("Could not resolve authentication method")
