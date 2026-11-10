@@ -1,0 +1,109 @@
+{
+  "name": "Kunstpixel HR lab: vendored upstream reference snapshots",
+  "created": "2026-10-20",
+  "status": "reference_only_do_not_import",
+  "museum_db": "05_data/museum.db",
+  "repositories": {
+    "frappe": {
+      "repository": "frappe/hrms",
+      "license": "GPL-3.0",
+      "commit": "7fc314bdbdb69d0161bff1ba4dd46f4a7dffd8a2",
+      "source_license": "license.txt",
+      "purpose": "Arbeidsflyt, fravær/oppmøte og selvbetjening i Vue/Frappe"
+    },
+    "mint": {
+      "repository": "minthcm/minthcm",
+      "license": "AGPL-3.0",
+      "commit": "e080d19ccbc407c5d75908c000c5d93144473c78",
+      "source_license": "LICENSE",
+      "purpose": "MCP OAuth2/PKCE samtykke, CSRF-beskyttelse og HR-integrasjonsmønstre"
+    },
+    "onyx": {
+      "repository": "onyx-dot-app/onyx",
+      "license": "MIT for kopierte CE-filer (ikke ee/)",
+      "commit": "e516bc7ae368b3d84af9b5fcec42ffb0f32159a5",
+      "source_license": "LICENSE",
+      "purpose": "Kildesporing, sitatprosessor og scoped permissions"
+    }
+  },
+  "files": [
+    {
+      "origin": "frappe",
+      "upstream_path": "frontend/src/composables/workflow.js",
+      "local_path": "upstream/frappe/frontend/src/composables/workflow.js",
+      "upstream_url": "https://github.com/frappe/hrms/blob/7fc314bdbdb69d0161bff1ba4dd46f4a7dffd8a2/frontend/src/composables/workflow.js"
+    },
+    {
+      "origin": "frappe",
+      "upstream_path": "frontend/src/data/attendance.js",
+      "local_path": "upstream/frappe/frontend/src/data/attendance.js",
+      "upstream_url": "https://github.com/frappe/hrms/blob/7fc314bdbdb69d0161bff1ba4dd46f4a7dffd8a2/frontend/src/data/attendance.js"
+    },
+    {
+      "origin": "frappe",
+      "upstream_path": "frontend/src/views/attendance/AttendanceRequestForm.vue",
+      "local_path": "upstream/frappe/frontend/src/views/attendance/AttendanceRequestForm.vue",
+      "upstream_url": "https://github.com/frappe/hrms/blob/7fc314bdbdb69d0161bff1ba4dd46f4a7dffd8a2/frontend/src/views/attendance/AttendanceRequestForm.vue"
+    },
+    {
+      "origin": "frappe",
+      "upstream_path": "license.txt",
+      "local_path": "upstream/frappe/license.txt",
+      "upstream_url": "https://github.com/frappe/hrms/blob/7fc314bdbdb69d0161bff1ba4dd46f4a7dffd8a2/license.txt"
+    },
+    {
+      "origin": "mint",
+      "upstream_path": "api/app/Routes/routes/mcp.php",
+      "local_path": "upstream/mint/api/app/Routes/routes/mcp.php",
+      "upstream_url": "https://github.com/minthcm/minthcm/blob/e080d19ccbc407c5d75908c000c5d93144473c78/api/app/Routes/routes/mcp.php"
+    },
+    {
+      "origin": "mint",
+      "upstream_path": "api/app/Controllers/McpController.php",
+      "local_path": "upstream/mint/api/app/Controllers/McpController.php",
+      "upstream_url": "https://github.com/minthcm/minthcm/blob/e080d19ccbc407c5d75908c000c5d93144473c78/api/app/Controllers/McpController.php"
+    },
+    {
+      "origin": "mint",
+      "upstream_path": "api/documentation/14-mcp-login-flow.md",
+      "local_path": "upstream/mint/api/documentation/14-mcp-login-flow.md",
+      "upstream_url": "https://github.com/minthcm/minthcm/blob/e080d19ccbc407c5d75908c000c5d93144473c78/api/documentation/14-mcp-login-flow.md"
+    },
+    {
+      "origin": "mint",
+      "upstream_path": "LICENSE",
+      "local_path": "upstream/mint/LICENSE",
+      "upstream_url": "https://github.com/minthcm/minthcm/blob/e080d19ccbc407c5d75908c000c5d93144473c78/LICENSE"
+    },
+    {
+      "origin": "onyx",
+      "upstream_path": "backend/onyx/chat/citation_processor.py",
+      "local_path": "upstream/onyx/backend/onyx/chat/citation_processor.py",
+      "upstream_url": "https://github.com/onyx-dot-app/onyx/blob/e516bc7ae368b3d84af9b5fcec42ffb0f32159a5/backend/onyx/chat/citation_processor.py"
+    },
+    {
+      "origin": "onyx",
+      "upstream_path": "backend/onyx/auth/scoped_permissions.py",
+      "local_path": "upstream/onyx/backend/onyx/auth/scoped_permissions.py",
+      "upstream_url": "https://github.com/onyx-dot-app/onyx/blob/e516bc7ae368b3d84af9b5fcec42ffb0f32159a5/backend/onyx/auth/scoped_permissions.py"
+    },
+    {
+      "origin": "onyx",
+      "upstream_path": ".agents/feature-map/components/citations.md",
+      "local_path": "upstream/onyx/docs/citations.md",
+      "upstream_url": "https://github.com/onyx-dot-app/onyx/blob/e516bc7ae368b3d84af9b5fcec42ffb0f32159a5/.agents/feature-map/components/citations.md"
+    },
+    {
+      "origin": "onyx",
+      "upstream_path": ".agents/feature-map/components/auth-and-identity.md",
+      "local_path": "upstream/onyx/docs/auth-and-identity.md",
+      "upstream_url": "https://github.com/onyx-dot-app/onyx/blob/e516bc7ae368b3d84af9b5fcec42ffb0f32159a5/.agents/feature-map/components/auth-and-identity.md"
+    },
+    {
+      "origin": "onyx",
+      "upstream_path": "LICENSE",
+      "local_path": "upstream/onyx/LICENSE",
+      "upstream_url": "https://github.com/onyx-dot-app/onyx/blob/e516bc7ae368b3d84af9b5fcec42ffb0f32159a5/LICENSE"
+    }
+  ]
+}
