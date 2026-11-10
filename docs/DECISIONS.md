@@ -115,3 +115,13 @@ Valg jeg (Claude) tok underveis i pakke 1. Si fra hvis noen skal gjøres om:
 - **R10.** Funn 14 har ingen rød test: `anthropic` er installert her, så feilen kan ikke vises uten å avinstallere pakken. Endringen er `importorskip` i to tester.
 
 Testet: hele pytest 2220 bestått, 9 hoppet over, 2 ventede feil. De berørte testene (59) er også kjørt grønt i en ren utsjekk. Ikke testet: Linux og Colab.
+
+Pakke 2 (2026-11-10, commit `6316ab5`):
+- **R11.** Funn 5: alle seks konklusjonskolonnene er flyttet til `fasit/personvern_trondheim_fasit.csv` (Lars' valg). Det gjelder både CSV-en og tabellen `ekstern_osint_trondheim` i Colab-databasen.
+- **R12.** GitHub-repoet er offentlig. De gamle fødselsnumrene, helsefeltene og fasiten ligger fortsatt i historikken der. Lars valgte å rette fremover og ikke røre historikken. Om repoet skal gjøres privat, avgjør Lars selv.
+- **R13 (Claude).** Fasitfilen ligger i `fasit/` i repo-roten, ikke i `05_data/fasit/` som planen sa. Grunn: notatboken leter etter data i `05_data` på Drive, og da ville fasiten blitt lastet opp sammen med angrepsdataene. Kostnad hvis feil: flytt én mappe og én sti.
+- **R14 (Claude).** Funn 3, 4 og 5 er én commit, ikke tre. Grunn: den nye databasen måtte tas ut av sporingen i samme commit som den ble laget, ellers hadde en ny 99 MB-fil havnet i historikken.
+- **R15 (Claude).** Generatoren skriver nå LF i alle tre CSV-ene, som resten av datafilene.
+- `02_deliverables/02_rapporter/personvern_trondheim_colab.html` er et gammelt øyeblikksbilde uten generator. Det har ingen fødselsnumre, men viser de gamle fasitkolonnene. Det er ikke endret.
+
+Testet: generatoren og notatboken er kjørt lokalt. Notatboken virker med og uten fasit. 8 nye tester er grønne. Ikke testet: i selve Colab, og kopien på Drive er ikke oppdatert.
