@@ -8,9 +8,23 @@ from __future__ import annotations
 from pathlib import Path
 
 try:  # i repoet
-    from src.kunstpixel.core.intern.leveranse import FILER, KILDER_TILLATT, NAVN, PLASSHOLDER, ROLLER_TILLATT, skjelett_tekst
+    from src.kunstpixel.core.intern.leveranse import (
+        FILER,
+        KILDER_TILLATT,
+        NAVN,
+        PLASSHOLDER,
+        ROLLER_TILLATT,
+        skjelett_tekst,
+    )
 except ImportError:  # i Colab-pakken, der filene ligger side om side
-    from leveranse import FILER, KILDER_TILLATT, NAVN, PLASSHOLDER, ROLLER_TILLATT, skjelett_tekst  # type: ignore[no-redef]
+    from leveranse import (  # type: ignore[no-redef]
+        FILER,
+        KILDER_TILLATT,
+        NAVN,
+        PLASSHOLDER,
+        ROLLER_TILLATT,
+        skjelett_tekst,
+    )
 
 KJERNE = f"""# Bestilling: syntetisk fyll for et kunstmuseum
 
@@ -96,11 +110,12 @@ def skriv_colab_pakke(mappe: Path) -> list[Path]:
     ut: list[Path] = []
     sjekksummer: list[str] = []
     for navn in PAKKEFILER:
-        data = (kilde / navn).read_bytes()
+        # Alltid LF: pakken og sjekksummen skal være like på Windows, Linux og i Colab.
+        data = (kilde / navn).read_bytes().replace(b"\r\n", b"\n")
         (mappe / navn).write_bytes(data)
         sjekksummer.append(f"{hashlib.sha256(data).hexdigest()}  {navn}")
         ut.append(mappe / navn)
-    (mappe / "SJEKKSUM.txt").write_text("\n".join(sjekksummer) + "\n", encoding="utf-8")
+    (mappe / "SJEKKSUM.txt").write_bytes(("\n".join(sjekksummer) + "\n").encode("utf-8"))
     ut.append(mappe / "SJEKKSUM.txt")
     return ut
 

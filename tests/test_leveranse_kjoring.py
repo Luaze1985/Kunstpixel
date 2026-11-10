@@ -9,8 +9,16 @@ from pathlib import Path
 import pytest
 
 from src.kunstpixel.core.intern import leveranse as L
-from src.kunstpixel.core.intern.leveranse_bestilling import PAKKEFILER, skriv_colab_pakke
-from src.kunstpixel.core.intern.leveranse_kjoring import MAKS_KALL, MAKS_RUNDER, hent_yaml, kjor
+from src.kunstpixel.core.intern.leveranse_bestilling import (
+    PAKKEFILER,
+    skriv_colab_pakke,
+)
+from src.kunstpixel.core.intern.leveranse_kjoring import (
+    MAKS_KALL,
+    MAKS_RUNDER,
+    hent_yaml,
+    kjor,
+)
 from tests.test_leveranse import Teller, dump, fyll
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -185,6 +193,29 @@ def test_checksums_file_is_correct():
     for l in linjer:
         h, navn = l.split("  ")
         assert hashlib.sha256((PAKKE / navn).read_bytes()).hexdigest() == h
+
+
+def test_checksums_are_of_lf_content_on_every_platform():
+    """Sjekksummen skal gjelde LF-innholdet, slik filene ligger i git og i Colab, uansett linjeskift på disken."""
+    sjekksum = (PAKKE / "SJEKKSUM.txt").read_bytes()
+    assert b"\r" not in sjekksum
+    for l in sjekksum.decode("utf-8").strip().splitlines():
+        h, navn = l.split("  ")
+        lf = (PAKKE / navn).read_bytes().replace(b"\r\n", b"\n")
+        assert hashlib.sha256(lf).hexdigest() == h, f"{navn}: sjekksummen er regnet av CRLF-bytes"
+
+
+def test_package_is_written_with_lf_even_from_crlf_sources(tmp_path, monkeypatch):
+    import src.kunstpixel.core.intern.leveranse_bestilling as lb
+
+    kilde = tmp_path / "kilde"
+    kilde.mkdir()
+    for navn in PAKKEFILER:
+        (kilde / navn).write_bytes(b"a = 1\r\nb = 2\r\n")
+    monkeypatch.setattr(lb, "__file__", str(kilde / "leveranse_bestilling.py"))
+    lb.skriv_colab_pakke(tmp_path / "ut")
+    for navn in (*PAKKEFILER, "SJEKKSUM.txt"):
+        assert b"\r" not in (tmp_path / "ut" / navn).read_bytes()
 
 
 def test_package_is_regenerated_identically(tmp_path):

@@ -14,7 +14,7 @@ scripts/githooks/* text eol=lf
 # Datafiler og Colab-pakken genereres med LF og sammenlignes byte for byte i testene.
 # Uten dette gir core.autocrlf=true CRLF ved utsjekk, og testene feiler i en ny mappe.
 *.csv text eol=lf
-# (SJEKKSUM.txt er unntatt: den skrives med plattformens linjeskift av skriv_colab_pakke.)
 01_inbox/h5_colab/*.py text eol=lf
+01_inbox/h5_colab/SJEKKSUM.txt text eol=lf
 src/kunstpixel/core/intern/leveranse*.py text eol=lf
 05_data/*.csv text eol=lf

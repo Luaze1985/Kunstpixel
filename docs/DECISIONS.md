@@ -41,6 +41,7 @@ Lars: «alt i ett vindu, med tre paneler». Gjelder `02_deliverables/arbeidsflyt
 - Tre tester feilet i en ny utsjekk av main `0ba51e4`: `test_leveranse_kjoring` (2) og `test_publikum_data` (1). Årsaken var `core.autocrlf=true`, som ga CRLF ved utsjekk, mens generatorene skriver LF og testene sammenligner byte for byte.
 - Rettet i `.gitattributes`: `*.csv`, `01_inbox/h5_colab/*.py` og `src/kunstpixel/core/intern/leveranse*.py` får `eol=lf`. `SJEKKSUM.txt` er unntatt, fordi `skriv_colab_pakke` skriver den med plattformens linjeskift.
 - Ingen filinnhold er endret, bare hvordan git sjekker ut. Hele pytest er grønn i en ny utsjekk.
+- **Rettet 2026-11-10 (revisjonsfunn 7):** påstanden over holdt ikke. Etter sammenslåingen `5cbce56` hadde `SJEKKSUM.txt` hashene av CRLF-bytes, mens filene i git er LF. Testene var grønne bare fordi arbeidsmappen hadde gamle CRLF-kopier. Nå normaliserer `skriv_colab_pakke` alltid til LF, `SJEKKSUM.txt` har `eol=lf`, og to nye tester låser dette. Ikke kontrollert i en ren utsjekk ennå.
 - Kjent støy: `test_org_builder` skriver fire `05_data/mock_*.csv` på nytt med `\r\n`, slik at `git status` viser dem som endret selv om `git diff` er tom. Dette skjedde også før. Rett eventuelt med `lineterminator="\n"` i `org_builder.write_csv`, eller ved å la testen skrive til en temp-mappe.
 
 ## 2026-11-06 — «AI-forslag» er kildemerket, «KI» er ordet i tekst (oppgave 03)
