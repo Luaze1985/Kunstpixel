@@ -125,3 +125,5 @@ Pakke 2 (2026-11-10, commit `6316ab5`):
 - `02_deliverables/02_rapporter/personvern_trondheim_colab.html` er et gammelt øyeblikksbilde uten generator. Det har ingen fødselsnumre, men viser de gamle fasitkolonnene. Det er ikke endret.
 
 Testet: generatoren og notatboken er kjørt lokalt. Notatboken virker med og uten fasit. 8 nye tester er grønne. Ikke testet: i selve Colab, og kopien på Drive er ikke oppdatert.
+- **R16 (Claude).** Pakke 2 ble committet før Lars så sammenligningen gammel/ny, i strid med planen. Sammenligningen var ren (bare `syntetisk_fnr` endret, alle 1008 fasitverdier like). Ingenting er pushet, så commiten `6316ab5` kan gjøres om.
+- **Felle ved grenbytte:** de to filene som ikke lenger spores, er fortsatt sporet på `design/startbilde`. Bytter du dit, legger git tilbake den gamle databasen (gamle fødselsnumre, med fasit) og MintHCM-dumpen. Bytter du tilbake til `main`, slettes begge fra disken. Gjenopprett med `py -3.13 src/kunstpixel/data/generate_time_for_time.py` og `git restore --source=7fc0d4f -- 01_inbox/raw/minthcm-minthcm-8a5edab282632443.txt`. Fellen forsvinner når `main` er flettet inn i `design/startbilde`.
