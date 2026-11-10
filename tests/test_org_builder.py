@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import csv
+import hashlib
+import shutil
 from pathlib import Path
 
 from src.kunstpixel.data.org_builder import (
@@ -63,8 +65,37 @@ def test_hms_incidents_generation():
         assert inc["alvorlighetsgrad"] in ("LAV", "MIDDELS", "HØY", "KRITISK")
 
 
-def test_build_all_internal_datasets_creates_valid_csvs():
-    counts = build_all_internal_datasets()
+MOCK_FILER = [
+    "mock_interne_ferdigheter.csv",
+    "mock_ansatt_kompetanser.csv",
+    "mock_interne_henvendelser.csv",
+    "mock_avvik_hms_tekst.csv",
+]
+
+
+def _bygg_i(tmp_path: Path) -> dict[str, int]:
+    shutil.copy(DATA_DIR / "arkiv_hr_ansatte.csv", tmp_path / "arkiv_hr_ansatte.csv")
+    return build_all_internal_datasets(tmp_path)
+
+
+def test_build_skriver_lf_og_ikke_i_05_data(tmp_path):
+    """En test skal aldri endre sannhetskilden, og generatoren skal skrive LF på alle plattformer."""
+    for_ = {fn: hashlib.sha256((DATA_DIR / fn).read_bytes()).hexdigest() for fn in MOCK_FILER}
+    _bygg_i(tmp_path)
+    for fn in MOCK_FILER:
+        assert b"\r\n" not in (tmp_path / fn).read_bytes(), f"{fn} er skrevet med CRLF"
+        assert hashlib.sha256((DATA_DIR / fn).read_bytes()).hexdigest() == for_[fn]
+
+
+def test_committed_mock_files_match_the_generator(tmp_path):
+    _bygg_i(tmp_path)
+    for fn in MOCK_FILER:
+        lagret = (DATA_DIR / fn).read_bytes().replace(b"\r\n", b"\n")
+        assert (tmp_path / fn).read_bytes() == lagret, f"{fn} i 05_data er utdatert. Kjør org_builder"
+
+
+def test_build_all_internal_datasets_creates_valid_csvs(tmp_path):
+    counts = _bygg_i(tmp_path)
     assert counts["ferdigheter"] == 14
     assert counts["ansatt_kompetanser"] > 500
     assert counts["interne_henvendelser"] == 60
@@ -78,7 +109,7 @@ def test_build_all_internal_datasets_creates_valid_csvs():
         "mock_avvik_hms_tekst.csv",
     ]
     for fn in files:
-        path = DATA_DIR / fn
+        path = tmp_path / fn
         assert path.is_file(), f"Mangler fil: {fn}"
         with path.open(encoding="utf-8", newline="") as f:
             reader = csv.reader(f)

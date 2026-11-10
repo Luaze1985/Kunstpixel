@@ -33,7 +33,6 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.kunstpixel.core.intern import leveranse
 
-
 # -----------------------------------------------------------------------------
 # 1. FYLLDATA (BEVART FRA COLAB OG UTVIDET TIL Å VÆRE 100 % UNIKE OG REGELRETTE)
 # -----------------------------------------------------------------------------
@@ -832,7 +831,7 @@ def _skriv_csv(sti: Path, rader: list[dict[str, Any]]) -> None:
         return
     fieldnames = list(rader[0].keys())
     with sti.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames, quoting=csv.QUOTE_MINIMAL)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, quoting=csv.QUOTE_MINIMAL, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rader)
     print(f"  Skrev CSV: {sti} ({len(rader)} rader)")
