@@ -76,6 +76,16 @@ Skal en regel for vurdering og forslag endres: rediger `05_data/rapport_regler.c
 Notatboken bygger aldri `museum.db` på Drive. Husk: Drive-mappen «Min disk» heter `/content/drive/MyDrive` i Colab.
 Status: celleinnholdet er kjørt lokalt, men notatboken er **ikke kjørt i selve Colab**.
 
+### Personvern-settet for Trondheim (utenfor museum.db)
+
+Lages av `src/kunstpixel/data/generate_time_for_time.py` med fast tilfeldighet (`random.Random(42)`). Generatoren leser `05_data/arkiv_hr_*.csv` og avvik fra `museum.db`, og skriver:
+
+- `05_data/colab_personvern_historikk.db` (99 MB). **Spores ikke i git.** Lag den på nytt med `py -3.13 src/kunstpixel/data/generate_time_for_time.py` fra repo-roten.
+- `05_data/ansatte_168_komplett_personvern_trondheim.csv` og `05_data/vakt_time_for_time_2025_2026.csv`. Bare rådata.
+- `fasit/personvern_trondheim_fasit.csv`. Konklusjonene (risikoscore, risikonivå, avsløringer, habilitet, inntektsavvik, kollektivkoblinger). Ligger utenfor `05_data` med vilje, så den ikke lastes opp sammen med angrepsdataene.
+
+Notatboken lages av `src/kunstpixel/data/create_colab_notebook.py` og leser fasiten i en egen celle (1b). Fødselsnumrene bruker Tenor-format (måned + 80). Kopien på Google Drive oppdateres ikke automatisk: last opp de nye filene selv. `tests/test_personvern_colab_data.py` låser alt dette.
+
 ## Kjente feller
 
 - **Komma i CSV uten anførselstegn** forskyver eller kutter kolonner stille. Byggeskriptet avviser det ikke. `tests/test_data_csv.py` fanger det.

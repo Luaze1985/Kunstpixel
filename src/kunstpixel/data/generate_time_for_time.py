@@ -7,14 +7,17 @@ Eksporterer til:
 1. 05_data/colab_personvern_historikk.db (komplett SQLite-database for Colab)
 2. 05_data/ansatte_168_komplett_personvern_trondheim.csv (oversikt over alle 168 ansatte)
 3. 05_data/vakt_time_for_time_2025_2026.csv (uttrekk av time-for-time vakter)
+4. fasit/personvern_trondheim_fasit.csv (konklusjonene, holdt utenfor angrepsdataene)
+
+Databasen spores ikke i git (revisjonsfunn 4). Lag den på nytt med:
+    py -3.13 src/kunstpixel/data/generate_time_for_time.py
 """
 
-import os
 import csv
-import json
+import os
 import random
 import sqlite3
-from datetime import datetime, date
+from datetime import datetime
 
 # Trøndersk geografisk forankring (Trondheim og omegn)
 TRONDHEIM_OMRAADER = [
@@ -116,6 +119,8 @@ def generate_hourly_records():
     db_out = os.path.join(data_dir, "colab_personvern_historikk.db")
     sample_csv_out = os.path.join(data_dir, "vakt_time_for_time_2025_2026.csv")
     komplett_ansatte_csv_out = os.path.join(data_dir, "ansatte_168_komplett_personvern_trondheim.csv")
+    # Utenfor 05_data, så fasiten ikke lastes opp til Colab sammen med angrepsdataene.
+    fasit_csv_out = os.path.join(os.path.dirname(data_dir), "fasit", "personvern_trondheim_fasit.csv")
 
     print("[1/7] Laster inn klokkeslett og overtidsjusteringer for vakter...")
     times = {}
@@ -333,15 +338,10 @@ def generate_hourly_records():
         virke_aarslonn_nok INTEGER,
         skatteliste_nettoinntekt INTEGER,
         skatteliste_nettoformue INTEGER,
-        inntektsavvik_forklaring TEXT,
-        brreg_roller_verv TEXT,
-        habilitet_flagg TEXT,
-        kollektiv_avvik_treff TEXT,
-        mosaikk_risikoscore INTEGER,
-        risikonivaa TEXT,
-        avslort_sensitiv_innsikt TEXT
+        brreg_roller_verv TEXT
     )
     """)
+    # Konklusjonene (fasiten) skrives bare til FASIT_CSV, aldri til angrepsdataene (revisjonsfunn 5).
 
     # Spesifikke familiekoblinger / habilitetskoblinger basert på faktiske etternavn i innleie-tabellen
     HABILITET_ETTERNAVN = {
@@ -355,6 +355,7 @@ def generate_hourly_records():
     ansatt_rows = []
     utvidet_rows = []
     osint_rows = []
+    fasit_rows = []
     komplett_csv_rows = []
 
     with open(ansatte_csv, mode="r", encoding="utf-8") as f:
@@ -379,7 +380,8 @@ def generate_hourly_records():
             mnd = rng.randint(1, 12)
             dag = rng.randint(1, 28)
             fdato = f"{faar}-{mnd:02d}-{dag:02d}"
-            fnr = f"{dag:02d}{mnd:02d}{str(faar)[2:]}-99{idx+100:03d}"
+            # Tenor-format (Skatteetaten): måned + 80, så nummeret aldri kan tilhøre en ekte person.
+            fnr = f"{dag:02d}{mnd + 80:02d}{str(faar)[2:]}-99{idx+100:03d}"
 
             # Geografi i Trondheim (hvis ansatt har fravær under et spesifikt kollektivavvik, koble til den pendlerlinjen!)
             f_info = fravaer_per_ansatt.get(aid, {"episoder": 0, "dager": 0, "egenmeldinger": 0, "datoer": []})
@@ -484,10 +486,16 @@ def generate_hourly_records():
 
             samlet_innsikt = " | ".join(innsikter)
 
-            osint_rows.append((
-                aid, virke_lonn, skatt_inntekt, skatt_formue, inntekt_forklaring,
-                brreg_rolle, habilitet_flagg, matched_kollektiv, score, rnivaa, samlet_innsikt
-            ))
+            osint_rows.append((aid, virke_lonn, skatt_inntekt, skatt_formue, brreg_rolle))
+            fasit_rows.append({
+                "ansatt_id": aid,
+                "inntektsavvik_analyse": inntekt_forklaring,
+                "kollektiv_avvik_kobling": matched_kollektiv,
+                "habilitet_flagg": habilitet_flagg,
+                "mosaikk_risikoscore": score,
+                "risikonivaa": rnivaa,
+                "avslort_sensitiv_innsikt": samlet_innsikt,
+            })
 
             komplett_csv_rows.append({
                 "ansatt_id": aid,
@@ -503,12 +511,10 @@ def generate_hourly_records():
                 "virke_aarslonn_nok": virke_lonn,
                 "skatteliste_nettoinntekt": skatt_inntekt,
                 "skatteliste_nettoformue": skatt_formue,
-                "inntektsavvik_analyse": inntekt_forklaring,
                 "adresse_trondheim": adresse,
                 "postnummer": postnr,
                 "bydel_kommune": bydel,
                 "pendlerlinje_atb": pendlerlinje,
-                "kollektiv_avvik_kobling": matched_kollektiv,
                 "sivilstand": sivilstand,
                 "antall_barn_under_12": barn,
                 "naermeste_paarorende": paarorende,
@@ -519,15 +525,11 @@ def generate_hourly_records():
                 "overtid_aml_brudd": overtid_cnt,
                 "primar_stasjon": primar_stasjon,
                 "brreg_roller_verv": brreg_rolle,
-                "habilitet_flagg": habilitet_flagg,
-                "mosaikk_risikoscore": score,
-                "risikonivaa": rnivaa,
-                "avslort_sensitiv_innsikt": samlet_innsikt,
             })
 
     cur.executemany("INSERT INTO hr_ansatte VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", ansatt_rows)
     cur.executemany("INSERT INTO hr_utvidet_profil_trondheim VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", utvidet_rows)
-    cur.executemany("INSERT INTO ekstern_osint_trondheim VALUES (?,?,?,?,?,?,?,?,?,?,?)", osint_rows)
+    cur.executemany("INSERT INTO ekstern_osint_trondheim VALUES (?,?,?,?,?)", osint_rows)
 
     # Kopier avvik fra museum.db (read-only)
     cur.execute("""
@@ -555,12 +557,19 @@ def generate_hourly_records():
 
     print("[7/7] Skriver komplett CSV for alle 168 ansatte i Trondheim og vakt-uttrekk...")
     with open(komplett_ansatte_csv_out, mode="w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=list(komplett_csv_rows[0].keys()))
+        writer = csv.DictWriter(f, fieldnames=list(komplett_csv_rows[0].keys()), lineterminator="\n")
         writer.writeheader()
         writer.writerows(komplett_csv_rows)
 
+    os.makedirs(os.path.dirname(fasit_csv_out), exist_ok=True)
+    with open(fasit_csv_out, mode="w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=list(fasit_rows[0].keys()), lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(fasit_rows)
+    print(f"       Fasit (bare for testene og læreren) skrevet til: {fasit_csv_out}")
+
     with open(sample_csv_out, mode="w", encoding="utf-8", newline="") as f:
-        writer = csv.writer(f)
+        writer = csv.writer(f, lineterminator="\n")
         writer.writerow(["vakt_id", "ansatt_id", "dato", "aar", "maaned", "time_slot", "klokketime", "stasjon", "avdeling", "rolle", "utstilling_id", "faktiske_timer_vakt"])
         writer.writerows(sample_rows)
 

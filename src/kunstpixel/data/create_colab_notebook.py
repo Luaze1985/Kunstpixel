@@ -84,35 +84,52 @@ else:
     df_168 = pd.read_csv(csv_168_path)
 
 print(f"Totalt antall ansatte analysert: {len(df_168)}")
-df_168[["ansatt_id", "navn", "stilling", "bydel_kommune", "pendlerlinje_atb", "risikonivaa", "mosaikk_risikoscore"]].head(10)""")
+df_168[["ansatt_id", "navn", "stilling", "bydel_kommune", "pendlerlinje_atb"]].head(10)""")
+
+    # Fasiten er holdt utenfor angrepsdataene (revisjonsfunn 5)
+    md("""## 1b. Fasit (lærerens nøkkel)
+Angrepsdataene over har bare rådata. Konklusjonene (risikoscore, risikonivå, avsløringer, habilitet, inntektsavvik og kollektivkoblinger) ligger i en egen fil, `fasit/personvern_trondheim_fasit.csv`, utenfor `05_data`.
+
+**Skal du teste om en KI klarer koblingen selv, så hopp over denne cellen og ikke gi KI-en fasitfilen.** Cellene merket «bruker fasiten» stopper med en melding hvis fasiten ikke er lastet.
+""")
+
+    code("""fasit_stier = ["fasit", "../fasit", "/content/drive/MyDrive/Kunstpixel/fasit", "/content"]
+fasit_fil = next((os.path.join(p, "personvern_trondheim_fasit.csv") for p in fasit_stier
+                  if os.path.exists(os.path.join(p, "personvern_trondheim_fasit.csv"))), None)
+HAR_FASIT = fasit_fil is not None
+if HAR_FASIT:
+    df_168 = df_168.merge(pd.read_csv(fasit_fil), on="ansatt_id", how="left")
+    print(f"🔑 Fasit lastet fra {fasit_fil}")
+else:
+    print("Ingen fasit lastet. Cellene som bruker fasiten, stopper med en melding.")
+
+
+def krever_fasit():
+    if not HAR_FASIT:
+        raise RuntimeError("Denne cellen bruker fasiten. Last opp fasit/personvern_trondheim_fasit.csv og kjør celle 1b.")""")
 
     # Steg 2: Oversikt over de 168 ansatte i Trondheim
     md("""## 2. Geografisk fordeling i Trondheim og Risikoprofil (Alle 168 ansatte)
 Vi ser først på hvor de 168 ansatte bor i Trondheimsregionen og hvordan eksponeringsrisikoen fordeler seg når grunnlagsdataene kobles sammen.
 """)
 
-    code("""print("=== FORDELING PER RISIKONIVÅ (168 ANSATTE) ===")
-print(df_168["risikonivaa"].value_counts())
-
-print("\\n=== FORDELING PER BYDEL / KOMMUNE I TRONDHEIMSREGIONEN ===")
+    code("""print("=== FORDELING PER BYDEL / KOMMUNE I TRONDHEIMSREGIONEN ===")
 print(df_168["bydel_kommune"].value_counts())
 
 try:
     import matplotlib.pyplot as plt
-    fig, axes = plt.subplots(1, 2, figsize=(15, 5))
-    df_168["bydel_kommune"].value_counts().plot(kind="barh", ax=axes[0], color="#1f77b4")
-    axes[0].set_title("Bosted i Trondheim & omegn (168 ansatte)")
-    axes[0].set_xlabel("Antall ansatte")
-
-    df_168["risikonivaa"].value_counts().reindex(["KRITISK", "HØY", "MODERAT", "LAV"]).plot(
-        kind="bar", ax=axes[1], color=["#d62728", "#ff7f0e", "#ffbb78", "#2ca02c"]
-    )
-    axes[1].set_title("Mosaikk-risikonivå ved krysskobling av kilder")
-    axes[1].set_ylabel("Antall ansatte")
+    df_168["bydel_kommune"].value_counts().plot(kind="barh", figsize=(8, 5), color="#1f77b4")
+    plt.title("Bosted i Trondheim & omegn (168 ansatte)")
+    plt.xlabel("Antall ansatte")
     plt.tight_layout()
     plt.show()
 except ImportError:
     pass""")
+
+    code("""# Bruker fasiten
+krever_fasit()
+print("=== FORDELING PER RISIKONIVÅ (168 ANSATTE) ===")
+print(df_168["risikonivaa"].value_counts().reindex(["KRITISK", "HØY", "MODERAT", "LAV"]))""")
 
     # Steg 3: Modul 1 - Kollektivavvik i Trondheim (AtB / Gråkallbanen / Trønderbanen)
     md("""## 3. Kobling 1: Bosteds-avsløring via AtB Metrobuss, Gråkallbanen og Trønderbanen
@@ -122,7 +139,9 @@ Selv om en vakt- og fraværsliste er «anonymisert» (kun `ansatt_id`), kan vi k
 - **Gråkallbanen:** Strømstans ved Breidablikk $\\rightarrow$ peker ut ansatte på **Byåsen og Ila**.
 """)
 
-    code("""kollektiv_treff = df_168[df_168["kollektiv_avvik_kobling"] != "Ingen treff mot kollektivstans"]
+    code("""# Bruker fasiten
+krever_fasit()
+kollektiv_treff = df_168[df_168["kollektiv_avvik_kobling"] != "Ingen treff mot kollektivstans"]
 print(f"🚨 Fant {len(kollektiv_treff)} ansatte hvis fravær/forsinkelse avslører eksakt pendlerkorridor i Trondheim:\\n")
 display(kollektiv_treff[[
     "ansatt_id", "navn", "bydel_kommune", "adresse_trondheim",
@@ -154,7 +173,9 @@ Når museets interne lønnstrinn (Virke-tabellen) er kjent, kan hvem som helst k
 3. **Etternavn + Roller mot `hr_innleie`:** Avslører ansatte som bestiller eller godkjenner oppdrag fra egne familiemedlemmer!
 """)
 
-    code("""habilitet_og_okonomi = df_168[
+    code("""# Bruker fasiten
+krever_fasit()
+habilitet_og_okonomi = df_168[
     (df_168["habilitet_flagg"] != "Ingen registrert konflikt") |
     (df_168["inntektsavvik_analyse"].str.contains("avslører"))
 ].sort_values(by="mosaikk_risikoscore", ascending=False)
@@ -171,7 +192,9 @@ display(habilitet_og_okonomi[[
 Tabellen under viser hvordan enkeltbitene danner et komplett, høy-sensitivt personkort når alle kildene slås sammen.
 """)
 
-    code("""kritiske = df_168[df_168["risikonivaa"] == "KRITISK"].sort_values(by="mosaikk_risikoscore", ascending=False)
+    code("""# Bruker fasiten
+krever_fasit()
+kritiske = df_168[df_168["risikonivaa"] == "KRITISK"].sort_values(by="mosaikk_risikoscore", ascending=False)
 print(f"🔴 Totalt {len(kritiske)} ansatte har KRITISK eksponeringsrisiko (Score >= 75/100):")
 display(kritiske[[
     "ansatt_id", "navn", "fodselsdato", "adresse_trondheim",
@@ -186,7 +209,9 @@ Her ser vi nøkternt på tre vanlige grupper som ligger i grenseland i arbeidshv
 3. **Stram økonomi eller ekstrajobb:** Ansatte i deltid eller med høy gjeldsbelastning i skattelisten, eller med bi-inntekt ved siden av museumsjobben.
 """)
 
-    code("""print("--- A. SLITASJE & LANGE VAKTER (Overtid >= 12 vakter + Helse/Fravær) ---")
+    code("""# Del B og C bruker fasiten
+krever_fasit()
+print("--- A. SLITASJE & LANGE VAKTER (Overtid >= 12 vakter + Helse/Fravær) ---")
 slitasje = df_168[
     (df_168["overtid_aml_brudd"] >= 12) &
     (df_168["sykefravaer_dager"] >= 25)

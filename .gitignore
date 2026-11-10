@@ -34,3 +34,9 @@ gate-log.jsonl
 
 # Colab-leveranser som ikke er kontrollert ennå (se 01_inbox/MOTTAK_COLAB_DATA.md)
 05_data/innkommende/
+
+# Store filer som ikke skal i git (revisjonsfunn 4, Lars 2026-11-10).
+# Colab-databasen lages på nytt med: py -3.13 src/kunstpixel/data/generate_time_for_time.py
+05_data/colab_personvern_historikk.db
+# Tredjepartskode (MintHCM). Lisensen må sjekkes før den deles.
+01_inbox/raw/minthcm-*.txt
