@@ -17,7 +17,7 @@
 | Entitet | Felt | Type/krav | Null/ukjent | Referanse / validering |
 |---|---|---|---|---|
 | person | id | ikke-tom, unik tekst-ID | aldri | `hr_people.id` PK; navn er ikke unik nøkkel |
-| person | name | tekst, ikke blank | aldri | kun fiktive navn |
+| person | ansatt_id | peker på `hr_ansatte` | aldri | navnet lagres bare i `hr_ansatte`, og alle navn er fiktive |
 | person | role | tekst | aldri | rolle, ikke kompetansebevis |
 | person | active | bool heltall 0/1 | aldri | inaktive tas ut av telling/rangering |
 | person | employment | fast/deltid/innleie | aldri | kontrollerte kodeverdier |

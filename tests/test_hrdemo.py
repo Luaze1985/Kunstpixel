@@ -1,11 +1,20 @@
 """Objective regression suite: deterministic truth vs uncertain LLM judgements."""
 from __future__ import annotations
+
 import copy
 import json
 import sqlite3
 from pathlib import Path
+
 import pytest
-from src.kunstpixel.core.hrdemo import init_demo,validate_seed,count_skill,candidates,find_rules
+
+from src.kunstpixel.core.hrdemo import (
+    candidates,
+    count_skill,
+    find_rules,
+    init_demo,
+    validate_seed,
+)
 
 SEED = Path(__file__).resolve().parents[1] / '05_data' / 'hr_demo' / 'seed.json'
 
@@ -19,6 +28,11 @@ def env(tmp_path):
     with sqlite3.connect(master) as c:
         c.execute('CREATE TABLE museum_invariant(id INTEGER PRIMARY KEY,label TEXT)')
         c.execute("INSERT INTO museum_invariant VALUES (1,'Behold')")
+        # Personalregisteret er eneste kilde til navn (revisjonsfunn 1).
+        c.execute('CREATE TABLE hr_ansatte(ansatt_id TEXT PRIMARY KEY,navn TEXT NOT NULL)')
+        folk=json.loads(SEED.read_text(encoding='utf-8'))['people']
+        c.executemany('INSERT INTO hr_ansatte VALUES (?,?)',
+                      [(p['ansatt_id'],'Jonas Berg' if p['id']=='E101' else f"Navn {p['id']}") for p in folk])
     target=tmp_path/'combined.db'
     init_demo(target,master,SEED)
     return master,target
@@ -26,7 +40,7 @@ def env(tmp_path):
 def test_source_master_immutable(env):
     master,target=env
     with sqlite3.connect(master) as c:
-        assert c.execute('SELECT count(*) FROM sqlite_master WHERE name LIKE "hr_%"').fetchone()[0]==0
+        assert c.execute('SELECT count(*) FROM sqlite_master WHERE name LIKE "hr_%" AND name<>"hr_ansatte"').fetchone()[0]==0
         assert c.execute('SELECT label FROM museum_invariant').fetchone()[0]=='Behold'
     with sqlite3.connect(target) as c:
         assert c.execute('SELECT count(*) FROM hr_people').fetchone()[0]==12
@@ -156,7 +170,7 @@ def test_get_person(env):
     from src.kunstpixel.core.hrdemo import get_person
     ada = get_person('E101', db_path=env[1])
     assert ada is not None
-    assert ada['name'] == 'Ada Nord'
+    assert ada['name'] == 'Jonas Berg'
     assert len(ada['skills']) == 4
     assert all(s['is_current'] for s in ada['skills'])
     assert len(ada['availability']) >= 1
@@ -167,11 +181,11 @@ def test_get_person(env):
 def test_hrdemo_mcp_tools():
     from src.kunstpixel.core.hrdemo_mcp import (
         count_documented_skill,
-        propose_kiosk_staffing,
-        lookup_hr_hms_quality_rules,
+        evaluate_kiosk_proposal,
         get_competence_catalog,
         get_staff_member,
-        evaluate_kiosk_proposal,
+        lookup_hr_hms_quality_rules,
+        propose_kiosk_staffing,
     )
     skill = count_documented_skill('kasse', '2026-11-07')
     assert skill['count'] == 7
@@ -182,12 +196,13 @@ def test_hrdemo_mcp_tools():
     catalog = get_competence_catalog()
     assert len(catalog) >= 7
     ada = get_staff_member('E101')
-    assert ada['name'] == 'Ada Nord'
+    assert ada['name'] == 'Jonas Berg'
     eval_res = evaluate_kiosk_proposal(['E101', 'E102', 'E106', 'E103', 'E111'])
     assert eval_res['verdict'] == 'PASS'
 
 def test_hrdemo_api_handler():
     import io
+
     from src.kunstpixel.core.hrdemo_api import Handler
     class FakeServerHandler(Handler):
         def __init__(self, path):
@@ -212,7 +227,7 @@ def test_hrdemo_api_handler():
     assert '"id": "E112"' not in h_people.wfile.getvalue().decode('utf-8')
 
     h_person = FakeServerHandler('/api/v1/hr/people?id=E101')
-    assert '"Ada Nord"' in h_person.wfile.getvalue().decode('utf-8')
+    assert '"Jonas Berg"' in h_person.wfile.getvalue().decode('utf-8')
 
     h_eval = FakeServerHandler('/api/v1/hr/evaluate?ids=E101,E102,E106,E103,E111')
     assert '"verdict": "PASS"' in h_eval.wfile.getvalue().decode('utf-8')

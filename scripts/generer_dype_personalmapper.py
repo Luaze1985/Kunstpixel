@@ -11,7 +11,7 @@ import hashlib
 import json
 import random
 import sqlite3
-from datetime import datetime, date
+from datetime import datetime
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -282,7 +282,7 @@ def generer_dype_mapper():
             "innhold_fortrolig": innhold,
             "gradering": gradering,
             "saksbehandler_rolle": saksbehandler,
-            "datakilde": "syntetisk: HR personalmapper dyp-berikelse (order_personalmapper_163)",
+            "datakilde": "syntetisk (order_personalmapper_163)",
         })
 
     # 3. Skriv ut til Colab-leveransepakken

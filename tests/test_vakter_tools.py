@@ -247,11 +247,11 @@ def test_bygget_db_felles_sannhet_ansatte_kobling(bygget_db: Path) -> None:
     import sqlite3
     con = sqlite3.connect(bygget_db.resolve().as_uri() + "?mode=ro", uri=True)
     try:
-        r = con.execute("SELECT id, name, ansatt_id FROM hr_people WHERE id='E101'").fetchone()
+        r = con.execute("SELECT id, ansatt_id FROM hr_people WHERE id='E101'").fetchone()
         assert r[0] == "E101"
-        assert r[2] and r[2].startswith("KP-ANS-")
+        assert r[1] and r[1].startswith("KP-ANS-")
         # Bekreft at ansatt_id finnes i hr_ansatte
-        navn = con.execute("SELECT navn FROM hr_ansatte WHERE ansatt_id=?", (r[2],)).fetchone()[0]
+        navn = con.execute("SELECT navn FROM hr_ansatte WHERE ansatt_id=?", (r[1],)).fetchone()[0]
         assert navn
     finally:
         con.close()

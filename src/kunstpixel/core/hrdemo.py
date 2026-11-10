@@ -22,9 +22,10 @@ VALID_STATES = {'available', 'unavailable', 'unknown'}
 
 SCHEMA = '''
 CREATE TABLE hr_people (
- id TEXT PRIMARY KEY CHECK(length(id)>0), name TEXT NOT NULL CHECK(length(name)>1),
+ id TEXT PRIMARY KEY CHECK(length(id)>0),
  role TEXT NOT NULL, active INTEGER NOT NULL CHECK(active IN (0,1)),
- employment TEXT NOT NULL CHECK(employment IN ('fast','deltid','innleie'))
+ employment TEXT NOT NULL CHECK(employment IN ('fast','deltid','innleie')),
+ ansatt_id TEXT NOT NULL REFERENCES hr_ansatte(ansatt_id)
 );
 CREATE TABLE hr_skills (
  code TEXT PRIMARY KEY, name TEXT NOT NULL, expires INTEGER NOT NULL CHECK(expires IN (0,1))
@@ -57,6 +58,10 @@ CREATE TABLE hr_rules (
 CREATE INDEX hr_skills_idx ON hr_person_skill(skill_code,verified,valid_to);
 CREATE INDEX hr_rules_idx ON hr_rules(domain,topic,status,valid_from);
 '''
+
+# Navnet lagres bare i hr_ansatte (revisjonsfunn 1). Alle oppslag på personer går gjennom denne koblingen.
+PERSON_SQL = '''SELECT p.id, a.navn AS name, p.role, p.active, p.employment, p.ansatt_id
+    FROM hr_people p JOIN hr_ansatte a ON a.ansatt_id=p.ansatt_id'''
 
 
 def _date(value: str) -> str:
@@ -124,7 +129,11 @@ def validate_seed(seed: dict[str, Any]) -> None:
     people = {p['id'] for p in seed['people']}
     skills = {s['code']: s for s in seed['skills']}
     for p in seed['people']:
-        if p['active'] not in (0,1) or p['employment'] not in ('fast','deltid','innleie') or not p['name'].strip():
+        if 'name' in p:
+            raise ValueError(f'{p["id"]}: navn lagres bare i hr_ansatte, ikke i seed')
+        if not str(p.get('ansatt_id') or '').strip():
+            raise ValueError(f'{p["id"]}: mangler ansatt_id')
+        if p['active'] not in (0,1) or p['employment'] not in ('fast','deltid','innleie'):
             raise ValueError(f'Ugyldig person: {p["id"]}')
     for s in seed['skills']:
         if s['expires'] not in (0,1):
@@ -169,7 +178,7 @@ def load_seed(con: sqlite3.Connection, seed: dict[str, Any]) -> None:
     with con:
         con.executescript(SCHEMA)
         con.executemany('INSERT INTO hr_people VALUES (?,?,?,?,?)', [
-            (p['id'],p['name'],p['role'],p['active'],p['employment']) for p in seed['people']])
+            (p['id'],p['role'],p['active'],p['employment'],p['ansatt_id']) for p in seed['people']])
         con.executemany('INSERT INTO hr_skills VALUES (?,?,?)', [
             (s['code'],s['name'],s['expires']) for s in seed['skills']])
         con.executemany('INSERT INTO hr_person_skill VALUES (?,?,?,?,?,?)', [
@@ -232,7 +241,8 @@ def count_skill(code: str, as_of: str, db_path: Path | str | None = None) -> dic
         skill = con.execute('SELECT * FROM hr_skills WHERE code=?',(code,)).fetchone()
         if skill is None:
             return {'code': code, 'as_of': as_of, 'count': 0, 'people': [], 'error': 'UNKNOWN_SKILL'}
-        rows = con.execute('''SELECT p.id,p.name FROM hr_people p
+        rows = con.execute('''SELECT p.id,a.navn AS name FROM hr_people p
+            JOIN hr_ansatte a ON a.ansatt_id=p.ansatt_id
             JOIN hr_person_skill ps ON ps.person_id=p.id
             WHERE p.active=1 AND ps.skill_code=? AND ps.verified=1
              AND (ps.acquired IS NULL OR ps.acquired<=?)
@@ -252,7 +262,7 @@ def candidates(work_date: str, start: str = '10:00', end: str = '16:00',
     if start >= end or not (1 <= need <= 100):
         raise ValueError('Ugyldig tidsrom eller bemanningsbehov')
     with _open(db_path) as con:
-        persons = [dict(r) for r in con.execute('SELECT * FROM hr_people ORDER BY id')]
+        persons = [dict(r) for r in con.execute(PERSON_SQL + ' ORDER BY p.id')]
         skills = [dict(r) for r in con.execute('''SELECT ps.*,s.expires FROM hr_person_skill ps
                    JOIN hr_skills s ON s.code=ps.skill_code''')]
         avs = [dict(r) for r in con.execute('SELECT * FROM hr_availability WHERE work_date=?',(work_date,))]
@@ -323,7 +333,7 @@ def list_skills(db_path: Path | str | None = None) -> list[dict]:
 def list_people(active_only: bool = False, db_path: Path | str | None = None) -> list[dict]:
     """Return staff members with roles and activity status."""
     with _open(db_path) as con:
-        query = 'SELECT * FROM hr_people' + (' WHERE active=1' if active_only else '') + ' ORDER BY id'
+        query = PERSON_SQL + (' WHERE p.active=1' if active_only else '') + ' ORDER BY p.id'
         rows = con.execute(query).fetchall()
         return [dict(r) for r in rows]
 
@@ -332,7 +342,7 @@ def get_person(person_id: str, as_of: str = '2026-11-07', db_path: Path | str | 
     """Return detailed person record with documented skills and availability."""
     as_of = _date(as_of)
     with _open(db_path) as con:
-        p = con.execute('SELECT * FROM hr_people WHERE id=?', (person_id,)).fetchone()
+        p = con.execute(PERSON_SQL + ' WHERE p.id=?', (person_id,)).fetchone()
         if not p:
             return None
         person = dict(p)

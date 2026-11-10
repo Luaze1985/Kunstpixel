@@ -8,7 +8,7 @@ dette skriptet. Hvert bygg starter fra grunnlaget og gjør de samme stegene:
 
 1. HR-demotabellene (hr_people, hr_skills, hr_person_skill, hr_availability, hr_rules)
    lastes fra `05_data/hr_demo/seed.json`, så alt ligger i én database.
-   hr_people kobles til hr_ansatte (ansatt_id) for felles sannhetskilde (G10).
+   hr_people peker på hr_ansatte (ansatt_id, satt i seed.json). Navnet lagres bare i hr_ansatte (G10).
 2. hr_vakter bygges om med fremmednøkkel til hr_ansatte, start/slutt fra
    `05_data/arkiv_hr_vakt_klokkeslett.csv`, og overtidstimer fra `05_data/arkiv_hr_vakt_justering.csv`.
 3. Tabellen arbeidstid_grenser lastes fra `05_data/arbeidstid_grenser.csv`.
@@ -59,7 +59,7 @@ DATA_DIR = PROJECT_ROOT / "05_data"
 BASE_DB = DATA_DIR / "kilde" / "museum_base.db"
 OUT_DB = DATA_DIR / "museum.db"
 SHA_FILE = DATA_DIR / "museum.db.sha256"
-SKJEMAVERSJON = 7
+SKJEMAVERSJON = 8
 
 KLOKKESLETT_CSV = DATA_DIR / "arkiv_hr_vakt_klokkeslett.csv"
 GRENSER_CSV = DATA_DIR / "arbeidstid_grenser.csv"
@@ -947,7 +947,7 @@ def bygg_personas(con: sqlite3.Connection) -> int:
                 p.get("stilling"),
                 p.get("icor_rolle"),
                 json.dumps(p, ensure_ascii=False),
-                "syntetisk: arkiv personas CV 2010-2026",
+                "syntetisk (arkiv_personas_cv)",
             )
             for p in data
         ],
@@ -1144,45 +1144,6 @@ def oppgrader_fremmednokler(con: sqlite3.Connection) -> None:
     con.execute("ALTER TABLE hms_ergonomi_rotasjon_ny RENAME TO hms_ergonomi_rotasjon")
 
 
-def koble_ansattregistre(con: sqlite3.Connection) -> None:
-    """Koble hr_people (E101..E112) til hr_ansatte (KP-ANS-...) for én felles sannhet (G10)."""
-    # Kartlegging mellom kiosk-roller og representative ansatte i hr_ansatte
-    # E101..E112 er 12 verter/kafémedarbeidere
-    mapping = {
-        "E101": "KP-ANS-006",  # Ada Nord -> Jonas Berg (Seniorvert)
-        "E102": "KP-ANS-139",  # Birk Lund -> Synnøve Myhre (Kafémedarbeider)
-        "E103": "KP-ANS-156",  # Celia Vik -> Vegard Haugen (Butikk/Kafé)
-        "E104": "KP-ANS-153",  # Dag Foss -> Sindre Lindqvist (Museumsvert)
-        "E105": "KP-ANS-163",  # Eva Blom -> Liv Pettersen (Museumsvert)
-        "E106": "KP-ANS-073",  # Finn Mo -> Henrik Pettersen (Vekter/vert)
-        "E107": "KP-ANS-091",  # Gina Dal -> Sunniva Bratt (Vekter/vert)
-        "E108": "KP-ANS-096",  # Hugo Vik -> Magnus Hansen (Vekter/vert)
-        "E109": "KP-ANS-119",  # Iris Sol -> Sindre Pedersen (Formidling/vert)
-        "E110": "KP-ANS-142",  # Jan Hage -> Kirsti Johansen (Formidling/vert)
-        "E111": "KP-ANS-158",  # Kaja Lien -> Trond Hansen (Formidling/vert)
-        "E112": "KP-ANS-168",  # Leo Vang -> Fredrik Ruud (Vekter/vert)
-    }
-
-    # Legg til koblingskolonne ansatt_id REFERENCES hr_ansatte(ansatt_id)
-    con.execute("""
-    CREATE TABLE hr_people_ny (
-        id TEXT PRIMARY KEY CHECK(length(id)>0),
-        name TEXT NOT NULL CHECK(length(name)>1),
-        role TEXT NOT NULL,
-        active INTEGER NOT NULL CHECK(active IN (0,1)),
-        employment TEXT NOT NULL CHECK(employment IN ('fast','deltid','innleie')),
-        ansatt_id TEXT REFERENCES hr_ansatte(ansatt_id)
-    )
-    """)
-    folk = con.execute("SELECT id, name, role, active, employment FROM hr_people").fetchall()
-    con.executemany(
-        "INSERT INTO hr_people_ny VALUES (?,?,?,?,?,?)",
-        [(fid, name, role, act, emp, mapping.get(fid)) for fid, name, role, act, emp in folk],
-    )
-    con.execute("DROP TABLE hr_people")
-    con.execute("ALTER TABLE hr_people_ny RENAME TO hr_people")
-
-
 def bygg(til: Path) -> dict:
     if not BASE_DB.is_file():
         raise FileNotFoundError(f"Mangler grunnlag: {BASE_DB}")
@@ -1227,7 +1188,6 @@ def bygg(til: Path) -> dict:
             antall_personalmapper = bygg_personalmapper(con)
             antall_handboker = bygg_handboker(con)
             oppgrader_fremmednokler(con)
-            koble_ansattregistre(con)
             for sql in INDEXES:
                 con.execute(sql)
             con.execute(f"PRAGMA user_version = {SKJEMAVERSJON}")
