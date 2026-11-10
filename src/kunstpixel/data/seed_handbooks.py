@@ -1,7 +1,8 @@
-"""Seed and indexing script for Kunstpixel Virksomhetshåndbøker og SOP-er.
+"""Leser Kunstpixels virksomhetshåndbøker og SOP-er og bygger tabellen `handbok_oppslag`.
 
-Parses Markdown handbooks from 04_knowledge/01_governance/handboker/ and SOPs from
-04_knowledge/02_sops/ into table `handbok_oppslag`.
+Kildene er Markdown i 04_knowledge/01_governance/handboker/ og 04_knowledge/02_sops/.
+Denne modulen åpner aldri museum.db selv. `bygg_handboker` kalles av build_museum_db.py,
+som er det eneste skriptet som skriver databasen.
 """
 from __future__ import annotations
 
@@ -12,7 +13,6 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = ROOT / "05_data"
-MUSEUM_DB = DATA_DIR / "museum.db"
 HANDBOKER_DIR = ROOT / "04_knowledge" / "01_governance" / "handboker"
 SOPS_DIR = ROOT / "04_knowledge" / "02_sops"
 
@@ -343,17 +343,8 @@ def bygg_handboker(conn: sqlite3.Connection) -> int:
     return len(all_records)
 
 
-def populate_handbooks(db_path: Path = MUSEUM_DB) -> int:
-    """Parse all handbooks and SOPs and insert records into database."""
-    conn = sqlite3.connect(db_path)
-    try:
-        with conn:
-            count = bygg_handboker(conn)
-        return count
-    finally:
-        conn.close()
-
-
 if __name__ == "__main__":
-    count = populate_handbooks()
-    print(f"Vellykket indeksert {count} håndbok-punkter i museum.db under handbok_oppslag.")
+    raise SystemExit(
+        "seed_handbooks.py skriver ikke lenger i museum.db. "
+        "Kjør: py -3.13 src/kunstpixel/data/build_museum_db.py"
+    )

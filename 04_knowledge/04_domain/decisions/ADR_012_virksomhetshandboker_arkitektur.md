@@ -27,4 +27,4 @@ Det etableres en 4-delt håndbokpakke med en **to-lags arkitektur**:
 ## Konsekvenser
 - **Positivt:** 100 % transparens for ansatte og ledere. Hvert enkelt punkt har klar forankring i norsk lovverk (AML, Internkontrollforskriften, Matloven, Brann- og eksplosjonsvernloven, Virke-tariffen).
 - **Positivt:** Null token-sløsing; agenter og CLI kan hente eksakte regler på sekunder ved behov.
-- **Oppfølging:** Ved revisjon av en håndbok kjøres ingest-skriptet `py -3.13 src/kunstpixel/data/seed_handbooks.py` for å synkronisere databasen.
+- **Oppfølging:** Ved revisjon av en håndbok bygges databasen på nytt med `py -3.13 src/kunstpixel/data/build_museum_db.py`. (Rettet 2026-11-10: `seed_handbooks.py` skriver ikke lenger rett i `museum.db`.)
