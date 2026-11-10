@@ -1,0 +1,348 @@
+<title>Aura Kunstprofil</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=Silkscreen&display=swap">
+<style>
+  /* Én kolonne, én skjerm om gangen: velkomst, seks spørsmål, resultat.
+     Pikselportrettet er det eneste "bildet". Alt annet er rolig typografi på en kald, grå galleriflate. */
+  :root {
+    --bg: #E9ECF1;
+    --surface: #F7F8FA;
+    --fg: #141A2B;
+    --muted: #566079;
+    --line: #C5CCDA;
+    --accent: #2745D6;
+    --accent-fg: #FFFFFF;
+    --accent-soft: #DCE2FA;
+    --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --font-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+    --font-pixel: "Silkscreen", ui-monospace, "Cascadia Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0D1120; --surface: #151B30; --fg: #EAEEF9; --muted: #96A0BC;
+      --line: #2A3350; --accent: #8CA0FF; --accent-fg: #0D1120; --accent-soft: #232C57;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0D1120; --surface: #151B30; --fg: #EAEEF9; --muted: #96A0BC;
+    --line: #2A3350; --accent: #8CA0FF; --accent-fg: #0D1120; --accent-soft: #232C57;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.5;
+    min-height: 100%;
+    padding-block: 24px 40px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  main { max-width: 34rem; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+  section { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+
+  .label {
+    font-family: var(--font-pixel);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  h1, h2 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    margin: 0;
+  }
+  h1 { font-size: clamp(2rem, 8vw, 2.75rem); }
+  h2 { font-size: clamp(1.5rem, 6vw, 2rem); }
+  p { margin: 0; max-width: 65ch; }
+  .lead { color: var(--muted); font-size: 1.0625rem; }
+
+  /* Knapper */
+  button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    border: 2px solid var(--fg);
+    background: var(--surface);
+    border-radius: 0;
+    min-height: 3.25rem;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    transition: transform 0.08s ease, background-color 0.12s ease;
+  }
+  button:hover { background: var(--accent-soft); }
+  button:active { transform: translate(2px, 2px); }
+  button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .primary {
+    background: var(--accent);
+    color: var(--accent-fg);
+    border-color: var(--accent);
+    font-weight: 600;
+    text-align: center;
+  }
+  .primary:hover { background: var(--accent); filter: brightness(1.08); }
+  .quiet { border-color: var(--line); text-align: center; }
+  .linklike {
+    border: 0; background: none; min-height: 2.5rem; padding: 0.25rem 0;
+    color: var(--muted); text-decoration: underline; text-underline-offset: 3px; align-self: flex-start;
+  }
+  .linklike:hover { background: none; color: var(--fg); }
+
+  /* Velkomst */
+  .mosaic { display: flex; flex-wrap: wrap; gap: 6px; }
+  .mosaic canvas { width: 3rem; height: 3rem; image-rendering: pixelated; display: block; border: 2px solid var(--fg); }
+
+  /* Spørsmål */
+  .progress { display: flex; gap: 4px; }
+  .progress i { flex: 1; height: 8px; background: var(--line); }
+  .progress i.done { background: var(--accent); }
+  .progress i.now { background: var(--fg); }
+  .options { display: flex; flex-direction: column; gap: 10px; padding: 0; margin: 0; list-style: none; }
+  .options button { width: 100%; display: flex; gap: 0.875rem; align-items: baseline; }
+  .options button.picked { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+  .options .key { font-family: var(--font-pixel); font-size: 0.8125rem; color: var(--muted); flex: none; }
+  .options button.picked .key { color: inherit; }
+
+  /* Resultat */
+  .portrait { width: 100%; max-width: 20rem; aspect-ratio: 1; display: block; image-rendering: pixelated; border: 3px solid var(--fg); }
+  .festtype { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; color: var(--accent); margin: 0; }
+  .facts { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 0; }
+  .facts dt { font-family: var(--font-pixel); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 0.2rem; }
+  .facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  .work { background: var(--surface); border: 2px solid var(--line); padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .work h3 { font-family: var(--font-display); font-size: 1.375rem; margin: 0; line-height: 1.15; }
+  .work .meta { color: var(--muted); font-size: 0.9375rem; }
+  .actions { display: flex; flex-direction: column; gap: 10px; }
+  .toast { min-height: 1.5rem; color: var(--muted); font-size: 0.9375rem; }
+
+  @media (prefers-reduced-motion: reduce) { button { transition: none; } }
+</style>
+
+<main>
+  <section id="intro" aria-labelledby="intro-title">
+    <span class="label">Aura Kunstmuseum · Firmafest</span>
+    <h1 id="intro-title">Hvilken kunstner er du på festen?</h1>
+    <p class="lead">Seks spørsmål. Du får én av elleve kunstnere fra samlingen vår, og et verk du kan gå og se.</p>
+    <div class="mosaic" id="mosaic" aria-hidden="true"></div>
+    <button type="button" class="primary" id="start">Start</button>
+  </section>
+
+  <section id="quiz" hidden aria-live="polite">
+    <div class="progress" id="progress" aria-hidden="true"></div>
+    <span class="label" id="steg"></span>
+    <h2 id="sporsmal" tabindex="-1"></h2>
+    <ul class="options" id="valg"></ul>
+    <button type="button" class="linklike" id="tilbake">Tilbake</button>
+  </section>
+
+  <section id="resultat" hidden aria-live="polite">
+    <span class="label">Din kunstprofil</span>
+    <canvas class="portrait" id="portrett" width="144" height="144" role="img"></canvas>
+    <h1 id="navn" tabindex="-1"></h1>
+    <p class="festtype" id="festtype"></p>
+    <p id="festtekst"></p>
+    <dl class="facts" id="fakta"></dl>
+    <div class="work">
+      <span class="label">Ditt verk i samlingen</span>
+      <h3 id="verk-tittel"></h3>
+      <span class="meta" id="verk-meta"></span>
+      <p id="verk-tekst"></p>
+      <span class="meta" id="verk-sted"></span>
+    </div>
+    <div class="actions">
+      <button type="button" class="primary" id="kopier">Kopier svaret mitt</button>
+      <button type="button" class="quiet" id="igjen">Ta quizen på nytt</button>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+  </section>
+</main>
+
+<script>
+(function () {
+  var DATA = {"artister": [{"id": 1, "navn": "Theodor Kittelsen", "fodt": 1857, "dod": 1914, "nasjonalitet": "norsk", "kunstretning": "nyromantikk, naturmystikk", "teknikker": "pastell, blyant, akvarell, olje", "festtype": "Festens historieforteller", "festtekst": "Du får hele rommet til å lytte. Noen går hjem med litt gåsehud.", "farger": ["#14231f", "#3f7a64", "#d8e8a0"], "verk": {"id": "AURA-2026-001", "tittel": "Nøkken", "aar": 1904, "teknikk": "Pastell og blyant på papir", "beskrivelse": "Et mørkt, blikkstille skogstjern i skumringen hvor Nøkken titter opp over vannflaten forkledd som vannliljer og to stirrende øyne. Skaper en stemning av mystikk og urovekkende stillhet. Kittelsen gir det overnaturlige en overbevisende fysisk tilstedeværelse i naturen.", "status": "utstilt", "sal": "Sal A – Mytologi og natur"}}, {"id": 2, "navn": "Christian Krohg", "fodt": 1852, "dod": 1925, "nasjonalitet": "norsk", "kunstretning": "naturalisme, sosialrealisme", "teknikker": "olje på lerret", "festtype": "Den som sier det alle tenker", "festtekst": "Du ser hvem som blir stående alene, og du går bort til dem.", "farger": ["#2a2a33", "#8a8f9a", "#d9b36a"], "verk": {"id": "AURA-2026-003", "tittel": "Kampen for tilværelsen", "aar": 1889, "teknikk": "Olje på lerret", "beskrivelse": "Fattige kvinner og barn samlet i en kald gate i Kristiania en vintermorgen for å motta utdeling av brød fra en bakerbutikk. Realistisk, nærmest fotografisk skildring av sosial nød i 1880-årenes Norge.", "status": "utstilt", "sal": "Sal B – Realisme og samfunn"}}, {"id": 3, "navn": "Harriet Backer", "fodt": 1845, "dod": 1932, "nasjonalitet": "norsk", "kunstretning": "realisme, impresjonisme", "teknikker": "olje på lerret", "festtype": "Gjesten som får lyset riktig", "festtekst": "Du flytter lampene og lysene til alle plutselig ser bedre ut.", "farger": ["#1d3552", "#3f78b5", "#e8d9b0"], "verk": {"id": "AURA-2026-005", "tittel": "Blått interiør", "aar": 1883, "teknikk": "Olje på lerret", "beskrivelse": "En kvinne i profil som syr i en stue badet i kjølig, blålig dagslys fra et vindu. Mesterlig studie i lysets refleksjon og fargespill i et interiør. Backer overfører impresjonismens friluftsoppmerksomhet på lys til det intime inneområdet.", "status": "utstilt", "sal": "Sal C – Lys, farge og interiør"}}, {"id": 4, "navn": "Harald Sohlberg", "fodt": 1869, "dod": 1935, "nasjonalitet": "norsk", "kunstretning": "nyromantikk, symbolisme", "teknikker": "olje på lerret", "festtype": "Han som blir stående ute i natten", "festtekst": "Du trenger ikke mange ord. Stillheten din er det folk husker.", "farger": ["#0d1b3d", "#3a5fb0", "#e9eefc"], "verk": {"id": "AURA-2026-007", "tittel": "Vinternatt i Rondane", "aar": 1914, "teknikk": "Olje på lerret", "beskrivelse": "De snøkledde Rondane-toppene under en dyp, mørkeblå stjernehimmel med en lysende korsstjerne over fjellmassivet. Sohlberg arbeidet med dette motivet i over 14 år. Verket regnes som Norges uoffisielle nasjonalmaleri.", "status": "utstilt", "sal": "Sal A – Mytologi og natur"}}, {"id": 5, "navn": "Nikolai Astrup", "fodt": 1880, "dod": 1928, "nasjonalitet": "norsk", "kunstretning": "nyromantikk, ekspresjonisme", "teknikker": "olje, tresnitt, linosnitt", "festtype": "Bålmakeren", "festtekst": "Der du står, blir det varmt og fargerikt. Resten av gjengen kommer etter.", "farger": ["#2d1b4e", "#e0452f", "#ffc83d"], "verk": {"id": "AURA-2026-008", "tittel": "Jonsokbål", "aar": 1926, "teknikk": "Olje på lerret", "beskrivelse": "Folk som danser rundt flammende sankthansbål på Jølster med bratte vestlandsfjell i bakgrunnen. Intense, nærmest gloende farger og flat, dekorativ komposisjon. Bålet lyser opp menneskene og landskapet i en hedensk feiring av den lengste natten.", "status": "utstilt", "sal": "Sal A – Mytologi og natur"}}, {"id": 6, "navn": "Edvard Munch", "fodt": 1863, "dod": 1944, "nasjonalitet": "norsk", "kunstretning": "ekspresjonisme, symbolisme", "teknikker": "olje, tempera, oljekritt, litografi, tresnitt", "festtype": "Den som kjenner stemningen først", "festtekst": "Du merker når kvelden snur, og du sier det høyt.", "farger": ["#5a1f1a", "#e8602c", "#2b4b8f"], "verk": {"id": "AURA-2026-009", "tittel": "Skrik", "aar": 1893, "teknikk": "Tempera og oljekritt på papp", "beskrivelse": "En skikkelse som holder seg for ørene på en bro under en blodrodt himmel, overveldet av det store uendelige skriket gjennom naturen. Ikonisk ekspresjonistisk mesterverk og et av verdens mest gjenkjennelige kunstverk.", "status": "utstilt", "sal": "Sal D – Eksistens og modernisme"}}, {"id": 7, "navn": "Adolph Tidemand", "fodt": 1814, "dod": 1876, "nasjonalitet": "norsk", "kunstretning": "nasjonalromantikk", "teknikker": "olje på lerret", "festtype": "Allsangleder og bordvert", "festtekst": "Du sørger for at alle har en plass og en tekst å synge.", "farger": ["#3b2a1e", "#a8442e", "#e8c98a"], "verk": {"id": "AURA-2026-011", "tittel": "Brudeferd i Hardanger", "aar": 1848, "teknikk": "Olje på lerret", "beskrivelse": "Et brudefølge i båt over en speilblank fjord med bunader, spillemann og dramatisk fjellandskap. Samarbeid mellom Adolph Tidemand (figurene) og Hans Gude (landskapet). Hovedverket i norsk nasjonalromantikk.", "status": "magasin", "sal": "Magasin 1 – Klimastyrt lager"}}, {"id": 9, "navn": "Kitty Kielland", "fodt": 1843, "dod": 1914, "nasjonalitet": "norsk", "kunstretning": "naturalisme, plein air", "teknikker": "olje på lerret", "festtype": "Sommerkvelden selv", "festtekst": "Du får alle med ut på terrassen, uansett vær.", "farger": ["#1f3b4d", "#4fb3b0", "#f6d38a"], "verk": {"id": "AURA-2026-013", "tittel": "Sommernatt ved Kysten", "aar": 1886, "teknikk": "Olje på lerret", "beskrivelse": "Et stille kystlandskap fra Jæren badet i nordisk sommerlys. Kielland fanger den karakteristiske flate horisontlinjen og det myke lyset som gir Vestlandets kystlinje et droemmeaktig preg. Maleriet markerer overgangen fra akademisk landskapsmaleri til plein air-realisme i norsk kunst.", "status": "utstilt", "sal": "Sal C – Lys, farge og interiør"}}, {"id": 10, "navn": "Erik Werenskiold", "fodt": 1855, "dod": 1938, "nasjonalitet": "norsk", "kunstretning": "realisme, nasjonalromantikk", "teknikker": "olje, penn og tusj, blyant", "festtype": "Festens tegner og talemann", "festtekst": "Du fanger folk akkurat slik de er, og alle ler gjenkjennende.", "farger": ["#2c2a22", "#7a8a4a", "#d9cfa8"], "verk": {"id": "AURA-2026-014", "tittel": "En bondebegravelse", "aar": 1885, "teknikk": "Olje på lerret", "beskrivelse": "Et begravelsesfylge med hest og vogn i et stillferdig norsk kulturlandskap. Werenskiold skildrer bygdelivets alvor uten sentimentalitet – menneskene er små mot landskapet, men verdigheten er uhyre stor.", "status": "utstilt", "sal": "Sal B – Realisme og samfunn"}}, {"id": 11, "navn": "Frits Thaulow", "fodt": 1847, "dod": 1906, "nasjonalitet": "norsk", "kunstretning": "impresjonisme, naturalisme, plein air", "teknikker": "olje på lerret", "festtype": "Den som får alt til å se lett ut", "festtekst": "Du er rolig, rask og sjelden våt på beina.", "farger": ["#16324a", "#8fc9e0", "#f2f7fa"], "verk": {"id": "AURA-2026-015", "tittel": "Vinter på Simoa", "aar": 1883, "teknikk": "Olje på lerret", "beskrivelse": "En frossen elv med snødekte trear langs bredden, malt med Thaulows karakteristiske virtuose penselføring der vannet og isen glitrer i blå-hvitt vinterlys. Thaulow er særlig kjent for sine bekkemotiver og vinterscener.", "status": "utstilt", "sal": "Sal C – Lys, farge og interiør"}}, {"id": 12, "navn": "Anna-Eva Bergman", "fodt": 1909, "dod": 1987, "nasjonalitet": "norsk", "kunstretning": "abstrakt kunst, lyrisk abstraksjon", "teknikker": "olje, metallblad (gull/sølv), tempera", "festtype": "Den rolige glansen", "festtekst": "Du sier lite. Gull og sølv gjør resten.", "farger": ["#10141c", "#c9a54a", "#cfd5dc"], "verk": {"id": "AURA-2026-016", "tittel": "N. 7 – Stor blå fjellform", "aar": 1967, "teknikk": "Olje og metallblad på lerret", "beskrivelse": "En monumental, abstrakt fjellform i dype blåtoner med solvblad som gir en indre luminositet. Bergman forener arktisk norsk natur med abstrakt modernisme på en måte som er unik i europeisk kunst.", "status": "utstilt", "sal": "Sal D – Eksistens og modernisme"}}], "spoersmaal": [{"tekst": "Du kommer inn døren på festen. Hva gjør du først?", "valg": [{"tekst": "Går rett inn til folkene midt i rommet", "poeng": {"7": 2, "5": 2, "11": 1}}, {"tekst": "Finner en plass ved siden av og ser på folk", "poeng": {"2": 2, "10": 2, "6": 1}}, {"tekst": "Går bort til vinduet og tar inn stemningen", "poeng": {"4": 2, "12": 1, "3": 1}}, {"tekst": "Begynner å fortelle en historie", "poeng": {"1": 2, "5": 1, "9": 1}}]}, {"tekst": "Hvilken musikk setter du på?", "valg": [{"tekst": "Allsang og gamle favoritter", "poeng": {"7": 2, "5": 1, "1": 1}}, {"tekst": "Noe intenst og litt melankolsk", "poeng": {"6": 2, "4": 1, "2": 1}}, {"tekst": "Rolig jazz eller ambient", "poeng": {"12": 1, "11": 2, "3": 1}}, {"tekst": "Sommerhiten alle kan synge", "poeng": {"9": 2, "10": 1, "5": 1}}]}, {"tekst": "Hva prater du helst om ved bordet?", "valg": [{"tekst": "Det som skjer i samfunnet", "poeng": {"2": 2, "10": 1, "7": 1}}, {"tekst": "Store spørsmål og følelser", "poeng": {"6": 2, "4": 1, "12": 1}}, {"tekst": "Små, gode detaljer fra hverdagen", "poeng": {"3": 1, "11": 2, "9": 1}}, {"tekst": "Rykter, eventyr og spøkelseshistorier", "poeng": {"1": 2, "5": 1, "7": 1}}]}, {"tekst": "Hvilket lys vil du ha i lokalet?", "valg": [{"tekst": "Levende lys og bål", "poeng": {"5": 2, "1": 1, "6": 1}}, {"tekst": "Mykt og varmt lampelys", "poeng": {"3": 2, "10": 1, "2": 1}}, {"tekst": "Kaldt, blått skumringslys", "poeng": {"4": 2, "11": 1, "12": 1}}, {"tekst": "Sommerlys og åpne vinduer", "poeng": {"9": 2, "7": 1, "11": 1}}]}, {"tekst": "Hvor er du etter midnatt?", "valg": [{"tekst": "På dansegulvet, full fart", "poeng": {"5": 2, "6": 1, "7": 1}}, {"tekst": "Ute under stjernene", "poeng": {"4": 1, "12": 2, "9": 1}}, {"tekst": "I en dyp samtale i sofaen", "poeng": {"2": 1, "3": 2, "6": 1}}, {"tekst": "Med en penn, tegner karikaturer av kollegene", "poeng": {"10": 2, "11": 1, "1": 1}}]}, {"tekst": "Hvilke farger har festantrekket ditt?", "valg": [{"tekst": "Gull og sølv", "poeng": {"12": 2, "11": 1, "7": 1}}, {"tekst": "Sterke, kontrastfylte farger", "poeng": {"5": 1, "6": 2, "1": 1}}, {"tekst": "Dempede jordtoner og dyp blå", "poeng": {"3": 2, "2": 1, "10": 1}}, {"tekst": "Hvitt og lysblått", "poeng": {"4": 1, "9": 2, "11": 1}}]}]};
+  var ARTISTER = DATA.artister;
+  var SPORSMAAL = DATA.spoersmaal;
+  var svar = [];
+  var GRID = 9;
+
+  function $(id) { return document.getElementById(id); }
+  function vis(navn) {
+    ["intro", "quiz", "resultat"].forEach(function (id) { $(id).hidden = id !== navn; });
+  }
+
+  // Samme regel som finn_profil i bygg_data.py: høyest sum, så siste svar, så laveste id.
+  function finnProfil(valg) {
+    var sum = {}, siste = {};
+    SPORSMAAL.forEach(function (q, i) {
+      var poeng = q.valg[valg[i]].poeng;
+      Object.keys(poeng).forEach(function (k) { sum[k] = (sum[k] || 0) + poeng[k]; });
+      siste = poeng;
+    });
+    var ids = Object.keys(sum).map(Number);
+    ids.sort(function (a, b) {
+      return (sum[b] - sum[a]) || ((siste[b] || 0) - (siste[a] || 0)) || (a - b);
+    });
+    return ARTISTER.filter(function (a) { return a.id === ids[0]; })[0];
+  }
+
+  function rng(seed) {
+    var a = seed | 0;
+    return function () {
+      a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  // Speilvendt 9x9-portrett, unikt per kunstner. Fargene kommer fra kunstnerens palett.
+  function tegnPortrett(canvas, artist, celle) {
+    var ctx = canvas.getContext("2d");
+    canvas.width = canvas.height = GRID * celle;
+    ctx.imageSmoothingEnabled = false;
+    var f = artist.farger, r = rng(artist.id * 7919 + 17), x, y;
+    ctx.fillStyle = f[0];
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    for (y = 0; y < GRID; y++) {
+      for (x = 0; x <= 4; x++) {
+        var v = r(), tett = x >= 3 ? 0.18 : 0;
+        var farge = v < 0.42 - tett ? null : v < 0.88 ? f[1] : f[2];
+        if (!farge) continue;
+        ctx.fillStyle = farge;
+        ctx.fillRect(x * celle, y * celle, celle, celle);
+        ctx.fillRect((GRID - 1 - x) * celle, y * celle, celle, celle);
+      }
+    }
+  }
+
+  function el(tag, tekst, klasse) {
+    var e = document.createElement(tag);
+    if (tekst != null) e.textContent = tekst;
+    if (klasse) e.className = klasse;
+    return e;
+  }
+
+  function lagMosaikk() {
+    var m = $("mosaic");
+    ARTISTER.forEach(function (a) {
+      var c = document.createElement("canvas");
+      tegnPortrett(c, a, 6);
+      m.appendChild(c);
+    });
+  }
+
+  function visSporsmaal() {
+    var i = svar.length, q = SPORSMAAL[i];
+    var p = $("progress");
+    p.textContent = "";
+    SPORSMAAL.forEach(function (_, n) {
+      p.appendChild(el("i", null, n < i ? "done" : n === i ? "now" : ""));
+    });
+    $("steg").textContent = "Spørsmål " + (i + 1) + " av " + SPORSMAAL.length;
+    $("sporsmal").textContent = q.tekst;
+    var liste = $("valg");
+    liste.textContent = "";
+    q.valg.forEach(function (v, n) {
+      var li = document.createElement("li");
+      var b = el("button");
+      b.type = "button";
+      b.appendChild(el("span", "ABCD".charAt(n), "key"));
+      b.appendChild(el("span", v.tekst));
+      b.addEventListener("click", function () {
+        b.classList.add("picked");
+        svar.push(n);
+        setTimeout(neste, 160);
+      });
+      li.appendChild(b);
+      liste.appendChild(li);
+    });
+    $("tilbake").hidden = i === 0;
+  }
+
+  function neste() {
+    if (svar.length < SPORSMAAL.length) {
+      visSporsmaal();
+      $("sporsmal").focus({ preventScroll: true });
+    } else {
+      visResultat(finnProfil(svar));
+    }
+  }
+
+  var delingstekst = "";
+  function visResultat(a) {
+    vis("resultat");
+    tegnPortrett($("portrett"), a, 16);
+    $("portrett").setAttribute("aria-label", "Pikselportrett i fargene til " + a.navn);
+    $("navn").textContent = a.navn;
+    $("festtype").textContent = a.festtype;
+    $("festtekst").textContent = a.festtekst;
+    var d = $("fakta");
+    d.textContent = "";
+    [["Levde", a.fodt + "–" + (a.dod || "")], ["Retning", a.kunstretning], ["Teknikker", a.teknikker]]
+      .forEach(function (rad) { d.appendChild(el("dt", rad[0])); d.appendChild(el("dd", rad[1])); });
+    var v = a.verk;
+    $("verk-tittel").textContent = v.tittel;
+    $("verk-meta").textContent = v.aar + " · " + v.teknikk;
+    $("verk-tekst").textContent = v.beskrivelse;
+    $("verk-sted").textContent = v.status === "utstilt"
+      ? "Henger nå i " + v.sal
+      : "Ligger i magasinet akkurat nå, ikke utstilt";
+    delingstekst = "Jeg er " + a.navn + " (" + a.festtype.toLowerCase() + ") på Aura-festen. Hvem er du?";
+    $("toast").textContent = "";
+    $("navn").focus({ preventScroll: true });
+    window.scrollTo(0, 0);
+  }
+
+  function kopier() {
+    var melding = $("toast");
+    function ok() { melding.textContent = "Kopiert. Lim den inn i chatten."; }
+    function reserve() {
+      var t = document.createElement("textarea");
+      t.value = delingstekst;
+      t.setAttribute("readonly", "");
+      t.style.position = "fixed";
+      t.style.opacity = "0";
+      document.body.appendChild(t);
+      t.select();
+      var klart = false;
+      try { klart = document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(t);
+      melding.textContent = klart ? "Kopiert. Lim den inn i chatten." : delingstekst;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(delingstekst).then(ok, reserve);
+    } else {
+      reserve();
+    }
+  }
+
+  function start() {
+    svar = [];
+    vis("quiz");
+    visSporsmaal();
+    $("sporsmal").focus({ preventScroll: true });
+  }
+
+  $("start").addEventListener("click", start);
+  $("igjen").addEventListener("click", function () { vis("intro"); window.scrollTo(0, 0); });
+  $("kopier").addEventListener("click", kopier);
+  $("tilbake").addEventListener("click", function () {
+    if (svar.length) { svar.pop(); visSporsmaal(); }
+  });
+
+  lagMosaikk();
+  // Brukes bare av testen i bygg-prosessen for å sjekke at JS og Python gir samme profil
+  window.__finnProfil = function (valg) { return finnProfil(valg).id; };
+})();
+</script>

@@ -14,3 +14,8 @@ Dette er museets **leveransemappe** hvor spesialiserte agenter legger ferdige, k
 
 ### Regel for agenter:
 Ingen agent skal utføre irreversible eksterne handlinger (publisere til web, sende søknader, bestille transport) før saken er levert her og signert av eier/direktør (*Human Sovereignty*).
+
+---
+
+### Innhold nå:
+* **`firmafest_kunstprofil/`** — Kunstprofil-app for firmafesten (øvingscase). Seks spørsmål gir deltakeren én av elleve kunstnere fra `museum.db`, med et verk å se i samlingen. Åpne `index.html` i nettleseren. Bygges på nytt med `py -3.13 02_deliverables/firmafest_kunstprofil/bygg_data.py`.

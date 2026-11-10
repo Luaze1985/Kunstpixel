@@ -1,0 +1,503 @@
+{
+  "artister": [
+    {
+      "id": 1,
+      "navn": "Theodor Kittelsen",
+      "fodt": 1857,
+      "dod": 1914,
+      "nasjonalitet": "norsk",
+      "kunstretning": "nyromantikk, naturmystikk",
+      "teknikker": "pastell, blyant, akvarell, olje",
+      "festtype": "Festens historieforteller",
+      "festtekst": "Du får hele rommet til å lytte. Noen går hjem med litt gåsehud.",
+      "farger": [
+        "#14231f",
+        "#3f7a64",
+        "#d8e8a0"
+      ],
+      "verk": {
+        "id": "AURA-2026-001",
+        "tittel": "Nøkken",
+        "aar": 1904,
+        "teknikk": "Pastell og blyant på papir",
+        "beskrivelse": "Et mørkt, blikkstille skogstjern i skumringen hvor Nøkken titter opp over vannflaten forkledd som vannliljer og to stirrende øyne. Skaper en stemning av mystikk og urovekkende stillhet. Kittelsen gir det overnaturlige en overbevisende fysisk tilstedeværelse i naturen.",
+        "status": "utstilt",
+        "sal": "Sal A – Mytologi og natur"
+      }
+    },
+    {
+      "id": 2,
+      "navn": "Christian Krohg",
+      "fodt": 1852,
+      "dod": 1925,
+      "nasjonalitet": "norsk",
+      "kunstretning": "naturalisme, sosialrealisme",
+      "teknikker": "olje på lerret",
+      "festtype": "Den som sier det alle tenker",
+      "festtekst": "Du ser hvem som blir stående alene, og du går bort til dem.",
+      "farger": [
+        "#2a2a33",
+        "#8a8f9a",
+        "#d9b36a"
+      ],
+      "verk": {
+        "id": "AURA-2026-003",
+        "tittel": "Kampen for tilværelsen",
+        "aar": 1889,
+        "teknikk": "Olje på lerret",
+        "beskrivelse": "Fattige kvinner og barn samlet i en kald gate i Kristiania en vintermorgen for å motta utdeling av brød fra en bakerbutikk. Realistisk, nærmest fotografisk skildring av sosial nød i 1880-årenes Norge.",
+        "status": "utstilt",
+        "sal": "Sal B – Realisme og samfunn"
+      }
+    },
+    {
+      "id": 3,
+      "navn": "Harriet Backer",
+      "fodt": 1845,
+      "dod": 1932,
+      "nasjonalitet": "norsk",
+      "kunstretning": "realisme, impresjonisme",
+      "teknikker": "olje på lerret",
+      "festtype": "Gjesten som får lyset riktig",
+      "festtekst": "Du flytter lampene og lysene til alle plutselig ser bedre ut.",
+      "farger": [
+        "#1d3552",
+        "#3f78b5",
+        "#e8d9b0"
+      ],
+      "verk": {
+        "id": "AURA-2026-005",
+        "tittel": "Blått interiør",
+        "aar": 1883,
+        "teknikk": "Olje på lerret",
+        "beskrivelse": "En kvinne i profil som syr i en stue badet i kjølig, blålig dagslys fra et vindu. Mesterlig studie i lysets refleksjon og fargespill i et interiør. Backer overfører impresjonismens friluftsoppmerksomhet på lys til det intime inneområdet.",
+        "status": "utstilt",
+        "sal": "Sal C – Lys, farge og interiør"
+      }
+    },
+    {
+      "id": 4,
+      "navn": "Harald Sohlberg",
+      "fodt": 1869,
+      "dod": 1935,
+      "nasjonalitet": "norsk",
+      "kunstretning": "nyromantikk, symbolisme",
+      "teknikker": "olje på lerret",
+      "festtype": "Han som blir stående ute i natten",
+      "festtekst": "Du trenger ikke mange ord. Stillheten din er det folk husker.",
+      "farger": [
+        "#0d1b3d",
+        "#3a5fb0",
+        "#e9eefc"
+      ],
+      "verk": {
+        "id": "AURA-2026-007",
+        "tittel": "Vinternatt i Rondane",
+        "aar": 1914,
+        "teknikk": "Olje på lerret",
+        "beskrivelse": "De snøkledde Rondane-toppene under en dyp, mørkeblå stjernehimmel med en lysende korsstjerne over fjellmassivet. Sohlberg arbeidet med dette motivet i over 14 år. Verket regnes som Norges uoffisielle nasjonalmaleri.",
+        "status": "utstilt",
+        "sal": "Sal A – Mytologi og natur"
+      }
+    },
+    {
+      "id": 5,
+      "navn": "Nikolai Astrup",
+      "fodt": 1880,
+      "dod": 1928,
+      "nasjonalitet": "norsk",
+      "kunstretning": "nyromantikk, ekspresjonisme",
+      "teknikker": "olje, tresnitt, linosnitt",
+      "festtype": "Bålmakeren",
+      "festtekst": "Der du står, blir det varmt og fargerikt. Resten av gjengen kommer etter.",
+      "farger": [
+        "#2d1b4e",
+        "#e0452f",
+        "#ffc83d"
+      ],
+      "verk": {
+        "id": "AURA-2026-008",
+        "tittel": "Jonsokbål",
+        "aar": 1926,
+        "teknikk": "Olje på lerret",
+        "beskrivelse": "Folk som danser rundt flammende sankthansbål på Jølster med bratte vestlandsfjell i bakgrunnen. Intense, nærmest gloende farger og flat, dekorativ komposisjon. Bålet lyser opp menneskene og landskapet i en hedensk feiring av den lengste natten.",
+        "status": "utstilt",
+        "sal": "Sal A – Mytologi og natur"
+      }
+    },
+    {
+      "id": 6,
+      "navn": "Edvard Munch",
+      "fodt": 1863,
+      "dod": 1944,
+      "nasjonalitet": "norsk",
+      "kunstretning": "ekspresjonisme, symbolisme",
+      "teknikker": "olje, tempera, oljekritt, litografi, tresnitt",
+      "festtype": "Den som kjenner stemningen først",
+      "festtekst": "Du merker når kvelden snur, og du sier det høyt.",
+      "farger": [
+        "#5a1f1a",
+        "#e8602c",
+        "#2b4b8f"
+      ],
+      "verk": {
+        "id": "AURA-2026-009",
+        "tittel": "Skrik",
+        "aar": 1893,
+        "teknikk": "Tempera og oljekritt på papp",
+        "beskrivelse": "En skikkelse som holder seg for ørene på en bro under en blodrodt himmel, overveldet av det store uendelige skriket gjennom naturen. Ikonisk ekspresjonistisk mesterverk og et av verdens mest gjenkjennelige kunstverk.",
+        "status": "utstilt",
+        "sal": "Sal D – Eksistens og modernisme"
+      }
+    },
+    {
+      "id": 7,
+      "navn": "Adolph Tidemand",
+      "fodt": 1814,
+      "dod": 1876,
+      "nasjonalitet": "norsk",
+      "kunstretning": "nasjonalromantikk",
+      "teknikker": "olje på lerret",
+      "festtype": "Allsangleder og bordvert",
+      "festtekst": "Du sørger for at alle har en plass og en tekst å synge.",
+      "farger": [
+        "#3b2a1e",
+        "#a8442e",
+        "#e8c98a"
+      ],
+      "verk": {
+        "id": "AURA-2026-011",
+        "tittel": "Brudeferd i Hardanger",
+        "aar": 1848,
+        "teknikk": "Olje på lerret",
+        "beskrivelse": "Et brudefølge i båt over en speilblank fjord med bunader, spillemann og dramatisk fjellandskap. Samarbeid mellom Adolph Tidemand (figurene) og Hans Gude (landskapet). Hovedverket i norsk nasjonalromantikk.",
+        "status": "magasin",
+        "sal": "Magasin 1 – Klimastyrt lager"
+      }
+    },
+    {
+      "id": 9,
+      "navn": "Kitty Kielland",
+      "fodt": 1843,
+      "dod": 1914,
+      "nasjonalitet": "norsk",
+      "kunstretning": "naturalisme, plein air",
+      "teknikker": "olje på lerret",
+      "festtype": "Sommerkvelden selv",
+      "festtekst": "Du får alle med ut på terrassen, uansett vær.",
+      "farger": [
+        "#1f3b4d",
+        "#4fb3b0",
+        "#f6d38a"
+      ],
+      "verk": {
+        "id": "AURA-2026-013",
+        "tittel": "Sommernatt ved Kysten",
+        "aar": 1886,
+        "teknikk": "Olje på lerret",
+        "beskrivelse": "Et stille kystlandskap fra Jæren badet i nordisk sommerlys. Kielland fanger den karakteristiske flate horisontlinjen og det myke lyset som gir Vestlandets kystlinje et droemmeaktig preg. Maleriet markerer overgangen fra akademisk landskapsmaleri til plein air-realisme i norsk kunst.",
+        "status": "utstilt",
+        "sal": "Sal C – Lys, farge og interiør"
+      }
+    },
+    {
+      "id": 10,
+      "navn": "Erik Werenskiold",
+      "fodt": 1855,
+      "dod": 1938,
+      "nasjonalitet": "norsk",
+      "kunstretning": "realisme, nasjonalromantikk",
+      "teknikker": "olje, penn og tusj, blyant",
+      "festtype": "Festens tegner og talemann",
+      "festtekst": "Du fanger folk akkurat slik de er, og alle ler gjenkjennende.",
+      "farger": [
+        "#2c2a22",
+        "#7a8a4a",
+        "#d9cfa8"
+      ],
+      "verk": {
+        "id": "AURA-2026-014",
+        "tittel": "En bondebegravelse",
+        "aar": 1885,
+        "teknikk": "Olje på lerret",
+        "beskrivelse": "Et begravelsesfylge med hest og vogn i et stillferdig norsk kulturlandskap. Werenskiold skildrer bygdelivets alvor uten sentimentalitet – menneskene er små mot landskapet, men verdigheten er uhyre stor.",
+        "status": "utstilt",
+        "sal": "Sal B – Realisme og samfunn"
+      }
+    },
+    {
+      "id": 11,
+      "navn": "Frits Thaulow",
+      "fodt": 1847,
+      "dod": 1906,
+      "nasjonalitet": "norsk",
+      "kunstretning": "impresjonisme, naturalisme, plein air",
+      "teknikker": "olje på lerret",
+      "festtype": "Den som får alt til å se lett ut",
+      "festtekst": "Du er rolig, rask og sjelden våt på beina.",
+      "farger": [
+        "#16324a",
+        "#8fc9e0",
+        "#f2f7fa"
+      ],
+      "verk": {
+        "id": "AURA-2026-015",
+        "tittel": "Vinter på Simoa",
+        "aar": 1883,
+        "teknikk": "Olje på lerret",
+        "beskrivelse": "En frossen elv med snødekte trear langs bredden, malt med Thaulows karakteristiske virtuose penselføring der vannet og isen glitrer i blå-hvitt vinterlys. Thaulow er særlig kjent for sine bekkemotiver og vinterscener.",
+        "status": "utstilt",
+        "sal": "Sal C – Lys, farge og interiør"
+      }
+    },
+    {
+      "id": 12,
+      "navn": "Anna-Eva Bergman",
+      "fodt": 1909,
+      "dod": 1987,
+      "nasjonalitet": "norsk",
+      "kunstretning": "abstrakt kunst, lyrisk abstraksjon",
+      "teknikker": "olje, metallblad (gull/sølv), tempera",
+      "festtype": "Den rolige glansen",
+      "festtekst": "Du sier lite. Gull og sølv gjør resten.",
+      "farger": [
+        "#10141c",
+        "#c9a54a",
+        "#cfd5dc"
+      ],
+      "verk": {
+        "id": "AURA-2026-016",
+        "tittel": "N. 7 – Stor blå fjellform",
+        "aar": 1967,
+        "teknikk": "Olje og metallblad på lerret",
+        "beskrivelse": "En monumental, abstrakt fjellform i dype blåtoner med solvblad som gir en indre luminositet. Bergman forener arktisk norsk natur med abstrakt modernisme på en måte som er unik i europeisk kunst.",
+        "status": "utstilt",
+        "sal": "Sal D – Eksistens og modernisme"
+      }
+    }
+  ],
+  "spoersmaal": [
+    {
+      "tekst": "Du kommer inn døren på festen. Hva gjør du først?",
+      "valg": [
+        {
+          "tekst": "Går rett inn til folkene midt i rommet",
+          "poeng": {
+            "7": 2,
+            "5": 2,
+            "11": 1
+          }
+        },
+        {
+          "tekst": "Finner en plass ved siden av og ser på folk",
+          "poeng": {
+            "2": 2,
+            "10": 2,
+            "6": 1
+          }
+        },
+        {
+          "tekst": "Går bort til vinduet og tar inn stemningen",
+          "poeng": {
+            "4": 2,
+            "12": 1,
+            "3": 1
+          }
+        },
+        {
+          "tekst": "Begynner å fortelle en historie",
+          "poeng": {
+            "1": 2,
+            "5": 1,
+            "9": 1
+          }
+        }
+      ]
+    },
+    {
+      "tekst": "Hvilken musikk setter du på?",
+      "valg": [
+        {
+          "tekst": "Allsang og gamle favoritter",
+          "poeng": {
+            "7": 2,
+            "5": 1,
+            "1": 1
+          }
+        },
+        {
+          "tekst": "Noe intenst og litt melankolsk",
+          "poeng": {
+            "6": 2,
+            "4": 1,
+            "2": 1
+          }
+        },
+        {
+          "tekst": "Rolig jazz eller ambient",
+          "poeng": {
+            "12": 1,
+            "11": 2,
+            "3": 1
+          }
+        },
+        {
+          "tekst": "Sommerhiten alle kan synge",
+          "poeng": {
+            "9": 2,
+            "10": 1,
+            "5": 1
+          }
+        }
+      ]
+    },
+    {
+      "tekst": "Hva prater du helst om ved bordet?",
+      "valg": [
+        {
+          "tekst": "Det som skjer i samfunnet",
+          "poeng": {
+            "2": 2,
+            "10": 1,
+            "7": 1
+          }
+        },
+        {
+          "tekst": "Store spørsmål og følelser",
+          "poeng": {
+            "6": 2,
+            "4": 1,
+            "12": 1
+          }
+        },
+        {
+          "tekst": "Små, gode detaljer fra hverdagen",
+          "poeng": {
+            "3": 1,
+            "11": 2,
+            "9": 1
+          }
+        },
+        {
+          "tekst": "Rykter, eventyr og spøkelseshistorier",
+          "poeng": {
+            "1": 2,
+            "5": 1,
+            "7": 1
+          }
+        }
+      ]
+    },
+    {
+      "tekst": "Hvilket lys vil du ha i lokalet?",
+      "valg": [
+        {
+          "tekst": "Levende lys og bål",
+          "poeng": {
+            "5": 2,
+            "1": 1,
+            "6": 1
+          }
+        },
+        {
+          "tekst": "Mykt og varmt lampelys",
+          "poeng": {
+            "3": 2,
+            "10": 1,
+            "2": 1
+          }
+        },
+        {
+          "tekst": "Kaldt, blått skumringslys",
+          "poeng": {
+            "4": 2,
+            "11": 1,
+            "12": 1
+          }
+        },
+        {
+          "tekst": "Sommerlys og åpne vinduer",
+          "poeng": {
+            "9": 2,
+            "7": 1,
+            "11": 1
+          }
+        }
+      ]
+    },
+    {
+      "tekst": "Hvor er du etter midnatt?",
+      "valg": [
+        {
+          "tekst": "På dansegulvet, full fart",
+          "poeng": {
+            "5": 2,
+            "6": 1,
+            "7": 1
+          }
+        },
+        {
+          "tekst": "Ute under stjernene",
+          "poeng": {
+            "4": 1,
+            "12": 2,
+            "9": 1
+          }
+        },
+        {
+          "tekst": "I en dyp samtale i sofaen",
+          "poeng": {
+            "2": 1,
+            "3": 2,
+            "6": 1
+          }
+        },
+        {
+          "tekst": "Med en penn, tegner karikaturer av kollegene",
+          "poeng": {
+            "10": 2,
+            "11": 1,
+            "1": 1
+          }
+        }
+      ]
+    },
+    {
+      "tekst": "Hvilke farger har festantrekket ditt?",
+      "valg": [
+        {
+          "tekst": "Gull og sølv",
+          "poeng": {
+            "12": 2,
+            "11": 1,
+            "7": 1
+          }
+        },
+        {
+          "tekst": "Sterke, kontrastfylte farger",
+          "poeng": {
+            "5": 1,
+            "6": 2,
+            "1": 1
+          }
+        },
+        {
+          "tekst": "Dempede jordtoner og dyp blå",
+          "poeng": {
+            "3": 2,
+            "2": 1,
+            "10": 1
+          }
+        },
+        {
+          "tekst": "Hvitt og lysblått",
+          "poeng": {
+            "4": 1,
+            "9": 2,
+            "11": 1
+          }
+        }
+      ]
+    }
+  ]
+}

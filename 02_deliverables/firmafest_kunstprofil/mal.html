@@ -1,0 +1,348 @@
+<title>Aura Kunstprofil</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=Silkscreen&display=swap">
+<style>
+  /* Én kolonne, én skjerm om gangen: velkomst, seks spørsmål, resultat.
+     Pikselportrettet er det eneste "bildet". Alt annet er rolig typografi på en kald, grå galleriflate. */
+  :root {
+    --bg: #E9ECF1;
+    --surface: #F7F8FA;
+    --fg: #141A2B;
+    --muted: #566079;
+    --line: #C5CCDA;
+    --accent: #2745D6;
+    --accent-fg: #FFFFFF;
+    --accent-soft: #DCE2FA;
+    --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --font-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+    --font-pixel: "Silkscreen", ui-monospace, "Cascadia Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0D1120; --surface: #151B30; --fg: #EAEEF9; --muted: #96A0BC;
+      --line: #2A3350; --accent: #8CA0FF; --accent-fg: #0D1120; --accent-soft: #232C57;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0D1120; --surface: #151B30; --fg: #EAEEF9; --muted: #96A0BC;
+    --line: #2A3350; --accent: #8CA0FF; --accent-fg: #0D1120; --accent-soft: #232C57;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.5;
+    min-height: 100%;
+    padding-block: 24px 40px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  main { max-width: 34rem; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+  section { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+
+  .label {
+    font-family: var(--font-pixel);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  h1, h2 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    margin: 0;
+  }
+  h1 { font-size: clamp(2rem, 8vw, 2.75rem); }
+  h2 { font-size: clamp(1.5rem, 6vw, 2rem); }
+  p { margin: 0; max-width: 65ch; }
+  .lead { color: var(--muted); font-size: 1.0625rem; }
+
+  /* Knapper */
+  button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    border: 2px solid var(--fg);
+    background: var(--surface);
+    border-radius: 0;
+    min-height: 3.25rem;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    transition: transform 0.08s ease, background-color 0.12s ease;
+  }
+  button:hover { background: var(--accent-soft); }
+  button:active { transform: translate(2px, 2px); }
+  button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .primary {
+    background: var(--accent);
+    color: var(--accent-fg);
+    border-color: var(--accent);
+    font-weight: 600;
+    text-align: center;
+  }
+  .primary:hover { background: var(--accent); filter: brightness(1.08); }
+  .quiet { border-color: var(--line); text-align: center; }
+  .linklike {
+    border: 0; background: none; min-height: 2.5rem; padding: 0.25rem 0;
+    color: var(--muted); text-decoration: underline; text-underline-offset: 3px; align-self: flex-start;
+  }
+  .linklike:hover { background: none; color: var(--fg); }
+
+  /* Velkomst */
+  .mosaic { display: flex; flex-wrap: wrap; gap: 6px; }
+  .mosaic canvas { width: 3rem; height: 3rem; image-rendering: pixelated; display: block; border: 2px solid var(--fg); }
+
+  /* Spørsmål */
+  .progress { display: flex; gap: 4px; }
+  .progress i { flex: 1; height: 8px; background: var(--line); }
+  .progress i.done { background: var(--accent); }
+  .progress i.now { background: var(--fg); }
+  .options { display: flex; flex-direction: column; gap: 10px; padding: 0; margin: 0; list-style: none; }
+  .options button { width: 100%; display: flex; gap: 0.875rem; align-items: baseline; }
+  .options button.picked { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+  .options .key { font-family: var(--font-pixel); font-size: 0.8125rem; color: var(--muted); flex: none; }
+  .options button.picked .key { color: inherit; }
+
+  /* Resultat */
+  .portrait { width: 100%; max-width: 20rem; aspect-ratio: 1; display: block; image-rendering: pixelated; border: 3px solid var(--fg); }
+  .festtype { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; color: var(--accent); margin: 0; }
+  .facts { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 0; }
+  .facts dt { font-family: var(--font-pixel); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 0.2rem; }
+  .facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  .work { background: var(--surface); border: 2px solid var(--line); padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .work h3 { font-family: var(--font-display); font-size: 1.375rem; margin: 0; line-height: 1.15; }
+  .work .meta { color: var(--muted); font-size: 0.9375rem; }
+  .actions { display: flex; flex-direction: column; gap: 10px; }
+  .toast { min-height: 1.5rem; color: var(--muted); font-size: 0.9375rem; }
+
+  @media (prefers-reduced-motion: reduce) { button { transition: none; } }
+</style>
+
+<main>
+  <section id="intro" aria-labelledby="intro-title">
+    <span class="label">Aura Kunstmuseum · Firmafest</span>
+    <h1 id="intro-title">Hvilken kunstner er du på festen?</h1>
+    <p class="lead">Seks spørsmål. Du får én av elleve kunstnere fra samlingen vår, og et verk du kan gå og se.</p>
+    <div class="mosaic" id="mosaic" aria-hidden="true"></div>
+    <button type="button" class="primary" id="start">Start</button>
+  </section>
+
+  <section id="quiz" hidden aria-live="polite">
+    <div class="progress" id="progress" aria-hidden="true"></div>
+    <span class="label" id="steg"></span>
+    <h2 id="sporsmal" tabindex="-1"></h2>
+    <ul class="options" id="valg"></ul>
+    <button type="button" class="linklike" id="tilbake">Tilbake</button>
+  </section>
+
+  <section id="resultat" hidden aria-live="polite">
+    <span class="label">Din kunstprofil</span>
+    <canvas class="portrait" id="portrett" width="144" height="144" role="img"></canvas>
+    <h1 id="navn" tabindex="-1"></h1>
+    <p class="festtype" id="festtype"></p>
+    <p id="festtekst"></p>
+    <dl class="facts" id="fakta"></dl>
+    <div class="work">
+      <span class="label">Ditt verk i samlingen</span>
+      <h3 id="verk-tittel"></h3>
+      <span class="meta" id="verk-meta"></span>
+      <p id="verk-tekst"></p>
+      <span class="meta" id="verk-sted"></span>
+    </div>
+    <div class="actions">
+      <button type="button" class="primary" id="kopier">Kopier svaret mitt</button>
+      <button type="button" class="quiet" id="igjen">Ta quizen på nytt</button>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+  </section>
+</main>
+
+<script>
+(function () {
+  var DATA = /*PROFILER_JSON*/null;
+  var ARTISTER = DATA.artister;
+  var SPORSMAAL = DATA.spoersmaal;
+  var svar = [];
+  var GRID = 9;
+
+  function $(id) { return document.getElementById(id); }
+  function vis(navn) {
+    ["intro", "quiz", "resultat"].forEach(function (id) { $(id).hidden = id !== navn; });
+  }
+
+  // Samme regel som finn_profil i bygg_data.py: høyest sum, så siste svar, så laveste id.
+  function finnProfil(valg) {
+    var sum = {}, siste = {};
+    SPORSMAAL.forEach(function (q, i) {
+      var poeng = q.valg[valg[i]].poeng;
+      Object.keys(poeng).forEach(function (k) { sum[k] = (sum[k] || 0) + poeng[k]; });
+      siste = poeng;
+    });
+    var ids = Object.keys(sum).map(Number);
+    ids.sort(function (a, b) {
+      return (sum[b] - sum[a]) || ((siste[b] || 0) - (siste[a] || 0)) || (a - b);
+    });
+    return ARTISTER.filter(function (a) { return a.id === ids[0]; })[0];
+  }
+
+  function rng(seed) {
+    var a = seed | 0;
+    return function () {
+      a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  // Speilvendt 9x9-portrett, unikt per kunstner. Fargene kommer fra kunstnerens palett.
+  function tegnPortrett(canvas, artist, celle) {
+    var ctx = canvas.getContext("2d");
+    canvas.width = canvas.height = GRID * celle;
+    ctx.imageSmoothingEnabled = false;
+    var f = artist.farger, r = rng(artist.id * 7919 + 17), x, y;
+    ctx.fillStyle = f[0];
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    for (y = 0; y < GRID; y++) {
+      for (x = 0; x <= 4; x++) {
+        var v = r(), tett = x >= 3 ? 0.18 : 0;
+        var farge = v < 0.42 - tett ? null : v < 0.88 ? f[1] : f[2];
+        if (!farge) continue;
+        ctx.fillStyle = farge;
+        ctx.fillRect(x * celle, y * celle, celle, celle);
+        ctx.fillRect((GRID - 1 - x) * celle, y * celle, celle, celle);
+      }
+    }
+  }
+
+  function el(tag, tekst, klasse) {
+    var e = document.createElement(tag);
+    if (tekst != null) e.textContent = tekst;
+    if (klasse) e.className = klasse;
+    return e;
+  }
+
+  function lagMosaikk() {
+    var m = $("mosaic");
+    ARTISTER.forEach(function (a) {
+      var c = document.createElement("canvas");
+      tegnPortrett(c, a, 6);
+      m.appendChild(c);
+    });
+  }
+
+  function visSporsmaal() {
+    var i = svar.length, q = SPORSMAAL[i];
+    var p = $("progress");
+    p.textContent = "";
+    SPORSMAAL.forEach(function (_, n) {
+      p.appendChild(el("i", null, n < i ? "done" : n === i ? "now" : ""));
+    });
+    $("steg").textContent = "Spørsmål " + (i + 1) + " av " + SPORSMAAL.length;
+    $("sporsmal").textContent = q.tekst;
+    var liste = $("valg");
+    liste.textContent = "";
+    q.valg.forEach(function (v, n) {
+      var li = document.createElement("li");
+      var b = el("button");
+      b.type = "button";
+      b.appendChild(el("span", "ABCD".charAt(n), "key"));
+      b.appendChild(el("span", v.tekst));
+      b.addEventListener("click", function () {
+        b.classList.add("picked");
+        svar.push(n);
+        setTimeout(neste, 160);
+      });
+      li.appendChild(b);
+      liste.appendChild(li);
+    });
+    $("tilbake").hidden = i === 0;
+  }
+
+  function neste() {
+    if (svar.length < SPORSMAAL.length) {
+      visSporsmaal();
+      $("sporsmal").focus({ preventScroll: true });
+    } else {
+      visResultat(finnProfil(svar));
+    }
+  }
+
+  var delingstekst = "";
+  function visResultat(a) {
+    vis("resultat");
+    tegnPortrett($("portrett"), a, 16);
+    $("portrett").setAttribute("aria-label", "Pikselportrett i fargene til " + a.navn);
+    $("navn").textContent = a.navn;
+    $("festtype").textContent = a.festtype;
+    $("festtekst").textContent = a.festtekst;
+    var d = $("fakta");
+    d.textContent = "";
+    [["Levde", a.fodt + "–" + (a.dod || "")], ["Retning", a.kunstretning], ["Teknikker", a.teknikker]]
+      .forEach(function (rad) { d.appendChild(el("dt", rad[0])); d.appendChild(el("dd", rad[1])); });
+    var v = a.verk;
+    $("verk-tittel").textContent = v.tittel;
+    $("verk-meta").textContent = v.aar + " · " + v.teknikk;
+    $("verk-tekst").textContent = v.beskrivelse;
+    $("verk-sted").textContent = v.status === "utstilt"
+      ? "Henger nå i " + v.sal
+      : "Ligger i magasinet akkurat nå, ikke utstilt";
+    delingstekst = "Jeg er " + a.navn + " (" + a.festtype.toLowerCase() + ") på Aura-festen. Hvem er du?";
+    $("toast").textContent = "";
+    $("navn").focus({ preventScroll: true });
+    window.scrollTo(0, 0);
+  }
+
+  function kopier() {
+    var melding = $("toast");
+    function ok() { melding.textContent = "Kopiert. Lim den inn i chatten."; }
+    function reserve() {
+      var t = document.createElement("textarea");
+      t.value = delingstekst;
+      t.setAttribute("readonly", "");
+      t.style.position = "fixed";
+      t.style.opacity = "0";
+      document.body.appendChild(t);
+      t.select();
+      var klart = false;
+      try { klart = document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(t);
+      melding.textContent = klart ? "Kopiert. Lim den inn i chatten." : delingstekst;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(delingstekst).then(ok, reserve);
+    } else {
+      reserve();
+    }
+  }
+
+  function start() {
+    svar = [];
+    vis("quiz");
+    visSporsmaal();
+    $("sporsmal").focus({ preventScroll: true });
+  }
+
+  $("start").addEventListener("click", start);
+  $("igjen").addEventListener("click", function () { vis("intro"); window.scrollTo(0, 0); });
+  $("kopier").addEventListener("click", kopier);
+  $("tilbake").addEventListener("click", function () {
+    if (svar.length) { svar.pop(); visSporsmaal(); }
+  });
+
+  lagMosaikk();
+  // Brukes bare av testen i bygg-prosessen for å sjekke at JS og Python gir samme profil
+  window.__finnProfil = function (valg) { return finnProfil(valg).id; };
+})();
+</script>
