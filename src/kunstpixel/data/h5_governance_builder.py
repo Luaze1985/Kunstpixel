@@ -666,6 +666,9 @@ def valider_alle_yaml_strukturer() -> None:
 # 4. EKSPORT TIL YAML I 05_DATA/GOVERNANCE/
 # -----------------------------------------------------------------------------
 
+GENERERT_MERKE = "# GENERERT av h5_governance_builder.py. Ikke rediger for hånd: rett i generatoren og kjør den."
+
+
 def eksporter_yaml_filer(output_dir: Path | None = None) -> None:
     out = output_dir or GOV_DIR
     out.mkdir(parents=True, exist_ok=True)
@@ -684,7 +687,7 @@ def eksporter_yaml_filer(output_dir: Path | None = None) -> None:
     for filnavn, data in filer.items():
         sti = out / filnavn
         tekst = yaml.safe_dump(data, sort_keys=False, allow_unicode=True, width=1000)
-        sti.write_text(tekst, encoding="utf-8")
+        sti.write_text(GENERERT_MERKE + "\n" + tekst, encoding="utf-8")
         print(f"  Skrev YAML: {sti}")
 
 
