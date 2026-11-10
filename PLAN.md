@@ -2,6 +2,11 @@
 
 **Aktiv plan:** [Demo-databasen med én startkommando](docs/plans/2026-11-06-demo-database.md)
 
+**Pågår på grenen `fix/revisjon-2026-11`:** [Revisjonsfunnene](docs/plans/2026-11-10-revisjonsfunn.md), 17 funn fra ekstern gjennomgang.
+- Pakke 1 er ferdig (2026-11-10): funn 6, 7, 9, 11, 13 og 14. Hele pytest: 2220 bestått, 9 hoppet over, 2 ventede feil. Også grønn i en ren utsjekk for de berørte testene.
+- Neste: pakke 2 (Colab-settet: funn 3, 5 og 4), så pakke 3 (navn og merking), 4 (Datafinner-sperre) og 5 (innholdshash og dokumenter).
+- Funn 2 (rolle fra klienten) er utsatt, og funn 16 (domene og telefon) gjøres ikke. Se `docs/DECISIONS.md`.
+
 ## Gjort (2026-11-06)
 - `scripts/start_demo.ps1`: sjekker miljø og database, og åpner Datafinner. Kjørt og testet.
 - `mcp` er låst til 1.29.1 i `pyproject.toml`.

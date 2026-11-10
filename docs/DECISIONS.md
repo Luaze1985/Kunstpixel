@@ -95,3 +95,23 @@ Rekkefølge: (1) slå `ux/ett-vindu` inn i main, (2) Aura-skriptet + vakttest, (
 - Kart og leksjoner som faner, og én startkommando, kommer etter sammenslåingen.
 - Hvilke innganger som arkiveres (Telegram-bro og `chat_hub` foreslått).
 - Hvor kopien av designsystemet skal ligge (forslag: `00_felles/design/`).
+
+## 2026-11-10: revisjonsfunnene (gren `fix/revisjon-2026-11`)
+
+Plan og vurdering av alle 17 funn: `docs/plans/2026-11-10-revisjonsfunn.md`.
+
+Lars' valg:
+- **R1.** Funn 1: navnekolonnen fjernes fra `hr_people`. Navn hentes alltid fra `hr_ansatte`. (Pakke 3, ikke bygget ennå.)
+- **R2.** Funn 2: rollen i intern-siden velges fortsatt av klienten. Akseptert fordi siden bare binder til 127.0.0.1. Må rettes før intern-siden hostes: rolle settes ved oppstart og valideres med `role_id()`.
+- **R3.** Funn 4: Colab-databasen og MintHCM-dumpen tas ut av sporingen. Git-historikken røres ikke. (Pakke 2, ikke gjort ennå.)
+- **R4.** Hele revisjonen gjøres nå, pakke for pakke, selv om bare funn 1 er synlig i demoen.
+- **R5.** Funn 16 (e-postdomene og telefon) gjøres ikke. Systemet sender ingen e-post, og et domenebytte krever endring i den frosne `kilde/museum_base.db`.
+
+Valg jeg (Claude) tok underveis i pakke 1. Si fra hvis noen skal gjøres om:
+- **R6.** Funn 7: `skriv_colab_pakke` normaliserer alltid til LF, i stedet for bare å lage sjekksumfilen på nytt. Grunn: sjekksummen ble regnet av bytes på disken og var derfor plattformavhengig i selve koden. Kostnad hvis feil: en pakke laget på Windows har LF i stedet for CRLF.
+- **R7.** Funn 9: de fire ureferte skriptene er flyttet til `arkiv/2026-11-skript-som-skrev-i-museum-db/`, og `seed_handbooks.py` stopper med en melding hvis den kjøres direkte. Vakttesten bruker en godkjentliste for skript som skriver til andre databaser. Kostnad hvis feil: `git mv` tilbake.
+- **R8.** Funn 11: testen sammenligner lagret YAML med det generatoren lager, i stedet for å telle poster mot databasen som planen sa. Grunn: det fanger håndretting direkte, og CSV mot database er alt testet. Kostnad hvis feil: et avvik mellom YAML og database som ikke skyldes håndretting, fanges ikke her.
+- **R9.** Funn 13: `fastmcp` er fjernet fra `pyproject.toml` (0 importer). pandas, numpy, duckdb og requests ligger i en valgfri gruppe `data`, ikke som faste avhengigheter. Kostnad hvis feil: én linje tilbake.
+- **R10.** Funn 14 har ingen rød test: `anthropic` er installert her, så feilen kan ikke vises uten å avinstallere pakken. Endringen er `importorskip` i to tester.
+
+Testet: hele pytest 2220 bestått, 9 hoppet over, 2 ventede feil. De berørte testene (59) er også kjørt grønt i en ren utsjekk. Ikke testet: Linux og Colab.
