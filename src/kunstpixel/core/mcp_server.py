@@ -294,8 +294,8 @@ def get_personnel_dossier(
     """Hent konfidensiell personalmappe med streng rollebasert tilgangskontroll (RBAC).
 
     Sikkerhetsregel (CASE-016):
-    Kun autoriserte roller ('museumsdirektor', 'driftsansvarlig', 'kvalitetsvokter', 'hr_hms')
-    har tilgang. Uautoriserte forespørsler avvises med FORBIDDEN.
+    Kun autoriserte roller (AUTHORIZED_HR_ROLES i db.py: 'museumsdirektor', 'driftsansvarlig',
+    'kvalitetsvokter', 'hr_hms', 'avdelingsleder', 'direktor', 'hr') har tilgang. Uautoriserte forespørsler avvises med FORBIDDEN.
 
     Args:
         ansatt_id: Ansatt-ID for personen (f.eks. 'KP-ANS-006').
