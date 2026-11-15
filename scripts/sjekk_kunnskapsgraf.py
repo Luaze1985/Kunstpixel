@@ -9,8 +9,9 @@ Kontrollerer de 4 leddene når data utvides over tid:
      - Finnes det _id-kolonner (f.eks. utstilling_id, avvik_id, ansatt_id) uten FOREIGN KEY,
        og peker verdiene deres faktisk på gyldige rader i måltabellen?
   3. LLM-TILGJENGELIGHET (museum.db -> src/kunstpixel/core/ -> MCP/Datafinner):
-     - Hvilke tabeller i museum.db kan LLM spørre mot via verktøy, og hvilke tabeller er «blinde»
-       fordi ingen funksjon i core/ leser dem?
+     - MCP-dekning: hvilke tabeller når demo-Claude via et @mcp.tool? Målt ved å følge kallene
+       fra hvert verktøy gjennom funksjoner og konstanter i core/ (tabeller_via_mcp).
+     - Nevnt i src/: står tabellnavnet i noen fil i src/ (Datafinner, MCP m.m.)? Svakere mål.
   4. KUNNSKAPSKART-SYNK (KUNNSKAPSKART.md):
      - Hvor mange av tabellene i museum.db er nevnt i KUNNSKAPSKART.md?
      - Skriver alltid et komplett, oppdatert maskin- og lesekart til:
@@ -20,10 +21,12 @@ Kontrollerer de 4 leddene når data utvides over tid:
 from __future__ import annotations
 
 import argparse
+import ast
 import csv
 import re
 import sqlite3
 import sys
+import textwrap
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,6 +34,7 @@ DATA_DIR = ROOT / "05_data"
 DB_PATH = DATA_DIR / "museum.db"
 BYGGER_PATH = ROOT / "src" / "kunstpixel" / "data" / "build_museum_db.py"
 KART_PATH = ROOT / "KUNNSKAPSKART.md"
+MCP_PATH = ROOT / "src" / "kunstpixel" / "core" / "mcp_server.py"
 OUT_MD = ROOT / ".scratch" / "kvalitet" / "KUNNSKAPSGRAF_FOR_LLM.md"
 
 # CSV-filer i 05_data som allerede ligger bakt inn i det frosne grunnlaget (05_data/kilde/museum_base.db)
@@ -107,6 +111,57 @@ def sjekk_innboks() -> list[tuple[str, str]]:
     return funn
 
 
+def kodefiler_for_mcp() -> list[Path]:
+    """Filene MCP-verktøyene kan kalle inn i (kjernemodulene, ikke datagenereringen)."""
+    return sorted((ROOT / "src" / "kunstpixel" / "core").rglob("*.py"))
+
+
+def tabeller_via_mcp(tabeller: list[str], verktoyfil: Path, kodefiler: list[Path]) -> set[str]:
+    """Tabeller demo-Claude faktisk når: følger kall fra hvert @mcp.tool gjennom funksjoner og konstanter.
+
+    Et tabellnavn som bare står i Datafinner, byggeskript eller et verktøy som ikke er registrert, telles ikke.
+    """
+    defs: dict[str, list[str]] = {}
+    for fil in kodefiler:
+        kilde = fil.read_text(encoding="utf-8")
+        tre = ast.parse(kilde)
+        for node in ast.walk(tre):
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                defs.setdefault(node.name, []).append(ast.get_source_segment(kilde, node) or "")
+        for node in tre.body:
+            if isinstance(node, (ast.Assign, ast.AnnAssign)):
+                maal = node.targets if isinstance(node, ast.Assign) else [node.target]
+                for m in maal:
+                    if isinstance(m, ast.Name):
+                        defs.setdefault(m.id, []).append(ast.get_source_segment(kilde, node) or "")
+
+    def er_verktoy(fn: ast.AST) -> bool:
+        return any("tool" in ast.unparse(d) for d in getattr(fn, "decorator_list", []))
+
+    kilde = verktoyfil.read_text(encoding="utf-8")
+    ko = [
+        ast.get_source_segment(kilde, n) or ""
+        for n in ast.walk(ast.parse(kilde))
+        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) and er_verktoy(n)
+    ]
+    sett: set[str] = set()
+    tekst: list[str] = []
+    while ko:
+        seg = ko.pop()
+        tekst.append(seg)
+        try:
+            noder = ast.walk(ast.parse(textwrap.dedent(seg)))
+        except SyntaxError:
+            continue
+        for n in noder:
+            navn = n.id if isinstance(n, ast.Name) else n.attr if isinstance(n, ast.Attribute) else None
+            if navn and navn in defs and navn not in sett:
+                sett.add(navn)
+                ko.extend(defs[navn])
+    samlet = "\n".join(tekst)
+    return {t for t in tabeller if re.search(rf"\b{re.escape(t)}\b", samlet)}
+
+
 def analyser_database(con: sqlite3.Connection) -> dict:
     tabeller = [
         r[0]
@@ -131,6 +186,8 @@ def analyser_database(con: sqlite3.Connection) -> dict:
 
     tabell_info = []
     usynlige_for_llm = []
+    via_mcp = tabeller_via_mcp(tabeller, MCP_PATH, kodefiler_for_mcp())
+    usynlige_for_mcp = []
     ubevoktede_koblinger = []
     brutte_logiske_koblinger = []
 
@@ -150,6 +207,8 @@ def analyser_database(con: sqlite3.Connection) -> dict:
         ]
         if not brukt_i:
             usynlige_for_llm.append((t, rader))
+        if t not in via_mcp:
+            usynlige_for_mcp.append((t, rader))
 
         # Sjekk om tabellen har logiske _id-kolonner uten FOREIGN KEY
         for kol in kolonner:
@@ -179,12 +238,14 @@ def analyser_database(con: sqlite3.Connection) -> dict:
                 "fks": fk_map,
                 "brukt_i": brukt_i,
                 "i_kunnskapskart": i_kart,
+                "via_mcp": t in via_mcp,
             }
         )
 
     return {
         "tabeller": tabell_info,
         "usynlige_for_llm": usynlige_for_llm,
+        "usynlige_for_mcp": usynlige_for_mcp,
         "ubevoktede_koblinger": ubevoktede_koblinger,
         "brutte_logiske_koblinger": brutte_logiske_koblinger,
     }
@@ -199,6 +260,7 @@ def skriv_kunnskapsgraf_md(
 ) -> None:
     tabeller = analyse["tabeller"]
     usynlige = analyse["usynlige_for_llm"]
+    blinde_mcp = analyse["usynlige_for_mcp"]
     ubevoktede = analyse["ubevoktede_koblinger"]
     brutte = analyse["brutte_logiske_koblinger"]
     i_kart_antall = sum(1 for t in tabeller if t["i_kunnskapskart"])
@@ -212,8 +274,9 @@ def skriv_kunnskapsgraf_md(
         "## 1. Sammendrag",
         "",
         f"- **Tabeller i `museum.db`:** {len(tabeller)} tabeller",
-        f"- **Tilgjengelige for LLM (har verktøy/spørring i `src/`):** {len(tabeller) - len(usynlige)} av {len(tabeller)} tabeller",
-        f"- **Blinde tabeller (i `museum.db`, men mangler LLM-verktøy):** {len(usynlige)} tabeller",
+        f"- **Når demo-Claude via MCP (`@mcp.tool` i `core/mcp_server.py`):** {len(tabeller) - len(blinde_mcp)} av {len(tabeller)} tabeller",
+        f"- **Nevnt i `src/` (Datafinner, MCP m.m.):** {len(tabeller) - len(usynlige)} av {len(tabeller)} tabeller",
+        f"- **Blinde for MCP:** {len(blinde_mcp)} tabeller ({', '.join(t for t, _ in blinde_mcp) or 'ingen'})",
         f"- **CSV-filer i `05_data/` som ikke er koblet inn i `build_museum_db.py` ennå:** {len(ubrukte_csv)} filer",
         f"- **Logiske koblinger (`_id`) med ugyldige verdier:** {len(brutte)} brudd",
         f"- **Tabeller nevnt i `KUNNSKAPSKART.md`:** {i_kart_antall} av {len(tabeller)}",
@@ -236,6 +299,13 @@ def skriv_kunnskapsgraf_md(
             linjer.append(
                 f"- ⚠️ **`{t}.{kol}` → `{mt}.{mk}`:** {ant} unike ID-verdier i `{t}.{kol}` finnes ikke i `{mt}.{mk}`."
             )
+        linjer.append("")
+
+    if blinde_mcp:
+        linjer.append("### [OBS] Tabeller demo-Claude ikke når via MCP")
+        linjer.append("Ingen `@mcp.tool` i `src/kunstpixel/core/mcp_server.py` leser disse (målt ved å følge kallene fra hvert verktøy):")
+        for t, rader in blinde_mcp:
+            linjer.append(f"- **`{t}`** ({rader} rader) → lag lesende funksjon i `core/db.py` og et `@mcp.tool` i `core/mcp_server.py`.")
         linjer.append("")
 
     if usynlige:
@@ -274,14 +344,15 @@ def skriv_kunnskapsgraf_md(
         "",
         "## 3. Komplett Kunnskapsgraf (Alle tabeller i `museum.db`, koblinger og LLM-status)",
         "",
-        "| Tabell | Rader | Koblinger (FOREIGN KEY) | Tilgjengelig for LLM i `src/` |",
-        "|---|---:|---|---|",
+        "| Tabell | Rader | Koblinger (FOREIGN KEY) | MCP | Nevnt i `src/` |",
+        "|---|---:|---|---|---|",
     ]
 
     for t in tabeller:
         fk_str = ", ".join(f"`{k}` → `{v}`" for k, v in t["fks"].items()) or "*(rot-tabell / oppslag)*"
         llm_str = "✅ " + ", ".join(f"`{Path(p).name}`" for p in t["brukt_i"][:2]) if t["brukt_i"] else "⚠️ **Mangler verktøy**"
-        linjer.append(f"| `{t['tabell']}` | {t['rader']} | {fk_str} | {llm_str} |")
+        mcp_str = "✅" if t["via_mcp"] else "⚠️ nei"
+        linjer.append(f"| `{t['tabell']}` | {t['rader']} | {fk_str} | {mcp_str} | {llm_str} |")
 
     OUT_MD.parent.mkdir(parents=True, exist_ok=True)
     OUT_MD.write_text("\n".join(linjer) + "\n", encoding="utf-8")
@@ -307,12 +378,16 @@ def main() -> int:
 
     tabeller = analyse["tabeller"]
     usynlige = analyse["usynlige_for_llm"]
+    blinde_mcp = analyse["usynlige_for_mcp"]
     brutte = analyse["brutte_logiske_koblinger"]
 
     print("KUNNSKAPSGRAF & LLM-TILGJENGELIGHET")
     print("=" * 70)
     print(f"[ {'FEIL' if formatfeil else 'OK '} ] Alle {len(list(DATA_DIR.glob('*.csv')))} CSV-filer i 05_data/ sjekket for komma- og kolonnefeil ({len(formatfeil)} feil)")
-    print(f"[ {'OBS' if usynlige else 'OK '} ] LLM-verktøydekning: {len(tabeller) - len(usynlige)} av {len(tabeller)} tabeller i museum.db har verktøy i src/")
+    print(f"[ {'OBS' if blinde_mcp else 'OK '} ] MCP-dekning (demo-Claude): {len(tabeller) - len(blinde_mcp)} av {len(tabeller)} tabeller")
+    if blinde_mcp:
+        print(f"         Blinde for MCP: {', '.join(t for t, _ in blinde_mcp)}")
+    print(f"[ {'OBS' if usynlige else 'OK '} ] Nevnt i src/ (Datafinner, MCP m.m.): {len(tabeller) - len(usynlige)} av {len(tabeller)} tabeller")
     if usynlige:
         print(f"         Blinde tabeller uten LLM-verktøy: {', '.join(t for t, _ in usynlige)}")
         print("         Gjør dette: Be LLM lese .scratch/kvalitet/KUNNSKAPSGRAF_FOR_LLM.md og lage verktøy for dem.")
@@ -322,13 +397,15 @@ def main() -> int:
     print(f"[ INFO] Ubrukte CSV-filer i 05_data/ som ikke står i build_museum_db.py: {len(ubrukte_csv)} stk")
     if ubrukte_csv:
         print(f"         ({', '.join(ubrukte_csv[:5])}{' ...' if len(ubrukte_csv) > 5 else ''})")
-    print(f"[ OK  ] Oppdatert kunnskapsgraf for LLM skrevet til: .scratch/kvalitet/KUNNSKAPSGRAF_FOR_LLM.md")
+    print("[ OK  ] Oppdatert kunnskapsgraf for LLM skrevet til: .scratch/kvalitet/KUNNSKAPSGRAF_FOR_LLM.md")
     print("=" * 70)
 
     if args.problems:
         for f in formatfeil:
             fil = f.split(":")[0]
             print(f"PROBLEM|error|{fil}|1|{f}")
+        if blinde_mcp:
+            print(f"PROBLEM|warning|src/kunstpixel/core/mcp_server.py|1|MCP: {len(blinde_mcp)} tabeller i museum.db har ikke noe MCP-verktøy ({', '.join(t for t, _ in blinde_mcp)}).")
         if usynlige:
             navn_liste = ", ".join(t for t, _ in usynlige)
             print(

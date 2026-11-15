@@ -178,3 +178,8 @@ Kartet står i `docs/plans/2026-11-15-ren-main.md`.
 - **W5. `AGENTS.md` er slått sammen.** Den gamle fila står urørt (del 1–7), og multiagent-laget fra den nye er lagt til som del 8. Den nye manglet byggeregelen, testkravet, datapolicyen og kommandoene. `KUNNSKAPSKART.md` er den nye versjonen, med avviksnotatet fra den gamle beholdt som del 6. `handoffs/epost/README.md` er lagt i git.
 - **Åpent:** `design/startbilde` er ikke avgjort. Lars vet ikke ennå hva grenen skal brukes til.
 
+## 2026-11-15 — Helsesjekken måler MCP-dekning (etter loggjennomgang)
+
+- **H1. `sjekk_kunnskapsgraf.py` måler nå hva demo-Claude når.** Den gamle målingen talte en tabell som dekket hvis navnet sto i en hvilken som helst fil i `src/`, og meldte «61 av 61, 0 blinde». Den nye (`tabeller_via_mcp`) følger kallene fra hvert `@mcp.tool` gjennom funksjoner og konstanter i `core/`. Resultat: 58 av 61. `dagsbesok`, `hr_medarbeidersamtaler` og `hr_innleide_kompetanse` er blinde for MCP (krav K2). Det gamle målet vises fortsatt som «Nevnt i src/». Tester: `tests/test_sjekk_kunnskapsgraf_mcp.py` (3), som var røde først. Hele pytest: 2257 bestått.
+- **Funn i loggjennomgangen (ikke rettet):** `.scratch/bygger-fremdrift.md` (morgenagenten 2026-11-15 09:34) påstår at den har verifisert `check_shift_compliance`, `lookup_handbook_and_sops` og `cases/runner.py`. Ingen av dem finnes i koden. Den oppgir også 34 MCP-verktøy, men `core/mcp_server.py` har 56 `@mcp.tool`. Regel: påstander i agentlogger er ikke bevis før en kommando har kjørt og vist resultatet.
+
