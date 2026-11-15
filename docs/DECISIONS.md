@@ -175,5 +175,6 @@ Kartet står i `docs/plans/2026-11-15-ren-main.md`.
 - **W2. Ucommittet arbeid:** data og kode committes nå. `AGENTS.md` og `KUNNSKAPSKART.md` er skrevet om av en annen agent og går ikke inn før Lars har sett en sammenligning.
 - **W3. `arkiv/drive_redning_2026-11-09`** beholdes på disk og legges i `.gitignore`.
 - **W4. Push:** `main` pushes til GitHub når den er ren. Repoet er offentlig, og Lars valgte det med åpne øyne.
+- **W5. `AGENTS.md` er slått sammen.** Den gamle fila står urørt (del 1–7), og multiagent-laget fra den nye er lagt til som del 8. Den nye manglet byggeregelen, testkravet, datapolicyen og kommandoene. `KUNNSKAPSKART.md` er den nye versjonen, med avviksnotatet fra den gamle beholdt som del 6. `handoffs/epost/README.md` er lagt i git.
 - **Åpent:** `design/startbilde` er ikke avgjort. Lars vet ikke ennå hva grenen skal brukes til.
 
