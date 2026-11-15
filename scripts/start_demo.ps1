@@ -2,13 +2,13 @@
 Start Kunstpixel-demoen: sjekker miljø og database, og åpner Datafinner i nettleseren.
 
 Bruk (fra hvor som helst):
-    powershell -ExecutionPolicy Bypass -File scripts/start_demo.ps1        # uten KI (standard)
-    powershell -ExecutionPolicy Bypass -File scripts/start_demo.ps1 -KI    # KI på: .env med nøkkel, ellers din egen Claude
+    powershell -ExecutionPolicy Bypass -File scripts/start_demo.ps1        # KI på når .env eller Claude er tilgjengelig
+    powershell -ExecutionPolicy Bypass -File scripts/start_demo.ps1 -UtenKI # bare database og rapporter
 
 Skriptet leser bare. Det skriver aldri til 05_data/museum.db og installerer ingenting.
 Stopp demoen med Ctrl+C.
 #>
-param([switch]$KI)
+param([switch]$KI, [switch]$UtenKI)
 
 # Ikke 'Stop': i PowerShell 5.1 blir stderr fra py til feil som ville skjult STOPP-meldingene. Vi sjekker $LASTEXITCODE selv.
 $ErrorActionPreference = 'Continue'
@@ -22,6 +22,7 @@ function Stopp([string]$melding, [string]$rad = '') {
     exit 1
 }
 function Ok([string]$melding) { Write-Host "[OK] $melding" -ForegroundColor Green }
+if ($KI -and $UtenKI) { Stopp "Velg enten -KI eller -UtenKI." }
 
 # 0. Kjør fra repo-roten, uansett hvor mappen ligger (koden importerer src.kunstpixel...).
 $Rot = Split-Path -Parent $PSScriptRoot
@@ -54,6 +55,7 @@ Ok "Port $Port er ledig"
 $db = Join-Path $Rot '05_data\museum.db'
 $sumfil = Join-Path $Rot '05_data\museum.db.sha256'
 if (-not (Test-Path $db)) { Stopp "Fant ikke 05_data\museum.db." "Sjekk at du står i riktig demomappe." }
+$env:KUNSTPIXEL_DB_PATH = $db
 if (Test-Path $sumfil) {
     $forventet = ((Get-Content $sumfil -Raw).Trim() -split '\s+')[0].ToLower()
     $faktisk = (Get-FileHash $db -Algorithm SHA256).Hash.ToLower()
@@ -76,8 +78,8 @@ $tall = ($selvtest | & py -3.13 -)
 if ($tall -ne '16,12,6') { Stopp "Selvtesten fikk verk,kunstnere,saler = $tall, forventet 16,12,6." }
 Ok "Selvtest: 16 verk, 12 kunstnere, 6 saler"
 
-# 5. KI: av som standard. Et mellomrom i LLM_PROVIDER slår den av og hindrer at .env slår den på.
-if ($KI) {
+# 5. KI: på når den er tilgjengelig. -UtenKI gir en ren, deterministisk datavisning.
+if (-not $UtenKI) {
     $env:LLM_PROVIDER = $null
     $envfil = Join-Path $Rot '.env'
     $navn = @()
@@ -97,7 +99,7 @@ if ($KI) {
     }
 } else {
     $env:LLM_PROVIDER = ' '
-    Ok "KI av (start med -KI for å slå den på)"
+    Ok "KI av (-UtenKI)"
 }
 
 # 6. Start Datafinner, vent til den svarer, åpne nettleseren.
@@ -106,7 +108,7 @@ Write-Host ""
 Write-Host "Starter Datafinner på $url ... (Ctrl+C for å stoppe)"
 # Start python.exe direkte (ikke py-starteren), så prosessen vi stopper er selve serveren og porten frigjøres.
 $python = (& py -3.13 -c "import sys; print(sys.executable)")
-$proc = Start-Process -FilePath $python -ArgumentList 'src/kunstpixel/adapters/datafinner.py' -WorkingDirectory $Rot -NoNewWindow -PassThru
+$proc = Start-Process -FilePath $python -ArgumentList 'src/kunstpixel/adapters/datafinner.py' -WorkingDirectory $Rot -WindowStyle Hidden -PassThru
 $klar = $false
 for ($i = 0; $i -lt 60; $i++) {
     Start-Sleep -Milliseconds 500

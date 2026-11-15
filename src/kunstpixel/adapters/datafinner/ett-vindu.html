@@ -8,7 +8,7 @@
 </head>
 <body class="af" style="margin:0;padding:24px 16px;background:var(--canvas)">
 <div class="af">
-  <div class="af-shell">
+  <div class="af-shell af-no-context">
     <!-- Venstre: alt som kan velges. Midten: arbeidet. Høyre: fasit (verktøy, kilde, KI). -->
     <nav class="af-sidebar" aria-label="Innhold">
       <p class="af-side-heading">Datafinner</p>
@@ -25,11 +25,10 @@
         <label for="mobilvalg">Gå til</label>
         <select id="mobilvalg"></select>
       </div>
-      <div class="af-alert info" role="status"><strong>Øvingsdata</strong><span>Alle navn og tall er syntetiske.</span></div>
       <div id="midt" aria-live="polite"></div>
     </main>
 
-    <aside class="af-context" aria-label="Fasit">
+    <aside class="af-context" aria-label="Fasit" hidden>
       <h2 class="af-context-title">Fasit</h2>
       <p class="af-task-hint" style="margin:0 0 12px">Tallene kommer fra databasen. KI formulerer bare.</p>
       <div class="af-context-card">
@@ -60,9 +59,9 @@
   function hent(url, opts) { return fetch(url, opts).then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || ("HTTP " + r.status)); return d; }); }); }
   function post(url, body) { return hent(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }); }
 
-  var KI = false, ROLLER = [], SPORSMAL = {}, SKJEMA = {}, AREA = { omrader: [], caser: [] };
+  var KI = false, KI_MODELL = "", ROLLER = [], SPORSMAL = {}, SKJEMA = {}, AREA = { omrader: [], caser: [] };
   var valgt = null, aktivRolle = null;
-  try { aktivRolle = sessionStorage.getItem("datafinner-rolle") || null; } catch (e) {}
+  try { aktivRolle = sessionStorage.getItem("datafinner-rolle") || "Museumsdirektør"; } catch (e) { aktivRolle = "Museumsdirektør"; }
 
   // Flatene i venstre meny. Alle vises i midten av vinduet.
   var FLATER = [
@@ -82,6 +81,9 @@
 
   // ---------- Høyre panel ----------
   function fasit(verktoy, args, kilde, regel) {
+    var vis = !!(verktoy || kilde || regel);
+    document.querySelector(".af-context").hidden = !vis;
+    document.querySelector(".af-shell").classList.toggle("af-no-context", !vis);
     $("f-verktoy").textContent = verktoy ? verktoy + "(" + (args && Object.keys(args).length ? JSON.stringify(args) : "") + ")" : "Ingen ennå";
     $("f-kilde").textContent = kilde || "museum.db, kun lesing";
     $("f-regel-kort").hidden = !regel;
@@ -101,10 +103,10 @@
     rv.length = 1;
     synligeRoller().forEach(function (r) { var o = el("option", null, r.navn); o.value = r.navn; rv.appendChild(o); });
     rv.value = aktivRolle || "";
-    function gruppe(tittel, punkter, kunMobil) {
+    function gruppe(tittel, punkter, kunMobil, container) {
       var og = el("optgroup"); og.label = tittel;
       if (kunMobil) { punkter.forEach(function (p) { var op = el("option", null, p.navn); op.value = p.id; og.appendChild(op); }); mobil.appendChild(og); return; }
-      meny.appendChild(el("p", "af-side-heading", tittel));
+      (container || meny).appendChild(el("p", "af-side-heading", tittel));
       var ol = el("ol", "af-flow-list");
       punkter.forEach(function (p) {
         // p.klikk og p.dataId brukes av vaktrom-stegene, som styres av vaktrom.js og ikke av adressen.
@@ -116,7 +118,7 @@
         li.appendChild(b); ol.appendChild(li);
         var op = el("option", null, p.navn); op.value = p.id; og.appendChild(op);
       });
-      meny.appendChild(ol); mobil.appendChild(og);
+      (container || meny).appendChild(ol); mobil.appendChild(og);
     }
     // Mens vaktrommet er åpent, står stegene øverst i menyen.
     if (VAKTROM.api && (valgt || "").indexOf("flate:vaktrom") === 0) {
@@ -129,20 +131,24 @@
     if (ARBEID.oppgaver && (valgt || "").indexOf("flate:arbeidsflyt") === 0) {
       gruppe("Arbeidsroller", arbeidsroller().map(function (a) { return { id: arbeidId(a), navn: a }; }));
     }
-    // Chatten er en egen inngang over rapportene (DECISIONS punkt 12), ikke en av flatene.
-    gruppe("KI", [{ id: "flate:chat", navn: "Spør KI", status: KI ? null : "Krever KI" }]);
     var r = rolle(aktivRolle);
     var rollePunkter = synligeRoller().map(function (x) { return { id: "rolle:" + x.navn, navn: x.navn, status: antall(x.sporsmal.length, "rapport", "rapporter") }; });
-    // Med rolle: rollens egne rapporter øverst. Uten rolle: rollelisten, så man velger først.
-    if (r) gruppe("Rapporter for " + r.navn.toLowerCase(), r.sporsmal.map(function (id) { return { id: "rolle:" + r.navn + "/" + id, navn: (SPORSMAL[id] || { tekst: id }).tekst }; }));
-    else gruppe("Velg rolle", rollePunkter);
+    gruppe("Finn data", [
+      { id: "flate:chat", navn: "Spør om data", status: KI ? null : "KI utilgjengelig" },
+      { id: "rolle:" + (r ? r.navn : "Museumsdirektør"), navn: "Rapporter" },
+      { id: "katalog", navn: "Tabeller" }
+    ]);
+    var mer = el("details", "af-nav-more"), merInnhold = el("div");
+    mer.appendChild(el("summary", null, "Mer"));
+    mer.appendChild(merInnhold); meny.appendChild(mer);
+    mer.open = !!(valgt && (valgt.indexOf("arena:") === 0 || (valgt.indexOf("flate:") === 0 && valgt !== "flate:chat")));
     gruppe("Arena", AREA.omrader.map(function (o) {
       var n = AREA.caser.filter(function (c) { return c.omrade === o.id; }).length;
       return { id: "arena:" + o.id, navn: o.navn, status: n + (n === 1 ? " case" : " caser") };
-    }));
-    gruppe("Flater", FLATER.map(function (f) { return { id: "flate:" + f.id, navn: f.navn, status: f.krevKI && !KI ? "Krever KI" : null }; }));
+    }), false, merInnhold);
+    gruppe("Flater", FLATER.map(function (f) { return { id: "flate:" + f.id, navn: f.navn, status: f.krevKI && !KI ? "Krever KI" : null }; }), false, merInnhold);
     if (r) gruppe("Bytt rolle", rollePunkter, true);  // I mobilvisning finnes ikke rollevalget i sidemenyen.
-    mobil.value = (valgt || "").split("/")[0];  // Valget kjenner bare toppnivået (rolle, område, flate).
+    mobil.value = (valgt || "flate:chat").split("/")[0];  // Valget kjenner bare toppnivået (rolle, område, flate).
   }
   $("mobilvalg").addEventListener("change", function () {
     if (this.value.indexOf("vaktrom-steg:") === 0 && VAKTROM.api) return VAKTROM.api.gaa(this.value.slice(13));
@@ -405,7 +411,7 @@
   // ---------- Chat (oppgave 04) ----------
   // Samtalen ligger i minnet så den er der når man går ut og inn av chatten. «Ny samtale» tømmer den.
   var CHAT = { historikk: [], svar: [] };  // historikk: [{rolle: "bruker"|"assistent", tekst}]; svar: assistentsvarene i samme rekkefølge
-  var KI_AV = "KI er av. Start med start_demo.cmd -KI for å bruke din egen Claude.";
+  var KI_AV = "KI er utilgjengelig. Du kan fortsatt åpne rapporter og tabeller.";
   var CHAT_FORSLAG = [
     "Hvem kan ta vakt i vaktrommet lørdag 7. november 2026 kl. 08–16? Ranger dem.",
     "Hvem har hatt flest helgevakter i Sal A det siste året?",
@@ -429,7 +435,7 @@
   }
 
   function chatFasit(svar) {
-    if (!svar) return fasit(null, null, "Ingen data hentet ennå");
+    if (!svar) return fasit(null);
     var kall = svar.verktoykall || [];
     var navn = kall.map(function (k) { return k.navn + (k.ok ? "" : " (feilet)"); });
     var siste = kall[kall.length - 1] || {};
@@ -438,7 +444,9 @@
   }
 
   function visChat() {
-    var m = tom("KI", "Spør KI", "Spør med vanlige ord. KI-en henter fakta med verktøyene og svarer. Hvert svar er et AI-forslag.");
+    var m = tom(null, "Spør om data", "Skriv hva du trenger å vite. KI henter fakta fra Kunstpixel-dataene.");
+    var chatStatus = el("p", "af-chat-status", KI ? "KI konfigurert · " + KI_MODELL + " · syntetiske øvingsdata" : "KI utilgjengelig · syntetiske øvingsdata");
+    chatStatus.id = "chat-status"; m.appendChild(chatStatus);
     if (!KI) m.appendChild(el("p", "af-panel-message", KI_AV));
     var feil = el("div", "af-error-summary"); feil.setAttribute("role", "alert"); feil.style.display = "none";
     feil.appendChild(el("h2", null, "Feil")); var feilTekst = el("p"); feil.appendChild(feilTekst); m.appendChild(feil);
@@ -448,39 +456,41 @@
     var svarIndeks = 0;
     CHAT.historikk.forEach(function (h) { chatMelding(logg, h.rolle, h.tekst, h.rolle === "assistent" ? CHAT.svar[svarIndeks++] : null); });
 
-    // Eksempelspørsmål bare før samtalen har startet.
-    if (!CHAT.historikk.length) {
-      var ex = el("ul", "af-task-board");
-      CHAT_FORSLAG.forEach(function (f) {
-        var li = el("li"), b = el("button", "af-task-card"); b.type = "button";
-        var t = el("span"); t.appendChild(el("strong", null, f)); b.appendChild(t);
-        b.addEventListener("click", function () { felt.value = f; felt.focus(); });
-        li.appendChild(b); ex.appendChild(li);
-      });
-      m.appendChild(ex);
-    }
-
     var g = el("div", "af-group"), l = el("label", "af-label", "Spørsmål"), felt = el("textarea", "af-textarea");
     felt.id = "chat-felt"; l.htmlFor = felt.id; felt.rows = 3; felt.disabled = !KI;
     g.appendChild(l); g.appendChild(felt); m.appendChild(g);
     var a = el("div", "af-actions"), send = el("button", "af-btn af-btn-primary", "Send"), ny = el("button", "af-btn af-btn-secondary", "Ny samtale"), status = el("span", "af-save-status");
     send.type = "button"; ny.type = "button"; send.disabled = !KI;
     a.appendChild(send); a.appendChild(ny); a.appendChild(status); m.appendChild(a);
+    if (!CHAT.historikk.length) {
+      var eksempler = el("details", "af-examples"), ex = el("ul", "af-task-board");
+      eksempler.appendChild(el("summary", null, "Forslag til spørsmål"));
+      CHAT_FORSLAG.forEach(function (f) {
+        var li = el("li"), b = el("button", "af-task-card"); b.type = "button";
+        b.appendChild(el("span", null, f));
+        b.addEventListener("click", function () { felt.value = f; felt.focus(); });
+        li.appendChild(b); ex.appendChild(li);
+      });
+      eksempler.appendChild(ex); m.appendChild(eksempler);
+    }
 
     function sendNa() {
       var tekst = felt.value.trim(); if (!tekst || !KI) return;
       visFeil("");
+      var forslag = m.querySelector(".af-examples");
+      if (forslag) forslag.hidden = true;
       CHAT.historikk.push({ rolle: "bruker", tekst: tekst }); chatMelding(logg, "bruker", tekst);
       felt.value = ""; send.disabled = true; status.textContent = "KI-en henter data …";
       post("/api/chat", { meldinger: CHAT.historikk, rolle: aktivRolle || "ukjent rolle" })
-        .then(function (s) { CHAT.historikk.push({ rolle: "assistent", tekst: s.tekst }); CHAT.svar.push(s); chatMelding(logg, "assistent", s.tekst, s); chatFasit(s); })
-        .catch(function (e) { CHAT.historikk.pop(); logg.removeChild(logg.lastChild); felt.value = tekst; visFeil(e.message); })
+        .then(function (s) { CHAT.historikk.push({ rolle: "assistent", tekst: s.tekst }); CHAT.svar.push(s); chatMelding(logg, "assistent", s.tekst, s); chatFasit(s); chatStatus.textContent = "KI tilkoblet · " + KI_MODELL + " · syntetiske øvingsdata"; })
+        .catch(function (e) { CHAT.historikk.pop(); logg.removeChild(logg.lastChild); felt.value = tekst; if (forslag) forslag.hidden = false; visFeil(e.message); chatStatus.textContent = "KI svarte ikke · syntetiske øvingsdata"; })
         .then(function () { send.disabled = !KI; status.textContent = ""; felt.focus(); });
     }
     send.addEventListener("click", sendNa);
     felt.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendNa(); } });
     ny.addEventListener("click", function () { CHAT.historikk = []; CHAT.svar = []; visChat(); });
     chatFasit(CHAT.svar[CHAT.svar.length - 1]);
+    felt.focus({ preventScroll: true });
   }
 
   // ---------- Søk (oppgave 05) ----------
@@ -851,6 +861,7 @@
     else if (type === "flate") visFlate(navn, deler[1], deler[2]);
     else if (hode === "katalog" && deler[1]) visTabell(deler.slice(1).join("/"));
     else if (hode === "katalog") visKatalog();
+    else if (aktivRolle) visChat();
     else visStart();
     tegnMeny();
   }
@@ -864,6 +875,7 @@
     hent("/api/arena/caser").catch(function () { return { omrader: [], caser: [] }; })
   ]).then(function (d) {
     KI = !!d[0].llm;
+    KI_MODELL = d[0].llm_modell || "";
     $("f-ki").textContent = KI ? "På (" + d[0].llm_modell + "). KI-svar merkes AI-forslag til en person har godtatt dem." : "Av. Alle svar er hentet rett fra databasen.";
     ROLLER = d[1].resultat || [];
     SPORSMAL = d[2].sporsmal || {};

@@ -43,9 +43,11 @@ Dobbeltklikk på **`start_demo.cmd`** i prosjektmappen. Fra terminalen:
 
 Skriptet sjekker Python 3.13, `mcp` 1.29.1, at port 8010 er ledig, sjekksummen til `museum.db`, datakvaliteten og en selvtest (16 verk, 12 kunstnere, 6 saler). Deretter åpner det Datafinner på `http://127.0.0.1:8010`. Stopp med Ctrl+C.
 
-* KI er av som standard. Legg til `-KI` for å slå den på. Det krever `LLM_PROVIDER`, `LLM_MODEL` og `LLM_API_KEY` i `.env` i den samme mappen. Mangler de, starter demoen uten KI.
-* Demoen kjøres fra en låst versjon. Sjekk ut taggen (for eksempel `git checkout demo-v1`) i en egen mappe, og start derfra.
+* Startsiden åpner «Spør om data». KI brukes når `.env` har leverandør, modell og nøkkel, eller når Claude Code er installert lokalt. Bruk `-UtenKI` for bare rapporter og tabeller. Uten tilgjengelig KI vises en tydelig status; dataene kan fortsatt åpnes.
+* Demoen bruker databasen i den lokale prosjektkopien. Oppstarten kontrollerer sjekksum og datakvalitet før siden åpnes.
 * Skriptet leser bare. Det skriver aldri til databasen og installerer ingenting.
+
+Validering før en lederrunde: se [ledervalidering](docs/LEDER_VALIDERING.md).
 
 ---
 

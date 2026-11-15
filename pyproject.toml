@@ -15,6 +15,7 @@ dependencies = [
 llm = ["anthropic"]
 # Trengs bare av datageneratorene og Telegram-broen, ikke av Datafinner eller MCP-serveren.
 data = ["pandas", "numpy", "duckdb", "requests"]
+ui-test = ["playwright>=1.59,<2"]
 
 [tool.pytest.ini_options]
 markers = ["llm_live: kjører mot ekte modell (krever ANTHROPIC_API_KEY), hoppes over som standard"]

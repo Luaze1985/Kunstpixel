@@ -38,11 +38,13 @@ from src.kunstpixel.data import build_museum_db as bygger
 
 FEIL, ADVARSEL, OK = "FEIL", "ADVARSEL", "OK"
 resultater: list[tuple[str, str, str]] = []
+KORT = False
 
 
 def logg(sjekk: str, niva: str, detalj: str) -> None:
     resultater.append((sjekk, niva, detalj))
-    print(f"[{niva:8}] {sjekk}: {detalj}")
+    if not KORT or niva != OK or sjekk.startswith("P0 "):
+        print(f"[{niva:8}] {sjekk}: {detalj}")
 
 
 def en(con: sqlite3.Connection, sql: str):
@@ -61,6 +63,21 @@ def sjekk_bygg(tmp: Path) -> Path:
     ha, hb = bygger.sha256(a), bygger.sha256(b)
     logg("P1 deterministisk bygg", OK if ha == hb else FEIL, f"sha256 {ha[:12]} / {hb[:12]}")
     return a
+
+
+def sjekk_aktiv_db(bygd: Path, aktiv: Path) -> None:
+    """Sjekk at databasen som verktøyene leser er det validerte bygget."""
+    if not aktiv.is_file():
+        logg("P0 aktiv museum.db", FEIL, f"mangler: {aktiv}")
+        return
+    try:
+        forventet = bygger.sha256(bygd)
+        faktisk = bygger.sha256(aktiv)
+    except OSError as exc:
+        logg("P0 aktiv museum.db", FEIL, f"kunne ikke leses: {exc}")
+        return
+    niva = OK if faktisk == forventet else FEIL
+    logg("P0 aktiv museum.db", niva, f"sha256 {faktisk[:12]} / validert bygg {forventet[:12]}")
 
 
 def sjekk_integritet(con: sqlite3.Connection) -> None:
@@ -211,12 +228,12 @@ def sjekk_pytest() -> None:
     logg("P5 pytest", OK if r.returncode == 0 else FEIL, "alle besto" if r.returncode == 0 else f"{len(feilet)} feilet: {feilet[:3]}")
 
 
-def skriv_rapport() -> Path:
+def skriv_rapport(formaal: str) -> Path:
     ut = ROOT / ".scratch" / "db-status"
     ut.mkdir(parents=True, exist_ok=True)
     fil = ut / f"STATUS-{datetime.now():%Y%m%d-%H%M%S}.md"
     feil = sum(1 for _, n, _ in resultater if n == FEIL)
-    linjer = ["# Databasestatus før sammenslåing", f"*{datetime.now():%Y-%m-%d %H:%M}* · "
+    linjer = [f"# Databasestatus før {formaal}", f"*{datetime.now():%Y-%m-%d %H:%M}* · "
               f"**{'BLOKKERT' if feil else 'KLAR'}** ({feil} feil)", "", "| Sjekk | Nivå | Detalj |", "|---|---|---|"]
     linjer += [f"| {s} | {n} | {d} |" for s, n, d in resultater]
     fil.write_text("\n".join(linjer) + "\n", encoding="utf-8")
@@ -224,11 +241,18 @@ def skriv_rapport() -> Path:
 
 
 def main() -> int:
+    global KORT
     ap = argparse.ArgumentParser(description="Statusport for museum.db før sammenslåing")
     ap.add_argument("--uten-pytest", action="store_true")
+    ap.add_argument("--aktiv-db", type=Path, help="sjekk at denne databasen er identisk med det validerte bygget")
+    ap.add_argument("--kort", action="store_true", help="vis bare aktiv database, feil, varsler og sluttsum")
     args = ap.parse_args()
+    KORT = args.kort
+    resultater.clear()
     with tempfile.TemporaryDirectory(prefix="kunstpixel-port-") as t:
         dbsti = sjekk_bygg(Path(t))
+        if args.aktiv_db is not None:
+            sjekk_aktiv_db(dbsti, args.aktiv_db)
         con = sqlite3.connect(dbsti.resolve().as_uri() + "?mode=ro", uri=True)
         try:
             sjekk_integritet(con)
@@ -240,9 +264,11 @@ def main() -> int:
             con.close()
     if not args.uten_pytest:
         sjekk_pytest()
-    fil = skriv_rapport()
+    formaal = "oppstart" if args.aktiv_db is not None else "sammenslåing"
+    fil = skriv_rapport(formaal)
     feil = sum(1 for _, n, _ in resultater if n == FEIL)
-    print(f"\n{'BLOKKERT' if feil else 'KLAR'} for sammenslåing ({feil} feil). Rapport: {fil}")
+    varsler = sum(1 for _, n, _ in resultater if n == ADVARSEL)
+    print(f"\n{'BLOKKERT' if feil else 'KLAR'} for {formaal} ({feil} feil, {varsler} varsler). Rapport: {fil}")
     return 1 if feil else 0
 
 
