@@ -11,7 +11,13 @@
 
 ## Gjort (2026-11-15): ren main (DECISIONS W1–W5)
 - Driftsinnboksen, `museum.db`, hjelpeskriptene og dokumentene er committet. `AGENTS.md` er slått sammen (driftsregler + multiagent-lag). Hele pytest: 2254 bestått, 9 hoppet over, 2 ventede feil. `main` er pushet til GitHub.
-- Neste valg står i kartet: `.agents/` i git eller ikke, og hva som skal skje med `design/startbilde`.
+
+## Krav nå (2026-11-15, detaljer i `.scratch/handoffs/HANDOFF-2026-11-15T1657.md`)
+1. **K1. Prøverunde i en ny økt:** `start_claude.cmd`, spør om Stine Haugens personalmappe og Anja Eriksens stilling, og kjør `/sjekk` etter hvert svar.
+2. **K2. Datahull:** demo-Claude (MCP) når ikke `dagsbesok` (6 209 rader), `hr_medarbeidersamtaler` (142) og `hr_innleide_kompetanse` (19). Lag tre lesende MCP-verktøy med TDD. Lars godkjenner først.
+3. **K3.** Skal `.agents/` inn i git? Lars avgjør.
+4. **K4.** Kjør én e-post gjennom multiagent-flyten (`handoffs/epost/README.md`).
+5. **K5.** `design/startbilde`: flett, forkast eller la ligge. Lars avgjør.
 
 ## Gjort (2026-11-15): lekegrind for live-demo (DECISIONS L1–L12)
 - Dobbeltklikk `start_claude.cmd`, og statusporten kjøres først. Still et fritt spørsmål, og skriv `/sjekk` etter svaret. Da finner en uavhengig kontrollør fasit med `scripts/sql_ro.py`.
