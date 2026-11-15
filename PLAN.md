@@ -9,6 +9,10 @@
 - Neste: pakke 4 (Datafinner-sperre) og 5 (innholdshash og dokumenter).
 - Funn 2 (rolle fra klienten) er utsatt, og funn 16 (domene og telefon) gjøres ikke. Se `docs/DECISIONS.md`.
 
+## Gjort (2026-11-15): lekegrind for live-demo (DECISIONS L1–L11)
+- Dobbeltklikk `start_claude.cmd`, og statusporten kjøres først. Still et fritt spørsmål, og skriv `/sjekk` etter svaret. Da finner en uavhengig kontrollør fasit med `scripts/sql_ro.py`.
+- Neste: prøv flere frie spørsmål med `/sjekk` i en ny økt.
+
 ## Gjort (2026-11-06)
 - `scripts/start_demo.ps1`: sjekker miljø og database, og åpner Datafinner. Kjørt og testet.
 - `mcp` er låst til 1.29.1 i `pyproject.toml`.

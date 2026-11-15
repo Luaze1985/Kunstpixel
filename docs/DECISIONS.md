@@ -137,3 +137,24 @@ Pakke 3 (2026-11-10):
 - **Åpent, ikke rettet:** rolle og ansettelsesform i `hr_people` stemmer heller ikke med `hr_ansatte`. E110 er `driftstekniker` i `hr_people`, men Kirsti Johansen er audioguide-produsent i registeret. E106 er `kafevert`, men Henrik Pettersen er vekter. Koblingen fra G10 ble satt uten å se på stillingene.
 
 Testet: hele pytest 2240 bestått, 9 hoppet over, 2 ventede feil. Databasesjekken er grønn på et midlertidig bygg.
+
+## 2026-11-15 — Lekegrind og demo av oppgaver (grilling-økt)
+
+- **L1. Formål:** portefølje for Lars. Vises bare som live-demo på egen PC, ikke publisert offentlig. Personvern og risiko er ikke aktuelt (alt syntetisk).
+- **L2. Motor:** Claude Code med MCP-serveren `kunstpixel` (`.mcp.json`).
+- **L3. Ingen oppgavekatalog.** Lars stiller frie spørsmål i demoen (vanlige og spesielle, blant annet HR, drift, vakt, økonomi). Ingen YAML, tabell eller ferdige oppgavekort.
+- **L4. Data følger `main`.** Ingen frosset demo-versjon. Fasit regnes alltid fra `museum.db` i øyeblikket.
+- **L5. Én agent svarer,** ingen ruting-krav nå. Multiagent kommer senere.
+- **L6. Rettekommando `/sjekk`** som prosjekt-skill i `.claude/skills/sjekk`, kjøres manuelt etter et svar.
+- **L7. Kontrollør:** egen agentfil `.claude/agents/kontrollor.md`. Kun Read/Bash, åpner `museum.db` med `mode=ro`, får ikke MCP. Skriver egen SQL uten å se svaret først, og sammenligner etterpå.
+- **L8. Visning:** kort dom per påstand (✅/❌), riktig verdi og SQL-en som viser det.
+- **L9. Fritekst** (f.eks. svarutkast) vurderes av LLM-dommer med fri vurdering av tone og korrekthet.
+- **L10. Start:** `start_claude.cmd` utvides med `db_status_gate.py --uten-pytest` og stopper ved rødt.
+
+Bygget samme dag (gjenbruker `core/db.execute_read_query` og statusporten):
+- `scripts/sql_ro.py`: kontrollørens eneste vei inn i databasen. `tests/test_sql_ro.py` (4 tester) var rød først og er grønn nå. Testene dekker blant annet DELETE, DROP, ATTACH, PRAGMA og to setninger etter hverandre.
+- `.claude/agents/kontrollor.md` og `.claude/skills/sjekk/SKILL.md`.
+- `start_claude.cmd` kjører `db_status_gate.py --uten-pytest` først. Testet grønn vei (`start_claude.cmd --version`: porten har 0 feil, og Claude starter). Ikke testet: rød vei.
+- Testet ende til ende med instruksene i `kontrollor.md` (via en generell agent, fordi nye agentfiler lastes først i neste økt). Svaret hadde to plantede feil, og fase 2 fanget begge: datoen 12.11 (❌) og SAL-C (❌). «7,5 timer» ble merket ⚠️, fordi klokketiden er 8,0. Ikke testet: `/sjekk` kalt fra en ny økt, med verktøysperren til agenttypen.
+- **L11. Korte svar, minst mulig støy (Lars, 2026-11-15).** Svar på dataspørsmål: 1–3 linjer, så `Kilde:` (ny `CLAUDE.md` i Kunstpixel). `/sjekk` viser bare tabellen Påstand/Dom/Riktig, `Bevis:`-SQL bare for ❌/⚠️, høyst én setning fritekst, og `Samlet:`. Fase 1 vises aldri.
+- **Funn:** `05_data/index.md` stemmer ikke med databasen. JOIN-eksempelet bruker `fra_klokke`/`til_klokke`, men kolonnene heter `start`/`slutt`. ID-katalogen nevner `arkiv_hr_vakt_historikk` og `arkiv_hr_vakt_klokkeslett`, som ikke finnes i `museum.db`. **Rettet samme dag.** Alle fire JOIN-eksemplene hadde kolonner som ikke finnes, og er skrevet om og kjørt mot databasen. Rettet også: verktøynavn som ikke finnes (`get_employee_profile`, `check_shift_compliance`, `bemanning_sjekk`), og at `syntetisk_fnr` bare ligger i CSV. Radtallene (61 tabeller, 92 505 rader) stemte allerede.
