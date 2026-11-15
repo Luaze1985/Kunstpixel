@@ -1,6 +1,6 @@
 # PLAN — status
 
-**Aktiv plan:** [Demo-databasen med én startkommando](docs/plans/2026-11-06-demo-database.md)
+**Aktiv plan:** [Kart: ren main](docs/plans/2026-11-15-ren-main.md). Demo-v2 er droppet (DECISIONS W1).
 
 **Pågår i `main`:** [Revisjonsfunnene](docs/plans/2026-11-10-revisjonsfunn.md), 17 funn fra ekstern gjennomgang.
 - Pakke 1 er ferdig (2026-11-10): funn 6, 7, 9, 11, 13 og 14. Hele pytest: 2220 bestått, 9 hoppet over, 2 ventede feil. Også grønn i en ren utsjekk for de berørte testene.

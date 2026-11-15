@@ -40,3 +40,6 @@ gate-log.jsonl
 05_data/colab_personvern_historikk.db
 # Tredjepartskode (MintHCM). Lisensen må sjekkes før den deles.
 01_inbox/raw/minthcm-*.txt
+
+# Redningskopi fra Drive (beholdes paa disk, DECISIONS W3)
+arkiv/drive_redning_2026-11-09/

@@ -166,3 +166,14 @@ Bygget samme dag (gjenbruker `core/db.execute_read_query` og statusporten):
   - **Funn:** docstringen til `get_personnel_dossier` (`mcp_server.py:302`) nevnte 4 roller, men `AUTHORIZED_HR_ROLES` (`db.py:777`) har 7. Docstringen er rettet til 7, og tilgangen er uendret.
   - **Demo-rolle:** Lars spør som `museumsdirektor` (`CLAUDE.md`), så agenten slår opp direkte i stedet for å spørre om rolle.
 - **Funn:** `05_data/index.md` stemmer ikke med databasen. JOIN-eksempelet bruker `fra_klokke`/`til_klokke`, men kolonnene heter `start`/`slutt`. ID-katalogen nevner `arkiv_hr_vakt_historikk` og `arkiv_hr_vakt_klokkeslett`, som ikke finnes i `museum.db`. **Rettet samme dag.** Alle fire JOIN-eksemplene hadde kolonner som ikke finnes, og er skrevet om og kjørt mot databasen. Rettet også: verktøynavn som ikke finnes (`get_employee_profile`, `check_shift_compliance`, `bemanning_sjekk`), og at `syntetisk_fnr` bare ligger i CSV. Radtallene (61 tabeller, 92 505 rader) stemte allerede.
+
+## 2026-11-15 — Kart mot ren main (wayfinder-økt)
+
+Kartet står i `docs/plans/2026-11-15-ren-main.md`.
+
+- **W1. Målet er ren main.** Taggen `demo-v2` droppes. Demoen kjører fra `main` (L4), så en frosset versjon har ingen bruk.
+- **W2. Ucommittet arbeid:** data og kode committes nå. `AGENTS.md` og `KUNNSKAPSKART.md` er skrevet om av en annen agent og går ikke inn før Lars har sett en sammenligning.
+- **W3. `arkiv/drive_redning_2026-11-09`** beholdes på disk og legges i `.gitignore`.
+- **W4. Push:** `main` pushes til GitHub når den er ren. Repoet er offentlig, og Lars valgte det med åpne øyne.
+- **Åpent:** `design/startbilde` er ikke avgjort. Lars vet ikke ennå hva grenen skal brukes til.
+
