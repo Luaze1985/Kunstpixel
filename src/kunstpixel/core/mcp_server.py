@@ -14,26 +14,38 @@ from src.kunstpixel.core.db import (
     audit_shift_aml_compliance,
     normalize_room_identifier,
     query_absence_report,
+    query_active_contractors,
+    query_arbeidsflyt_og_testcaser,
+    query_arbeidsoppgaver_tidsbruk,
     query_archive_exhibitions,
     query_artwork_details,
+    query_besok_og_anmeldelser,
+    query_building_map_data,
     query_cleaning_registry,
     query_collection,
     query_condition_report,
     query_contractors,
+    query_daglig_driftsinnboks,
     query_employee_cv,
-    query_active_contractors,
-    query_personnel_file,
     query_employee_skills,
     query_events,
     query_exhibition_economy,
     query_exhibitions_with_economy,
     query_faq,
     query_handbook,
+    query_historikk_2010_2026,
+    query_hms_avvik_tekst,
     query_holidays,
+    query_hr_opplaering_onboarding,
     query_incidents,
     query_internal_requests,
+    query_kafe_meny_og_salg,
     query_loans,
+    query_myndighetskontakter,
+    query_personnel_file,
     query_quarterly_absence,
+    query_rapporteringskalender,
+    query_rapportmaler,
     query_report_assessment,
     query_report_rules,
     query_roles,
@@ -45,16 +57,9 @@ from src.kunstpixel.core.db import (
     query_styrk_job_code,
     query_supplier_brreg,
     query_tariff_pay,
+    query_tilsynsbesok_rutine,
     query_working_hours,
     query_working_time_limits,
-    query_myndighetskontakter,
-    query_tilsynsbesok_rutine,
-    query_rapporteringskalender,
-    query_rapportmaler,
-    query_arbeidsoppgaver_tidsbruk,
-    query_historikk_2010_2026,
-    query_hr_opplaering_onboarding,
-    query_building_map_data,
 )
 from src.kunstpixel.core.hr_eval import evaluate_staffing_proposal
 from src.kunstpixel.core.hrdemo import (
@@ -942,6 +947,118 @@ def verify_colab_dataset(delivery_name: str) -> dict[str, Any]:
     """Verifiserer sjekksummen for en innkommende Colab-leveranse via MCP."""
     from src.kunstpixel.core.colab_bridge import verify_colab_delivery
     return verify_colab_delivery(delivery_name)
+
+
+@mcp.tool()
+def get_cafe_menu_and_sales(
+    kategori: str | None = None,
+    fra_dato: str | None = None,
+    til_dato: str | None = None,
+    limit: int = 100,
+) -> dict[str, Any]:
+    """Henter kafémeny (priser, varekost, allergener) og varesalg per dato."""
+    return query_kafe_meny_og_salg(
+        kategori=kategori,
+        fra_dato=fra_dato,
+        til_dato=til_dato,
+        limit=limit,
+    )
+
+
+@mcp.tool()
+def search_visitor_reviews_and_satisfaction(
+    kanal: str | None = None,
+    status: str | None = None,
+    tema: str | None = None,
+    fra_dato: str | None = None,
+    til_dato: str | None = None,
+    kun_persondata: bool = False,
+    limit: int = 50,
+) -> dict[str, Any]:
+    """Søker i publikumsanmeldelser og daglig besøkstilfredshet."""
+    return query_besok_og_anmeldelser(
+        kanal=kanal,
+        status=status,
+        tema=tema,
+        fra_dato=fra_dato,
+        til_dato=til_dato,
+        kun_persondata=kun_persondata,
+        limit=limit,
+    )
+
+
+@mcp.tool()
+def search_hms_incident_narratives(
+    avdeling: str | None = None,
+    alvorlighetsgrad: str | None = None,
+    status: str | None = None,
+    sok: str | None = None,
+    limit: int = 50,
+) -> dict[str, Any]:
+    """Søker i fritekst-beskrivelser og strakstiltak for HMS-avvik."""
+    return query_hms_avvik_tekst(
+        avdeling=avdeling,
+        alvorlighetsgrad=alvorlighetsgrad,
+        status=status,
+        sok=sok,
+        limit=limit,
+    )
+
+
+@mcp.tool()
+def get_role_workflows_and_testcases(
+    rolle: str | None = None,
+    kategori: str | None = None,
+) -> dict[str, Any]:
+    """Henter rollebaserte arbeidsoppgaver, målgrupper, opplæringsroller og ansatt-testcaser."""
+    return query_arbeidsflyt_og_testcaser(
+        rolle=rolle,
+        kategori=kategori,
+    )
+
+
+@mcp.tool()
+def get_daily_ops_inbox(
+    dato: str | None = None,
+    fra_dato: str | None = None,
+    til_dato: str | None = None,
+    aar: int | None = None,
+    kategori: str | None = None,
+    hastegrad: str | None = None,
+    status: str | None = None,
+    mottaker_rolle: str | None = None,
+    vurdering_utfall: str | None = None,
+    sok: str | None = None,
+    limit: int = 50,
+) -> dict[str, Any]:
+    """Henter daglige drifts-, kunde- og arrangementsmeldinger/e-post/SMS (2010–2026) med triage, lov-/SOP-treff og forslag til svarutkast.
+
+    Args:
+        dato: Eksakt dato (YYYY-MM-DD).
+        fra_dato: Startdato (YYYY-MM-DD).
+        til_dato: Sluttdato (YYYY-MM-DD).
+        aar: Filtrer på årstall (2010–2026).
+        kategori: En av: vakt_og_hviletid, sykefraver_og_vikar, personvern_og_gdpr, hms_og_sikkerhet, klima_og_samling, kafe_og_allergen, kundekontakt_og_epost, arrangement_og_booking.
+        hastegrad: KRITISK, HOY eller NORMAL.
+        status: Tiltaksstatus (APEN, UNDER_BEHANDLING, LUKKET).
+        mottaker_rolle: Ansvarlig mottakerrolle i museet.
+        vurdering_utfall: Utfall fra regel-/lovsjekk (f.eks. AVSLÅS_LOVSTRIDIG_OVERSTYRING, AVSLÅ_PRIVAT_VERDIVURDERING_OG_GAVE, AVSLÅ_MEDBRAKT_ALKOHOL_OG_OVERKAPASITET).
+        sok: Fritekstsøk på tvers av emne, meldingstekst, tiltak og svarutkast.
+        limit: Maks antall treff (1–500).
+    """
+    return query_daglig_driftsinnboks(
+        dato=dato,
+        fra_dato=fra_dato,
+        til_dato=til_dato,
+        aar=aar,
+        kategori=kategori,
+        hastegrad=hastegrad,
+        status=status,
+        mottaker_rolle=mottaker_rolle,
+        vurdering_utfall=vurdering_utfall,
+        sok=sok,
+        limit=limit,
+    )
 
 
 if __name__ == "__main__":

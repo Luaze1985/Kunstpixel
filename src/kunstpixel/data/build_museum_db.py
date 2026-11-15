@@ -93,6 +93,12 @@ INNLEIDE_PERSONER_CSV = DATA_DIR / "arkiv_hr_innleide_personer.csv"
 INNLEIDE_KOMPETANSE_CSV = DATA_DIR / "arkiv_hr_innleide_kompetanse.csv"
 MEDARBEIDERSAMTALER_CSV = DATA_DIR / "arkiv_hr_medarbeidersamtaler.csv"
 PERSONALMAPPER_CSV = DATA_DIR / "arkiv_hr_personalmapper.csv"
+ANSATT_TESTCASER_CSV = DATA_DIR / "ansatt_testcaser.csv"
+ARBEIDSFLYT_ROLLER_CSV = DATA_DIR / "arbeidsflyt_roller.csv"
+ARBEIDSROLLE_MALGRUPPE_CSV = DATA_DIR / "arbeidsrolle_malgruppe.csv"
+ARBEIDSROLLE_OPPLAERING_CSV = DATA_DIR / "arbeidsrolle_opplaering.csv"
+DRIFTSMELDINGER_EPOST_CSV = DATA_DIR / "arkiv_driftsmeldinger_2010_2026.csv"
+DRIFTSMELDINGER_TILTAK_CSV = DATA_DIR / "arkiv_driftsmeldinger_tiltak.csv"
 
 HR_DEMO_TABLES = ["hr_rules", "hr_availability", "hr_person_skill", "hr_skills", "hr_people"]
 
@@ -486,7 +492,7 @@ CREATE TABLE anmeldelser (
     kanal TEXT NOT NULL CHECK(kanal IN ('google', 'tripadvisor', 'egen_undersokelse')),
     stjerner INTEGER NOT NULL CHECK(stjerner BETWEEN 1 AND 5),
     tema TEXT NOT NULL CHECK(tema IN ('utstilling', 'kafe', 'service', 'fasiliteter')),
-    utstilling_id TEXT,
+    utstilling_id TEXT REFERENCES utstillinger_historikk(utstilling_id),
     produkt_id TEXT REFERENCES kafe_meny(produkt_id),
     tekst TEXT NOT NULL,
     allergen_pastand TEXT,
@@ -516,6 +522,9 @@ INDEXES = [
     "CREATE INDEX IF NOT EXISTS hr_opplaering_rolle_idx ON hr_opplaering_onboarding(rolle, kategori)",
     "CREATE INDEX IF NOT EXISTS anmeldelser_tema_idx ON anmeldelser(tema, dato)",
     "CREATE INDEX IF NOT EXISTS anmeldelser_status_idx ON anmeldelser(status, ansvarlig_rolle)",
+    "CREATE INDEX IF NOT EXISTS idx_driftsmeldinger_dato ON driftsmeldinger_epost(dato, hastegrad)",
+    "CREATE INDEX IF NOT EXISTS idx_driftsmeldinger_aar_kat ON driftsmeldinger_epost(aar, kategori)",
+    "CREATE INDEX IF NOT EXISTS idx_driftsmeldinger_tiltak_melding ON driftsmeldinger_tiltak(melding_id, status)",
 ]
 
 
@@ -1017,6 +1026,178 @@ def bygg_personalmapper(con: sqlite3.Connection) -> int:
     return len(rader)
 
 
+ARBEIDSROLLE_SQL = [
+    """
+CREATE TABLE ansatt_testcaser (
+    case_id TEXT PRIMARY KEY,
+    arbeidsrolle TEXT NOT NULL,
+    ansatt_id TEXT NOT NULL REFERENCES hr_ansatte(ansatt_id),
+    forventet_navn TEXT NOT NULL,
+    kategori TEXT NOT NULL,
+    begrunnelse TEXT NOT NULL,
+    datakilde TEXT NOT NULL
+)""",
+    """
+CREATE TABLE arbeidsflyt_roller (
+    rolle TEXT NOT NULL,
+    oppgave_id TEXT NOT NULL,
+    tittel TEXT NOT NULL,
+    beskrivelse TEXT NOT NULL,
+    verktoy TEXT NOT NULL,
+    datakilde TEXT NOT NULL,
+    PRIMARY KEY (rolle, oppgave_id)
+)""",
+    """
+CREATE TABLE arbeidsrolle_malgruppe (
+    rolle TEXT NOT NULL,
+    malgruppe_term TEXT NOT NULL,
+    datakilde TEXT NOT NULL,
+    PRIMARY KEY (rolle, malgruppe_term)
+)""",
+    """
+CREATE TABLE arbeidsrolle_opplaering (
+    rolle TEXT NOT NULL,
+    opplaeringsrolle TEXT NOT NULL,
+    datakilde TEXT NOT NULL,
+    PRIMARY KEY (rolle, opplaeringsrolle)
+)""",
+]
+
+
+def bygg_arbeidsrolle_tabeller(con: sqlite3.Connection) -> int:
+    """Bygg tabellene for ansatt-testcaser, arbeidsflyt per rolle og rollekoblinger."""
+    for t in ("arbeidsrolle_opplaering", "arbeidsrolle_malgruppe", "arbeidsflyt_roller", "ansatt_testcaser"):
+        con.execute(f"DROP TABLE IF EXISTS {t}")
+    for sql in ARBEIDSROLLE_SQL:
+        con.execute(sql)
+
+    testcaser = les_csv(ANSATT_TESTCASER_CSV)
+    con.executemany(
+        "INSERT INTO ansatt_testcaser VALUES (?,?,?,?,?,?,?)",
+        [
+            (r["case_id"], r["arbeidsrolle"], r["ansatt_id"], r["forventet_navn"],
+             r["kategori"], r["begrunnelse"], r["datakilde"])
+            for r in testcaser
+        ],
+    )
+
+    flyt = les_csv(ARBEIDSFLYT_ROLLER_CSV)
+    con.executemany(
+        "INSERT INTO arbeidsflyt_roller VALUES (?,?,?,?,?,?)",
+        [
+            (r["rolle"], r["oppgave_id"], r["tittel"], r["beskrivelse"], r["verktoy"], r["datakilde"])
+            for r in flyt
+        ],
+    )
+
+    malgruppe = les_csv(ARBEIDSROLLE_MALGRUPPE_CSV)
+    con.executemany(
+        "INSERT INTO arbeidsrolle_malgruppe VALUES (?,?,?)",
+        [(r["rolle"], r["malgruppe_term"], r["datakilde"]) for r in malgruppe],
+    )
+
+    opplaering = les_csv(ARBEIDSROLLE_OPPLAERING_CSV)
+    con.executemany(
+        "INSERT INTO arbeidsrolle_opplaering VALUES (?,?,?)",
+        [(r["rolle"], r["opplaeringsrolle"], r["datakilde"]) for r in opplaering],
+    )
+
+    return len(testcaser) + len(flyt) + len(malgruppe) + len(opplaering)
+
+
+DRIFTSMELDINGER_SQL = [
+    """
+CREATE TABLE driftsmeldinger_epost (
+    melding_id TEXT PRIMARY KEY,
+    dato TEXT NOT NULL,
+    klokkeslett TEXT NOT NULL,
+    aar INTEGER NOT NULL,
+    kanal TEXT NOT NULL,
+    kategori TEXT NOT NULL,
+    hastegrad TEXT NOT NULL,
+    ansatt_id TEXT NOT NULL REFERENCES hr_ansatte(ansatt_id),
+    mottaker_rolle TEXT NOT NULL,
+    sal_id TEXT NOT NULL REFERENCES saler(id),
+    utstilling_id TEXT NOT NULL REFERENCES utstillinger_historikk(utstilling_id),
+    emne TEXT NOT NULL,
+    meldingstekst TEXT NOT NULL,
+    inneholder_persondata INTEGER NOT NULL CHECK(inneholder_persondata IN (0, 1)),
+    datakilde TEXT NOT NULL
+)""",
+    """
+CREATE TABLE driftsmeldinger_tiltak (
+    tiltak_id TEXT PRIMARY KEY,
+    melding_id TEXT NOT NULL REFERENCES driftsmeldinger_epost(melding_id),
+    ansvarlig_rolle TEXT NOT NULL,
+    handbok_punkt_id TEXT NOT NULL REFERENCES handbok_oppslag(punkt_id),
+    lovhjemmel TEXT NOT NULL,
+    vurdering_utfall TEXT NOT NULL,
+    foreslatt_tiltak TEXT NOT NULL,
+    epost_sms_utkast TEXT NOT NULL,
+    status TEXT NOT NULL,
+    svartid_timer REAL NOT NULL,
+    lost_dato TEXT,
+    datakilde TEXT NOT NULL
+)""",
+]
+
+
+def bygg_driftsmeldinger_tabeller(con: sqlite3.Connection) -> int:
+    """Bygg tabellene for daglig driftsinnboks & meldingssystem (2010–2026)."""
+    for t in ("driftsmeldinger_tiltak", "driftsmeldinger_epost"):
+        con.execute(f"DROP TABLE IF EXISTS {t}")
+    for sql in DRIFTSMELDINGER_SQL:
+        con.execute(sql)
+
+    epost = les_csv(DRIFTSMELDINGER_EPOST_CSV)
+    con.executemany(
+        "INSERT INTO driftsmeldinger_epost VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        [
+            (
+                r["melding_id"],
+                r["dato"],
+                r["klokkeslett"],
+                int(r["aar"]),
+                r["kanal"],
+                r["kategori"],
+                r["hastegrad"],
+                r["ansatt_id"],
+                r["mottaker_rolle"],
+                r["sal_id"],
+                r["utstilling_id"],
+                r["emne"],
+                r["meldingstekst"],
+                int(r["inneholder_persondata"]),
+                r["datakilde"],
+            )
+            for r in epost
+        ],
+    )
+
+    tiltak = les_csv(DRIFTSMELDINGER_TILTAK_CSV)
+    con.executemany(
+        "INSERT INTO driftsmeldinger_tiltak VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+        [
+            (
+                r["tiltak_id"],
+                r["melding_id"],
+                r["ansvarlig_rolle"],
+                r["handbok_punkt_id"],
+                r["lovhjemmel"],
+                r["vurdering_utfall"],
+                r["foreslatt_tiltak"],
+                r["epost_sms_utkast"],
+                r["status"],
+                float(r["svartid_timer"]),
+                _tom_til_null(r["lost_dato"]),
+                r["datakilde"],
+            )
+            for r in tiltak
+        ],
+    )
+    return len(epost) + len(tiltak)
+
+
 def oppgrader_fremmednokler(con: sqlite3.Connection) -> None:
     """Bygg om tabellene i G9 for å legge til eksplisitte FOREIGN KEY constraints."""
     # 1. hr_innleie
@@ -1143,6 +1324,24 @@ def oppgrader_fremmednokler(con: sqlite3.Connection) -> None:
     con.execute("DROP TABLE hms_ergonomi_rotasjon")
     con.execute("ALTER TABLE hms_ergonomi_rotasjon_ny RENAME TO hms_ergonomi_rotasjon")
 
+    # 6. tilstandsrapporter: legg til fremmednøkkel til hr_ansatte(ansatt_id)
+    con.execute("""
+    CREATE TABLE tilstandsrapporter_ny (
+        rapport_id TEXT PRIMARY KEY,
+        verk_id TEXT NOT NULL REFERENCES verk(id),
+        inspeksjonsdato TEXT NOT NULL,
+        tilstandsgrad INTEGER NOT NULL CHECK(tilstandsgrad BETWEEN 1 AND 4),
+        lysomfintlighet_luks INTEGER NOT NULL,
+        klimakrav_rh_prosent TEXT NOT NULL,
+        konserveringshistorikk TEXT NOT NULL,
+        forsikringsverdi_nok INTEGER NOT NULL,
+        vurdert_av_ansatt_id TEXT NOT NULL REFERENCES hr_ansatte(ansatt_id)
+    )
+    """)
+    con.execute("INSERT INTO tilstandsrapporter_ny SELECT * FROM tilstandsrapporter")
+    con.execute("DROP TABLE tilstandsrapporter")
+    con.execute("ALTER TABLE tilstandsrapporter_ny RENAME TO tilstandsrapporter")
+
 
 def bygg(til: Path) -> dict:
     if not BASE_DB.is_file():
@@ -1187,6 +1386,8 @@ def bygg(til: Path) -> dict:
             antall_medarbeidersamtaler = bygg_medarbeidersamtaler(con)
             antall_personalmapper = bygg_personalmapper(con)
             antall_handboker = bygg_handboker(con)
+            antall_arbeidsroller = bygg_arbeidsrolle_tabeller(con)
+            antall_driftsmeldinger = bygg_driftsmeldinger_tabeller(con)
             oppgrader_fremmednokler(con)
             for sql in INDEXES:
                 con.execute(sql)
@@ -1218,6 +1419,8 @@ def bygg(til: Path) -> dict:
             "h5_historikk": antall_h5_historikk,
             "hr_opplaering": antall_hr_opplaering,
             "publikum": antall_publikum,
+            "arbeidsroller": antall_arbeidsroller,
+            "driftsmeldinger": antall_driftsmeldinger,
             "user_version": SKJEMAVERSJON,
         }
     finally:

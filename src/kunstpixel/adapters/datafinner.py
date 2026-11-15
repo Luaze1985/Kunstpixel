@@ -96,6 +96,11 @@ from src.kunstpixel.core.mcp_server import (
     search_hr_onboarding,
     search_myndighet,
     search_rapportering,
+    get_cafe_menu_and_sales,
+    search_visitor_reviews_and_satisfaction,
+    search_hms_incident_narratives,
+    get_role_workflows_and_testcases,
+    get_daily_ops_inbox,
 )
 
 ASSET_DIR = Path(__file__).resolve().parent / "datafinner"
@@ -234,6 +239,32 @@ VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
     "get_absence_by_person": (vaktrom.get_absence_by_person, {"fra", "til", "stasjon"}),
     "search_hms_guidance": (search_hms_guidance, {"query", "topic", "limit"}),
     "lookup_handbook": (lookup_handbook, {"query", "handbok", "role", "limit"}),
+    "get_cafe_menu_and_sales": (get_cafe_menu_and_sales, {"kategori", "fra", "til", "bare_tilgjengelige"}),
+    "search_visitor_reviews_and_satisfaction": (
+        search_visitor_reviews_and_satisfaction,
+        {"aar", "sprak", "min_rating", "max_rating", "sok", "limit"},
+    ),
+    "search_hms_incident_narratives": (
+        search_hms_incident_narratives,
+        {"avdeling", "alvorlighetsgrad", "status", "sok", "limit"},
+    ),
+    "get_role_workflows_and_testcases": (get_role_workflows_and_testcases, {"rolle", "kategori"}),
+    "get_daily_ops_inbox": (
+        get_daily_ops_inbox,
+        {
+            "dato",
+            "fra_dato",
+            "til_dato",
+            "aar",
+            "kategori",
+            "hastegrad",
+            "status",
+            "mottaker_rolle",
+            "vurdering_utfall",
+            "sok",
+            "limit",
+        },
+    ),
 }
 
 UKEDAGER = ["mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag", "søndag"]

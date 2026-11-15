@@ -2228,3 +2228,436 @@ def query_building_map_data(
 
     result["etasjer"] = etasjer
     return result
+
+
+def query_kafe_meny_og_salg(
+    kategori: str | None = None,
+    fra_dato: str | None = None,
+    til_dato: str | None = None,
+    limit: int = 100,
+    db_path=None,
+) -> dict:
+    """Henter kafémeny og varesalg fra museum.db (skrivebeskyttet)."""
+    db = _db(db_path)
+    if not _har_tabell("kafe_meny", db) or not _har_tabell("kafe_varesalg", db):
+        return {
+            "feil": "Kafétabeller (kafe_meny / kafe_varesalg) mangler i databasen.",
+            "meny": [],
+            "varesalg": [],
+        }
+
+    try:
+        trygget_limit = max(1, min(int(limit), 500))
+    except (TypeError, ValueError):
+        trygget_limit = 100
+
+    meny_where: list[str] = []
+    meny_params: list = []
+    if kategori and kategori.strip():
+        meny_where.append("LOWER(kategori) = LOWER(?)")
+        meny_params.append(kategori.strip())
+    meny_sql = (
+        "SELECT produkt_id, navn, kategori, pris_nok, varekost_nok, allergener, datakilde "
+        "FROM kafe_meny"
+    )
+    if meny_where:
+        meny_sql += " WHERE " + " AND ".join(meny_where)
+    meny_sql += " ORDER BY produkt_id"
+    meny = [dict(r) for r in execute_read_query(meny_sql, tuple(meny_params), db)]
+
+    salg_where: list[str] = []
+    salg_params: list = []
+    if kategori and kategori.strip():
+        salg_where.append("LOWER(m.kategori) = LOWER(?)")
+        salg_params.append(kategori.strip())
+    if fra_dato and fra_dato.strip():
+        salg_where.append("s.dato >= ?")
+        salg_params.append(fra_dato.strip())
+    if til_dato and til_dato.strip():
+        salg_where.append("s.dato <= ?")
+        salg_params.append(til_dato.strip())
+
+    salg_sql = (
+        "SELECT s.dato, s.produkt_id, m.navn, m.kategori, s.antall, s.omsetning_nok, s.datakilde "
+        "FROM kafe_varesalg s "
+        "LEFT JOIN kafe_meny m ON m.produkt_id = s.produkt_id"
+    )
+    if salg_where:
+        salg_sql += " WHERE " + " AND ".join(salg_where)
+    salg_sql += " ORDER BY s.dato DESC, s.omsetning_nok DESC LIMIT ?"
+    salg_params.append(trygget_limit)
+    varesalg = [dict(r) for r in execute_read_query(salg_sql, tuple(salg_params), db)]
+
+    return {
+        "antall_produkter": len(meny),
+        "meny": meny,
+        "antall_salgslinjer": len(varesalg),
+        "totalt_solgt_antall": sum(int(r.get("antall") or 0) for r in varesalg),
+        "total_omsetning_nok": round(sum(float(r.get("omsetning_nok") or 0) for r in varesalg), 2),
+        "varesalg": varesalg,
+    }
+
+
+def query_besok_og_anmeldelser(
+    kanal: str | None = None,
+    status: str | None = None,
+    tema: str | None = None,
+    fra_dato: str | None = None,
+    til_dato: str | None = None,
+    kun_persondata: bool = False,
+    limit: int = 50,
+    db_path=None,
+) -> dict:
+    """Henter publikumsanmeldelser og daglig besøkstilfredshet fra museum.db."""
+    db = _db(db_path)
+    har_anm = _har_tabell("anmeldelser", db)
+    har_tilfr = _har_tabell("besok_tilfredshet", db)
+    if not har_anm and not har_tilfr:
+        return {
+            "feil": "Tabellene anmeldelser og besok_tilfredshet mangler i databasen.",
+            "anmeldelser": [],
+            "besok_tilfredshet": [],
+        }
+
+    try:
+        trygget_limit = max(1, min(int(limit), 500))
+    except (TypeError, ValueError):
+        trygget_limit = 50
+
+    anmeldelser: list[dict] = []
+    if har_anm:
+        anm_where: list[str] = []
+        anm_params: list = []
+        if kanal and kanal.strip():
+            anm_where.append("LOWER(kanal) = LOWER(?)")
+            anm_params.append(kanal.strip())
+        if status and status.strip():
+            anm_where.append("LOWER(status) = LOWER(?)")
+            anm_params.append(status.strip())
+        if tema and tema.strip():
+            anm_where.append("LOWER(tema) LIKE LOWER(?)")
+            anm_params.append(f"%{tema.strip()}%")
+        if fra_dato and fra_dato.strip():
+            anm_where.append("dato >= ?")
+            anm_params.append(fra_dato.strip())
+        if til_dato and til_dato.strip():
+            anm_where.append("dato <= ?")
+            anm_params.append(til_dato.strip())
+        if kun_persondata:
+            anm_where.append("inneholder_persondata = 1")
+
+        anm_sql = (
+            "SELECT anmeldelse_id, dato, kanal, stjerner, tema, utstilling_id, produkt_id, "
+            "tekst, allergen_pastand, allergen_stemmer_med_meny, inneholder_persondata, "
+            "ansvarlig_rolle, status, besvart_dato, svartid_dager, svartekst, tiltak, datakilde "
+            "FROM anmeldelser"
+        )
+        if anm_where:
+            anm_sql += " WHERE " + " AND ".join(anm_where)
+        anm_sql += " ORDER BY dato DESC, anmeldelse_id LIMIT ?"
+        anm_params.append(trygget_limit)
+        anmeldelser = [dict(r) for r in execute_read_query(anm_sql, tuple(anm_params), db)]
+
+    tilfredshet: list[dict] = []
+    if har_tilfr:
+        tilfr_where: list[str] = []
+        tilfr_params: list = []
+        if fra_dato and fra_dato.strip():
+            tilfr_where.append("dato >= ?")
+            tilfr_params.append(fra_dato.strip())
+        if til_dato and til_dato.strip():
+            tilfr_where.append("dato <= ?")
+            tilfr_params.append(til_dato.strip())
+
+        tilfr_sql = (
+            "SELECT dato, antall_svar, score_utstilling, score_kafe, score_service, "
+            "score_totalt, publikumsvakter, kafe_vakter, datakilde "
+            "FROM besok_tilfredshet"
+        )
+        if tilfr_where:
+            tilfr_sql += " WHERE " + " AND ".join(tilfr_where)
+        tilfr_sql += " ORDER BY dato DESC LIMIT ?"
+        tilfr_params.append(trygget_limit)
+        tilfredshet = [dict(r) for r in execute_read_query(tilfr_sql, tuple(tilfr_params), db)]
+
+    return {
+        "antall_anmeldelser": len(anmeldelser),
+        "anmeldelser": anmeldelser,
+        "antall_tilfredshet_dager": len(tilfredshet),
+        "besok_tilfredshet": tilfredshet,
+    }
+
+
+def query_hms_avvik_tekst(
+    avdeling: str | None = None,
+    alvorlighetsgrad: str | None = None,
+    status: str | None = None,
+    sok: str | None = None,
+    limit: int = 50,
+    db_path=None,
+) -> dict:
+    """Henter detaljerte HMS-avviksbeskrivelser og strakstiltak fra museum.db."""
+    db = _db(db_path)
+    if not _har_tabell("hms_avvik_tekst", db):
+        return {
+            "feil": "Tabellen hms_avvik_tekst mangler i databasen.",
+            "avvik": [],
+        }
+
+    try:
+        trygget_limit = max(1, min(int(limit), 500))
+    except (TypeError, ValueError):
+        trygget_limit = 50
+
+    where: list[str] = []
+    params: list = []
+    if avdeling and avdeling.strip():
+        where.append("LOWER(avdeling) = LOWER(?)")
+        params.append(avdeling.strip())
+    if alvorlighetsgrad and alvorlighetsgrad.strip():
+        where.append("LOWER(alvorlighetsgrad) = LOWER(?)")
+        params.append(alvorlighetsgrad.strip())
+    if status and status.strip():
+        where.append("LOWER(status) = LOWER(?)")
+        params.append(status.strip())
+    if sok and sok.strip():
+        where.append("(LOWER(beskrivelse) LIKE LOWER(?) OR LOWER(strakstiltak) LIKE LOWER(?))")
+        term = f"%{sok.strip()}%"
+        params.extend([term, term])
+
+    sql = (
+        "SELECT avvik_id, dato, avdeling, stasjon, alvorlighetsgrad, beskrivelse, "
+        "strakstiltak, ansvarlig_rolle, status, datakilde "
+        "FROM hms_avvik_tekst"
+    )
+    if where:
+        sql += " WHERE " + " AND ".join(where)
+    sql += " ORDER BY dato DESC, avvik_id LIMIT ?"
+    params.append(trygget_limit)
+    avvik = [dict(r) for r in execute_read_query(sql, tuple(params), db)]
+
+    return {
+        "antall": len(avvik),
+        "avvik": avvik,
+    }
+
+
+def query_arbeidsflyt_og_testcaser(
+    rolle: str | None = None,
+    kategori: str | None = None,
+    db_path=None,
+) -> dict:
+    """Henter rollebaserte arbeidsoppgaver, målgrupper, opplæringsroller og testcaser."""
+    db = _db(db_path)
+    rolle_filter = rolle.strip() if rolle and rolle.strip() else None
+    kat_filter = kategori.strip() if kategori and kategori.strip() else None
+
+    arbeidsflyt_roller: list[dict] = []
+    if _har_tabell("arbeidsflyt_roller", db):
+        sql = "SELECT rolle, oppgave_id, tittel, beskrivelse, verktoy, datakilde FROM arbeidsflyt_roller"
+        params: list = []
+        if rolle_filter:
+            sql += " WHERE LOWER(rolle) = LOWER(?)"
+            params.append(rolle_filter)
+        sql += " ORDER BY rolle, oppgave_id"
+        arbeidsflyt_roller = [dict(r) for r in execute_read_query(sql, tuple(params), db)]
+
+    arbeidsrolle_malgruppe: list[dict] = []
+    if _har_tabell("arbeidsrolle_malgruppe", db):
+        sql = "SELECT rolle, malgruppe_term, datakilde FROM arbeidsrolle_malgruppe"
+        params = []
+        if rolle_filter:
+            sql += " WHERE LOWER(rolle) = LOWER(?)"
+            params.append(rolle_filter)
+        sql += " ORDER BY rolle, malgruppe_term"
+        arbeidsrolle_malgruppe = [dict(r) for r in execute_read_query(sql, tuple(params), db)]
+
+    arbeidsrolle_opplaering: list[dict] = []
+    if _har_tabell("arbeidsrolle_opplaering", db):
+        sql = "SELECT rolle, opplaeringsrolle, datakilde FROM arbeidsrolle_opplaering"
+        params = []
+        if rolle_filter:
+            sql += " WHERE LOWER(rolle) = LOWER(?)"
+            params.append(rolle_filter)
+        sql += " ORDER BY rolle, opplaeringsrolle"
+        arbeidsrolle_opplaering = [dict(r) for r in execute_read_query(sql, tuple(params), db)]
+
+    ansatt_testcaser: list[dict] = []
+    if _har_tabell("ansatt_testcaser", db):
+        where: list[str] = []
+        params = []
+        if rolle_filter:
+            where.append("LOWER(arbeidsrolle) = LOWER(?)")
+            params.append(rolle_filter)
+        if kat_filter:
+            where.append("LOWER(kategori) = LOWER(?)")
+            params.append(kat_filter)
+        sql = (
+            "SELECT case_id, arbeidsrolle, ansatt_id, forventet_navn, kategori, begrunnelse, datakilde "
+            "FROM ansatt_testcaser"
+        )
+        if where:
+            sql += " WHERE " + " AND ".join(where)
+        sql += " ORDER BY case_id"
+        ansatt_testcaser = [dict(r) for r in execute_read_query(sql, tuple(params), db)]
+
+    return {
+        "arbeidsflyt_roller": arbeidsflyt_roller,
+        "arbeidsrolle_malgruppe": arbeidsrolle_malgruppe,
+        "arbeidsrolle_opplaering": arbeidsrolle_opplaering,
+        "ansatt_testcaser": ansatt_testcaser,
+        "antall": {
+            "arbeidsflyt_roller": len(arbeidsflyt_roller),
+            "arbeidsrolle_malgruppe": len(arbeidsrolle_malgruppe),
+            "arbeidsrolle_opplaering": len(arbeidsrolle_opplaering),
+            "ansatt_testcaser": len(ansatt_testcaser),
+        },
+    }
+
+
+def query_daglig_driftsinnboks(
+    dato: str | None = None,
+    fra_dato: str | None = None,
+    til_dato: str | None = None,
+    aar: int | None = None,
+    kategori: str | None = None,
+    hastegrad: str | None = None,
+    status: str | None = None,
+    mottaker_rolle: str | None = None,
+    vurdering_utfall: str | None = None,
+    sok: str | None = None,
+    limit: int = 50,
+    db_path=None,
+) -> dict:
+    """Henter daglige driftsmeldinger, e-post/SMS-triage, lov-/SOP-treff og forslag til svarutkast."""
+    db = _db(db_path)
+    if not _har_tabell("driftsmeldinger_epost", db) or not _har_tabell("driftsmeldinger_tiltak", db):
+        return {
+            "feil": "Tabellene driftsmeldinger_epost og/eller driftsmeldinger_tiltak mangler i databasen.",
+            "meldinger": [],
+            "dagens_kritiske_saker": [],
+        }
+
+    try:
+        trygget_limit = max(1, min(int(limit), 500))
+    except (TypeError, ValueError):
+        trygget_limit = 50
+
+    where: list[str] = []
+    params: list = []
+    if dato and dato.strip():
+        where.append("e.dato = ?")
+        params.append(dato.strip())
+    if fra_dato and fra_dato.strip():
+        where.append("e.dato >= ?")
+        params.append(fra_dato.strip())
+    if til_dato and til_dato.strip():
+        where.append("e.dato <= ?")
+        params.append(til_dato.strip())
+    if aar is not None:
+        where.append("e.aar = ?")
+        params.append(int(aar))
+    if kategori and kategori.strip():
+        where.append("LOWER(e.kategori) = LOWER(?)")
+        params.append(kategori.strip())
+    if hastegrad and hastegrad.strip():
+        where.append("LOWER(e.hastegrad) = LOWER(?)")
+        params.append(hastegrad.strip())
+    if status and status.strip():
+        where.append("LOWER(t.status) = LOWER(?)")
+        params.append(status.strip())
+    if mottaker_rolle and mottaker_rolle.strip():
+        where.append("LOWER(e.mottaker_rolle) = LOWER(?)")
+        params.append(mottaker_rolle.strip())
+    if vurdering_utfall and vurdering_utfall.strip():
+        where.append("LOWER(t.vurdering_utfall) = LOWER(?)")
+        params.append(vurdering_utfall.strip())
+    if sok and sok.strip():
+        term = f"%{sok.strip()}%"
+        where.append(
+            "(LOWER(e.emne) LIKE LOWER(?) OR LOWER(e.meldingstekst) LIKE LOWER(?) "
+            "OR LOWER(t.foreslatt_tiltak) LIKE LOWER(?) OR LOWER(t.epost_sms_utkast) LIKE LOWER(?) "
+            "OR LOWER(e.melding_id) LIKE LOWER(?))"
+        )
+        params.extend([term, term, term, term, term])
+
+    base_join = (
+        "FROM driftsmeldinger_epost e "
+        "LEFT JOIN driftsmeldinger_tiltak t ON t.melding_id = e.melding_id "
+        "LEFT JOIN hr_ansatte a ON a.ansatt_id = e.ansatt_id "
+        "LEFT JOIN saler s ON s.id = e.sal_id "
+        "LEFT JOIN utstillinger_historikk u ON u.utstilling_id = e.utstilling_id "
+        "LEFT JOIN handbok_oppslag h ON h.punkt_id = t.handbok_punkt_id "
+    )
+
+    sql = (
+        "SELECT e.melding_id, e.dato, e.klokkeslett, e.aar, e.kanal, e.kategori, "
+        "e.hastegrad, e.ansatt_id, a.navn AS ansatt_navn, e.mottaker_rolle, "
+        "e.sal_id, s.navn AS sal_navn, e.utstilling_id, u.tittel AS utstilling_navn, "
+        "e.emne, e.meldingstekst, e.inneholder_persondata, "
+        "t.tiltak_id, t.ansvarlig_rolle, t.handbok_punkt_id, h.avsnitt_tittel AS handbok_tittel, "
+        "t.lovhjemmel, t.vurdering_utfall, t.foreslatt_tiltak, t.epost_sms_utkast, "
+        "t.status, t.svartid_timer, t.lost_dato, e.datakilde "
+        + base_join
+    )
+    if where:
+        sql += " WHERE " + " AND ".join(where)
+    sql += " ORDER BY e.dato DESC, e.klokkeslett DESC, e.melding_id DESC LIMIT ?"
+    meldinger = [dict(r) for r in execute_read_query(sql, tuple([*params, trygget_limit]), db)]
+
+    oversikt_row = dict(
+        execute_read_query(
+            "SELECT COUNT(*) AS totalt_antall, "
+            "SUM(CASE WHEN aar BETWEEN 2010 AND 2019 THEN 1 ELSE 0 END) AS antall_2010_2019, "
+            "SUM(CASE WHEN aar BETWEEN 2020 AND 2026 THEN 1 ELSE 0 END) AS antall_2020_2026 "
+            "FROM driftsmeldinger_epost",
+            (),
+            db,
+        )[0]
+    )
+    totalt = oversikt_row.get("totalt_antall") or 0
+    nyere = oversikt_row.get("antall_2020_2026") or 0
+    oversikt_row["andel_2020_2026_prosent"] = round((nyere / totalt) * 100.0, 1) if totalt else 0.0
+    oversikt_row["per_kategori"] = {
+        r["kategori"]: r["antall"]
+        for r in execute_read_query(
+            "SELECT kategori, COUNT(*) AS antall FROM driftsmeldinger_epost GROUP BY kategori ORDER BY antall DESC",
+            (),
+            db,
+        )
+    }
+    oversikt_row["per_hastegrad"] = {
+        r["hastegrad"]: r["antall"]
+        for r in execute_read_query(
+            "SELECT hastegrad, COUNT(*) AS antall FROM driftsmeldinger_epost GROUP BY hastegrad ORDER BY antall DESC",
+            (),
+            db,
+        )
+    }
+    oversikt_row["per_status"] = {
+        r["status"]: r["antall"]
+        for r in execute_read_query(
+            "SELECT status, COUNT(*) AS antall FROM driftsmeldinger_tiltak GROUP BY status ORDER BY antall DESC",
+            (),
+            db,
+        )
+    }
+
+    kritiske_sql = (
+        "SELECT e.melding_id, e.dato, e.klokkeslett, e.kanal, e.kategori, e.hastegrad, "
+        "e.mottaker_rolle, e.emne, t.handbok_punkt_id, t.lovhjemmel, t.vurdering_utfall, "
+        "t.foreslatt_tiltak, t.epost_sms_utkast, t.status "
+        "FROM driftsmeldinger_epost e "
+        "LEFT JOIN driftsmeldinger_tiltak t ON t.melding_id = e.melding_id "
+        "WHERE t.status IN ('ÅPEN', 'ESKALERT') OR e.hastegrad = 'KRITISK' "
+        "ORDER BY e.dato DESC, e.klokkeslett DESC, e.melding_id DESC LIMIT 10"
+    )
+    dagens_kritiske = [dict(r) for r in execute_read_query(kritiske_sql, (), db)]
+
+    return {
+        "historikk_oversikt": oversikt_row,
+        "treff_antall": len(meldinger),
+        "meldinger": meldinger,
+        "dagens_kritiske_saker": dagens_kritiske,
+    }
+
