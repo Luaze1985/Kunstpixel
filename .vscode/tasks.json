@@ -2,11 +2,17 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Databasekvalitet (klartekst)",
+      "label": "1. Sjekk helse, kunnskapsgraf & LLM-tilgjengelighet (Ctrl+Shift+B)",
       "type": "shell",
-      "command": "py -3.13 scripts/db_kvalitet.py --problems --stille --rapport apning",
-      "presentation": { "reveal": "never", "panel": "dedicated", "clear": true, "focus": false, "showReuseMessage": false, "close": true },
-      "runOptions": { "runOn": "folderOpen" },
+      "command": "py -3.13 scripts/sjekk_kunnskapsgraf.py --problems ; py -3.13 scripts/db_kvalitet.py --fra-data --problems --rapport lagring ; code -r .scratch/kvalitet/KUNNSKAPSGRAF_FOR_LLM.md .scratch/kvalitet/RAPPORT.md",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true,
+        "focus": true,
+        "showReuseMessage": false,
+        "close": false
+      },
       "problemMatcher": {
         "owner": "db-kvalitet",
         "fileLocation": ["relative", "${workspaceFolder}"],
@@ -21,9 +27,55 @@
       "group": { "kind": "build", "isDefault": true }
     },
     {
+      "label": "Databasekvalitet ved oppstart (stille bakgrunnssjekk)",
+      "type": "shell",
+      "command": "py -3.13 scripts/sjekk_kunnskapsgraf.py --problems ; py -3.13 scripts/db_kvalitet.py --problems --stille --rapport apning",
+      "presentation": {
+        "reveal": "never",
+        "panel": "dedicated",
+        "clear": true,
+        "focus": false,
+        "showReuseMessage": false,
+        "close": true
+      },
+      "runOptions": { "runOn": "folderOpen" },
+      "problemMatcher": {
+        "owner": "db-kvalitet",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^PROBLEM\\|(error|warning)\\|([^|]+)\\|(\\d+)\\|(.*)$",
+          "severity": 1,
+          "file": 2,
+          "line": 3,
+          "message": 4
+        }
+      }
+    },
+    {
+      "label": "Kunnskapsgraf & LLM-dekning (rask sjekk)",
+      "type": "shell",
+      "command": "py -3.13 scripts/sjekk_kunnskapsgraf.py --problems ; code -r .scratch/kvalitet/KUNNSKAPSGRAF_FOR_LLM.md",
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
       "label": "Statusport (full, med tester)",
       "type": "shell",
       "command": "py -3.13 scripts/db_status_gate.py",
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Statusport (rask, uten pytest)",
+      "type": "shell",
+      "command": "py -3.13 scripts/db_status_gate.py --uten-pytest",
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Prøvebygg museum.db (--check, skrivebeskyttet)",
+      "type": "shell",
+      "command": "py -3.13 src/kunstpixel/data/build_museum_db.py --check",
       "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
       "problemMatcher": []
     },
@@ -33,20 +85,88 @@
       "command": "py -3.13 -m pytest -q",
       "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
       "problemMatcher": [],
-      "group": "test"
+      "group": { "kind": "test", "isDefault": true }
     },
     {
-      "label": "Åpne kvalitetsrapport",
+      "label": "Tester: CSV- og datakvalitet",
       "type": "shell",
-      "command": "code -r .scratch/kvalitet/RAPPORT.md",
-      "presentation": { "reveal": "never", "close": true },
-      "problemMatcher": []
+      "command": "py -3.13 -m pytest tests/test_data_csv.py tests/test_db_quality.py -v",
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": [],
+      "group": "test"
     },
     {
       "label": "MVP-fremdrift",
       "type": "shell",
       "command": "py -3.13 -m pytest tests/test_mvp_oppslag.py tests/test_mvp_bemanning.py -q",
       "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Demo / Datafinner (uten KI, port 8010)",
+      "type": "shell",
+      "command": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start_demo.ps1",
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Demo / Datafinner (med KI, port 8010)",
+      "type": "shell",
+      "command": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start_demo.ps1 -KI",
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Museumsvert CLI (interaktiv)",
+      "type": "shell",
+      "command": "py -3.13 src/cli.py",
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true, "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Museumsvert CLI: Rask test ('Hvor finner jeg Skrik?')",
+      "type": "shell",
+      "command": "py -3.13 src/cli.py \"Hvor finner jeg Skrik?\"",
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Web-chat for gründerne (port 8000)",
+      "type": "shell",
+      "command": "py -3.13 src/kunstpixel/adapters/chat_hub.py",
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Intern assistent HR/HMS/drift (port 8001)",
+      "type": "shell",
+      "command": "py -3.13 src/kunstpixel/adapters/intern_hub.py",
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Deterministisk verifisering (verify.ps1)",
+      "type": "shell",
+      "command": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode manual",
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: Bygg og test demo-container lokalt",
+      "type": "shell",
+      "command": "docker build -f deploy/demo/Dockerfile -t kunstpixel-datafinner:demo . ; if ($LASTEXITCODE -eq 0) { powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test_demo_container.ps1 }",
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Åpne kvalitetsrapport & kunnskapsgraf",
+      "type": "shell",
+      "command": "code -r .scratch/kvalitet/KUNNSKAPSGRAF_FOR_LLM.md .scratch/kvalitet/RAPPORT.md",
+      "presentation": { "reveal": "never", "close": true },
       "problemMatcher": []
     }
   ]
