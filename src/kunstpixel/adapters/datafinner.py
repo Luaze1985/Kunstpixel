@@ -65,6 +65,7 @@ from src.kunstpixel.core.bunnlinje import (
     get_result_trend,
     get_team_efficiency,
 )
+from src.kunstpixel.core.driftsoversikt import get_today_overview, get_week_overview
 from src.kunstpixel.core.hr_cases import (
     discover_hr_cases,
     investigate_hr_case,
@@ -109,6 +110,8 @@ ASSETS = {
     # Markupen til vaktrommet. Skallet henter stegene herfra, så de finnes ett sted.
     "/vaktrom-innhold": ("vaktrom-innhold.html", "text/html; charset=utf-8"),
     "/vaktrom.js": ("vaktrom.js", "text/javascript; charset=utf-8"),
+    # Rene visningsfunksjoner for ledelsessiden (status, normalt, etiketter). Testes i Node.
+    "/ledelse.js": ("ledelse.js", "text/javascript; charset=utf-8"),
     "/af.css": ("af.css", "text/css; charset=utf-8"),
 }
 
@@ -217,6 +220,9 @@ VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
     "get_team_efficiency": (get_team_efficiency, {"maaned"}),
     "get_result_trend": (get_result_trend, {"fra_aar", "til_aar"}),
     "get_exhibition_ranking": (get_exhibition_ranking, {"aar", "limit"}),
+    # Ledelsessiden (spec datafinner-ledelse, etappe 2): «I dag» og uka. Aldri tall etter i dag (D1).
+    "get_today_overview": (get_today_overview, {"dato"}),
+    "get_week_overview": (get_week_overview, {"dato"}),
     # H5 Governance & Onboarding (åpne rutiner, kalender og maler)
     "search_myndighet": (search_myndighet, {"query", "intern_eier"}),
     "get_inspection_routine": (get_inspection_routine, {"ansvarlig"}),

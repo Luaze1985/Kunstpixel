@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Datafinner – ett vindu</title>
 <link rel="stylesheet" href="/af.css">
+<script src="/ledelse.js"></script>
 </head>
 <body class="af" style="margin:0;padding:24px 16px;background:var(--canvas)">
 <div class="af">
@@ -275,7 +276,8 @@
 
   // Generisk visning av et verktøysvar: nøkkeltall, én tabell, resten som liste.
   // Feltnavn til lesbar etikett: antall_pa_jobb → «Antall på jobb».
-  function etikett(k) { var s = k.replace(/_/g, " ").replace(/\bpa\b/g, "på").replace(/\bnok\b/g, "kr").replace(/aa/g, "å").replace(/\bbesok/g, "besøk"); return s.charAt(0).toUpperCase() + s.slice(1); }
+  // Kjente navn (Måned, Formål, År …) slås opp i ledelse.js (F4). Resten får de gamle erstatningene.
+  function etikett(k) { return Ledelse.etikett(k).replace(/\bpa\b/g, "på").replace(/\bnok\b/g, "kr").replace(/aa/g, "å").replace(/\b([Bb])esok/g, "$1esøk"); }
   // Tabell der hver rad kan åpnes. valg.lenke(i) gir adressen til rad i (rapporter, så tilbake lukker detaljen);
   // uten valg.lenke åpnes detaljen rett under tabellen.
   function tabell(rader, valg) {
@@ -544,8 +546,75 @@
     fasit(navn.join(", ") || null, siste.args, kilde);
   }
 
+  // ---------- «I dag» på Hjem (spec datafinner-ledelse, F1). Virker uten KI. ----------
+  // Tallene og statusen kommer fra get_today_overview. Her vises de bare, med ord og form (af-signal).
+  var I_DAG_TALL = ["besok", "vakter", "arrangementer", "driftsmeldinger", "hms_avvik", "driftsmeldinger_eldre"];
+  function iDagKort(m) {
+    var s = el("section", "af-report"), h = el("h2", "af-title", "I dag");
+    h.id = "i-dag-tittel"; s.setAttribute("aria-labelledby", h.id); s.style.marginBottom = "24px"; s.appendChild(h);
+    var ut = el("div"); ut.appendChild(el("p", "af-task-hint", "Henter …")); s.appendChild(ut); m.appendChild(s);
+    var args = { dato: lokalDato(new Date()) };
+    hent("/api/verktoy?navn=get_today_overview&args=" + encodeURIComponent(JSON.stringify(args)))
+      .then(function (d) { tegnIDag(ut, d.resultat || {}); })
+      .catch(function (e) { ut.textContent = ""; feilMelding(ut, "Fant ikke dagens tall", e); });
+  }
+  function tegnIDag(ut, d) {
+    ut.textContent = "";
+    var aapent = d.aapent_i_dag === false ? "Stengt i dag" : d.aapent_i_dag ? "Åpent i dag" : "Åpningstid ukjent";
+    ut.appendChild(el("p", "af-hint", [aapent, Ledelse.datoKort(d.dato), Ledelse.tallPer(d.hentet_kl)].filter(Boolean).join(" · ")));
+    var rutenett = el("div"); rutenett.style.cssText = "display:flex;flex-wrap:wrap;gap:12px;margin:10px 0";
+    var radPlass = el("div");
+    ut.appendChild(rutenett); ut.appendChild(radPlass);
+    I_DAG_TALL.forEach(function (k) { if (d[k]) rutenett.appendChild(maalKort(d[k], k, radPlass)); });
+  }
+  function maalKort(x, k, radPlass) {
+    var harStatus = x.status !== undefined && x.status !== null, sv = Ledelse.statusVisning(x.status);
+    var kort = el("div", "af-signal" + (harStatus && sv.klasse ? " " + sv.klasse : ""));
+    kort.style.cssText = "flex:1 1 240px;max-width:none";
+    var form = el("span", "af-signal-shape"); form.setAttribute("aria-hidden", "true"); kort.appendChild(form);
+    var navn = k === "besok" && x.dato ? "Besøk " + Ledelse.datoKort(x.dato) : x.navn;
+    var tallTekst = x.verdi === null || x.verdi === undefined ? "–" : Ledelse.tall(x.verdi);
+    kort.appendChild(el("p", "af-signal-label", navn + ": " + tallTekst));
+    var hvorfor = harStatus ? sv.tekst + (k === "besok" && x.normalt !== null && x.normalt !== undefined ? " · " + Ledelse.normaltTekst(x.normalt, x.endring_pst) : "") : "Kilde: " + (x.kilde || "museum.db");
+    var why = el("p", "af-signal-why", hvorfor);
+    if (x.rader && x.rader.length) {
+      // Tallet lenker til radene bak (Specify-mønsteret): tabellen åpnes under kortene.
+      var b = el("button", "af-btn af-btn-secondary", "Vis radene"); b.type = "button";
+      b.setAttribute("aria-label", "Vis radene: " + navn);
+      b.style.cssText = "min-height:30px;padding:3px 10px;margin-left:8px;font-size:.78rem";
+      b.addEventListener("click", function () { visRadeneBak(radPlass, navn, x); });
+      why.appendChild(b);
+    }
+    kort.appendChild(why);
+    return kort;
+  }
+  function visRadeneBak(plass, navn, x) {
+    plass.textContent = "";
+    var s = el("section"), h = el("h3", null, navn);
+    h.id = "rader-bak-" + Date.now(); h.tabIndex = -1; s.setAttribute("aria-labelledby", h.id); s.appendChild(h);
+    s.appendChild(el("p", "af-hint", x.rader.length + " rader · kilde: " + (x.kilde || "museum.db")));
+    s.appendChild(tabell(x.rader));
+    var a = el("div", "af-actions"); a.style.cssText = "margin-top:10px;padding-top:0;border:0";
+    if (x.rapport) {
+      // Rapporten åpnes for aktiv rolle hvis den har den, ellers for første rolle som har den.
+      var eier = rolle(aktivRolle) && rolle(aktivRolle).sporsmal.indexOf(x.rapport.sporsmal_id) >= 0 ? aktivRolle
+        : (synligeRoller().filter(function (r) { return r.sporsmal.indexOf(x.rapport.sporsmal_id) >= 0; })[0] || {}).navn;
+      if (eier) {
+        var lenke = el("a", "af-btn af-btn-secondary", "Åpne rapporten");
+        lenke.href = "#" + encodeURIComponent(rapportAdresse(eier, x.rapport.sporsmal_id, x.rapport.args));
+        a.appendChild(lenke);
+      }
+    }
+    var lukk = el("button", "af-btn af-btn-secondary", "Lukk"); lukk.type = "button";
+    lukk.addEventListener("click", function () { plass.textContent = ""; });
+    a.appendChild(lukk); s.appendChild(a);
+    plass.appendChild(s);
+    h.focus({ preventScroll: false });
+  }
+
   function visChat() {
     var m = tom(null, "Spør om data", "Skriv hva du trenger å vite. KI henter fakta fra Kunstpixel-dataene.");
+    iDagKort(m);
     var chatStatus = el("p", "af-chat-status", KI ? "KI konfigurert · " + KI_MODELL + " · syntetiske øvingsdata" : "KI utilgjengelig · syntetiske øvingsdata");
     chatStatus.id = "chat-status"; m.appendChild(chatStatus);
     if (!KI) m.appendChild(el("p", "af-panel-message", KI_AV));

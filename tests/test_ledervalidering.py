@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import sqlite3
 import threading
 from http.server import ThreadingHTTPServer
@@ -273,3 +274,86 @@ def test_mobil_har_hjem_forst(leder_side) -> None:
     forste = page.locator("#mobilvalg option").first
     assert forste.inner_text() == "Hjem" and forste.get_attribute("value") == "flate:chat"
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth + 1")
+
+
+# ---------- Etappe 2 (2026-11-16): kortet «I dag» på Hjem ----------
+
+def _norsk_side(page, naa: str, ki: bool = False):
+    from datetime import datetime
+
+    side = page.context.browser.new_page(viewport={"width": 1400, "height": 900}, timezone_id="Europe/Oslo")
+    side.route("**/api/status", lambda route: route.fulfill(json={"llm": ki, "llm_modell": "Testmodell"}))
+    side.clock.install(time=datetime.fromisoformat(naa))
+    return side
+
+
+def test_i_dag_kortet_virker_uten_ki_paa_stengt_dag(leder_side) -> None:
+    page, base = leder_side
+    side = _norsk_side(page, "2026-11-16T09:05:00+01:00")
+    side.goto(base, wait_until="networkidle")
+    kort = side.get_by_role("region", name="I dag")
+    kort.wait_for()
+    tekst = kort.inner_text()
+    assert "Stengt i dag" in tekst
+    assert "søndag 15.11." in tekst and "391" in tekst  # siste hele åpne dag, ikke dagens syntetiske tall
+    assert "Tall per kl." in tekst
+    assert side.locator("#chat-felt").is_disabled()  # KI av, kortet vises likevel
+    side.close()
+
+
+def test_i_dag_tall_aapner_radene_bak(leder_side) -> None:
+    page, base = leder_side
+    side = _norsk_side(page, "2026-11-16T09:05:00+01:00", ki=True)
+    side.goto(base, wait_until="networkidle")
+    kort = side.get_by_role("region", name="I dag")
+    kort.get_by_role("button", name=re.compile("^Vis radene: Åpne driftsmeldinger")).click()
+    kort.locator("table tbody tr").first.wait_for()
+    assert kort.locator("table tbody tr").count() > 0
+    assert side.locator("#chat-felt").is_enabled()
+    side.close()
+
+
+def test_i_dag_mangler_data_er_aldri_gronn(leder_side) -> None:
+    page, base = leder_side
+    side = _norsk_side(page, "2026-11-16T09:05:00+01:00")
+    side.route("**/api/verktoy?navn=get_today_overview*", lambda route: route.fulfill(json={"resultat": {
+        "dato": "2026-11-16", "aapent_i_dag": True, "hentet_kl": "09:05",
+        "besok": {"navn": "Besøk", "dato": "2026-11-15", "verdi": None, "normalt": None, "endring_pst": None, "status": "Ukjent", "rader": []},
+    }}))
+    side.goto(base, wait_until="networkidle")
+    kort = side.get_by_role("region", name="I dag")
+    kort.get_by_text("Mangler data").wait_for()
+    assert kort.locator(".af-signal.go").count() == 0
+    side.close()
+
+
+def test_i_dag_viser_farlig_tekst_som_tekst(leder_side) -> None:
+    """XSS: navn og radverdier fra serveren skal aldri tolkes som HTML (textContent, ikke innerHTML)."""
+    page, base = leder_side
+    side = _norsk_side(page, "2026-11-16T09:05:00+01:00")
+    farlig = "<img src=x onerror=window.__x=1>"
+    side.route("**/api/verktoy?navn=get_today_overview*", lambda route: route.fulfill(json={"resultat": {
+        "dato": "2026-11-16", "aapent_i_dag": True, "hentet_kl": "09:05",
+        "driftsmeldinger": {"navn": farlig, "verdi": 1, "kilde": farlig,
+                            "rader": [{"dato": "2026-11-14", "emne": farlig, "status": "APEN"}]},
+    }}))
+    side.goto(base, wait_until="networkidle")
+    kort = side.get_by_role("region", name="I dag")
+    kort.get_by_role("button", name=re.compile("^Vis radene")).click()
+    kort.locator("table tbody tr").first.wait_for()
+    assert kort.locator("img").count() == 0
+    assert side.evaluate("window.__x") is None
+    assert farlig in kort.inner_text()
+    side.close()
+
+
+def test_i_dag_paa_mobil_uten_sidelengs_rulling(leder_side) -> None:
+    page, base = leder_side
+    side = _norsk_side(page, "2026-11-16T09:05:00+01:00")
+    side.set_viewport_size({"width": 390, "height": 844})
+    side.goto(base, wait_until="networkidle")
+    kort = side.get_by_role("region", name="I dag")
+    kort.get_by_role("button", name=re.compile("^Vis radene: Åpne driftsmeldinger")).click()
+    kort.locator("table tbody tr").first.wait_for()
+    assert side.evaluate("document.documentElement.scrollWidth <= innerWidth + 1")
+    side.close()

@@ -202,3 +202,17 @@ Kartet står i `docs/plans/2026-11-15-ren-main.md`.
 - **E8. Kafé-blandingen** er synliggjort, ikke løst: tabeller viser stilling, stasjon og målgruppe først. Årsaken er data (vakter fordelt etter avdeling, håndbokens målgruppe per bok), etappe 4. Håndbokens rollefilter gir 0 treff for «Jeg er»-roller.
 - **Utsatt:** Kontroll-avkrysningene fjernes i etappe 3 sammen med handlingslinjen («Godta» må finnes før de går).
 - **Tester:** 13 nye (Playwright i `test_ledervalidering.py`, API i `test_datafinner.py`), alle røde først. Endret med vilje: menynavn, `/arbeidsflyt`- og `/arena`-adressene. Hele pytest: 2290 bestått, 9 hoppet over, 2 ventede feil.
+- Committet på grenen `datafinner-ledelse` (7489e90), ikke på `main`.
+
+## 2026-11-16 — Datafinner etappe 2: «I dag» (spec `docs/specs/datafinner-ledelse.md`)
+
+- **I1. Testgrense (Lars):** dypere tester på enkeltfunksjoner. Utregning i rene funksjoner (`core/ledelse.py`, `datafinner/ledelse.js`), verktøyene i `core/driftsoversikt.py` henter bare rader. Én tynn Playwright-runde for kortet.
+- **I2. Terskler ±15 % (Følg med) og ±30 % (Over terskel)** mot normalt, i `ledelse.TERSKLER`. Lars: dataene er simulert, så dette er et forslag som kan justeres. «Normalt» = snitt for samme ukedag de siste 4 åpne ukene (minst 2, ellers Ukjent).
+- **I3. Fem statuser:** Normal, Følg med, Over terskel, Ukjent («Mangler data», aldri grønn) og Stengt (egen, ikke et fall i besøk). Vises med `af-signal` (ord + form), ikke `af-source`, som betyr kilde/merke (Bekreftet, Systemforslag …).
+- **I4. D1, dagens tall:** besøk vises for siste hele åpne dag, aldri for i dag (de syntetiske tallene for hele dagen finnes allerede). «I dag» viser bare det planlagte: åpent/stengt, vakter per stasjon, arrangementer. En dato etter i dag avvises (400).
+- **I5. Driftsmeldinger deles i to:** åpne siste 30 dager (15) og eldre åpne (198, helt tilbake til 2010). Et samlet «213 åpne» ville bare vært støy.
+- **I6. «Tallet lenker til radene bak»:** radene følger med i svaret og åpnes under kortene med «Vis radene». Vakter har i tillegg «Åpne rapporten» (vaktplan for dagen, aktiv rolle eller første rolle som har den). Avvik fra spec B3, som foreslo en rapportadresse: det fantes ikke rapporter for alle tallene.
+- **I7. Personvern:** svarene har bare summer per stasjon og kategori, aldri ansatt-ID eller navn. **Lars valgte «bare antall per kategori»:** driftsmeldinger på Hjem vises som kategori, antall og antall kritiske. Ingen emnetekst, dato eller mottaker. Vokter: `test_i_dag_lekker_ikke_ansatte_eller_persondata` og `test_i_dag_driftsmeldinger_er_bare_antall_per_kategori`.
+- **I8. Uka (`get_week_overview`) er laget, men ikke vist ennå.** Den blir rapporten «Driften denne uka» (B5), som venter på Lars' ja fordi CSV-ene endres og `museum.db` må bygges. Tilfredshet, anmeldelser og kafé gir «Mangler data» når kilden ikke dekker hele perioden (de stopper 2026-10-29).
+- **I9. Etiketter med æøå** (Måned, Formål, År, Åpent …) fra én ordtabell i `ledelse.js`, brukt i alle tabeller.
+- **Tester:** 68 nye (`test_ledelse.py` 38, `test_ledelse_js.py` 25, Playwright 5). De 66 første var røde først. XSS- og mobiltesten kom etterpå som vakter og var grønne med en gang. Hele pytest: 2361 bestått, 9 hoppet over, 2 ventede feil. Codex-review er ikke kjørt (MCP-tilkoblingen feilet). Kontrollfil: `.scratch/handoffs/CODEX-REVIEW-2026-11-16-etappe2.md`.

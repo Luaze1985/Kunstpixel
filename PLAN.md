@@ -9,6 +9,11 @@
 - Neste: pakke 4 (Datafinner-sperre) og 5 (innholdshash og dokumenter).
 - Funn 2 (rolle fra klienten) er utsatt, og funn 16 (domene og telefon) gjøres ikke. Se `docs/DECISIONS.md`.
 
+## Gjort (2026-11-16): Datafinner etappe 2, «I dag» (DECISIONS I1–I9), grenen `datafinner-ledelse`
+- Kortet «I dag» på Hjem: åpent/stengt, besøk siste hele dag mot normalt, vakter, arrangementer, driftsmeldinger, HMS-avvik. Hvert tall åpner radene bak. Virker uten KI. Hele pytest: 2356 bestått.
+- **Venter på Lars:** ja til B5 (rapporten «Driften denne uka», krever bygging av `museum.db`). Verktøyet `get_week_overview` er klart.
+- **Neste:** etappe 3 (frister og handlinger). Trenger svar på Å1, Å2 og godkjente fristregler (B7) først.
+
 ## Gjort (2026-11-16): Datafinner etappe 1 (DECISIONS E1–E8)
 - Hjem-knapp, brødsmuler, tilbake/frem, klikkbare rader, huskelapp til høyre, Søk/Arbeidsflyter//arena fjernet, rapportmaler og to verktøy rettet. Hele pytest: 2290 bestått.
 - **Spec for etappe 2–4:** [docs/specs/datafinner-ledelse.md](docs/specs/datafinner-ledelse.md) (ready-for-agent, 🔒-oppgaver og åpne spørsmål Å1–Å4 venter på Lars).
