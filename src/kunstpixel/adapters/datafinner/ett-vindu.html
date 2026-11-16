@@ -349,15 +349,21 @@
     return s;
   }
   // Årstall uten tusenskille (2025, ikke 2 025). Andre tall på norsk.
-  function verdi(v, k) { return typeof v === "number" ? (/(^|_)aar$|^ar$/.test(k || "") ? String(v) : v.toLocaleString("nb-NO")) : v === null || v === undefined ? "" : String(v); }
+  function verdi(v, k) {
+    if (typeof v === "boolean") return Ledelse.jaNei(v);
+    if (k === "kategori") return Ledelse.kategoriTekst(v);
+    return typeof v === "number" ? (/(^|_)aar$|^ar$/.test(k || "") ? String(v) : v.toLocaleString("nb-NO")) : v === null || v === undefined ? "" : String(v);
+  }
   function forsteListe(f) { if (Array.isArray(f)) return f; if (f && typeof f === "object") { for (var k in f) if (Array.isArray(f[k]) && f[k].length && typeof f[k][0] === "object") return f[k]; } return null; }
   // Objekt uten liste: én rad per felt, nestede objekter ett nivå ned («SSB · sykefravær prosent»).
-  function objektTabell(obj) {
+  // skjul: valgfri regex for felt som ikke skal med (hjelpefelt som navn, kilde, merknad).
+  function objektTabell(obj, skjul) {
     var rader = [];
+    function vekk(k) { return SKJULT.test(k) || (skjul && skjul.test(k)); }
     Object.keys(obj || {}).forEach(function (k) {
-      if (SKJULT.test(k)) return;
+      if (vekk(k)) return;
       var v = obj[k];
-      if (v && typeof v === "object" && !Array.isArray(v)) Object.keys(v).forEach(function (u) { if (!SKJULT.test(u) && (v[u] === null || typeof v[u] !== "object")) rader.push([etikett(k) + " · " + etikett(u).toLowerCase(), v[u], u]); });
+      if (v && typeof v === "object" && !Array.isArray(v)) Object.keys(v).forEach(function (u) { if (!vekk(u) && (v[u] === null || typeof v[u] !== "object")) rader.push([etikett(k) + " · " + etikett(u).toLowerCase(), v[u], u]); });
       else if (!Array.isArray(v)) rader.push([etikett(k), v, k]);
     });
     var wrap = el("div", "af-table-wrap"), t = el("table", "af-table"), tb = el("tbody");
@@ -401,9 +407,13 @@
     var kp = nokkeltall(tall, r.args); if (kp) rap.appendChild(kp);
     var faktaVisning = liste ? tabell(liste, { lenke: nav.lenke }) :Array.isArray(r.fakta) ? "Ingen treff." : r.fakta && typeof r.fakta === "object" ? objektTabell(r.fakta) : String(r.fakta);
     // Svar med både en liste og andre tall (f.eks. «Driften denne uka»): resten av tallene under «Flere tall».
+    // Merknaden (f.eks. «dette er forrige uke») står over tabellen, ikke gjemt i «Flere tall».
     if (liste && r.fakta && !Array.isArray(r.fakta)) {
-      var flere = el("details"); flere.appendChild(el("summary", null, "Flere tall")); flere.appendChild(objektTabell(r.fakta));
-      var samlet = el("div"); samlet.appendChild(faktaVisning); samlet.appendChild(flere); faktaVisning = samlet;
+      var flere = el("details"); flere.appendChild(el("summary", null, "Flere tall"));
+      flere.appendChild(objektTabell(r.fakta, /^(navn|kilde|merknad|hentet_kl|viser_forrige_uke)$/));
+      var samlet = el("div");
+      if (typeof r.fakta.merknad === "string") samlet.appendChild(el("p", "af-hint", r.fakta.merknad));
+      samlet.appendChild(faktaVisning); samlet.appendChild(flere); faktaVisning = samlet;
     }
     var fakta = blokk("Fakta", faktaVisning, MERKE.verifiser); rap.appendChild(fakta);
     var v = r.vurdering || {}, harRegel = !!(v.vurdering || v.forslag);

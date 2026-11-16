@@ -66,3 +66,27 @@ def test_dato_kort() -> None:
 ])
 def test_etiketter_med_aeoeaa(felt: str, etikett: str) -> None:
     assert js(f"L.etikett({json.dumps(felt)})") == etikett
+
+
+@pytest.mark.parametrize("felt,etikett", [
+    ("besok_uka", "Besøk i uka"),
+    ("endring_forrige_uke_pst", "Endring mot forrige uke (%)"),
+    ("endring_i_fjor_pst", "Endring mot i fjor (%)"),
+    ("driftsmeldinger_aapnet", "Driftsmeldinger åpnet"),
+])
+def test_etiketter_for_ukerapporten(felt: str, etikett: str) -> None:
+    assert js(f"L.etikett({json.dumps(felt)})") == etikett
+
+
+@pytest.mark.parametrize("verdi,tekst", [
+    ("klima_og_samling", "Klima og samling"),
+    ("kafe_og_allergen", "Kafé og allergen"),
+    ("hms_og_sikkerhet", "HMS og sikkerhet"),
+    ("SIKKERHET", "SIKKERHET"),
+])
+def test_kategorinavn_uten_understrek(verdi: str, tekst: str) -> None:
+    assert js(f"L.kategoriTekst({json.dumps(verdi)})") == tekst
+
+
+def test_ja_nei() -> None:
+    assert js("[L.jaNei(true), L.jaNei(false)]") == ["Ja", "Nei"]

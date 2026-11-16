@@ -49,15 +49,26 @@
     stoette: "Støtte", sporsmal: "Spørsmål", forslag: "Forslag", losning: "Løsning", lost_dato: "Løst dato",
     neste_kontroll: "Neste kontroll", berort_sal_id: "Berørt sal", alvorlighetsgrad: "Alvorlighetsgrad",
     klokkeslett_start: "Starter", klokkeslett_slutt: "Slutter", inneholder_persondata: "Persondata",
-    forrige_uke: "Forrige uke", i_fjor: "I fjor"
+    forrige_uke: "Forrige uke", i_fjor: "I fjor",
+    besok_uka: "Besøk i uka", endring_forrige_uke_pst: "Endring mot forrige uke (%)",
+    endring_i_fjor_pst: "Endring mot i fjor (%)", driftsmeldinger_aapnet: "Driftsmeldinger åpnet"
   };
+  // Kategoriverdier som «klima_og_samling» vises som «Klima og samling». Andre verdier (ID-er, STORE ord) står urørt.
+  var ORD_I_VERDI = { kafe: "kafé", hms: "HMS", sykefraver: "sykefravær", aapent: "åpent" };
+  function kategoriTekst(v) {
+    if (typeof v !== "string" || !/^[a-z0-9]+(_[a-z0-9]+)+$/.test(v)) return v;
+    var t = v.split("_").map(function (o) { return ORD_I_VERDI[o] || o; }).join(" ");
+    return t.charAt(0).toUpperCase() + t.slice(1);
+  }
+  function jaNei(b) { return b ? "Ja" : "Nei"; }
   function etikett(felt) {
     if (ORD[felt]) return ORD[felt];
     var t = String(felt || "").replace(/_/g, " ");
     return t.charAt(0).toUpperCase() + t.slice(1);
   }
 
-  var api = { statusVisning: statusVisning, normaltTekst: normaltTekst, tallPer: tallPer, datoKort: datoKort, etikett: etikett, tall: tall };
+  var api = { statusVisning: statusVisning, normaltTekst: normaltTekst, tallPer: tallPer, datoKort: datoKort, etikett: etikett, tall: tall,
+    kategoriTekst: kategoriTekst, jaNei: jaNei };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else rot.Ledelse = api;
 })(this);

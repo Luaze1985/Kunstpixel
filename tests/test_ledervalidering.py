@@ -359,6 +359,32 @@ def test_driften_uka_viser_dagene_og_flere_tall(leder_side) -> None:
     assert "Tilfredshet" in page.locator("main").inner_text()
 
 
+def test_driften_uka_er_lesbar_for_leder(leder_side) -> None:
+    """Helsesjekk 2026-11-16: merknaden synlig øverst, norske etiketter, ingen true/false eller rå hjelpefelt."""
+    page, base = leder_side
+    page.goto(_adr(base, "rolle:Driftsansvarlig/driften-uka?dato=2026-11-14"), wait_until="networkidle")
+    page.get_by_role("heading", name="Driften denne uka").wait_for()
+    page.get_by_text("Besøk sammenlignes med de samme ukedagene", exact=False).first.wait_for()
+    assert page.get_by_text("Besøk sammenlignes", exact=False).first.is_visible()  # ikke gjemt i «Flere tall»
+    assert "Endring mot forrige uke (%)" in page.locator(".af-kpis").inner_text()
+    page.get_by_text("Flere tall", exact=True).click()
+    tekst = page.locator("main").inner_text()
+    assert "true" not in tekst and "false" not in tekst
+    assert "· navn" not in tekst and "Hentet kl" not in tekst
+
+
+def test_i_dag_kategorinavn_uten_understrek(leder_side) -> None:
+    page, base = leder_side
+    side = _norsk_side(page, "2026-11-16T09:05:00+01:00")
+    side.goto(base, wait_until="networkidle")
+    kort = side.get_by_role("region", name="I dag")
+    kort.get_by_role("button", name=re.compile("^Vis radene: Åpne driftsmeldinger")).click()
+    kort.locator("table tbody tr").first.wait_for()
+    tabell = kort.locator("table").inner_text()
+    assert "Klima og samling" in tabell and "klima_og_samling" not in tabell
+    side.close()
+
+
 def test_i_dag_paa_mobil_uten_sidelengs_rulling(leder_side) -> None:
     page, base = leder_side
     side = _norsk_side(page, "2026-11-16T09:05:00+01:00")
