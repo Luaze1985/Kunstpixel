@@ -11,7 +11,8 @@
 
 ## Gjort (2026-11-16): Datafinner etappe 2, «I dag» (DECISIONS I1–I10), grenen `datafinner-ledelse`
 - Kortet «I dag» på Hjem: åpent/stengt, besøk siste hele dag mot normalt, vakter, arrangementer, driftsmeldinger (bare antall per kategori), HMS-avvik. Hvert tall åpner radene bak. Virker uten KI. Committet (13aa545).
-- B5 «Driften denne uka» er laget, men ikke committet. **Lars må bygge:** `py -3.13 src/kunstpixel/data/build_museum_db.py`. Til da er 3 tester røde (to rapporttester og gate-sjekken), og `start_claude.cmd` blokkeres av gate-sjekken.
+- B5 «Driften denne uka» er ferdig. Lars bygget `museum.db`, og den er committet (6641cda). Hele pytest: 2372 bestått, 9 hoppet over, 2 ventede feil.
+- Uavhengig sjekk: kontrollfil til Antigravity i `.scratch/handoffs/AGY-REVIEW-2026-11-16-etappe2.md`. Funnene skal skrives til `AGY-FUNN-2026-11-16.md`.
 - Ukjente endringer i `db.py`, `mcp_server.py`, `test_mcp_server.py`, `AGENTS.md` og `05_data/index.md` (ser ut som K2-arbeid fra en annen økt) er ikke rørt og ikke committet.
 - **Neste:** etappe 3 (frister og handlinger). Trenger svar på Å1, Å2 og godkjente fristregler (B7) først.
 
