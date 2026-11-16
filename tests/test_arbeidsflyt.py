@@ -37,16 +37,12 @@ def test_rolleflyt_og_verktoykatalog():
         with urlopen(base + "/api/verktoykatalog") as response:
             katalog = json.load(response)["verktoy"]
         assert {r["navn"] for r in katalog} == set(VERKTOY)
-        # Arbeidsflyter ligger i skallet (oppgave 08). Den gamle adressen sendes dit med 302.
+        # Arbeidsflyter er fjernet fra skallet (Lars 2026-11-16). API-et består; den gamle adressen går til forsiden.
         con = http.client.HTTPConnection("127.0.0.1", server.server_address[1], timeout=10)
         con.request("GET", "/arbeidsflyt")
         svar = con.getresponse()
-        assert svar.status == 302 and svar.getheader("Location") == "/#flate:arbeidsflyt"
+        assert svar.status == 302 and svar.getheader("Location") == "/"
         con.close()
-        with urlopen(base + "/") as response:
-            side = response.read().decode("utf-8")
-        assert "Velg arbeidsrolle" in side
-        assert "localStorage" in side
         args = quote(json.dumps({"query": "brann", "limit": 2}))
         with urlopen(base + f"/api/verktoy?navn=lookup_handbook&args={args}") as response:
             treff = json.load(response)["resultat"]

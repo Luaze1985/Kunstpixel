@@ -239,7 +239,7 @@ def test_systemprompt_kan_byttes_og_standard_er_uendret() -> None:
 
 def test_sidene_finnes(server: str) -> None:
     # / er skallet (oppgave 08). Vaktrommets markup ligger på /vaktrom-innhold, og /vaktrom sendes til skallet.
-    for sti, tekst in (("/vaktrom-innhold", b"Mine kontaktutkast"), ("/arena", b"Grensemodus"), ("/", b"Fasit")):
+    for sti, tekst in (("/vaktrom-innhold", b"Mine kontaktutkast"), ("/", b"Fasit")):  # /arena er fjernet (2026-11-16)
         with urllib.request.urlopen(server + sti, timeout=20) as res:
             assert res.status == 200 and tekst in res.read()
     with urllib.request.urlopen(server + "/vaktrom", timeout=20) as res:

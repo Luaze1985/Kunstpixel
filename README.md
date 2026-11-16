@@ -46,6 +46,9 @@ Skriptet sjekker Python 3.13, `mcp` 1.29.1, at port 8010 er ledig, sjekksummen t
 * Startsiden åpner «Spør om data». KI brukes når `.env` har leverandør, modell og nøkkel, eller når Claude Code er installert lokalt. Bruk `-UtenKI` for bare rapporter og tabeller. Uten tilgjengelig KI vises en tydelig status; dataene kan fortsatt åpnes.
 * Demoen bruker databasen i den lokale prosjektkopien. Oppstarten kontrollerer sjekksum og datakvalitet før siden åpnes.
 * Skriptet leser bare. Det skriver aldri til databasen og installerer ingenting.
+* Kjører Datafinner fra denne mappen allerede, åpner skriptet bare nettleseren.
+
+**Alltid på (autostart):** `powershell -ExecutionPolicy Bypass -File scripts/autostart.ps1` legger en snarvei i Windows-oppstarten og et bokmerke «Kunstpixel Datafinner» på skrivebordet. Datafinner starter da skjult ved pålogging, med de samme sjekkene. Logg: `.scratch/datafinner_bakgrunn.log`. Slå av med `-Fjern`.
 
 Validering før en lederrunde: se [ledervalidering](docs/LEDER_VALIDERING.md).
 

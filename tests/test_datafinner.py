@@ -118,3 +118,43 @@ def test_api_svarer_paa_hr_og_okonomi(server_url: str, navn: str, args: dict) ->
 
 def test_utstillingsliste_dekker_alle_med_okonomi() -> None:
     assert len(run_tool("list_exhibitions_with_economy", {})) == 102
+
+
+# ---------- Etappe 1 (2026-11-16): hviteliste og gamle adresser ----------
+
+def test_hvitelistens_argumenter_finnes_i_funksjonen() -> None:
+    """Et argument på hvitelisten som funksjonen ikke kjenner, gir TypeError (svar 400) og feil skjema til KI-en."""
+    import inspect
+
+    from src.kunstpixel.adapters.datafinner import VERKTOY
+
+    feil = {}
+    for navn, (fn, tillatt) in VERKTOY.items():
+        params = inspect.signature(fn).parameters
+        if any(p.kind is inspect.Parameter.VAR_KEYWORD for p in params.values()):
+            continue
+        ukjente = set(tillatt) - set(params)
+        if ukjente:
+            feil[navn] = sorted(ukjente)
+    assert feil == {}
+
+
+def test_kafe_og_besoksverktoy_svarer_via_api(server_url: str) -> None:
+    for navn, args in (
+        ("get_cafe_menu_and_sales", {"fra_dato": "2026-11-01", "til_dato": "2026-11-07", "limit": 5}),
+        ("search_visitor_reviews_and_satisfaction", {"fra_dato": "2026-10-01", "limit": 5}),
+    ):
+        status, body = _get(f"{server_url}/api/verktoy?navn={navn}&args={urllib.parse.quote(json.dumps(args))}")
+        assert status == 200, (navn, body[:200])
+
+
+@pytest.mark.parametrize("sti, maal", [("/arena", "/#arena"), ("/arbeidsflyt", "/"), ("/sok.html", "/")])
+def test_fjernede_sider_sendes_til_skallet(server_url: str, sti: str, maal: str) -> None:
+    import http.client
+
+    port = int(server_url.rsplit(":", 1)[1])
+    con = http.client.HTTPConnection("127.0.0.1", port, timeout=10)
+    con.request("GET", sti)
+    svar = con.getresponse()
+    assert svar.status == 302 and svar.getheader("Location") == maal
+    con.close()

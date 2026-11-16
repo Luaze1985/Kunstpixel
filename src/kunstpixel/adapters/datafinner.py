@@ -73,11 +73,14 @@ from src.kunstpixel.core.hr_cases import (
 from src.kunstpixel.core.mcp_server import (
     get_absence_report,
     get_artwork_details,
+    get_cafe_menu_and_sales,
+    get_daily_ops_inbox,
     get_employee_cv,
     get_exhibition_economy,
     get_inspection_routine,
     get_report_assessment,
     get_report_rules,
+    get_role_workflows_and_testcases,
     get_room_artworks,
     get_shift_cost_for_period,
     get_shifts_for_date,
@@ -93,20 +96,16 @@ from src.kunstpixel.core.mcp_server import (
     search_events,
     search_faq,
     search_hms_guidance,
+    search_hms_incident_narratives,
     search_hr_onboarding,
     search_myndighet,
     search_rapportering,
-    get_cafe_menu_and_sales,
     search_visitor_reviews_and_satisfaction,
-    search_hms_incident_narratives,
-    get_role_workflows_and_testcases,
-    get_daily_ops_inbox,
 )
 
 ASSET_DIR = Path(__file__).resolve().parent / "datafinner"
 ASSETS = {
     "/": ("ett-vindu.html", "text/html; charset=utf-8"),  # alt i ett vindu med tre paneler (oppgave 08)
-    "/arena": ("arena.html", "text/html; charset=utf-8"),
     # Markupen til vaktrommet. Skallet henter stegene herfra, så de finnes ett sted.
     "/vaktrom-innhold": ("vaktrom-innhold.html", "text/html; charset=utf-8"),
     "/vaktrom.js": ("vaktrom.js", "text/javascript; charset=utf-8"),
@@ -119,8 +118,11 @@ VIDERESEND = {
     "/ett-vindu": "/",
     "/chat": "/#flate:chat",
     "/vaktrom": "/#flate:vaktrom",
-    "/sok.html": "/#flate:sok",
-    "/arbeidsflyt": "/#flate:arbeidsflyt",
+    # Fjernet fra skallet 2026-11-16 (Lars): Søk, Arbeidsflyter og egen Arena-side med Grensemodus.
+    # API-ene (/api/arbeidsflyt, /api/grense/*) består.
+    "/sok.html": "/",
+    "/arbeidsflyt": "/",
+    "/arena": "/#arena",
 }
 
 # Interne mapper siden kan lese. Bare tekstfiler, aldri skriving.
@@ -239,10 +241,11 @@ VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
     "get_absence_by_person": (vaktrom.get_absence_by_person, {"fra", "til", "stasjon"}),
     "search_hms_guidance": (search_hms_guidance, {"query", "topic", "limit"}),
     "lookup_handbook": (lookup_handbook, {"query", "handbok", "role", "limit"}),
-    "get_cafe_menu_and_sales": (get_cafe_menu_and_sales, {"kategori", "fra", "til", "bare_tilgjengelige"}),
+    # Argumentnavnene må stemme med funksjonen (vokter: test_hvitelistens_argumenter_finnes_i_funksjonen).
+    "get_cafe_menu_and_sales": (get_cafe_menu_and_sales, {"kategori", "fra_dato", "til_dato", "limit"}),
     "search_visitor_reviews_and_satisfaction": (
         search_visitor_reviews_and_satisfaction,
-        {"aar", "sprak", "min_rating", "max_rating", "sok", "limit"},
+        {"kanal", "status", "tema", "fra_dato", "til_dato", "kun_persondata", "limit"},
     ),
     "search_hms_incident_narratives": (
         search_hms_incident_narratives,

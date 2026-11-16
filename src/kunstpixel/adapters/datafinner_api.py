@@ -33,7 +33,8 @@ SPORSMAL: dict[str, dict[str, Any]] = {
     "rapporteringskalender": {"tekst": "Rapporteringskalender og frister", "verktoy": "search_rapportering"},
     "myndighetsoversikt": {"tekst": "Myndighetskrav og tilsynsorganer", "verktoy": "search_myndighet"},
     "tilsynsrutine": {"tekst": "Rutine ved tilsynsbesøk", "verktoy": "get_inspection_routine"},
-    "rapportmaler": {"tekst": "Offisielle rapportmaler", "verktoy": "search_rapportering"},
+    # «parametre»: valgfrie felt som skal vises i skjemaet. Uten mal_id gir verktøyet kalenderen, ikke malen.
+    "rapportmaler": {"tekst": "Offisielle rapportmaler", "verktoy": "search_rapportering", "parametre": ["mal_id"]},
     "onboarding": {"tekst": "Onboarding og HMS-opplæring", "verktoy": "search_hr_onboarding"},
     # Personal og kompetanse, innleide, HMS og håndbøker. Uten rollesperre (spec vaktrom-uten-sperrer).
     "cv": {"tekst": "CV og kompetanse for en person", "verktoy": "get_employee_cv"},

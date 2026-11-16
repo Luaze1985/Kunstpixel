@@ -9,6 +9,11 @@
 - Neste: pakke 4 (Datafinner-sperre) og 5 (innholdshash og dokumenter).
 - Funn 2 (rolle fra klienten) er utsatt, og funn 16 (domene og telefon) gjøres ikke. Se `docs/DECISIONS.md`.
 
+## Gjort (2026-11-16): Datafinner etappe 1 (DECISIONS E1–E8)
+- Hjem-knapp, brødsmuler, tilbake/frem, klikkbare rader, huskelapp til høyre, Søk/Arbeidsflyter//arena fjernet, rapportmaler og to verktøy rettet. Hele pytest: 2290 bestått.
+- **Spec for etappe 2–4:** [docs/specs/datafinner-ledelse.md](docs/specs/datafinner-ledelse.md) (ready-for-agent, 🔒-oppgaver og åpne spørsmål Å1–Å4 venter på Lars).
+- **Neste:** Lars prøver i nettleseren. Så etappe 2 («Driften denne uka»), etappe 3 (handlinger i nettleseren) og etappe 4 (datagenerator for kafévakter, ferdige spørsmål, personvern-casene).
+
 ## Gjort (2026-11-15): ren main (DECISIONS W1–W5)
 - Driftsinnboksen, `museum.db`, hjelpeskriptene og dokumentene er committet. `AGENTS.md` er slått sammen (driftsregler + multiagent-lag). Hele pytest: 2254 bestått, 9 hoppet over, 2 ventede feil. `main` er pushet til GitHub.
 

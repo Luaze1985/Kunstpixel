@@ -122,9 +122,10 @@ def test_api_avviser_ukjent_case(server: str) -> None:
     assert status == 400
 
 
-def test_arenasiden_serveres(server: str) -> None:
+def test_arena_ligger_i_skallet(server: str) -> None:
+    # Egen /arena-side er fjernet (Lars 2026-11-16). Adressen sendes til Arena i skallet.
     with urllib.request.urlopen(f"{server}/arena") as res:
-        assert res.status == 200 and b"class=\"af\"" in res.read()
+        assert res.status == 200 and res.url.endswith("/#arena") and b"class=\"af\"" in res.read()
 
 
 def test_k1_tallene_stemmer_med_databasen() -> None:

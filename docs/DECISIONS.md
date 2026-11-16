@@ -183,3 +183,22 @@ Kartet står i `docs/plans/2026-11-15-ren-main.md`.
 - **H1. `sjekk_kunnskapsgraf.py` måler nå hva demo-Claude når.** Den gamle målingen talte en tabell som dekket hvis navnet sto i en hvilken som helst fil i `src/`, og meldte «61 av 61, 0 blinde». Den nye (`tabeller_via_mcp`) følger kallene fra hvert `@mcp.tool` gjennom funksjoner og konstanter i `core/`. Resultat: 58 av 61. `dagsbesok`, `hr_medarbeidersamtaler` og `hr_innleide_kompetanse` er blinde for MCP (krav K2). Det gamle målet vises fortsatt som «Nevnt i src/». Tester: `tests/test_sjekk_kunnskapsgraf_mcp.py` (3), som var røde først. Hele pytest: 2257 bestått.
 - **Funn i loggjennomgangen (ikke rettet):** `.scratch/bygger-fremdrift.md` (morgenagenten 2026-11-15 09:34) påstår at den har verifisert `check_shift_compliance`, `lookup_handbook_and_sops` og `cases/runner.py`. Ingen av dem finnes i koden. Den oppgir også 34 MCP-verktøy, men `core/mcp_server.py` har 56 `@mcp.tool`. Regel: påstander i agentlogger er ikke bevis før en kommando har kjørt og vist resultatet.
 
+
+## 2026-11-16 — Datafinner alltid på via localhost
+
+- **A1. Datafinner starter skjult ved pålogging** (Lars valgte «alltid på»). `scripts/autostart.ps1` lager snarvei i Windows-oppstarten (`scripts/start_bakgrunn.vbs` -> `start_demo.ps1 -Bakgrunn`) og bokmerke på skrivebordet til `http://127.0.0.1:8010`. Ingen tjeneste, ingen admin, ingen registerendring. Av: `autostart.ps1 -Fjern`.
+- **A2. Samme sjekker som før.** Bakgrunnsstart kjører sjekksum, kvalitet og selvtest; feiler den, starter ikke serveren, og grunnen står i `.scratch/datafinner_bakgrunn.log`.
+- **A3. Port 8010 opptatt:** er det Datafinner fra denne mappen (sjekkes på full sti i prosessens kommandolinje), åpner `start_demo` bare nettleseren. Annen prosess gir STOPP som før.
+- **Ikke testet:** selve påloggingen (krever omstart). Skjult start via `.vbs`, «kjører allerede»-veien og et KI-spørsmål i nettleseren er kjørt og virket.
+## 2026-11-16 — Datafinner etappe 1: navigasjon, opprydding og feil (plan: ~/.claude/plans/jeg-jeg-er-jeg-keen-tulip.md)
+
+- **E1. Oppsett:** venstre = hovedting (Hjem, Finn data: Rapporter og Tabeller, Mer: Arena og Vaktrom), «Jeg er» nederst. Midten = brødsmuler med «← Tilbake» (ett nivå opp) og arbeidet. Høyre = ett huskelapp-kort (fasit) med én knapp «Spør KI om dette». Inspirert av mønsteret Lars viste, ikke kopiert. `af.css` er ikke endret.
+- **E2. Hjem = KI-chatten** (`#flate:chat`), alltid først i meny og mobilvalg. Erstatter menypunktet «Spør om data».
+- **E3. Adressen bærer tilstanden:** rapportvalg (`?dato=…`), åpen rad (`&rad=N`), vaktrom-steg (`flate:vaktrom/<steg>`) og Arena-oversikt (`#arena`). Nettleserens tilbake/frem virker.
+- **E4. Rader kan åpnes:** første celle er en lenke til en detalj med alle felt (ikke bare 5 kolonner). «Vis alle N rader» over 50.
+- **E5. Fjernet (Lars):** Søk, Arbeidsflyter og egen `/arena`-side med Grensemodus. `arena.html` flyttet til `arkiv/2026-11-datafinner-gamle-sider/`. Gamle adresser gir 302. `/api/arbeidsflyt` og `/api/grense/*` består.
+- **E6. «Offisielle rapportmaler» rettet, ikke fjernet** (Lars): den eneste rapporten til Kvalitetsvokter. `SPORSMAL` har nå `parametre: ["mal_id"]`.
+- **E7. Feil rettet:** hvitelisten for `get_cafe_menu_and_sales` og `search_visitor_reviews_and_satisfaction` hadde argumentnavn funksjonen ikke kjenner (vokter: `test_hvitelistens_argumenter_finnes_i_funksjonen`). «I dag» er lokal dato, ikke UTC.
+- **E8. Kafé-blandingen** er synliggjort, ikke løst: tabeller viser stilling, stasjon og målgruppe først. Årsaken er data (vakter fordelt etter avdeling, håndbokens målgruppe per bok), etappe 4. Håndbokens rollefilter gir 0 treff for «Jeg er»-roller.
+- **Utsatt:** Kontroll-avkrysningene fjernes i etappe 3 sammen med handlingslinjen («Godta» må finnes før de går).
+- **Tester:** 13 nye (Playwright i `test_ledervalidering.py`, API i `test_datafinner.py`), alle røde først. Endret med vilje: menynavn, `/arbeidsflyt`- og `/arena`-adressene. Hele pytest: 2290 bestått, 9 hoppet over, 2 ventede feil.

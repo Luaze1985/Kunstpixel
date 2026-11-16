@@ -4,11 +4,20 @@ Start Kunstpixel-demoen: sjekker miljø og database, og åpner Datafinner i nett
 Bruk (fra hvor som helst):
     powershell -ExecutionPolicy Bypass -File scripts/start_demo.ps1        # KI på når .env eller Claude er tilgjengelig
     powershell -ExecutionPolicy Bypass -File scripts/start_demo.ps1 -UtenKI # bare database og rapporter
+    powershell -ExecutionPolicy Bypass -File scripts/start_demo.ps1 -Bakgrunn # autostart: ingen nettleser, logg til .scratch
 
 Skriptet leser bare. Det skriver aldri til 05_data/museum.db og installerer ingenting.
-Stopp demoen med Ctrl+C.
+Kjører Datafinner fra denne mappen allerede, åpnes bare nettleseren.
+Stopp demoen med Ctrl+C (eller avslutt python-prosessen når den kjører i bakgrunnen).
 #>
-param([switch]$KI, [switch]$UtenKI)
+param([switch]$KI, [switch]$UtenKI, [switch]$Bakgrunn)
+
+if ($Bakgrunn) {
+    $env:KUNSTPIXEL_DEMO_IKKE_NETTLESER = '1'
+    $loggmappe = Join-Path (Split-Path -Parent $PSScriptRoot) '.scratch'
+    New-Item -ItemType Directory -Force $loggmappe | Out-Null
+    Start-Transcript -Path (Join-Path $loggmappe 'datafinner_bakgrunn.log') -Force | Out-Null
+}
 
 # Ikke 'Stop': i PowerShell 5.1 blir stderr fra py til feil som ville skjult STOPP-meldingene. Vi sjekker $LASTEXITCODE selv.
 $ErrorActionPreference = 'Continue'
@@ -46,8 +55,16 @@ if ($mcp -ne $ForventetMcp) { Stopp "mcp er $mcp, demoen krever $ForventetMcp." 
 Ok "mcp $mcp"
 
 # 2b. Porten må være ledig, ellers åpner nettleseren en annen Datafinner (f.eks. utviklingskopien).
-if (Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue) {
-    Stopp "Port $Port er allerede i bruk. En annen Datafinner kjører trolig." "Lukk vinduet der den kjører, og start på nytt."
+$Server = Join-Path $Rot 'src\kunstpixel\adapters\datafinner.py'
+$lytter = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1
+if ($lytter) {
+    $kommando = (Get-CimInstance Win32_Process -Filter "ProcessId=$($lytter.OwningProcess)" -ErrorAction SilentlyContinue).CommandLine
+    if ($kommando -and $kommando.ToLower().Contains($Server.ToLower())) {
+        Ok "Datafinner fra denne mappen kjører allerede på http://127.0.0.1:$Port"
+        if (-not $env:KUNSTPIXEL_DEMO_IKKE_NETTLESER) { Start-Process "http://127.0.0.1:$Port" }
+        exit 0
+    }
+    Stopp "Port $Port er allerede i bruk av en annen prosess (trolig en annen Datafinner-kopi)." "Lukk den, og start på nytt."
 }
 Ok "Port $Port er ledig"
 
@@ -108,7 +125,7 @@ Write-Host ""
 Write-Host "Starter Datafinner på $url ... (Ctrl+C for å stoppe)"
 # Start python.exe direkte (ikke py-starteren), så prosessen vi stopper er selve serveren og porten frigjøres.
 $python = (& py -3.13 -c "import sys; print(sys.executable)")
-$proc = Start-Process -FilePath $python -ArgumentList 'src/kunstpixel/adapters/datafinner.py' -WorkingDirectory $Rot -WindowStyle Hidden -PassThru
+$proc = Start-Process -FilePath $python -ArgumentList "`"$Server`"" -WorkingDirectory $Rot -WindowStyle Hidden -PassThru
 $klar = $false
 for ($i = 0; $i -lt 60; $i++) {
     Start-Sleep -Milliseconds 500

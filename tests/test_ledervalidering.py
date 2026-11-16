@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from src.kunstpixel.adapters.datafinner import DatafinnerHandler, SYSTEM_CHAT, run_tool
+from src.kunstpixel.adapters.datafinner import SYSTEM_CHAT, DatafinnerHandler, run_tool
 
 
 @pytest.fixture(scope="module")
@@ -90,7 +90,7 @@ def test_leder_aapner_til_sporsmal_uten_menystoy(leder_side) -> None:
     assert "KI konfigurert" in page.locator("#chat-status").inner_text()
     assert page.locator("#chat-felt").evaluate("(e) => document.activeElement === e")
     assert page.locator("#rollevalg").input_value() == "Museumsdirektør"
-    for navn in ("Spør om data", "Rapporter", "Tabeller"):
+    for navn in ("Hjem", "Rapporter", "Tabeller"):  # «Hjem» er KI-chatten (etappe 1, 2026-11-16)
         assert page.get_by_role("navigation", name="Innhold").get_by_role("button", name=navn).is_visible()
     assert not page.get_by_role("navigation", name="Innhold").get_by_text("Arena", exact=True).is_visible()
     assert not page.get_by_role("complementary", name="Fasit").is_visible()
@@ -155,4 +155,121 @@ def test_mobil_har_sporsmal_og_tabellvei(leder_side) -> None:
     assert page.get_by_role("complementary", name="Fasit").is_visible()
     page.locator("#mobilvalg").select_option("katalog")
     page.get_by_role("heading", name="Alle tabellene i databasen").wait_for()
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth + 1")
+
+
+# ---------- Etappe 1 (2026-11-16): navigasjon, huskelapp og feilrettinger ----------
+
+def _adr(base: str, rute: str) -> str:
+    from urllib.parse import quote
+    return base + "/#" + quote(rute, safe="")
+
+
+def test_meny_har_hjem_og_faa_punkter(leder_side) -> None:
+    page, base = leder_side
+    page.goto(base, wait_until="networkidle")
+    nav = page.get_by_role("navigation", name="Innhold")
+    for navn in ("Hjem", "Rapporter", "Tabeller"):
+        assert nav.get_by_role("button", name=navn, exact=True).is_visible()
+    nav.get_by_text("Mer", exact=True).click()
+    assert nav.get_by_role("button", name="Vaktrom", exact=True).is_visible()
+    tekst = nav.inner_text()
+    assert "Arbeidsflyter" not in tekst and "Søk" not in tekst and "Flater" not in tekst
+    # «Jeg er» ligger nederst i menyen, under navigasjonen.
+    assert page.evaluate("document.getElementById('meny').compareDocumentPosition(document.getElementById('rollevalg')) & Node.DOCUMENT_POSITION_FOLLOWING")
+
+
+def test_hjem_fra_rapport_gaar_til_ki(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "rolle:HR og bemanning/vaktplan"), wait_until="networkidle")
+    page.get_by_role("heading", name="Vaktplan for en dag").wait_for()
+    page.get_by_role("navigation", name="Innhold").get_by_role("button", name="Hjem", exact=True).click()
+    page.get_by_role("heading", name="Spør om data", exact=True).wait_for()
+
+
+def test_brodsmuler_og_tilbake(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "rolle:HR og bemanning/vaktplan"), wait_until="networkidle")
+    sti = page.get_by_role("navigation", name="Du er her")
+    sti.get_by_text("Vaktplan for en dag").wait_for()
+    assert "Rapporter" in sti.inner_text() and "HR og bemanning" in sti.inner_text()
+    page.get_by_role("button", name="Tilbake").click()
+    page.get_by_role("heading", name="HR og bemanning", exact=True).wait_for()
+
+
+def test_rapportvalg_ligger_i_adressen_og_tilbake_virker(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "rolle:HR og bemanning/vaktplan"), wait_until="networkidle")
+    for dato in ("2026-11-14", "2026-11-13"):
+        page.locator("#p-dato").fill(dato)
+        page.get_by_role("button", name="Oppdater").click()
+        page.wait_for_function(f"decodeURIComponent(location.hash).indexOf('dato={dato}') > 0")
+    page.go_back()
+    page.wait_for_function("document.getElementById('p-dato') && document.getElementById('p-dato').value === '2026-11-14'")
+
+
+def test_rad_i_rapport_kan_aapnes_med_alle_felt(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "rolle:Museumsdirektør/rapporteringskalender"), wait_until="networkidle")
+    page.get_by_role("link", name="Brannøvelsesrapport", exact=True).click()
+    detalj = page.get_by_role("region", name="Brannøvelsesrapport")
+    detalj.wait_for()
+    assert "RP-10" in detalj.inner_text()
+    assert "Evaluere evakueringstider" in detalj.inner_text()
+    page.go_back()
+    detalj.wait_for(state="detached")
+
+
+def test_dagens_dato_er_lokal_ikke_utc(leder_side) -> None:
+    from datetime import datetime
+
+    page, base = leder_side
+    norsk = page.context.browser.new_page(viewport={"width": 1400, "height": 900}, timezone_id="Europe/Oslo")
+    norsk.clock.install(time=datetime.fromisoformat("2026-11-16T00:30:00+01:00"))
+    norsk.goto(_adr(base, "rolle:HR og bemanning/vaktplan"), wait_until="networkidle")
+    assert norsk.locator("#p-dato").input_value() == "2026-11-16"
+    norsk.close()
+
+
+def test_rapportmaler_viser_malen_ikke_kalenderen(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "rolle:Kvalitetsvokter/rapportmaler"), wait_until="networkidle")
+    assert page.locator("#p-mal_id").input_value() == "ML-01"
+    page.get_by_text("Driftsrapport").first.wait_for()
+    assert "Brannøvelsesrapport" not in page.locator("#midt").inner_text()
+
+
+def test_vaktliste_viser_stilling_og_stasjon(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "rolle:HR og bemanning/vaktplan"), wait_until="networkidle")
+    page.locator("#p-dato").fill("2026-11-14")
+    page.get_by_role("button", name="Oppdater").click()
+    page.locator("main table thead").first.wait_for()
+    hoder = page.locator("main table thead").first.inner_text()
+    assert "Stilling" in hoder and "Stasjon" in hoder
+
+
+def test_huskelapp_er_ett_kort_med_spor_ki(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "rolle:HR og bemanning/vaktplan"), wait_until="networkidle")
+    fasit = page.get_by_role("complementary", name="Fasit")
+    fasit.wait_for()
+    assert fasit.locator(".af-context-card").count() == 1
+    fasit.get_by_role("button", name="Spør KI om dette").click()
+    page.get_by_role("heading", name="Spør om data", exact=True).wait_for()
+    assert "Vaktplan for en dag" in page.locator("#chat-felt").input_value()
+
+
+def test_vaktrom_steg_ligger_i_adressen(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "flate:vaktrom"), wait_until="networkidle")
+    page.wait_for_function("decodeURIComponent(location.hash) === '#flate:vaktrom/vakt'")
+
+
+def test_mobil_har_hjem_forst(leder_side) -> None:
+    page, base = leder_side
+    page.set_viewport_size({"width": 390, "height": 844})
+    page.goto(_adr(base, "rolle:HR og bemanning/vaktplan"), wait_until="networkidle")
+    forste = page.locator("#mobilvalg option").first
+    assert forste.inner_text() == "Hjem" and forste.get_attribute("value") == "flate:chat"
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth + 1")
