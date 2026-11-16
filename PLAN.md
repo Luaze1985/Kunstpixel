@@ -9,9 +9,10 @@
 - Neste: pakke 4 (Datafinner-sperre) og 5 (innholdshash og dokumenter).
 - Funn 2 (rolle fra klienten) er utsatt, og funn 16 (domene og telefon) gjøres ikke. Se `docs/DECISIONS.md`.
 
-## Gjort (2026-11-16): Datafinner etappe 2, «I dag» (DECISIONS I1–I9), grenen `datafinner-ledelse`
-- Kortet «I dag» på Hjem: åpent/stengt, besøk siste hele dag mot normalt, vakter, arrangementer, driftsmeldinger, HMS-avvik. Hvert tall åpner radene bak. Virker uten KI. Hele pytest: 2356 bestått.
-- **Venter på Lars:** ja til B5 (rapporten «Driften denne uka», krever bygging av `museum.db`). Verktøyet `get_week_overview` er klart.
+## Gjort (2026-11-16): Datafinner etappe 2, «I dag» (DECISIONS I1–I10), grenen `datafinner-ledelse`
+- Kortet «I dag» på Hjem: åpent/stengt, besøk siste hele dag mot normalt, vakter, arrangementer, driftsmeldinger (bare antall per kategori), HMS-avvik. Hvert tall åpner radene bak. Virker uten KI. Committet (13aa545).
+- B5 «Driften denne uka» er laget, men ikke committet. **Lars må bygge:** `py -3.13 src/kunstpixel/data/build_museum_db.py`. Til da er 3 tester røde (to rapporttester og gate-sjekken), og `start_claude.cmd` blokkeres av gate-sjekken.
+- Ukjente endringer i `db.py`, `mcp_server.py`, `test_mcp_server.py`, `AGENTS.md` og `05_data/index.md` (ser ut som K2-arbeid fra en annen økt) er ikke rørt og ikke committet.
 - **Neste:** etappe 3 (frister og handlinger). Trenger svar på Å1, Å2 og godkjente fristregler (B7) først.
 
 ## Gjort (2026-11-16): Datafinner etappe 1 (DECISIONS E1–E8)

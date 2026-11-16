@@ -29,6 +29,7 @@ EKSEMPEL_ARGS = {
     "tilsynsrutine": {},
     "rapportmaler": {"mal_id": "ML-01"},
     "onboarding": {"kategori": "kompetanse_matrise"},
+    "driften-uka": {"dato": "2026-11-14"},  # B5, krever at Lars har bygget museum.db
 }
 
 
@@ -96,6 +97,36 @@ def test_vaktplanen_telles_for_regelen(server: str) -> None:
     assert r["regelverdier"]["antall_vakter"] == len(r["fakta"])
     assert r["regelverdier"]["antall_stasjoner"] == len({v["stasjon"] for v in r["fakta"]})
     assert r["regelverdier"]["timer_totalt"] == round(sum(float(v["timer"]) for v in r["fakta"]), 2)
+
+
+def test_driften_uka_gir_tall_som_regelen_kan_bruke() -> None:
+    """B5: regelen sammenligner besøket mot forrige uke. Manglende tall gir ingen nøkkel (da brukes fallback)."""
+    fakta = {"besok": {"verdi": 1750, "endring_pst": 3.6, "i_fjor_pst": -9.8},
+             "driftsmeldinger": {"aapnet": 9, "lukket": 0}}
+    assert datafinner_api.regelverdier("driften-uka", fakta) == {
+        "besok_uka": 1750, "endring_forrige_uke_pst": 3.6, "endring_i_fjor_pst": -9.8, "driftsmeldinger_aapnet": 9}
+    tom = {"besok": {"verdi": None, "endring_pst": None, "i_fjor_pst": None}, "driftsmeldinger": {"aapnet": None}}
+    assert datafinner_api.regelverdier("driften-uka", tom) == {}
+
+
+def test_driften_uka_er_for_direktor_drift_og_kafe_i_csv() -> None:
+    import csv
+
+    with (ROOT / "05_data/rolle_sporsmal.csv").open(encoding="utf-8", newline="") as f:
+        roller = {r["rolle_kode"] for r in csv.DictReader(f) if r["sporsmal_id"] == "driften-uka"}
+    assert roller == {"A", "F", "M"}  # Museumsdirektør, Driftsansvarlig, Kafeansvarlig
+
+
+def test_hvert_sporsmal_har_regel_og_fallback_i_csv() -> None:
+    """Vokter før databasen er bygget: CSV-ene som bygger museum.db skal dekke alle spørsmålene i SPORSMAL."""
+    import csv
+
+    with (ROOT / "05_data/rolle_sporsmal.csv").open(encoding="utf-8", newline="") as f:
+        i_roller = {r["sporsmal_id"] for r in csv.DictReader(f)}
+    with (ROOT / "05_data/rapport_regler.csv").open(encoding="utf-8", newline="") as f:
+        regler = list(csv.DictReader(f))
+    assert set(datafinner_api.SPORSMAL) == i_roller == {r["sporsmal_id"] for r in regler}
+    assert all(any(r["sporsmal_id"] == s and r["operator"] == "fallback" for r in regler) for s in datafinner_api.SPORSMAL)
 
 
 def test_ukjent_sporsmal_og_ukjent_argument_gir_400(server: str) -> None:

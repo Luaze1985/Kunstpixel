@@ -42,6 +42,8 @@ SPORSMAL: dict[str, dict[str, Any]] = {
     "personalmappe": {"tekst": "Personalmappe", "verktoy": "get_personnel_file"},
     "hms": {"tekst": "HMS-veiledning", "verktoy": "search_hms_guidance"},
     "handbok": {"tekst": "Virksomhetshåndbøkene", "verktoy": "lookup_handbook"},
+    # Ledelsessiden (spec datafinner-ledelse B5): uka mot forrige uke og samme uke i fjor. Aldri tall etter i dag.
+    "driften-uka": {"tekst": "Driften denne uka", "verktoy": "get_week_overview"},
 }
 
 
@@ -57,6 +59,18 @@ def regelverdier(sporsmal_id: str, fakta: Any) -> dict[str, float]:
             "antall_stasjoner": len(stasjoner),
             "timer_totalt": timer,
         }
+    if sporsmal_id == "driften-uka":
+        if not isinstance(fakta, dict):
+            return {}
+        besok, drift = fakta.get("besok") or {}, fakta.get("driftsmeldinger") or {}
+        tall = {
+            "besok_uka": besok.get("verdi"),
+            "endring_forrige_uke_pst": besok.get("endring_pst"),
+            "endring_i_fjor_pst": besok.get("i_fjor_pst"),
+            "driftsmeldinger_aapnet": drift.get("aapnet"),
+        }
+        # Manglende tall tas ikke med. Da velger regelen fallback, som ber om manuell sjekk.
+        return {k: v for k, v in tall.items() if isinstance(v, (int, float)) and not isinstance(v, bool)}
     if isinstance(fakta, dict):
         return {k: v for k, v in fakta.items() if isinstance(v, (int, float)) and not isinstance(v, bool)}
     return {}

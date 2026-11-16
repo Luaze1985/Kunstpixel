@@ -400,6 +400,11 @@
     var tall = r.regelverdier && Object.keys(r.regelverdier).length ? r.regelverdier : (!Array.isArray(r.fakta) ? r.fakta : null);
     var kp = nokkeltall(tall, r.args); if (kp) rap.appendChild(kp);
     var faktaVisning = liste ? tabell(liste, { lenke: nav.lenke }) :Array.isArray(r.fakta) ? "Ingen treff." : r.fakta && typeof r.fakta === "object" ? objektTabell(r.fakta) : String(r.fakta);
+    // Svar med både en liste og andre tall (f.eks. «Driften denne uka»): resten av tallene under «Flere tall».
+    if (liste && r.fakta && !Array.isArray(r.fakta)) {
+      var flere = el("details"); flere.appendChild(el("summary", null, "Flere tall")); flere.appendChild(objektTabell(r.fakta));
+      var samlet = el("div"); samlet.appendChild(faktaVisning); samlet.appendChild(flere); faktaVisning = samlet;
+    }
     var fakta = blokk("Fakta", faktaVisning, MERKE.verifiser); rap.appendChild(fakta);
     var v = r.vurdering || {}, harRegel = !!(v.vurdering || v.forslag);
     var vurdering = blokk("Vurdering", v.vurdering || v.mangler || "Databasen har ingen regel for dette spørsmålet.", harRegel ? MERKE.system : MERKE.mangler);

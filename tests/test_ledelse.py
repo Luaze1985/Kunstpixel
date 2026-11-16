@@ -185,6 +185,15 @@ def test_uka_viser_ikke_dager_fra_i_dag_og_utover(monkeypatch: pytest.MonkeyPatc
     assert d["besok"]["verdi"] == 210 + 194
 
 
+def test_uka_uten_hele_dager_viser_forrige_uke(idag: date) -> None:
+    """Mandag 2026-11-16: uke 47 har ingen hele dager ennå. Da vises uke 46, med merknad."""
+    d = driftsoversikt.get_week_overview("2026-11-16")
+    assert d["uke"] == 46 and d["viser_forrige_uke"] is True
+    assert "forrige uke" in d["merknad"].lower()
+    assert d["besok"]["verdi"] == 1750
+    assert driftsoversikt.get_week_overview("2026-11-14")["viser_forrige_uke"] is False
+
+
 def test_uka_sier_mangler_data_der_kildene_stopper(idag: date) -> None:
     d = driftsoversikt.get_week_overview("2026-11-14")  # tilfredshet, anmeldelser og kafé stopper 2026-10-29
     assert d["tilfredshet"]["verdi"] is None and d["tilfredshet"]["status"] == "Ukjent"

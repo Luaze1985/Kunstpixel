@@ -126,13 +126,16 @@ def _horisont(con: Any, tabell: str) -> str:
 def get_week_overview(dato: str) -> dict[str, Any]:
     """Driften i uka (mandag–søndag) som `dato` ligger i: besøk per dag mot forrige uke og samme uke i fjor,
     tilfredshet, lave anmeldelser, kafésalg per besøkende, og driftsmeldinger og HMS-avvik åpnet og lukket.
-    Dager fra og med i dag tas ikke med.
+    Dager fra og med i dag tas ikke med. Har uka ingen hele dager ennå (mandag), vises forrige uke.
 
     Args:
         dato: En dag i uka, ISO-format 'YYYY-MM-DD'. Kan ikke være etter i dag.
     """
     d = _sjekk_dato(dato)
     idag = _idag()
+    viser_forrige_uke = d - timedelta(days=d.weekday()) >= idag
+    if viser_forrige_uke:
+        d -= timedelta(days=7)
     aar, uke, ukedag = d.isocalendar()
     mandag = d - timedelta(days=ukedag - 1)
     sondag = mandag + timedelta(days=6)
@@ -151,14 +154,17 @@ def get_week_overview(dato: str) -> dict[str, Any]:
         for i in range(7):
             dag = mandag + timedelta(days=i)
             k = dag.isoformat()
-            rad = {"dato": k, "ukedag": _UKEDAG[i], "aapent": (denne.get(k) or {}).get("aapent")}
+            # Rekkefølgen styrer tabellen (maks 5 kolonner): dato, ukedag, besøk, forrige uke, i fjor.
+            aapent = (denne.get(k) or {}).get("aapent")
             if dag >= idag:
-                dager.append({**rad, "besok": None, "kommer": True})
+                dager.append({"dato": k, "ukedag": _UKEDAG[i], "besok": None, "forrige_uke": None, "i_fjor": None,
+                              "aapent": aapent, "kommer": True})
                 continue
             na = (denne.get(k) or {}).get("besok")
             f = (forrige.get((dag - timedelta(days=7)).isoformat()) or {}).get("besok")
             fj = (fjor.get((fjor_mandag + timedelta(days=i)).isoformat()) or {}).get("besok") if fjor_mandag else None
-            dager.append({**rad, "besok": na, "forrige_uke": f, "i_fjor": fj, "kommer": False})
+            dager.append({"dato": k, "ukedag": _UKEDAG[i], "besok": na, "forrige_uke": f, "i_fjor": fj,
+                          "aapent": aapent, "kommer": False})
             ferdige += 1
             sum_na += na or 0
             sum_forrige += f or 0
@@ -198,6 +204,7 @@ def get_week_overview(dato: str) -> dict[str, Any]:
     return {
         "aar": aar, "uke": uke, "fra": mandag.isoformat(), "til": sondag.isoformat(),
         "ferdige_dager": ferdige,
+        "viser_forrige_uke": viser_forrige_uke,
         "hentet_kl": datetime.now().strftime("%H:%M"),
         "dager": dager,
         "besok": {"navn": "Besøk i uka", **besok, "forrige_uke": sum_forrige if har_dager else None, "i_fjor": i_fjor,
@@ -211,7 +218,8 @@ def get_week_overview(dato: str) -> dict[str, Any]:
         "driftsmeldinger": {"navn": "Driftsmeldinger", "aapnet": aapnet, "lukket": lukket,
                             "kilde": "driftsmeldinger_epost og driftsmeldinger_tiltak"},
         "hms_avvik": {"navn": "HMS-avvik", "aapnet": avvik, "kilde": "avvik_hms_drift"},
-        "merknad": "Besøk sammenlignes med de samme ukedagene forrige uke. Mangler data betyr at kilden ikke dekker "
+        "merknad": (f"Uka har ingen hele dager ennå, så dette er forrige uke (uke {uke}). " if viser_forrige_uke else "")
+                   + "Besøk sammenlignes med de samme ukedagene forrige uke. Mangler data betyr at kilden ikke dekker "
                    "hele perioden ennå.",
         "datakilde": "dagsbesok, besok_tilfredshet, anmeldelser, kafe_varesalg, driftsmeldinger og avvik_hms_drift",
     }

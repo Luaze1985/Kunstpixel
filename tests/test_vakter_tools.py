@@ -203,8 +203,10 @@ def test_bygget_db_rapport_regler_med_fallback(bygget_db: Path) -> None:
 def test_bygget_db_roller_folger_rekkefolge(bygget_db: Path) -> None:
     from src.kunstpixel.core.db import query_roles
     roller = {r["kode"]: r["sporsmal"] for r in query_roles(db_path=bygget_db)}
-    assert roller["A"] == ["rapporteringskalender", "myndighetsoversikt", "cv", "innleide", "personalmappe"]
-    assert roller["F"] == ["tilsynsrutine", "innleide", "hms", "handbok"]
+    # «Driften denne uka» står først for direktør, drift og kafé (B5, Lars 2026-11-16).
+    assert roller["A"] == ["driften-uka", "rapporteringskalender", "myndighetsoversikt", "cv", "innleide", "personalmappe"]
+    assert roller["F"] == ["driften-uka", "tilsynsrutine", "innleide", "hms", "handbok"]
+    assert roller["M"] == ["driften-uka", "hms", "handbok"]
     assert roller["G"] == ["rapportmaler"]
     assert roller["K"] == ["vakt-i-dag", "vaktplan", "arbeidstid", "sykefravaer", "onboarding", "cv", "personalmappe", "hms"]
     assert roller["L"] == ["utstilling", "vaktkostnad"]
@@ -221,6 +223,10 @@ def test_bygget_db_roller_folger_rekkefolge(bygget_db: Path) -> None:
     ("utstilling", {"netto_resultat_nok": -1}, "R-UTST-FALLBACK"),
     ("vaktkostnad", {"vakter_uten_tariff": 0}, "R-KOST-01"),
     ("vaktkostnad", {"vakter_uten_tariff": "0"}, "R-KOST-FALLBACK"),  # ikke et tall -> fallback
+    ("driften-uka", {"endring_forrige_uke_pst": 3.6}, "R-UKE-01"),
+    ("driften-uka", {"endring_forrige_uke_pst": -15}, "R-UKE-01"),  # grensen er med, som i ledelse.TERSKLER
+    ("driften-uka", {"endring_forrige_uke_pst": -20.4}, "R-UKE-FALLBACK"),
+    ("driften-uka", {}, "R-UKE-FALLBACK"),  # tallene mangler
 ])
 def test_bygget_db_vurdering_velger_en_regel(bygget_db: Path, sporsmal_id: str, verdier: dict, forventet: str) -> None:
     from src.kunstpixel.core.db import query_report_assessment

@@ -347,6 +347,18 @@ def test_i_dag_viser_farlig_tekst_som_tekst(leder_side) -> None:
     side.close()
 
 
+def test_driften_uka_viser_dagene_og_flere_tall(leder_side) -> None:
+    """B5: dagene som tabell (mot forrige uke og i fjor), og resten av tallene under «Flere tall»."""
+    page, base = leder_side
+    page.goto(_adr(base, "rolle:Driftsansvarlig/driften-uka?dato=2026-11-14"), wait_until="networkidle")
+    page.get_by_role("heading", name="Driften denne uka").wait_for()
+    hoder = page.locator("main table thead").first.inner_text()
+    assert "Forrige uke" in hoder and "I fjor" in hoder
+    flere = page.get_by_text("Flere tall", exact=True)
+    flere.click()
+    assert "Tilfredshet" in page.locator("main").inner_text()
+
+
 def test_i_dag_paa_mobil_uten_sidelengs_rulling(leder_side) -> None:
     page, base = leder_side
     side = _norsk_side(page, "2026-11-16T09:05:00+01:00")
