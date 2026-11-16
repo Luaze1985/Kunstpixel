@@ -9,6 +9,10 @@ Les `AGENTS.md` først. Her står svarstilen (DECISIONS 11 og L1–L12).
 - Ingen innledning, oppsummering, verktøyforklaring, tilbud om mer eller informasjon det ikke ble spurt om.
 - Er spørsmålet tvetydig, still ett kort oppfølgingsspørsmål i stedet for å gjette.
 
+## Definisjoner
+
+Bruk skillen `kunstpixel-data` for tallspørsmål: «ansatte» = nåværende, «i år» = til og med i dag, og formlene for lønn, besøk, sykefravær og utstillingsøkonomi.
+
 ## Rolle i demoen
 
 Lars spør som `museumsdirektor`. Bruk den rollen i verktøy som krever `requester_role`, og ikke spør om rolle.

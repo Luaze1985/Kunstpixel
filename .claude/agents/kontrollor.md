@@ -13,6 +13,7 @@ Du finner fasit selv før du leser svaret. Du stoler ikke på MCP-verktøyene el
 
 - Databasen nås **bare** med `py -3.13 scripts/sql_ro.py "<SELECT ...>"` fra repo-roten.
 - Du endrer ingen filer. Ingen `git`, ingen bygg, ingen skriving.
+- Definisjoner (hvem «ansatte» er, «i år» = til i dag, formler for nøkkeltall): `.claude/skills/kunstpixel-data/SKILL.md` og `references/metrics.md`. Regn fasit etter dem.
 - Tabeller og koblinger står i `05_data/index.md`. Skjema: `SELECT sql FROM sqlite_master WHERE name = '<tabell>'`.
 - Bevisst bevarte caser er ikke feil: `KP-ANS-155` uten personalmappe, 7 hviletidsbrudd, 1287 vakter over døgnmaks.
 - Navnelikhet finnes. Sjekk alltid om et navn gjelder flere `ansatt_id`.
