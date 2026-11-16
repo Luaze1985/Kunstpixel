@@ -66,6 +66,7 @@ from src.kunstpixel.core.bunnlinje import (
     get_team_efficiency,
 )
 from src.kunstpixel.core.driftsoversikt import get_today_overview, get_week_overview
+from src.kunstpixel.core.frister import get_my_deadlines
 from src.kunstpixel.core.hr_cases import (
     discover_hr_cases,
     investigate_hr_case,
@@ -75,6 +76,7 @@ from src.kunstpixel.core.mcp_server import (
     get_absence_report,
     get_artwork_details,
     get_cafe_menu_and_sales,
+    get_condition_report,
     get_daily_ops_inbox,
     get_employee_cv,
     get_exhibition_economy,
@@ -99,6 +101,7 @@ from src.kunstpixel.core.mcp_server import (
     search_hms_guidance,
     search_hms_incident_narratives,
     search_hr_onboarding,
+    search_loans,
     search_myndighet,
     search_rapportering,
     search_visitor_reviews_and_satisfaction,
@@ -223,6 +226,11 @@ VERKTOY: dict[str, tuple[Callable[..., Any], set[str]]] = {
     # Ledelsessiden (spec datafinner-ledelse, etappe 2): «I dag» og uka. Aldri tall etter i dag (D1).
     "get_today_overview": (get_today_overview, {"dato"}),
     "get_week_overview": (get_week_overview, {"dato"}),
+    # «Mine frister» (etappe 3a). Rollen styrer hva som vises, aldri fraværstype eller emnetekst.
+    "get_my_deadlines": (get_my_deadlines, {"rolle", "dato"}),
+    # Samling (B10): tilstandsrapporter og innlån, lesende.
+    "get_condition_report": (get_condition_report, {"artwork_id"}),
+    "search_loans": (search_loans, {"exhibition_id", "query", "limit"}),
     # H5 Governance & Onboarding (åpne rutiner, kalender og maler)
     "search_myndighet": (search_myndighet, {"query", "intern_eier"}),
     "get_inspection_routine": (get_inspection_routine, {"ansvarlig"}),

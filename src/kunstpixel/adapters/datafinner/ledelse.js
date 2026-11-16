@@ -61,6 +61,28 @@
     return t.charAt(0).toUpperCase() + t.slice(1);
   }
   function jaNei(b) { return b ? "Ja" : "Nei"; }
+
+  // ---------- «Fulgt opp» (F6). Lagres bare i nettleseren. Lagring som feiler, velter ikke siden. ----------
+  var NOKKEL = "kunstpixel.oppfolging.v1";
+  function lesOppfolging(lager) {
+    try { var d = JSON.parse(lager.getItem(NOKKEL) || "{}"); return d && typeof d === "object" && !Array.isArray(d) ? d : {}; }
+    catch (e) { return {}; }
+  }
+  function skriv(lager, d) { try { lager.setItem(NOKKEL, JSON.stringify(d)); } catch (e) { /* privat vindu o.l. */ } return d; }
+  function merkFulgtOpp(lager, id, tid) { var d = lesOppfolging(lager); d[id] = { tid: tid }; return skriv(lager, d); }
+  function angreFulgtOpp(lager, id) { var d = lesOppfolging(lager); delete d[id]; return skriv(lager, d); }
+  function erFulgtOpp(oppf, id) { return !!(oppf && Object.prototype.hasOwnProperty.call(oppf, id)); }
+  var GRUPPER = ["Forfalt", "I dag", "Denne uka", "Senere"];
+  function grupper(frister, oppf) {
+    var ut = {}; GRUPPER.concat(["Fulgt opp"]).forEach(function (g) { ut[g] = []; });
+    (frister || []).forEach(function (f) { (erFulgtOpp(oppf, f.id) ? ut["Fulgt opp"] : ut[f.gruppe] || ut.Senere).push(f); });
+    return ut;
+  }
+  function fristTekst(dager) {
+    if (dager === 0) return "I dag";
+    var n = Math.abs(dager), ord_ = n === 1 ? "dag" : "dager";
+    return dager < 0 ? n + " " + ord_ + " over fristen" : "Om " + n + " " + ord_;
+  }
   function etikett(felt) {
     if (ORD[felt]) return ORD[felt];
     var t = String(felt || "").replace(/_/g, " ");
@@ -68,7 +90,9 @@
   }
 
   var api = { statusVisning: statusVisning, normaltTekst: normaltTekst, tallPer: tallPer, datoKort: datoKort, etikett: etikett, tall: tall,
-    kategoriTekst: kategoriTekst, jaNei: jaNei };
+    kategoriTekst: kategoriTekst, jaNei: jaNei,
+    lesOppfolging: lesOppfolging, merkFulgtOpp: merkFulgtOpp, angreFulgtOpp: angreFulgtOpp, erFulgtOpp: erFulgtOpp,
+    grupper: grupper, fristTekst: fristTekst };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else rot.Ledelse = api;
 })(this);

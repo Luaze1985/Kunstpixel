@@ -14,7 +14,12 @@
 - B5 «Driften denne uka» er ferdig. Lars bygget `museum.db`, og den er committet (6641cda). Hele pytest: 2372 bestått, 9 hoppet over, 2 ventede feil.
 - Uavhengig sjekk: kontrollfil til Antigravity i `.scratch/handoffs/AGY-REVIEW-2026-11-16-etappe2.md`. Funnene skal skrives til `AGY-FUNN-2026-11-16.md`.
 - Ukjente endringer i `db.py`, `mcp_server.py`, `test_mcp_server.py`, `AGENTS.md` og `05_data/index.md` (ser ut som K2-arbeid fra en annen økt) er ikke rørt og ikke committet.
-- **Neste:** etappe 3 (frister og handlinger). Trenger svar på Å1, Å2 og godkjente fristregler (B7) først.
+
+## Gjort (2026-11-16): Datafinner etappe 3a, «Mine frister» (DECISIONS F1–F6)
+- «Mine frister» under «Følg opp» i menyen og som kort på Hjem: sykefravær uke 4/7 (HR og Avdelingsleder), driftsmeldinger og HMS-avvik åpne over 14 dager, rapportfrister, tilstandskontroll og retur av innlån. Gruppert Forfalt, I dag, Denne uka og Senere.
+- «Fulgt opp» og «Angre» lagres i nettleseren. «Spør KI» tar fristen med til chatten. `get_condition_report` og `search_loans` er hvitelistet (B10). Hele pytest: 2426 bestått.
+- **Neste: etappe 3b.** E-postmaler (B9), «Meld avvik», «Godta» i stedet for kontroll-avkrysningene (F8) og visningen «Mine oppfølginger» med CSV (F9).
+- Åpent: tilstandskontroll hver 12. måned og innlån ved utstillingens slutt er forslag. Lars har ikke bekreftet dem.
 
 ## Gjort (2026-11-16): Datafinner etappe 1 (DECISIONS E1–E8)
 - Hjem-knapp, brødsmuler, tilbake/frem, klikkbare rader, huskelapp til høyre, Søk/Arbeidsflyter//arena fjernet, rapportmaler og to verktøy rettet. Hele pytest: 2290 bestått.

@@ -385,6 +385,51 @@ def test_i_dag_kategorinavn_uten_understrek(leder_side) -> None:
     side.close()
 
 
+# ---------- Etappe 3a (2026-11-16): «Mine frister» og «Fulgt opp» ----------
+
+def test_meny_har_mine_frister_under_folg_opp(leder_side) -> None:
+    page, base = leder_side
+    page.goto(base, wait_until="networkidle")
+    nav = page.get_by_role("navigation", name="Innhold")
+    assert nav.get_by_text("Følg opp", exact=True).is_visible()
+    nav.get_by_role("button", name=re.compile("^Mine frister")).click()
+    page.get_by_role("heading", name="Mine frister", exact=True).wait_for()
+    assert "Mine frister" in page.get_by_role("navigation", name="Du er her").inner_text()
+
+
+def test_forfalte_innlan_og_fulgt_opp_huskes(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "frister"), wait_until="networkidle")
+    forfalt = page.get_by_role("region", name=re.compile("^Forfalt"))
+    forfalt.get_by_text("Retur av innlån", exact=False).first.wait_for()
+    for_antall = forfalt.locator("li").count()
+    forfalt.get_by_role("button", name=re.compile("^Fulgt opp: Retur av innlån")).first.click()
+    fulgt = page.get_by_role("region", name=re.compile("^Fulgt opp"))
+    fulgt.get_by_text("Retur av innlån", exact=False).first.wait_for()
+    assert page.get_by_role("region", name=re.compile("^Forfalt")).locator("li").count() == for_antall - 1
+    page.reload(wait_until="networkidle")  # lagret i nettleseren
+    page.get_by_role("region", name=re.compile("^Fulgt opp")).get_by_text("Retur av innlån", exact=False).first.wait_for()
+    page.get_by_role("region", name=re.compile("^Fulgt opp")).get_by_role("button", name=re.compile("^Angre")).first.click()
+    page.wait_for_function("!document.body.innerText.includes('Angre')")
+
+
+def test_hjem_viser_mine_frister_med_lenke(leder_side) -> None:
+    page, base = leder_side
+    page.goto(base, wait_until="networkidle")
+    kort = page.get_by_role("region", name="Mine frister")
+    kort.get_by_text("Forfalt", exact=False).first.wait_for()
+    kort.get_by_role("link", name="Se alle frister").click()
+    page.get_by_role("heading", name="Mine frister", exact=True).wait_for()
+
+
+def test_frist_kan_tas_med_til_ki(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "frister"), wait_until="networkidle")
+    page.get_by_role("button", name=re.compile("^Spør KI: Retur av innlån")).first.click()
+    page.get_by_role("heading", name="Spør om data", exact=True).wait_for()
+    assert "Retur av innlån" in page.locator("#chat-felt").input_value()
+
+
 def test_i_dag_paa_mobil_uten_sidelengs_rulling(leder_side) -> None:
     page, base = leder_side
     side = _norsk_side(page, "2026-11-16T09:05:00+01:00")

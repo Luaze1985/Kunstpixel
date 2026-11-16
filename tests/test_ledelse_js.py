@@ -90,3 +90,38 @@ def test_kategorinavn_uten_understrek(verdi: str, tekst: str) -> None:
 
 def test_ja_nei() -> None:
     assert js("[L.jaNei(true), L.jaNei(false)]") == ["Ja", "Nei"]
+
+
+# ---------- F6: «Fulgt opp» i nettleseren (falsk lagring) ----------
+
+FALSK = "(function(){var d={};return {getItem:function(k){return k in d?d[k]:null},setItem:function(k,v){d[k]=String(v)}}})()"
+KAPUTT = "{getItem:function(){throw new Error('blokkert')},setItem:function(){throw new Error('blokkert')}}"
+
+
+def test_tom_lagring_gir_ingen_oppfolging() -> None:
+    assert js(f"L.lesOppfolging({FALSK})") == {}
+
+
+def test_merk_og_angre_fulgt_opp() -> None:
+    ut = js(f"(function(){{var s={FALSK};L.merkFulgtOpp(s,'innlan:LAN-1:2026-03-01','2026-11-16T10:00');"
+            f"var a=L.erFulgtOpp(L.lesOppfolging(s),'innlan:LAN-1:2026-03-01');L.angreFulgtOpp(s,'innlan:LAN-1:2026-03-01');"
+            f"return [a,L.erFulgtOpp(L.lesOppfolging(s),'innlan:LAN-1:2026-03-01'),JSON.parse(s.getItem('kunstpixel.oppfolging.v1'))]}})()")
+    assert ut == [True, False, {}]
+
+
+def test_blokkert_lagring_velter_ikke_siden() -> None:
+    assert js(f"(function(){{var s={KAPUTT};L.merkFulgtOpp(s,'x','t');return L.lesOppfolging(s)}})()") == {}
+
+
+def test_grupper_flytter_fulgt_opp_til_egen_gruppe() -> None:
+    frister = [{"id": "a", "gruppe": "Forfalt"}, {"id": "b", "gruppe": "Senere"}, {"id": "c", "gruppe": "I dag"}]
+    ut = js(f"L.grupper({json.dumps(frister)}, {{b: {{tid: 't'}}}})")
+    assert [x["id"] for x in ut["Forfalt"]] == ["a"]
+    assert ut["Senere"] == [] and [x["id"] for x in ut["Fulgt opp"]] == ["b"]
+    assert list(ut) == ["Forfalt", "I dag", "Denne uka", "Senere", "Fulgt opp"]
+
+
+@pytest.mark.parametrize("dager,tekst", [(-260, "260 dager over fristen"), (-1, "1 dag over fristen"),
+                                          (0, "I dag"), (1, "Om 1 dag"), (14, "Om 14 dager")])
+def test_frist_tekst(dager: int, tekst: str) -> None:
+    assert js(f"L.fristTekst({dager})") == tekst

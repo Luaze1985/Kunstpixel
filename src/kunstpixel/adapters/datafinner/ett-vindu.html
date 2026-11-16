@@ -145,6 +145,9 @@
       { id: "rolle:" + (r ? r.navn : "Museumsdirektør"), navn: "Rapporter" },
       { id: "katalog", navn: "Tabeller" }
     ]);
+    // Følg opp: tallet er forfalt + i dag som ikke er merket fulgt opp (vises når fristene er hentet).
+    var aapne = FRISTER.svar ? fristerAapne() : null;
+    gruppe("Følg opp", [{ id: "frister", navn: "Mine frister", status: aapne ? aapne + " å følge opp" : null }]);
     var mer = el("details", "af-nav-more"), merInnhold = el("div");
     mer.appendChild(el("summary", null, "Mer"));
     mer.appendChild(merInnhold); meny.appendChild(mer);
@@ -627,9 +630,87 @@
     h.focus({ preventScroll: false });
   }
 
+  // ---------- «Mine frister» (etappe 3a). Fristene regnes ut på serveren, «Fulgt opp» lagres bare i nettleseren. ----------
+  var LAGER = (function () {
+    try { var s = window.localStorage; s.getItem("x"); return s; }
+    catch (e) { var d = {}; return { getItem: function (k) { return k in d ? d[k] : null; }, setItem: function (k, v) { d[k] = String(v); } }; }
+  })();
+  var FRISTER = { rolle: null, dato: null, svar: null, lover: null };
+  function hentFrister() {
+    var dato = lokalDato(new Date()), r = aktivRolle || "Museumsdirektør";
+    if (FRISTER.lover && FRISTER.rolle === r && FRISTER.dato === dato) return FRISTER.lover;
+    FRISTER.rolle = r; FRISTER.dato = dato; FRISTER.svar = null;
+    FRISTER.lover = hent("/api/verktoy?navn=get_my_deadlines&args=" + encodeURIComponent(JSON.stringify({ rolle: r, dato: dato })))
+      .then(function (d) { FRISTER.svar = d.resultat; tegnMeny(); return d.resultat; })
+      .catch(function (e) { FRISTER.lover = null; throw e; });
+    return FRISTER.lover;
+  }
+  function fristGrupper() { return Ledelse.grupper((FRISTER.svar || {}).frister, Ledelse.lesOppfolging(LAGER)); }
+  function fristerAapne() { var g = fristGrupper(); return g.Forfalt.length + g["I dag"].length; }
+  function sporKiOmFrist(f) {
+    CHAT.utkast = "Hjelp meg å følge opp «" + f.tittel + "» (frist " + f.frist_dato + ", kilde " + f.kilde + "). Hva bør jeg som " + (aktivRolle || "leder") + " gjøre?";
+    vis("flate:chat");
+  }
+  function fristLinje(f, fulgt, etter) {
+    var li = el("li", "af-task-card"); li.style.cssText = "display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;cursor:default";
+    var t = el("span"); t.appendChild(el("strong", null, f.tittel));
+    t.appendChild(el("small", null, "Frist " + Ledelse.datoKort(f.frist_dato) + " · " + Ledelse.fristTekst(f.dager_til) + " · kilde: " + f.kilde));
+    li.appendChild(t);
+    var knapper = el("span"); knapper.style.cssText = "display:flex;gap:6px;flex-wrap:wrap";
+    var b = el("button", "af-btn af-btn-secondary", fulgt ? "Angre" : "Fulgt opp"); b.type = "button";
+    b.setAttribute("aria-label", (fulgt ? "Angre: " : "Fulgt opp: ") + f.tittel);
+    b.addEventListener("click", function () {
+      if (fulgt) Ledelse.angreFulgtOpp(LAGER, f.id); else Ledelse.merkFulgtOpp(LAGER, f.id, new Date().toISOString());
+      etter();
+    });
+    knapper.appendChild(b);
+    if (KI) {
+      var k = el("button", "af-btn af-btn-secondary", "Spør KI"); k.type = "button";
+      k.setAttribute("aria-label", "Spør KI: " + f.tittel);
+      k.addEventListener("click", function () { sporKiOmFrist(f); });
+      knapper.appendChild(k);
+    }
+    li.appendChild(knapper);
+    return li;
+  }
+  function fristerKort(m) {
+    var s = el("section", "af-report"), h = el("h2", "af-title", "Mine frister");
+    h.id = "frister-kort-tittel"; s.setAttribute("aria-labelledby", h.id); s.style.marginBottom = "24px"; s.appendChild(h);
+    var ut = el("div"); ut.appendChild(el("p", "af-task-hint", "Henter …")); s.appendChild(ut); m.appendChild(s);
+    function tegn() {
+      ut.textContent = "";
+      var g = fristGrupper();
+      ut.appendChild(el("p", "af-hint", ["Forfalt", "I dag", "Denne uka", "Senere"].map(function (n) { return n + ": " + g[n].length; }).join(" · ")
+        + " · for " + (aktivRolle || "Museumsdirektør")));
+      var topp = g.Forfalt.concat(g["I dag"], g["Denne uka"]).slice(0, 3);
+      if (topp.length) { var ul = el("ul", "af-task-board"); topp.forEach(function (f) { ul.appendChild(fristLinje(f, false, function () { tegn(); tegnMeny(); })); }); ut.appendChild(ul); }
+      var p = el("p"), a = el("a", null, "Se alle frister"); a.href = "#frister"; p.appendChild(a); ut.appendChild(p);
+    }
+    hentFrister().then(tegn).catch(function (e) { ut.textContent = ""; feilMelding(ut, "Fant ikke fristene", e); });
+  }
+  function visFrister() {
+    var m = tom("Følg opp", "Mine frister", "Frister for rollen du har valgt. «Fulgt opp» huskes bare i denne nettleseren. Ingenting sendes.");
+    var ut = el("div"); ut.appendChild(el("p", "af-task-hint", "Henter …")); m.appendChild(ut);
+    fasit("get_my_deadlines", { rolle: aktivRolle || "Museumsdirektør", dato: lokalDato(new Date()) }, "museum.db, kun lesing");
+    function tegn() {
+      ut.textContent = "";
+      var d = FRISTER.svar || {}, g = fristGrupper();
+      ["Forfalt", "I dag", "Denne uka", "Senere", "Fulgt opp"].forEach(function (navn, i) {
+        var s = el("section"), h = el("h2", "af-title", navn + " (" + g[navn].length + ")");
+        h.id = "frister-gruppe-" + i; s.setAttribute("aria-labelledby", h.id); s.style.marginBottom = "20px"; s.appendChild(h);
+        if (!g[navn].length) s.appendChild(el("p", "af-hint", navn === "Fulgt opp" ? "Ingen er merket som fulgt opp." : "Ingen frister."));
+        else { var ul = el("ul", "af-task-board"); g[navn].forEach(function (f) { ul.appendChild(fristLinje(f, navn === "Fulgt opp", function () { tegn(); tegnMeny(); })); }); s.appendChild(ul); }
+        ut.appendChild(s);
+      });
+      if (d.eldre_saker) ut.appendChild(el("p", "af-hint", d.eldre_saker + " åpne saker er eldre enn ett år og står ikke i lista."));
+    }
+    hentFrister().then(tegn).catch(function (e) { ut.textContent = ""; feilMelding(ut, "Fant ikke fristene", e); });
+  }
+
   function visChat() {
     var m = tom(null, "Spør om data", "Skriv hva du trenger å vite. KI henter fakta fra Kunstpixel-dataene.");
     iDagKort(m);
+    fristerKort(m);
     var chatStatus = el("p", "af-chat-status", KI ? "KI konfigurert · " + KI_MODELL + " · syntetiske øvingsdata" : "KI utilgjengelig · syntetiske øvingsdata");
     chatStatus.id = "chat-status"; m.appendChild(chatStatus);
     if (!KI) m.appendChild(el("p", "af-panel-message", KI_AV));
@@ -813,6 +894,8 @@
         s.push([(SPORSMAL[under] || { tekst: under }).tekst, hode + "/" + under + (utenRad ? "?" + utenRad : "")]);
         if (/(^|&)rad=\d+/.test(valgDel)) s.push(["Rad " + (Number(lesValg(valgDel).rad) + 1), v]);
       }
+    } else if (hode === "frister") {
+      s.push(["Mine frister", "frister"]);
     } else if (hode === "katalog") {
       s.push(["Tabeller", "katalog"]);
       if (d[1]) s.push([d.slice(1).join("/"), v]);
@@ -863,6 +946,7 @@
     else if (type === "arena" && navn) visArena(navn);
     else if (hode === "arena") visArenaOversikt();
     else if (type === "flate") visFlate(navn, deler[1]);
+    else if (hode === "frister") visFrister();
     else if (hode === "katalog" && deler[1]) visTabell(deler.slice(1).join("/"));
     else if (hode === "katalog") visKatalog();
     else if (aktivRolle) visChat();

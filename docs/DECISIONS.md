@@ -217,3 +217,21 @@ Kartet står i `docs/plans/2026-11-15-ren-main.md`.
 - **I10. B5 «Driften denne uka» (Lars sa ja, bygger `museum.db` selv):** står først for Museumsdirektør, Driftsansvarlig og Kafeansvarlig (`rekkefolge` 0). Regel R-UKE-01: besøk ≥ −15 % mot forrige uke gir «på nivå». Ellers, eller hvis tallene mangler, brukes fallback med manuell sjekk. Samme grense som `ledelse.TERSKLER`. Rapporten viser dagene som tabell og resten under «Flere tall». Endret med vilje: rolle-rekkefølgen i `test_vakter_tools.py`.
 - **I9. Etiketter med æøå** (Måned, Formål, År, Åpent …) fra én ordtabell i `ledelse.js`, brukt i alle tabeller.
 - **Tester:** 68 nye (`test_ledelse.py` 38, `test_ledelse_js.py` 25, Playwright 5). De 66 første var røde først. XSS- og mobiltesten kom etterpå som vakter og var grønne med en gang. Hele pytest: 2361 bestått, 9 hoppet over, 2 ventede feil. Codex-review er ikke kjørt (MCP-tilkoblingen feilet). Kontrollfil: `.scratch/handoffs/CODEX-REVIEW-2026-11-16-etappe2.md`.
+
+## 2026-11-16 — Datafinner etappe 3a: «Mine frister» (spec B6–B8, B10, F5–F6)
+
+- **F1. Sykefravær (Lars, Å1):** frist = første fraværsdag + 4 uker (oppfølgingsplan) og + 7 uker (dialogmøte) for alle sykemeldinger. Dataene skiller ikke hel og delvis, så alle tas med («heller én påminnelse for mye»). Bare pågående fravær (`til` ≥ i dag) som varer til fristen. Egenmelding og permisjon tas ikke med. Fraværstype og årsak går aldri ut. Navn vises bare for HR og bemanning og Avdelingsleder.
+- **F2. Rapportfrist (Lars, Å2):** siste dag i måneden. «Månedlig» gir siste dag i inneværende måned, «Kvartalsvis» siste dag i kvartalet, og en navngitt måned gir neste gang den måneden slutter. «Løpende» gir ingen frist. Rapporter vises for rollen som er `eier`.
+- **F3. Åpne saker (Lars):** driftsmeldinger og HMS-avvik som har vært åpne i mer enn 14 dager. Driftsmeldinger vises for `mottaker_rolle`, og bare fra det siste året. Eldre saker telles i én linje, så listen ikke drukner (min antakelse, 198 gamle saker). Ingen emnetekst, bare kategori og ID.
+- **F4. Forslag, ikke avklart med Lars:** tilstandskontroll = siste inspeksjon + 12 måneder. Innlån har frist ved utstillingens `periode_slutt` når status ikke er «Returnert». Begge vises for Samlingsforvalter og Kurator. Innlån vises også for Museumsdirektør, fordi Samlingsforvalter og Kurator ikke har rapporter og ikke kan velges i «Jeg er». Funn: tre innlån står som «Aktiv i utstilling» med sluttdato 2026-03-01.
+- **F5. Grupper:** Forfalt, I dag, Denne uka (til og med søndag) og Senere (innen 60 dager). Frister regnes ut når siden lastes og lagres aldri.
+- **F6. «Fulgt opp»** lagres bare i nettleseren (`kunstpixel.oppfolging.v1`). Siden virker uten lagring.
+- **Funn:** ingen sykemeldinger i dataene varer 4 uker eller mer, så uke 4/7-regelen slår aldri ut på dagens data. Hører til datageneratoren (D2).
+
+## 2026-11-16 — Datadefinisjoner (skill `kunstpixel-data`)
+
+- **D1. «Ansatte» betyr nåværende** (`status <> 'Sluttet'`, 74 personer). Alle 168 bare ved «tidligere», «historisk» eller et tidligere årstall.
+- **D2. «I år» og «2026» telles til og med i dag.** Dataene går til 2026-12-31. Det som ligger etter i dag, er plan og tas med bare når Lars spør om fremtiden.
+- **D3. Nøkkeltall:** formlene for lønnskostnad, besøk, sykefravær og utstillingsøkonomi står i `.claude/skills/kunstpixel-data/references/metrics.md`. Alle 16 SQL-eksempler er kjørt. Lønnsformelen gir samme svar som `query_shift_cost` for 2026-10. Egen sykefraværsprosent regnes ikke: prosenten kommer bare fra SSB.
+- **Funn:** `00_DATA_OG_MCP_OVERSIKT.md` sier at 26 ansatte står uten medarbeidersamtale. Databasen viser at 2 nåværende mangler samtale, og at ingen av de 94 som har sluttet, har noen. Ikke rettet.
+- **Tester (3a):** `test_frister.py` (31), nye Node-tester for «Fulgt opp» (falsk og blokkert lagring) og 4 Playwright-tester (meny, Forfalt til Fulgt opp, som huskes etter omlasting, kortet på Hjem, «Spør KI»). Røde først, unntatt direktør-innlån-testen. Hele pytest: 2426 bestått, 9 hoppet over, 2 ventede feil.
