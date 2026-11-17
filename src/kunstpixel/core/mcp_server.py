@@ -26,6 +26,7 @@ from src.kunstpixel.core.db import (
     query_condition_report,
     query_contractors,
     query_daglig_driftsinnboks,
+    query_dagsbesok,
     query_employee_cv,
     query_employee_skills,
     query_events,
@@ -36,6 +37,8 @@ from src.kunstpixel.core.db import (
     query_historikk_2010_2026,
     query_hms_avvik_tekst,
     query_holidays,
+    query_hr_innleide_kompetanse,
+    query_hr_medarbeidersamtaler,
     query_hr_opplaering_onboarding,
     query_incidents,
     query_internal_requests,
@@ -1057,6 +1060,78 @@ def get_daily_ops_inbox(
         mottaker_rolle=mottaker_rolle,
         vurdering_utfall=vurdering_utfall,
         sok=sok,
+        limit=limit,
+    )
+
+
+@mcp.tool()
+def get_daily_visitors(
+    fra_dato: str | None = None,
+    til_dato: str | None = None,
+    aar: int | None = None,
+    kun_aapent: bool = False,
+    limit: int = 50,
+) -> dict[str, Any]:
+    """Henter historisk dagsbesøk, publikumstall og billettinntekter (dagsbesok).
+
+    Args:
+        fra_dato: Valgfri startdato (YYYY-MM-DD).
+        til_dato: Valgfri sluttdato (YYYY-MM-DD).
+        aar: Valgfritt årstall (2010–2026).
+        kun_aapent: Filtrer på kun åpne dager (True/False).
+        limit: Maks antall rader (standard 50, maks 500).
+    """
+    return query_dagsbesok(
+        fra_dato=fra_dato,
+        til_dato=til_dato,
+        aar=aar,
+        kun_aapent=kun_aapent,
+        limit=limit,
+    )
+
+
+@mcp.tool()
+def get_contractor_competencies(
+    innleid_id: str | None = None,
+    skill_code: str | None = None,
+    status: str | None = None,
+    limit: int = 50,
+) -> dict[str, Any]:
+    """Henter dokumentert kompetanse og sertifikater for innleid personell (hr_innleide_kompetanse).
+
+    Args:
+        innleid_id: Valgfri innleid ID (f.eks. 'KP-INN-P01').
+        skill_code: Valgfri kompetansekode (f.eks. 'HMS-01', 'BRANN-01').
+        status: Valgfri status ('gyldig' eller 'utlopt').
+        limit: Maks antall rader (standard 50, maks 500).
+    """
+    return query_hr_innleide_kompetanse(
+        innleid_id=innleid_id,
+        skill_code=skill_code,
+        status=status,
+        limit=limit,
+    )
+
+
+@mcp.tool()
+def get_performance_reviews(
+    ansatt_id: str | None = None,
+    samtale_id: str | None = None,
+    leder_rolle: str | None = None,
+    limit: int = 50,
+) -> dict[str, Any]:
+    """Henter gjennomførte medarbeidersamtaler, utviklingsmål og vaktønsker (hr_medarbeidersamtaler).
+
+    Args:
+        ansatt_id: Valgfri ansatt-ID (f.eks. 'KP-ANS-001').
+        samtale_id: Valgfri samtale-ID (f.eks. 'MS-2025-001').
+        leder_rolle: Valgfri lederrolle som gjennomførte samtalen.
+        limit: Maks antall rader (standard 50, maks 500).
+    """
+    return query_hr_medarbeidersamtaler(
+        ansatt_id=ansatt_id,
+        samtale_id=samtale_id,
+        leder_rolle=leder_rolle,
         limit=limit,
     )
 

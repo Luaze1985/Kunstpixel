@@ -2661,3 +2661,148 @@ def query_daglig_driftsinnboks(
         "dagens_kritiske_saker": dagens_kritiske,
     }
 
+
+def query_dagsbesok(
+    fra_dato: str | None = None,
+    til_dato: str | None = None,
+    aar: int | None = None,
+    kun_aapent: bool = False,
+    limit: int = 50,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Henter historiske dagsbesøk, publikumstall og billettinntekter fra dagsbesok."""
+    db = _db(db_path)
+    if not _har_tabell("dagsbesok", db):
+        return {"feil": "Tabellen dagsbesok mangler i databasen.", "antall": 0, "rader": []}
+
+    try:
+        trygget_limit = max(1, min(int(limit), 500))
+    except (TypeError, ValueError):
+        trygget_limit = 50
+
+    where: list[str] = []
+    params: list[Any] = []
+    if fra_dato:
+        where.append("dato >= ?")
+        params.append(fra_dato.strip())
+    if til_dato:
+        where.append("dato <= ?")
+        params.append(til_dato.strip())
+    if aar is not None:
+        where.append("aar = ?")
+        params.append(int(aar))
+    if kun_aapent:
+        where.append("er_aapent = 1")
+
+    sql = (
+        "SELECT dato, aar, maaned, uke_nr, ukedag_navn, er_aapent, "
+        "antall_voksne, antall_student, antall_barn, besok_totalt, gratis_dag, "
+        "pris_voksen, pris_student, inntekt_nok FROM dagsbesok"
+    )
+    if where:
+        sql += " WHERE " + " AND ".join(where)
+    sql += " ORDER BY dato DESC LIMIT ?"
+    params.append(trygget_limit)
+
+    rader = [dict(r) for r in execute_read_query(sql, tuple(params), db)]
+    return {
+        "antall": len(rader),
+        "rader": rader,
+    }
+
+
+def query_hr_innleide_kompetanse(
+    innleid_id: str | None = None,
+    skill_code: str | None = None,
+    status: str | None = None,
+    limit: int = 50,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Henter dokumentert kompetanse og sertifikater for innleid personell fra hr_innleide_kompetanse."""
+    db = _db(db_path)
+    if not _har_tabell("hr_innleide_kompetanse", db):
+        return {"feil": "Tabellen hr_innleide_kompetanse mangler i databasen.", "antall": 0, "rader": []}
+
+    try:
+        trygget_limit = max(1, min(int(limit), 500))
+    except (TypeError, ValueError):
+        trygget_limit = 50
+
+    where: list[str] = []
+    params: list[Any] = []
+    if innleid_id:
+        where.append("UPPER(k.innleid_id) = UPPER(?)")
+        params.append(innleid_id.strip())
+    if skill_code:
+        where.append("UPPER(k.skill_code) = UPPER(?)")
+        params.append(skill_code.strip())
+    if status:
+        where.append("LOWER(k.status) = LOWER(?)")
+        params.append(status.strip())
+
+    sql = (
+        "SELECT k.innleid_id, p.navn, p.firma, p.kategori, k.skill_code, "
+        "k.sertifisert_dato, k.gyldig_til, k.status, k.datakilde "
+        "FROM hr_innleide_kompetanse k "
+        "LEFT JOIN hr_innleide_personer p ON k.innleid_id = p.innleid_id"
+    )
+    if where:
+        sql += " WHERE " + " AND ".join(where)
+    sql += " ORDER BY k.innleid_id, k.skill_code LIMIT ?"
+    params.append(trygget_limit)
+
+    rader = [dict(r) for r in execute_read_query(sql, tuple(params), db)]
+    return {
+        "antall": len(rader),
+        "rader": rader,
+    }
+
+
+def query_hr_medarbeidersamtaler(
+    ansatt_id: str | None = None,
+    samtale_id: str | None = None,
+    leder_rolle: str | None = None,
+    limit: int = 50,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Henter gjennomførte medarbeidersamtaler og utviklingsnotater fra hr_medarbeidersamtaler."""
+    db = _db(db_path)
+    if not _har_tabell("hr_medarbeidersamtaler", db):
+        return {"feil": "Tabellen hr_medarbeidersamtaler mangler i databasen.", "antall": 0, "rader": []}
+
+    try:
+        trygget_limit = max(1, min(int(limit), 500))
+    except (TypeError, ValueError):
+        trygget_limit = 50
+
+    where: list[str] = []
+    params: list[Any] = []
+    if ansatt_id:
+        where.append("UPPER(m.ansatt_id) = UPPER(?)")
+        params.append(ansatt_id.strip())
+    if samtale_id:
+        where.append("UPPER(m.samtale_id) = UPPER(?)")
+        params.append(samtale_id.strip())
+    if leder_rolle:
+        where.append("LOWER(m.leder_rolle) LIKE LOWER(?)")
+        params.append(f"%{leder_rolle.strip()}%")
+
+    sql = (
+        "SELECT m.samtale_id, m.ansatt_id, a.navn, a.stilling, a.avdeling, "
+        "m.dato, m.leder_rolle, m.samlet_vurdering, m.styrker, m.utviklingsomrade, "
+        "m.erfaring_notat, m.onsker_flere_helgevakter, m.datakilde "
+        "FROM hr_medarbeidersamtaler m "
+        "LEFT JOIN hr_ansatte a ON m.ansatt_id = a.ansatt_id"
+    )
+    if where:
+        sql += " WHERE " + " AND ".join(where)
+    sql += " ORDER BY m.dato DESC LIMIT ?"
+    params.append(trygget_limit)
+
+    rader = [dict(r) for r in execute_read_query(sql, tuple(params), db)]
+    return {
+        "antall": len(rader),
+        "rader": rader,
+    }
+
+

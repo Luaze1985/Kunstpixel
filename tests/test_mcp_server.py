@@ -37,6 +37,9 @@ try:
         search_contractors,
         get_employee_cv,
         search_hms_guidance,
+        get_daily_visitors,
+        get_contractor_competencies,
+        get_performance_reviews,
     )
 except ImportError as err:
     pytest.fail(f"Could not import MCP tools from src.kunstpixel.core.mcp_server: {err}", pytrace=False)
@@ -319,4 +322,42 @@ class TestMcpReadOnlyCompliance:
         assert "verify_colab_dataset" in tool_names
         assert "list_colab_inbox_deliveries" in tool_names
         assert "get_building_map_data" in tool_names
+        assert "get_daily_visitors" in tool_names
+        assert "get_contractor_competencies" in tool_names
+        assert "get_performance_reviews" in tool_names
+
+
+class TestNewMcpCoverageTools:
+    """Verifies that the 3 new MCP tools covering dagsbesok, hr_innleide_kompetanse and hr_medarbeidersamtaler return expected structured data."""
+
+    def test_get_daily_visitors_returns_records(self):
+        res = get_daily_visitors(aar=2024, limit=5)
+        assert isinstance(res, dict)
+        assert "antall" in res
+        assert res["antall"] >= 1
+        assert len(res["rader"]) >= 1
+        rad = res["rader"][0]
+        assert "dato" in rad
+        assert "besok_totalt" in rad
+        assert "inntekt_nok" in rad
+        assert rad["aar"] == 2024
+
+    def test_get_contractor_competencies_returns_records(self):
+        res = get_contractor_competencies(innleid_id="KP-INN-P01")
+        assert isinstance(res, dict)
+        assert res["antall"] >= 1
+        rad = res["rader"][0]
+        assert rad["innleid_id"] == "KP-INN-P01"
+        assert "skill_code" in rad
+        assert "status" in rad
+
+    def test_get_performance_reviews_returns_records(self):
+        res = get_performance_reviews(ansatt_id="KP-ANS-001")
+        assert isinstance(res, dict)
+        assert res["antall"] >= 1
+        rad = res["rader"][0]
+        assert rad["ansatt_id"] == "KP-ANS-001"
+        assert "samtale_id" in rad
+        assert "samlet_vurdering" in rad
+
 

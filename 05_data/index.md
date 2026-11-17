@@ -148,11 +148,11 @@ Oversikt over samtlige **61 brukertabeller** (+ intern `sqlite_sequence` = 62 ta
 | `hr_vakter` | 54 994 | `vakt_id`, FK `ansatt_id`, `utstilling_id` | `db.py`, `get_shifts_for_date`, `audit_shift_compliance` |
 | `hr_fravaer` | 3 456 | `fravaer_id`, FK `ansatt_id` | `db.py` |
 | `hr_personalmapper` | 167 | `saksnr`, FK `ansatt_id` (`KP-ANS-155` mangler med vilje) | `db.py`, `get_personnel_file` |
-| `hr_medarbeidersamtaler` | 142 | `samtale_id`, FK `ansatt_id` | `db.py` |
+| `hr_medarbeidersamtaler` | 142 | `samtale_id`, FK `ansatt_id` | `db.py`, `query_hr_medarbeidersamtaler`, `get_performance_reviews` |
 | `hr_opplaering_onboarding` | 18 | `opplaering_id`, `rolle` | `query_hr_opplaering_onboarding` |
 | `hr_innleie` | 318 | `innleie_id`, FK `knyttet_utstilling_id`, `godkjent_av_ansatt_id` | `db.py` |
 | `hr_innleide_personer` | 8 | `innleid_id` (`KP-INN-Pxx`) | `db.py` |
-| `hr_innleide_kompetanse` | 19 | FK `innleid_id`, `skill_code` | `db.py` |
+| `hr_innleide_kompetanse` | 19 | FK `innleid_id`, `skill_code` | `db.py`, `query_hr_innleide_kompetanse`, `get_contractor_competencies` |
 | `hr_people` | 12 | `id`, FK `ansatt_id` | `db.py`, `core/bemanning.py` |
 | `hr_availability` | 11 | FK `person_id` -> `hr_people` | `db.py`, `core/bemanning.py` |
 | `hr_person_skill` | 30 | FK `person_id`, `skill_code` | `db.py`, `core/bemanning.py` |
@@ -179,7 +179,7 @@ Oversikt over samtlige **61 brukertabeller** (+ intern `sqlite_sequence` = 62 ta
 | `avvik_hms_drift` | 34 | `avvik_id`, FK `berort_sal_id`, `berort_verk_id`, `oppfolging_ansvarlig_id` | `db.py` |
 | `hms_avvik_tekst` | 40 | `avvik_id`, `dato`, `avdeling`, `stasjon` | `query_hms_avvik_tekst`, `search_hms_incident_narratives` |
 | `hms_ergonomi_rotasjon` | 9 | `stasjon_id`, `anbefalt_rotasjon_stasjon_id` | `db.py` |
-| `dagsbesok` | 6 209 | `dato` | `db.py` |
+| `dagsbesok` | 6 209 | `dato` | `db.py`, `query_dagsbesok`, `get_daily_visitors` |
 | `besok_tilfredshet` | 885 | `dato`, daglige scoringer | `query_besok_og_anmeldelser`, `search_visitor_reviews_and_satisfaction` |
 | `anmeldelser` | 2 040 | `anmeldelse_id`, FK `utstilling_id`, `produkt_id` | `query_besok_og_anmeldelser`, `search_visitor_reviews_and_satisfaction` |
 | `publikum_faq` | 12 | `id` | `db.py` |

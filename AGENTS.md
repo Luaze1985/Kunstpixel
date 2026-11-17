@@ -149,6 +149,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode man
 36. `verify_colab_dataset(delivery_name)`
     - Verifiserer sjekksummen for en innkommende Colab-leveranse via SHA-256.
 
+### Dagsbesøk, Leverandørkompetanse & Medarbeidersamtaler (3 verktøy i `src/mcp_server.py`):
+37. `get_daily_visitors(fra_dato, til_dato, aar, kun_aapent, limit)`
+    - Historiske dagsbesøk, publikumstall og billettinntekter fra `dagsbesok`.
+38. `get_contractor_competencies(innleid_id, skill_code, status, limit)`
+    - Dokumentert kompetanse og sertifikater for innleid personell fra `hr_innleide_kompetanse`.
+39. `get_performance_reviews(ansatt_id, samtale_id, leder_rolle, limit)`
+    - Gjennomførte medarbeidersamtaler, utviklingsmål og vaktønsker fra `hr_medarbeidersamtaler`.
+
 ---
 
 ## 5. Kritiske Regler for AI-agenter
