@@ -62,6 +62,21 @@
   }
   function jaNei(b) { return b ? "Ja" : "Nei"; }
 
+  // Oversikt på Hjem (Lars 2026-11-17: «pass på støyen»). Løft fram det som krever oppmerksomhet, legg resten bak ett klikk.
+  // Krever oppmerksomhet: status som ikke er normal, eller et problemtall (uten status) som er over null.
+  var IKKE_NORMAL = { "Følg med": 1, "Over terskel": 1, "Ukjent": 1 };
+  var PROBLEMTALL = { driftsmeldinger: 1, hms_avvik: 1 };
+  function delAvvik(d, nokler) {
+    var ut = { avvik: [], resten: [] };
+    (nokler || []).forEach(function (k) {
+      var x = d && d[k]; if (!x) return;
+      var harStatus = x.status !== undefined && x.status !== null;
+      var avvik = harStatus ? !!IKKE_NORMAL[x.status] : !!PROBLEMTALL[k] && x.verdi > 0;
+      ut[avvik ? "avvik" : "resten"].push(k);
+    });
+    return ut;
+  }
+
   // ---------- «Fulgt opp» (F6). Lagres bare i nettleseren. Lagring som feiler, velter ikke siden. ----------
   var NOKKEL = "kunstpixel.oppfolging.v1";
   function lesOppfolging(lager) {
@@ -83,6 +98,70 @@
     var n = Math.abs(dager), ord_ = n === 1 ? "dag" : "dager";
     return dager < 0 ? n + " " + ord_ + " over fristen" : "Om " + n + " " + ord_;
   }
+  // ---------- 3b: e-postutkast, «Mine oppfølginger» og «Godta». Bare i nettleseren, ingenting sendes. ----------
+  // Utkastet (overskrift og tekst) lages på serveren fra en fast mal (B9). Her blir det bare en mailto-lenke.
+  function mailto(utkast) {
+    if (!utkast || !utkast.overskrift) return null;
+    var tekst = String(utkast.tekst || "").replace(/\r?\n/g, "\r\n");
+    return "mailto:?subject=" + encodeURIComponent(utkast.overskrift) + "&body=" + encodeURIComponent(tekst);
+  }
+
+  // Egen nøkkel for lista. «Fulgt opp» på frister (kunstpixel.oppfolging.v1) er urørt.
+  var LISTE = "kunstpixel.oppfolginger.v1";
+  var TYPER = { oppfolging: "Følg opp", avvik: "Avvik", godkjent: "Godkjent" };
+  function tekst(v, maks) { return typeof v === "string" ? v.slice(0, maks) : ""; }
+  function vask(o) {
+    return { id: tekst(o.id, 40), tittel: tekst(o.tittel, 200), type: TYPER[o.type] ? o.type : "oppfolging",
+      adresse: tekst(o.adresse, 500), kilde: tekst(o.kilde, 200), opprettet: tekst(o.opprettet, 40),
+      lukket: typeof o.lukket === "string" ? o.lukket.slice(0, 40) : null };
+  }
+  function lesOppfolginger(lager) {
+    try { var d = JSON.parse(lager.getItem(LISTE) || "[]"); return Array.isArray(d) ? d.filter(function (o) { return o && typeof o === "object"; }).map(vask) : []; }
+    catch (e) { return []; }
+  }
+  function skrivListe(lager, liste) { try { lager.setItem(LISTE, JSON.stringify(liste)); } catch (e) { /* privat vindu o.l. */ } return liste; }
+  function leggTilOppfolging(lager, o, tid) {
+    var liste = lesOppfolginger(lager), ny = vask({ tittel: o.tittel, type: o.type, adresse: o.adresse, kilde: o.kilde, opprettet: tid, lukket: null });
+    var finnes = liste.filter(function (x) { return !x.lukket && x.type === ny.type && x.adresse === ny.adresse && x.tittel === ny.tittel; })[0];
+    if (finnes) return finnes;
+    ny.id = "o" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    liste.push(ny); skrivListe(lager, liste);
+    return ny;
+  }
+  function endre(lager, id, f) { var liste = lesOppfolginger(lager); liste.forEach(function (o) { if (o.id === id) f(o); }); return skrivListe(lager, liste); }
+  function lukkOppfolging(lager, id, tid) { return endre(lager, id, function (o) { o.lukket = tid; }); }
+  function gjenaapneOppfolging(lager, id) { return endre(lager, id, function (o) { o.lukket = null; }); }
+  function nyesteAapne(liste, n) {
+    return (liste || []).filter(function (o) { return !o.lukket && o.type !== "godkjent"; })
+      .slice().sort(function (a, b) { return a.opprettet < b.opprettet ? 1 : a.opprettet > b.opprettet ? -1 : 0; }).slice(0, n);
+  }
+  // «Godta» (F8): én post per rapportadresse (rapport + valg). Står som lukket, så den ikke telles som åpen oppgave.
+  function godta(lager, adresse, tittel, tid) {
+    var liste = lesOppfolginger(lager).filter(function (o) { return !(o.type === "godkjent" && o.adresse === adresse); });
+    liste.push(vask({ id: "g" + Date.now().toString(36), tittel: tittel, type: "godkjent", adresse: adresse, opprettet: tid, lukket: tid }));
+    return skrivListe(lager, liste);
+  }
+  function angreGodta(lager, adresse) {
+    return skrivListe(lager, lesOppfolginger(lager).filter(function (o) { return !(o.type === "godkjent" && o.adresse === adresse); }));
+  }
+  function erGodkjent(liste, adresse) { return (liste || []).some(function (o) { return o.type === "godkjent" && o.adresse === adresse; }); }
+
+  // CSV for Excel: semikolon, alt i anførselstegn, BOM. Celler som starter med = + - @ får ' foran (CSV-injeksjon).
+  function celle(v) {
+    var s = v === null || v === undefined ? "" : String(v);
+    if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+  function oppfolgingCsv(liste) {
+    var linjer = [["Tittel", "Type", "Status", "Opprettet", "Lukket", "Kilde", "Adresse"].map(celle).join(";")];
+    (liste || []).forEach(function (o) {
+      var status = o.type === "godkjent" ? "Godkjent" : o.lukket ? "Lukket" : "Åpen";
+      linjer.push([o.tittel, TYPER[o.type] || "Følg opp", status, o.opprettet, o.lukket, o.kilde, o.adresse].map(celle).join(";"));
+    });
+    return "﻿" + linjer.join("\r\n");
+  }
+  function typeTekst(t) { return TYPER[t] || "Følg opp"; }
+
   function etikett(felt) {
     if (ORD[felt]) return ORD[felt];
     var t = String(felt || "").replace(/_/g, " ");
@@ -90,9 +169,12 @@
   }
 
   var api = { statusVisning: statusVisning, normaltTekst: normaltTekst, tallPer: tallPer, datoKort: datoKort, etikett: etikett, tall: tall,
-    kategoriTekst: kategoriTekst, jaNei: jaNei,
+    kategoriTekst: kategoriTekst, jaNei: jaNei, delAvvik: delAvvik,
     lesOppfolging: lesOppfolging, merkFulgtOpp: merkFulgtOpp, angreFulgtOpp: angreFulgtOpp, erFulgtOpp: erFulgtOpp,
-    grupper: grupper, fristTekst: fristTekst };
+    grupper: grupper, fristTekst: fristTekst,
+    mailto: mailto, lesOppfolginger: lesOppfolginger, leggTilOppfolging: leggTilOppfolging, lukkOppfolging: lukkOppfolging,
+    gjenaapneOppfolging: gjenaapneOppfolging, nyesteAapne: nyesteAapne, godta: godta, angreGodta: angreGodta,
+    erGodkjent: erGodkjent, oppfolgingCsv: oppfolgingCsv, typeTekst: typeTekst };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else rot.Ledelse = api;
 })(this);

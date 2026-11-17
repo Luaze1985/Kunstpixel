@@ -148,7 +148,7 @@ def test_kafe_og_besoksverktoy_svarer_via_api(server_url: str) -> None:
         assert status == 200, (navn, body[:200])
 
 
-@pytest.mark.parametrize("sti, maal", [("/arena", "/#arena"), ("/arbeidsflyt", "/"), ("/sok.html", "/")])
+@pytest.mark.parametrize("sti, maal", [("/arena", "/"),("/arbeidsflyt", "/"), ("/sok.html", "/")])
 def test_fjernede_sider_sendes_til_skallet(server_url: str, sti: str, maal: str) -> None:
     import http.client
 

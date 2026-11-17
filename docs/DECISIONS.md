@@ -228,6 +228,46 @@ Kartet står i `docs/plans/2026-11-15-ren-main.md`.
 - **F6. «Fulgt opp»** lagres bare i nettleseren (`kunstpixel.oppfolging.v1`). Siden virker uten lagring.
 - **Funn:** ingen sykemeldinger i dataene varer 4 uker eller mer, så uke 4/7-regelen slår aldri ut på dagens data. Hører til datageneratoren (D2).
 
+## 2026-11-17 — Datafinner: Hjem i to faner og etappe 3b (spec B9, F7–F9)
+
+- **H1. Lite støy (Lars):** «Pass på støyen, poenget er å ikke få masse rot.» Regelen gjelder alt nytt: én eller to synlige knapper, resten under «Mer».
+- **H2. Hjem i to faner (Lars valgte):** Oversikt (`#hjem`) og Chat (`#flate:chat`). Begge fanene har egen adresse, så tilbake og frem virker. Hjem åpner på Oversikt. Etappe 1-testene som forutsatte chatten på Hjem, er endret med vilje.
+- **H3. Oversikt viser det som krever oppmerksomhet (min regel):** status Følg med, Over terskel eller Ukjent, eller et åpent driftsmeldings- eller HMS-tall over 0. Resten ligger under «Vis N andre tall». Der står det «andre tall», ikke «normale», fordi tall uten status ikke er vurdert.
+- **H4. Full 3b (Lars valgte):** e-postutkast, «Meld avvik», «Godta» og «Mine oppfølginger».
+- **H5. E-postmaler (B9)** ligger i `core/epostmaler.py`. `fyll_mal` feiler når en verdi mangler. Verdier settes inn i én omgang, uten linjeskift, og kuttes etter 300 tegn. Ingen mal spør om diagnose eller årsak. Utkastet lages på serveren:
+  - Hver frist i `get_my_deadlines` får `epost`.
+  - Hver rapport fra `lag_rapport` får `epost`.
+  - Ingen ny hvitelisting. KI-chatten får derfor ikke nye verktøy.
+  - Feltet heter `overskrift` (ikke `emne`), fordi vakttesten for frister forbyr ordet «emne».
+- **H6. E-postutkast bare der malen kan fylles med fakta fra databasen** (frister og rapporter), ikke på rader og KI-svar. Dette er et avvik fra F7 i specen, og skal hindre støy og fritt oppdiktede e-poster.
+- **H7. «Mine oppfølginger» (F9)** har egen nøkkel `kunstpixel.oppfolginger.v1` (en liste). «Fulgt opp» på frister (`kunstpixel.oppfolging.v1`) er urørt.
+  - Typene er Følg opp, Avvik og Godkjent.
+  - Samme åpne sak legges ikke inn to ganger.
+  - CSV-filen bruker semikolon og BOM, og celler som starter med = + - @ får ' foran (CSV-injeksjon).
+  - Huskelappen viser de 3 nyeste åpne når den er synlig.
+- **H8. «Godta» (F8)** erstatter avkrysningene. Godkjenningen huskes per rapportadresse, det vil si rapport og valg, uten rad, og kan angres. Uten regel blir rapporten ikke «Bekreftet».
+- **Tester:** hele pytest ga 2481 bestått, 9 hoppet over og 2 ventede feil. Datafinner er startet på nytt og sjekket i Chrome, uten konsollfeil.
+- **H9. Arena er fjernet fra siden (Lars: «Fjern hele Arena»).** Grunnen var at casen T1 viste en rådump («Dette sier de interne dataene: AO-03 …»).
+  - Menyen, adressene og visningen er fjernet.
+  - Gamle `#arena…`-lenker går til Hjem, og `/arena` går til `/`.
+  - Lars vil kanskje bruke casene til øving senere, så de skal ikke slettes. Kommer de tilbake, må svaret fra den interne assistenten vises ryddig (tabell), ikke som rådump.
+  - Står igjen urørt: `core/arena.py`, `04_knowledge/07_arena/caser.yaml`, `/api/arena/*` og `tests/test_arena_caser.py`. Den interne assistenten (`core/intern/`) brukes også av `intern_hub`.
+  - Hele pytest ga 2482 bestått.
+
+## 2026-11-17 — Skillen `kunstpixel-data` sjekket mot databasen (oppgaver i `.scratch/kunstpixel-data-skill/issues/`)
+
+- **S1. Tall-vakt:** `tests/test_skill_kunstpixel_data.py` sjekker hvert tall i skillen mot `museum.db`. Testen feiler hvis databasen bygges på nytt og skillen ikke følger med.
+- **S2. «Ansatte uten vakter»** er 24 nåværende (46 med sluttede), etter D1.
+- **S3. Offentlig og syntetisk** følger `arena.datamerke`:
+  - 4 tabeller er offentlige: SSB, helligdager, Arbeidstilsynet og enhetsregisteret.
+  - 31 tabeller er merket syntetisk.
+  - 26 tabeller er umerket, fordi de ikke har kolonnen `datakilde`.
+  - Påstanden «alle rader er syntetiske» er fjernet.
+- **S4. «I år»** bruker `date('now','localtime','start of year')`, ikke `'2026-01-01'`.
+- **S5. Kolonnen `timer` brukes alltid.** 83 vakter avviker fra slutt − start − 0,5, og 66 av dem er over døgnmaks. **Lars:** de 17 andre er feil og skal rettes i datageneratoren (D2, etappe 4).
+- **S6. K2 er lagret i git (d85af4e) etter Lars' ja:** `get_daily_visitors`, `get_contractor_competencies` og `get_performance_reviews`. Alle er bare MCP-verktøy. Ingen av dem er hvitelistet i Datafinner.
+- **S7. Medarbeidersamtaler er åpne uten rollesperre (Lars: «det skal være åpnet»).** Personalmappen har fortsatt sperre (CASE-016). Dataene er syntetiske. Blir det ekte data, må dette vurderes på nytt.
+
 ## 2026-11-16 — Datadefinisjoner (skill `kunstpixel-data`)
 
 - **D1. «Ansatte» betyr nåværende** (`status <> 'Sluttet'`, 74 personer). Alle 168 bare ved «tidligere», «historisk» eller et tidligere årstall.

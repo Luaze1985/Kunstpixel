@@ -15,7 +15,7 @@ import re
 from datetime import date, datetime, timedelta
 from typing import Any
 
-from src.kunstpixel.core import db, ledelse
+from src.kunstpixel.core import db, epostmaler, ledelse
 
 _DATO = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 _APNE = ("APEN", "UNDER_BEHANDLING")
@@ -131,6 +131,8 @@ def get_my_deadlines(rolle: str, dato: str) -> dict[str, Any]:
                                    "frist_dato": r["periode_slutt"], "kilde": "utstillingsinnlan og utstillinger_historikk"})
 
     liste = ledelse.beregn_frister(kandidater, idag)
+    for f in liste:
+        f["epost"] = epostmaler.utkast_for_frist(f)  # B9: fast mal, fakta fra databasen. Ingenting sendes.
     antall = {g: sum(1 for f in liste if f["gruppe"] == g) for g in ("Forfalt", "I dag", "Denne uka", "Senere")}
     return {
         "dato": idag.isoformat(), "rolle": rolle, "hentet_kl": datetime.now().strftime("%H:%M"),

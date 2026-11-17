@@ -85,13 +85,13 @@ def test_ki_faar_instruks_om_kort_svar_og_kilde() -> None:
 
 def test_leder_aapner_til_sporsmal_uten_menystoy(leder_side) -> None:
     page, base = leder_side
-    page.goto(base, wait_until="networkidle")
-    assert page.get_by_role("heading", name="Spør om data", exact=True).is_visible()
+    page.goto(_adr(base, "flate:chat"), wait_until="networkidle")
+    _chat_aapen(page)
     assert page.locator("#chat-felt").is_enabled()
     assert "KI konfigurert" in page.locator("#chat-status").inner_text()
     assert page.locator("#chat-felt").evaluate("(e) => document.activeElement === e")
     assert page.locator("#rollevalg").input_value() == "Museumsdirektør"
-    for navn in ("Hjem", "Rapporter", "Tabeller"):  # «Hjem» er KI-chatten (etappe 1, 2026-11-16)
+    for navn in ("Hjem", "Rapporter", "Tabeller"):  # Hjem har fanene Oversikt og Chat (2026-11-17)
         assert page.get_by_role("navigation", name="Innhold").get_by_role("button", name=navn).is_visible()
     assert not page.get_by_role("navigation", name="Innhold").get_by_text("Arena", exact=True).is_visible()
     assert not page.get_by_role("complementary", name="Fasit").is_visible()
@@ -104,7 +104,7 @@ def test_leder_spor_og_aapner_tabell(leder_side) -> None:
         sendt.append(route.request.post_data_json)
         route.fulfill(json={"tekst": "Nettoresultatet er 657 556 kr.", "verktoykall": [{"navn": "get_exhibition_economy", "args": {"exhibition_id": "KP-EXH-2026-FOKUS-2"}, "ok": True}], "data_hentet": [{"kilde": "utstilling_okonomi"}]})
     page.route("**/api/chat", svar)
-    page.goto(base, wait_until="networkidle")
+    page.goto(_adr(base, "flate:chat"), wait_until="networkidle")
     page.locator("#chat-felt").fill("Hva er nettoresultatet for KP-EXH-2026-FOKUS-2?")
     page.get_by_role("button", name="Send", exact=True).click()
     page.get_by_text("Nettoresultatet er 657 556 kr.").wait_for()
@@ -123,7 +123,7 @@ def test_leder_spor_og_aapner_tabell(leder_side) -> None:
 def test_ki_utilgjengelig_gir_fortsatt_tilgang_til_rapporter_og_tabeller(leder_side) -> None:
     page, base = leder_side
     page.route("**/api/status", lambda route: route.fulfill(json={"llm": False}))
-    page.goto(base, wait_until="networkidle")
+    page.goto(_adr(base, "flate:chat"), wait_until="networkidle")
     assert page.locator("#chat-felt").is_disabled()
     assert "KI er utilgjengelig" in page.locator("main").inner_text()
     nav = page.get_by_role("navigation", name="Innhold")
@@ -136,7 +136,7 @@ def test_ki_utilgjengelig_gir_fortsatt_tilgang_til_rapporter_og_tabeller(leder_s
 def test_ki_feil_vises_uten_falsk_tilkobling(leder_side) -> None:
     page, base = leder_side
     page.route("**/api/chat", lambda route: route.fulfill(status=502, json={"error": "Claude svarte ikke."}))
-    page.goto(base, wait_until="networkidle")
+    page.goto(_adr(base, "flate:chat"), wait_until="networkidle")
     page.locator("#chat-felt").fill("Finn et tall")
     page.get_by_role("button", name="Send", exact=True).click()
     page.get_by_role("alert").get_by_text("Claude svarte ikke.").wait_for()
@@ -148,8 +148,8 @@ def test_mobil_har_sporsmal_og_tabellvei(leder_side) -> None:
     page, base = leder_side
     page.set_viewport_size({"width": 390, "height": 844})
     page.route("**/api/chat", lambda route: route.fulfill(json={"tekst": "Nettoresultatet er 657 556 kr.", "verktoykall": [{"navn": "get_exhibition_economy", "args": {}, "ok": True}], "data_hentet": [{"kilde": "utstilling_okonomi"}]}))
-    page.goto(base, wait_until="networkidle")
-    assert page.get_by_role("heading", name="Spør om data", exact=True).is_visible()
+    page.goto(_adr(base, "flate:chat"), wait_until="networkidle")
+    _chat_aapen(page)
     page.locator("#chat-felt").fill("Hva er nettoresultatet?")
     page.get_by_role("button", name="Send", exact=True).click()
     page.get_by_text("Nettoresultatet er 657 556 kr.").wait_for()
@@ -180,12 +180,61 @@ def test_meny_har_hjem_og_faa_punkter(leder_side) -> None:
     assert page.evaluate("document.getElementById('meny').compareDocumentPosition(document.getElementById('rollevalg')) & Node.DOCUMENT_POSITION_FOLLOWING")
 
 
-def test_hjem_fra_rapport_gaar_til_ki(leder_side) -> None:
+def _chat_aapen(page) -> None:
+    """Hjem har fanene Oversikt og Chat (Lars 2026-11-17). Chat-fanen er valgt og skrivefeltet finnes."""
+    page.locator("#chat-felt").wait_for()
+    assert page.get_by_role("tab", name="Chat").get_attribute("aria-selected") == "true"
+
+
+def test_hjem_fra_rapport_gaar_til_oversikt(leder_side) -> None:
     page, base = leder_side
     page.goto(_adr(base, "rolle:HR og bemanning/vaktplan"), wait_until="networkidle")
     page.get_by_role("heading", name="Vaktplan for en dag").wait_for()
     page.get_by_role("navigation", name="Innhold").get_by_role("button", name="Hjem", exact=True).click()
-    page.get_by_role("heading", name="Spør om data", exact=True).wait_for()
+    page.get_by_role("region", name="I dag").wait_for()
+    assert page.get_by_role("tab", name="Oversikt").get_attribute("aria-selected") == "true"
+
+
+def test_arena_er_fjernet_fra_siden(leder_side) -> None:
+    """Lars 2026-11-17: «Fjern hele Arena». Rådumpen fra øvingscasene skal aldri vises."""
+    page, base = leder_side
+    page.goto(base, wait_until="networkidle")
+    nav = page.get_by_role("navigation", name="Innhold")
+    nav.get_by_text("Mer", exact=True).click()
+    assert "Arena" not in nav.inner_text() and "Tidsbruk" not in nav.inner_text()
+    assert page.locator("#mobilvalg option[value^='arena']").count() == 0
+    page.goto(_adr(base, "arena:tidsbruk/T1"), wait_until="networkidle")  # gamle lenker går til Hjem
+    page.get_by_role("region", name="I dag").wait_for()
+    assert "Dette sier de interne dataene" not in page.locator("main").inner_text()
+
+
+def test_hjem_har_fanene_oversikt_og_chat(leder_side) -> None:
+    """Lars 2026-11-17: Hjem som to faner, så oversikten og chatten ikke står oppå hverandre."""
+    page, base = leder_side
+    page.goto(base, wait_until="networkidle")
+    page.get_by_role("region", name="I dag").wait_for()
+    assert page.locator("#chat-felt").count() == 0  # chatten står ikke på Oversikt
+    page.get_by_role("tab", name="Chat").click()
+    _chat_aapen(page)
+    assert page.get_by_role("region", name="I dag").count() == 0
+    page.go_back()
+    page.get_by_role("region", name="I dag").wait_for()
+
+
+def test_oversikt_viser_bare_det_som_krever_oppmerksomhet(leder_side) -> None:
+    page, base = leder_side
+    page.route("**/api/verktoy?navn=get_today_overview*", lambda route: route.fulfill(json={"resultat": {
+        "dato": "2026-11-17", "aapent_i_dag": True, "hentet_kl": "09:05",
+        "besok": {"navn": "Besøk", "dato": "2026-11-16", "verdi": 300, "normalt": 400, "endring_pst": -25, "status": "Følg med", "rader": []},
+        "vakter": {"navn": "Vakter i dag", "verdi": 10, "rader": []},
+        "arrangementer": {"navn": "Arrangementer i dag", "verdi": 0, "rader": []},
+    }}))
+    page.goto(base, wait_until="networkidle")
+    kort = page.get_by_role("region", name="I dag")
+    kort.get_by_text("Følg med", exact=False).first.wait_for()
+    assert not kort.get_by_text("Vakter i dag", exact=False).is_visible()
+    kort.get_by_text("Vis 2 andre tall", exact=True).click()
+    assert kort.get_by_text("Vakter i dag", exact=False).is_visible()
 
 
 def test_brodsmuler_og_tilbake(leder_side) -> None:
@@ -257,7 +306,7 @@ def test_huskelapp_er_ett_kort_med_spor_ki(leder_side) -> None:
     fasit.wait_for()
     assert fasit.locator(".af-context-card").count() == 1
     fasit.get_by_role("button", name="Spør KI om dette").click()
-    page.get_by_role("heading", name="Spør om data", exact=True).wait_for()
+    _chat_aapen(page)
     assert "Vaktplan for en dag" in page.locator("#chat-felt").input_value()
 
 
@@ -272,7 +321,7 @@ def test_mobil_har_hjem_forst(leder_side) -> None:
     page.set_viewport_size({"width": 390, "height": 844})
     page.goto(_adr(base, "rolle:HR og bemanning/vaktplan"), wait_until="networkidle")
     forste = page.locator("#mobilvalg option").first
-    assert forste.inner_text() == "Hjem" and forste.get_attribute("value") == "flate:chat"
+    assert forste.inner_text() == "Hjem" and forste.get_attribute("value") == "hjem"
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth + 1")
 
 
@@ -293,11 +342,13 @@ def test_i_dag_kortet_virker_uten_ki_paa_stengt_dag(leder_side) -> None:
     side.goto(base, wait_until="networkidle")
     kort = side.get_by_role("region", name="I dag")
     kort.wait_for()
+    kort.get_by_text(re.compile(r"^Vis \d+ andre tall$")).click()  # besøk er normalt og står bak ett klikk
     tekst = kort.inner_text()
     assert "Stengt i dag" in tekst
     assert "søndag 15.11." in tekst and "391" in tekst  # siste hele åpne dag, ikke dagens syntetiske tall
     assert "Tall per kl." in tekst
-    assert side.locator("#chat-felt").is_disabled()  # KI av, kortet vises likevel
+    side.get_by_role("tab", name="Chat").click()
+    assert side.locator("#chat-felt").is_disabled()  # KI av, oversikten vises likevel
     side.close()
 
 
@@ -309,7 +360,6 @@ def test_i_dag_tall_aapner_radene_bak(leder_side) -> None:
     kort.get_by_role("button", name=re.compile("^Vis radene: Åpne driftsmeldinger")).click()
     kort.locator("table tbody tr").first.wait_for()
     assert kort.locator("table tbody tr").count() > 0
-    assert side.locator("#chat-felt").is_enabled()
     side.close()
 
 
@@ -425,8 +475,10 @@ def test_hjem_viser_mine_frister_med_lenke(leder_side) -> None:
 def test_frist_kan_tas_med_til_ki(leder_side) -> None:
     page, base = leder_side
     page.goto(_adr(base, "frister"), wait_until="networkidle")
-    page.get_by_role("button", name=re.compile("^Spør KI: Retur av innlån")).first.click()
-    page.get_by_role("heading", name="Spør om data", exact=True).wait_for()
+    rad = page.locator("li", has_text="Retur av innlån").first
+    rad.get_by_text("Mer", exact=True).click()  # 3b: Spør KI ligger under «Mer»
+    rad.get_by_role("button", name=re.compile("^Spør KI: Retur av innlån")).click()
+    _chat_aapen(page)
     assert "Retur av innlån" in page.locator("#chat-felt").input_value()
 
 
@@ -440,3 +492,86 @@ def test_i_dag_paa_mobil_uten_sidelengs_rulling(leder_side) -> None:
     kort.locator("table tbody tr").first.wait_for()
     assert side.evaluate("document.documentElement.scrollWidth <= innerWidth + 1")
     side.close()
+
+# ---------- Etappe 3b (2026-11-17): handlinger, «Godta» og «Mine oppfølginger». Én synlig handling, resten under «Mer». ----------
+
+def _mer(omraade):
+    """Åpner «Mer» i handlingslinjen (resten av handlingene ligger der, så radene ikke blir fulle av knapper)."""
+    omraade.get_by_text("Mer", exact=True).first.click()
+
+
+def test_fristrad_har_epostutkast_og_meld_avvik_under_mer(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "frister"), wait_until="networkidle")
+    rad = page.get_by_role("region", name=re.compile("^Forfalt")).locator("li", has_text="Retur av innlån").first
+    rad.wait_for()
+    assert not rad.get_by_role("link", name=re.compile("^E-postutkast")).is_visible()  # skjult til «Mer» åpnes
+    _mer(rad)
+    from urllib.parse import unquote
+    href = rad.get_by_role("link", name=re.compile("^E-postutkast")).get_attribute("href")
+    assert href.startswith("mailto:?subject=") and "Retur av innlån" in unquote(href)
+    rad.get_by_role("button", name=re.compile("^Meld avvik")).click()
+    rad.get_by_role("status").get_by_text("Lagt i Mine oppfølginger", exact=False).wait_for()
+    page.goto(_adr(base, "oppfolging"), wait_until="networkidle")
+    aapne = page.get_by_role("region", name=re.compile("^Åpne"))
+    aapne.get_by_text("Avvik: Retur av innlån", exact=False).first.wait_for()
+
+
+def test_rapport_har_godta_i_stedet_for_avkrysninger(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "rolle:HR og bemanning/vaktplan?dato=2026-11-14"), wait_until="networkidle")
+    godta = page.get_by_role("button", name="Godta", exact=True)
+    godta.wait_for()
+    assert page.locator("main input[type=checkbox]").count() == 0
+    assert page.locator("main .af-badge").first.inner_text() == "Utkast"
+    godta.click()
+    page.wait_for_function("document.querySelector('main .af-badge').textContent === 'Bekreftet'")
+    page.reload(wait_until="networkidle")  # godkjenningen huskes for denne rapporten og disse valgene
+    page.wait_for_function("document.querySelector('main .af-badge') && document.querySelector('main .af-badge').textContent === 'Bekreftet'")
+    page.get_by_role("button", name="Angre godkjenning").click()
+    page.wait_for_function("document.querySelector('main .af-badge').textContent === 'Utkast'")
+
+
+def test_folg_opp_fra_rapport_lukk_og_last_ned(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "rolle:HR og bemanning/vaktplan?dato=2026-11-14"), wait_until="networkidle")
+    page.get_by_role("button", name="Følg opp", exact=True).click()
+    page.get_by_role("status").get_by_text("Lagt i Mine oppfølginger", exact=False).first.wait_for()
+    # Huskelappen til høyre viser de nyeste åpne oppfølgingene.
+    assert "Vaktplan for en dag" in page.get_by_role("complementary", name="Fasit").inner_text()
+    nav = page.get_by_role("navigation", name="Innhold")
+    nav.get_by_role("button", name=re.compile("^Mine oppfølginger")).click()
+    aapne = page.get_by_role("region", name=re.compile("^Åpne"))
+    rad = aapne.locator("li", has_text="Vaktplan for en dag").first
+    assert rad.get_by_role("link", name="Åpne kilden").get_attribute("href").startswith("#rolle")
+    with page.expect_download() as nedlasting:
+        page.get_by_role("button", name="Last ned (.csv)").click()
+    innhold = open(nedlasting.value.path(), encoding="utf-8-sig").read()
+    assert "Vaktplan for en dag" in innhold and innhold.startswith('"Tittel"')
+    rad.get_by_role("button", name=re.compile("^Lukk")).click()
+    page.get_by_role("region", name=re.compile("^Lukket")).get_by_text("Vaktplan for en dag", exact=False).first.wait_for(state="attached")
+
+
+def test_ki_svar_kan_folges_opp(leder_side) -> None:
+    page, base = leder_side
+    page.route("**/api/chat", lambda route: route.fulfill(json={"tekst": "Tre åpne HMS-avvik.", "verktoykall": [], "data_hentet": []}))
+    page.goto(_adr(base, "flate:chat"), wait_until="networkidle")
+    page.locator("#chat-felt").fill("Hvor mange HMS-avvik er åpne?")
+    page.get_by_role("button", name="Send", exact=True).click()
+    page.get_by_text("Tre åpne HMS-avvik.").wait_for()
+    page.get_by_role("button", name="Følg opp", exact=True).click()
+    page.goto(_adr(base, "oppfolging"), wait_until="networkidle")
+    page.get_by_role("region", name=re.compile("^Åpne")).get_by_text("Hvor mange HMS-avvik er åpne?", exact=False).wait_for()
+
+
+def test_oppfolging_med_farlig_tittel_vises_som_tekst(leder_side) -> None:
+    page, base = leder_side
+    farlig = "<img src=x onerror=window.__x=1>"
+    page.goto(base, wait_until="networkidle")
+    page.evaluate("""f => localStorage.setItem('kunstpixel.oppfolginger.v1', JSON.stringify([
+        {id: 'a', tittel: f, type: 'avvik', adresse: 'javascript:alert(1)', kilde: f, opprettet: 't', lukket: null}]))""", farlig)
+    page.goto(_adr(base, "oppfolging"), wait_until="networkidle")
+    aapne = page.get_by_role("region", name=re.compile("^Åpne"))
+    aapne.get_by_text(farlig, exact=False).first.wait_for()
+    assert page.locator("main img").count() == 0 and page.evaluate("window.__x") is None
+    assert aapne.get_by_role("link", name="Åpne kilden").get_attribute("href").startswith("#")

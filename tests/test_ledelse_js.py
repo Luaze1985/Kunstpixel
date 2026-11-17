@@ -121,6 +121,113 @@ def test_grupper_flytter_fulgt_opp_til_egen_gruppe() -> None:
     assert list(ut) == ["Forfalt", "I dag", "Denne uka", "Senere", "Fulgt opp"]
 
 
+
+# ---------- Hjem → Oversikt (Lars 2026-11-17: «pass på støyen»): vis det som krever oppmerksomhet, resten bak ett klikk ----------
+
+def test_del_avvik_viser_bare_det_som_krever_oppmerksomhet() -> None:
+    d = {
+        "besok": {"status": "Normal", "verdi": 391},
+        "vakter": {"verdi": 10},
+        "arrangementer": {"verdi": 0},
+        "driftsmeldinger": {"verdi": 15},
+        "hms_avvik": {"verdi": 1},
+        "driftsmeldinger_eldre": {"verdi": 198},
+    }
+    nokler = ["besok", "vakter", "arrangementer", "driftsmeldinger", "hms_avvik", "driftsmeldinger_eldre"]
+    ut = js(f"L.delAvvik({json.dumps(d)}, {json.dumps(nokler)})")
+    assert ut == {"avvik": ["driftsmeldinger", "hms_avvik"], "resten": ["besok", "vakter", "arrangementer", "driftsmeldinger_eldre"]}
+
+
+@pytest.mark.parametrize("status", ["Følg med", "Over terskel", "Ukjent"])
+def test_del_avvik_loefter_status_som_ikke_er_normal(status: str) -> None:
+    ut = js(f"L.delAvvik({{besok: {{status: {json.dumps(status)}, verdi: null}}}}, ['besok'])")
+    assert ut == {"avvik": ["besok"], "resten": []}
+
+
+def test_del_avvik_null_hms_avvik_er_ikke_avvik_og_manglende_hoppes_over() -> None:
+    ut = js("L.delAvvik({hms_avvik: {verdi: 0}}, ['hms_avvik', 'vakter'])")
+    assert ut == {"avvik": [], "resten": ["hms_avvik"]}
+
+
+# ---------- 3b: e-postutkast (F7), «Mine oppfølginger» (F9) og «Godta» (F8). Bare i nettleseren. ----------
+
+def test_mailto_koder_emne_og_tekst() -> None:
+    ut = js('L.mailto({overskrift: "Oppfølging: A & B", tekst: "Hei\\nLinje 2"})')
+    assert ut == "mailto:?subject=Oppf%C3%B8lging%3A%20A%20%26%20B&body=Hei%0D%0ALinje%202"
+
+
+def test_mailto_uten_utkast_gir_null() -> None:
+    assert js("L.mailto(null)") is None
+
+
+def _med_lager(kropp: str) -> str:
+    return f"(function(){{var s={FALSK};{kropp}}})()"
+
+
+def test_legg_til_og_les_oppfolging() -> None:
+    ut = js(_med_lager("var o=L.leggTilOppfolging(s,{tittel:'Vaktplan',type:'avvik',adresse:'rolle:X/vaktplan',kilde:'get_staff_on_shift'},'2026-11-17T10:00');"
+                       "return [o.id.length>0, L.lesOppfolginger(s)]"))
+    assert ut[0] is True
+    o = ut[1][0]
+    assert {k: o[k] for k in ("tittel", "type", "adresse", "kilde", "opprettet", "lukket")} == {
+        "tittel": "Vaktplan", "type": "avvik", "adresse": "rolle:X/vaktplan", "kilde": "get_staff_on_shift",
+        "opprettet": "2026-11-17T10:00", "lukket": None}
+
+
+def test_samme_aapne_oppfolging_legges_ikke_inn_to_ganger() -> None:
+    ut = js(_med_lager("var a={tittel:'T',type:'oppfolging',adresse:'x'};L.leggTilOppfolging(s,a,'t1');L.leggTilOppfolging(s,a,'t2');"
+                       "return L.lesOppfolginger(s).length"))
+    assert ut == 1
+
+
+def test_lukk_og_gjenaapne_oppfolging() -> None:
+    ut = js(_med_lager("var o=L.leggTilOppfolging(s,{tittel:'T',type:'oppfolging',adresse:'x'},'t1');L.lukkOppfolging(s,o.id,'t2');"
+                       "var a=L.lesOppfolginger(s)[0].lukket;L.gjenaapneOppfolging(s,o.id);return [a,L.lesOppfolginger(s)[0].lukket]"))
+    assert ut == ["t2", None]
+
+
+def test_ugyldig_type_og_lang_tittel_vaskes() -> None:
+    ut = js(_med_lager("L.leggTilOppfolging(s,{tittel:'x'.repeat(500),type:'<script>',adresse:'x'},'t');var o=L.lesOppfolginger(s)[0];"
+                       "return [o.tittel.length,o.type]"))
+    assert ut == [200, "oppfolging"]
+
+
+def test_odelagt_lagring_gir_tom_liste() -> None:
+    assert js("L.lesOppfolginger({getItem:function(){return '{ikke json'}})") == []
+    assert js("L.lesOppfolginger({getItem:function(){return '{\"a\":1}'}})") == []
+    assert js(f"(function(){{var s={KAPUTT};L.leggTilOppfolging(s,{{tittel:'T',type:'avvik',adresse:'x'}},'t');return L.lesOppfolginger(s)}})()") == []
+
+
+def test_godta_huskes_per_adresse_og_kan_angres() -> None:
+    ut = js(_med_lager("L.godta(s,'rolle:X/vaktplan?dato=2026-11-14','Vaktplan','t');var a=L.erGodkjent(L.lesOppfolginger(s),'rolle:X/vaktplan?dato=2026-11-14');"
+                       "var b=L.erGodkjent(L.lesOppfolginger(s),'rolle:X/vaktplan?dato=2026-11-13');L.angreGodta(s,'rolle:X/vaktplan?dato=2026-11-14');"
+                       "return [a,b,L.erGodkjent(L.lesOppfolginger(s),'rolle:X/vaktplan?dato=2026-11-14')]"))
+    assert ut == [True, False, False]
+
+
+def test_godkjent_er_ikke_en_aapen_oppfolging() -> None:
+    ut = js(_med_lager("L.godta(s,'a','Rapport A','t1');L.leggTilOppfolging(s,{tittel:'B',type:'avvik',adresse:'b'},'t2');"
+                       "L.leggTilOppfolging(s,{tittel:'C',type:'oppfolging',adresse:'c'},'t3');"
+                       "return L.nyesteAapne(L.lesOppfolginger(s),5).map(function(o){return o.tittel})"))
+    assert ut == ["C", "B"]
+
+
+def test_csv_har_overskrift_semikolon_og_sitater() -> None:
+    liste = [{"tittel": 'Si "hei"; nå', "type": "avvik", "adresse": "x", "kilde": "db", "opprettet": "t1", "lukket": None}]
+    ut = js(f"L.oppfolgingCsv({json.dumps(liste)})")
+    linjer = ut.lstrip("﻿").split("\r\n")
+    assert linjer[0] == '"Tittel";"Type";"Status";"Opprettet";"Lukket";"Kilde";"Adresse"'
+    assert linjer[1] == '"Si ""hei""; nå";"Avvik";"Åpen";"t1";"";"db";"x"'
+
+
+@pytest.mark.parametrize("farlig", ["=HYPERLINK(\"x\")", "+1", "-1", "@SUM(A1)"])
+def test_csv_noeytraliserer_formler(farlig: str) -> None:
+    """CSV-injeksjon: en celle som starter med = + - @ skal ikke bli en formel i Excel."""
+    liste = [{"tittel": farlig, "type": "oppfolging", "adresse": "x", "kilde": "", "opprettet": "t", "lukket": "t2"}]
+    celle = js(f"L.oppfolgingCsv({json.dumps(liste)})").split("\r\n")[1].split(";")[0]
+    assert celle.startswith("\"'")
+
+
 @pytest.mark.parametrize("dager,tekst", [(-260, "260 dager over fristen"), (-1, "1 dag over fristen"),
                                           (0, "I dag"), (1, "Om 1 dag"), (14, "Om 14 dager")])
 def test_frist_tekst(dager: int, tekst: str) -> None:

@@ -20,6 +20,8 @@ import typing
 from collections.abc import Callable
 from typing import Any
 
+from src.kunstpixel.core import epostmaler
+
 # Hvert spørsmål peker på ett verktøy. Reglene i museum.db (rapport_regler) velger vurdering og forslag.
 # Denne listen må stemme med spørsmålene i museum.db (rolle_sporsmal og rapport_regler). Det vokter en test.
 # Forsiden henter spørsmålene herfra via /api/verktoyskjema.
@@ -85,7 +87,7 @@ def lag_rapport(sporsmal_id: str, args: dict[str, Any], kjor: Callable[[str, dic
     verdier = regelverdier(sporsmal_id, fakta)
     regel = kjor("get_report_assessment", {"sporsmal_id": sporsmal_id, "verdier": verdier})
     har_regel = "mangler" not in regel
-    return {
+    rapport = {
         "sporsmal_id": sporsmal_id,
         "sporsmal": spec["tekst"],
         "verktoy": spec["verktoy"],
@@ -101,6 +103,8 @@ def lag_rapport(sporsmal_id: str, args: dict[str, Any], kjor: Callable[[str, dic
         },
         "status": "Utkast",
     }
+    rapport["epost"] = epostmaler.utkast_for_rapport(rapport)  # B9/F7: fast mal. Ingenting sendes.
+    return rapport
 
 
 # ---------- verktøyskjema ----------

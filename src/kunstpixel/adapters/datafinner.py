@@ -128,7 +128,7 @@ VIDERESEND = {
     # API-ene (/api/arbeidsflyt, /api/grense/*) består.
     "/sok.html": "/",
     "/arbeidsflyt": "/",
-    "/arena": "/#arena",
+    "/arena": "/",  # Arena fjernet fra siden 2026-11-17 (Lars). API-et /api/arena/* står til Lars avgjør sletting.
 }
 
 # Interne mapper siden kan lese. Bare tekstfiler, aldri skriving.

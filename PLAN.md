@@ -15,10 +15,16 @@
 - Uavhengig sjekk: kontrollfil til Antigravity i `.scratch/handoffs/AGY-REVIEW-2026-11-16-etappe2.md`. Funnene skal skrives til `AGY-FUNN-2026-11-16.md`.
 - Ukjente endringer i `db.py`, `mcp_server.py`, `test_mcp_server.py`, `AGENTS.md` og `05_data/index.md` (ser ut som K2-arbeid fra en annen økt) er ikke rørt og ikke committet.
 
+## Gjort (2026-11-17): Hjem i to faner og etappe 3b (DECISIONS H1–H8), ikke committet
+- Hjem: fanene Oversikt og Chat. Oversikt viser bare det som krever oppmerksomhet, og resten ligger bak «Vis N andre tall».
+- Handlingslinje med én eller to synlige knapper og resten under «Mer»: e-postutkast fra fast mal, «Meld avvik», «Følg opp» og «Spør KI». «Godta» erstatter avkrysningene. «Mine oppfølginger» har CSV-nedlasting, og de 3 nyeste står i huskelappen.
+- Hele pytest: 2481 bestått.
+- **Neste:** Lars prøver, så commit. Deretter etappe 4.
+
 ## Gjort (2026-11-16): Datafinner etappe 3a, «Mine frister» (DECISIONS F1–F6)
 - «Mine frister» under «Følg opp» i menyen og som kort på Hjem: sykefravær uke 4/7 (HR og Avdelingsleder), driftsmeldinger og HMS-avvik åpne over 14 dager, rapportfrister, tilstandskontroll og retur av innlån. Gruppert Forfalt, I dag, Denne uka og Senere.
 - «Fulgt opp» og «Angre» lagres i nettleseren. «Spør KI» tar fristen med til chatten. `get_condition_report` og `search_loans` er hvitelistet (B10). Hele pytest: 2426 bestått.
-- **Neste: etappe 3b.** E-postmaler (B9), «Meld avvik», «Godta» i stedet for kontroll-avkrysningene (F8) og visningen «Mine oppfølginger» med CSV (F9).
+- Etappe 3b er ferdig (2026-11-17, se over).
 - Åpent: tilstandskontroll hver 12. måned og innlån ved utstillingens slutt er forslag. Lars har ikke bekreftet dem.
 
 ## Gjort (2026-11-16): Datafinner etappe 1 (DECISIONS E1–E8)

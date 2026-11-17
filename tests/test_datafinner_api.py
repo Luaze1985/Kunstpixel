@@ -92,6 +92,14 @@ def test_rapporten_er_deterministisk_og_har_regel_og_merker(server: str, sporsma
     assert a["fakta"]
 
 
+def test_rapporten_har_epostutkast_fra_fast_mal(server: str) -> None:
+    """B9/F7: utkastet lages på serveren fra spørsmålet, vurderingen og kilden. Ingenting sendes."""
+    _, r = _get(_rapport_url(server, "vaktplan", EKSEMPEL_ARGS["vaktplan"]))
+    assert r["epost"]["overskrift"] == "Rapport: " + r["sporsmal"]
+    assert r["vurdering"]["vurdering"] in r["epost"]["tekst"]
+    assert r["verktoy"] in r["epost"]["tekst"]
+
+
 def test_vaktplanen_telles_for_regelen(server: str) -> None:
     _, r = _get(_rapport_url(server, "vaktplan", EKSEMPEL_ARGS["vaktplan"]))
     assert r["regelverdier"]["antall_vakter"] == len(r["fakta"])
