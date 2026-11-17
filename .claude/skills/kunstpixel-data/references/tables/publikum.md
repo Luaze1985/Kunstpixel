@@ -18,7 +18,7 @@ Besøk og inntekt per måned i år:
 ```sql
 SELECT substr(dato, 1, 7) AS maaned, sum(besok_totalt) AS besok, sum(inntekt_nok) AS inntekt_nok
 FROM dagsbesok
-WHERE dato BETWEEN '2026-01-01' AND date('now','localtime')
+WHERE dato BETWEEN date('now','localtime','start of year') AND date('now','localtime')
 GROUP BY maaned ORDER BY maaned;
 ```
 
@@ -33,7 +33,7 @@ GROUP BY kanal;
 Kafeens omsetning i år:
 ```sql
 SELECT sum(omsetning_nok) AS omsetning_nok FROM kafe_varesalg
-WHERE dato BETWEEN '2026-01-01' AND date('now','localtime');
+WHERE dato BETWEEN date('now','localtime','start of year') AND date('now','localtime');
 ```
 
 ## Fallgruver

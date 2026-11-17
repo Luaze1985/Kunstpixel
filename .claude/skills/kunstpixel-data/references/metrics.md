@@ -49,7 +49,7 @@ GROUP BY v.avdeling;
 SELECT sum(besok_totalt) AS besok, sum(inntekt_nok) AS inntekt_nok,
        round(avg(CASE WHEN er_aapent = 1 THEN besok_totalt END), 1) AS snitt_per_apen_dag
 FROM dagsbesok
-WHERE dato BETWEEN '2026-01-01' AND date('now','localtime');
+WHERE dato BETWEEN date('now','localtime','start of year') AND date('now','localtime');
 ```
 
 - **Fallgruve:** `utstillinger_historikk.besokstall_total` er besøk per utstilling. Summen av utstillingene er ikke lik museets besøk.
@@ -66,7 +66,7 @@ WHERE dato BETWEEN '2026-01-01' AND date('now','localtime');
 SELECT type, count(*) AS tilfeller,
        sum(julianday(min(til, date('now','localtime'))) - julianday(fra) + 1) AS dager
 FROM hr_fravaer
-WHERE fra BETWEEN '2026-01-01' AND date('now','localtime')
+WHERE fra BETWEEN date('now','localtime','start of year') AND date('now','localtime')
   AND type IN ('sykemelding','egenmelding')
 GROUP BY type;
 ```

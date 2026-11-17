@@ -25,7 +25,7 @@ Snitt svartid per kategori i år:
 ```sql
 SELECT e.kategori, round(avg(t.svartid_timer), 1) AS snitt_timer, count(*) AS saker
 FROM driftsmeldinger_tiltak t JOIN driftsmeldinger_epost e USING (melding_id)
-WHERE e.dato BETWEEN '2026-01-01' AND date('now','localtime')
+WHERE e.dato BETWEEN date('now','localtime','start of year') AND date('now','localtime')
 GROUP BY e.kategori ORDER BY snitt_timer DESC;
 ```
 

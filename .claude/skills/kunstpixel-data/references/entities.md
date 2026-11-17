@@ -7,7 +7,7 @@
 - **Innleid:** `hr_innleide_personer` (`KP-INN-Pxx`, 8 personer) med kontrakter i `hr_innleie` (`KP-INN-YYYY-xxxx`). Ikke i `hr_ansatte`.
 - **Demoperson:** `hr_people` (`E101`–`E112`) er en liten demokjerne som peker til `hr_ansatte` via `ansatt_id`. Bruk `hr_ansatte` for navn og stilling.
 
-46 ansatte har ingen vakter (ledelse og kontor). «Ingen vakter» betyr ikke «ikke ansatt».
+24 nåværende ansatte har ingen vakter (46 med sluttede). Det er ledelse og kontor. «Ingen vakter» betyr ikke «ikke ansatt».
 
 ## ID-er
 
