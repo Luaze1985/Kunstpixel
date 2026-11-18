@@ -6,6 +6,13 @@
 <title>Datafinner – ett vindu</title>
 <link rel="stylesheet" href="/af.css">
 <script src="/ledelse.js"></script>
+<style>
+  /* Menyen blir stående når du blar (Lars 2026-11-18). overflow: clip, ikke hidden, ellers virker ikke sticky. */
+  .af-shell { overflow: clip; }
+  .af-sidebar-fast { position: sticky; top: 0; max-height: 100vh; overflow-y: auto; }
+  /* Hele rollenavnet («Museumsdirektør») får plass i «Jeg er». */
+  #rollevalg { width: 100%; padding-left: 8px; padding-right: 4px; font-size: .9rem; }
+</style>
 </head>
 <body class="af" style="margin:0;padding:24px 16px;background:var(--canvas)">
 <div class="af">
@@ -13,6 +20,7 @@
     <!-- Venstre: hovedting (Hjem, finn data, mer) og rollen nederst. Midten: der du er og arbeidet.
          Høyre: huskelapp med fasit og én handling. Etappe 1, 2026-11-16. -->
     <nav class="af-sidebar" aria-label="Innhold">
+     <div class="af-sidebar-fast">
       <p class="af-side-heading">Datafinner</p>
       <div id="meny"><p class="af-task-hint">Henter …</p></div>
       <!-- Rollen styrer hvilke rapporter som foreslås. Ligger nederst, som en profil. Valget huskes i fanen. -->
@@ -20,6 +28,7 @@
         <label class="af-label" for="rollevalg">Jeg er</label>
         <select class="af-input" id="rollevalg"><option value="">Velg rolle</option></select>
       </div>
+     </div>
     </nav>
 
     <main class="af-main">
@@ -89,7 +98,7 @@
     var vis = !!(verktoy || kilde || regel);
     document.querySelector(".af-context").hidden = !vis;
     document.querySelector(".af-shell").classList.toggle("af-no-context", !vis);
-    $("f-verktoy").textContent = verktoy ? verktoy + "(" + (args && Object.keys(args).length ? JSON.stringify(args) : "") + ")" : "Ingen ennå";
+    $("f-verktoy").textContent = Ledelse.verktoyTekst(verktoy, args);
     $("f-kilde").textContent = kilde || "museum.db, kun lesing";
     $("f-regel-kort").hidden = !regel;
     $("f-regel").textContent = regel || "";
@@ -162,7 +171,9 @@
     mer.appendChild(el("summary", null, "Mer"));
     mer.appendChild(merInnhold); meny.appendChild(mer);
     // Arena er fjernet (Lars 2026-11-17: «Fjern hele Arena»). Under «Mer» står bare Vaktrom.
-    mer.open = !!(valgt && valgt.indexOf("flate:") === 0 && valgt !== "flate:chat");
+    var merHusket = null; try { merHusket = sessionStorage.getItem("datafinner-mer"); } catch (e) {}
+    mer.open = merHusket === "1" || !!(valgt && valgt.indexOf("flate:") === 0 && valgt !== "flate:chat");
+    mer.addEventListener("toggle", function () { try { sessionStorage.setItem("datafinner-mer", mer.open ? "1" : "0"); } catch (e) {} });
     gruppe("Bemanning", FLATER.map(function (f) { return { id: "flate:" + f.id, navn: f.navn }; }), false, merInnhold);
     if (r) gruppe("Bytt rolle", rollePunkter, true);  // I mobilvisning finnes ikke rollevalget i sidemenyen.
     var topp = (valgt || "hjem").split("/")[0];  // Valget kjenner bare toppnivået (rolle, område, flate).
@@ -258,7 +269,8 @@
       i.id = "p-" + f.navn; l.htmlFor = i.id; i.name = f.navn;
       i.type = f.navn === "dato" ? "date" : f.navn === "maaned" ? "month" : f.type === "integer" ? "number" : "text";
       i.value = f.navn in valg ? valg[f.navn] : STANDARD[f.navn] ? STANDARD[f.navn]() : "";
-      g.appendChild(l); if (f.hjelp) g.appendChild(el("span", "af-hint", f.hjelp)); g.appendChild(i); form.appendChild(g);
+      var hjelp = Ledelse.hjelpTekst(f.hjelp, i.type);
+      g.appendChild(l); if (hjelp) g.appendChild(el("span", "af-hint", hjelp)); g.appendChild(i); form.appendChild(g);
     });
     var a = el("div", "af-actions"), b = el("button", "af-btn af-btn-secondary", "Oppdater"); b.type = "submit";
     a.appendChild(b); form.appendChild(a); m.appendChild(form);
@@ -411,7 +423,7 @@
   function tegnRapport(ut, r, nav) {
     nav = nav || {};
     ut.textContent = "";
-    var liste = forsteListe(r.fakta);
+    var liste = Ledelse.ukeRader(forsteListe(r.fakta));
     // Åpen rad (…&rad=3 i adressen) står øverst. Lukk og nettleserens tilbake går til rapporten uten rad.
     if (liste && nav.rad !== null && nav.rad !== undefined && liste[nav.rad]) {
       ut.appendChild(radDetalj(liste[nav.rad], nav.rad, liste.length, function () { vis(nav.lukk); }));
@@ -449,7 +461,7 @@
     }
 
     var det = el("details"); det.appendChild(el("summary", null, "Vis grunnlag"));
-    det.appendChild(el("p", null, "Kilde: museum.db via " + r.verktoy + "(" + JSON.stringify(r.args || {}) + ")." + (v.regel_id ? " Vurdering og forslag: regel " + v.regel_id + " (" + v.kilde + ", versjon " + v.versjon + ", " + v.datakilde + ")." : "")));
+    det.appendChild(el("p", null, "Kilde: museum.db via " + Ledelse.verktoyTekst(r.verktoy, r.args) + "." + (v.regel_id ? " Vurdering og forslag: regel " + v.regel_id + " (" + v.kilde + ", versjon " + v.versjon + ", " + v.datakilde + ")." : "")));
     // Datakatalogen ligger bevisst bare her, inne i grunnlaget (DECISIONS punkt 11: minst mulig støy).
     var tilKatalog = el("p", "af-hint"), lenke = el("a", null, "Se alle tabellene i databasen");
     lenke.href = "#katalog"; tilKatalog.appendChild(lenke); det.appendChild(tilKatalog);
@@ -477,7 +489,7 @@
     ]));
     ut.appendChild(rap);
     oppdater();
-    fasit(r.verktoy, r.args, "museum.db, kun lesing", v.regel_id ? v.regel_id + ": " + v.felt + " " + v.operator + " " + v.terskel : null);
+    fasit(r.verktoy, r.args, "museum.db, kun lesing", Ledelse.regelTekst(v.regel_id, v.felt, v.operator, v.terskel));
   }
 
   // ---------- Chat (oppgave 04) ----------
@@ -557,7 +569,8 @@
     var harStatus = x.status !== undefined && x.status !== null, sv = Ledelse.statusVisning(x.status);
     var kort = el("div", "af-signal" + (harStatus && sv.klasse ? " " + sv.klasse : ""));
     kort.style.cssText = "flex:1 1 240px;max-width:none";
-    var form = el("span", "af-signal-shape"); form.setAttribute("aria-hidden", "true"); kort.appendChild(form);
+    if (harStatus && sv.klasse) { var form = el("span", "af-signal-shape"); form.setAttribute("aria-hidden", "true"); kort.appendChild(form); }
+    else kort.style.gridTemplateColumns = "1fr";  // uten form: ingen tom kolonne til venstre
     var navn = k === "besok" && x.dato ? "Besøk " + Ledelse.datoKort(x.dato) : x.navn;
     var tallTekst = x.verdi === null || x.verdi === undefined ? "–" : Ledelse.tall(x.verdi);
     kort.appendChild(el("p", "af-signal-label", navn + ": " + tallTekst));
@@ -669,7 +682,9 @@
       .catch(function (e) { FRISTER.lover = null; throw e; });
     return FRISTER.lover;
   }
-  function fristGrupper() { return Ledelse.grupper((FRISTER.svar || {}).frister, Ledelse.lesOppfolging(LAGER)); }
+  // Innlånsfristene er skjult til Lars har bekreftet regelen (2026-11-18). Serveren og MCP har dem fortsatt.
+  function synligeFrister() { return Ledelse.skjulFrister((FRISTER.svar || {}).frister); }
+  function fristGrupper() { return Ledelse.grupper(synligeFrister().frister, Ledelse.lesOppfolging(LAGER)); }
   function fristerAapne() { var g = fristGrupper(); return g.Forfalt.length + g["I dag"].length; }
   function sporKiOmFrist(f) {
     CHAT.utkast = "Hjelp meg å følge opp «" + f.tittel + "» (frist " + f.frist_dato + ", kilde " + f.kilde + "). Hva bør jeg som " + (aktivRolle || "leder") + " gjøre?";
@@ -720,6 +735,8 @@
         ut.appendChild(s);
       });
       if (d.eldre_saker) ut.appendChild(el("p", "af-hint", d.eldre_saker + " åpne saker er eldre enn ett år og står ikke i lista."));
+      var skjult = synligeFrister().skjult;
+      if (skjult) ut.appendChild(el("p", "af-hint", antall(skjult, "innlånsfrist", "innlånsfrister") + " er skjult til regelen for retur av innlån er bekreftet."));
     }
     hentFrister().then(tegn).catch(function (e) { ut.textContent = ""; feilMelding(ut, "Fant ikke fristene", e); });
   }
@@ -931,17 +948,36 @@
     fasit(null, null, "museum.db, kun lesing");
     hent("/api/katalog").then(function (d) {
       ut.textContent = "";
-      ut.appendChild(el("p", "af-hint", antall(d.tabeller.length, "tabell", "tabeller") + ", " + d.totalt_rader.toLocaleString("nb-NO") + " rader."));
+      // Søk i tabell- og kolonnenavn (Lars 2026-11-18). Søket huskes i fanen, så det står der når du går tilbake.
+      var g = el("div", "af-group"), l = el("label", "af-label", "Finn tabell"), sok = el("input", "af-input");
+      sok.type = "search"; sok.id = "tabell-sok"; l.htmlFor = sok.id; sok.autocomplete = "off";
+      sok.placeholder = "For eksempel besøk, vakt eller stilling";
+      g.appendChild(l); g.appendChild(el("span", "af-hint", "Søker i tabellnavn og kolonnenavn.")); g.appendChild(sok); ut.appendChild(g);
+      var telling = el("p", "af-hint"); telling.setAttribute("role", "status"); ut.appendChild(telling);
       var wrap = el("div", "af-table-wrap"), t = el("table", "af-table"), th = el("thead"), tr = el("tr"), tb = el("tbody");
       ["Tabell", "Rader", "Kolonner"].forEach(function (k) { tr.appendChild(el("th", null, k)); }); th.appendChild(tr);
-      d.tabeller.forEach(function (x) {
-        var r = el("tr"), c = el("td"), a = el("a", null, x.navn);
-        a.href = "#" + encodeURIComponent("katalog/" + x.navn); c.appendChild(a); r.appendChild(c);
-        r.appendChild(el("td", null, x.rader.toLocaleString("nb-NO")));
-        r.appendChild(el("td", null, String(x.kolonner.length)));
-        tb.appendChild(r);
-      });
       t.appendChild(th); t.appendChild(tb); wrap.appendChild(t); ut.appendChild(wrap);
+      var ingen = el("p", null, "Ingen tabeller passer. Prøv et kortere ord."); ut.appendChild(ingen);
+      function tegnListe() {
+        var treff = Ledelse.filtrerTabeller(d.tabeller, sok.value);
+        tb.textContent = "";
+        treff.forEach(function (x) {
+          var r = el("tr"), c = el("td"), a = el("a", null, x.navn);
+          a.href = "#" + encodeURIComponent("katalog/" + x.navn); c.appendChild(a); r.appendChild(c);
+          r.appendChild(el("td", null, x.rader.toLocaleString("nb-NO")));
+          r.appendChild(el("td", null, String(x.kolonner.length)));
+          tb.appendChild(r);
+        });
+        telling.textContent = sok.value.trim()
+          ? treff.length + " av " + antall(d.tabeller.length, "tabell", "tabeller") + "."
+          : antall(d.tabeller.length, "tabell", "tabeller") + ", " + d.totalt_rader.toLocaleString("nb-NO") + " rader.";
+        wrap.style.display = treff.length ? "" : "none";
+        ingen.style.display = treff.length ? "none" : "";
+        try { sessionStorage.setItem("datafinner-tabellsok", sok.value); } catch (e) {}
+      }
+      try { sok.value = sessionStorage.getItem("datafinner-tabellsok") || ""; } catch (e) {}
+      sok.addEventListener("input", tegnListe);
+      tegnListe();
     }).catch(function (err) { ut.textContent = ""; feilMelding(ut, "Fant ikke katalogen", err); });
   }
   function visTabell(navn) {

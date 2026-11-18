@@ -168,7 +168,58 @@
     return t.charAt(0).toUpperCase() + t.slice(1);
   }
 
-  var api = { statusVisning: statusVisning, normaltTekst: normaltTekst, tallPer: tallPer, datoKort: datoKort, etikett: etikett, tall: tall,
+  // ---------- Brukervennlighet (Lars 2026-11-18) ----------
+  // Fasit uten rå JSON: get_week_overview(dato 2026-11-18), get_absence_report(år 2025, kvartal 2).
+  function verdiTekst(v) { return typeof v === "number" ? (v < 0 ? "−" + Math.abs(v) : String(v)) : String(v); }
+  function verktoyTekst(navn, args) {
+    if (!navn) return "Ingen ennå";
+    var deler = Object.keys(args || {}).map(function (k) { return etikett(k).toLowerCase() + " " + verdiTekst(args[k]); });
+    return navn + "(" + deler.join(", ") + ")";
+  }
+  // Regel med samme etiketter som tabellene og ekte tegn: «R-UKE-01: Endring mot forrige uke (%) ≥ −15».
+  var TEGN = { ">=": "≥", "<=": "≤", "!=": "≠", "==": "=" };
+  function regelTekst(id, felt, operator, terskel) {
+    if (!id) return null;
+    return id + ": " + etikett(felt) + " " + (TEGN[operator] || operator) + " " + verdiTekst(terskel);
+  }
+  // Hjelpeteksten kommer fra verktøyets beskrivelse (den samme som MCP bruker). Datovelgeren viser selv formatet,
+  // så «ISO-format 'YYYY-MM-DD'» tas bort der. Setninger som da bare er feltnavnet («Dato.»), tas også bort.
+  var ISO = /,?\s*\(?\s*(?:i |på formen |i formatet )?(?:ISO-format\s*)?'?YYYY-MM(?:-DD)?'?\s*\)?/g;
+  function hjelpTekst(hjelp, type) {
+    if (!hjelp || (type !== "date" && type !== "month")) return hjelp || "";
+    return hjelp.replace(ISO, "").split(/\.\s*/).map(function (s) { return s.trim(); })
+      .filter(function (s) { return s && s.split(/\s+/).length > 2; })
+      .map(function (s) { return s + "."; }).join(" ");
+  }
+  // «Driften denne uka»: dager som ikke har vært ennå (kommer) vises ikke, og stengte dager står som «Stengt», ikke 0.
+  // Andre lister (uten feltet «kommer») står urørt.
+  function ukeRader(rader) {
+    if (!Array.isArray(rader) || !rader.some(function (r) { return r && "kommer" in r; })) return rader;
+    return rader.filter(function (r) { return !r.kommer; }).map(function (r) {
+      var k = {}; for (var f in r) k[f] = r[f];
+      if (r.aapent === false || r.aapent === 0) k.besok = "Stengt";
+      return k;
+    });
+  }
+  // Innlånsfristen (retur når utstillingen slutter) er et forslag Lars ikke har bekreftet. Skjult i Datafinner til da.
+  var SKJULTE_FRISTER = { innlan: 1 };
+  function skjulFrister(frister) {
+    var alle = frister || [], synlige = alle.filter(function (f) { return !SKJULTE_FRISTER[f.type]; });
+    return { frister: synlige, skjult: alle.length - synlige.length };
+  }
+  // Tabellsøk: treff i tabellnavn eller kolonnenavn. Store/små bokstaver, ø/å/æ og mellomrom/understrek likt.
+  function sokeform(s) { return String(s || "").toLowerCase().replace(/ø/g, "o").replace(/å/g, "a").replace(/æ/g, "ae").replace(/[\s_]+/g, "_").trim(); }
+  function filtrerTabeller(tabeller, sok) {
+    var q = sokeform(sok);
+    if (!q) return (tabeller || []).slice();
+    return (tabeller || []).filter(function (t) {
+      return sokeform(t.navn).indexOf(q) >= 0 || (t.kolonner || []).some(function (k) { return sokeform(k).indexOf(q) >= 0; });
+    });
+  }
+
+  var api = { verktoyTekst: verktoyTekst, regelTekst: regelTekst, hjelpTekst: hjelpTekst, ukeRader: ukeRader,
+    skjulFrister: skjulFrister, filtrerTabeller: filtrerTabeller,
+    statusVisning: statusVisning, normaltTekst: normaltTekst, tallPer: tallPer, datoKort: datoKort, etikett: etikett, tall: tall,
     kategoriTekst: kategoriTekst, jaNei: jaNei, delAvvik: delAvvik,
     lesOppfolging: lesOppfolging, merkFulgtOpp: merkFulgtOpp, angreFulgtOpp: angreFulgtOpp, erFulgtOpp: erFulgtOpp,
     grupper: grupper, fristTekst: fristTekst,

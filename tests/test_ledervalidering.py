@@ -447,18 +447,18 @@ def test_meny_har_mine_frister_under_folg_opp(leder_side) -> None:
     assert "Mine frister" in page.get_by_role("navigation", name="Du er her").inner_text()
 
 
-def test_forfalte_innlan_og_fulgt_opp_huskes(leder_side) -> None:
+def test_forfalte_frister_og_fulgt_opp_huskes(leder_side) -> None:
     page, base = leder_side
     page.goto(_adr(base, "frister"), wait_until="networkidle")
     forfalt = page.get_by_role("region", name=re.compile("^Forfalt"))
-    forfalt.get_by_text("Retur av innlån", exact=False).first.wait_for()
+    forfalt.get_by_text("Driftsmelding åpen", exact=False).first.wait_for()
     for_antall = forfalt.locator("li").count()
-    forfalt.get_by_role("button", name=re.compile("^Fulgt opp: Retur av innlån")).first.click()
+    forfalt.get_by_role("button", name=re.compile("^Fulgt opp: Driftsmelding åpen")).first.click()
     fulgt = page.get_by_role("region", name=re.compile("^Fulgt opp"))
-    fulgt.get_by_text("Retur av innlån", exact=False).first.wait_for()
+    fulgt.get_by_text("Driftsmelding åpen", exact=False).first.wait_for()
     assert page.get_by_role("region", name=re.compile("^Forfalt")).locator("li").count() == for_antall - 1
     page.reload(wait_until="networkidle")  # lagret i nettleseren
-    page.get_by_role("region", name=re.compile("^Fulgt opp")).get_by_text("Retur av innlån", exact=False).first.wait_for()
+    page.get_by_role("region", name=re.compile("^Fulgt opp")).get_by_text("Driftsmelding åpen", exact=False).first.wait_for()
     page.get_by_role("region", name=re.compile("^Fulgt opp")).get_by_role("button", name=re.compile("^Angre")).first.click()
     page.wait_for_function("!document.body.innerText.includes('Angre')")
 
@@ -475,11 +475,11 @@ def test_hjem_viser_mine_frister_med_lenke(leder_side) -> None:
 def test_frist_kan_tas_med_til_ki(leder_side) -> None:
     page, base = leder_side
     page.goto(_adr(base, "frister"), wait_until="networkidle")
-    rad = page.locator("li", has_text="Retur av innlån").first
+    rad = page.locator("li", has_text="Driftsmelding åpen").first
     rad.get_by_text("Mer", exact=True).click()  # 3b: Spør KI ligger under «Mer»
-    rad.get_by_role("button", name=re.compile("^Spør KI: Retur av innlån")).click()
+    rad.get_by_role("button", name=re.compile("^Spør KI: Driftsmelding åpen")).click()
     _chat_aapen(page)
-    assert "Retur av innlån" in page.locator("#chat-felt").input_value()
+    assert "Driftsmelding åpen" in page.locator("#chat-felt").input_value()
 
 
 def test_i_dag_paa_mobil_uten_sidelengs_rulling(leder_side) -> None:
@@ -503,18 +503,18 @@ def _mer(omraade):
 def test_fristrad_har_epostutkast_og_meld_avvik_under_mer(leder_side) -> None:
     page, base = leder_side
     page.goto(_adr(base, "frister"), wait_until="networkidle")
-    rad = page.get_by_role("region", name=re.compile("^Forfalt")).locator("li", has_text="Retur av innlån").first
+    rad = page.get_by_role("region", name=re.compile("^Forfalt")).locator("li", has_text="Driftsmelding åpen").first
     rad.wait_for()
     assert not rad.get_by_role("link", name=re.compile("^E-postutkast")).is_visible()  # skjult til «Mer» åpnes
     _mer(rad)
     from urllib.parse import unquote
     href = rad.get_by_role("link", name=re.compile("^E-postutkast")).get_attribute("href")
-    assert href.startswith("mailto:?subject=") and "Retur av innlån" in unquote(href)
+    assert href.startswith("mailto:?subject=") and "Driftsmelding åpen" in unquote(href)
     rad.get_by_role("button", name=re.compile("^Meld avvik")).click()
     rad.get_by_role("status").get_by_text("Lagt i Mine oppfølginger", exact=False).wait_for()
     page.goto(_adr(base, "oppfolging"), wait_until="networkidle")
     aapne = page.get_by_role("region", name=re.compile("^Åpne"))
-    aapne.get_by_text("Avvik: Retur av innlån", exact=False).first.wait_for()
+    aapne.get_by_text("Avvik: Driftsmelding åpen", exact=False).first.wait_for()
 
 
 def test_rapport_har_godta_i_stedet_for_avkrysninger(leder_side) -> None:
@@ -575,3 +575,89 @@ def test_oppfolging_med_farlig_tittel_vises_som_tekst(leder_side) -> None:
     aapne.get_by_text(farlig, exact=False).first.wait_for()
     assert page.locator("main img").count() == 0 and page.evaluate("window.__x") is None
     assert aapne.get_by_role("link", name="Åpne kilden").get_attribute("href").startswith("#")
+
+
+# ---------- Brukervennlighet (Lars 2026-11-18): lesbar tekst, meny som blir stående, uketabell, tabellsøk, innlån skjult ----------
+
+def test_rapport_viser_lesbar_hjelpetekst_og_fasit(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "rolle:Driftsansvarlig/driften-uka?dato=2026-11-14"), wait_until="networkidle")
+    page.locator(".af-kpis").wait_for()
+    assert "ISO-format" not in page.locator("main").inner_text()
+    fasit = page.get_by_role("complementary", name="Fasit").inner_text()
+    assert "get_week_overview(dato 2026-11-14)" in fasit
+    assert "{" not in fasit and "_pst" not in fasit and ">=" not in fasit
+    assert "Endring mot forrige uke (%) ≥ −15" in fasit
+
+
+def test_uketabell_viser_stengt_og_ikke_dager_som_kommer(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "rolle:Driftsansvarlig/driften-uka?dato=2026-11-14"), wait_until="networkidle")
+    rad = page.locator("main table tbody tr", has_text="mandag").first
+    rad.wait_for()
+    assert "Stengt" in rad.inner_text()
+    # Inneværende uke: ingen tomme rader for dager som ikke har vært ennå.
+    page.goto(_adr(base, "rolle:Driftsansvarlig/driften-uka"), wait_until="networkidle")
+    page.locator(".af-kpis").wait_for()
+    tomme = page.evaluate("""[...document.querySelectorAll('main table')[0].querySelectorAll('tbody tr')]
+        .filter(tr => [...tr.children].slice(2).every(td => td.textContent.trim() === '')).length""")
+    assert tomme == 0
+
+
+def test_tabeller_kan_sokes(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "katalog"), wait_until="networkidle")
+    sok = page.get_by_role("searchbox", name="Finn tabell")
+    sok.wait_for()
+    alle = page.locator("main table tbody tr").count()
+    sok.fill("besøk")
+    page.wait_for_function(f"document.querySelectorAll('main table tbody tr').length < {alle}")
+    navn = page.locator("main table tbody tr td:first-child").all_inner_texts()
+    # Treff i tabellnavn og i kolonnenavn (h5_historikk_2010_2026 har en besøkskolonne).
+    assert "dagsbesok" in navn and "besok_tilfredshet" in navn and "hr_ansatte" not in navn
+    assert re.search(r"\d+ av \d+ tabeller", page.locator("main").inner_text())
+    sok.fill("finnes_ikke_xyz")
+    page.get_by_text("Ingen tabeller passer", exact=False).wait_for()
+
+
+def test_menyen_blir_staaende_naar_du_blar(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "rolle:Driftsansvarlig/driften-uka?dato=2026-11-14"), wait_until="networkidle")
+    page.locator(".af-kpis").wait_for()
+    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+    page.wait_for_timeout(100)
+    hjem = page.get_by_role("navigation", name="Innhold").get_by_role("button", name="Hjem", exact=True)
+    boks = hjem.bounding_box()
+    assert boks and 0 <= boks["y"] < 900
+
+
+def test_mer_i_menyen_huskes_mellom_sider(leder_side) -> None:
+    page, base = leder_side
+    page.goto(_adr(base, "katalog"), wait_until="networkidle")
+    nav = page.get_by_role("navigation", name="Innhold")
+    nav.get_by_text("Mer", exact=True).click()
+    nav.get_by_role("button", name="Vaktrom", exact=True).wait_for()
+    nav.get_by_role("button", name="Hjem", exact=True).click()
+    page.get_by_role("region", name="I dag").wait_for()
+    assert page.get_by_role("navigation", name="Innhold").get_by_role("button", name="Vaktrom", exact=True).is_visible()
+
+
+def test_innlansfrister_er_skjult_til_regelen_er_bekreftet(leder_side) -> None:
+    page, base = leder_side
+    page.goto(base, wait_until="networkidle")
+    page.get_by_role("region", name="Mine frister").get_by_text("Forfalt", exact=False).first.wait_for()
+    assert "Retur av innlån" not in page.locator("main").inner_text()
+    page.goto(_adr(base, "frister"), wait_until="networkidle")
+    page.get_by_role("region", name=re.compile("^Forfalt")).wait_for()
+    tekst = page.locator("main").inner_text()
+    assert "Retur av innlån" not in tekst
+    assert "innlånsfrister er skjult" in tekst
+
+
+def test_i_dag_kort_uten_tom_plass_til_venstre(leder_side) -> None:
+    page, base = leder_side
+    page.goto(base, wait_until="networkidle")
+    page.get_by_role("region", name="I dag").locator(".af-signal").first.wait_for()
+    tomme = page.evaluate("""[...document.querySelectorAll('.af-signal-shape')]
+        .filter(s => !/(^| )(go|check|stop)( |$)/.test(s.parentElement.className)).length""")
+    assert tomme == 0

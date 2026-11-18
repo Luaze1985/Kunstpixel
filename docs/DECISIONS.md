@@ -275,3 +275,18 @@ Kartet står i `docs/plans/2026-11-15-ren-main.md`.
 - **D3. Nøkkeltall:** formlene for lønnskostnad, besøk, sykefravær og utstillingsøkonomi står i `.claude/skills/kunstpixel-data/references/metrics.md`. Alle 16 SQL-eksempler er kjørt. Lønnsformelen gir samme svar som `query_shift_cost` for 2026-10. Egen sykefraværsprosent regnes ikke: prosenten kommer bare fra SSB.
 - **Funn:** `00_DATA_OG_MCP_OVERSIKT.md` sier at 26 ansatte står uten medarbeidersamtale. Databasen viser at 2 nåværende mangler samtale, og at ingen av de 94 som har sluttet, har noen. Ikke rettet.
 - **Tester (3a):** `test_frister.py` (31), nye Node-tester for «Fulgt opp» (falsk og blokkert lagring) og 4 Playwright-tester (meny, Forfalt til Fulgt opp, som huskes etter omlasting, kortet på Hjem, «Spør KI»). Røde først, unntatt direktør-innlån-testen. Hele pytest: 2426 bestått, 9 hoppet over, 2 ventede feil.
+
+## 2026-11-18 — Datafinner: lettere å bruke (U1–U7)
+
+Lars ba om «løs frontend-problemene så det blir lett å bruke». Agenten gikk gjennom siden på PC og mobil og la funnene fram som valg. Lars valgte alle fire grupper og å skjule innlånsfristene.
+
+- **U1. Hjelpetekst uten formatkode.** Datofeltet sier ikke lenger «ISO-format 'YYYY-MM-DD'», fordi datovelgeren viser formatet selv. Teksten kommer fortsatt fra verktøybeskrivelsen (som MCP bruker), og den er ikke endret. Siden fjerner bare formatet for dato- og månedsfelt (`Ledelse.hjelpTekst`).
+- **U2. Fasit er lesbar.** Verktøyet vises som `get_week_overview(dato 2026-11-18)`, ikke som JSON. Regelen bruker samme etiketter som tabellene og ekte tegn: «Endring mot forrige uke (%) ≥ −15». Gjelder også «Vis grunnlag». Dette var åpent fra designkritikken 2026-11-09.
+- **U3. Menyen blir stående** når du blar ned. «Mer» husker om den er åpen mens fanen er åpen. «Jeg er» viser hele rollenavnet.
+- **U4. «Driften denne uka»:** dager som ikke har vært ennå, vises ikke som tomme rader, og en stengt dag viser «Stengt» i stedet for 0. Bare visningen er endret, ikke `get_week_overview`.
+- **U5. Tabeller har søk** i tabellnavn og kolonnenavn. Søket skiller ikke mellom store og små bokstaver, ø og o, eller mellomrom og understrek, og det huskes i fanen.
+- **U6. Innlånsfrister er skjult i Datafinner** (Lars). Regelen «retur når utstillingen slutter» er et forslag som ikke er bekreftet. `get_my_deadlines` og MCP har fortsatt fristene. Siden «Mine frister» sier hvor mange som er skjult. Fjern `innlan` fra `SKJULTE_FRISTER` i `ledelse.js` når regelen er bekreftet.
+- **U7. «I dag»-kortet** har ikke lenger en tom plass til venstre når tallet ikke har farget status.
+- **Tester:** 15 nye Node-tester og 7 nye Playwright-tester, alle røde først. To av Node-testene er ekte verktøytekster som ga feil svar ved første kjøring («Måned i formatet.»). Fire eksisterende fristtester brukte innlån og bruker nå driftsmeldinger (endret med vilje). Hele pytest: 2520 bestått, 9 hoppet over, 2 ventede feil, 0 feil. De to siste Node-testene kom til etter kjøringen og er grønne hver for seg.
+- **Sjekket i nettleseren:** 1400 px, 900 px og mobil (375 px), ingen konsollfeil og ingen sidelengs rulling på mobil.
+- **Ikke gjort:** uavhengig gjennomgang. Kontrollfilen ligger i `.scratch/handoffs/REVIEW-2026-11-18-brukervennlighet.md`.

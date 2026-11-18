@@ -15,6 +15,12 @@
 - Uavhengig sjekk: kontrollfil til Antigravity i `.scratch/handoffs/AGY-REVIEW-2026-11-16-etappe2.md`. Funnene skal skrives til `AGY-FUNN-2026-11-16.md`.
 - Ukjente endringer i `db.py`, `mcp_server.py`, `test_mcp_server.py`, `AGENTS.md` og `05_data/index.md` (ser ut som K2-arbeid fra en annen økt) er ikke rørt og ikke committet.
 
+## Gjort (2026-11-18): Datafinner lettere å bruke (DECISIONS U1–U7), committet
+- Lesbar Fasit og hjelpetekst, menyen blir stående, «Stengt» og ingen tomme dager i ukerapporten, søk i Tabeller, innlånsfrister skjult.
+- Hele pytest: 2520 bestått, 9 hoppet over, 2 ventede feil. Sjekket i nettleseren på PC og mobil.
+- **Åpent for Lars:** bekreft regelen for retur av innlån, så kan fristene vises igjen (U6).
+- **Neste:** uavhengig gjennomgang med `.scratch/handoffs/REVIEW-2026-11-18-brukervennlighet.md`.
+
 ## Gjort (2026-11-17): Hjem i to faner og etappe 3b (DECISIONS H1–H9), committet (9087197)
 - Hjem: fanene Oversikt og Chat. Oversikt viser bare det som krever oppmerksomhet, og resten ligger bak «Vis N andre tall».
 - Handlingslinje med én eller to synlige knapper og resten under «Mer»: e-postutkast fra fast mal, «Meld avvik», «Følg opp» og «Spør KI». «Godta» erstatter avkrysningene. «Mine oppfølginger» har CSV-nedlasting, og de 3 nyeste står i huskelappen.

@@ -232,3 +232,72 @@ def test_csv_noeytraliserer_formler(farlig: str) -> None:
                                           (0, "I dag"), (1, "Om 1 dag"), (14, "Om 14 dager")])
 def test_frist_tekst(dager: int, tekst: str) -> None:
     assert js(f"L.fristTekst({dager})") == tekst
+
+
+# ---------- Brukervennlighet (Lars 2026-11-18): lesbar Fasit, hjelpetekst, uketabell, tabellsøk og skjulte innlånsfrister ----------
+
+def test_verktoy_tekst_uten_json() -> None:
+    assert js('L.verktoyTekst("get_week_overview", {"dato": "2026-11-18"})') == "get_week_overview(dato 2026-11-18)"
+    assert js('L.verktoyTekst("get_absence_report", {"aar": 2025, "kvartal": 2})') == "get_absence_report(år 2025, kvartal 2)"
+    assert js('L.verktoyTekst("list_roles", null)') == "list_roles()"
+    assert js('L.verktoyTekst(null, null)') == "Ingen ennå"
+
+
+def test_regel_tekst_med_etikett_og_tegn() -> None:
+    assert js('L.regelTekst("R-UKE-01", "endring_forrige_uke_pst", ">=", -15)') == "R-UKE-01: Endring mot forrige uke (%) ≥ −15"
+    assert js('L.regelTekst("R-FRAV-01", "egen_prosent", "<=", 7)') == "R-FRAV-01: Egen prosent ≤ 7"
+    assert js('L.regelTekst("R-X", "antall", ">", 3)') == "R-X: Antall > 3"
+    assert js('L.regelTekst(null, "antall", ">", 3)') is None
+
+
+@pytest.mark.parametrize("hjelp,type_,forventet", [
+    ("En dag i uka, ISO-format 'YYYY-MM-DD'. Kan ikke være etter i dag.", "date", "En dag i uka. Kan ikke være etter i dag."),
+    ("Dato i ISO-format 'YYYY-MM-DD'. Standard er i dag.", "date", "Standard er i dag."),
+    ("Dagens dato i ISO-format 'YYYY-MM-DD'. Kan ikke være etter i dag.", "date", "Kan ikke være etter i dag."),
+    ("Fra og med dato (ISO-format YYYY-MM-DD). Standard er dagens dato.", "date", "Fra og med dato. Standard er dagens dato."),
+    ("Måned på formen YYYY-MM.", "month", ""),
+    ("Måned i formatet 'YYYY-MM'.", "month", ""),  # ekte tekst fra verktøyskjemaet
+    ("Eksakt dato (YYYY-MM-DD).", "date", ""),
+    ("Dato i ISO-format 'YYYY-MM-DD'.", "text", "Dato i ISO-format 'YYYY-MM-DD'."),  # tekstfelt trenger formatet
+    ("Søkeord i tittel.", "text", "Søkeord i tittel."),
+])
+def test_hjelp_tekst_uten_iso_for_datovelger(hjelp: str, type_: str, forventet: str) -> None:
+    assert js(f"L.hjelpTekst({json.dumps(hjelp)}, {json.dumps(type_)})") == forventet
+
+
+def test_uke_rader_uten_dager_som_kommer_og_stengt_som_ord() -> None:
+    rader = [
+        {"dato": "2026-11-16", "ukedag": "mandag", "besok": 0, "forrige_uke": 0, "i_fjor": 0, "aapent": False, "kommer": False},
+        {"dato": "2026-11-17", "ukedag": "tirsdag", "besok": 204, "forrige_uke": 210, "i_fjor": 218, "aapent": True, "kommer": False},
+        {"dato": "2026-11-18", "ukedag": "onsdag", "besok": None, "forrige_uke": None, "i_fjor": None, "aapent": True, "kommer": True},
+    ]
+    ut = js(f"L.ukeRader({json.dumps(rader)})")
+    assert [r["dato"] for r in ut] == ["2026-11-16", "2026-11-17"]
+    assert ut[0]["besok"] == "Stengt" and ut[1]["besok"] == 204
+    assert rader[0]["besok"] == 0  # originalen er urørt
+
+
+def test_uke_rader_lar_andre_lister_vaere() -> None:
+    rader = [{"navn": "Anja", "besok": 0, "aapent": False}]
+    assert js(f"L.ukeRader({json.dumps(rader)})") == rader
+
+
+def test_skjul_innlansfrister() -> None:
+    frister = [{"type": "innlan", "id": "a"}, {"type": "driftsmelding", "id": "b"}, {"type": "rapport", "id": "c"}]
+    ut = js(f"L.skjulFrister({json.dumps(frister)})")
+    assert [f["id"] for f in ut["frister"]] == ["b", "c"]
+    assert ut["skjult"] == 1
+    assert js("L.skjulFrister(null)") == {"frister": [], "skjult": 0}
+
+
+def test_filtrer_tabeller_paa_navn_og_kolonne() -> None:
+    tabeller = [{"navn": "dagsbesok", "kolonner": ["dato", "besok_totalt"]},
+                {"navn": "hr_ansatte", "kolonner": ["navn", "stilling"]},
+                {"navn": "besok_tilfredshet", "kolonner": ["dato", "score_totalt"]}]
+    navn = lambda sok: [t["navn"] for t in js(f"L.filtrerTabeller({json.dumps(tabeller)}, {json.dumps(sok)})")]
+    assert navn("besok") == ["dagsbesok", "besok_tilfredshet"]
+    assert navn("BESØK") == ["dagsbesok", "besok_tilfredshet"]  # ø = o, store bokstaver
+    assert navn("hr ansatte") == ["hr_ansatte"]  # mellomrom = understrek
+    assert navn("stilling") == ["hr_ansatte"]  # treff i kolonnenavn
+    assert navn("") == ["dagsbesok", "hr_ansatte", "besok_tilfredshet"]
+    assert navn("finnes_ikke") == []
