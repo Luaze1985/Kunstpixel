@@ -169,7 +169,8 @@ def test_norske_tegn_og_periode(side) -> None:
     assert "16.11–18.11" in side.locator("#flate-besok_uke").inner_text()
 
 
-@pytest.mark.parametrize("bredde,hoyde", [(1920, 1080), (1280, 720)])
+# 1568x700: vinduet i claude.ai med verktøylinjen, bredere og lavere enn 16:9.
+@pytest.mark.parametrize("bredde,hoyde", [(1920, 1080), (1280, 720), (1568, 700)])
 def test_ingen_felt_flyter_over(nettleser, mapper, bredde: int, hoyde: int) -> None:
     s, _, srv = _apne(nettleser, mapper["vanlig"], bredde, hoyde)
     try:
@@ -204,3 +205,13 @@ def test_fristfeltet_har_luft_nederst(side) -> None:
         const sist = f.lastElementChild.getBoundingClientRect().bottom;
         return f.getBoundingClientRect().bottom - sist; }""")
     assert luft >= 8, luft
+
+
+@pytest.mark.parametrize("bredde,hoyde", [(1920, 1080), (1568, 700)])
+def test_kurven_har_hoyde(nettleser, mapper, bredde: int, hoyde: int) -> None:
+    s, _, srv = _apne(nettleser, mapper["vanlig"], bredde, hoyde)
+    try:
+        assert s.evaluate("document.querySelector('#besok-uker .ss-tegning').clientHeight") >= 120
+    finally:
+        s.close()
+        srv.shutdown()

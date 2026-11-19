@@ -9,7 +9,7 @@
 /* Storskjerm: én skjerm 16:9, lesbar fra tre meter. Arbeidsflyt-tokens (én lys palett, med vilje),
    status som ord, én blå for handling. Rader: topp, fire nøkkeltall, to rader med to felt (2:1). */
 :root { --ss-bg: #f3f6f8; --ss-ink: #172b3b; color-scheme: light; }
-html { height: 100%; font-size: clamp(14px, 1.15vw, 30px); }
+html { height: 100%; font-size: clamp(14px, min(1.15vw, 2.05vh), 30px); }  /* følger bredde og høyde, så alt får plass også i et lavt vindu */
 body { height: 100%; margin: 0; background: var(--ss-bg); color: var(--ss-ink);
   font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
 .ss { box-sizing: border-box; height: 100%; display: grid; gap: 0.8rem;
