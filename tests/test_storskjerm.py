@@ -113,3 +113,32 @@ def test_uka_gjelder_bare_til_i_gaar(idag: dict) -> None:
 def test_sammenligning_har_norske_heltall(idag: dict) -> None:
     tekster = " ".join(f["sammenligning"] for f in idag["flater"])
     assert ".0" not in tekster
+
+
+# --- Task 2: byggeskriptet ---------------------------------------------------------------------------------
+
+def _bygg_modul():
+    import importlib.util
+    from pathlib import Path
+    sti = Path(__file__).resolve().parents[1] / "scripts" / "lag_storskjerm.py"
+    spec = importlib.util.spec_from_file_location("lag_storskjerm", sti)
+    modul = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(modul)
+    return modul
+
+
+def test_bygg_skriver_side_og_data(tmp_path, idag: dict) -> None:
+    side, data = _bygg_modul().bygg(tmp_path, "2026-11-19")
+    assert side.name == "storskjerm.html" and data.name == "data.json"
+    assert json.loads(data.read_text("utf-8"))["dato"] == "2026-11-19"
+
+
+def test_af_css_er_lagt_inn(tmp_path, idag: dict) -> None:
+    tekst = _bygg_modul().bygg(tmp_path, "2026-11-19")[0].read_text("utf-8")
+    assert "/*AF_CSS*/" not in tekst and "--blue:" in tekst
+
+
+def test_siden_henter_ingen_eksterne_filer(tmp_path, idag: dict) -> None:
+    import re
+    tekst = _bygg_modul().bygg(tmp_path, "2026-11-19")[0].read_text("utf-8")
+    assert not re.search(r'(src|href)="https?://(?!fonts\.googleapis\.com)', tekst)
