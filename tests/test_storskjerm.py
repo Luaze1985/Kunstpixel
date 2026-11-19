@@ -76,9 +76,10 @@ def test_besok_uker_er_8_og_lik_sql(idag: dict) -> None:
     uker = idag["besok_uker"]
     assert len(uker) == 8
     siste = uker[-1]
-    assert siste["fra"] == "2026-11-16"
-    assert siste["i_aar"] == _sql("SELECT sum(besok_totalt) FROM dagsbesok WHERE dato BETWEEN '2026-11-16' AND '2026-11-18'")[0][0]
-    assert uker[0]["fra"] == "2026-09-28"
+    # Bare hele uker: uka som pågår står i flaten «Besøk denne uka».
+    assert (siste["fra"], siste["til"]) == ("2026-11-09", "2026-11-15")
+    assert siste["i_aar"] == _sql("SELECT sum(besok_totalt) FROM dagsbesok WHERE dato BETWEEN '2026-11-09' AND '2026-11-15'")[0][0]
+    assert uker[0]["fra"] == "2026-09-21"
 
 
 def test_utstillinger_i_aar(idag: dict) -> None:
@@ -142,3 +143,9 @@ def test_siden_henter_ingen_eksterne_filer(tmp_path, idag: dict) -> None:
     import re
     tekst = _bygg_modul().bygg(tmp_path, "2026-11-19")[0].read_text("utf-8")
     assert not re.search(r'(src|href)="https?://(?!fonts\.googleapis\.com)', tekst)
+
+
+def test_hull_har_tabell_og_sluttdato(idag: dict) -> None:
+    slutter = [h for h in idag["hull"] if h["type"] == "slutter"]
+    assert {h["tabell"]: h["slutter"] for h in slutter}["besok_tilfredshet"] == "2026-10-29"
+    assert [h for h in idag["hull"] if h["type"] == "uenige"]

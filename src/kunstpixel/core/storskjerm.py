@@ -7,6 +7,7 @@ e-postutkast går ut, fordi skjermen vises for andre. Innlånsfrister skjules (U
 
 from __future__ import annotations
 
+import re
 from datetime import date, timedelta
 from typing import Any
 
@@ -15,7 +16,7 @@ from src.kunstpixel.core import db, driftsoversikt, frister
 ROLLE = "Museumsdirektør"
 GRUPPER = ("Forfalt", "I dag", "Denne uka", "Senere")
 SKJULTE_FRISTER = {"innlan"}  # U6: regelen for retur av innlån er ikke bekreftet
-FELT_I_FRIST = ("type", "ref", "tittel", "frist_dato", "gruppe")
+FELT_I_FRIST = ("type", "ref", "tittel", "frist_dato", "gruppe", "kilde")
 UKER = 8
 
 # Tidsserier og datokolonnen deres. Slutter en før i går, står den i «Dette vet vi ikke».
@@ -54,9 +55,9 @@ def _flater(i_dag: dict[str, Any], uke: dict[str, Any], igaar: str) -> list[dict
          "sammenligning": f"samme dager uka før: {_tall(ub['normalt'])}" if ub["normalt"] is not None else "ingen sammenligning",
          "status": ub["status"], "gjelder": periode, "kilde": ub["kilde"]},
         {"id": "saker", "navn": "Åpne saker", "verdi": saker, "enhet": "saker", "normalt": None,
-         "sammenligning": (f"{i_dag['driftsmeldinger']['verdi']} driftsmeldinger (30 d), "
-                           f"{i_dag['hms_avvik']['verdi']} HMS-avvik (7 d), "
-                           f"{i_dag['driftsmeldinger_eldre']['verdi']} eldre åpne"),
+         "sammenligning": (f"{i_dag['driftsmeldinger']['verdi']} meldinger (30 d) · "
+                           f"{i_dag['hms_avvik']['verdi']} HMS-avvik (7 d) · "
+                           f"{i_dag['driftsmeldinger_eldre']['verdi']} eldre"),
          "status": None, "gjelder": i_dag["dato"],
          "kilde": "driftsmeldinger_epost, driftsmeldinger_tiltak og avvik_hms_drift"},
         {"id": "tilfredshet", "navn": f"Tilfredshet {hvilken}", "verdi": tilfreds, "enhet": "av 5", "normalt": None,
@@ -74,11 +75,13 @@ def _frister(dato: str) -> dict[str, Any]:
 
 
 def _besok_uker(con: Any, igaar: date) -> list[dict[str, Any]]:
-    siste_mandag = igaar - timedelta(days=igaar.weekday())
+    """De siste hele ukene (mandag–søndag) til og med i går. Uka som pågår står i flaten «Besøk denne uka»."""
+    siste_sondag = igaar - timedelta(days=(igaar.weekday() + 1) % 7)
+    siste_mandag = siste_sondag - timedelta(days=6)
     ut = []
     for n in range(UKER - 1, -1, -1):
         fra = siste_mandag - timedelta(weeks=n)
-        til = min(fra + timedelta(days=6), igaar)
+        til = fra + timedelta(days=6)
         aar, uke, _ = fra.isocalendar()
         sql = "SELECT sum(besok_totalt) FROM dagsbesok WHERE dato BETWEEN ? AND ?"
         i_aar = con.execute(sql, (fra.isoformat(), til.isoformat())).fetchone()[0]
@@ -103,14 +106,16 @@ def _hull(con: Any, d: date) -> list[dict[str, Any]]:
     for tabell, kol in TIDSSERIER:
         slutt = con.execute(f"SELECT max({kol}) FROM {tabell}").fetchone()[0]
         if slutt and slutt < igaar:
-            ut.append({"tekst": f"{tabell} slutter {slutt}. Tall etter det er Ukjent, ikke 0.", "kilde": tabell})
+            ut.append({"type": "slutter", "tabell": tabell, "slutter": slutt, "tekst": f"{tabell} slutter {slutt}.",
+                       "kilde": tabell})
     iso = d.isoformat()
     aktive = sorted(r[0] for r in con.execute("SELECT tittel FROM utstillinger WHERE status = 'aktiv'"))
     historikk = sorted({r[0] for r in con.execute(
         "SELECT tittel FROM utstillinger_historikk WHERE periode_start <= ? AND periode_slutt >= ?", (iso, iso))})
     if aktive and historikk and not set(aktive) & set(historikk):
-        ut.append({"tekst": (f"utstillinger og utstillinger_historikk er uenige om hva som vises nå: "
-                             f"{', '.join(aktive)} mot {', '.join(historikk)}."),
+        kort = sorted({re.sub(r"\s*\(\d{4}\)$", "", h).split(":")[0] for h in historikk})
+        ut.append({"type": "uenige", "tekst": (f"To tabeller er uenige om hva som vises nå. utstillinger: "
+                                                f"{', '.join(aktive)}. utstillinger_historikk: {', '.join(kort)}."),
                    "kilde": "utstillinger og utstillinger_historikk"})
     return ut
 
