@@ -290,3 +290,33 @@ Lars ba om «løs frontend-problemene så det blir lett å bruke». Agenten gikk
 - **Tester:** 15 nye Node-tester og 7 nye Playwright-tester, alle røde først. To av Node-testene er ekte verktøytekster som ga feil svar ved første kjøring («Måned i formatet.»). Fire eksisterende fristtester brukte innlån og bruker nå driftsmeldinger (endret med vilje). Hele pytest: 2520 bestått, 9 hoppet over, 2 ventede feil, 0 feil. De to siste Node-testene kom til etter kjøringen og er grønne hver for seg.
 - **Sjekket i nettleseren:** 1400 px, 900 px og mobil (375 px), ingen konsollfeil og ingen sidelengs rulling på mobil.
 - **Ikke gjort:** uavhengig gjennomgang. Kontrollfilen ligger i `.scratch/handoffs/REVIEW-2026-11-18-brukervennlighet.md`.
+
+## 2026-11-19 — Kunstpixel-demo i Claude-appen (C1–C7)
+
+Lars ba om en guide for å ta med databasen inn i Claude og kjøre demoen i Claude-appen hvor som helst. Han spurte om databasen er ferdig nok. Statusporten sa KLAR (0 feil, 2 kjente varsler). Lars: hullene er greie «så lenge du finner de og kan resonnere i KI».
+
+- **C1. Skill med databasen, ikke ekstern MCP-kobling.** Valgt av agenten etter Lars' svar over, fordi skillen virker uten server og uten at PC-en er på, og fordi KI-en kan finne hull selv med SQL. MCP-koblingen (offentlig server med innlogging) kan legges til senere.
+- **C2. Pakken bygges fra repoet:** `scripts/lag_claude_skill.py` lager `.scratch/claude-app/kunstpixel-demo.zip` (gitignorert) med `museum.db`, `deploy/claude-app/SKILL.md`, `deploy/claude-app/sql.py` og referansene fra skillen `kunstpixel-data`. Bygget stopper over 30 MB ukomprimert (Anthropics grense for skills). I dag er pakken 23,5 MB ukomprimert og 3,2 MB som zip.
+- **C3. `references/kjente-hull.md` regnes fra databasen ved hver bygging:** hvor langt hver tidsserie går, plan etter i dag, vakter over 9 timer, navnelikhet og fristregler som er forslag. Tre av punktene står som fast tekst: 83/17 vakter med avvikende timer, 7 hviletidsbrudd og `hr_people` mot `hr_ansatte`.
+- **C4. SQL-skriptet er lesende med tre sperrer:** filen åpnes med `mode=ro&immutable=1`, bare én SELECT/WITH tas imot, og SQLite-autorisasjonen avviser alt annet enn lesing. Unntaket er `pragma_table_info` for `--kolonner`. Skriptet importerer ingenting fra repoet.
+- **C5. Ingen rollesperrer i appen.** Claude leser alle tabeller, også personalmapper. Det er greit fordi dataene er syntetiske. Med ekte persondata må dette vurderes på nytt.
+- **C6. «sjekk» i appen** gjøres av samme KI med nye SQL-spørringer. Det er ikke like uavhengig som `/sjekk` med egen kontrollør i Claude Code, og det står i SKILL.md.
+- **Tester:** `tests/test_claude_skill.py` (15), røde først. To ble lagt til etter første kjøring (`--kolonner` ble avvist av sperren, og utskrift av æøå).  Hele pytest: 2537 bestått, 9 hoppet over, 2 ventede feil, 0 feil.
+- **IKKE TESTET:** opplasting i claude.ai, og skillen på mobil. Anthropics hjelpeside nevner ikke mobil.
+- Guide: `docs/GUIDE-claude-appen.md`.
+- **C7. Lars spør i vanlig språk, og hullene står ikke som fasit** (Lars 2026-11-19: «jeg ville aldri spurt slik» om ID-spørsmål, og «du forstår formålet med repo her»). SKILL.md har to nye regler: finn ID-en selv ut fra navn, tittel, sal eller periode, og vis begge kildene når to tabeller er uenige. Nye hull funnet med SQL (`utstillinger` og `utstillinger_historikk` er uenige om hva som vises nå, og høstutstillingen har resultat før den er slutt) legges med vilje ikke i `kjente-hull.md`. Poenget med demoen er at KI-en oppdager slikt selv. Guiden har nå et prosjektsteg og demospørsmål i hverdagsspråk med fasit. Tester: 2 nye i `tests/test_claude_skill.py`, røde først, 17 bestått.
+
+## 2026-11-19 — Storskjerm-dashbordet «Kunstpixel i dag» (D1–D8)
+
+Lars vil «komme på jobb» som museumsdirektør og vise dagen på storskjerm, «så enkelt som mulig å hente fram og vise». Design: `docs/specs/2026-11-19-storskjerm-dashbord.md` (godkjent av Lars). Plan: `docs/plans/2026-11-19-storskjerm-dashbord.md`.
+
+- **D1. Vanlig nettside (artifact), ikke Claudes Data-type eller Datafinner på nett.** Lars valgte etter fordeler og ulemper: én lenke, åpnes i fullskjerm uten sidepanel.
+- **D2. Samme tall som Datafinner.** `src/kunstpixel/core/storskjerm.py` bruker `get_today_overview`, `get_week_overview` og `get_my_deadlines("Museumsdirektør")`.
+- **D3. Oppdatering:** `py -3.13 scripts/lag_storskjerm.py`, så publiserer Claude Code til samme lenke. Lenke: https://claude.ai/artifact/SYi68yGa61mepG7aCyfpiY (privat, festet).
+- **D4. «I dag» er dagen skriptet kjøres.** Rader etter i dag telles ikke.
+- **D5. Status som ord** (Normal, Følg med, Over terskel, Ukjent). Flater uten terskelregel (Åpne saker) viser sammenligning uten statusord.
+- **D6. «Dette vet vi ikke»** regnes ved hver kjøring: tidsserier som slutter før i går, og utstillingstabeller som er uenige om hva som vises nå.
+- **D7. Ingen navn, fraværsårsak eller e-postutkast** i dataene. Innlånsfrister skjules (U6). Sykefraværsfrister er ikke med (de hører til HR).
+- **D8. Arbeidsflyt-utseende** (én lys palett, status som ord, ingen ikoner eller emoji). Storskjerm: minst 20 px tekst ved 1920×1080. Tekststørrelsen følger både bredde og høyde.
+- **Valg tatt under byggingen** (fremdriftslogg `.scratch/handoffs/LEDGER-2026-11-19-storskjerm.md`): kurven viser 8 hele uker; fristfeltet viser 2 frister og «N til»; høyre kolonne er litt bredere; datahull grupperes per sluttdato.
+- **Tester:** `tests/test_storskjerm.py` (20) og `tests/test_storskjerm_side.py` (24), røde først.

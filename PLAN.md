@@ -15,6 +15,16 @@
 - Uavhengig sjekk: kontrollfil til Antigravity i `.scratch/handoffs/AGY-REVIEW-2026-11-16-etappe2.md`. Funnene skal skrives til `AGY-FUNN-2026-11-16.md`.
 - Ukjente endringer i `db.py`, `mcp_server.py`, `test_mcp_server.py`, `AGENTS.md` og `05_data/index.md` (ser ut som K2-arbeid fra en annen økt) er ikke rørt og ikke committet.
 
+## Gjort (2026-11-19): Storskjerm-dashbordet «Kunstpixel i dag» (DECISIONS D1–D8), committet
+- Lenke: https://claude.ai/artifact/SYi68yGa61mepG7aCyfpiY (privat, festet i claude.ai). Vis: Festet → Fullskjerm.
+- Oppdater: `py -3.13 scripts/lag_storskjerm.py`, så publiserer Claude Code til samme lenke. Guide: «Storskjerm» i docs/GUIDE-claude-appen.md.
+- **Lars:** se den på storskjermen én gang. Lim eventuelt lenken inn i prosjektet Kunstpixel.
+
+## Gjort (2026-11-19): Kunstpixel-demo i Claude-appen (DECISIONS C1–C7), ikke committet
+- Guide: [docs/GUIDE-claude-appen.md](docs/GUIDE-claude-appen.md). Pakken bygges med `py -3.13 scripts/lag_claude_skill.py`.
+- **Lars:** last opp `.scratch/claude-app/kunstpixel-demo.zip` i claude.ai (Customize → Skills), lag prosjektet Kunstpixel-demo (guiden steg 4), og prøv én gang på mobil.
+- Bygg pakken på nytt hver gang `museum.db` er bygget på nytt.
+
 ## Gjort (2026-11-18): Datafinner lettere å bruke (DECISIONS U1–U7), committet
 - Lesbar Fasit og hjelpetekst, menyen blir stående, «Stengt» og ingen tomme dager i ukerapporten, søk i Tabeller, innlånsfrister skjult.
 - Hele pytest: 2520 bestått, 9 hoppet over, 2 ventede feil. Sjekket i nettleseren på PC og mobil.
