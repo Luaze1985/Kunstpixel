@@ -6,8 +6,13 @@ import json
 from datetime import date
 
 import pytest
-
-from src.kunstpixel.core import db, driftsoversikt, frister, storskjerm
+from src.kunstpixel.core import (
+    db,
+    driftsoversikt,
+    frister,
+    storskjerm,
+    storskjerm_roller,
+)
 from src.kunstpixel.core.storskjerm import lag_storskjerm
 
 IDAG = date(2026, 11, 19)  # torsdag
@@ -15,7 +20,7 @@ MANDAG = date(2026, 11, 16)
 
 
 def _las(monkeypatch: pytest.MonkeyPatch, dag: date) -> None:
-    for modul in (driftsoversikt, frister, storskjerm):
+    for modul in (driftsoversikt, frister, storskjerm, storskjerm_roller):
         monkeypatch.setattr(modul, "_idag", lambda: dag)
 
 

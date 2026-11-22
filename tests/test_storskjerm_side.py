@@ -1,4 +1,8 @@
-"""Storskjerm-siden i nettleseren (spec docs/specs/2026-11-19-storskjerm-dashbord.md, plan Task 3)."""
+"""Storskjerm-siden i nettleseren (spec docs/specs/2026-11-19-storskjerm-dashbord.md, DECISIONS SC1–SC20).
+
+Siden har seks roller. Hver rolle har fire tall og flere flater, én flate vises om gangen, og hver flate har
+et underlag. Testene går gjennom alle roller og flater, så nye roller dekkes uten nye tester.
+"""
 
 from __future__ import annotations
 
@@ -22,6 +26,13 @@ def _bygg(ut: Path) -> tuple[Path, Path]:
     return modul.bygg(ut, DATO)
 
 
+def _endre(mappe: Path, f) -> None:
+    data = mappe / "data.json"
+    d = json.loads(data.read_text("utf-8"))
+    f(d)
+    data.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
+
+
 class _Stille(SimpleHTTPRequestHandler):
     # Artifacten serveres med UTF-8. Uten dette gjetter nettleseren et annet tegnsett, og æøå blir feil.
     extensions_map = {**SimpleHTTPRequestHandler.extensions_map, ".html": "text/html; charset=utf-8",
@@ -31,27 +42,35 @@ class _Stille(SimpleHTTPRequestHandler):
         pass
 
 
+def _uten_frister(d: dict) -> None:
+    for r in d["roller"]:
+        for p in r["flater"]:
+            if p["type"] == "frister":
+                p["data"] = {"antall": {"Forfalt": 0, "I dag": 0, "Denne uka": 0, "Senere": 0}, "rader": []}
+                p["underlag"]["rader"] = []
+
+
+def _ukjent_tilfredshet(d: dict) -> None:
+    # Kunstig hull (I3/D5): et tall uten kilde skal stå som ordet Ukjent, uansett hva dataene har.
+    pub = next(r for r in d["roller"] if r["id"] == "publikum")
+    f = next(f for f in pub["fliser"] if f["id"] == "tilfredshet_uke")
+    f.update(verdi=None, status="Ukjent", sammenligning="kilden dekker ikke perioden", endring_pst=None, retning=0)
+
+
 @pytest.fixture(scope="module")
 def mapper(tmp_path_factory) -> dict[str, Path]:
-    vanlig = tmp_path_factory.mktemp("vanlig")
-    _bygg(vanlig)
-    uten_frister = tmp_path_factory.mktemp("uten_frister")
-    _, data = _bygg(uten_frister)
-    d = json.loads(data.read_text("utf-8"))
-    d["frister"] = {"antall": {"Forfalt": 0, "I dag": 0, "Denne uka": 0, "Senere": 0}, "rader": [], "skjult": 0}
-    data.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
-    uten_data = tmp_path_factory.mktemp("uten_data")
-    side, data = _bygg(uten_data)
-    data.unlink()
-    # Kunstig hull (I3/D5): tilfredshet uten tall skal vises som ordet Ukjent, uansett hva dataene har.
-    ukjent = tmp_path_factory.mktemp("ukjent")
-    _, data = _bygg(ukjent)
-    d = json.loads(data.read_text("utf-8"))
-    for f in d["flater"]:
-        if f["id"] == "tilfredshet":
-            f.update(verdi=None, status="Ukjent", sammenligning="kilden dekker ikke perioden")
-    data.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
-    return {"vanlig": vanlig, "uten_frister": uten_frister, "uten_data": uten_data, "ukjent": ukjent}
+    ut = {}
+    for navn in ("vanlig", "uten_frister", "uten_data", "ukjent", "html"):
+        ut[navn] = tmp_path_factory.mktemp(navn)
+        _bygg(ut[navn])
+    _endre(ut["uten_frister"], _uten_frister)
+    (ut["uten_data"] / "data.json").unlink()
+    _endre(ut["ukjent"], _ukjent_tilfredshet)
+    _endre(ut["html"], lambda d: d["roller"][0]["flater"].append(
+        {"id": "test", "type": "liste", "tittel": "Test", "kilde": "test", "forklaring": "",
+         "data": {"rader": ["<img src=x onerror=window.__hacket=1>"]},
+         "underlag": {"kolonner": ["<b>K</b>"], "rader": [["<img src=y onerror=window.__hacket=2>"]], "tall": []}}))
+    return ut
 
 
 @pytest.fixture(scope="module")
@@ -63,7 +82,7 @@ def nettleser():
         b.close()
 
 
-def _apne(nettleser, mappe: Path, bredde: int = 1920, hoyde: int = 1080):
+def _apne(nettleser, mappe: Path, bredde: int = 1920, hoyde: int = 1080, hash_: str = ""):
     # Hver mappe får sin egen server, så data.json hentes relativt slik som i artifacten.
     srv = ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(_Stille, directory=str(mappe)))
     threading.Thread(target=srv.serve_forever, daemon=True).start()
@@ -71,7 +90,7 @@ def _apne(nettleser, mappe: Path, bredde: int = 1920, hoyde: int = 1080):
     feil: list[str] = []
     side.on("console", lambda m: feil.append(m.text) if m.type == "error" else None)
     side.on("pageerror", lambda e: feil.append(str(e)))
-    side.goto(f"http://127.0.0.1:{srv.server_address[1]}/storskjerm.html")
+    side.goto(f"http://127.0.0.1:{srv.server_address[1]}/storskjerm.html{hash_}")
     side.wait_for_selector("main[data-klar]", timeout=10000)
     return side, feil, srv
 
@@ -85,54 +104,164 @@ def side(nettleser, mapper):
     srv.shutdown()
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def data(mapper) -> dict:
     return json.loads((mapper["vanlig"] / "data.json").read_text("utf-8"))
 
 
-@pytest.mark.parametrize("fid", ["besok", "besok_uke", "saker", "tilfredshet"])
-def test_siden_viser_fire_flater_med_kilde(side, fid: str) -> None:
-    tekst = side.locator(f"#flate-{fid}").inner_text()
-    assert "Kilde:" in tekst
+ROLLER = ["direktor", "drift", "hr", "okonomi", "publikum", "samling"]
+OVERFLYT = """() => [...document.querySelectorAll('.ss-scene, .ss-felt, .ss-flate, .ss-stolper, .ss-liste')]
+    .filter(e => e.getClientRects().length && e.scrollHeight > e.clientHeight + 1).map(e => e.id || e.className)"""
 
 
-def test_oppmerksomhet_i_toppen(side, data: dict) -> None:
-    assert f"{data['oppmerksomhet']} krever oppmerksomhet" in side.locator("header").inner_text()
+def _synlig_flate(s) -> list[str]:
+    return s.evaluate("""() => [...document.querySelectorAll('section.ss-felt[id^="flate-"]')]
+        .filter(e => e.getClientRects().length).map(e => e.id.slice(6))""")
 
 
-def _tilfredshet_mangler() -> bool:
-    """R5 forlenget besok_tilfredshet. Testene følger sluttdatoen i museum.db."""
-    from src.kunstpixel.core import db
-    return db.execute_read_query("SELECT max(dato) AS m FROM besok_tilfredshet")[0]["m"] < "2026-11-18"
+# --- Rollevalg ---
+
+def test_seks_roller_i_toppen_og_direktor_forst(side) -> None:
+    for r in ROLLER:
+        assert side.locator(f"#rolle-{r}").count() == 1, r
+    assert side.locator("#rolle-direktor").get_attribute("aria-pressed") == "true"
 
 
-def test_ukjent_star_som_ord(side) -> None:
-    assert ("Ukjent" in side.locator("#flate-tilfredshet").inner_text()) == _tilfredshet_mangler()
+def test_rollevalg_bytter_tallene(side, data: dict) -> None:
+    for r in data["roller"]:
+        side.click(f"#rolle-{r['id']}")
+        vist = side.locator(".ss-flate .ss-etikett").all_inner_texts()
+        assert vist == [f["navn"] for f in r["fliser"]], r["id"]
 
 
-def test_ukjent_vises_som_ord_med_kunstig_hull(nettleser, mapper) -> None:
-    s, _, srv = _apne(nettleser, mapper["ukjent"])
+def test_lenke_med_rolle_aapner_rollen(nettleser, mapper) -> None:
+    s, _, srv = _apne(nettleser, mapper["vanlig"], hash_="#hr")
     try:
-        assert "Ukjent" in s.locator("#flate-tilfredshet").inner_text()
+        assert s.locator("#rolle-hr").get_attribute("aria-pressed") == "true"
+        assert s.locator("#flis-fravaer_uke").count() == 1
     finally:
         s.close()
         srv.shutdown()
 
 
-def test_flaten_sier_hvilken_dag_besok_gjelder(side) -> None:
-    assert "18.11" in side.locator("#flate-besok").inner_text()
+def test_varseltall_paa_rollen_stemmer(side, data: dict) -> None:
+    for r in data["roller"]:
+        antall = sum(f["status"] in ("Følg med", "Over terskel") for f in r["fliser"])
+        prikk = side.locator(f"#rolle-{r['id']} .ss-prikk")
+        if antall:
+            assert prikk.inner_text() == str(antall), r["id"]
+        else:
+            assert prikk.count() == 0, r["id"]
 
 
-def test_fem_felt_under_flatene(side) -> None:
-    for i in ["besok-uker", "frister", "utstillinger", "hull"]:
-        assert side.locator(f"#{i}").count() == 1, i
-    assert "Slutter " in side.locator("#hull").inner_text()
+# --- Fliser ---
+
+def test_flis_viser_tall_endring_og_kilde_ved_mus(side, data: dict) -> None:
+    f = data["roller"][0]["fliser"][0]
+    flis = side.locator(f"#flis-{f['id']}")
+    assert flis.get_attribute("title") == "Kilde: " + f["kilde"]
+    tekst = flis.inner_text()
+    assert f["sammenligning"] in tekst and "%" in tekst
+    assert flis.locator(".ss-spark svg").count() == 1
+
+
+def test_normal_status_vises_ikke_som_pille(side, data: dict) -> None:
+    for f in data["roller"][0]["fliser"]:
+        pille = side.locator(f"#flis-{f['id']} .ss-status")
+        assert pille.count() == (0 if f["status"] == "Normal" else 1), f["id"]
+
+
+def test_ukjent_star_som_ord(nettleser, mapper) -> None:
+    s, _, srv = _apne(nettleser, mapper["ukjent"], hash_="#publikum")
+    try:
+        assert "Ukjent" in s.locator("#flis-tilfredshet_uke").inner_text()
+    finally:
+        s.close()
+        srv.shutdown()
+
+
+def test_millioner_vises_kort(nettleser, mapper) -> None:
+    s, _, srv = _apne(nettleser, mapper["vanlig"], hash_="#okonomi")
+    try:
+        assert "mill. kr" in s.locator("#flis-inntekter").inner_text()
+    finally:
+        s.close()
+        srv.shutdown()
+
+
+# --- Flater og underlag ---
+
+def test_en_flate_om_gangen(side, data: dict) -> None:
+    assert _synlig_flate(side) == [data["roller"][0]["flater"][0]["id"]]
+
+
+def test_hver_fane_bytter_flate_i_hver_rolle(side, data: dict) -> None:
+    for r in data["roller"]:
+        side.click(f"#rolle-{r['id']}")
+        for p in r["flater"]:
+            side.click(f"#fane-{p['id']}")
+            assert _synlig_flate(side) == [p["id"]], (r["id"], p["id"])
+
+
+def test_underlaget_viser_radene_bak(side, data: dict) -> None:
+    side.click("#underlag")
+    for r in data["roller"]:
+        side.click(f"#rolle-{r['id']}")
+        side.click("#underlag")
+        for p in r["flater"]:
+            side.click(f"#fane-{p['id']}")
+            u = side.locator(f"#flate-{p['id']} .ss-tab")
+            assert u.is_visible(), (r["id"], p["id"])
+            assert u.locator("tbody tr").count() == len(p["underlag"]["rader"]), (r["id"], p["id"])
+            assert "Kilde:" in side.locator(f"#flate-{p['id']}").inner_text()
+
+
+def test_forfalte_frister_vises_med_dager_over(side, data: dict) -> None:
+    p = next(p for p in data["roller"][0]["flater"] if p["type"] == "frister")
+    forfalt = [r for r in p["data"]["rader"] if r["gruppe"] == "Forfalt"]
+    if not forfalt:
+        pytest.skip("ingen forfalte frister i dataene")
+    side.click("#fane-frister")
+    tekst = side.locator("#flate-frister").inner_text()
+    for r in forfalt[:3]:
+        assert r["ref"] in tekst, r["ref"]
+    assert "dager over" in tekst
+    assert str(len(forfalt)) == side.locator("#flate-frister .ss-stort").inner_text()
 
 
 def test_tom_fristgruppe_viser_ingen(nettleser, mapper) -> None:
     s, _, srv = _apne(nettleser, mapper["uten_frister"])
     try:
-        assert "Ingen" in s.locator("#frister").inner_text()
+        s.click("#fane-frister")
+        assert "Ingen" in s.locator("#flate-frister").inner_text()
+    finally:
+        s.close()
+        srv.shutdown()
+
+
+def test_flaten_bytter_selv_og_kan_stoppes(nettleser, mapper, data: dict) -> None:
+    s, _, srv = _apne(nettleser, mapper["vanlig"])
+    try:
+        andre = data["roller"][0]["flater"][1]["id"]
+        s.wait_for_function(f"document.getElementById('flate-{andre}').getClientRects().length > 0", timeout=20000)
+        s.click("#bytting")  # Stopp bytting
+        s.wait_for_timeout(13000)
+        assert _synlig_flate(s) == [andre]
+    finally:
+        s.close()
+        srv.shutdown()
+
+
+# --- Sikkerhet, feil og lesbarhet ---
+
+def test_data_vises_som_tekst_ikke_html(nettleser, mapper) -> None:
+    s, _, srv = _apne(nettleser, mapper["html"])
+    try:
+        s.click("#fane-test")
+        assert "<img src=x" in s.locator("#flate-test").inner_text()
+        s.click("#underlag")
+        assert "<img src=y" in s.locator("#flate-test").inner_text()
+        assert s.evaluate("window.__hacket === undefined")
     finally:
         s.close()
         srv.shutdown()
@@ -147,159 +276,47 @@ def test_manglende_data_gir_feilmelding(nettleser, mapper) -> None:
         srv.shutdown()
 
 
-@pytest.mark.parametrize("bredde,hoyde", [(1920, 1080), (1280, 720), (400, 800)])
-def test_ingen_sidelengs_rulling(nettleser, mapper, bredde: int, hoyde: int) -> None:
-    s, _, srv = _apne(nettleser, mapper["vanlig"], bredde, hoyde)
-    try:
-        assert s.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
-    finally:
-        s.close()
-        srv.shutdown()
-
-
-def test_alt_far_plass_paa_en_storskjerm(side) -> None:
-    assert side.evaluate("document.documentElement.scrollHeight <= window.innerHeight + 1")
-
-
 def test_ingen_konsollfeil(side) -> None:
     side.wait_for_timeout(300)
     assert [f for f in side.feil if "fonts.g" not in f] == []
 
 
-def test_brodtekst_minst_20px_paa_storskjerm(side) -> None:
-    minste = side.evaluate("""() => Math.min(...[...document.querySelectorAll('main *')]
-        .filter(e => e.children.length === 0 && e.textContent.trim() && e.getClientRects().length)
-        .map(e => parseFloat(getComputedStyle(e).fontSize)))""")
-    assert minste >= 20, minste
+def test_brodtekst_minst_20px_paa_storskjerm(side, data: dict) -> None:
+    for r in data["roller"]:
+        side.click(f"#rolle-{r['id']}")
+        minste = side.evaluate("""() => Math.min(...[...document.querySelectorAll('main *')]
+            .filter(e => e.children.length === 0 && e.textContent.trim() && e.getClientRects().length)
+            .map(e => parseFloat(getComputedStyle(e).fontSize)))""")
+        assert minste >= 20, (r["id"], minste)
 
 
-def test_data_vises_som_tekst_ikke_html(nettleser, mapper, tmp_path) -> None:
-    _, data = _bygg(tmp_path)
-    d = json.loads(data.read_text("utf-8"))
-    d["hull"].append({"tekst": "<img src=x onerror=window.__hacket=1>", "kilde": "test"})
-    data.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
-    s, _, srv = _apne(nettleser, tmp_path)
+@pytest.mark.parametrize("bredde,hoyde", [(1920, 1080), (1280, 720), (400, 800)])
+def test_ingen_sidelengs_rulling(nettleser, mapper, bredde: int, hoyde: int) -> None:
+    s, _, srv = _apne(nettleser, mapper["vanlig"], bredde, hoyde)
     try:
-        assert "<img src=x" in s.locator("#hull").inner_text()
-        assert s.evaluate("window.__hacket === undefined")
+        for r in ROLLER:
+            s.click(f"#rolle-{r}")
+            assert s.evaluate("document.documentElement.scrollWidth <= window.innerWidth"), r
     finally:
         s.close()
         srv.shutdown()
-
-
-def test_norske_tegn_og_periode(side) -> None:
-    assert "Besøk siste 8 uker" in side.locator("#besok-uker").inner_text()
-    assert "16.11–18.11" in side.locator("#flate-besok_uke").inner_text()
 
 
 # 1568x700: vinduet i claude.ai med verktøylinjen, bredere og lavere enn 16:9.
 @pytest.mark.parametrize("bredde,hoyde", [(1920, 1080), (1280, 720), (1568, 700)])
-def test_ingen_felt_flyter_over(nettleser, mapper, bredde: int, hoyde: int) -> None:
+def test_hver_rolle_og_flate_far_plass_paa_en_skjerm(nettleser, mapper, data: dict, bredde: int, hoyde: int) -> None:
     s, _, srv = _apne(nettleser, mapper["vanlig"], bredde, hoyde)
     try:
-        over = s.evaluate("""() => [...document.querySelectorAll('.ss-felt, .ss-flate, .ss-stolper, .ss-liste')]
-            .filter(e => e.scrollHeight > e.clientHeight + 1).map(e => e.id)""")
-        assert over == []
-    finally:
-        s.close()
-        srv.shutdown()
-
-
-def test_hull_samlet_per_sluttdato(side) -> None:
-    linjer = side.locator("#hull li").all_inner_texts()
-    datoer = [li.split(":")[0] for li in linjer if li.startswith("Slutter ")]
-    assert datoer and len(datoer) == len(set(datoer))  # én linje per sluttdato
-    assert any("uenige" in li for li in linjer)
-
-
-def test_ukenavn_overlapper_ikke_paa_mobil(nettleser, mapper) -> None:
-    s, _, srv = _apne(nettleser, mapper["vanlig"], 400, 900)
-    try:
-        bokser = s.evaluate("""() => [...document.querySelectorAll('#besok-uker svg text')]
-            .filter(t => t.textContent.startsWith('uke ')).map(t => { const r = t.getBoundingClientRect(); return [r.left, r.right]; })""")
-        bokser.sort()
-        assert all(a[1] <= b[0] for a, b in zip(bokser, bokser[1:])), bokser
-    finally:
-        s.close()
-        srv.shutdown()
-
-
-# Oppsett C «Én ting om gangen» (DECISIONS SC1–SC6, 2026-11-22): fire tall står fast, én stor flate vises.
-FELT = ["besok-uker", "frister", "utstillinger", "hull"]
-
-
-def _synlige(s) -> list[str]:
-    return s.evaluate("ids => ids.filter(i => document.getElementById(i).getClientRects().length)", FELT)
-
-
-def test_en_flate_om_gangen(side) -> None:
-    assert _synlige(side) == ["besok-uker"]
-
-
-@pytest.mark.parametrize("fid", FELT)
-def test_fanen_bytter_flate(side, fid: str) -> None:
-    side.click(f"#fane-{fid}")
-    assert _synlige(side) == [fid]
-
-
-def test_forfalte_frister_vises_med_dager_over(side, data: dict) -> None:
-    forfalt = [r for r in data["frister"]["rader"] if r["gruppe"] == "Forfalt"]
-    if not forfalt:
-        pytest.skip("ingen forfalte frister i dataene")
-    side.click("#fane-frister")
-    tekst = side.locator("#frister").inner_text()
-    for r in forfalt[:4]:
-        assert r["ref"] in tekst, r["ref"]
-    assert "dager over" in tekst
-    assert str(len(forfalt)) == side.locator("#frister .ss-stort").inner_text()
-
-
-def test_underlaget_viser_radene_bak(side, data: dict) -> None:
-    antall = {"besok-uker": len(data["besok_uker"]), "frister": len(data["frister"]["rader"]),
-              "utstillinger": len(data["utstillinger"]),
-              "hull": len([h for h in data["hull"] if h["type"] == "slutter"])}
-    side.click("#underlag")
-    for fid in FELT:
-        side.click(f"#fane-{fid}")
-        assert side.locator(f"#{fid} .ss-tab tbody tr").count() == antall[fid], fid
-        assert side.locator(f"#{fid} .ss-tab").is_visible()
-        assert "Kilde:" in side.locator(f"#{fid}").inner_text()
-    side.click("#underlag")
-    assert not side.locator("#hull .ss-tab").is_visible()
-
-
-def test_tallet_hopper_til_flaten(side) -> None:
-    side.click("#flate-saker")
-    assert _synlige(side) == ["frister"]
-    side.click("#flate-tilfredshet")
-    assert _synlige(side) == ["hull"]
-
-
-def test_flaten_bytter_selv(nettleser, mapper) -> None:
-    s, _, srv = _apne(nettleser, mapper["vanlig"])
-    try:
-        s.wait_for_function("document.getElementById('frister').getClientRects().length > 0", timeout=20000)
-        s.click("#bytting")  # Stopp bytting
-        s.wait_for_timeout(13000)
-        assert _synlige(s) == ["frister"]
-    finally:
-        s.close()
-        srv.shutdown()
-
-
-@pytest.mark.parametrize("bredde,hoyde", [(1920, 1080), (1280, 720), (1568, 700)])
-@pytest.mark.parametrize("underlag", [False, True])
-def test_hver_flate_far_plass(nettleser, mapper, bredde: int, hoyde: int, underlag: bool) -> None:
-    s, _, srv = _apne(nettleser, mapper["vanlig"], bredde, hoyde)
-    try:
-        if underlag:
-            s.click("#underlag")
-        for fid in FELT:
-            s.click(f"#fane-{fid}")
-            over = s.evaluate("""() => [...document.querySelectorAll('.ss-scene, .ss-felt, .ss-visning, .ss-flate, .ss-stolper, .ss-liste')]
-                .filter(e => e.getClientRects().length && e.scrollHeight > e.clientHeight + 1).map(e => e.id || e.className)""")
-            assert over == [], (fid, over)
-            assert s.evaluate("document.documentElement.scrollHeight <= window.innerHeight + 1"), fid
+        s.click("#bytting")
+        for r in data["roller"]:
+            s.click(f"#rolle-{r['id']}")
+            for underlag in (False, True):
+                if underlag != (s.locator("#underlag").get_attribute("aria-pressed") == "true"):
+                    s.click("#underlag")
+                for p in r["flater"]:
+                    s.click(f"#fane-{p['id']}")
+                    assert s.evaluate(OVERFLYT) == [], (r["id"], p["id"], underlag)
+                    assert s.evaluate("document.documentElement.scrollHeight <= window.innerHeight + 1"), (r["id"], p["id"])
     finally:
         s.close()
         srv.shutdown()
@@ -309,7 +326,20 @@ def test_hver_flate_far_plass(nettleser, mapper, bredde: int, hoyde: int, underl
 def test_kurven_har_hoyde(nettleser, mapper, bredde: int, hoyde: int) -> None:
     s, _, srv = _apne(nettleser, mapper["vanlig"], bredde, hoyde)
     try:
-        assert s.evaluate("document.querySelector('#besok-uker .ss-tegning').clientHeight") >= 120
+        assert s.evaluate("document.querySelector('#flate-besok .ss-tegning').clientHeight") >= 120
+    finally:
+        s.close()
+        srv.shutdown()
+
+
+def test_ukenavn_overlapper_ikke_paa_mobil(nettleser, mapper) -> None:
+    s, _, srv = _apne(nettleser, mapper["vanlig"], 400, 900)
+    try:
+        bokser = s.evaluate("""() => [...document.querySelectorAll('#flate-besok svg text')]
+            .filter(t => t.textContent.startsWith('uke') || /^\\d+$/.test(t.textContent))
+            .map(t => { const r = t.getBoundingClientRect(); return [r.left, r.right, r.top]; })""")
+        rad = sorted(b for b in bokser if abs(b[2] - max(x[2] for x in bokser)) < 2)
+        assert all(a[1] <= b[0] for a, b in zip(rad, rad[1:])), rad
     finally:
         s.close()
         srv.shutdown()

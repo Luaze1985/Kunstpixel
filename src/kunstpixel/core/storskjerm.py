@@ -11,7 +11,7 @@ import re
 from datetime import date, timedelta
 from typing import Any
 
-from src.kunstpixel.core import db, driftsoversikt, frister
+from src.kunstpixel.core import db, driftsoversikt, frister, storskjerm_roller
 
 ROLLE = "Museumsdirektør"
 GRUPPER = ("Forfalt", "I dag", "Denne uka", "Senere")
@@ -138,4 +138,5 @@ def lag_storskjerm(dato: str) -> dict[str, Any]:
         "dato": dato, "ukedag": i_dag["ukedag"], "hentet_kl": i_dag["hentet_kl"],
         "aapent_i_dag": i_dag["aapent_i_dag"], "oppmerksomhet": oppmerksomhet, "flater": flater,
         "besok_uker": besok_uker, "frister": fristdata, "utstillinger": utstillinger, "hull": hull,
+        "roller": storskjerm_roller.lag_roller(dato),  # det skjermen viser (SC14–SC20)
     }

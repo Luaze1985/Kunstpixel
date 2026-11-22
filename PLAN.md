@@ -30,19 +30,21 @@
 - Det gamle navnet er fjernet fra 8 bilder. Kafeen er flyttet til glassfløyen mot Nidelva og har 45 plasser. Kunnskapsfila om bygget følger nå kartdataene (1912/2016).
 - **Nye tegninger (G1–G8):** bygget er tegnet som 58 × 25 m med 45 rom. BRA er 4 174,2 m², og tegningene, kartet og PDF-en er laget fra samme data. Ikke committet.
 - **Maskinpark (MP1–MP8):** 37 maskiner, 4 MCP-verktøy (bare lesing og forslag) og skillen `maskinpark`. Serverrom og robotgarasje i U1. Ikke committet.
-- **Neste:** maskinlag i 2.5D-kartet, øvingsdager (scenarier fra de åpne hendelsene), eventuelt hvitelisting i Datafinner, nye bilder av Sal B, C og E og driftsrommene, og fasade- og snittegninger.
+- **Gjort (MP9–MP12):** maskinlag i kartet, 6 øvingsscenarier med fasit (`get_drill_scenarios`), fasade sør/øst og snitt A–A/B–B. Ikke committet.
+- **Neste:** nye bilder av Sal B, C og E og driftsrommene (krever ja til ekstern bildetjeneste), fasade nord/vest, situasjonsplan, rømningsplan, robotenes kjøreveier, eventuelt hvitelisting i Datafinner.
 - **Neste:** nye bilder av Sal B, C og E og driftsrommene, og fasade-, snitt-, situasjons- og rømningstegninger.
 
-## Gjort (2026-11-22): storskjermen ryddet, oppsett C med underlag, KI-chat og Drift og HR (DECISIONS SC1–SC13), ikke committet
-- Fire nøkkeltall står fast. Under vises én stor flate om gangen (Besøk, Frister, Utstillinger, Vet ikke), og den bytter selv hvert 12. sekund. «Vis underlaget» åpner radene bak.
-- KI-chat står fast til høyre for dashbordet (SC13). Drift og HR er en skuff fra høyre. Begge ligger nå i repoet. `lag_storskjerm.py` skriver fire filer: side, `data.json`, `museum.db.gz.txt` og `chat-instruks.txt`.
-- Endret: `deploy/claude-app/storskjerm.html`, `scripts/lag_storskjerm.py`, `tests/test_storskjerm_side.py`, ny `tests/test_storskjerm_chat.py`. Storskjermtestene: 86 bestått mot den nye `museum.db`. Hele pytest er grønn (9 hoppet over, 2 ventede feil).
-- **Lenke:** https://claude.ai/artifact/PHo2wkd94Pmgo1qr1PzKXw (privat, festet som «Kunstpixel i dag»). Den gamle lenken fantes ikke lenger (SC7).
+## Gjort (2026-11-22): storskjermen for seks lederroller med KI-chat (DECISIONS SC1–SC21), committet
+- Rollevalg i toppen: Direktør, Drift, HR, Økonomi, Publikum og Samling. Hver rolle har 3–4 tall med endring, status og kurve, og flater med underlag. Én flate vises om gangen og bytter selv hvert 12. sekund.
+- KI-chat står fast til høyre (SC13), og forslagene følger rollen (SC20). Drift og HR-skuffen er fjernet og flyttet inn i rollene (SC19). `lag_storskjerm.py` skriver fire filer: side, `data.json`, `museum.db.gz.txt` og `chat-instruks.txt`.
+- Endret: `deploy/claude-app/storskjerm.html`, `scripts/lag_storskjerm.py`, `src/kunstpixel/core/storskjerm.py`, ny `src/kunstpixel/core/storskjerm_roller.py`, `tests/test_storskjerm.py`, `tests/test_storskjerm_side.py`, ny `tests/test_storskjerm_chat.py`, ny `tests/test_storskjerm_roller.py`. Storskjermtestene: 98 bestått. Hele pytest: grønn.
+- **Åpent for Lars:** statusgrensene (10 % og 25 % verre) er agentens valg (SC16).
+- **Lenke (gjeldende):** https://claude.ai/artifact/59CjTmfETMo6evyza8Cbfx (privat, festet som «Kunstpixel i dag», SC21). Forrige lenke (PHo2…) er tatt ut av Festet, ikke slettet.
 - **Lars:** åpne den i claude.ai og still ett spørsmål i chatten til høyre (første gang spør claude.ai om tillatelse). Se den på storskjermen. Bytt lenken i prosjektet Kunstpixel hvis den gamle står der.
 - KI-chat-testkopien (4Gp2…) er tatt ut av Festet, ikke slettet. **Åpent:** specen fra 19.11 er ikke skrevet om.
 
 ## Gjort (2026-11-19): Storskjerm-dashbordet «Kunstpixel i dag» (DECISIONS D1–D8), committet
-- Lenke: https://claude.ai/artifact/PHo2wkd94Pmgo1qr1PzKXw (privat). Den første lenken (SYi68…) er borte, se DECISIONS SC7. Vis: Fullskjerm.
+- Lenke: https://claude.ai/artifact/59CjTmfETMo6evyza8Cbfx (privat, se DECISIONS SC21). Den første lenken (SYi68…) er borte (SC7). Vis: Fullskjerm.
 - Oppdater: `py -3.13 scripts/lag_storskjerm.py`, så publiserer Claude Code til samme lenke. Guide: «Storskjerm» i docs/GUIDE-claude-appen.md.
 - **Lars:** se den på storskjermen én gang. Lim eventuelt lenken inn i prosjektet Kunstpixel.
 

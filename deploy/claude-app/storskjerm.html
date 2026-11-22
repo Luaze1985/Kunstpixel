@@ -1,100 +1,113 @@
 <title>Kunstpixel i dag</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <style>
 /*AF_CSS*/
 </style>
 <style>
-/* Storskjerm: én skjerm 16:9, lesbar fra tre meter. Arbeidsflyt-tokens (én lys palett, med vilje),
-   status som ord, én blå for handling. Oppsett C «Én ting om gangen» (DECISIONS SC1–SC6): topp, fire
-   nøkkeltall som står fast, og én stor flate som bytter mellom Besøk, Frister, Utstillinger og Vet ikke.
-   «Vis underlaget» åpner radene bak flaten. */
-:root { --ss-bg: #f3f6f8; --ss-ink: #172b3b; color-scheme: light; }
-html { height: 100%; font-size: clamp(14px, min(1.15vw, 2.05vh), 30px); }  /* følger bredde og høyde, så alt får plass også i et lavt vindu */
+/* Storskjerm «Kunstpixel i dag» (DECISIONS D1–D8, SC1–SC20). Én skjerm 16:9, lesbar fra tre meter.
+   Toppen har rollevalg. Under: rollens fire tall med kurve, og én stor flate om gangen med underlag.
+   I claude.ai står KI-chat fast til høyre. Arbeidsflyt-tokens, én lys palett med vilje, status som ord. */
+:root { --ss-bg: #f3f6f8; --ss-ink: #172b3b; --spark: #0a5f87; --spark-fyll: rgba(10,95,135,.12);
+  --bra: #1d6b52; --darlig: #b42318; color-scheme: light; }
+html { height: 100%; font-size: clamp(14px, min(1.15vw, 2.05vh), 30px); }
 body { height: 100%; margin: 0; background: var(--ss-bg); color: var(--ss-ink);
   font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
-.ss { box-sizing: border-box; height: 100%; display: grid; gap: 0.8rem;
+.ss { box-sizing: border-box; height: 100%; display: grid; gap: 0.7rem;
   grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr);
-  padding-block: 0.8rem; padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-block: 0.7rem; padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px)); background: var(--canvas); color: var(--ink); }
 .ss *, .ss *::before, .ss *::after { box-sizing: border-box; }
-.ss [hidden] { display: none !important; }  /* ellers vinner display: flex over hidden, og alle flatene vises samtidig */
+.ss [hidden] { display: none !important; }
+.ss :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 
-.ss-topp { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.4rem;
-  background: var(--topbar); color: var(--topbar-ink); border-radius: var(--radius-card); padding: 0.7rem 1.1rem; }
-.ss-navn { font-size: 1.35rem; font-weight: 700; margin: 0; }
-.ss-dag { font-size: 1.1rem; font-weight: 600; }
-.ss-per { font-size: 0.95rem; color: var(--topbar-muted); }
-.ss-obs { margin-left: auto; font-size: 1rem; font-weight: 700; border-radius: var(--radius-pill);
-  padding: 0.25rem 0.9rem; background: var(--gold-soft); color: var(--gold); }
-.ss-obs[data-null] { background: var(--green-soft); color: var(--green-ink); }
+/* Toppen: navn, rollevalg, tidspunkt, fullskjerm. Én linje. */
+.ss-topp { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.7rem;
+  background: var(--topbar); color: var(--topbar-ink); border-radius: var(--radius-card); padding: 0.45rem 0.6rem 0.45rem 1rem; }
+.ss-navn { font-size: 1.2rem; font-weight: 700; margin: 0 0.3rem 0 0; letter-spacing: -.01em; }
+.ss-roller { display: flex; flex-wrap: wrap; gap: 0.25rem; padding: 0.2rem; background: rgba(255,255,255,.08); border-radius: var(--radius-pill); }
+.ss-rolle { font: inherit; font-size: 0.92rem; font-weight: 600; color: var(--topbar-muted); background: transparent; border: 0;
+  border-radius: var(--radius-pill); padding: 0.28rem 0.6rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; }
+.ss-rolle:hover { color: var(--topbar-ink); background: rgba(255,255,255,.08); }
+.ss-rolle[aria-pressed="true"] { background: var(--topbar-ink); color: var(--topbar); }
+.ss-prikk { min-width: 1.35rem; height: 1.35rem; border-radius: var(--radius-pill); font-size: 0.92rem; font-weight: 700; line-height: 1;
+  display: inline-grid; place-items: center; padding: 0 0.3rem; background: var(--gold-soft); color: var(--gold); }
+.ss-prikk[data-niva="Over terskel"] { background: var(--danger); color: #fff; }
+.ss-tid { margin-left: auto; font-size: 0.95rem; color: var(--topbar-muted); white-space: nowrap; }
+.ss-tid b { color: var(--topbar-ink); font-weight: 600; }
 .ss-knapp { font: inherit; font-size: 0.95rem; font-weight: 600; color: var(--topbar); background: var(--topbar-ink);
   border: 0; border-radius: var(--radius-field); padding: 0.35rem 0.9rem; cursor: pointer; }
 .ss-knapp:hover { background: var(--blue-soft); }
-.ss :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 
-/* De fire nøkkeltallene står fast. Et trykk på ett av dem hopper til flaten det hører til. */
-.ss-flater, .ss-scene { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); min-width: 0; }
-.ss-flater { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: hidden; }
-.ss-flate { display: grid; gap: 0.2rem; align-content: start; padding: 0.6rem 1rem; min-width: 0; cursor: pointer; }
-.ss-flate + .ss-flate { border-left: 1px solid var(--line); }
-.ss-flate:hover { background: var(--blue-soft); }
+/* Rollens fire tall. Tallet, endringen med pil og en kurve over de siste ukene. Kilde ved mus og i underlaget. */
+.ss-flater { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.7rem; }
+.ss-flate { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); padding: 0.7rem 1rem 0.6rem;
+  display: grid; grid-template-rows: auto auto auto 1fr; gap: 0.15rem; min-width: 0; position: relative; }
+.ss-flate[data-s="Følg med"] { border-top: 4px solid var(--gold); }
+.ss-flate[data-s="Over terskel"] { border-top: 4px solid var(--danger); }
 .ss-etikett { font-size: 0.95rem; font-weight: 600; color: var(--muted); margin: 0; }
-.ss-tall { font-size: 2.1rem; font-weight: 700; line-height: 1.05; font-variant-numeric: tabular-nums; }
-.ss-enhet { font-size: 1rem; font-weight: 600; color: var(--muted); margin-left: 0.3rem; }
-.ss-linje { font-size: 0.92rem; color: var(--ink); }
-.ss-kilde { font-size: 0.92rem; color: var(--muted); }
-.ss-rad { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.7rem; }
-.ss-status { font-size: 0.92rem; font-weight: 700; border-radius: var(--radius-pill); padding: 0.1rem 0.7rem; }
-.ss-status[data-s="Normal"] { background: var(--green-soft); color: var(--green-ink); }
+.ss-tallrad { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.6rem; }
+.ss-tall { font-size: 2.3rem; font-weight: 700; line-height: 1.05; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.ss-tall.ukjent { color: var(--muted); font-size: 1.8rem; }
+.ss-enhet { font-size: 1rem; font-weight: 600; color: var(--muted); margin-left: 0.25rem; letter-spacing: 0; }
+.ss-status { font-size: 0.92rem; font-weight: 700; border-radius: var(--radius-pill); padding: 0.05rem 0.65rem; }
 .ss-status[data-s="Følg med"] { background: var(--gold-soft); color: var(--gold); }
 .ss-status[data-s="Over terskel"] { background: var(--danger-soft); color: var(--danger); }
-.ss-status[data-s="Ukjent"], .ss-status[data-s="Stengt"] { background: var(--neutral-soft); color: var(--neutral-ink); }
+.ss-status[data-s="Ukjent"] { background: var(--neutral-soft); color: var(--neutral-ink); }
+.ss-endring { font-size: 0.92rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ss-endring b { font-weight: 700; }
+.ss-endring b[data-god="ja"] { color: var(--bra); }
+.ss-endring b[data-god="nei"] { color: var(--darlig); }
+.ss-spark { height: 2.6rem; min-height: 0; margin-top: 0.2rem; }
+.ss-spark svg { width: 100%; height: 100%; display: block; overflow: visible; }
 
-/* Den store flaten: faner øverst, så én flate. Hver flate har en oversikt og et underlag. */
-.ss-scene { display: flex; flex-direction: column; gap: 0.7rem; min-height: 0; padding: 0.9rem 1.4rem 1.1rem; }
-.ss-faner { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+/* Den store flaten. */
+.ss-scene { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card);
+  display: flex; flex-direction: column; gap: 0.6rem; min-height: 0; min-width: 0; padding: 0.8rem 1.3rem 1rem; }
+.ss-faner { display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem; }
 .ss-fane { font: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; border: 1px solid var(--button-border);
-  background: var(--paper); color: var(--neutral-ink); border-radius: var(--radius-pill); padding: 0.25rem 1rem; }
+  background: var(--paper); color: var(--neutral-ink); border-radius: var(--radius-pill); padding: 0.22rem 0.95rem; }
 .ss-fane[aria-pressed="true"] { background: var(--topbar); border-color: var(--topbar); color: var(--topbar-ink); }
 .ss-dypere { margin-left: auto; border-color: var(--blue); background: var(--blue); color: #fff; }
 .ss-dypere[aria-pressed="true"] { background: var(--paper); color: var(--blue); }
-.ss-pause { border-style: dashed; }
-.ss-felt, .ss-visning { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column; gap: 0.6rem; }
-.ss-felt h2 { font-size: 1.6rem; font-weight: 700; letter-spacing: -.01em; margin: 0; }
+.ss-pause { background: transparent; }
+.ss-felt { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column; gap: 0.5rem; }
 .ss-fhode { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.1rem 1.2rem; }
+.ss-felt h2 { font-size: 1.55rem; font-weight: 700; letter-spacing: -.01em; margin: 0; }
+.ss-kilde { font-size: 0.92rem; color: var(--muted); }
+.ss-linje { font-size: 0.92rem; color: var(--muted); }
 .ss-tegning { flex: 1; min-height: 0; position: relative; }
 .ss-tegning svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .ss-tegning text { font-family: inherit; font-size: 1rem; fill: var(--muted); }
 .ss-tegning .ss-verdi { fill: var(--ink); font-weight: 700; }
+.ss-forklaring { display: flex; flex-wrap: wrap; gap: 0.3rem 1.2rem; font-size: 0.92rem; color: var(--muted); }
+.ss-forklaring i { display: inline-block; width: 1.4rem; height: 0; border-top: 4px solid var(--blue); vertical-align: middle; margin-right: 0.35rem; }
+.ss-forklaring i.fjor { border-top: 3px dashed var(--muted); }
 
-.ss-hode { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.9rem; }
-.ss-stort { font-size: 4.2rem; font-weight: 700; line-height: 0.95; font-variant-numeric: tabular-nums; color: var(--green-ink); }
-#frister[data-forfalt] .ss-stort { color: var(--danger); }
-.ss-over { font-weight: 700; color: var(--danger); }
-.ss-tre { display: flex; flex-wrap: wrap; gap: 0.2rem 1.4rem; font-size: 1rem; color: var(--muted); }
-.ss-tre b { font-size: 1.3rem; color: var(--ink); font-variant-numeric: tabular-nums; }
-.ss-liste { list-style: none; margin: 0; padding: 0; display: grid; }
-.ss-liste li { font-size: 1.25rem; line-height: 1.3; padding: 0.45rem 0; border-top: 1px solid var(--line); }
-#frister .ss-liste li { font-weight: 600; }
-.ss-liste small { display: block; font-size: 1rem; font-weight: 400; color: var(--muted); }
-.ss-tabeller { color: var(--muted); }
-
-.ss-stolper { flex: 1; min-height: 0; display: grid; align-content: start; gap: 0.55rem; }
-.ss-stolpe { display: grid; grid-template-columns: minmax(0, 24rem) minmax(0, 1fr) auto; align-items: center; gap: 1rem;
-  font-size: 1.15rem; }
+.ss-stolper { flex: 1; min-height: 0; display: grid; align-content: start; gap: 0.5rem; overflow: hidden; }
+.ss-stolpe { display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr) auto; align-items: center; gap: 1rem; font-size: 1.1rem; }
 .ss-stolpe span:first-child { overflow-wrap: anywhere; }
-.ss-spor { height: 1rem; background: var(--track); border-radius: 3px; overflow: hidden; }
-.ss-spor i { display: block; height: 100%; background: var(--blue); }
+.ss-spor { height: 0.95rem; background: var(--track); border-radius: 3px; overflow: hidden; }
+.ss-spor i { display: block; height: 100%; background: var(--blue); border-radius: 0 3px 3px 0; }
 .ss-stolpe b { font-variant-numeric: tabular-nums; text-align: right; }
 
-/* Underlaget: radene bak flaten. Ruller inne i feltet hvis det er mange rader. */
+.ss-hode { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.9rem; }
+.ss-stort { font-size: 3.8rem; font-weight: 700; line-height: 0.95; font-variant-numeric: tabular-nums; color: var(--green-ink); }
+[data-forfalt] .ss-stort { color: var(--danger); }
+.ss-tre { display: flex; flex-wrap: wrap; gap: 0.2rem 1.4rem; font-size: 1rem; color: var(--muted); }
+.ss-tre b { font-size: 1.25rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+.ss-liste { list-style: none; margin: 0; padding: 0; display: grid; }
+.ss-liste li { font-size: 1.15rem; line-height: 1.3; padding: 0.42rem 0; border-top: 1px solid var(--line); }
+.ss-frist li { font-weight: 600; }
+.ss-liste small { display: block; font-size: 0.95rem; font-weight: 400; color: var(--muted); }
+.ss-over { font-weight: 700; color: var(--danger); }
+
 .ss-rull { flex: 1; min-height: 0; overflow: auto; }
-.ss-tab { width: 100%; border-collapse: collapse; font-size: 1.1rem; }
+.ss-tab { width: 100%; border-collapse: collapse; font-size: 1.05rem; }
 .ss-tab th { text-align: left; font-size: 0.92rem; font-weight: 600; color: var(--muted); white-space: nowrap;
   padding: 0.35rem 1rem 0.35rem 0; border-bottom: 2px solid var(--line); position: sticky; top: 0; background: var(--paper); }
-.ss-tab td { padding: 0.45rem 1rem 0.45rem 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.ss-tab td { padding: 0.42rem 1rem 0.42rem 0; border-bottom: 1px solid var(--line); vertical-align: top; }
 .ss-tab .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 .ss-feil { background: var(--danger-soft); color: var(--danger); border-radius: var(--radius-card);
@@ -105,17 +118,13 @@ body { height: 100%; margin: 0; background: var(--ss-bg); color: var(--ss-ink);
   body, .ss { height: auto; }
   .ss { grid-template-rows: none; }
   .ss-flater { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .ss-flate:nth-child(3) { border-left: 0; }
-  .ss-flate:nth-child(n+3) { border-top: 1px solid var(--line); }
-  .ss-tegning { flex: none; height: 14rem; }
-  .ss-obs, .ss-dypere { margin-left: 0; }
+  .ss-tegning { flex: none; height: 15rem; }
+  .ss-tid, .ss-dypere { margin-left: 0; }
   .ss-scene { padding-inline: 0.9rem; }
+  .ss-stolpe { grid-template-columns: minmax(0, 1fr) auto; }
+  .ss-spor { grid-column: 1 / -1; grid-row: 2; }
 }
-@media (max-width: 480px) {
-  .ss-flater { grid-template-columns: minmax(0, 1fr); }
-  .ss-flate + .ss-flate { border-left: 0; border-top: 1px solid var(--line); }
-  .ss-stolpe { grid-template-columns: minmax(0, 1fr) auto; } .ss-spor { grid-column: 1 / -1; grid-row: 2; }
-}
+@media (max-width: 480px) { .ss-flater { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
@@ -125,419 +134,393 @@ body { height: 100%; margin: 0; background: var(--ss-bg); color: var(--ss-ink);
 (function () {
   "use strict";
   var main = document.querySelector("main");
-  var NB = new Intl.NumberFormat("nb-NO", { maximumFractionDigits: 2 });
   var SVG = "http://www.w3.org/2000/svg";
-  var VIS_FRISTER = 4;  // flere får ikke plass på storskjerm; resten telles og står i underlaget
   var BYTT_MS = 12000;   // så lenge står hver flate før neste vises
-  var TIL_FLATE = { besok: "besok-uker", besok_uke: "besok-uker", saker: "frister", tilfredshet: "hull" };
+  var VIS_FRISTER = 3;   // flere får ikke plass på storskjerm; resten står i underlaget
+  var data = null, rolle = null, naa = 0, apen = false, klokke = null, tegnere = [];
+  var gaar = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  function nb(des) { return new Intl.NumberFormat("nb-NO", { minimumFractionDigits: des || 0, maximumFractionDigits: des || 0 }); }
+  function tall(v, des) { return v === null || v === undefined ? "–" : nb(des).format(v); }
   function el(tag, cls, tekst) {
     var e = document.createElement(tag);
     if (cls) e.className = cls;
     if (tekst !== undefined && tekst !== null) e.textContent = String(tekst);
     return e;
   }
-  function tall(v) { return v === null || v === undefined ? "–" : NB.format(v); }
+  function svg(tag, attr, tekst, mor) {
+    var e = document.createElementNS(SVG, tag);
+    Object.keys(attr).forEach(function (k) { e.setAttribute(k, attr[k]); });
+    if (tekst !== undefined && tekst !== null) e.textContent = tekst;
+    if (mor) mor.appendChild(e);
+    return e;
+  }
   function dm(iso) { var d = String(iso || "").split("-"); return d.length === 3 ? d[2] + "." + d[1] : String(iso || ""); }
-  function periode(t) { return String(t || "").split("–").map(dm).join("–"); }
-  function kilde(t) { return el("div", "ss-kilde", "Kilde: " + t); }
-  function dagerMellom(fra, til) { return Math.round((new Date(til) - new Date(fra)) / 864e5); }
-  function tabell(hoder, rader, tallKol) {
+  function rem() { return parseFloat(getComputedStyle(document.documentElement).fontSize); }
+  function varsler(r) { return r.fliser.filter(function (f) { return f.status === "Følg med" || f.status === "Over terskel"; }); }
+
+  // Tegning som følger størrelsen på boksen sin (tegnes på nytt når vinduet eller chatten endrer bredden).
+  function tegnI(boks, f) {
+    function tegn() { while (boks.firstChild) boks.removeChild(boks.firstChild); var w = boks.clientWidth, h = boks.clientHeight; if (w > 20 && h > 20) f(w, h); }
+    tegn();
+    if (window.ResizeObserver) { var ro = new ResizeObserver(tegn); ro.observe(boks); tegnere.push(ro); }
+  }
+
+  // Kurve i flisen: område under, siste punkt markert. Uker uten tall er hull, ikke 0.
+  function spark(boks, serie, god) {
+    tegnI(boks, function (w, h) {
+      var v = serie.filter(function (x) { return x !== null; });
+      if (v.length < 2) return;
+      var lo = Math.min.apply(null, v), hi = Math.max.apply(null, v);
+      if (hi === lo) { hi += 1; lo -= 1; }
+      var p = 4, x = function (i) { return p + i * (w - 2 * p) / (serie.length - 1); };
+      var y = function (n) { return h - p - (n - lo) / (hi - lo) * (h - 2 * p); };
+      var s = svg("svg", { "aria-hidden": "true" }, null, boks);
+      var biter = [], bit = [];
+      serie.forEach(function (n, i) { if (n === null) { if (bit.length) biter.push(bit); bit = []; } else bit.push([x(i), y(n)]); });
+      if (bit.length) biter.push(bit);
+      biter.forEach(function (b) {
+        if (b.length > 1) svg("path", { d: "M" + b.map(function (q) { return q.join(","); }).join("L") + "L" + b[b.length - 1][0] + "," + (h - p) + "L" + b[0][0] + "," + (h - p) + "Z",
+          fill: "var(--spark-fyll)", stroke: "none" }, null, s);
+        svg("polyline", { points: b.map(function (q) { return q.join(","); }).join(" "), fill: "none", stroke: "var(--spark)",
+          "stroke-width": 2.5, "stroke-linejoin": "round", "stroke-linecap": "round" }, null, s);
+      });
+      var siste = biter.length ? biter[biter.length - 1] : null;
+      if (siste) svg("circle", { cx: siste[siste.length - 1][0], cy: siste[siste.length - 1][1], r: 4.5,
+        fill: god === "nei" ? "var(--darlig)" : "var(--spark)", stroke: "var(--paper)", "stroke-width": 2 }, null, s);
+    });
+  }
+
+  function flis(f) {
+    var s = el("section", "ss-flate"); s.id = "flis-" + f.id;
+    s.title = "Kilde: " + f.kilde;
+    if (f.status && f.status !== "Normal") s.setAttribute("data-s", f.status);
+    s.appendChild(el("h2", "ss-etikett", f.navn));
+    var rad = el("div", "ss-tallrad");
+    // Millioner vises som «17,2 mill. kr», så tallet kan leses på avstand og får plass i flisen. Eksakt tall står i underlaget.
+    var mill = f.verdi !== null && Math.abs(f.verdi) >= 1e6;
+    var t = el("div", "ss-tall" + (f.verdi === null ? " ukjent" : ""), f.verdi === null ? "Ukjent" : mill ? tall(f.verdi / 1e6, 1) : tall(f.verdi, f.des));
+    if (f.verdi !== null && (f.enhet || mill)) t.appendChild(el("span", "ss-enhet", (mill ? "mill. " : "") + f.enhet));
+    rad.appendChild(t);
+    if (f.status && f.status !== "Normal") { var st = el("span", "ss-status", f.status); st.setAttribute("data-s", f.status); rad.appendChild(st); }
+    s.appendChild(rad);
+    var e = el("div", "ss-endring"), god = null;
+    if (f.verdi !== null && f.endring_pst !== null && f.endring_pst !== undefined) {
+      var pil = f.retning > 0 ? "▲ " : f.retning < 0 ? "▼ " : "";
+      if (f.bra && f.retning) god = f.retning * f.bra > 0 ? "ja" : "nei";
+      var b = el("b", null, pil + (f.endring_pst > 0 ? "+" : "") + tall(f.endring_pst, 1) + " %");
+      if (god) b.setAttribute("data-god", god);
+      e.appendChild(b); e.appendChild(document.createTextNode(" · " + f.sammenligning));
+    } else e.textContent = f.sammenligning || "";
+    s.appendChild(e);
+    var sp = el("div", "ss-spark");
+    s.appendChild(sp);
+    if (f.serie) s._tegn = function () { spark(sp, f.serie, god); };
+    return s;
+  }
+
+  // Linjediagram for flaten: hovedserien heltrukket med område, de andre stiplet. Hull der kilden mangler tall.
+  function linje(boks, p) {
+    var d = p.data;
+    tegnI(boks, function (w, h) {
+      var r = rem(), v = { l: 4.6 * r, r: 7.2 * r, t: 1.2 * r, b: 2 * r }, alle = [];
+      d.serier.forEach(function (s) { s.verdier.forEach(function (n) { if (n !== null) alle.push(n); }); });
+      if (!alle.length) return;
+      var lo = Math.min(0, Math.min.apply(null, alle)), hi = Math.max.apply(null, alle);
+      // Rund av til et pent steg (1, 2 eller 5 ganger en tierpotens), så aksen ikke får mye tom plass.
+      var rå = (hi - lo) / 4 || 1, p10 = Math.pow(10, Math.floor(Math.log10(rå))), steg = [1, 2, 5, 10].map(function (k) { return k * p10; }).filter(function (s) { return s >= rå; })[0];
+      hi = Math.ceil(hi / steg) * steg; lo = lo < 0 ? Math.floor(lo / steg) * steg : 0;
+      if (d.enhet === "av 5") { lo = Math.floor(Math.min.apply(null, alle) * 2) / 2; hi = Math.ceil(Math.max.apply(null, alle) * 2) / 2; if (hi === lo) hi += 0.5; }
+      var n = d.etiketter.length;
+      var x = function (i) { return v.l + i * (w - v.l - v.r) / Math.max(n - 1, 1); };
+      var y = function (t) { return h - v.b - (t - lo) / (hi - lo) * (h - v.t - v.b); };
+      var s = svg("svg", { role: "img", "aria-label": p.tittel }, null, boks);
+      var kort = function (t) { return Math.abs(t) >= 1e6 ? tall(t / 1e6, 1) + " mill." : tall(t, d.des); };
+      var linjer = [];
+      if (d.enhet === "av 5") linjer = [lo, (lo + hi) / 2, hi];
+      else for (var t0 = lo; t0 <= hi + steg / 2; t0 += steg) linjer.push(Math.round(t0 / steg) * steg);
+      linjer.forEach(function (t) {
+        svg("line", { x1: v.l, x2: w - v.r, y1: y(t), y2: y(t), stroke: "var(--line)", "stroke-width": 1 }, null, s);
+        svg("text", { x: v.l - 0.5 * r, y: y(t) + 0.35 * r, "text-anchor": "end" }, kort(t), s);
+      });
+      if (lo < 0) svg("line", { x1: v.l, x2: w - v.r, y1: y(0), y2: y(0), stroke: "var(--input-border)", "stroke-width": 1 }, null, s);
+      var hvert = Math.max(1, Math.ceil(4.4 * r / Math.max(x(1) - x(0), 1)));
+      d.etiketter.forEach(function (e, i) {
+        if (i !== n - 1 && (n - 1 - i) % hvert !== 0) return;
+        svg("text", { x: x(i), y: h - 0.4 * r, "text-anchor": "middle" }, e, s);
+      });
+      var siste = [];
+      d.serier.slice().reverse().forEach(function (se) {
+        var hoved = !!se.hoved, farge = hoved ? "var(--blue)" : "var(--muted)", biter = [], bit = [];
+        se.verdier.forEach(function (t, i) { if (t === null) { if (bit.length) biter.push(bit); bit = []; } else bit.push([x(i), y(t), t]); });
+        if (bit.length) biter.push(bit);
+        biter.forEach(function (b) {
+          if (hoved && b.length > 1) svg("path", { d: "M" + b.map(function (q) { return q[0] + "," + q[1]; }).join("L") + "L" + b[b.length - 1][0] + "," + y(Math.max(lo, 0)) + "L" + b[0][0] + "," + y(Math.max(lo, 0)) + "Z",
+            fill: "var(--spark-fyll)" }, null, s);
+          svg("polyline", { points: b.map(function (q) { return q[0] + "," + q[1]; }).join(" "), fill: "none", stroke: farge,
+            "stroke-width": hoved ? 4 : 2.5, "stroke-dasharray": hoved ? "none" : "8 6", "stroke-linejoin": "round" }, null, s);
+        });
+        var sb = biter.length ? biter[biter.length - 1] : null;
+        if (sb) { var q = sb[sb.length - 1]; svg("circle", { cx: q[0], cy: q[1], r: hoved ? 6 : 4.5, fill: farge }, null, s); siste.push({ q: q, se: se, hoved: hoved }); }
+      });
+      // Etikettene for siste verdi: den høyeste over punktet, den andre under, så de ikke overlapper.
+      siste.sort(function (a, b) { return a.q[1] - b.q[1]; });
+      siste.forEach(function (o, i) {
+        svg("text", { x: o.q[0] + 0.6 * r, y: o.q[1] + (i === 0 ? -0.35 : 1.05) * r, "class": o.hoved ? "ss-verdi" : "" },
+          o.se.navn + " " + kort(o.q[2]), s);
+      });
+    });
+  }
+
+  function stolper(p) {
+    var d = p.data, boks = el("div", "ss-stolper"), maks = 0;
+    d.rader.forEach(function (r) { maks = Math.max(maks, Math.abs(r.verdi || 0)); });
+    d.rader.forEach(function (r) {
+      var rad = el("div", "ss-stolpe"); rad.appendChild(el("span", null, r.navn));
+      var spor = el("div", "ss-spor"), fyll = el("i");
+      fyll.style.width = (maks ? Math.abs(r.verdi || 0) / maks * 100 : 0) + "%";
+      if (r.verdi < 0) fyll.style.background = "var(--danger)";
+      spor.appendChild(fyll); rad.appendChild(spor);
+      var fmt = Math.abs(r.verdi || 0) >= 1e6 ? tall(r.verdi / 1e6, 1) + " mill. " + d.enhet : tall(r.verdi, d.des) + (d.enhet ? " " + d.enhet : "");
+      rad.appendChild(el("b", null, fmt));
+      boks.appendChild(rad);
+    });
+    if (!d.rader.length) boks.appendChild(el("div", "ss-linje", "Ingen tall for perioden."));
+    return boks;
+  }
+
+  function fristliste(p, idag) {
+    var d = p.data, boks = el("div", "ss-visning");
+    boks.style.cssText = "display:flex;flex-direction:column;gap:0.5rem;min-height:0";
+    var forfalt = d.antall.Forfalt || 0;
+    if (forfalt) boks.setAttribute("data-forfalt", "");
+    var h = el("div", "ss-hode");
+    h.appendChild(el("span", "ss-stort", forfalt ? forfalt : "Ingen"));
+    h.appendChild(el("h2", null, forfalt === 1 ? "frist er forfalt" : "frister er forfalt"));
+    boks.appendChild(h);
+    var tre = el("div", "ss-tre");
+    ["I dag", "Denne uka", "Senere"].forEach(function (g) {
+      if (g === "Senere" && !d.antall[g]) return;
+      var b = el("span"); b.appendChild(el("b", null, d.antall[g] ? d.antall[g] : "Ingen"));
+      b.appendChild(document.createTextNode(" " + g.toLowerCase())); tre.appendChild(b);
+    });
+    boks.appendChild(tre);
+    var naa = d.rader.filter(function (r) { return r.gruppe !== "Senere"; });
+    var vis = (naa.length ? naa : d.rader).slice(0, VIS_FRISTER);
+    var ul = el("ul", "ss-liste ss-frist");
+    vis.forEach(function (r) {
+      var li = el("li", null, r.tittel), sm = el("small");
+      var over = Math.round((new Date(idag) - new Date(r.frist_dato)) / 864e5);
+      if (r.gruppe === "Forfalt" && over > 0) { sm.appendChild(el("span", "ss-over", over + (over === 1 ? " dag over" : " dager over"))); sm.appendChild(document.createTextNode(" · ")); }
+      sm.appendChild(document.createTextNode("frist " + dm(r.frist_dato) + " · " + r.ref + (r.rolle && p.data.rader.some(function (x) { return x.rolle !== r.rolle; }) ? " · " + r.rolle : "")));
+      li.appendChild(sm); ul.appendChild(li);
+    });
+    if (!d.rader.length) ul.appendChild(el("li", null, "Ingen frister."));
+    boks.appendChild(ul);
+    if (d.rader.length > vis.length) boks.appendChild(el("div", "ss-linje", (d.rader.length - vis.length) + " til i underlaget"));
+    return boks;
+  }
+
+  function tabell(u) {
     var t = el("table", "ss-tab"), thead = el("thead"), hr = el("tr"), tb = el("tbody");
-    hoder.forEach(function (x, i) { hr.appendChild(el("th", tallKol.indexOf(i) >= 0 ? "num" : null, x)); });
+    u.kolonner.forEach(function (k, i) { hr.appendChild(el("th", u.tall.indexOf(i) >= 0 ? "num" : null, k)); });
     thead.appendChild(hr); t.appendChild(thead);
-    rader.forEach(function (r) {
+    u.rader.forEach(function (r) {
       var tr = el("tr");
-      r.forEach(function (c, i) { tr.appendChild(el("td", tallKol.indexOf(i) >= 0 ? "num" : null, c)); });
+      r.forEach(function (c, i) { tr.appendChild(el("td", u.tall.indexOf(i) >= 0 ? "num" : null, c)); });
       tb.appendChild(tr);
     });
     t.appendChild(tb);
     var rull = el("div", "ss-rull"); rull.tabIndex = 0; rull.appendChild(t);
+    if (!u.rader.length) rull.appendChild(el("div", "ss-linje", "Ingen rader."));
     return rull;
   }
-  // Hver flate er en seksjon med to visninger: oversikten (o) og underlaget (u). Bare én vises om gangen.
-  function felt(id, fane) {
-    var s = el("section", "ss-felt"); s.id = id; s.hidden = true;
-    s._fane = fane;
-    s.o = el("div", "ss-visning"); s.u = el("div", "ss-visning"); s.u.hidden = true;
-    s.appendChild(s.o); s.appendChild(s.u);
+
+  function flate(p) {
+    var s = el("section", "ss-felt"); s.id = "flate-" + p.id;
+    var o = el("div", "ss-felt"), u = el("div", "ss-felt");
+    var hode = el("div", "ss-fhode");
+    if (p.type !== "frister") hode.appendChild(el("h2", null, p.tittel));
+    hode.appendChild(el("div", "ss-kilde", "Kilde: " + p.kilde));
+    o.appendChild(hode);
+    if (p.type === "linje") {
+      var b = el("div", "ss-tegning"); o.appendChild(b);
+      var fk = el("div", "ss-forklaring");
+      p.data.serier.forEach(function (se) { var sp = el("span"); sp.appendChild(el("i", se.hoved ? null : "fjor")); sp.appendChild(document.createTextNode(se.navn)); fk.appendChild(sp); });
+      if (p.forklaring) fk.appendChild(el("span", null, p.forklaring));
+      o.appendChild(fk);
+      o._tegn = function () { linje(b, p); };
+    } else if (p.type === "stolper") o.appendChild(stolper(p));
+    else if (p.type === "frister") o.appendChild(fristliste(p, data.dato));
+    else {
+      var ul = el("ul", "ss-liste");
+      p.data.rader.forEach(function (t) { ul.appendChild(el("li", null, t)); });
+      o.appendChild(ul);
+      if (p.forklaring) o.appendChild(el("div", "ss-linje", p.forklaring));
+    }
+    var uh = el("div", "ss-fhode"); uh.appendChild(el("h2", null, "Underlag: " + (p.type === "frister" ? "alle frister" : p.tittel.charAt(0).toLowerCase() + p.tittel.slice(1))));
+    uh.appendChild(el("div", "ss-kilde", "Kilde: " + p.kilde)); u.appendChild(uh);
+    u.appendChild(tabell(p.underlag));
+    s.appendChild(o); s.appendChild(u);
+    s.o = o; s.u = u; s.p = p;
     return s;
   }
-  function hode(tittel, kildeTekst) {
-    var h = el("div", "ss-fhode");
-    h.appendChild(el("h2", null, tittel));
-    h.appendChild(kilde(kildeTekst));
-    return h;
-  }
 
-  function topp(d) {
+  function topp() {
     var h = el("header", "ss-topp");
     h.appendChild(el("h1", "ss-navn", "Kunstpixel"));
-    var dag = new Date(d.dato + "T12:00:00").toLocaleDateString("nb-NO",
-      { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-    h.appendChild(el("span", "ss-dag", dag.charAt(0).toUpperCase() + dag.slice(1) + (d.aapent_i_dag === false ? " · stengt" : "")));
-    h.appendChild(el("span", "ss-per", "Tall per " + dm(d.dato) + " kl. " + d.hentet_kl));
-    var obs = el("span", "ss-obs", d.oppmerksomhet + " krever oppmerksomhet");
-    if (!d.oppmerksomhet) obs.setAttribute("data-null", "");
-    h.appendChild(obs);
+    var rl = el("nav", "ss-roller"); rl.setAttribute("aria-label", "Rolle");
+    data.roller.forEach(function (r) {
+      var b = el("button", "ss-rolle", r.kort || r.navn); b.type = "button"; b.id = "rolle-" + r.id;
+      b.title = r.navn;
+      var v = varsler(r);
+      if (v.length) {
+        var pr = el("span", "ss-prikk", v.length);
+        pr.setAttribute("data-niva", v.some(function (f) { return f.status === "Over terskel"; }) ? "Over terskel" : "Følg med");
+        pr.setAttribute("aria-label", v.length + " tall å følge med på");
+        b.appendChild(pr);
+      }
+      b.addEventListener("click", function () { velgRolle(r.id, true); });
+      rl.appendChild(b);
+    });
+    h.appendChild(rl);
+    var dag = new Date(data.dato + "T12:00:00").toLocaleDateString("nb-NO", { day: "numeric", month: "short" });
+    var tid = el("span", "ss-tid"); tid.appendChild(el("b", null, dag.replace(/\.$/, "")));
+    tid.appendChild(document.createTextNode(" kl. " + data.hentet_kl + (data.aapent_i_dag === false ? " · stengt" : "")));
+    h.appendChild(tid);
     if (document.fullscreenEnabled) {
       var k = el("button", "ss-knapp", "Fullskjerm"); k.type = "button"; k.id = "fullskjerm";
       k.addEventListener("click", function () {
         var p = document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
         if (p && p.catch) p.catch(function () { k.hidden = true; });
       });
-      document.addEventListener("fullscreenchange", function () {
-        k.textContent = document.fullscreenElement ? "Lukk fullskjerm" : "Fullskjerm";
-      });
+      document.addEventListener("fullscreenchange", function () { k.textContent = document.fullscreenElement ? "Lukk fullskjerm" : "Fullskjerm"; });
       h.appendChild(k);
     }
     return h;
   }
 
-  function flate(f) {
-    var s = el("section", "ss-flate"); s.id = "flate-" + f.id;
-    s.appendChild(el("h2", "ss-etikett", f.navn + " · " + (String(f.gjelder).indexOf("–") > 0 ? "" : "gjelder ") + periode(f.gjelder)));
-    var rad = el("div", "ss-rad");
-    var t = el("div", "ss-tall", tall(f.verdi));
-    if (f.verdi !== null && f.verdi !== undefined) t.appendChild(el("span", "ss-enhet", f.enhet));
-    rad.appendChild(t);
-    if (f.status) { var st = el("span", "ss-status", f.status); st.setAttribute("data-s", f.status); rad.appendChild(st); }
-    s.appendChild(rad);
-    s.appendChild(el("div", "ss-linje", f.sammenligning));
-    s.appendChild(kilde(f.kilde));
-    return s;
+  var flaterBoks, scene, faner, under, pause, felter = [];
+
+  function velgRolle(id, fraKlikk) {
+    var r = data.roller.filter(function (x) { return x.id === id; })[0] || data.roller[0];
+    rolle = r; naa = 0; apen = false;
+    tegnere.forEach(function (ro) { ro.disconnect(); }); tegnere = [];
+    data.roller.forEach(function (x) { var b = document.getElementById("rolle-" + x.id); if (b) b.setAttribute("aria-pressed", x.id === r.id ? "true" : "false"); });
+    flaterBoks.textContent = "";
+    var fl = r.fliser.map(flis);
+    fl.forEach(function (f) { flaterBoks.appendChild(f); });
+    while (faner.firstChild !== under) faner.removeChild(faner.firstChild);
+    felter.forEach(function (f) { f.remove(); });
+    felter = r.flater.map(flate);
+    felter.forEach(function (s, i) {
+      var k = el("button", "ss-fane", s.p.type === "liste" ? "Vet ikke" : s.p.type === "frister" ? "Frister" : kortTittel(s.p.tittel));
+      k.type = "button"; k.id = "fane-" + s.p.id;
+      k.addEventListener("click", function () { vel(i); });
+      faner.insertBefore(k, under);
+      scene.appendChild(s);
+    });
+    vel(0);
+    fl.forEach(function (f) { if (f._tegn) f._tegn(); });
+    felter.forEach(function (s) { if (s.o._tegn) s.o._tegn(); });
+    if (fraKlikk) { try { history.replaceState(null, "", "#" + r.id); } catch (e) { location.hash = r.id; } }
+    document.dispatchEvent(new CustomEvent("kp-rolle", { detail: r }));
+  }
+  function kortTittel(t) {
+    return t.split(":")[0].replace(/ (hittil )?i år.*$/, "").replace(/ per (uke|måned|kategori|avdeling|konto|ansatt|antall stjerner)$/, "")
+      .replace(/^Nye meldinger om klima og samling$/, "Klima").replace(/^Åpne meldinger$/, "Kategorier").replace(/^Anmeldelser$/, "Stjerner");
   }
 
-  function linjediagram(boks, uker) {
-    function tegn() {
-      while (boks.firstChild) boks.removeChild(boks.firstChild);
-      var w = boks.clientWidth, h = boks.clientHeight;
-      if (w < 50 || h < 50) return;
-      var rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
-      var v = { l: 3.8 * rem, r: 7 * rem, t: 1.2 * rem, b: 2 * rem };
-      var maks = 0;
-      uker.forEach(function (u) { maks = Math.max(maks, u.i_aar || 0, u.i_fjor || 0); });
-      var steg = Math.pow(10, Math.floor(Math.log10(maks || 1)));
-      var topp = Math.ceil((maks || 1) / steg) * steg;
-      var x = function (i) { return v.l + i * (w - v.l - v.r) / Math.max(uker.length - 1, 1); };
-      var y = function (n) { return h - v.b - n / topp * (h - v.t - v.b); };
-      var svg = document.createElementNS(SVG, "svg");
-      svg.setAttribute("role", "img");
-      svg.setAttribute("aria-label", "Besøk per uke, i år mot i fjor");
-      function ny(tag, attr, tekst) {
-        var e = document.createElementNS(SVG, tag);
-        Object.keys(attr).forEach(function (k) { e.setAttribute(k, attr[k]); });
-        if (tekst !== undefined) e.textContent = tekst;
-        svg.appendChild(e); return e;
-      }
-      [0, topp / 2, topp].forEach(function (n) {
-        ny("line", { x1: v.l, x2: w - v.r, y1: y(n), y2: y(n), stroke: "var(--line)", "stroke-width": 1 });
-        ny("text", { x: v.l - 0.4 * rem, y: y(n) + 0.3 * rem, "text-anchor": "end" }, tall(n));
-      });
-      // Smal skjerm: vis bare hver n-te uke, så navnene ikke overlapper. Siste uke vises alltid.
-      var hvert = Math.max(1, Math.ceil(4.6 * rem / Math.max(x(1) - x(0), 1)));
-      uker.forEach(function (u, i) {
-        var siste = i === uker.length - 1;
-        if (!siste && ((uker.length - 1 - i) % hvert !== 0)) return;
-        ny("text", { x: x(i), y: h - 0.4 * rem, "text-anchor": "middle" }, "uke " + u.uke);
-      });
-      [["i_fjor", "var(--muted)", "I fjor"], ["i_aar", "var(--blue)", "I år"]].forEach(function (s) {
-        var pkt = uker.map(function (u, i) { return u[s[0]] === null ? null : [x(i), y(u[s[0]])]; }).filter(Boolean);
-        if (!pkt.length) return;
-        ny("polyline", { points: pkt.map(function (p) { return p.join(","); }).join(" "), fill: "none", stroke: s[1],
-          "stroke-width": s[0] === "i_aar" ? 4 : 3, "stroke-dasharray": s[0] === "i_fjor" ? "8 6" : "none" });
-        var sist = pkt[pkt.length - 1];
-        var u = uker[uker.length - 1];
-        // Den høyeste av de to siste verdiene får etiketten over punktet, den andre under, så de ikke overlapper.
-        var over = s[0] === "i_aar" ? (u.i_aar || 0) >= (u.i_fjor || 0) : (u.i_fjor || 0) > (u.i_aar || 0);
-        ny("circle", { cx: sist[0], cy: sist[1], r: 6, fill: s[1] });
-        ny("text", { x: sist[0] + 0.6 * rem, y: sist[1] + (over ? -0.35 : 1.0) * rem,
-          "class": s[0] === "i_aar" ? "ss-verdi" : "" }, s[2] + " " + tall(u[s[0]]));
-      });
-      boks.appendChild(svg);
-    }
-    tegn();
-    if (window.ResizeObserver) new ResizeObserver(tegn).observe(boks);  // tegner også når flaten blir synlig igjen
-  }
-
-  function besokUker(d) {
-    var s = felt("besok-uker", "Besøk");
-    s.o.appendChild(hode("Besøk siste 8 uker", "dagsbesok. Hele uker, uten uka som pågår."));
-    var b = el("div", "ss-tegning");
-    s.o.appendChild(b);
-    s.u.appendChild(hode("Underlag: besøk per uke", "dagsbesok"));
-    s.u.appendChild(tabell(["Uke", "Dager", "I år", "Samme uke i fjor", "Endring"], d.besok_uker.map(function (u) {
-      var e = "–";
-      if (u.i_aar !== null && u.i_fjor) {
-        var p = (u.i_aar - u.i_fjor) / u.i_fjor * 100;
-        e = (p > 0 ? "+" : p < 0 ? "−" : "") + NB.format(Math.abs(Math.round(p * 10) / 10)) + " %";
-      }
-      return ["uke " + u.uke, dm(u.fra) + "–" + dm(u.til), tall(u.i_aar), tall(u.i_fjor), e];
-    }), [2, 3, 4]));
-    s._tegn = function () { linjediagram(b, d.besok_uker); };
-    return s;
-  }
-
-  function fristFelt(d) {
-    var f = d.frister;
-    var kilder = [];
-    f.rader.forEach(function (r) { if (r.kilde && kilder.indexOf(r.kilde) < 0) kilder.push(r.kilde); });
-    var kildeTekst = kilder.length ? kilder.join(", ") : "driftsmeldinger, avvik_hms_drift, h5_rapporteringskalender";
-    var s = felt("frister", "Frister");
-    // Det som haster står størst: antall forfalte som stort tall, og hver frist med hvor lenge den har ligget.
-    var forfalt = f.antall.Forfalt || 0;
-    if (forfalt) s.setAttribute("data-forfalt", "");
-    var h = el("div", "ss-hode");
-    h.appendChild(el("span", "ss-stort", forfalt ? forfalt : "Ingen"));
-    h.appendChild(el("h2", null, forfalt === 1 ? "frist er forfalt" : "frister er forfalt"));
-    s.o.appendChild(h);
-    var tre = el("div", "ss-tre");
-    ["I dag", "Denne uka"].forEach(function (g) {
-      var b = el("span"); b.appendChild(el("b", null, f.antall[g] ? f.antall[g] : "Ingen"));
-      b.appendChild(document.createTextNode(" " + g.toLowerCase())); tre.appendChild(b);
-    });
-    s.o.appendChild(tre);
-    var naa = f.rader.filter(function (r) { return r.gruppe !== "Senere"; });
-    var ul = el("ul", "ss-liste");
-    naa.slice(0, VIS_FRISTER).forEach(function (r) {
-      var li = el("li", null, r.tittel), sm = el("small");
-      var over = dagerMellom(r.frist_dato, d.dato);
-      if (r.gruppe === "Forfalt" && over > 0) {
-        sm.appendChild(el("span", "ss-over", over + (over === 1 ? " dag over" : " dager over")));
-        sm.appendChild(document.createTextNode(" · "));
-      }
-      sm.appendChild(document.createTextNode("frist " + dm(r.frist_dato) + " · " + r.ref));
-      li.appendChild(sm);
-      ul.appendChild(li);
-    });
-    if (!naa.length) ul.appendChild(el("li", null, "Ingen frister forfalt, i dag eller denne uka."));
-    s.o.appendChild(ul);
-    var mer = [];
-    if (naa.length > VIS_FRISTER) mer.push((naa.length - VIS_FRISTER) + " til");
-    if (f.antall.Senere) mer.push(f.antall.Senere + " senere");
-    if (f.skjult) mer.push(f.skjult + " innlån skjult");
-    s.o.appendChild(el("div", "ss-kilde", (mer.length ? mer.join(" · ") + " · " : "") + "Kilde: " + kildeTekst));
-
-    s.u.appendChild(hode("Underlag: alle frister", kildeTekst));
-    s.u.appendChild(tabell(["Frist", "Status", "Sak", "Referanse"], f.rader.map(function (r) {
-      var om = dagerMellom(d.dato, r.frist_dato);
-      var st = om < 0 ? (-om) + (om === -1 ? " dag over" : " dager over") : om === 0 ? "i dag" : "om " + om + (om === 1 ? " dag" : " dager");
-      return [dm(r.frist_dato), st, r.tittel, r.ref];
-    }), []));
-    if (!f.rader.length) s.u.appendChild(el("div", "ss-linje", "Ingen frister."));
-    return s;
-  }
-
-  function utstillinger(d) {
-    var kildeTekst = "utstillinger_historikk og utstilling_okonomi";
-    var s = felt("utstillinger", "Utstillinger");
-    s.o.appendChild(hode("Utstillingene i år: netto resultat", kildeTekst));
-    var maks = 0;
-    d.utstillinger.forEach(function (u) { maks = Math.max(maks, Math.abs(u.netto_resultat_nok || 0)); });
-    var boks = el("div", "ss-stolper");
-    d.utstillinger.forEach(function (u) {
-      var navn = String(u.tittel).replace(/\s*\(\d{4}\)\s*$/, "").split(":")[0];
-      var r = el("div", "ss-stolpe");
-      r.appendChild(el("span", null, navn + " · " + u.sesong));
-      var spor = el("div", "ss-spor"), fyll = el("i");
-      fyll.style.width = (maks ? Math.max(0, u.netto_resultat_nok) / maks * 100 : 0) + "%";
-      if (u.netto_resultat_nok < 0) fyll.style.background = "var(--danger)";
-      spor.appendChild(fyll); r.appendChild(spor);
-      r.appendChild(el("b", null, tall(u.netto_resultat_nok) + " kr"));
-      boks.appendChild(r);
-    });
-    if (!d.utstillinger.length) boks.appendChild(el("div", "ss-linje", "Ingen utstillinger med økonomi i år."));
-    s.o.appendChild(boks);
-    s.u.appendChild(hode("Underlag: utstillingene i år", kildeTekst));
-    s.u.appendChild(tabell(["ID", "Utstilling", "Sesong", "Netto resultat"], d.utstillinger.map(function (u) {
-      return [u.utstilling_id, u.tittel, u.sesong, tall(u.netto_resultat_nok) + " kr"];
-    }), [3]));
-    return s;
-  }
-
-  function hull(d) {
-    var s = felt("hull", "Vet ikke");
-    s.o.appendChild(hode("Dette vet vi ikke", "tabellene som er nevnt"));
-    s.o.appendChild(el("div", "ss-linje", "Tall etter sluttdatoen er Ukjent, ikke 0."));
-    var ul = el("ul", "ss-liste");
-    var perDato = {}, datoer = [];
-    d.hull.forEach(function (h) {
-      if (h.type !== "slutter") return;
-      if (!perDato[h.slutter]) { perDato[h.slutter] = []; datoer.push(h.slutter); }
-      perDato[h.slutter].push(h.tabell);
-    });
-    datoer.sort().forEach(function (dato) {
-      var li = el("li", null, "Slutter " + dm(dato) + ": ");
-      li.appendChild(el("span", "ss-tabeller", perDato[dato].join(", ")));
-      ul.appendChild(li);
-    });
-    d.hull.forEach(function (h) { if (h.type !== "slutter") ul.appendChild(el("li", null, h.tekst)); });
-    if (!d.hull.length) ul.appendChild(el("li", null, "Ingen kjente hull i dag."));
-    s.o.appendChild(ul);
-
-    s.u.appendChild(hode("Underlag: tabeller som slutter før i dag", "tabellene som er nevnt"));
-    var slutter = d.hull.filter(function (h) { return h.type === "slutter"; });
-    s.u.appendChild(tabell(["Tabell", "Siste dato", "Dager uten tall"], slutter.map(function (h) {
-      return [h.tabell, dm(h.slutter), dagerMellom(h.slutter, d.dato)];
-    }), [2]));
-    d.hull.forEach(function (h) { if (h.type !== "slutter") s.u.appendChild(el("div", "ss-linje", h.tekst)); });
-    return s;
+  function vel(i) {
+    naa = i;
+    felter.forEach(function (s, j) { s.hidden = j !== i; s.o.hidden = apen; s.u.hidden = !apen; });
+    [].forEach.call(faner.querySelectorAll(".ss-fane:not(.ss-dypere):not(.ss-pause)"), function (k, j) { k.setAttribute("aria-pressed", j === i ? "true" : "false"); });
+    under.textContent = apen ? "Tilbake til oversikten" : "Vis underlaget";
+    under.setAttribute("aria-pressed", apen ? "true" : "false");
+    pause.textContent = gaar ? "Stopp bytting" : "Start bytting";
+    pause.hidden = apen;
   }
 
   function vis(d) {
-    window.kpDato = d.dato;  // Drift og HR regner «i år» til denne datoen, som tallene og KI-chatten
-    main.appendChild(topp(d));
-    var flater = el("div", "ss-flater");
-    main.appendChild(flater);
-    var scene = el("section", "ss-scene"), faner = el("div", "ss-faner");
-    var felter = [besokUker(d), fristFelt(d), utstillinger(d), hull(d)];
-    var naa = 0, apen = false;
-    var gaar = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    function knapp(cls, tekst, id) { var k = el("button", "ss-fane " + cls, tekst); k.type = "button"; k.id = id; return k; }
-    var knapper = felter.map(function (s, i) {
-      var k = knapp("", s._fane, "fane-" + s.id);
-      k.addEventListener("click", function () { vel(i); });
-      faner.appendChild(k); return k;
-    });
-    var under = knapp("ss-dypere", "Vis underlaget", "underlag");
+    data = d;
+    window.kpDato = d.dato;
+    main.appendChild(topp());
+    flaterBoks = el("div", "ss-flater"); main.appendChild(flaterBoks);
+    scene = el("section", "ss-scene"); faner = el("div", "ss-faner");
+    under = el("button", "ss-fane ss-dypere", "Vis underlaget"); under.type = "button"; under.id = "underlag";
     under.addEventListener("click", function () { apen = !apen; vel(naa); });
-    var pause = knapp("ss-pause", "", "bytting");
+    pause = el("button", "ss-fane ss-pause", ""); pause.type = "button"; pause.id = "bytting";
     pause.addEventListener("click", function () { gaar = !gaar; vel(naa); });
     faner.appendChild(under); faner.appendChild(pause);
-
-    function vel(i) {
-      naa = i;
-      felter.forEach(function (s, j) { s.hidden = j !== i; s.o.hidden = apen; s.u.hidden = !apen; });
-      knapper.forEach(function (k, j) { k.setAttribute("aria-pressed", j === i ? "true" : "false"); });
-      under.textContent = apen ? "Tilbake til oversikten" : "Vis underlaget";
-      under.setAttribute("aria-pressed", apen ? "true" : "false");
-      pause.textContent = gaar ? "Stopp bytting" : "Start bytting";
-      pause.hidden = apen;  // åpent underlag står stille til det lukkes
-    }
-
-    d.flater.forEach(function (f) {
-      var s = flate(f), til = -1;
-      felter.forEach(function (x, i) { if (x.id === TIL_FLATE[f.id]) til = i; });
-      if (til >= 0) {
-        s.setAttribute("role", "button"); s.tabIndex = 0;
-        s.addEventListener("click", function () { apen = false; vel(til); });
-        s.addEventListener("keydown", function (e) {
-          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); apen = false; vel(til); }
-        });
-      }
-      flater.appendChild(s);
-    });
-
-    scene.appendChild(faner);
-    felter.forEach(function (s) { scene.appendChild(s); });
-    main.appendChild(scene);
-    vel(0);
-    felter[0]._tegn();
-    setInterval(function () { if (gaar && !apen) vel((naa + 1) % felter.length); }, BYTT_MS);
-  }
-
-  function feil(tekst) {
-    main.appendChild(el("div", "ss-feil", tekst));
+    scene.appendChild(faner); main.appendChild(scene);
+    velgRolle(location.hash.slice(1), false);
+    window.addEventListener("hashchange", function () { if (location.hash.slice(1) !== rolle.id) velgRolle(location.hash.slice(1), false); });
+    klokke = setInterval(function () { if (gaar && !apen && felter.length) vel((naa + 1) % felter.length); }, BYTT_MS);
+    window.kpRolle = function () { return rolle; };
   }
 
   fetch("data.json", { cache: "no-store" })
     .then(function (r) { if (!r.ok) throw new Error("status " + r.status); return r.json(); })
     .then(vis)
-    .catch(function () {
-      feil("Fant ikke tallene (data.json). Kjør scripts/lag_storskjerm.py og publiser på nytt.");
-    })
+    .catch(function () { main.appendChild(el("div", "ss-feil", "Fant ikke tallene (data.json). Kjør scripts/lag_storskjerm.py og publiser på nytt.")); })
     .then(function () { main.setAttribute("data-klar", ""); });
 })();
 </script>
 
-<!-- KI-chat og Drift og HR (spec docs/specs/2026-11-19-storskjerm-chat.md, DECISIONS SC8–SC12).
-     KI-chat står fast til høyre for dashbordet (SC13), Drift og HR er en skuff fra høyre. Begge bruker samme
-     database i minnet (sql.js), som lastes første gang den trengs. Chatten vises bare når siden kan spørre
-     Claude med verktøy (sample-kapabiliteten i claude.ai). -->
+<!-- KI-chat (spec docs/specs/2026-11-19-storskjerm-chat.md, DECISIONS SC8–SC13, SC19). Står fast til høyre for
+     dashbordet i claude.ai. Databasen lastes i minnet (sql.js) først når noen klikker i feltet eller på et forslag.
+     Chatten vises bare når siden kan spørre Claude med verktøy (sample-kapabiliteten i claude.ai). -->
 <style>
-#kichat-knapp, #drift-hr-knapp { background: var(--blue); color: #fff; }
-#kichat-knapp:hover, #drift-hr-knapp:hover { background: var(--blue-soft); color: var(--topbar); }
-.sk-skuff { position: fixed; top: 0; right: 0; bottom: 0; width: min(40vw, 46rem); z-index: 20; display: flex; flex-direction: column;
-  background: var(--paper); border-left: 1px solid var(--line); box-shadow: -12px 0 32px rgba(23,43,59,.18);
-  transform: translateX(100%); transition: transform .22s ease; visibility: hidden;
+.sk-skuff { display: none; flex-direction: column; background: var(--paper); border-left: 1px solid var(--line); min-height: 0;
   padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); padding-right: env(safe-area-inset-right, 0px); }
-.sk-skuff[data-apen] { transform: none; visibility: visible; }
-.sk-hode { display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; background: var(--topbar); color: var(--topbar-ink); }
-.sk-hode h2 { margin: 0; font-size: 1.15rem; }
-.sk-hode small { color: var(--topbar-muted); font-size: 0.85rem; }
-.sk-lukk { margin-left: auto; }
-.sk-forslag { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.8rem 1rem; border-bottom: 1px solid var(--line); }
-.sk-chip { font: inherit; font-size: 0.9rem; border: 1px solid var(--blue); color: var(--blue); background: var(--paper);
-  border-radius: var(--radius-pill); padding: 0.3rem 0.8rem; cursor: pointer; }
-.sk-chip:hover { background: var(--blue-soft); }
+body.med-chat { display: grid; grid-template-columns: minmax(0, 1fr) minmax(20rem, 28vw); grid-template-rows: minmax(0, 100%); }
+body.med-chat .ss { min-width: 0; }
+body.med-chat .sk-skuff { display: flex; height: 100%; }
+.sk-hode { display: flex; align-items: baseline; gap: 0.6rem; padding: 0.8rem 1rem 0.6rem; }
+.sk-hode h2 { margin: 0; font-size: 1.2rem; }
+.sk-hode small { color: var(--muted); font-size: 0.92rem; }
+.sk-forslag { display: flex; flex-wrap: wrap; gap: 0.45rem; padding: 0 1rem 0.8rem; border-bottom: 1px solid var(--line); }
+.sk-chip { font: inherit; font-size: 0.92rem; border: 1px solid var(--blue-border); color: var(--blue-current); background: var(--blue-soft);
+  border-radius: var(--radius-pill); padding: 0.3rem 0.8rem; cursor: pointer; text-align: left; }
+.sk-chip:hover { border-color: var(--blue); }
 .sk-chip:disabled { opacity: .5; cursor: default; }
 .sk-skuff :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .sk-logg { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
 .sk-status { color: var(--muted); font-size: 0.95rem; }
 .sk-du { align-self: flex-end; max-width: 85%; background: var(--blue); color: #fff; border-radius: 12px 12px 2px 12px; padding: 0.5rem 0.8rem; font-size: 0.95rem; white-space: pre-wrap; }
-.sk-claude { align-self: flex-start; max-width: 92%; background: var(--canvas); border: 1px solid var(--line); border-radius: 12px 12px 12px 2px;
+.sk-claude { align-self: flex-start; max-width: 94%; background: var(--canvas); border: 1px solid var(--line); border-radius: 12px 12px 12px 2px;
   padding: 0.6rem 0.8rem; font-size: 0.95rem; display: grid; gap: 0.5rem; }
 .sk-tekst { white-space: pre-wrap; overflow-wrap: anywhere; }
 .sk-tenker { color: var(--muted); font-style: italic; }
 .sk-feil { color: var(--danger); }
 .sk-valg { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .sk-handling { display: flex; flex-wrap: wrap; gap: 0.4rem; border-top: 1px dashed var(--line); padding-top: 0.4rem; }
-.sk-handling button { font: inherit; font-size: 0.82rem; color: var(--muted); background: none; border: 0; padding: 0.15rem 0.3rem; cursor: pointer; text-decoration: underline; }
-.sk-sql { font-family: ui-monospace, Consolas, monospace; font-size: 0.8rem; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--paper);
+.sk-handling button { font: inherit; font-size: 0.92rem; color: var(--muted); background: none; border: 0; padding: 0.15rem 0.3rem; cursor: pointer; text-decoration: underline; }
+.sk-sql { font-family: ui-monospace, Consolas, monospace; font-size: 0.92rem; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--paper);
   border: 1px solid var(--line); border-radius: 6px; padding: 0.4rem 0.6rem; margin: 0; }
-.sk-diagram { display: grid; gap: 0.2rem; }
-.sk-diagram .ss-stolpe { grid-template-columns: minmax(0, 11rem) minmax(0, 1fr) auto; font-size: 0.9rem; gap: 0.6rem; }
+.sk-diagram { display: grid; gap: 0.25rem; }
+.sk-diagram .ss-stolpe { grid-template-columns: minmax(0, 10rem) minmax(0, 1fr) auto; font-size: 0.92rem; gap: 0.6rem; }
 .sk-diagram .ss-spor { height: 0.8rem; }
 .sk-skriv { display: flex; gap: 0.5rem; padding: 0.8rem 1rem; border-top: 1px solid var(--line); }
 .sk-skriv input { flex: 1; min-width: 0; font: inherit; font-size: 0.95rem; padding: 0.5rem 0.7rem; border: 1px solid var(--input-border); border-radius: var(--radius-field); }
 .sk-send { font: inherit; font-weight: 600; background: var(--blue); color: #fff; border: 0; border-radius: var(--radius-field); padding: 0.5rem 1rem; cursor: pointer; }
 .sk-send:disabled { opacity: .6; cursor: default; }
-.rp-faner { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.8rem 1rem; border-bottom: 1px solid var(--line); }
-.rp-fane[aria-pressed="true"] { background: var(--blue); color: #fff; }
-.rp-innhold { flex: 1; overflow-y: auto; padding: 1rem; display: grid; gap: 0.8rem; align-content: start; }
-.rp-innhold h3 { margin: 0; font-size: 1.05rem; }
-.rp-ingress { margin: 0; font-size: 0.95rem; }
-.rp-tabell { width: 100%; border-collapse: collapse; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
-.rp-tabell th, .rp-tabell td { padding: 0.35rem 0.4rem; border-bottom: 1px solid var(--line); text-align: right; }
-.rp-tabell th:first-child, .rp-tabell td:first-child { text-align: left; }
-.rp-tabell th { color: var(--muted); font-weight: 600; font-size: 0.82rem; }
-.rp-tabell td.rp-merk { color: var(--danger); font-weight: 700; }
-.rp-bunn { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; padding: 0.8rem 1rem; border-top: 1px solid var(--line); }
-@media (max-width: 900px) { .sk-skuff { width: 100vw; } }
-
-/* SC13: i claude.ai står KI-chat fast til høyre for dashbordet hele tiden. Uten Claude får dashbordet hele skjermen. */
-body.med-chat { display: grid; grid-template-columns: minmax(0, 1fr) minmax(20rem, 30vw); grid-template-rows: minmax(0, 100%); }
-body.med-chat .ss { min-width: 0; }
-#skuff.sk-kolonne { position: static; transform: none; visibility: visible; transition: none; width: auto; height: 100%;
-  min-height: 0; z-index: auto; box-shadow: none; }
-#skuff.sk-kolonne .sk-lukk { display: none; }
-#skuff.sk-kolonne .sk-hode { padding-block: 0.7rem; }
 @media (max-width: 900px) {
   body.med-chat { display: block; }
-  #skuff.sk-kolonne { height: 85vh; border-left: 0; border-top: 1px solid var(--line); }
+  body.med-chat .sk-skuff { height: 85vh; border-left: 0; border-top: 1px solid var(--line); }
 }
 </style>
 
 <aside class="af sk-skuff" id="skuff" aria-label="KI-chat">
-  <div class="sk-hode"><h2>KI-chat</h2><small>Svar hentes med SQL fra museum.db</small>
-    <button class="ss-knapp sk-lukk" id="lukk" type="button">Lukk</button></div>
+  <div class="sk-hode"><h2>Spør om tallene</h2><small id="chat-rolle"></small></div>
   <div class="sk-forslag" id="forslag"></div>
-  <div class="sk-logg" id="logg" aria-live="polite"><div class="sk-status" id="status">Hva lurer du på i dag? Trykk et forslag eller skriv selv.</div></div>
+  <div class="sk-logg" id="logg" aria-live="polite"><div class="sk-status" id="status">Trykk et forslag eller skriv selv. Claude henter svaret med SQL fra databasen.</div></div>
   <form class="sk-skriv" id="skjema"><input id="felt" autocomplete="off" placeholder="Spør i vanlig språk …" aria-label="Spørsmål til KI-chat">
     <button class="sk-send" id="send" type="submit">Send</button></form>
 </aside>
 
-<aside class="af sk-skuff" id="rapportskuff" aria-label="Drift og HR">
-  <div class="sk-hode"><h2>Drift og HR</h2><small>Rapporter for i år til og med dagens tall. Ingen navn.</small>
-    <button class="ss-knapp sk-lukk" id="rp-lukk" type="button">Lukk</button></div>
-  <div class="rp-faner" id="rp-faner"></div>
-  <div class="rp-innhold" id="rp-innhold"><div class="sk-status">Laster databasen …</div></div>
-  <div class="rp-bunn"><button class="sk-send" id="rp-spor" type="button" hidden>Spør KI-chat om dette</button></div>
-</aside>
-
 <script>
-/* Felles: databasen i minnet og knappene i toppen. Knappene settes inn når storskjermen har tegnet toppen. */
+/* Databasen i minnet, lastet første gang den trengs: ca. 4 MB og en SQL-motor fra cdnjs. */
 (function () {
   "use strict";
   var CDN = "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.12.0/";
@@ -552,10 +535,8 @@ body.med-chat .ss { min-width: 0; }
     });
   }
   function frist(p, ms, hva) {
-    return Promise.race([p, new Promise(function (_, nei) {
-      setTimeout(function () { nei(new Error(hva + " tok over " + ms / 1000 + " s")); }, ms); })]);
+    return Promise.race([p, new Promise(function (_, nei) { setTimeout(function () { nei(new Error(hva + " tok over " + ms / 1000 + " s")); }, ms); })]);
   }
-  // Lastes første gang en skuff åpnes, ikke når siden åpnes: ca. 4 MB og en SQL-motor fra cdnjs.
   window.kp.last = function () {
     if (laster) return laster;
     window.kp.start = performance.now();
@@ -592,45 +573,21 @@ body.med-chat .ss { min-width: 0; }
       .then(function () { window.kp.slutt = performance.now(); clearInterval(tikk); melde(); });
     return laster;
   };
-
-  // Knappene i toppen: «Drift og HR» alltid, «KI-chat» bare når siden kan spørre Claude med verktøy.
-  window.kp.knapp = function (id, tekst, klikk) {
-    var h = document.querySelector("header.ss-topp");
-    if (!h || document.getElementById(id)) return;
-    var b = document.createElement("button");
-    b.className = "ss-knapp"; b.type = "button"; b.id = id; b.textContent = tekst; b.onclick = klikk;
-    var fs = document.getElementById("fullskjerm");
-    if (fs) h.insertBefore(b, fs); else h.appendChild(b);
-  };
-  window.kp.naarToppen = function (f) {
-    if (document.querySelector("header.ss-topp")) return f();
-    var obs = new MutationObserver(function () {
-      if (document.querySelector("header.ss-topp")) { obs.disconnect(); f(); }
-    });
-    obs.observe(document.querySelector("main"), { childList: true });
-  };
-  window.kp.lukkAlle = function () {
-    document.querySelectorAll(".sk-skuff[data-apen]").forEach(function (s) { s.removeAttribute("data-apen"); });
-  };
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") window.kp.lukkAlle(); });
 })();
 </script>
 
 <script>
-/* KI-chat. Hvert spørsmål sendes med instruksen og samtalen så langt. Claude henter tall med verktøyet sql,
-   som kjører i siden mot databasen i minnet. All tekst tegnes med textContent (ingen markdown, ingen HTML). */
+/* KI-chat. Hvert spørsmål sendes med instruksen, rollen som er valgt og samtalen så langt. Claude henter tall med
+   verktøyet sql, som kjører i siden mot databasen i minnet. All tekst tegnes med textContent (ingen markdown, ingen HTML). */
 (function () {
   "use strict";
   var NB = new Intl.NumberFormat("nb-NO", { maximumFractionDigits: 2 });
   var skuff = document.getElementById("skuff"), logg = document.getElementById("logg"), felt = document.getElementById("felt");
-  var sendKnapp = document.getElementById("send");
-  var sample = null, turer = [], opptatt = false;
-  var FORSLAG = ["Hva krever oppmerksomhet i dag?", "Hvordan går utstillingene i år?",
-    "Hvordan var besøket forrige uke?", "Hvordan gikk Fokusrommet i år?"];
+  var sendKnapp = document.getElementById("send"), forslag = document.getElementById("forslag");
+  var sample = null, turer = [], opptatt = false, rolle = null;
 
   function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = String(x); return e; }
   function rull() { logg.scrollTop = logg.scrollHeight; }
-  // Kolonnen står alltid. Databasen lastes først når noen begynner å skrive eller trykker et forslag.
   function klargjor() { window.kp.last(); visSteg(); }
   felt.addEventListener("focus", klargjor);
 
@@ -642,6 +599,16 @@ body.med-chat .ss { min-width: 0; }
     else s.textContent = "Laster … " + window.kp.steg + " (" + sek + " s)";
   }
   window.kp.lyttere.push(visSteg);
+
+  // Forslagene følger rollen som er valgt i toppen.
+  function settRolle(r) {
+    rolle = r;
+    document.getElementById("chat-rolle").textContent = r ? "som " + r.navn.toLowerCase() : "";
+    forslag.textContent = "";
+    ((r && r.forslag) || []).forEach(function (q) { var k = el("button", "sk-chip", q); k.type = "button"; k.onclick = function () { spor(q); }; forslag.appendChild(k); });
+  }
+  document.addEventListener("kp-rolle", function (e) { settRolle(e.detail); });
+  if (window.kpRolle && window.kpRolle()) settRolle(window.kpRolle());
 
   // Samme regel som sql.py: én SELECT eller WITH, maks 200 rader, svar på maks ca. 30 KB.
   function kjorSql(q, sqlLogg) {
@@ -703,7 +670,7 @@ body.med-chat .ss { min-width: 0; }
     try {
       await window.kp.last();
       if (!window.kp.db) throw { code: "ingen_db" };
-      turer.push({ role: "user", content: q });
+      turer.push({ role: "user", content: (rolle ? "[Rolle: " + rolle.navn + "] " : "") + q });
       var meldinger = [{ role: "user", content: window.kp.instruks }].concat(turer.slice(-20));
       var svar = await sample(meldinger, { signal: ctl.signal,
         onText: function (u) { tekstEl.className = "sk-tekst"; tekstEl.textContent = del(u.text).tekst; rull(); },
@@ -754,14 +721,8 @@ body.med-chat .ss { min-width: 0; }
   }
 
   // Sier Lars nei til at siden bruker Claude, tas kolonnen bort og dashbordet får hele skjermen igjen.
-  function skjulChat() {
-    document.body.classList.remove("med-chat"); skuff.classList.remove("sk-kolonne");
-    window.kp.spor = null;
-    window.dispatchEvent(new Event("resize"));
-  }
+  function skjulChat() { document.body.classList.remove("med-chat"); window.dispatchEvent(new Event("resize")); }
 
-  var f = document.getElementById("forslag");
-  FORSLAG.forEach(function (q) { var k = el("button", "sk-chip", q); k.type = "button"; k.onclick = function () { spor(q); }; f.appendChild(k); });
   document.getElementById("skjema").onsubmit = function (e) {
     e.preventDefault(); var v = felt.value.trim(); if (v && !opptatt) { felt.value = ""; spor(v); }
   };
@@ -772,132 +733,8 @@ body.med-chat .ss { min-width: 0; }
       if (sample) { var lim = await sample.limits().catch(function () { return null; }); if (!lim || !lim.tools) sample = null; }
     } catch (e) { sample = null; }
     if (!sample) return;  // utenfor claude.ai, eller uten verktøy: ingen chat, dashbordet får hele skjermen
-    window.kp.spor = function (q) { window.kp.lukkAlle(); spor(q); };
-    skuff.classList.add("sk-kolonne");
     document.body.classList.add("med-chat");
-    window.kp.lyttere.forEach(function (l) { l(); });
+    if (window.kpRolle && window.kpRolle()) settRolle(window.kpRolle());
   })();
-})();
-</script>
-
-<script>
-/* Drift og HR: tre faste rapporter regnet med SQL i siden. «I år» går til datoen tallene gjelder (data.json). */
-(function () {
-  "use strict";
-  var RAPPORT_SQL = {
-    prestasjon: "WITH n AS (SELECT avdeling, count(*) AS ansatte FROM hr_ansatte WHERE status <> 'Sluttet' GROUP BY avdeling),\n" +
-      "s AS (SELECT a.avdeling, m.ansatt_id, m.samlet_vurdering AS v FROM hr_medarbeidersamtaler m JOIN hr_ansatte a USING (ansatt_id)\n" +
-      "      WHERE a.status <> 'Sluttet' AND m.dato BETWEEN '{AARSTART}' AND '{IDAG}')\n" +
-      "SELECT n.avdeling AS Avdeling, n.ansatte AS Ansatte,\n" +
-      "  (SELECT count(*) FROM s WHERE s.avdeling = n.avdeling AND v = 'Overgår') AS \"Overgår\",\n" +
-      "  (SELECT count(*) FROM s WHERE s.avdeling = n.avdeling AND v = 'Innfrir') AS Innfrir,\n" +
-      "  (SELECT count(*) FROM s WHERE s.avdeling = n.avdeling AND v = 'Delvis') AS Delvis,\n" +
-      "  (SELECT count(*) FROM s WHERE s.avdeling = n.avdeling AND v = 'Under') AS Under,\n" +
-      "  n.ansatte - (SELECT count(DISTINCT ansatt_id) FROM s WHERE s.avdeling = n.avdeling) AS \"Uten samtale\"\n" +
-      "FROM n ORDER BY Under DESC, Delvis DESC",
-    belastning: "WITH n AS (SELECT avdeling, count(*) AS ansatte FROM hr_ansatte WHERE status <> 'Sluttet' GROUP BY avdeling),\n" +
-      "f AS (SELECT a.avdeling, sum(julianday(min(f.til, '{IDAG}')) - julianday(max(f.fra, '{AARSTART}')) + 1) AS dager\n" +
-      "      FROM hr_fravaer f JOIN hr_ansatte a USING (ansatt_id)\n" +
-      "      WHERE a.status <> 'Sluttet' AND f.type IN ('egenmelding', 'sykemelding') AND f.fra <= '{IDAG}' AND f.til >= '{AARSTART}' GROUP BY a.avdeling),\n" +
-      "v AS (SELECT avdeling, sum(timer > 9) AS lange, count(*) AS vakter FROM hr_vakter WHERE dato BETWEEN '{AARSTART}' AND '{IDAG}' GROUP BY avdeling)\n" +
-      "SELECT n.avdeling AS Avdeling, n.ansatte AS Ansatte, round(coalesce(f.dager, 0)) AS \"Fraværsdager\",\n" +
-      "  round(coalesce(f.dager, 0) * 1.0 / n.ansatte, 1) AS \"Dager per ansatt\", coalesce(v.lange, 0) AS \"Vakter over 9 t\", coalesce(v.vakter, 0) AS Vakter\n" +
-      "FROM n LEFT JOIN f USING (avdeling) LEFT JOIN v USING (avdeling) ORDER BY \"Dager per ansatt\" DESC",
-    innleie: "SELECT kategori AS Kategori, count(*) AS Oppdrag, round(sum(fakturerte_timer)) AS Timer, round(sum(totalbelop_nok)) AS \"Kostnad kr\"\n" +
-      "FROM hr_innleie WHERE periode_fra BETWEEN '{AARSTART}' AND '{IDAG}' GROUP BY kategori ORDER BY \"Kostnad kr\" DESC",
-    vakttimer: "SELECT avdeling AS Avdeling, round(sum(timer)) AS Vakttimer, count(*) AS Vakter FROM hr_vakter\n" +
-      "WHERE dato BETWEEN '{AARSTART}' AND '{IDAG}' GROUP BY avdeling ORDER BY Vakttimer DESC"
-  };
-  var RAPPORTER = [
-    { id: "prestasjon", navn: "Prestasjon", tittel: "Prestasjon per avdeling",
-      ingress: "Samlet vurdering fra årets medarbeidersamtaler, nåværende ansatte.", kilde: "hr_medarbeidersamtaler, hr_ansatte",
-      deler: [{ sql: "prestasjon", merk: ["Under", "Uten samtale"] }],
-      sporsmal: "Se på rapporten «Prestasjon per avdeling» (medarbeidersamtaler i år). Hvilke avdelinger bør jeg som direktør følge opp, og hvorfor?" },
-    { id: "belastning", navn: "Fravær og belastning", tittel: "Fravær og belastning per avdeling",
-      ingress: "Fraværsdager (egenmelding og sykemelding) i år per ansatt, ved siden av vakter over 9 timer. Ingen fraværsårsaker.", kilde: "hr_fravaer, hr_vakter, hr_ansatte",
-      deler: [{ sql: "belastning", merk: ["Dager per ansatt", "Vakter over 9 t"], stolpe: "Dager per ansatt" }],
-      sporsmal: "Se på rapporten «Fravær og belastning per avdeling» i år. Henger fravær og lange vakter sammen? Hva bør jeg se nærmere på?" },
-    { id: "innleie", navn: "Innleie og bemanning", tittel: "Innleie og egen bemanning",
-      ingress: "Innleid hjelp med oppstart i år per kategori, og egne vakttimer per avdeling.", kilde: "hr_innleie, hr_vakter",
-      deler: [{ sql: "innleie", stolpe: "Kostnad kr" }, { sql: "vakttimer", stolpe: "Vakttimer" }],
-      sporsmal: "Se på rapporten «Innleie og egen bemanning» i år. Hvor bruker vi mest på innleie, og er det rimelig sett mot egne vakttimer?" }
-  ];
-  var NB = new Intl.NumberFormat("nb-NO", { maximumFractionDigits: 1 });
-  var skuff = document.getElementById("rapportskuff"), innhold = document.getElementById("rp-innhold"), faner = document.getElementById("rp-faner");
-  var sporKnapp = document.getElementById("rp-spor");
-  var valgt = RAPPORTER[0];
-
-  function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = String(x); return e; }
-  function sql(id) {
-    var idag = window.kpDato || new Date().toISOString().slice(0, 10);
-    return RAPPORT_SQL[id].split("{IDAG}").join(idag).split("{AARSTART}").join(idag.slice(0, 4) + "-01-01");
-  }
-
-  function tabell(sqlId, merk, stolpe) {
-    var r = window.kp.db.exec(sql(sqlId))[0] || { columns: [], values: [] };
-    var t = el("table", "rp-tabell"), hode = el("tr"), thead = el("thead"), tb = el("tbody");
-    r.columns.forEach(function (k) { hode.appendChild(el("th", null, k)); });
-    thead.appendChild(hode); t.appendChild(thead);
-    var si = r.columns.indexOf(stolpe), maks = 0;
-    if (si >= 0) r.values.forEach(function (v) { maks = Math.max(maks, Number(v[si]) || 0); });
-    var merkIdx = (merk || []).map(function (m) { return r.columns.indexOf(m); });
-    var topp = merkIdx.map(function (i) { return i < 0 ? null : Math.max.apply(null, r.values.map(function (v) { return Number(v[i]) || 0; })); });
-    r.values.forEach(function (v) {
-      var tr = el("tr");
-      v.forEach(function (c, i) {
-        var td = el("td", null, typeof c === "number" ? NB.format(c) : c);
-        var mi = merkIdx.indexOf(i); if (mi >= 0 && topp[mi] > 0 && Number(c) === topp[mi]) td.className = "rp-merk";
-        tr.appendChild(td);
-      });
-      tb.appendChild(tr);
-    });
-    t.appendChild(tb);
-    var boks = el("div"); boks.style.overflowX = "auto"; boks.appendChild(t);
-    if (si < 0 || !maks) return boks;
-    var d = el("div", "sk-diagram");
-    r.values.forEach(function (v) {
-      var rad = el("div", "ss-stolpe"); rad.appendChild(el("span", null, v[0]));
-      var spor = el("div", "ss-spor"), i = el("i"); i.style.width = (Number(v[si]) / maks * 100) + "%"; spor.appendChild(i); rad.appendChild(spor);
-      rad.appendChild(el("b", null, NB.format(v[si]))); d.appendChild(rad);
-    });
-    var w = el("div"); w.style.display = "grid"; w.style.gap = "0.6rem";
-    w.appendChild(el("div", "ss-etikett", stolpe)); w.appendChild(d); w.appendChild(boks);
-    return w;
-  }
-
-  function vis() {
-    [].forEach.call(faner.children, function (b) { b.setAttribute("aria-pressed", String(b.dataset.id === valgt.id)); });
-    sporKnapp.hidden = !window.kp.spor;
-    innhold.textContent = "";
-    if (window.kp.feil) { innhold.appendChild(el("div", "sk-status sk-feil", "Fikk ikke lastet databasen: " + window.kp.feil)); return; }
-    if (!window.kp.db) { innhold.appendChild(el("div", "sk-status", "Laster databasen … " + window.kp.steg)); return; }
-    innhold.appendChild(el("h3", null, valgt.tittel));
-    innhold.appendChild(el("p", "rp-ingress", valgt.ingress));
-    var sqlTekst = [];
-    try {
-      valgt.deler.forEach(function (d) { innhold.appendChild(tabell(d.sql, d.merk, d.stolpe)); sqlTekst.push(sql(d.sql)); });
-    } catch (e) { innhold.appendChild(el("div", "sk-feil", "Rapporten feilet: " + (e && e.message || e))); }
-    innhold.appendChild(el("div", "ss-kilde", "Kilde: " + valgt.kilde + ". Rødt er høyest i kolonnen."));
-    var h = el("div", "sk-handling"), vs = el("button", null, "Vis SQL"), pre = null; vs.type = "button";
-    vs.onclick = function () { if (pre) { pre.remove(); pre = null; return; } pre = el("pre", "sk-sql", sqlTekst.join("\n\n")); innhold.appendChild(pre); };
-    h.appendChild(vs); innhold.appendChild(h);
-  }
-
-  RAPPORTER.forEach(function (r) {
-    var b = el("button", "sk-chip rp-fane", r.navn); b.type = "button"; b.dataset.id = r.id;
-    b.onclick = function () { valgt = r; vis(); }; faner.appendChild(b);
-  });
-  var vistKlar = false;
-  window.kp.lyttere.push(function () {
-    // Tegn på nytt når databasen blir klar eller feiler, ikke hvert sekund mens den laster.
-    if (!skuff.hasAttribute("data-apen")) return;
-    var klar = !!(window.kp.db || window.kp.feil);
-    if (klar && vistKlar) { sporKnapp.hidden = !window.kp.spor; return; }
-    vistKlar = klar; vis();
-  });
-  function apne() { window.kp.lukkAlle(); skuff.setAttribute("data-apen", ""); vis(); window.kp.last(); }
-  document.getElementById("rp-lukk").onclick = function () { skuff.removeAttribute("data-apen"); };
-  sporKnapp.onclick = function () { if (window.kp.spor) window.kp.spor(valgt.sporsmal); };
-  window.kp.naarToppen(function () { window.kp.knapp("drift-hr-knapp", "Drift og HR", apne); });
 })();
 </script>

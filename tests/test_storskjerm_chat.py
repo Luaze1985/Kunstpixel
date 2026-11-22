@@ -168,7 +168,6 @@ def test_chatten_staar_fast_ved_siden_av_dashbordet(nettleser, server) -> None:
         assert m["chatHoyde"] >= 0.9 * m["vinduH"], m
         assert s.locator("#skuff").is_visible() and s.locator("#forslag button").count() == 4
         assert s.locator("#kichat-knapp").count() == 0
-        assert s.locator("#drift-hr-knapp").is_visible()
         s.keyboard.press("Escape")
         assert s.locator("#skuff").is_visible()                 # Esc lukker ikke kolonnen
         assert s.feil == []
@@ -183,7 +182,6 @@ def test_uten_claude_far_dashbordet_hele_skjermen(nettleser, server) -> None:
         assert s.locator("body.med-chat").count() == 0
         assert not s.locator("#skuff").is_visible()
         assert s.evaluate("document.querySelector('main').getBoundingClientRect().width >= innerWidth - 1")
-        assert s.locator("#drift-hr-knapp").is_visible()
     finally:
         s.close()
 
@@ -231,16 +229,30 @@ def test_chatten_svarer_med_sql_og_tegner_diagram(nettleser, server) -> None:
         s.close()
 
 
-@trenger_nett
-def test_drift_og_hr_bruker_datoen_fra_dataene(nettleser, server) -> None:
+def test_forslagene_folger_rollen_og_rollen_sendes_med(nettleser, server) -> None:
     s = _apne(nettleser, server)
     try:
-        s.click("#drift-hr-knapp")
-        s.wait_for_selector("#rp-innhold table", timeout=90000)
-        s.click("#rp-innhold .sk-handling button")
-        sql = s.locator("#rp-innhold .sk-sql").inner_text()
-        assert DATO in sql and "{IDAG}" not in sql
-        assert s.feil == []
+        _med_chat(s)
+        direktor = s.locator("#forslag button").all_inner_texts()
+        s.click("#rolle-hr")
+        hr = s.locator("#forslag button").all_inner_texts()
+        assert len(hr) == 4 and hr != direktor
+        assert "hr og bemanning" in s.locator("#chat-rolle").inner_text()
+    finally:
+        s.close()
+
+
+@trenger_nett
+def test_sporsmalet_far_rollen_foran(nettleser, server) -> None:
+    s = _apne(nettleser, server)
+    try:
+        _med_chat(s)
+        s.click("#rolle-okonomi")
+        s.locator("#forslag button").first.click()
+        s.wait_for_selector(".sk-claude .sk-handling", timeout=90000)
+        siste = s.evaluate("window.__kall[0][window.__kall[0].length - 1].content")
+        assert siste.startswith("[Rolle: Økonomi]")
+        assert "Rolle:" in s.evaluate("window.__kall[0][0].content")
     finally:
         s.close()
 
@@ -252,15 +264,31 @@ def test_alt_far_plass_med_chatkolonnen(nettleser, server, bredde: int, hoyde: i
     try:
         _med_chat(s)
         assert s.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+        s.click("#bytting")
         for underlag in (False, True):
-            if underlag:
-                s.click("#underlag")
-            for fid in ["besok-uker", "frister", "utstillinger", "hull"]:
-                s.click(f"#fane-{fid}")
-                over = s.evaluate("""() => [...document.querySelectorAll('.ss-scene, .ss-felt, .ss-visning, .ss-flate, .ss-stolper, .ss-liste')]
-                    .filter(e => e.getClientRects().length && e.scrollHeight > e.clientHeight + 1).map(e => e.id || e.className)""")
-                assert over == [], (fid, underlag, over)
-                assert s.evaluate("document.documentElement.scrollHeight <= window.innerHeight + 1"), (fid, underlag)
+            for rolle in ["direktor", "drift", "hr", "okonomi", "publikum", "samling"]:
+                s.click(f"#rolle-{rolle}")
+                if underlag != (s.locator("#underlag").get_attribute("aria-pressed") == "true"):
+                    s.click("#underlag")
+                for fane in s.locator(".ss-fane[id^='fane-']").all():
+                    fane.click()
+                    over = s.evaluate("""() => [...document.querySelectorAll('.ss-scene, .ss-felt, .ss-flate, .ss-stolper, .ss-liste')]
+                        .filter(e => e.getClientRects().length && e.scrollHeight > e.clientHeight + 1).map(e => e.id || e.className)""")
+                    assert over == [], (rolle, underlag, over)
+                    assert s.evaluate("document.documentElement.scrollHeight <= window.innerHeight + 1"), (rolle, underlag)
+    finally:
+        s.close()
+
+
+def test_chattekst_minst_20px_paa_storskjerm(nettleser, server) -> None:
+    # Chatten står fast på storskjermen, så samme regel som for dashbordet (D8): minst 20 px ved 1920×1080.
+    s = _apne(nettleser, server)
+    try:
+        _med_chat(s)
+        minste = s.evaluate("""() => Math.min(...[...document.querySelectorAll('#skuff *')]
+            .filter(e => e.children.length === 0 && e.textContent.trim() && e.getClientRects().length)
+            .map(e => parseFloat(getComputedStyle(e).fontSize)))""")
+        assert minste >= 20, minste
     finally:
         s.close()
 
