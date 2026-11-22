@@ -30,7 +30,7 @@
 - Det gamle navnet er fjernet fra 8 bilder. Kafeen er flyttet til glassfløyen mot Nidelva og har 45 plasser. Kunnskapsfila om bygget følger nå kartdataene (1912/2016).
 - **Nye tegninger (G1–G8):** bygget er tegnet som 58 × 25 m med 45 rom. BRA er 4 174,2 m², og tegningene, kartet og PDF-en er laget fra samme data. Ikke committet.
 - **Maskinpark (MP1–MP8):** 37 maskiner, 4 MCP-verktøy (bare lesing og forslag) og skillen `maskinpark`. Serverrom og robotgarasje i U1. Ikke committet.
-- **Gjort (MP9–MP12):** maskinlag i kartet, 6 øvingsscenarier med fasit (`get_drill_scenarios`), fasade sør/øst og snitt A–A/B–B. Ikke committet.
+- **Gjort (MP9–MP12):** maskinlag i kartet, 6 øvingsscenarier med fasit (`get_drill_scenarios`), fasade sør/øst og snitt A–A/B–B. Committet 2026-11-22.
 - **Neste:** nye bilder av Sal B, C og E og driftsrommene (krever ja til ekstern bildetjeneste), fasade nord/vest, situasjonsplan, rømningsplan, robotenes kjøreveier, eventuelt hvitelisting i Datafinner.
 - **Neste:** nye bilder av Sal B, C og E og driftsrommene, og fasade-, snitt-, situasjons- og rømningstegninger.
 

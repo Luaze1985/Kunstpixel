@@ -277,6 +277,8 @@ def generate_blueprint_svg(floor_data: dict, model_data: dict) -> str:
 
 def generate_html(data: dict) -> str:
     data_json = json.dumps(data, ensure_ascii=False)
+    mp_sti = BASE_DIR / "maskinpark.json"
+    maskinpark_json = mp_sti.read_text(encoding="utf-8") if mp_sti.is_file() else '{"maskiner": [], "hendelser": []}'
 
     room_images = {
         "FASADE": "bilder/01_eksterior_hovedfasade.jpg",
@@ -820,6 +822,7 @@ def generate_html(data: dict) -> str:
         <button class="btn-toggle active" id="zone-ark" onclick="setZone('ark')">Arkitektur</button>
         <button class="btn-toggle" id="zone-sikkerhet" onclick="setZone('sikkerhet')">Sikkerhetssoner</button>
         <button class="btn-toggle" id="zone-klima" onclick="setZone('klima')">Klimasoner</button>
+        <button class="btn-toggle" id="zone-maskin" onclick="setZone('maskin')">Maskiner</button>
       </div>
     </div>
   </header>
@@ -931,12 +934,20 @@ def generate_html(data: dict) -> str:
       <div class="section-title">Aktive Sensorer & Instrumentering</div>
       <div class="tag-list" id="drawer-sensorer">
       </div>
+
+      <div class="section-title">Maskiner i rommet (maskinpark)</div>
+      <div class="tag-list" id="drawer-maskiner">
+      </div>
     </div>
   </div>
 
   <script>
     const MODEL = {data_json};
     const ROOM_IMAGES = {room_images_json};
+    const MASKINPARK = {maskinpark_json};
+    const MASKINSTATUS = {{ i_drift: '#10b981', varsel: '#f59e0b', feil: '#ef4444', vedlikehold: '#3b82f6' }};
+    const STATUSRANG = {{ i_drift: 0, vedlikehold: 1, varsel: 2, feil: 3 }};
+    function maskinerIRom(romId) {{ return MASKINPARK.maskiner.filter(m => m.rom_id === romId); }}
     const GALLERY_ITEMS = {gallery_items_json};
 
     let mainView = '25d';
@@ -1245,6 +1256,12 @@ def generate_html(data: dict) -> str:
       }} else if (currentZone === 'klima') {{
         const klima = MODEL.soner_definisjon.klima[room.klimasone];
         return klima ? klima.farge : "#8b5cf6";
+      }} else if (currentZone === 'maskin') {{
+        // Rommet får fargen til den verste maskinstatusen i rommet; rom uten maskiner tones ned.
+        const ms = maskinerIRom(room.id);
+        if (!ms.length) return "#111827";
+        const verst = ms.reduce((a, m) => STATUSRANG[m.status] > STATUSRANG[a] ? m.status : a, 'i_drift');
+        return MASKINSTATUS[verst];
       }} else {{
         if (room.id.startsWith("SAL")) return "#475569";
         if (room.id.startsWith("MAG")) return "#334155";
@@ -1421,6 +1438,16 @@ def generate_html(data: dict) -> str:
         return;
       }}
 
+      if (currentZone === 'maskin') {{
+        heading.innerText = "Maskinpark (" + MASKINPARK.maskiner.length + " maskiner)";
+        const antall = {{}};
+        MASKINPARK.maskiner.forEach(m => antall[m.status] = (antall[m.status] || 0) + 1);
+        const tekst = {{ i_drift: 'I drift', varsel: 'Varsel', feil: 'Feil', vedlikehold: 'Vedlikehold' }};
+        content.innerHTML = Object.keys(MASKINSTATUS).map(s =>
+          `<div class="legend-item"><div class="legend-color" style="background:${{MASKINSTATUS[s]}};"></div><span>${{tekst[s]}} (${{antall[s] || 0}})</span></div>`).join('');
+        return;
+      }}
+
       if (currentZone === 'sikkerhet') {{
         heading.innerText = "Sikkerhetssoner (Adgang)";
         const defs = MODEL.soner_definisjon.sikkerhet;
@@ -1585,6 +1612,19 @@ def generate_html(data: dict) -> str:
         sensorDiv.innerHTML = '<span style="color:#64748b; font-size:12px;">Ingen dedikerte kartsensorer</span>';
       }}
 
+      const maskinDiv = document.getElementById('drawer-maskiner');
+      const ms = maskinerIRom(room.id);
+      maskinDiv.innerHTML = ms.length ? '' : '<span style="color:#64748b; font-size:12px;">Ingen maskiner i rommet</span>';
+      ms.forEach(m => {{
+        const apne = MASKINPARK.hendelser.filter(h => h.maskin_id === m.maskin_id && !h.lukket);
+        const span = document.createElement('span');
+        span.className = 'tag';
+        span.style.borderLeft = '3px solid ' + MASKINSTATUS[m.status];
+        span.title = apne.map(h => h.beskrivelse).join('; ');
+        span.innerText = m.maskin_id.replace('KP-MASK-', '') + ' · ' + m.navn + ' · ' + m.status.replace('_', ' ') + (apne.length ? ' (' + apne.length + ' åpen)' : '');
+        maskinDiv.appendChild(span);
+      }});
+
       document.getElementById('drawer').classList.add('open');
     }}
 
@@ -1638,7 +1678,7 @@ def generate_html(data: dict) -> str:
 
     function setZone(zone) {{
       currentZone = zone;
-      ['ark', 'sikkerhet', 'klima'].forEach(z => {{
+      ['ark', 'sikkerhet', 'klima', 'maskin'].forEach(z => {{
         const btn = document.getElementById('zone-' + z);
         if (btn) btn.classList.toggle('active', currentZone === z);
       }});
@@ -1700,6 +1740,14 @@ def build():
         with open(svg_path, "w", encoding="utf-8") as f:
             f.write(svg_content)
         print(f"Skrev 2D blueprint SVG for etasje {fnr}: {svg_path.name}")
+
+    # Fasader og snitt tegnes fra samme modell (06_kart/fasader.py).
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("kp_fasader", BASE_DIR / "fasader.py")
+    fasader = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(fasader)
+    for sti in fasader.skriv_alle(data, BASE_DIR):
+        print(f"Skrev fasade/snitt: {sti.name}")
 
     print(f"Genererer interaktivt bygningskart til {HTML_PATH}...")
     html_content = generate_html(data)

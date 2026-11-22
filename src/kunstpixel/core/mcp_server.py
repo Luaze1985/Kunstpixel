@@ -605,6 +605,18 @@ def propose_machine_command(maskin_id: str, kommando: str, parametre: dict | Non
                                        rolle=requester_role)
 
 
+@mcp.tool()
+def get_drill_scenarios(scenario_id: str | None = None) -> dict[str, Any]:
+    """Øvingsscenarier for KI i drift (øvingsdager), med oppgave, forventede verktøy og fasit.
+
+    Hvert scenario har et riktig forslag (gir 'venter_godkjenning') og en felle (gir 'avvist').
+
+    Args:
+        scenario_id: F.eks. 'KP-OV-01' (valgfritt, ellers alle).
+    """
+    return maskinpark.ovingsscenarier(scenario_id)
+
+
 # --- HR, HMS & Kvalitetsverktøy (integrert) ---
 @mcp.tool()
 def count_documented_skill(code: str, as_of: str = "2026-11-07") -> dict:

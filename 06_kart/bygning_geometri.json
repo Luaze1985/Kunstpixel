@@ -139,7 +139,9 @@
             "y": 44,
             "b": 332,
             "d": 242
-          }
+          },
+          "tak_topp_moh": 28.4,
+          "takform": "mansard"
         },
         {
           "id": "GLASSFLOY",
@@ -156,7 +158,9 @@
             "y": 43,
             "b": 237,
             "d": 244
-          }
+          },
+          "tak_topp_moh": 24.9,
+          "takform": "flatt"
         }
       ],
       "fasadevegg": {

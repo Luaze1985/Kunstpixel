@@ -202,3 +202,15 @@ def foresla_kommando(maskin_id: str, kommando: str, parametre: dict | None = Non
         svar["forslag"] = {"maskin_id": m["maskin_id"], "kommando": kommando, "parametre": parametre,
                            "tidspunkt": tidspunkt, "status": "venter_godkjenning", "begrunnelse_kreves": True}
     return svar
+
+
+def ovingsscenarier(scenario_id: str | None = None) -> dict[str, Any]:
+    """Øvingsscenarier for øvingsdager: oppgave, forventede verktøy, riktig forslag og felle (fasit)."""
+    alle = _data().get("ovingsscenarier", [])
+    if scenario_id is not None:
+        alle = [s for s in alle if s["scenario_id"] == str(scenario_id).strip().upper()]
+        if not alle:
+            raise ValueError(f"Ukjent scenario: {scenario_id}")
+    return {"antall": len(alle), "scenarier": alle, "datakilde": "maskinpark.json (syntetisk)",
+            "merknad": "Fasiten er regelsjekken i propose_machine_command: riktig gir venter_godkjenning, fellen gir avvist."}
+

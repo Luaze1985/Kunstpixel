@@ -75,11 +75,10 @@ MANGLER_BILDER = [
 ]
 
 MANGLER_TEGNINGER = [
-    ("Fasadetegninger", "Alle fire fasader med høyder og materialer. Avklarer også hvilken side glassfløyen står på."),
-    ("Snitt", "Tverrsnitt som viser etasjehøyder, overlys og kjeller (koter finnes alt i dataene)."),
+    ("Fasade nord og vest", "Fasade sør og øst er tegnet; nord (bakgård med rampe) og vest gjenstår."),
     ("Situasjonsplan", "Tomta med skulpturhage, varelevering, kjøresluse og gatene rundt."),
     ("Rømnings- og brannplan", "Rømningsveier, nødutganger og brannceller per etasje."),
-    ("Maskinpark i kartet", "Eget kartlag med maskiner, ladepunkter og robotenes kjøreveier."),
+    ("Robotenes kjøreveier", "Maskinlaget i kartet viser maskiner per rom; kjøreveier og ladepunkter i gangene gjenstår."),
 ]
 
 
@@ -154,6 +153,15 @@ def tegn_plantegninger(mappe: Path) -> dict[str, Path]:
         png = mappe / f"plan_{kode}.png"
         _edge("--window-size=1100,680", "--force-device-scale-factor=2", f"--screenshot={png}", side.as_uri())
         ut[kode] = png
+    # Fasader og snitt (viewBox-bredde 1000 eller 760, høyde 400).
+    for navn, bredde in (("fasade_sor", 1000), ("fasade_ost", 760), ("snitt_a", 760), ("snitt_b", 760)):
+        svg = (KART / f"{navn}.svg").read_text(encoding="utf-8")
+        side = mappe / f"{navn}.html"
+        side.write_text("<!doctype html><meta charset='utf-8'><body style='margin:0;background:#0b1220'>"
+                        f"<div style='width:{bredde}px;height:400px'>{svg}</div></body>", encoding="utf-8")
+        png = mappe / f"{navn}.png"
+        _edge(f"--window-size={bredde},400", "--force-device-scale-factor=2", f"--screenshot={png}", side.as_uri())
+        ut[navn] = png
     return ut
 
 
@@ -302,6 +310,22 @@ Tall og rom er hentet fra <code>06_kart/bygning_geometri.json</code>, som også 
 {plansider}
 
 <section class=side>
+<h2>Fasader</h2>
+<p class=ingress>Tegnet fra samme modell som planene: bredder fra fotavtrykket og høyder fra kotene. Hovedfløyen har mansardtak
+(topp {_tall(M['fotavtrykk']['volumer'][0]['tak_topp_moh'])} moh), glassfløyen flatt sedumtak på gesimshøyde.</p>
+<img class=plan src='{_b64(planer["fasade_sor"], "image/png")}'>
+<img class=plan style="width:76%" src='{_b64(planer["fasade_ost"], "image/png")}'>
+</section>
+
+<section class=side>
+<h2>Snitt</h2>
+<p class=ingress>Nord–sør-snitt gjennom midten av hver fløy. Snittene viser rommene snittlinja krysser i hver etasje,
+etasjeskillerne og kjelleren under terreng.</p>
+<img class=plan style="width:76%" src='{_b64(planer["snitt_a"], "image/png")}'>
+<img class=plan style="width:76%" src='{_b64(planer["snitt_b"], "image/png")}'>
+</section>
+
+<section class=side>
 <h2>Interiør: publikumsarealer</h2>
 <div class=to>{''.join(_bilde(*x) for x in inn[:4])}</div>
 </section>
@@ -315,7 +339,7 @@ Tall og rom er hentet fra <code>06_kart/bygning_geometri.json</code>, som også 
 
 <section class=side>
 <h2>Vurdering: trenger vi flere bilder og tegninger?</h2>
-<p class=ingress><b>Ja.</b> Plantegningene er nå komplette for alle tre etasjer. Bildene dekker fasaden, publikumsarealene, Sal A, Sal D og magasinet. Tre av fem utstillingssaler og alle driftsrommene mangler bilder. Fasader, snitt og situasjonsplan finnes ikke ennå.</p>
+<p class=ingress><b>Ja.</b> Plantegningene er nå komplette for alle tre etasjer. Bildene dekker fasaden, publikumsarealene, Sal A, Sal D og magasinet. Tre av fem utstillingssaler og alle driftsrommene mangler bilder. Fasade sør og øst og to snitt er tegnet. Fasade nord og vest, situasjonsplan og rømningsplan mangler.</p>
 <h3>Bilder som mangler</h3>
 <table><tr><th>Rom</th><th>Etasje og type</th></tr>{''.join(f'<tr><td>{a}</td><td>{b_}</td></tr>' for a, b_ in MANGLER_BILDER)}</table>
 <h3>Tegninger som mangler</h3>

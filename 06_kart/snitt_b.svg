@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" width="100%" height="100%" class="fasade-svg">
+  <defs>
+    <pattern id="tegl" width="6" height="3" patternUnits="userSpaceOnUse"><rect width="6" height="3" fill="#7f1d1d"/><line x1="0" y1="3" x2="6" y2="3" stroke="#991b1b" stroke-width="0.5"/></pattern>
+    <pattern id="jord" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="8" stroke="rgba(148,163,184,0.25)" stroke-width="1"/></pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="#0a0f1d"/>
+  <text x="30" y="34" font-family="sans-serif" font-size="18" font-weight="bold" fill="#ffffff">KUNSTPIXEL · SNITT B–B</text>
+  <text x="30" y="54" font-family="sans-serif" font-size="10.5" fill="#94a3b8">Nord–sør gjennom glassfløy 2016 (x = 46.0 m fra vestfasaden) · nord til venstre</text>
+  <text x="730" y="34" font-family="sans-serif" font-size="11" font-weight="bold" fill="#38bdf8" text-anchor="end">MÅLESTOKK 1:100</text>
+  <rect x="140" y="298.3" width="330" height="76.69999999999999" fill="url(#jord)"/>
+  <line class="terreng" x1="140" y1="298.3" x2="470" y2="298.3" stroke="#a3a3a3" stroke-width="1.6"/>
+  <rect x="180" y="298.3" width="250" height="42.69999999999999" fill="#0a0f1d" stroke="#94a3b8" stroke-width="1.2"/>
+  <rect x="180" y="182.0" width="250" height="116.30000000000001" fill="none" stroke="#38bdf8" stroke-width="2"/>
+  <rect class="dekke" x="180" y="338.0" width="250" height="3.0" fill="#94a3b8"/>
+  <g class="snittrom" data-room-id="VER-1">
+    <rect x="183" y="300.0" width="120" height="35.0" fill="rgba(51,65,85,0.35)" stroke="#475569" stroke-width="0.8"/>
+    <text x="243.0" y="322.0" font-family="sans-serif" font-size="8" fill="#e2e8f0" text-anchor="middle">KUNSTMOTTAK</text>
+  </g>
+  <g class="snittrom" data-room-id="GANG-U1G">
+    <rect x="303" y="300.0" width="24" height="35.0" fill="rgba(51,65,85,0.35)" stroke="#475569" stroke-width="0.8"/>
+    <text x="315.0" y="322.0" font-family="sans-serif" font-size="8" fill="#e2e8f0" text-anchor="middle" transform="rotate(-90 315.0 319.0)">012</text>
+  </g>
+  <g class="snittrom" data-room-id="ROB-1">
+    <rect x="327" y="300.0" width="100" height="35.0" fill="rgba(51,65,85,0.35)" stroke="#475569" stroke-width="0.8"/>
+    <text x="377.0" y="322.0" font-family="sans-serif" font-size="8" fill="#e2e8f0" text-anchor="middle">ROBOTGARASJE</text>
+  </g>
+  <rect class="dekke" x="180" y="296.0" width="250" height="3.0" fill="#94a3b8"/>
+  <g class="snittrom" data-room-id="SAL-E">
+    <rect x="183" y="246.0" width="120" height="47.0" fill="rgba(51,65,85,0.35)" stroke="#475569" stroke-width="0.8"/>
+    <text x="243.0" y="274.0" font-family="sans-serif" font-size="8" fill="#e2e8f0" text-anchor="middle">SAL E</text>
+  </g>
+  <g class="snittrom" data-room-id="GANG-P1G">
+    <rect x="303" y="251.0" width="24" height="42.0" fill="rgba(51,65,85,0.35)" stroke="#475569" stroke-width="0.8"/>
+    <text x="315.0" y="276.5" font-family="sans-serif" font-size="8" fill="#e2e8f0" text-anchor="middle" transform="rotate(-90 315.0 273.5)">114</text>
+  </g>
+  <g class="snittrom" data-room-id="KAF-1">
+    <rect x="327" y="251.0" width="100" height="42.0" fill="rgba(51,65,85,0.35)" stroke="#475569" stroke-width="0.8"/>
+    <text x="377.0" y="276.5" font-family="sans-serif" font-size="8" fill="#e2e8f0" text-anchor="middle">KAFÉ</text>
+  </g>
+  <rect class="dekke" x="180" y="233.0" width="250" height="3.0" fill="#94a3b8"/>
+  <g class="snittrom" data-room-id="KON-P2">
+    <rect x="183" y="201.0" width="94" height="29.0" fill="rgba(51,65,85,0.35)" stroke="#475569" stroke-width="0.8"/>
+    <text x="230.0" y="220.0" font-family="sans-serif" font-size="8" fill="#e2e8f0" text-anchor="middle">KONTORER</text>
+  </g>
+  <g class="snittrom" data-room-id="SAL-C">
+    <rect x="277" y="185.0" width="150" height="45.0" fill="rgba(51,65,85,0.35)" stroke="#475569" stroke-width="0.8"/>
+    <text x="352.0" y="212.0" font-family="sans-serif" font-size="8" fill="#e2e8f0" text-anchor="middle">SAL C</text>
+  </g>
+  <rect class="dekke" x="180" y="182.0" width="250" height="3.0" fill="#94a3b8"/>
+  <rect class="sedumtak" x="180" y="178.0" width="250" height="4" fill="#4d7c0f"/>
+  <text x="305.0" y="174.0" font-family="sans-serif" font-size="9" fill="#a3e635" text-anchor="middle">SEDUMTAK</text>
+  <line x1="180" y1="158.0" x2="430" y2="158.0" stroke="#64748b" stroke-width="0.8"/>
+  <line x1="180" y1="154.0" x2="180" y2="162.0" stroke="#38bdf8" stroke-width="1.2" transform="rotate(45 180 158.0)"/>
+  <line x1="430" y1="154.0" x2="430" y2="162.0" stroke="#38bdf8" stroke-width="1.2" transform="rotate(45 430 158.0)"/>
+  <text x="305.0" y="153.0" font-family="sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">25 000 mm</text>
+  <g class="koter">
+    <line x1="180" y1="182.0" x2="442" y2="182.0" stroke="rgba(56,189,248,0.35)" stroke-width="0.6" stroke-dasharray="3,3"/>
+    <polygon points="442,182.0 448,177.0 436,177.0" fill="#38bdf8"/>
+    <text x="452" y="185.0" font-family="sans-serif" font-size="9.5" fill="#bae6fd">+24,90 gesims</text>
+    <line x1="180" y1="233.0" x2="442" y2="233.0" stroke="rgba(56,189,248,0.35)" stroke-width="0.6" stroke-dasharray="3,3"/>
+    <polygon points="442,233.0 448,228.0 436,228.0" fill="#38bdf8"/>
+    <text x="452" y="236.0" font-family="sans-serif" font-size="9.5" fill="#bae6fd">+19,80 P2 FG</text>
+    <line x1="180" y1="296.0" x2="442" y2="296.0" stroke="rgba(56,189,248,0.35)" stroke-width="0.6" stroke-dasharray="3,3"/>
+    <polygon points="442,296.0 448,291.0 436,291.0" fill="#38bdf8"/>
+    <text x="452" y="299.0" font-family="sans-serif" font-size="9.5" fill="#bae6fd">+13,50 P1 FG</text>
+    <line x1="180" y1="298.3" x2="442" y2="298.3" stroke="rgba(56,189,248,0.35)" stroke-width="0.6" stroke-dasharray="3,3"/>
+    <polygon points="442,298.3 448,293.3 436,293.3" fill="#38bdf8"/>
+    <text x="452" y="309.0" font-family="sans-serif" font-size="9.5" fill="#bae6fd">+13,27 terreng</text>
+    <line x1="180" y1="338.0" x2="442" y2="338.0" stroke="rgba(56,189,248,0.35)" stroke-width="0.6" stroke-dasharray="3,3"/>
+    <polygon points="442,338.0 448,333.0 436,333.0" fill="#38bdf8"/>
+    <text x="452" y="341.0" font-family="sans-serif" font-size="9.5" fill="#bae6fd">+9,30 U1 FG</text>
+  </g>
+  <text x="150" y="292.3" font-family="sans-serif" font-size="9" fill="#64748b" text-anchor="end">NORD</text>
+  <text x="550" y="320.3" font-family="sans-serif" font-size="9" fill="#64748b">SØR</text>
+</svg>

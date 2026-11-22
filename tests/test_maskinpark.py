@@ -188,3 +188,45 @@ def test_mcp_verktoyene_er_registrert() -> None:
     from src.kunstpixel.core.mcp_server import mcp
     navn = {t.name for t in mcp._tool_manager.list_tools()}
     assert {"get_machine_park", "get_machine_health", "get_maintenance_plan", "propose_machine_command"} <= navn
+
+
+# --- Maskinlag i 2.5D-kartet ------------------------------------------------------------------
+
+def test_kartet_har_maskinlag_med_alle_maskiner() -> None:
+    html = (KART / "index.html").read_text(encoding="utf-8")
+    assert "const MASKINPARK = " in html
+    assert 'id="zone-maskin"' in html and "setZone('maskin')" in html
+    assert 'id="drawer-maskiner"' in html
+    for mid in MASKINER:
+        assert mid in html, mid
+    kilde = (KART / "build_map.py").read_text(encoding="utf-8")
+    assert "currentZone === 'maskin'" in kilde
+
+
+# --- Øvingsdager: scenarier med fasit -------------------------------------------------------
+
+SCENARIER = DATA.get("ovingsscenarier", [])
+
+
+def test_det_finnes_minst_seks_ovingsscenarier() -> None:
+    assert len(SCENARIER) >= 6
+    assert len({s["scenario_id"] for s in SCENARIER}) == len(SCENARIER)
+
+
+@pytest.mark.parametrize("s", SCENARIER, ids=lambda s: s["scenario_id"])
+def test_scenarioets_fasit_stemmer_med_regelsjekken(s: dict) -> None:
+    assert s["maskin_id"] in MASKINER
+    for nokkel in ("riktig", "felle"):
+        f = s[nokkel]
+        svar = mp.foresla_kommando(f["maskin_id"], f["kommando"], f.get("parametre"), tidspunkt=f.get("tidspunkt"))
+        assert svar["status"] == f["forventet"], (s["scenario_id"], nokkel, svar["grunner"])
+    assert s["felle"]["forventet"] == "avvist"
+    assert s["riktig"]["forventet"] == "venter_godkjenning"
+
+
+def test_ovingsscenarier_finnes_som_mcp_verktoy() -> None:
+    from src.kunstpixel.core.mcp_server import get_drill_scenarios
+    alle = get_drill_scenarios()
+    assert alle["antall"] == len(SCENARIER)
+    en = get_drill_scenarios(scenario_id=SCENARIER[0]["scenario_id"])
+    assert en["scenarier"][0]["scenario_id"] == SCENARIER[0]["scenario_id"]

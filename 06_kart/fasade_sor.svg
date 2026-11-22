@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400" width="100%" height="100%" class="fasade-svg">
+  <defs>
+    <pattern id="tegl" width="6" height="3" patternUnits="userSpaceOnUse"><rect width="6" height="3" fill="#7f1d1d"/><line x1="0" y1="3" x2="6" y2="3" stroke="#991b1b" stroke-width="0.5"/></pattern>
+    <pattern id="jord" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="8" stroke="rgba(148,163,184,0.25)" stroke-width="1"/></pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="#0a0f1d"/>
+  <text x="30" y="34" font-family="sans-serif" font-size="18" font-weight="bold" fill="#ffffff">KUNSTPIXEL · FASADE SØR (mot Bispegata)</text>
+  <text x="30" y="54" font-family="sans-serif" font-size="10.5" fill="#94a3b8">Hovedfløy 1912 i tegl og glassfløy 2016 i glass · koter i moh</text>
+  <text x="970" y="34" font-family="sans-serif" font-size="11" font-weight="bold" fill="#38bdf8" text-anchor="end">MÅLESTOKK 1:100</text>
+  <rect x="80" y="298.3" width="660" height="76.69999999999999" fill="url(#jord)"/>
+  <line class="terreng" x1="80" y1="298.3" x2="740" y2="298.3" stroke="#a3a3a3" stroke-width="1.6"/>
+  <rect class="vegg-tegl" x="120" y="182.0" width="340" height="116.30000000000001" fill="url(#tegl)" stroke="#fca5a5" stroke-width="0.8"/>
+  <rect class="sokkel" x="120" y="286.0" width="340" height="12.300000000000011" fill="#64748b"/>
+  <polygon class="mansardtak" points="120,182.0 140,147.0 440,147.0 460,182.0" fill="#0f766e" stroke="#5eead4" stroke-width="1"/>
+  <rect class="vindu" x="145" y="256.0" width="14" height="28.0" fill="#1e3a5f" stroke="#e2e8f0" stroke-width="0.8"/>
+  <rect class="vindu" x="185" y="256.0" width="14" height="28.0" fill="#1e3a5f" stroke="#e2e8f0" stroke-width="0.8"/>
+  <rect class="vindu" x="225" y="256.0" width="14" height="28.0" fill="#1e3a5f" stroke="#e2e8f0" stroke-width="0.8"/>
+  <rect class="vindu" x="265" y="256.0" width="14" height="28.0" fill="#1e3a5f" stroke="#e2e8f0" stroke-width="0.8"/>
+  <rect class="vindu" x="305" y="256.0" width="14" height="28.0" fill="#1e3a5f" stroke="#e2e8f0" stroke-width="0.8"/>
+  <rect class="vindu" x="385" y="256.0" width="14" height="28.0" fill="#1e3a5f" stroke="#e2e8f0" stroke-width="0.8"/>
+  <rect class="vindu" x="425" y="256.0" width="14" height="28.0" fill="#1e3a5f" stroke="#e2e8f0" stroke-width="0.8"/>
+  <rect class="vindu" x="145" y="193.0" width="14" height="28.0" fill="#1e3a5f" stroke="#e2e8f0" stroke-width="0.8"/>
+  <rect class="vindu" x="185" y="193.0" width="14" height="28.0" fill="#1e3a5f" stroke="#e2e8f0" stroke-width="0.8"/>
+  <rect class="vindu" x="225" y="193.0" width="14" height="28.0" fill="#1e3a5f" stroke="#e2e8f0" stroke-width="0.8"/>
+  <rect class="vindu" x="265" y="193.0" width="14" height="28.0" fill="#1e3a5f" stroke="#e2e8f0" stroke-width="0.8"/>
+  <rect class="vindu" x="305" y="193.0" width="14" height="28.0" fill="#1e3a5f" stroke="#e2e8f0" stroke-width="0.8"/>
+  <rect class="vindu" x="345" y="193.0" width="14" height="28.0" fill="#1e3a5f" stroke="#e2e8f0" stroke-width="0.8"/>
+  <rect class="vindu" x="385" y="193.0" width="14" height="28.0" fill="#1e3a5f" stroke="#e2e8f0" stroke-width="0.8"/>
+  <rect class="vindu" x="425" y="193.0" width="14" height="28.0" fill="#1e3a5f" stroke="#e2e8f0" stroke-width="0.8"/>
+  <rect class="hovedinngang" x="332.0" y="260.0" width="24" height="36.0" fill="#78350f" stroke="#fde68a" stroke-width="1"/>
+  <polygon class="trapp" points="314.0,298.3 328.0,296.0 360.0,296.0 374.0,298.3" fill="#94a3b8"/>
+  <rect class="vegg-glass" x="460" y="182.0" width="240" height="116.30000000000001" fill="rgba(56,189,248,0.25)" stroke="#38bdf8" stroke-width="1"/>
+  <line class="spile" x1="475" y1="182.0" x2="475" y2="298.3" stroke="#d6a868" stroke-width="1.2"/>
+  <line class="spile" x1="490" y1="182.0" x2="490" y2="298.3" stroke="#d6a868" stroke-width="1.2"/>
+  <line class="spile" x1="505" y1="182.0" x2="505" y2="298.3" stroke="#d6a868" stroke-width="1.2"/>
+  <line class="spile" x1="520" y1="182.0" x2="520" y2="298.3" stroke="#d6a868" stroke-width="1.2"/>
+  <line class="spile" x1="535" y1="182.0" x2="535" y2="298.3" stroke="#d6a868" stroke-width="1.2"/>
+  <line class="spile" x1="550" y1="182.0" x2="550" y2="298.3" stroke="#d6a868" stroke-width="1.2"/>
+  <line class="spile" x1="565" y1="182.0" x2="565" y2="298.3" stroke="#d6a868" stroke-width="1.2"/>
+  <line class="spile" x1="580" y1="182.0" x2="580" y2="298.3" stroke="#d6a868" stroke-width="1.2"/>
+  <line class="spile" x1="595" y1="182.0" x2="595" y2="298.3" stroke="#d6a868" stroke-width="1.2"/>
+  <line class="spile" x1="610" y1="182.0" x2="610" y2="298.3" stroke="#d6a868" stroke-width="1.2"/>
+  <line class="spile" x1="625" y1="182.0" x2="625" y2="298.3" stroke="#d6a868" stroke-width="1.2"/>
+  <line class="spile" x1="640" y1="182.0" x2="640" y2="298.3" stroke="#d6a868" stroke-width="1.2"/>
+  <line class="spile" x1="655" y1="182.0" x2="655" y2="298.3" stroke="#d6a868" stroke-width="1.2"/>
+  <line class="spile" x1="670" y1="182.0" x2="670" y2="298.3" stroke="#d6a868" stroke-width="1.2"/>
+  <line class="spile" x1="685" y1="182.0" x2="685" y2="298.3" stroke="#d6a868" stroke-width="1.2"/>
+  <line x1="460" y1="233.0" x2="700" y2="233.0" stroke="#38bdf8" stroke-width="0.8"/>
+  <line x1="120" y1="107.0" x2="700" y2="107.0" stroke="#64748b" stroke-width="0.8"/>
+  <line x1="120" y1="103.0" x2="120" y2="111.0" stroke="#38bdf8" stroke-width="1.2" transform="rotate(45 120 107.0)"/>
+  <line x1="700" y1="103.0" x2="700" y2="111.0" stroke="#38bdf8" stroke-width="1.2" transform="rotate(45 700 107.0)"/>
+  <text x="410.0" y="102.0" font-family="sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">58 000 mm</text>
+  <line x1="120" y1="127.0" x2="460" y2="127.0" stroke="#64748b" stroke-width="0.8"/>
+  <line x1="120" y1="123.0" x2="120" y2="131.0" stroke="#38bdf8" stroke-width="1.2" transform="rotate(45 120 127.0)"/>
+  <line x1="460" y1="123.0" x2="460" y2="131.0" stroke="#38bdf8" stroke-width="1.2" transform="rotate(45 460 127.0)"/>
+  <text x="290.0" y="122.0" font-family="sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">34 000 mm · 1912</text>
+  <line x1="460" y1="127.0" x2="700" y2="127.0" stroke="#64748b" stroke-width="0.8"/>
+  <line x1="460" y1="123.0" x2="460" y2="131.0" stroke="#38bdf8" stroke-width="1.2" transform="rotate(45 460 127.0)"/>
+  <line x1="700" y1="123.0" x2="700" y2="131.0" stroke="#38bdf8" stroke-width="1.2" transform="rotate(45 700 127.0)"/>
+  <text x="580.0" y="122.0" font-family="sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">24 000 mm · 2016</text>
+  <g class="koter">
+    <line x1="120" y1="182.0" x2="712" y2="182.0" stroke="rgba(56,189,248,0.35)" stroke-width="0.6" stroke-dasharray="3,3"/>
+    <polygon points="712,182.0 718,177.0 706,177.0" fill="#38bdf8"/>
+    <text x="722" y="185.0" font-family="sans-serif" font-size="9.5" fill="#bae6fd">+24,90 gesims</text>
+    <line x1="120" y1="233.0" x2="712" y2="233.0" stroke="rgba(56,189,248,0.35)" stroke-width="0.6" stroke-dasharray="3,3"/>
+    <polygon points="712,233.0 718,228.0 706,228.0" fill="#38bdf8"/>
+    <text x="722" y="236.0" font-family="sans-serif" font-size="9.5" fill="#bae6fd">+19,80 P2 FG</text>
+    <line x1="120" y1="296.0" x2="712" y2="296.0" stroke="rgba(56,189,248,0.35)" stroke-width="0.6" stroke-dasharray="3,3"/>
+    <polygon points="712,296.0 718,291.0 706,291.0" fill="#38bdf8"/>
+    <text x="722" y="299.0" font-family="sans-serif" font-size="9.5" fill="#bae6fd">+13,50 P1 FG</text>
+    <line x1="120" y1="298.3" x2="712" y2="298.3" stroke="rgba(56,189,248,0.35)" stroke-width="0.6" stroke-dasharray="3,3"/>
+    <polygon points="712,298.3 718,293.3 706,293.3" fill="#38bdf8"/>
+    <text x="722" y="309.0" font-family="sans-serif" font-size="9.5" fill="#bae6fd">+13,27 terreng</text>
+  </g>
+  <text x="344.0" y="316.3" font-family="sans-serif" font-size="9" fill="#fde68a" text-anchor="middle">HOVEDINNGANG</text>
+</svg>
