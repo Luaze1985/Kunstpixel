@@ -312,7 +312,7 @@ Lars vil «komme på jobb» som museumsdirektør og vise dagen på storskjerm, �
 
 - **D1. Vanlig nettside (artifact), ikke Claudes Data-type eller Datafinner på nett.** Lars valgte etter fordeler og ulemper: én lenke, åpnes i fullskjerm uten sidepanel.
 - **D2. Samme tall som Datafinner.** `src/kunstpixel/core/storskjerm.py` bruker `get_today_overview`, `get_week_overview` og `get_my_deadlines("Museumsdirektør")`.
-- **D3. Oppdatering:** `py -3.13 scripts/lag_storskjerm.py`, så publiserer Claude Code til samme lenke. Lenke: https://claude.ai/artifact/SYi68yGa61mepG7aCyfpiY (privat, festet).
+- **D3. Oppdatering:** `py -3.13 scripts/lag_storskjerm.py`, så publiserer Claude Code til samme lenke. Lenke: https://claude.ai/artifact/SYi68yGa61mepG7aCyfpiY (privat, festet). **Erstattet av SC7:** lenken finnes ikke lenger.
 - **D4. «I dag» er dagen skriptet kjøres.** Rader etter i dag telles ikke.
 - **D5. Status som ord** (Normal, Følg med, Over terskel, Ukjent). Flater uten terskelregel (Åpne saker) viser sammenligning uten statusord.
 - **D6. «Dette vet vi ikke»** regnes ved hver kjøring: tidsserier som slutter før i går, og utstillingstabeller som er uenige om hva som vises nå.
@@ -371,9 +371,9 @@ Lars syntes storskjermen var rotete. Tre prototyper ble vist (https://claude.ai/
 - **IKKE GJORT:** ikke publisert til lenken, ikke committet. KI-chat-testkopien (https://claude.ai/artifact/4Gp2AweTDj9m54E6ZDxiL9) har ingen kildefil i repoet og har fortsatt det gamle oppsettet. Hele pytest er ikke kjørt.
 - **Erstattet samme dag av SC1–SC6.** Lars valgte A før han hadde sett prototypene. Da han så dem, valgte han C. Oppsett A ble aldri publisert eller committet.
 
-## 2026-11-22 — Storskjermen: oppsett C «Én ting om gangen» med underlag (SC1–SC6)
+## 2026-11-22 — Storskjermen: oppsett C «Én ting om gangen» med underlag (SC1–SC7)
 
-Erstatter A1–A3. Lars: «Én ting om gangen er mye bedre», og han vil ha et underlag så man kan fordype seg.
+Erstatter A1–A3. Lars: «Én ting om gangen er mye bedre», og han vil ha et underlag så man kan fordype seg. Lenke: se SC7.
 
 - **SC1. Én stor flate om gangen (Lars).** Toppen og de fire nøkkeltallene står fast. Under vises én flate: Besøk, Frister, Utstillinger eller Vet ikke. Dette endrer målet i specen fra 19.11 om at alt vises samtidig på én skjerm. Det er fortsatt ingen rulling på storskjerm.
 - **SC2. Underlag (Lars).** «Vis underlaget» bytter flaten til radene bak: besøk per uke med endring i prosent, alle frister, utstillingene med ID og full tittel, og tabellene som slutter før i dag. Underlaget bruker bare det som alt står i `data.json`. `core/storskjerm.py` er urørt.
@@ -382,7 +382,22 @@ Erstatter A1–A3. Lars: «Én ting om gangen er mye bedre», og han vil ha et u
 - **SC5. Kravene fra D1–D8 står ellers.** Kildelinje på hvert tall og hver flate, status som ord, Ukjent i stedet for 0, minst 20 px tekst, ingen navn i fristene. Fristflaten viser 4 frister og «N til», resten står i underlaget.
 - **SC6. Feil som ble rettet samtidig.** Etter N1 (innlånsfrister vises igjen) fløt fristfeltet over i oppsettet fra 19.11. Fire sidetester var røde før endringen.
 - **Tester endret med vilje:** `test_fristfeltet_har_luft_nederst` er erstattet av `test_hver_flate_far_plass`, som sjekker hver flate og hvert underlag i tre skjermstørrelser. Nye tester for faner, underlag, hopp fra tall og automatisk bytting. Testene ble skrevet sammen med malen, ikke røde først. `test_storskjerm_side.py` og `test_storskjerm.py`: 61 bestått. Sett på skjermbilder i 1920×1080.
-- **IKKE GJORT:** ikke publisert til lenken, ikke committet, hele pytest ikke kjørt, ikke sett på den fysiske storskjermen. KI-chat-testkopien (https://claude.ai/artifact/4Gp2AweTDj9m54E6ZDxiL9) har ingen kildefil i repoet og har fortsatt det gamle oppsettet. Specen `docs/specs/2026-11-19-storskjerm-dashbord.md` er ikke skrevet om.
+- **SC7. Ny lenke (Lars).** Den gamle lenken (SYi68…) ga «finnes ikke» da den skulle oppdateres. Den festede siden i claude.ai var nå KI-chat-testkopien. Lars valgte en ny egen lenke framfor å skrive over den: https://claude.ai/artifact/PHo2wkd94Pmgo1qr1PzKXw (privat, festet i claude.ai etter Lars' ja). Publisert med tall fra `museum.db` bygget 2026-11-22 kl. 15:07 (B2). Storskjermtestene: 61 bestått mot den.
+- **IKKE GJORT:** ikke committet, hele pytest ikke kjørt, ikke sett på den fysiske storskjermen. Specen `docs/specs/2026-11-19-storskjerm-dashbord.md` er ikke skrevet om.
+
+## 2026-11-22 — KI-chat og Drift og HR inn i storskjermen (SC8–SC12)
+
+Lars: «Chatten må jo være der.» Chatten og Drift og HR fantes bare i artifacten «Kunstpixel KI-chat test» (4Gp2…), uten kildefil i repoet. Derfor forsvant de da storskjermen ble bygget fra repoet. Designet er det Lars godkjente 19.11 i `docs/specs/2026-11-19-storskjerm-chat.md` (skuff fra høyre, hele databasen med SQL, alle data med fordi de er syntetiske).
+
+- **SC8. Chatten ligger nå i repoet.** Begge skuffene står i `deploy/claude-app/storskjerm.html`. `scripts/lag_storskjerm.py` skriver i tillegg `museum.db.gz.txt` og `chat-instruks.txt`, så «oppdater dashbordet» tar med alt og chatten får samme database som tallene. Artifacten erklærer `sample`.
+- **SC9. Instruksen bygges fra skillen.** Den settes sammen av `deploy/claude-app/SKILL.md` (fra «Definisjoner»), `kjente_hull()` fra `lag_claude_skill.py`, `metrics.md`, `entities.md` og alle tabeller med kolonner. Maskinens dato byttes med datoen i `data.json`. Den ble sammenlignet med instruksen i 4Gp2: den er lik bortsett fra dato, nye hull og nye regler for overtid og økonomi.
+- **SC10. Rettet en selvmotsigelse i instruksen.** Den gamle linjen sa «Bruk alltid '2026-11-19'» og så «Bruk ALDRI '2026-11-19'». Nå står det «aldri maskinens dato (now, localtime eller CURRENT_DATE)». Test passer på det.
+- **SC11 (agentens valg).** Databasen lastes først når en skuff åpnes, ikke når siden åpnes (slik specen sier). KI-chat-knappen vises bare når claude.ai lar siden spørre Claude med verktøy, og skjules hvis Lars sier nei. Drift og HR vises alltid. TESTVERSJON-merket er tatt bort.
+- **SC12. Drift og HR følger datoen i dataene.** SQL-en hadde `'2026-11-19'` skrevet fast. Nå brukes datoen i `data.json`, så skjermen, chatten og rapportene regner «i år» likt.
+- **Tester:** ny `tests/test_storskjerm_chat.py` (22), røde først: databasen pakkes ut til samme bytes, instruksen (dato, ingen `date('now'`, regler, alle tabeller), knappene med og uten Claude, skuffen åpnes og lukkes, ingen lasting før skuffen åpnes, SQL avviser `DELETE` og to setninger, `DIAGRAM:` tegnes og tåler HTML, Drift og HR bruker datoen. Claude er falsk i testene, men SQL kjører ekte i sql.js. Ny test sjekker også at skjermen får plass med begge knappene i toppen (1920×1080, 1280×720, 1568×700). Storskjermtestene: 86 bestått. Hele pytest: grønn (9 hoppet over, 2 ventede feil). Publiseringen er sjekket: alle fire filene ligger i artifacten med riktig størrelse.
+- **Publisert** til samme lenke, https://claude.ai/artifact/PHo2wkd94Pmgo1qr1PzKXw, med `sample` og alle fire filene.
+- **SC13. Chatten står fast ved siden av dashbordet (Lars).** Lars: «fiks at chat og dashboard kommer samlet». Han valgte «chat alltid synlig» framfor side om side ved åpning og chat som femte fane. Det erstatter skuffen fra 20.11 for KI-chat. I claude.ai er chatten en kolonne til høyre (30 % av bredden, minst 20rem) hele tiden, og KI-chat-knappen er borte. Uten Claude, eller hvis Lars sier nei til tillatelsen, får dashbordet hele skjermen. På mobil står chatten under dashbordet. Drift og HR er fortsatt en skuff. Databasen lastes først når noen klikker i tekstfeltet eller på et forslag. Tester omskrevet med vilje: plass-testen med chat i tre skjermstørrelser, uten Claude og på mobil. Storskjermtestene: 85 bestått. Publisert som versjon 3.
+- **IKKE TESTET:** ekte svar fra Claude i claude.ai, tillatelsesdialogen og om claude.ai slipper gjennom sql.js fra cdnjs. Det kan bare Lars prøve. 4Gp2 er tatt ut av Festet etter Lars' ja, men er ikke slettet.
 
 ## 2026-11-22 — Bygget: bilder, plantegninger og PDF (B1–B6)
 
@@ -392,8 +407,63 @@ Lars ba om bilder og tegninger av museet samlet i en PDF med beskrivelser, og en
 - **B2. Navnet er fjernet fra bildene (Lars, DECISIONS 10).** Det gjelder skilt, disker og fasader i 8 bilder pluss en dublett. `scripts/fjern_navn_i_bilder.py` leser originalene fra commit 1c4d9a4, maler over bokstavene (OpenCV-inpainting) og skriver «KUNSTPIXEL» der det sto et skilt. Kafédisken og logoen på resepsjonsdisken står blanke. Den rotete KI-teksten på de samme skiltene er også rettet («VELAONHEN» → «VELKOMMEN», «ERSISTENS» → «EKSISTENS»). Filnavnene er beholdt. Originalene ligger i git og kan hentes tilbake.
 - **B3. Kafeen ligger i glassfløyen mot Nidelva (agentens valg).** KAF-1 og BUT-1 har byttet plass i plan P1 (kafé i øst, bokhandel i vest), slik at planen stemmer med bildet og teksten «glassvegg mot Nidelva». Kafeen har 45 sitteplasser som i HMS-håndboka og kvalitetssystemet (var 60 i kartet). Kartet og plantegningene er bygget på nytt med `06_kart/build_map.py`.
 - **B4. PDF.** `02_deliverables/bygningsdokumentasjon/kunstpixel_bygning.pdf` (9 sider) lages med `lag_pdf.py` i samme mappe: Edge uten vindu, ingen nye pakker. Den inneholder alle tall fra kartdataene, alle 12 ulike bildene og de 3 plantegningene, og ender med en vurdering av hva som mangler.
-- **B5. Ikke rettet, venter på Lars.** Fotavtrykket på tegningene er 48 × 24 m = 1 152 m², mens BYA og BTA per etasje er 1 450 m². De tegnede rommene dekker 688 av 1 300 m² i U1, 1 009 av 1 310 m² i P1 og 817 av 1 310 m² i P2. Ganger, toaletter, garderober og kontorer er ikke tegnet. Testene i `test_building_map.py` låser 19 rom og arealtallene, så en retting endrer datamodellen.
+- **B5. Løst samme dag, se G1–G8.** Fotavtrykket på tegningene er 48 × 24 m = 1 152 m², mens BYA og BTA per etasje er 1 450 m². De tegnede rommene dekker 688 av 1 300 m² i U1, 1 009 av 1 310 m² i P1 og 817 av 1 310 m² i P2. Ganger, toaletter, garderober og kontorer er ikke tegnet. Testene i `test_building_map.py` låser 19 rom og arealtallene, så en retting endrer datamodellen.
 - **B6. Andre avvik som står igjen.** Glassfløyen står på ulik side i de to fasadebildene. Skulpturhage-bildet viser et annet teglbygg. HMS-håndboka bruker andre navn på Sal A, B og C enn kartet og databasen. To bilder er dubletter (testen krever alle 14 filene).
 - **Tester:** nye `tests/test_bilder_uten_gammelt_navn.py` (SHA-256 for de 8 gamle bildene) og `tests/test_bygning_konsistens.py` (kafeens side, sitteplasser og kunnskapsfila mot kartdataene). Begge ble kjørt røde først. Kart-, navne-, MCP- og nye tester: grønne. I hele pytest feiler 8 tester (arenacaser, chat-eval U2, to skill-tester og start-gate). De feilet før denne endringen, og de venter på at `museum.db` bygges på nytt (se PLAN).
 - **Sett i nettleseren:** `06_kart/index.html` via ny oppstart «kart» i `.claude/launch.json` (port 8766). P1 i røntgenvisning har kafeen i øst ved Sal E. Alle 9 galleribildene lastes, og konsollen har ingen feil. De 6 grafene i `assets/` har ikke det gamle navnet. Skjermbildene i `02_deliverables/arbeidsflyt/designsjekk-2026-10-20/` er historikk og er ikke sjekket eller endret.
 - **IKKE GJORT:** ikke committet eller pushet. En Datafinner- eller MCP-server som kjører, husker den gamle byggmodellen (`lru_cache`) til den startes på nytt.
+
+## 2026-11-22 — Nye plantegninger som henger sammen (G1–G8)
+
+Spec: `docs/specs/2026-11-22-bygg-tegninger-design.md`. Plan: `docs/plans/2026-11-22-bygg-tegninger.md`. Lars: «Rett opp og lag nye tegninger som gjør at det henger sammen.»
+
+- **G1. To bygningskropper, samme BTA og BYA (Lars valgte A).** Hovedfløyen er 34 × 25 m (1912, tegl 400 mm) og glassfløyen 24 × 25 m (2016, glass/betong 300 mm). Til sammen er det 58 × 25 m = 1 450 m² per etasje. Fotavtrykket står i `museum.fotavtrykk` i `bygning_geometri.json`.
+- **G2. BRA regnes fra tegningen (Lars).** BRA er 1 391,4 m² per etasje og 4 174,2 m² totalt (var 3 920). Det er BTA minus ytterveggene. Den gamle østfasaden mellom fløyene er en innervegg og regnes med. BTA 4 350 og BYA 1 450 står.
+- **G3. Tegninger først, maskinpark senere (Lars).** I U1 er det satt av et reserveareal på 177 m² (MASK-RES-1) ved klimasentralen og vareheisen. Øvingsdager er ikke planlagt ennå.
+- **G4. Romoppsettet (agentens valg innenfor specen).** 45 rom: 16 i P1, 15 i P2 og 14 i U1. De fyller hver etasje uten overlapp. Sal A–E har samme areal. Nye rom er ganger, toaletter og garderobe, kafékjøkken, kunstsluse, administrasjon, kontorer, magasin 2/papirarkiv, verksted, renhold, kjøresluse og lager.
+- **G5. Trapper og heiser (agentens valg).** Hovedtrappen går gjennom alle etasjer og er låst for publikum i U1. Rømningstrapp 2 og vareheisen står i glassfløyen og går gjennom alle etasjer. Publikumsheisen går mellom P1 og P2. Testen sjekker at hver sjakt står på samme sted.
+- **G6. Avvik fra specen (agentens valg).**
+  - Vaktrommet er flyttet til hovedfløyen i P2 og er nå 120 m² (var 140).
+  - Hovedtrappene er 26,4 m² (var 25).
+  - Gangen i hovedfløyen er 2,2 m bred (specen sa ca. 2,5).
+  
+  Arealene gikk ikke opp ellers.
+- **G7. Tegnes fra data.** `06_kart/geometri.py` regner arealene og sjekker reglene. `build_map.py` tegner vegger, mållinjer, tegningshode og 2.5D-kart fra fotavtrykket, og ingen byggmål står fast i koden. Nye felt i JSON: `type`, `sjakt` og `dor_langs` (valgfri dørplassering).
+- **G8. Tester endret med vilje.** `test_building_map.py` låste 19 rom, BRA 3 920 og faste veggkoordinater. Nå er det minst 19 rom, BRA fra tegningen og vegger fra fotavtrykket. Ny `tests/test_bygning_geometri.py` (18 tester) ble kjørt rød først, bortsett fra `test_romtitler_far_plass_i_rommet`, som ble skrevet etter rettingen. `test_bygning_konsistens.py` er oppdatert for BRA og vaktrommet. Kartet er sett i nettleseren: røntgen, skall, rotasjon og konsoll uten feil.
+- **G9. Rettet etter uavhengig gjennomgang.**
+  - **Dører inn i heissjakt:** To dører gikk inn i heissjakta. LAG-P1 går nå til vestibylen, og WC-P2 er blitt SIK-P2, et teknisk rom for sikkerhetsanlegg som nås fra vaktrommet. `geometri.dorfeil()` stopper slike feil.
+  - **PDF:** Tegningene ble kuttet nederst.
+  - **2.5D-kartet:** Smale rom viser bare romnummer. Skallet følger rotasjonen.
+  - **Rømningstrapp 2 (agentens valg):** Trappen har ingen yttervegg. Den leder via gangen i glassfløyen til en nødutgang i øst mot elvepromenaden.
+  - **Små funn som står igjen:** står i loggen `.superpowers/sdd/2026-11-22-bygg-tegninger/progress.md`.
+- **Tester:** hele pytest er grønn, uten feil.
+- **IKKE GJORT:** ikke committet. En Datafinner- eller MCP-server som kjører, må startes på nytt for å vise den nye modellen.
+
+## 2026-11-22 — Maskinpark: KI i drift (MP1–MP8)
+
+Lars: «Kjør, lag fullstendig maskinpark» med ting som kan styres og vedlikeholdes via KI, og en agentinstruks for det. Lars hoppet over spørsmålene, så valgene under er agentens med mindre annet står.
+
+- **MP1. Agentinstruks.** Skillen `.claude/skills/maskinpark/SKILL.md` er laget etter `instruks-for-agenter`. Den inneholder kontekstpekere, en deterministisk indre sløyfe, sperrene SEC-M1–M7 og fem ferdig-kriterier (PASS/FAIL).
+- **MP2. KI-en foreslår, mennesket godkjenner (agentens valg).** MCP-serveren er fortsatt skrivebeskyttet. `propose_machine_command` gir «venter_godkjenning» eller «avvist» og endrer ingenting. Driftsansvarlig godkjenner alltid. Sikkerhetsansvarlig godkjenner i tillegg for kritikalitet A og sikkerhetsutstyr. En egen styringsdel som faktisk sender kommandoer er ikke bygget.
+- **MP3. Data ved siden av bygget, ikke i museum.db (agentens valg).** `06_kart/maskinpark.json` lages av `06_kart/maskinpark_builder.py` med fast frø, og to kjøringer gir lik fil. Samme mønster som `bygning_geometri.json`. `museum.db` trenger ikke bygges på nytt.
+- **MP4. Innhold:**
+  - 37 maskiner: 8 KI-servere, 8 roboter (4 renhold, 2 vakt, 2 kunsttransport), 12 anlegg (ventilasjon, befukter, kjøling, klima i magasinene og Sal D, lys i Sal A–E, lading), 7 sikkerhet (Inergen, adgang, CCTV, brannsentral) og 2 heiser.
+  - 100 hendelser over 90 dager, 257 arbeidsordrer og 8 kommandoer i loggen.
+  - Fire åpne scenarier til øvingsdager: RF-avvik i Magasin 1, GPU-node som går varm, renholdsrobot som står fast, og lavt Inergen-trykk.
+- **MP5. Sperrer:**
+  - Forbudt uansett: deaktivere slukking, låse opp dører, slå av kamera, alarm eller adgang, overstyre heis.
+  - Klima og lys må ligge innenfor rommets klimasone.
+  - Kunsttransport bare 17–10, og to personer ved S4.
+  - Renholds- og vaktroboter kjører ikke inn i S4.
+  - Sikkerhetsutstyr er bare lesbart for KI. Bare selvtest kan foreslås.
+- **MP6. Rom:** Reservearealet i U1 er delt i KI-serverrom SRV-1 (90 m²) og robotgarasje ROB-1 (87 m²). Romtypen er `maskin`. Tegningene er bygget på nytt, og BRA er uendret.
+- **MP7. MCP:** Fire nye verktøy (`get_machine_park`, `get_machine_health`, `get_maintenance_plan`, `propose_machine_command`). De er bare MCP og er ikke hvitelistet i Datafinner-chatten. De er dokumentert i `AGENTS.md` og `00_DATA_OG_MCP_OVERSIKT.md`.
+- **MP8. Tester:** Ny `tests/test_maskinpark.py` (25 tester) ble kjørt rød først. Hele pytest er grønn. PDF-en har fått to sider om maskinparken (nå 11 sider).
+- **IKKE GJORT:**
+  - ikke committet,
+  - ingen uavhengig gjennomgang av maskinparken,
+  - ikke noe eget maskinlag i 2.5D-kartet,
+  - ikke hvitelistet i Datafinner.
+  
+  En MCP-server som kjører, må startes på nytt for å se verktøyene.
+

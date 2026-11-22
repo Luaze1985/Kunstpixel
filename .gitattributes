@@ -18,3 +18,6 @@ scripts/githooks/* text eol=lf
 01_inbox/h5_colab/SJEKKSUM.txt text eol=lf
 src/kunstpixel/core/intern/leveranse*.py text eol=lf
 05_data/*.csv text eol=lf
+
+# Maskinparken lages av 06_kart/maskinpark_builder.py med LF og sammenlignes byte for byte i tests/test_maskinpark.py.
+06_kart/maskinpark.json text eol=lf

@@ -66,6 +66,7 @@ from src.kunstpixel.core.db import (
     query_working_hours,
     query_working_time_limits,
 )
+from src.kunstpixel.core import maskinpark
 from src.kunstpixel.core.hr_eval import evaluate_staffing_proposal
 from src.kunstpixel.core.hrdemo import (
     candidates,
@@ -544,6 +545,64 @@ def get_operating_accounts(aar: int | None = None, maaned: str | None = None, ko
         sum_inntekter_nok, sum_kostnader_nok, resultat_nok, per_aar, per_konto og datakilde.
     """
     return query_driftsregnskap(aar=aar, maaned=maaned, konto=konto)
+
+
+# --- Maskinpark (KI i drift): bare lesing og forslag, ingenting utføres ---
+@mcp.tool()
+def get_machine_park(kategori: str | None = None, status: str | None = None, etasje: int | None = None,
+                     rom_id: str | None = None) -> dict[str, Any]:
+    """Maskinparken: KI-servere, roboter, anlegg (klima, lys, ventilasjon), sikkerhet og heiser, kun lesing.
+
+    Args:
+        kategori: server, robot, anlegg, sikkerhet eller heis (valgfritt).
+        status: i_drift, varsel, feil eller vedlikehold (valgfritt).
+        etasje: 0 kjeller, 1 hovedplan, 2 galleri (valgfritt).
+        rom_id: Rom-ID fra bygningsmodellen, f.eks. 'SRV-1' (valgfritt).
+
+    Returns:
+        antall, per_status, per_kategori, apne_hendelser og maskiner (med neste_service).
+    """
+    return maskinpark.hent_maskinpark(kategori=kategori, status=status, etasje=etasje, rom_id=rom_id)
+
+
+@mcp.tool()
+def get_machine_health(maskin_id: str) -> dict[str, Any]:
+    """Helsekort for én maskin: åpne og siste hendelser, vedlikehold, neste service og kommandologg.
+
+    Args:
+        maskin_id: F.eks. 'KP-MASK-ANL-04'.
+    """
+    return maskinpark.maskinhelse(maskin_id)
+
+
+@mcp.tool()
+def get_maintenance_plan(dager: int = 30, dato: str | None = None) -> dict[str, Any]:
+    """Vedlikeholdsplan: forfalt service, service de neste dagene og åpne arbeidsordrer.
+
+    Args:
+        dager: Hvor mange dager fram (standard 30).
+        dato: Fra-dato 'YYYY-MM-DD' (standard i dag, 2026-11-22).
+    """
+    return maskinpark.vedlikeholdsplan(dager=dager, dato=dato)
+
+
+@mcp.tool()
+def propose_machine_command(maskin_id: str, kommando: str, parametre: dict | None = None,
+                            tidspunkt: str | None = None, requester_role: str = "museumsdirektor") -> dict[str, Any]:
+    """Sjekk et KI-forslag til en maskinkommando mot sikkerhetsreglene. Utfører ALDRI noe.
+
+    Gir status 'venter_godkjenning' med krav og hvem som må godkjenne, eller 'avvist' med grunner.
+    Forbudt uansett: deaktivere slukking, låse opp dører, slå av kamera/alarm/adgang, overstyre heis.
+
+    Args:
+        maskin_id: F.eks. 'KP-MASK-TRA-01'.
+        kommando: F.eks. 'sett_klima', 'send_til_rom', 'flytt_verk', 'kjor_selvtest'.
+        parametre: F.eks. {'temperatur_c': 18.5, 'rf_prosent': 52} eller {'rom_id': 'SAL-B'}.
+        tidspunkt: Når kommandoen skal skje, 'YYYY-MM-DDTHH:MM' (standard i dag kl. 22:00).
+        requester_role: Rollen som ber om forslaget.
+    """
+    return maskinpark.foresla_kommando(maskin_id, kommando, parametre=parametre, tidspunkt=tidspunkt,
+                                       rolle=requester_role)
 
 
 # --- HR, HMS & Kvalitetsverktøy (integrert) ---

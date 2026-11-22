@@ -16,44 +16,187 @@ JSON_PATH = BASE_DIR / "bygning_geometri.json"
 HTML_PATH = BASE_DIR / "index.html"
 
 
-def generate_blueprint_svg(floor_data: dict, model_data: dict) -> str:
-    floor_nr = floor_data["etasje_nr"]
-    kode = floor_data["kode"]
-    navn = floor_data["navn"]
-    rooms = floor_data.get("rom", [])
-    
-    museum = model_data["museum"]
-    matrikkel = museum.get("matrikkel", {})
-    arealer = museum.get("arealer_ns3940", {})
-    brann = museum.get("brannkonsept", {})
+OFFSET_X = 65
+OFFSET_Y = 100
 
-    bta_val = arealer.get("bta_m2", 4350)
-    bra_val = arealer.get("bra_m2", 3920)
-    bya_val = arealer.get("bya_m2", 1450)
-    tomt_val = arealer.get("tomteareal_m2", 3200)
-    utnyttelse_val = arealer.get("utnyttelsesgrad_prosent_bya", 45.3)
+ROMFARGER = {
+    # type: (fyll, kant, tittel)
+    "sal": ("rgba(245, 158, 11, 0.20)", "#f59e0b", "#fef08a"),
+    "magasin": ("rgba(239, 68, 68, 0.20)", "#ef4444", "#fecaca"),
+    "trapp": ("rgba(100, 116, 139, 0.35)", "#94a3b8", "#ffffff"),
+    "heis": ("rgba(100, 116, 139, 0.35)", "#94a3b8", "#ffffff"),
+    "gang": ("rgba(30, 41, 59, 0.55)", "#475569", "#94a3b8"),
+    "wc": ("rgba(20, 184, 166, 0.15)", "#14b8a6", "#ccfbf1"),
+    "kontor": ("rgba(99, 102, 241, 0.15)", "#6366f1", "#e0e7ff"),
+    "reserve": ("rgba(236, 72, 153, 0.12)", "#ec4899", "#fbcfe8"),
+    "maskin": ("rgba(236, 72, 153, 0.18)", "#ec4899", "#fbcfe8"),
+}
+ROMFARGER_ID = {
+    "KAF-1": ("rgba(16, 185, 129, 0.20)", "#10b981", "#a7f3d0"),
+    "BUT-1": ("rgba(168, 85, 247, 0.20)", "#a855f7", "#e9d5ff"),
+    "RES-1": ("rgba(14, 165, 233, 0.20)", "#0ea5e9", "#bae6fd"),
+    "VER-1": ("rgba(239, 68, 68, 0.20)", "#ef4444", "#fecaca"),
+}
+STANDARDFARGE = ("rgba(51, 65, 85, 0.30)", "#64748b", "#f8fafc")
+HATCH = {"tegl": "hatch-tegl-400", "glass": "hatch-betong-300"}
 
-    bkl_val = brann.get("brannklasse", "BKL 3")
-    rkl_val = brann.get("risikoklasse", "RKL 5")
 
-    if floor_nr == 0:
-        kote_display = "KOTE FG: -4.200 m (+9.30 moh / 9.30 moh)"
-        kote_val_str = "+9.30 moh"
-        tegningsnr_display = "A-001 (A-10-01)"
-    elif floor_nr == 1:
-        kote_display = "KOTE FG: ±0.000 m (+13.50 moh / 13.50 moh) | TERRENG: +13.27 moh DTM1"
-        kote_val_str = "+13.50 moh (±0.000)"
-        tegningsnr_display = "A-101 (A-10-02)"
+def _tall(v: float) -> str:
+    """Norsk tallformat: 4 350 eller 4 174,2."""
+    tekst = f"{v:,.1f}" if v != int(v) else f"{int(v):,}"
+    return tekst.replace(",", " ").replace(".", ",")
+
+
+def _mm(enheter: int) -> str:
+    return f"{enheter * 100:,} mm".replace(",", " ")
+
+
+def _romfarge(r: dict) -> tuple[str, str, str]:
+    return ROMFARGER_ID.get(r["id"]) or ROMFARGER.get(r.get("type", ""), STANDARDFARGE)
+
+
+def _sx(x: float) -> float:
+    return x + OFFSET_X
+
+
+def _sy(y: float) -> float:
+    return y + OFFSET_Y
+
+
+def _vegger(fot: dict, rooms: list[dict]) -> list[str]:
+    ut = ['  <g class="architectural-walls">']
+    for v in fot["volumer"]:
+        x, y, b, d = v["x"], v["y"], v["b"], v["d"]
+        t = v["vegg_mm"] // 100
+        inn = v["innvendig"]
+        hatch = HATCH.get(v["materiale"], "hatch-tegl-400")
+        sider = [(x, y, b, t), (x, y + d - t, b, t)]  # nord, sør
+        if inn["x"] > x:
+            sider.append((x, y, t, d))  # vest
+        if inn["x"] + inn["b"] < x + b:
+            sider.append((x + b - t, y, t, d))  # øst
+        ut.append(f'    <!-- {v["navn"]}: {v["vegg_mm"]} mm yttervegg ({v["materiale"]}) -->')
+        for sx, sy, sb, sd in sider:
+            ut.append(f'    <rect class="yttervegg" data-volum="{v["id"]}" x="{_sx(sx)}" y="{_sy(sy)}" width="{sb}" height="{sd}" '
+                      f'fill="url(#{hatch})" stroke="#38bdf8" stroke-width="1.2"/>')
+    f = fot["fasadevegg"]
+    ut.append('    <!-- Den gamle østfasaden fra 1912, nå innervegg mellom fløyene -->')
+    ut.append(f'    <rect class="fasadevegg" x="{_sx(f["x"])}" y="{_sy(f["y"])}" width="{f["b"]}" height="{f["d"]}" '
+              f'fill="url(#hatch-tegl-400)" stroke="#38bdf8" stroke-width="1"/>')
+    for r in rooms:
+        if r.get("type") == "gang":
+            for ky in (r["y"], r["y"] + r["h"]):
+                ut.append(f'    <rect class="baerevegg" x="{_sx(r["x"])}" y="{_sy(ky) - 1}" width="{r["w"]}" height="2" '
+                          f'fill="url(#hatch-baerevegg-200)" stroke="#38bdf8" stroke-width="0.6"/>')
+    ut.append('  </g>')
+    return ut
+
+
+def _malkjeder(fot: dict) -> list[str]:
+    vol = fot["volumer"]
+    x0, x1 = min(v["x"] for v in vol), max(v["x"] + v["b"] for v in vol)
+    y0, y1 = min(v["y"] for v in vol), max(v["y"] + v["d"] for v in vol)
+
+    def kjede(ax: float, bx: float, yy: float, tekst: str) -> list[str]:
+        return [
+            f'    <line x1="{ax}" y1="{yy}" x2="{bx}" y2="{yy}" stroke="#64748b" stroke-width="0.8" marker-start="url(#tick-45)" marker-end="url(#tick-45)"/>',
+            f'    <line x1="{ax}" y1="{yy - 5}" x2="{ax}" y2="{yy + 5}" stroke="#38bdf8" stroke-width="1.2" class="arch-tick" transform="rotate(45 {ax} {yy})"/>',
+            f'    <line x1="{bx}" y1="{yy - 5}" x2="{bx}" y2="{yy + 5}" stroke="#38bdf8" stroke-width="1.2" class="arch-tick" transform="rotate(45 {bx} {yy})"/>',
+            f'    <text x="{(ax + bx) / 2}" y="{yy - 5}" font-family="sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">{tekst}</text>',
+        ]
+
+    ut = ['  <!-- Målekjeder iht. NS 8351, regnet fra fotavtrykket -->', '  <g class="dimension-chain" style="opacity: 0.75;">']
+    ut += kjede(_sx(x0), _sx(x1), _sy(y0) - 30, f"{_mm(x1 - x0)} ({(x1 - x0) / 10:g} m)")
+    for v in vol:
+        ut += kjede(_sx(v["x"]), _sx(v["x"] + v["b"]), _sy(y0) - 14, f'{_mm(v["b"])} · {v["byggeaar"]}')
+    lx = _sx(x0) - 20
+    ut += [
+        f'    <line x1="{lx}" y1="{_sy(y0)}" x2="{lx}" y2="{_sy(y1)}" stroke="#64748b" stroke-width="0.8" marker-start="url(#tick-45)" marker-end="url(#tick-45)"/>',
+        f'    <text x="{lx - 6}" y="{(_sy(y0) + _sy(y1)) / 2}" font-family="sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle" '
+        f'transform="rotate(-90 {lx - 6} {(_sy(y0) + _sy(y1)) / 2})">{_mm(y1 - y0)}</text>',
+        '  </g>',
+    ]
+    return ut
+
+
+def _rom(r: dict) -> list[str]:
+    rx, ry, rw, rh = _sx(r["x"]), _sy(r["y"]), r["w"], r["h"]
+    fyll, kant, tittelfarge = _romfarge(r)
+    areal = r["areal_m2"]
+    brann = html.escape(str((r.get("brannklasse") or "EI-60").split()[0]))
+    smal = min(rw, rh) < 40
+    fs = 11 if (rw >= 100 and rh >= 80) else 8.5
+    if smal:
+        tittel = html.escape(str(r["romnummer"]))
+    elif r.get("type") == "trapp":
+        tittel = "TRAPP"
+    elif r.get("type") == "heis":
+        tittel = "HEIS"
     else:
-        kote_display = "KOTE FG: +6.300 m (+19.80 moh / 19.80 moh) | GESIMS: +11.400 m (+24.90 moh)"
-        kote_val_str = "+19.80 moh (+6.30m)"
-        tegningsnr_display = "A-201 (A-10-03)"
+        # Lengste navn som får plass i rommet: kortnavn, så første ord, ellers romnummer.
+        kort = r.get("romnavn_kort", r["navn"].split("–")[0].strip())
+        tittel = next((t for t in (kort, kort.split()[0]) if len(t) * fs * 0.68 <= rw - 6), str(r["romnummer"]))
+        tittel = html.escape(tittel)
+    cx, cy = rx + rw / 2, ry + rh / 2
+    strek = ' stroke-dasharray="5,3"' if r.get("type") == "reserve" else ""
+    ut = [
+        f'  <g class="blueprint-room" data-room-id="{r["id"]}" style="cursor: pointer;">',
+        f'    <desc>H: {r.get("takhoyde_m", 4.0):.1f} m | BRA {areal} m² | {brann} | {r.get("sikkerhetssone", "S1")}/{r.get("klimasone", "K3")}</desc>',
+        f'    <rect x="{rx}" y="{ry}" width="{rw}" height="{rh}" fill="{fyll}" stroke="{kant}" stroke-width="1.4"{strek}/>',
+    ]
+    if smal:
+        rot = f' transform="rotate(-90 {cx} {cy})"' if rh > rw else ""
+        ut.append(f'    <text x="{cx}" y="{cy + 3}" font-family="sans-serif" font-size="8" font-weight="bold" fill="{tittelfarge}" text-anchor="middle"{rot}>{tittel}</text>')
+    else:
+        ut.append(f'    <text x="{cx}" y="{cy - 2}" font-family="sans-serif" font-size="{fs}" font-weight="bold" fill="{tittelfarge}" text-anchor="middle">{tittel}</text>')
+        ut.append(f'    <text x="{cx}" y="{cy + 11}" font-family="sans-serif" font-size="{fs * 0.8:.1f}" font-weight="500" fill="#cbd5e1" text-anchor="middle">{_tall(areal)} m²</text>')
+    ut.append('  </g>')
+    if r.get("type") == "trapp":
+        if rh >= rw:
+            ut += [f'  <line x1="{rx + 3}" y1="{ty}" x2="{rx + rw - 3}" y2="{ty}" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>'
+                   for ty in range(int(ry + 5), int(ry + rh - 4), 6)]
+        else:
+            ut += [f'  <line x1="{tx}" y1="{ry + 3}" x2="{tx}" y2="{ry + rh - 3}" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>'
+                   for tx in range(int(rx + 5), int(rx + rw - 4), 6)]
+    elif r.get("type") == "heis":
+        ut.append(f'  <line x1="{rx + 3}" y1="{ry + 3}" x2="{rx + rw - 3}" y2="{ry + rh - 3}" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>')
+        ut.append(f'  <line x1="{rx + rw - 3}" y1="{ry + 3}" x2="{rx + 3}" y2="{ry + rh - 3}" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>')
+    dor = r.get("dor_pos", "sor")
+    langs = r.get("dor_langs")  # valgfri modellkoordinat langs veggen, ellers midt på
+    if dor in ("sor", "nord"):
+        dx, dy = (_sx(langs) if langs is not None else rx + rw / 2), ry + (rh if dor == "sor" else 0)
+        retning = -8 if dor == "sor" else 8
+        ut.append(f'  <line x1="{dx - 6}" y1="{dy}" x2="{dx + 6}" y2="{dy}" stroke="#0a0f1d" stroke-width="3"/>')
+        ut.append(f'  <line x1="{dx - 6}" y1="{dy}" x2="{dx + 6}" y2="{dy + retning}" stroke="{kant}" stroke-width="1.2"/>')
+    elif dor in ("vest", "ost"):
+        dx, dy = rx + (0 if dor == "vest" else rw), (_sy(langs) if langs is not None else ry + rh / 2)
+        retning = 8 if dor == "vest" else -8
+        ut.append(f'  <line x1="{dx}" y1="{dy - 6}" x2="{dx}" y2="{dy + 6}" stroke="#0a0f1d" stroke-width="3"/>')
+        ut.append(f'  <line x1="{dx}" y1="{dy - 6}" x2="{dx + retning}" y2="{dy + 6}" stroke="{kant}" stroke-width="1.2"/>')
+    return ut
 
-    OFFSET_X = 65
-    OFFSET_Y = 100
 
-    svg_parts = [
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 680" width="100%" height="100%" class="blueprint-svg">',
+def generate_blueprint_svg(floor_data: dict, model_data: dict) -> str:
+    kode = floor_data["kode"]
+    rooms = floor_data.get("rom", [])
+    museum = model_data["museum"]
+    fot = museum["fotavtrykk"]
+    matrikkel = museum.get("matrikkel", {})
+    arealer = museum["arealer_ns3940"]
+    brann = museum.get("brannkonsept", {})
+    vol = fot["volumer"]
+    x0, x1 = min(v["x"] for v in vol), max(v["x"] + v["b"] for v in vol)
+    y0, y1 = min(v["y"] for v in vol), max(v["y"] + v["d"] for v in vol)
+    midt_y = (_sy(y0) + _sy(y1)) / 2
+
+    kote = f'KOTE FG: {floor_data["kote_relativ"]} ({floor_data["kote_moh"]:+.2f} moh)'
+    if kode == "P1":
+        kote += f' | TERRENG: {matrikkel.get("kote_terreng_moh", 0):+.2f} moh DTM1'
+    elif kode == "P2":
+        kote += f' | GESIMS: {matrikkel.get("kote_gesims_moh", 0):+.2f} moh'
+
+    svg = [
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 680" width="100%" height="100%" class="blueprint-svg">',
         '  <defs>',
         '    <!-- NS 8351 Skravurmønstre (Hatch Patterns) -->',
         '    <pattern id="hatch-tegl-400" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">',
@@ -71,228 +214,65 @@ def generate_blueprint_svg(floor_data: dict, model_data: dict) -> str:
         '      <line x1="1" y1="9" x2="9" y2="1" stroke="#38bdf8" stroke-width="1.8" class="arch-tick"/>',
         '    </marker>',
         '  </defs>',
-        '',
-        '  <!-- Ren, minimalistisk mørk bakgrunn -->',
         '  <rect width="100%" height="100%" fill="#0a0f1d"/>',
-        '',
-        '  <!-- Diskret etasjekote over bygget -->',
-        f'  <text x="105" y="65" font-family="sans-serif" font-size="11" font-weight="600" fill="#38bdf8">{kote_display}</text>',
-        '',
-        '  <!-- Bygningsvegger med skravur iht. NS 8351 -->',
-        '  <g class="architectural-walls">',
-        '    <!-- Hovedfløy 400 mm Yttervegg i tegl/mur -->',
-        '    <rect x="101" y="136" width="4" height="248" fill="url(#hatch-tegl-400)" stroke="#38bdf8" stroke-width="1.2"/>',
-        '    <rect x="101" y="136" width="344" height="4" fill="url(#hatch-tegl-400)" stroke="#38bdf8" stroke-width="1.2"/>',
-        '    <rect x="101" y="380" width="344" height="4" fill="url(#hatch-tegl-400)" stroke="#38bdf8" stroke-width="1.2"/>',
-        '    <!-- Tilbygg Øst 300 mm Yttervegg i slipt betong -->',
-        '    <rect x="585" y="137" width="3" height="246" fill="url(#hatch-betong-300)" stroke="#38bdf8" stroke-width="1.2"/>',
-        '    <rect x="445" y="137" width="143" height="3" fill="url(#hatch-betong-300)" stroke="#38bdf8" stroke-width="1.2"/>',
-        '    <rect x="445" y="380" width="143" height="3" fill="url(#hatch-betong-300)" stroke="#38bdf8" stroke-width="1.2"/>',
-    ]
-
-    # Etasjetilpassede bærevegger
-    if floor_nr == 0:
-        svg_parts.extend([
-            '    <rect x="444" y="140" width="2" height="240" fill="url(#hatch-baerevegg-200)" stroke="#38bdf8" stroke-width="1"/>',
-            '    <rect x="105" y="279" width="480" height="2" fill="url(#hatch-baerevegg-200)" stroke="#38bdf8" stroke-width="1"/>',
-            '    <rect x="284" y="140" width="2" height="140" fill="url(#hatch-baerevegg-200)" stroke="#38bdf8" stroke-width="1"/>',
-        ])
-    elif floor_nr == 1:
-        svg_parts.extend([
-            '    <rect x="444" y="140" width="2" height="240" fill="url(#hatch-baerevegg-200)" stroke="#38bdf8" stroke-width="1"/>',
-            '    <rect x="105" y="259" width="480" height="2" fill="url(#hatch-baerevegg-200)" stroke="#38bdf8" stroke-width="1"/>',
-            '    <rect x="284" y="140" width="2" height="120" fill="url(#hatch-baerevegg-200)" stroke="#38bdf8" stroke-width="1"/>',
-        ])
-    else:
-        svg_parts.extend([
-            '    <rect x="444" y="140" width="2" height="240" fill="url(#hatch-baerevegg-200)" stroke="#38bdf8" stroke-width="1"/>',
-            '    <rect x="304" y="140" width="2" height="120" fill="url(#hatch-baerevegg-200)" stroke="#38bdf8" stroke-width="1"/>',
-            '    <rect x="504" y="140" width="2" height="120" fill="url(#hatch-baerevegg-200)" stroke="#38bdf8" stroke-width="1"/>',
-        ])
-
-    svg_parts.extend([
-        '  </g>',
-        '',
+        f'  <text x="{_sx(x0)}" y="{_sy(y0) - 52}" font-family="sans-serif" font-size="11" font-weight="600" fill="#38bdf8">{html.escape(kote)}</text>',
         '  <!-- Bygningskropp underlag -->',
-        '  <rect x="105" y="140" width="480" height="240" fill="rgba(15, 23, 42, 0.45)" stroke="#38bdf8" stroke-width="1"/>',
-    ])
+        f'  <rect x="{_sx(x0)}" y="{_sy(y0)}" width="{x1 - x0}" height="{y1 - y0}" fill="rgba(15, 23, 42, 0.45)" stroke="#38bdf8" stroke-width="1"/>',
+    ]
+    svg += _vegger(fot, rooms)
+    for r in rooms:
+        svg += _rom(r)
+    svg += _malkjeder(fot)
 
-    if floor_nr == 1:
-        svg_parts.extend([
-            '  <!-- Enkel, innbydende inngang fra Bispegata -->',
-            '  <line x1="105" y1="420" x2="585" y2="420" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4,4"/>',
-            '  <g class="entrance-portal" transform="translate(345, 405)">',
+    # Himmelretninger og adkomst
+    svg += [
+        f'  <text x="{_sx(x0) - 42}" y="{midt_y}" font-family="sans-serif" font-size="9" font-weight="600" fill="#64748b" transform="rotate(-90 {_sx(x0) - 42} {midt_y})" letter-spacing="2" text-anchor="middle">◀ VEST · MOT NIDAROSDOMEN</text>',
+        f'  <text x="{_sx(x1) + 18}" y="{midt_y}" font-family="sans-serif" font-size="9" font-weight="600" fill="#0284c7" transform="rotate(90 {_sx(x1) + 18} {midt_y})" letter-spacing="2" text-anchor="middle">≋ ØST · NIDELVA ≋</text>',
+        f'  <text x="{(_sx(x0) + _sx(x1)) / 2}" y="{_sy(y1) + 46}" font-family="sans-serif" font-size="9" fill="#64748b" text-anchor="middle" letter-spacing="2">SØR · BISPEGATA</text>',
+    ]
+    if kode in ("P1", "U1"):
+        svg.append(f'  <text x="{_sx(x1) - 60}" y="{_sy(y0) - 52}" font-family="sans-serif" font-size="9" fill="#64748b" text-anchor="middle" letter-spacing="1">NORD · BAKGÅRD{" OG RAMPE" if kode == "U1" else ""}</text>')
+    res = next((r for r in rooms if r["id"] == "RES-1"), None)
+    if res:
+        ex = _sx(res["x"] + res["w"] / 2)
+        svg += [
+            f'  <g class="entrance-portal" transform="translate({ex}, {_sy(y1) + 18})">',
             '    <polygon points="0,-10 6,-3 -6,-3" fill="#38bdf8"/>',
-            '    <text x="0" y="8" font-family="sans-serif" font-size="11" font-weight="bold" fill="#38bdf8" text-anchor="middle" letter-spacing="1">▲ HOVEDINNGANG FRA BISPEGATA</text>',
+            '    <text x="0" y="9" font-family="sans-serif" font-size="10" font-weight="bold" fill="#38bdf8" text-anchor="middle" letter-spacing="1">HOVEDINNGANG FRA BISPEGATA</text>',
             '  </g>',
-            '  <text x="50" y="260" font-family="sans-serif" font-size="10" font-weight="600" fill="#64748b" transform="rotate(-90 50 260)" letter-spacing="2" text-anchor="middle">◀ MOT NIDAROSDOMEN</text>',
-            '  <text x="635" y="260" font-family="sans-serif" font-size="10" font-weight="600" fill="#0284c7" transform="rotate(90 635 260)" letter-spacing="2" text-anchor="middle">≋ NIDELVA ≋</text>',
-        ])
+        ]
 
-    # Tegn rommene - RENT OG MINIMALISTISK
-    for r in rooms:
-        rx = r["x"] + OFFSET_X
-        ry = r["y"] + OFFSET_Y
-        rw = r["w"]
-        rh = r["h"]
-        rid = r["id"]
-        rnummer = html.escape(str(r.get("romnummer", "")))
-        rnavn_kort = html.escape(r.get("romnavn_kort", r["navn"].split("–")[0].strip()))
-        areal = r["areal_m2"]
-        hoyde = r.get("takhoyde_m", 4.0)
-        sone_s = html.escape(str(r.get("sikkerhetssone", "S1")))
-        sone_k = html.escape(str(r.get("klimasone", "K3")))
-        brann_str = r.get("brannklasse", "EI-60")
-        brann_kort = html.escape(str(brann_str.split()[0] if brann_str else "EI-60"))
-
-        # Rene, stilige fargetoner
-        if rid in ["SAL-A", "SAL-B", "SAL-C", "SAL-D", "SAL-E"]:
-            fill_color = "rgba(245, 158, 11, 0.20)"
-            border_color = "#f59e0b"
-            title_color = "#fef08a"
-        elif rid in ["KAF-1"]:
-            fill_color = "rgba(16, 185, 129, 0.20)"
-            border_color = "#10b981"
-            title_color = "#a7f3d0"
-        elif rid in ["BUT-1"]:
-            fill_color = "rgba(168, 85, 247, 0.20)"
-            border_color = "#a855f7"
-            title_color = "#e9d5ff"
-        elif rid in ["RES-1"]:
-            fill_color = "rgba(14, 165, 233, 0.20)"
-            border_color = "#0ea5e9"
-            title_color = "#bae6fd"
-        elif rid.startswith("MAG") or rid.startswith("VER"):
-            fill_color = "rgba(239, 68, 68, 0.20)"
-            border_color = "#ef4444"
-            title_color = "#fecaca"
-        elif rid.startswith("TRAPP") or rid.startswith("HEIS"):
-            fill_color = "rgba(100, 116, 139, 0.35)"
-            border_color = "#94a3b8"
-            title_color = "#ffffff"
-        else:
-            fill_color = "rgba(51, 65, 85, 0.30)"
-            border_color = "#64748b"
-            title_color = "#f8fafc"
-
-        cx = rx + rw / 2
-        cy = ry + rh / 2
-        if rid == "RES-1":
-            cy = ry + 70
-
-        # Enkel tittel og areal (KUN 2 RENE LINJER!)
-        display_title = rnavn_kort
-        if rid.startswith("TRAPP"):
-            display_title = "TRAPP"
-        elif rid.startswith("HEIS"):
-            display_title = "HEIS"
-
-        font_size = 12 if (rw >= 100 and rh >= 80) else 9.5
-
-        svg_parts.extend([
-            f'  <g class="blueprint-room" data-room-id="{rid}" style="cursor: pointer;">',
-            f'    <desc>H: {hoyde:.1f} m | BRA {areal} m² | {brann_kort} | {sone_s}/{sone_k}</desc>',
-            f'    <rect x="{rx}" y="{ry}" width="{rw}" height="{rh}" fill="{fill_color}" stroke="{border_color}" stroke-width="1.8"/>',
-            f'    <!-- Minimalistisk romtekst -->',
-            f'    <text x="{cx}" y="{cy - 2}" font-family="sans-serif" font-size="{font_size}" font-weight="bold" fill="{title_color}" text-anchor="middle">{display_title}</text>',
-            f'    <text x="{cx}" y="{cy + 13}" font-family="sans-serif" font-size="{font_size * 0.75:.1f}" font-weight="500" fill="#cbd5e1" text-anchor="middle">{areal} m²</text>',
-            f'  </g>',
-        ])
-
-        # Trappetrinn
-        if rid.startswith("TRAPP"):
-            for ty in range(int(ry + 6), int(ry + rh - 6), 5):
-                svg_parts.append(f'  <line x1="{rx + 4}" y1="{ty}" x2="{rx + rw - 4}" y2="{ty}" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>')
-        elif rid.startswith("HEIS"):
-            svg_parts.append(f'  <line x1="{rx + 4}" y1="{ry + 4}" x2="{rx + rw - 4}" y2="{ry + rh - 4}" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>')
-            svg_parts.append(f'  <line x1="{rx + rw - 4}" y1="{ry + 4}" x2="{rx + 4}" y2="{ry + rh - 4}" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>')
-
-        # Døråpning
-        dor_pos = r.get("dor_pos", "sor")
-        if dor_pos == "sor":
-            dx = rx + rw / 2
-            dy = ry + rh
-            svg_parts.append(f'  <line x1="{dx - 8}" y1="{dy}" x2="{dx + 8}" y2="{dy}" stroke="#0a0f1d" stroke-width="3"/>')
-            svg_parts.append(f'  <line x1="{dx - 8}" y1="{dy}" x2="{dx + 8}" y2="{dy - 10}" stroke="{border_color}" stroke-width="1.2"/>')
-        elif dor_pos == "nord":
-            dx = rx + rw / 2
-            dy = ry
-            svg_parts.append(f'  <line x1="{dx - 8}" y1="{dy}" x2="{dx + 8}" y2="{dy}" stroke="#0a0f1d" stroke-width="3"/>')
-            svg_parts.append(f'  <line x1="{dx - 8}" y1="{dy}" x2="{dx + 8}" y2="{dy + 10}" stroke="{border_color}" stroke-width="1.2"/>')
-        elif dor_pos == "vest":
-            dx = rx
-            dy = ry + rh / 2
-            svg_parts.append(f'  <line x1="{dx}" y1="{dy - 8}" x2="{dx}" y2="{dy + 8}" stroke="#0a0f1d" stroke-width="3"/>')
-            svg_parts.append(f'  <line x1="{dx}" y1="{dy - 8}" x2="{dx + 10}" y2="{dy + 8}" stroke="{border_color}" stroke-width="1.2"/>')
-        elif dor_pos == "ost":
-            dx = rx + rw
-            dy = ry + rh / 2
-            svg_parts.append(f'  <line x1="{dx}" y1="{dy - 8}" x2="{dx}" y2="{dy + 8}" stroke="#0a0f1d" stroke-width="3"/>')
-            svg_parts.append(f'  <line x1="{dx}" y1="{dy - 8}" x2="{dx - 10}" y2="{dy + 8}" stroke="{border_color}" stroke-width="1.2"/>')
-
-    # Subtile målekjeder (diskrete og ryddige)
-    svg_parts.extend([
-        '  <!-- Diskrete arkitektoniske målekjeder iht. NS 8351 -->',
-        '  <g class="dimension-chain" style="opacity: 0.7;">',
-        '    <line x1="105" y1="115" x2="585" y2="115" stroke="#64748b" stroke-width="0.8" marker-start="url(#tick-45)" marker-end="url(#tick-45)"/>',
-        '    <line x1="105" y1="110" x2="105" y2="120" stroke="#38bdf8" stroke-width="1.2" class="arch-tick" transform="rotate(45 105 115)"/>',
-        '    <line x1="585" y1="110" x2="585" y2="120" stroke="#38bdf8" stroke-width="1.2" class="arch-tick" transform="rotate(45 585 115)"/>',
-        '    <text x="345" y="108" font-family="sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">48 000 mm (48 m)</text>',
-        '    <line x1="85" y1="140" x2="85" y2="380" stroke="#64748b" stroke-width="0.8" marker-start="url(#tick-45)" marker-end="url(#tick-45)"/>',
-        '    <line x1="85" y1="135" x2="85" y2="145" stroke="#38bdf8" stroke-width="1.2" class="arch-tick" transform="rotate(45 85 140)"/>',
-        '    <line x1="85" y1="375" x2="85" y2="385" stroke="#38bdf8" stroke-width="1.2" class="arch-tick" transform="rotate(45 85 380)"/>',
-        '    <text x="75" y="260" font-family="sans-serif" font-size="9" fill="#94a3b8" text-anchor="end">24 000 mm</text>',
-        '  </g>',
-    ])
-
-    # HØYRESIDE: ELEGANT SKANDINAVISK PLANOVERSIKT
-    svg_parts.extend([
-        '  <!-- Elegant skandinavisk planoversikt og romguide -->',
-        '  <g class="title-block" transform="translate(680, 80)">',
+    # Tegningshode og romliste
+    svg += [
+        '  <g class="title-block" transform="translate(760, 60)">',
         '    <text x="0" y="0" font-family="sans-serif" font-size="20" font-weight="bold" fill="#ffffff" letter-spacing="1">KUNSTPIXEL</text>',
-        f'    <text x="0" y="24" font-family="sans-serif" font-size="13" font-weight="600" fill="#38bdf8">PLAN {html.escape(kode)} • {html.escape(navn.upper())}</text>',
-        '    <text x="0" y="44" font-family="sans-serif" font-size="10" fill="#94a3b8">Bispegata 9B, 7012 Trondheim • Gnr 401 / Bnr 12</text>',
-        '    <line x1="0" y1="60" x2="280" y2="60" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>',
-        '    <text x="0" y="85" font-family="sans-serif" font-size="10" font-weight="bold" fill="#64748b" letter-spacing="1">ROMLISTE &amp; AREALER (BRA)</text>',
-    ])
-
-    y_cursor = 110
+        f'    <text x="0" y="22" font-family="sans-serif" font-size="12" font-weight="600" fill="#38bdf8">PLAN {html.escape(kode)} • {html.escape(floor_data["navn"].upper())}</text>',
+        f'    <text x="0" y="40" font-family="sans-serif" font-size="9.5" fill="#94a3b8">{html.escape(matrikkel.get("adresse", ""))} • Gnr {matrikkel.get("gnr")} / Bnr {matrikkel.get("bnr")}</text>',
+        '    <line x1="0" y1="52" x2="300" y2="52" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>',
+        '    <text x="0" y="72" font-family="sans-serif" font-size="9.5" font-weight="bold" fill="#64748b" letter-spacing="1">ROMLISTE &amp; AREALER (BRA)</text>',
+    ]
+    yc = 92
     for r in rooms:
-        rid = r["id"]
-        rnavn = html.escape(r["navn"].split("–")[0].strip())
-        areal = r["areal_m2"]
-        hoyde = r.get("takhoyde_m", 4.0)
-        
-        dot_color = "#94a3b8"
-        if rid in ["SAL-A", "SAL-B", "SAL-C", "SAL-D", "SAL-E"]:
-            dot_color = "#f59e0b"
-        elif rid in ["KAF-1"]:
-            dot_color = "#10b981"
-        elif rid in ["BUT-1"]:
-            dot_color = "#a855f7"
-        elif rid in ["RES-1"]:
-            dot_color = "#0ea5e9"
-        elif rid.startswith("MAG") or rid.startswith("VER"):
-            dot_color = "#ef4444"
-
-        svg_parts.extend([
-            f'    <circle cx="6" cy="{y_cursor - 4}" r="4" fill="{dot_color}"/>',
-            f'    <text x="18" y="{y_cursor}" font-family="sans-serif" font-size="11" font-weight="500" fill="#f8fafc">{rnavn}</text>',
-            f'    <text x="280" y="{y_cursor}" font-family="sans-serif" font-size="11" font-weight="600" fill="#cbd5e1" text-anchor="end">{areal} m²</text>',
-        ])
-        y_cursor += 24
-
-    svg_parts.extend([
-        f'    <line x1="0" y1="{y_cursor + 10}" x2="280" y2="{y_cursor + 10}" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>',
-        f'    <text x="0" y="{y_cursor + 32}" font-family="sans-serif" font-size="10" fill="#94a3b8">BTA: 4 350 m² (4350) • BRA: 3 920 m² (3920) • BYA: 1 450 m² (1450)</text>',
-        f'    <text x="0" y="{y_cursor + 50}" font-family="sans-serif" font-size="10" fill="#94a3b8">Kote FG: {kote_val_str}</text>',
-        f'    <text x="0" y="{y_cursor + 68}" font-family="sans-serif" font-size="9" fill="#64748b">Brannklasse BKL 3 / Risikoklasse RKL 5 • 401/12</text>',
-        f'    <text x="0" y="{y_cursor + 86}" font-family="sans-serif" font-size="10" font-weight="bold" fill="#38bdf8">MÅLESTOKK 1:100</text>',
+        _, kant, _ = _romfarge(r)
+        navn = html.escape(r["navn"].split("–")[0].strip())
+        svg += [
+            f'    <circle cx="5" cy="{yc - 3.5}" r="3.5" fill="{kant}"/>',
+            f'    <text x="14" y="{yc}" font-family="sans-serif" font-size="9.5" fill="#64748b">{html.escape(str(r["romnummer"]))}</text>',
+            f'    <text x="40" y="{yc}" font-family="sans-serif" font-size="10" font-weight="500" fill="#f8fafc">{navn}</text>',
+            f'    <text x="300" y="{yc}" font-family="sans-serif" font-size="10" font-weight="600" fill="#cbd5e1" text-anchor="end">{_tall(r["areal_m2"])} m²</text>',
+        ]
+        yc += 18
+    bta, bra, bya = arealer["bta_m2"], arealer["bra_m2"], arealer["bya_m2"]
+    svg += [
+        f'    <line x1="0" y1="{yc}" x2="300" y2="{yc}" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>',
+        f'    <text x="0" y="{yc + 18}" font-family="sans-serif" font-size="9.5" fill="#94a3b8">BTA: {_tall(bta)} m² • BRA: {_tall(bra)} m² • BYA: {_tall(bya)} m²</text>',
+        f'    <text x="0" y="{yc + 32}" font-family="sans-serif" font-size="8.5" fill="#64748b">NS 3940 ({bta} / {bra} / {bya}) · etasje: BTA {_tall(floor_data["bta_etasje_m2"])}, BRA {_tall(floor_data["bra_etasje_m2"])}</text>',
+        f'    <text x="0" y="{yc + 46}" font-family="sans-serif" font-size="8.5" fill="#64748b">Brannklasse {brann.get("brannklasse", "")} / Risikoklasse {brann.get("risikoklasse", "")} • {matrikkel.get("gnr")}/{matrikkel.get("bnr")} • Tegning {html.escape(floor_data.get("tegningsnummer", ""))}</text>',
+        f'    <text x="0" y="{yc + 62}" font-family="sans-serif" font-size="10" font-weight="bold" fill="#38bdf8">MÅLESTOKK {html.escape(floor_data.get("malestokk", "1:100"))}</text>',
         '  </g>',
         '</svg>',
-    ])
-
-    return "\n".join(svg_parts)
+    ]
+    return "\n".join(svg)
 
 
 def generate_html(data: dict) -> str:
@@ -317,7 +297,7 @@ def generate_html(data: dict) -> str:
         {"file": "bilder/03_eksterior_skulpturhage.jpg", "title": "03. Skulpturhage i atriet", "cat": "Eksteriør", "desc": "Skjermet indre museumshage med granittheller, vannspeil, bronseskulpturer og åpen siktlinje mot Marinen-parken."},
         {"file": "bilder/04_vestibyle_resepsjon.jpg", "title": "04. Vestibyle & Resepsjon (P1)", "cat": "Publikum", "desc": "Ankomsthall med overlys fra glasstaket, lys grå terrazzo, minimalistisk skranke i mørk røkt eik med 'KUNSTPIXEL'-tekst og adgangsporter."},
         {"file": "bilder/05_museumsbutikk.jpg", "title": "05. Museumsbutikk / Kunstpixel Bokhandel (P1)", "cat": "Publikum", "desc": "Kunstbøker, utstillingskataloger og skandinavisk formgivning i spesialbygde eikehyller med integrert LED-lys."},
-        {"file": "bilder/06_museumskafe.jpg", "title": "06. Museumskafé mot Nidelva (P1)", "cat": "Publikum", "desc": "Kafé med 60 sitteplasser, skandinaviske designstoler i lys eik og panoramavinduer mot skulpturhagen, Nidelva og trebryggene."},
+        {"file": "bilder/06_museumskafe.jpg", "title": "06. Museumskafé mot Nidelva (P1)", "cat": "Publikum", "desc": "Kafé med 45 sitteplasser, skandinaviske designstoler i lys eik og panoramavinduer mot skulpturhagen, Nidelva og trebryggene."},
         {"file": "bilder/07_sal_a_mytologi.jpg", "title": "07. Sal A – Mytologi & Natur (P1)", "cat": "Utstilling", "desc": "Museets største sal med 6 meters takhøyde, matte antrasittgrå vegger, fiskebensparkett og spotbelysning over Kittelsen og Sohlberg."},
         {"file": "bilder/11_sal_d_munch.jpg", "title": "08. Sal D – Eksistens & Modernisme (P2)", "cat": "Utstilling", "desc": "Dype karmosinrøde vegger med dempet belysning for Edvard Munch, og frittstående klimastyrte glassmontre med 50 luks for papirverk."},
         {"file": "bilder/13_magasin_1_hovedlager.jpg", "title": "09. Magasin 1 – Klimastyrt lager (U1)", "cat": "Høysikkerhet", "desc": "Sone 4 Høysikkerhet: Automatiserte elektriske rullehyller i stål, Inergen-gasslukkeanlegg og digital klimakontroll (18.0 °C / 50 % RF)."}
@@ -813,7 +793,7 @@ def generate_html(data: dict) -> str:
       <div class="logo-badge">TRONDHEIM</div>
       <div class="title-group">
         <h1>{data['museum']['navn']} – Bygnings-, Sone- &amp; Plantegningskart</h1>
-        <p>{data['museum']['fiktiv_adresse']} • Nidelva &amp; Bispegata • BRA: 3 920 m² • BTA: 4 350 m² • BYA: 1 450 m² • {data['museum']['georeferanse']['moh']} m.o.h.</p>
+        <p>{data['museum']['fiktiv_adresse']} • Nidelva &amp; Bispegata • BRA: {_tall(data['museum']['arealer_ns3940']['bra_m2'])} m² ({data['museum']['arealer_ns3940']['bra_m2']}) • BTA: {_tall(data['museum']['arealer_ns3940']['bta_m2'])} m² • BYA: {_tall(data['museum']['arealer_ns3940']['bya_m2'])} m² • {data['museum']['georeferanse']['moh']} m.o.h.</p>
       </div>
     </div>
 
@@ -1017,9 +997,18 @@ def generate_html(data: dict) -> str:
 
     window.addEventListener('resize', resizeCanvas);
 
+    // Fotavtrykket styrer alt som tegnes utenfor rommene (fasit: bygning_geometri.json).
+    const FOT = MODEL.museum.fotavtrykk;
+    const BX0 = Math.min(...FOT.volumer.map(v => v.x));
+    const BX1 = Math.max(...FOT.volumer.map(v => v.x + v.b));
+    const BY0 = Math.min(...FOT.volumer.map(v => v.y));
+    const BY1 = Math.max(...FOT.volumer.map(v => v.y + v.d));
+    const BCX = (BX0 + BX1) / 2;
+    const BCY = (BY0 + BY1) / 2;
+
     function toIso(x, y, z) {{
-      let cx = x - 280;
-      let cy = y - 160;
+      let cx = x - BCX;
+      let cy = y - BCY;
 
       let rx = cx, ry = cy;
       if (rotationIndex === 1) {{ rx = -cy; ry = cx; }}
@@ -1131,10 +1120,10 @@ def generate_html(data: dict) -> str:
 
     function drawGround() {{
       ctx.save();
-      const p1 = toIso(-20, -20, -10);
-      const p2 = toIso(580, -20, -10);
-      const p3 = toIso(580, 340, -10);
-      const p4 = toIso(-20, 340, -10);
+      const p1 = toIso(BX0 - 60, BY0 - 60, -10);
+      const p2 = toIso(BX1 + 60, BY0 - 60, -10);
+      const p3 = toIso(BX1 + 60, BY1 + 50, -10);
+      const p4 = toIso(BX0 - 60, BY1 + 50, -10);
 
       ctx.beginPath();
       ctx.moveTo(p1.x, p1.y);
@@ -1148,8 +1137,8 @@ def generate_html(data: dict) -> str:
       ctx.lineWidth = 1;
       ctx.stroke();
 
-      const s1 = toIso(-20, 310, -9);
-      const s2 = toIso(580, 310, -9);
+      const s1 = toIso(BX0 - 60, BY1 + 20, -9);
+      const s2 = toIso(BX1 + 60, BY1 + 20, -9);
       ctx.beginPath();
       ctx.moveTo(s1.x, s1.y);
       ctx.lineTo(s2.x, s2.y);
@@ -1157,7 +1146,7 @@ def generate_html(data: dict) -> str:
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      const streetLabel = toIso(280, 328, -9);
+      const streetLabel = toIso(BCX, BY1 + 38, -9);
       ctx.font = "11px sans-serif";
       ctx.fillStyle = "rgba(156, 163, 175, 0.6)";
       ctx.textAlign = "center";
@@ -1167,10 +1156,10 @@ def generate_html(data: dict) -> str:
 
     function drawFloorSlab(floorData, z) {{
       ctx.save();
-      const p1 = toIso(20, 20, z);
-      const p2 = toIso(540, 20, z);
-      const p3 = toIso(540, 300, z);
-      const p4 = toIso(20, 300, z);
+      const p1 = toIso(BX0, BY0, z);
+      const p2 = toIso(BX1, BY0, z);
+      const p3 = toIso(BX1, BY1, z);
+      const p4 = toIso(BX0, BY1, z);
 
       ctx.beginPath();
       ctx.moveTo(p1.x, p1.y);
@@ -1185,8 +1174,8 @@ def generate_html(data: dict) -> str:
       ctx.stroke();
 
       const slabH = 6;
-      const b3 = toIso(540, 300, z - slabH);
-      const b4 = toIso(20, 300, z - slabH);
+      const b3 = toIso(BX1, BY1, z - slabH);
+      const b4 = toIso(BX0, BY1, z - slabH);
 
       ctx.beginPath();
       ctx.moveTo(p4.x, p4.y);
@@ -1198,7 +1187,7 @@ def generate_html(data: dict) -> str:
       ctx.fill();
       ctx.stroke();
 
-      const labelPos = toIso(30, 290, z);
+      const labelPos = toIso(BX0 + 10, BY1 - 10, z);
       ctx.font = "bold 12px sans-serif";
       ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
       ctx.fillText(floorData.kode + " • " + floorData.navn.toUpperCase(), labelPos.x, labelPos.y);
@@ -1208,36 +1197,33 @@ def generate_html(data: dict) -> str:
 
     function drawShafts(offsets) {{
       ctx.save();
-      const zBottom = offsets[0];
-      const zTop = offsets[2] + 40;
-
-      const p1 = toIso(240, 180, zBottom);
-      const p2 = toIso(280, 180, zBottom);
-      const p3 = toIso(280, 220, zBottom);
-      const p4 = toIso(240, 220, zBottom);
-
-      const t1 = toIso(240, 180, zTop);
-      const t2 = toIso(280, 180, zTop);
-      const t3 = toIso(280, 220, zTop);
-      const t4 = toIso(240, 220, zTop);
-
+      const grupper = {{}};
+      MODEL.etasjer.forEach(e => e.rom.forEach(r => {{
+        if (!r.sjakt) return;
+        (grupper[r.sjakt] = grupper[r.sjakt] || {{ rom: r, etasjer: [] }}).etasjer.push(e.etasje_nr);
+      }}));
       ctx.strokeStyle = "rgba(59, 130, 246, 0.35)";
       ctx.lineWidth = 1.5;
-      ctx.setLineDash([4, 4]);
-
-      ctx.beginPath();
-      ctx.moveTo(p1.x, p1.y); ctx.lineTo(t1.x, t1.y);
-      ctx.moveTo(p2.x, p2.y); ctx.lineTo(t2.x, t2.y);
-      ctx.moveTo(p3.x, p3.y); ctx.lineTo(t3.x, t3.y);
-      ctx.moveTo(p4.x, p4.y); ctx.lineTo(t4.x, t4.y);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      const midPos = toIso(260, 200, (zBottom + zTop)/2);
       ctx.font = "10px sans-serif";
       ctx.fillStyle = "rgba(147, 197, 253, 0.8)";
-      ctx.fillText("↕ HEIS- OG TRAPPESJAKT", midPos.x, midPos.y);
-
+      Object.entries(grupper).forEach(([navn, g]) => {{
+        if (g.etasjer.length < 2) return;
+        const zBunn = offsets[Math.min(...g.etasjer)];
+        const zTopp = offsets[Math.max(...g.etasjer)] + 40;
+        const r = g.rom;
+        const hjorner = [[r.x, r.y], [r.x + r.w, r.y], [r.x + r.w, r.y + r.h], [r.x, r.y + r.h]];
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        hjorner.forEach(([x, y]) => {{
+          const p = toIso(x, y, zBunn);
+          const q = toIso(x, y, zTopp);
+          ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
+        }});
+        ctx.stroke();
+        ctx.setLineDash([]);
+        const midt = toIso(r.x + r.w / 2, r.y + r.h / 2, (zBunn + zTopp) / 2);
+        ctx.fillText("↕ " + navn.toUpperCase(), midt.x, midt.y);
+      }});
       ctx.restore();
     }}
 
@@ -1344,6 +1330,13 @@ def generate_html(data: dict) -> str:
       const centerPos = toIso(x + w / 2, y + h / 2, zBase + 2);
       ctx.textAlign = "center";
       ctx.fillStyle = "#ffffff";
+      // Smale rom (under 4 m) viser bare romnummer, som i plantegningene.
+      if (Math.min(room.w, room.h) < 40) {{
+        ctx.font = "bold " + Math.max(7, Math.round(9 * camera.zoom)) + "px sans-serif";
+        ctx.fillText(room.romnummer, centerPos.x, centerPos.y + 3);
+        ctx.restore();
+        return;
+      }}
       ctx.font = isHovered ? "bold 12px sans-serif" : "bold 11px sans-serif";
       ctx.fillText(room.id, centerPos.x, centerPos.y - 6);
 
@@ -1362,70 +1355,54 @@ def generate_html(data: dict) -> str:
     function drawExteriorShell(floorData, zBase) {{
       ctx.save();
       const wallH = (floorData.takhoyde_m || 5.0) * 8.0;
-
-      const b1 = toIso(20, 20, zBase);
-      const b2 = toIso(370, 20, zBase);
-      const b3 = toIso(370, 300, zBase);
-      const b4 = toIso(20, 300, zBase);
-
-      const t1 = toIso(20, 20, zBase + wallH);
-      const t2 = toIso(370, 20, zBase + wallH);
-      const t3 = toIso(370, 300, zBase + wallH);
-      const t4 = toIso(20, 300, zBase + wallH);
-
-      ctx.beginPath();
-      ctx.moveTo(b4.x, b4.y);
-      ctx.lineTo(b3.x, b3.y);
-      ctx.lineTo(t3.x, t3.y);
-      ctx.lineTo(t4.x, t4.y);
-      ctx.closePath();
-      ctx.fillStyle = "#991b1b";
-      ctx.fill();
-      ctx.strokeStyle = "rgba(255,255,255,0.2)";
-      ctx.stroke();
-
-      const gb2 = toIso(540, 20, zBase);
-      const gb3 = toIso(540, 300, zBase);
-      const gt2 = toIso(540, 20, zBase + wallH);
-      const gt3 = toIso(540, 300, zBase + wallH);
-
-      ctx.beginPath();
-      ctx.moveTo(b3.x, b3.y);
-      ctx.lineTo(gb3.x, gb3.y);
-      ctx.lineTo(gt3.x, gt3.y);
-      ctx.lineTo(t3.x, t3.y);
-      ctx.closePath();
-      ctx.fillStyle = "rgba(56, 189, 248, 0.45)";
-      ctx.fill();
-      ctx.strokeStyle = "#38bdf8";
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-
-      if (floorData.etasje_nr === 2) {{
-        const rTop = toIso(195, 160, zBase + wallH + 40);
-        ctx.beginPath();
-        ctx.moveTo(t1.x, t1.y);
-        ctx.lineTo(t2.x, t2.y);
-        ctx.lineTo(rTop.x, rTop.y);
-        ctx.closePath();
-        ctx.fillStyle = "#0d9488";
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.moveTo(t4.x, t4.y);
-        ctx.lineTo(t3.x, t3.y);
-        ctx.lineTo(rTop.x, rTop.y);
-        ctx.closePath();
-        ctx.fillStyle = "#0f766e";
-        ctx.fill();
+      // Dybde mot betrakteren etter rotasjon (samme transform som toIso): større = nærmere.
+      function dybde(x, y) {{
+        let rx = x - BCX, ry = y - BCY;
+        if (rotationIndex === 1) {{ [rx, ry] = [-ry, rx]; }}
+        else if (rotationIndex === 2) {{ rx = -rx; ry = -ry; }}
+        else if (rotationIndex === 3) {{ [rx, ry] = [ry, -rx]; }}
+        return rx + ry;
       }}
-
-      const annotPos = toIso(195, 305, zBase + wallH / 2);
+      const volumer = [...FOT.volumer].sort((a, b) => dybde(a.x + a.b / 2, a.y + a.d / 2) - dybde(b.x + b.b / 2, b.y + b.d / 2));
+      volumer.forEach(v => {{
+        const tegl = v.materiale === "tegl";
+        const b3 = toIso(v.x + v.b, v.y + v.d, zBase), b4 = toIso(v.x, v.y + v.d, zBase), b2 = toIso(v.x + v.b, v.y, zBase);
+        const t3 = toIso(v.x + v.b, v.y + v.d, zBase + wallH), t4 = toIso(v.x, v.y + v.d, zBase + wallH), t2 = toIso(v.x + v.b, v.y, zBase + wallH);
+        const hj = [[v.x, v.y], [v.x + v.b, v.y], [v.x + v.b, v.y + v.d], [v.x, v.y + v.d]];
+        const alle = [0, 1, 2, 3].map(i => {{
+          const [a, c] = [hj[i], hj[(i + 1) % 4]];
+          return {{ d: dybde((a[0] + c[0]) / 2, (a[1] + c[1]) / 2),
+                   p: [toIso(a[0], a[1], zBase), toIso(c[0], c[1], zBase), toIso(c[0], c[1], zBase + wallH), toIso(a[0], a[1], zBase + wallH)] }};
+        }});
+        const flater = alle.sort((a, b) => a.d - b.d).slice(2).map(f => f.p);
+        flater.forEach((f, i) => {{
+          ctx.beginPath();
+          ctx.moveTo(f[0].x, f[0].y);
+          f.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+          ctx.closePath();
+          ctx.fillStyle = tegl ? (i === 0 ? "#991b1b" : "#7f1d1d") : (i === 0 ? "rgba(56, 189, 248, 0.45)" : "rgba(56, 189, 248, 0.30)");
+          ctx.fill();
+          ctx.strokeStyle = tegl ? "rgba(255,255,255,0.2)" : "#38bdf8";
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }});
+        if (tegl && floorData.etasje_nr === 2) {{
+          const t1 = toIso(v.x, v.y, zBase + wallH);
+          const topp = toIso(v.x + v.b / 2, v.y + v.d / 2, zBase + wallH + 40);
+          [[t1, t2, "#0d9488"], [t4, t3, "#0f766e"]].forEach(([a, b, farge]) => {{
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.lineTo(topp.x, topp.y);
+            ctx.closePath();
+            ctx.fillStyle = farge;
+            ctx.fill();
+          }});
+        }}
+      }});
+      const annotPos = toIso(BCX, BY1 + 5, zBase + wallH / 2);
       ctx.fillStyle = "#ffffff";
       ctx.font = "bold 12px sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText(floorData.navn + " – Rød Tegl & Glassfasade (Trondheim)", annotPos.x, annotPos.y);
-
+      ctx.fillText(floorData.navn + " – tegl 1912 og glass 2016", annotPos.x, annotPos.y);
       ctx.restore();
     }}
 
@@ -1682,7 +1659,9 @@ def generate_html(data: dict) -> str:
     function resetView() {{
       camera.x = 0;
       camera.y = 0;
-      camera.zoom = 1.0;
+      // Startzoom slik at hele fotavtrykket (pluss bakke) får plass i vinduet.
+      const isoBredde = (BX1 - BX0 + BY1 - BY0 + 220) * 0.866;
+      camera.zoom = Math.min(1.0, viewport.clientWidth / isoBredde, viewport.clientHeight / (isoBredde * 0.75));
       rotationIndex = 0;
       render();
     }}

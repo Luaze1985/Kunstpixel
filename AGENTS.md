@@ -149,6 +149,16 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode man
 36. `verify_colab_dataset(delivery_name)`
     - Verifiserer sjekksummen for en innkommende Colab-leveranse via SHA-256.
 
+### Maskinpark – KI i drift (4 verktøy i `src/mcp_server.py`, bare lesing og forslag):
+36a. `get_machine_park(kategori, status, etasje, rom_id)`
+    - 37 maskiner (KI-servere, roboter, klima, lys, sikkerhet, heiser) med status og neste service.
+36b. `get_machine_health(maskin_id)`
+    - Helsekort: åpne hendelser, vedlikehold, neste service og kommandologg.
+36c. `get_maintenance_plan(dager, dato)`
+    - Forfalt og kommende service, åpne arbeidsordrer.
+36d. `propose_machine_command(maskin_id, kommando, parametre, tidspunkt, requester_role)`
+    - Sjekker et KI-forslag mot reglene og gir «venter_godkjenning» eller «avvist». Utfører aldri. Se skillen `maskinpark`.
+
 ### Dagsbesøk, Leverandørkompetanse & Medarbeidersamtaler (3 verktøy i `src/mcp_server.py`):
 37. `get_daily_visitors(fra_dato, til_dato, aar, kun_aapent, limit)`
     - Historiske dagsbesøk, publikumstall og billettinntekter fra `dagsbesok`.

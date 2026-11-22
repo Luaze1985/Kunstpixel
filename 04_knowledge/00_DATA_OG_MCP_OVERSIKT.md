@@ -199,6 +199,12 @@ flowchart TB
 35. `list_colab_inbox_deliveries()` — Lister leveranser i `01_inbox/incoming`.
 36. `verify_colab_dataset(delivery_name)` — Verifiserer SHA-256 for Colab-leveranser.
 
+### 4.7 Maskinpark – KI i drift (4 verktøy, kun MCP, ikke i Datafinner)
+37. `get_machine_park(kategori, status, etasje, rom_id)` — Maskinene i `06_kart/maskinpark.json` med status, antall og åpne hendelser.
+38. `get_machine_health(maskin_id)` — Helsekort for én maskin.
+39. `get_maintenance_plan(dager, dato)` — Forfalt og kommende service og åpne arbeidsordrer.
+40. `propose_machine_command(maskin_id, kommando, parametre, tidspunkt, requester_role)` — Regelsjekk av et KI-forslag. Utfører aldri noe. Regler: `.claude/skills/maskinpark/SKILL.md`.
+
 *(I tillegg eksponerer `src/kunstpixel/adapters/datafinner.py` totalt **45 hvitelistede verktøy** inkl. `discover_hr_cases`, `investigate_hr_case`, `propose_shift_swap`, `lookup_onboarding`, `query_cafe_sales` og `query_reviews`.)*
 
 ---

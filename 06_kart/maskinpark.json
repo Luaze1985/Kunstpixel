@@ -1,0 +1,4412 @@
+{
+  "datakilde": "syntetisk (maskinpark_builder, fast frø 20261122)",
+  "versjon": 1,
+  "i_dag": "2026-11-22",
+  "apningstid": {
+    "fra": "10:00",
+    "til": "17:00"
+  },
+  "forbudte_kommandoer": [
+    "deaktiver_slukking",
+    "las_opp_dor",
+    "sla_av_kamera",
+    "sla_av_alarm",
+    "deaktiver_adgang",
+    "overstyr_heis"
+  ],
+  "maskiner": [
+    {
+      "maskin_id": "KP-MASK-SRV-01",
+      "navn": "GPU-node 1 (inferens)",
+      "kategori": "server",
+      "type": "gpu_node",
+      "rom_id": "SRV-1",
+      "hjem_rom_id": "SRV-1",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Nordlys Compute AS",
+      "installert": "2022-10-21",
+      "serviceintervall_dager": 90,
+      "sist_service": "2026-09-14",
+      "kommandoer": {
+        "restart_tjeneste": {
+          "tjeneste": [
+            "inferens",
+            "mcp",
+            "telemetri"
+          ]
+        },
+        "sett_effektgrense": {
+          "watt": [
+            300,
+            700
+          ]
+        },
+        "flytt_last": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-SRV-02",
+      "navn": "GPU-node 2 (inferens)",
+      "kategori": "server",
+      "type": "gpu_node",
+      "rom_id": "SRV-1",
+      "hjem_rom_id": "SRV-1",
+      "kritikalitet": "A",
+      "status": "feil",
+      "leverandor": "Nordlys Compute AS",
+      "installert": "2020-10-02",
+      "serviceintervall_dager": 90,
+      "sist_service": "2026-08-07",
+      "kommandoer": {
+        "restart_tjeneste": {
+          "tjeneste": [
+            "inferens",
+            "mcp",
+            "telemetri"
+          ]
+        },
+        "sett_effektgrense": {
+          "watt": [
+            300,
+            700
+          ]
+        },
+        "flytt_last": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-SRV-03",
+      "navn": "GPU-node 3 (trening og test)",
+      "kategori": "server",
+      "type": "gpu_node",
+      "rom_id": "SRV-1",
+      "hjem_rom_id": "SRV-1",
+      "kritikalitet": "B",
+      "status": "i_drift",
+      "leverandor": "Nordlys Compute AS",
+      "installert": "2024-06-19",
+      "serviceintervall_dager": 90,
+      "sist_service": "2026-09-15",
+      "kommandoer": {
+        "restart_tjeneste": {
+          "tjeneste": [
+            "inferens",
+            "mcp",
+            "telemetri"
+          ]
+        },
+        "sett_effektgrense": {
+          "watt": [
+            300,
+            700
+          ]
+        },
+        "flytt_last": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-SRV-04",
+      "navn": "GPU-node 4 (øvingsdager)",
+      "kategori": "server",
+      "type": "gpu_node",
+      "rom_id": "SRV-1",
+      "hjem_rom_id": "SRV-1",
+      "kritikalitet": "C",
+      "status": "i_drift",
+      "leverandor": "Nordlys Compute AS",
+      "installert": "2019-08-03",
+      "serviceintervall_dager": 90,
+      "sist_service": "2026-10-05",
+      "kommandoer": {
+        "restart_tjeneste": {
+          "tjeneste": [
+            "inferens",
+            "mcp",
+            "telemetri"
+          ]
+        },
+        "sett_effektgrense": {
+          "watt": [
+            300,
+            700
+          ]
+        },
+        "flytt_last": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-SRV-05",
+      "navn": "Lagringsserver (samling og logg)",
+      "kategori": "server",
+      "type": "lagring",
+      "rom_id": "SRV-1",
+      "hjem_rom_id": "SRV-1",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Fjordlager Data AS",
+      "installert": "2023-07-09",
+      "serviceintervall_dager": 180,
+      "sist_service": "2026-06-29",
+      "kommandoer": {
+        "restart_tjeneste": {
+          "tjeneste": [
+            "telemetri"
+          ]
+        }
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-SRV-06",
+      "navn": "Nettverkskjerne og brannmur",
+      "kategori": "server",
+      "type": "nettverk",
+      "rom_id": "SRV-1",
+      "hjem_rom_id": "SRV-1",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Fjordlager Data AS",
+      "installert": "2020-04-11",
+      "serviceintervall_dager": 180,
+      "sist_service": "2026-07-23",
+      "kommandoer": {
+        "restart_tjeneste": {
+          "tjeneste": [
+            "telemetri"
+          ]
+        }
+      },
+      "ki_tilgang": "les"
+    },
+    {
+      "maskin_id": "KP-MASK-SRV-07",
+      "navn": "UPS for serverrommet",
+      "kategori": "server",
+      "type": "ups",
+      "rom_id": "SRV-1",
+      "hjem_rom_id": "SRV-1",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Stabil Kraft AS",
+      "installert": "2022-06-13",
+      "serviceintervall_dager": 180,
+      "sist_service": "2026-06-25",
+      "kommandoer": {
+        "test_batteri": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-SRV-08",
+      "navn": "Kjøleenhet i rad (serverrom)",
+      "kategori": "server",
+      "type": "kjoler",
+      "rom_id": "SRV-1",
+      "hjem_rom_id": "SRV-1",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Stabil Kraft AS",
+      "installert": "2020-03-22",
+      "serviceintervall_dager": 90,
+      "sist_service": "2026-10-07",
+      "kommandoer": {
+        "sett_temperatur": {
+          "temperatur_c": [
+            18,
+            27
+          ]
+        }
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-REN-01",
+      "navn": "Renholdsrobot 1 (1. etasje vest)",
+      "kategori": "robot",
+      "type": "renholdsrobot",
+      "rom_id": "ROB-1",
+      "hjem_rom_id": "ROB-1",
+      "kritikalitet": "B",
+      "status": "i_drift",
+      "leverandor": "Ryddig Robotikk AS",
+      "installert": "2019-07-17",
+      "serviceintervall_dager": 60,
+      "sist_service": "2026-09-25",
+      "kommandoer": {
+        "send_til_rom": {
+          "rom_id": "rom"
+        },
+        "start_runde": {},
+        "pause": {},
+        "retur_til_lading": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-REN-02",
+      "navn": "Renholdsrobot 2 (1. etasje øst)",
+      "kategori": "robot",
+      "type": "renholdsrobot",
+      "rom_id": "ROB-1",
+      "hjem_rom_id": "ROB-1",
+      "kritikalitet": "B",
+      "status": "i_drift",
+      "leverandor": "Ryddig Robotikk AS",
+      "installert": "2020-09-04",
+      "serviceintervall_dager": 60,
+      "sist_service": "2026-10-25",
+      "kommandoer": {
+        "send_til_rom": {
+          "rom_id": "rom"
+        },
+        "start_runde": {},
+        "pause": {},
+        "retur_til_lading": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-REN-03",
+      "navn": "Renholdsrobot 3 (2. etasje)",
+      "kategori": "robot",
+      "type": "renholdsrobot",
+      "rom_id": "GANG-P2",
+      "hjem_rom_id": "ROB-1",
+      "kritikalitet": "B",
+      "status": "vedlikehold",
+      "leverandor": "Ryddig Robotikk AS",
+      "installert": "2021-10-14",
+      "serviceintervall_dager": 60,
+      "sist_service": "2026-10-07",
+      "kommandoer": {
+        "send_til_rom": {
+          "rom_id": "rom"
+        },
+        "start_runde": {},
+        "pause": {},
+        "retur_til_lading": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-REN-04",
+      "navn": "Renholdsrobot 4 (kjeller)",
+      "kategori": "robot",
+      "type": "renholdsrobot",
+      "rom_id": "ROB-1",
+      "hjem_rom_id": "ROB-1",
+      "kritikalitet": "C",
+      "status": "i_drift",
+      "leverandor": "Ryddig Robotikk AS",
+      "installert": "2021-03-23",
+      "serviceintervall_dager": 60,
+      "sist_service": "2026-10-13",
+      "kommandoer": {
+        "send_til_rom": {
+          "rom_id": "rom"
+        },
+        "start_runde": {},
+        "pause": {},
+        "retur_til_lading": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-VAK-01",
+      "navn": "Vaktrobot 1 (nattrunde 1. etasje)",
+      "kategori": "robot",
+      "type": "vaktrobot",
+      "rom_id": "ROB-1",
+      "hjem_rom_id": "ROB-1",
+      "kritikalitet": "B",
+      "status": "i_drift",
+      "leverandor": "Ugle Sikkerhetsrobot AS",
+      "installert": "2017-09-29",
+      "serviceintervall_dager": 60,
+      "sist_service": "2026-09-29",
+      "kommandoer": {
+        "send_til_rom": {
+          "rom_id": "rom"
+        },
+        "start_runde": {},
+        "pause": {},
+        "retur_til_lading": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-VAK-02",
+      "navn": "Vaktrobot 2 (nattrunde 2. etasje)",
+      "kategori": "robot",
+      "type": "vaktrobot",
+      "rom_id": "ROB-1",
+      "hjem_rom_id": "ROB-1",
+      "kritikalitet": "B",
+      "status": "i_drift",
+      "leverandor": "Ugle Sikkerhetsrobot AS",
+      "installert": "2023-04-05",
+      "serviceintervall_dager": 60,
+      "sist_service": "2026-10-27",
+      "kommandoer": {
+        "send_til_rom": {
+          "rom_id": "rom"
+        },
+        "start_runde": {},
+        "pause": {},
+        "retur_til_lading": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-TRA-01",
+      "navn": "Transportrobot 1 (kunst, løft 400 kg)",
+      "kategori": "robot",
+      "type": "transportrobot",
+      "rom_id": "ROB-1",
+      "hjem_rom_id": "ROB-1",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Varsom Logistikk AS",
+      "installert": "2019-02-22",
+      "serviceintervall_dager": 45,
+      "sist_service": "2026-09-20",
+      "kommandoer": {
+        "flytt_verk": {
+          "fra_rom": "rom",
+          "til_rom": "rom"
+        },
+        "retur_til_lading": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-TRA-02",
+      "navn": "Transportrobot 2 (emballasje og utstyr)",
+      "kategori": "robot",
+      "type": "transportrobot",
+      "rom_id": "ROB-1",
+      "hjem_rom_id": "ROB-1",
+      "kritikalitet": "B",
+      "status": "i_drift",
+      "leverandor": "Varsom Logistikk AS",
+      "installert": "2021-02-03",
+      "serviceintervall_dager": 45,
+      "sist_service": "2026-10-18",
+      "kommandoer": {
+        "flytt_verk": {
+          "fra_rom": "rom",
+          "til_rom": "rom"
+        },
+        "retur_til_lading": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-LAD-01",
+      "navn": "Ladestasjoner (6 plasser)",
+      "kategori": "anlegg",
+      "type": "lading",
+      "rom_id": "ROB-1",
+      "hjem_rom_id": "ROB-1",
+      "kritikalitet": "C",
+      "status": "i_drift",
+      "leverandor": "Ryddig Robotikk AS",
+      "installert": "2021-01-24",
+      "serviceintervall_dager": 180,
+      "sist_service": "2026-10-24",
+      "kommandoer": {
+        "test_lading": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-ANL-01",
+      "navn": "Ventilasjonsaggregat med varmegjenvinner",
+      "kategori": "anlegg",
+      "type": "ventilasjon",
+      "rom_id": "TEK-1",
+      "hjem_rom_id": "TEK-1",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Trøndelag Luft AS",
+      "installert": "2020-01-16",
+      "serviceintervall_dager": 90,
+      "sist_service": "2026-10-14",
+      "kommandoer": {
+        "sett_luftmengde": {
+          "prosent": [
+            40,
+            100
+          ]
+        }
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-ANL-02",
+      "navn": "Dampbefukter",
+      "kategori": "anlegg",
+      "type": "befukter",
+      "rom_id": "TEK-1",
+      "hjem_rom_id": "TEK-1",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Trøndelag Luft AS",
+      "installert": "2022-07-16",
+      "serviceintervall_dager": 90,
+      "sist_service": "2026-11-10",
+      "kommandoer": {
+        "sett_ytelse": {
+          "prosent": [
+            0,
+            100
+          ]
+        }
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-ANL-03",
+      "navn": "Kjølemaskin",
+      "kategori": "anlegg",
+      "type": "kjolemaskin",
+      "rom_id": "TEK-1",
+      "hjem_rom_id": "TEK-1",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Trøndelag Luft AS",
+      "installert": "2022-09-11",
+      "serviceintervall_dager": 90,
+      "sist_service": "2026-08-10",
+      "kommandoer": {
+        "sett_turtemperatur": {
+          "temperatur_c": [
+            6,
+            14
+          ]
+        }
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-ANL-04",
+      "navn": "Klimastyring Magasin 1",
+      "kategori": "anlegg",
+      "type": "klimastyring",
+      "rom_id": "MAG-1",
+      "hjem_rom_id": "TEK-1",
+      "kritikalitet": "A",
+      "status": "varsel",
+      "leverandor": "Trøndelag Luft AS",
+      "installert": "2017-08-18",
+      "serviceintervall_dager": 90,
+      "sist_service": "2026-11-12",
+      "kommandoer": {
+        "sett_klima": {
+          "temperatur_c": "sone",
+          "rf_prosent": "sone"
+        }
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-ANL-05",
+      "navn": "Klimastyring Magasin 2 (papirarkiv)",
+      "kategori": "anlegg",
+      "type": "klimastyring",
+      "rom_id": "MAG-2",
+      "hjem_rom_id": "TEK-1",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Trøndelag Luft AS",
+      "installert": "2021-06-21",
+      "serviceintervall_dager": 90,
+      "sist_service": "2026-10-12",
+      "kommandoer": {
+        "sett_klima": {
+          "temperatur_c": "sone",
+          "rf_prosent": "sone"
+        }
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-ANL-06",
+      "navn": "Klimamontre Sal D (papirverk)",
+      "kategori": "anlegg",
+      "type": "klimastyring",
+      "rom_id": "SAL-D",
+      "hjem_rom_id": "TEK-1",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Trøndelag Luft AS",
+      "installert": "2020-08-07",
+      "serviceintervall_dager": 90,
+      "sist_service": "2026-11-02",
+      "kommandoer": {
+        "sett_klima": {
+          "temperatur_c": "sone",
+          "rf_prosent": "sone"
+        }
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-ANL-07",
+      "navn": "Lysstyring Sal A",
+      "kategori": "anlegg",
+      "type": "lysstyring",
+      "rom_id": "SAL-A",
+      "hjem_rom_id": "TEK-1",
+      "kritikalitet": "C",
+      "status": "i_drift",
+      "leverandor": "Lysverk Nord AS",
+      "installert": "2024-02-26",
+      "serviceintervall_dager": 365,
+      "sist_service": "2026-07-21",
+      "kommandoer": {
+        "sett_lysniva": {
+          "luks": "sone"
+        },
+        "slukk_utenom_apningstid": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-ANL-08",
+      "navn": "Lysstyring Sal B",
+      "kategori": "anlegg",
+      "type": "lysstyring",
+      "rom_id": "SAL-B",
+      "hjem_rom_id": "TEK-1",
+      "kritikalitet": "C",
+      "status": "i_drift",
+      "leverandor": "Lysverk Nord AS",
+      "installert": "2024-06-12",
+      "serviceintervall_dager": 365,
+      "sist_service": "2026-09-19",
+      "kommandoer": {
+        "sett_lysniva": {
+          "luks": "sone"
+        },
+        "slukk_utenom_apningstid": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-ANL-09",
+      "navn": "Lysstyring Sal C",
+      "kategori": "anlegg",
+      "type": "lysstyring",
+      "rom_id": "SAL-C",
+      "hjem_rom_id": "TEK-1",
+      "kritikalitet": "C",
+      "status": "i_drift",
+      "leverandor": "Lysverk Nord AS",
+      "installert": "2021-10-05",
+      "serviceintervall_dager": 365,
+      "sist_service": "2026-07-06",
+      "kommandoer": {
+        "sett_lysniva": {
+          "luks": "sone"
+        },
+        "slukk_utenom_apningstid": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-ANL-10",
+      "navn": "Lysstyring Sal D",
+      "kategori": "anlegg",
+      "type": "lysstyring",
+      "rom_id": "SAL-D",
+      "hjem_rom_id": "TEK-1",
+      "kritikalitet": "B",
+      "status": "i_drift",
+      "leverandor": "Lysverk Nord AS",
+      "installert": "2016-07-17",
+      "serviceintervall_dager": 365,
+      "sist_service": "2026-04-16",
+      "kommandoer": {
+        "sett_lysniva": {
+          "luks": "sone"
+        },
+        "slukk_utenom_apningstid": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-ANL-11",
+      "navn": "Lysstyring Sal E",
+      "kategori": "anlegg",
+      "type": "lysstyring",
+      "rom_id": "SAL-E",
+      "hjem_rom_id": "TEK-1",
+      "kritikalitet": "C",
+      "status": "i_drift",
+      "leverandor": "Lysverk Nord AS",
+      "installert": "2020-10-19",
+      "serviceintervall_dager": 365,
+      "sist_service": "2026-06-30",
+      "kommandoer": {
+        "sett_lysniva": {
+          "luks": "sone"
+        },
+        "slukk_utenom_apningstid": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-SIK-01",
+      "navn": "Inergen-sentral Magasin 1",
+      "kategori": "sikkerhet",
+      "type": "inergen",
+      "rom_id": "MAG-1",
+      "hjem_rom_id": "MAG-1",
+      "kritikalitet": "A",
+      "status": "varsel",
+      "leverandor": "Brannvern Midt AS",
+      "installert": "2019-03-04",
+      "serviceintervall_dager": 365,
+      "sist_service": "2026-09-15",
+      "kommandoer": {
+        "kjor_selvtest": {}
+      },
+      "ki_tilgang": "les"
+    },
+    {
+      "maskin_id": "KP-MASK-SIK-02",
+      "navn": "Inergen-sentral Magasin 2",
+      "kategori": "sikkerhet",
+      "type": "inergen",
+      "rom_id": "MAG-2",
+      "hjem_rom_id": "MAG-2",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Brannvern Midt AS",
+      "installert": "2020-03-01",
+      "serviceintervall_dager": 365,
+      "sist_service": "2026-11-16",
+      "kommandoer": {
+        "kjor_selvtest": {}
+      },
+      "ki_tilgang": "les"
+    },
+    {
+      "maskin_id": "KP-MASK-SIK-03",
+      "navn": "Inergen-sentral Kunstmottak",
+      "kategori": "sikkerhet",
+      "type": "inergen",
+      "rom_id": "VER-1",
+      "hjem_rom_id": "VER-1",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Brannvern Midt AS",
+      "installert": "2018-01-10",
+      "serviceintervall_dager": 365,
+      "sist_service": "2025-11-03",
+      "kommandoer": {
+        "kjor_selvtest": {}
+      },
+      "ki_tilgang": "les"
+    },
+    {
+      "maskin_id": "KP-MASK-SIK-04",
+      "navn": "Inergen-sentral Teknisk rom",
+      "kategori": "sikkerhet",
+      "type": "inergen",
+      "rom_id": "TEK-1",
+      "hjem_rom_id": "TEK-1",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Brannvern Midt AS",
+      "installert": "2022-03-14",
+      "serviceintervall_dager": 365,
+      "sist_service": "2026-06-28",
+      "kommandoer": {
+        "kjor_selvtest": {}
+      },
+      "ki_tilgang": "les"
+    },
+    {
+      "maskin_id": "KP-MASK-SIK-05",
+      "navn": "Adgangskontroll (kort, PIN og biometri)",
+      "kategori": "sikkerhet",
+      "type": "adgangskontroll",
+      "rom_id": "SIK-P2",
+      "hjem_rom_id": "SIK-P2",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Låsesmed Nidaros AS",
+      "installert": "2020-12-16",
+      "serviceintervall_dager": 180,
+      "sist_service": "2026-06-15",
+      "kommandoer": {
+        "kjor_selvtest": {}
+      },
+      "ki_tilgang": "les"
+    },
+    {
+      "maskin_id": "KP-MASK-SIK-06",
+      "navn": "CCTV-opptak (48 kamera)",
+      "kategori": "sikkerhet",
+      "type": "cctv",
+      "rom_id": "SIK-P2",
+      "hjem_rom_id": "SIK-P2",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Låsesmed Nidaros AS",
+      "installert": "2021-12-19",
+      "serviceintervall_dager": 180,
+      "sist_service": "2026-09-03",
+      "kommandoer": {
+        "kjor_selvtest": {}
+      },
+      "ki_tilgang": "les"
+    },
+    {
+      "maskin_id": "KP-MASK-SIK-07",
+      "navn": "Brannsentral med direktevarsling",
+      "kategori": "sikkerhet",
+      "type": "brannsentral",
+      "rom_id": "VAK-1",
+      "hjem_rom_id": "VAK-1",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Brannvern Midt AS",
+      "installert": "2020-05-23",
+      "serviceintervall_dager": 365,
+      "sist_service": "2025-12-14",
+      "kommandoer": {
+        "kjor_selvtest": {}
+      },
+      "ki_tilgang": "les"
+    },
+    {
+      "maskin_id": "KP-MASK-HEI-01",
+      "navn": "Vare- og kunstheis (3,5 tonn)",
+      "kategori": "heis",
+      "type": "vareheis",
+      "rom_id": "HEIS-U1",
+      "hjem_rom_id": "HEIS-U1",
+      "kritikalitet": "A",
+      "status": "i_drift",
+      "leverandor": "Løft Trondheim AS",
+      "installert": "2019-11-12",
+      "serviceintervall_dager": 90,
+      "sist_service": "2026-09-09",
+      "kommandoer": {
+        "kall_til_etasje": {
+          "etasje": [
+            0,
+            2
+          ]
+        },
+        "sett_kunstmodus": {}
+      },
+      "ki_tilgang": "foresla"
+    },
+    {
+      "maskin_id": "KP-MASK-HEI-02",
+      "navn": "Publikumsheis",
+      "kategori": "heis",
+      "type": "publikumsheis",
+      "rom_id": "HEIS-P1",
+      "hjem_rom_id": "HEIS-P1",
+      "kritikalitet": "B",
+      "status": "i_drift",
+      "leverandor": "Løft Trondheim AS",
+      "installert": "2016-09-16",
+      "serviceintervall_dager": 90,
+      "sist_service": "2026-11-16",
+      "kommandoer": {
+        "kall_til_etasje": {
+          "etasje": [
+            1,
+            2
+          ]
+        }
+      },
+      "ki_tilgang": "foresla"
+    }
+  ],
+  "hendelser": [
+    {
+      "hendelse_id": "KP-HEN-0001",
+      "maskin_id": "KP-MASK-ANL-08",
+      "tidspunkt": "2026-08-26T03:52",
+      "alvorlighet": "info",
+      "kode": "LAMPE_DEFEKT",
+      "beskrivelse": "Spot defekt",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0002",
+      "maskin_id": "KP-MASK-ANL-09",
+      "tidspunkt": "2026-08-26T13:50",
+      "alvorlighet": "info",
+      "kode": "LAMPE_DEFEKT",
+      "beskrivelse": "Spot defekt",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0003",
+      "maskin_id": "KP-MASK-ANL-07",
+      "tidspunkt": "2026-08-26T22:32",
+      "alvorlighet": "varsel",
+      "kode": "DALI_FEIL",
+      "beskrivelse": "DALI-buss svarer ikke",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0004",
+      "maskin_id": "KP-MASK-TRA-02",
+      "tidspunkt": "2026-08-27T23:47",
+      "alvorlighet": "varsel",
+      "kode": "LAST_SENSOR",
+      "beskrivelse": "Avvik på lastsensor",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0005",
+      "maskin_id": "KP-MASK-ANL-11",
+      "tidspunkt": "2026-08-29T06:03",
+      "alvorlighet": "varsel",
+      "kode": "DALI_FEIL",
+      "beskrivelse": "DALI-buss svarer ikke",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0006",
+      "maskin_id": "KP-MASK-ANL-02",
+      "tidspunkt": "2026-08-29T16:17",
+      "alvorlighet": "varsel",
+      "kode": "VANNKVALITET",
+      "beskrivelse": "Ledningsevne høy i damptank",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0007",
+      "maskin_id": "KP-MASK-TRA-02",
+      "tidspunkt": "2026-08-30T01:47",
+      "alvorlighet": "info",
+      "kode": "OPPDRAG_FULLFORT",
+      "beskrivelse": "Transportoppdrag fullført",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0008",
+      "maskin_id": "KP-MASK-SIK-01",
+      "tidspunkt": "2026-08-30T18:55",
+      "alvorlighet": "info",
+      "kode": "SELVTEST_OK",
+      "beskrivelse": "Ukentlig selvtest bestått",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0009",
+      "maskin_id": "KP-MASK-ANL-08",
+      "tidspunkt": "2026-08-31T06:35",
+      "alvorlighet": "varsel",
+      "kode": "DALI_FEIL",
+      "beskrivelse": "DALI-buss svarer ikke",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0010",
+      "maskin_id": "KP-MASK-SRV-01",
+      "tidspunkt": "2026-08-31T21:26",
+      "alvorlighet": "varsel",
+      "kode": "GPU_TEMP_HOY",
+      "beskrivelse": "GPU-temperatur over 83 °C",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0011",
+      "maskin_id": "KP-MASK-SIK-07",
+      "tidspunkt": "2026-09-01T14:39",
+      "alvorlighet": "info",
+      "kode": "SELVTEST_OK",
+      "beskrivelse": "Selvtest bestått",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0012",
+      "maskin_id": "KP-MASK-SIK-06",
+      "tidspunkt": "2026-09-01T23:55",
+      "alvorlighet": "info",
+      "kode": "SELVTEST_OK",
+      "beskrivelse": "Selvtest bestått",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0013",
+      "maskin_id": "KP-MASK-SRV-07",
+      "tidspunkt": "2026-09-03T19:32",
+      "alvorlighet": "info",
+      "kode": "BATTERI_TEST_OK",
+      "beskrivelse": "Batteritest bestått",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0014",
+      "maskin_id": "KP-MASK-HEI-01",
+      "tidspunkt": "2026-09-05T00:26",
+      "alvorlighet": "varsel",
+      "kode": "DORSENSOR",
+      "beskrivelse": "Dørsensor ustabil",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0015",
+      "maskin_id": "KP-MASK-SRV-05",
+      "tidspunkt": "2026-09-05T15:21",
+      "alvorlighet": "varsel",
+      "kode": "DISK_SMART",
+      "beskrivelse": "SMART-varsel på disk",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0016",
+      "maskin_id": "KP-MASK-ANL-08",
+      "tidspunkt": "2026-09-07T08:29",
+      "alvorlighet": "info",
+      "kode": "LAMPE_DEFEKT",
+      "beskrivelse": "Spot defekt",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0017",
+      "maskin_id": "KP-MASK-REN-02",
+      "tidspunkt": "2026-09-10T19:13",
+      "alvorlighet": "info",
+      "kode": "BATTERI_LAVT",
+      "beskrivelse": "Batteri under 15 %, kjørte til lading",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0018",
+      "maskin_id": "KP-MASK-SIK-06",
+      "tidspunkt": "2026-09-10T19:15",
+      "alvorlighet": "info",
+      "kode": "SELVTEST_OK",
+      "beskrivelse": "Selvtest bestått",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0019",
+      "maskin_id": "KP-MASK-SIK-02",
+      "tidspunkt": "2026-09-11T05:41",
+      "alvorlighet": "varsel",
+      "kode": "TRYKK_LAVT",
+      "beskrivelse": "Flasketrykk under 95 %",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0020",
+      "maskin_id": "KP-MASK-SRV-08",
+      "tidspunkt": "2026-09-13T04:44",
+      "alvorlighet": "varsel",
+      "kode": "TEMP_AVVIK",
+      "beskrivelse": "Tilluft over 25 °C",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0021",
+      "maskin_id": "KP-MASK-SIK-07",
+      "tidspunkt": "2026-09-13T11:59",
+      "alvorlighet": "info",
+      "kode": "SELVTEST_OK",
+      "beskrivelse": "Selvtest bestått",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0022",
+      "maskin_id": "KP-MASK-SIK-06",
+      "tidspunkt": "2026-09-15T15:59",
+      "alvorlighet": "varsel",
+      "kode": "KAMERA_UTFALL",
+      "beskrivelse": "Kamera mistet bilde i 2 min",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0023",
+      "maskin_id": "KP-MASK-ANL-01",
+      "tidspunkt": "2026-09-19T00:10",
+      "alvorlighet": "varsel",
+      "kode": "FILTER_SKITTENT",
+      "beskrivelse": "Trykkfall over filter",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0024",
+      "maskin_id": "KP-MASK-REN-02",
+      "tidspunkt": "2026-09-19T15:55",
+      "alvorlighet": "feil",
+      "kode": "HJUL_BLOKKERT",
+      "beskrivelse": "Hjul blokkert",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0025",
+      "maskin_id": "KP-MASK-ANL-07",
+      "tidspunkt": "2026-09-20T18:35",
+      "alvorlighet": "varsel",
+      "kode": "DALI_FEIL",
+      "beskrivelse": "DALI-buss svarer ikke",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0026",
+      "maskin_id": "KP-MASK-SIK-02",
+      "tidspunkt": "2026-09-20T23:53",
+      "alvorlighet": "info",
+      "kode": "SELVTEST_OK",
+      "beskrivelse": "Ukentlig selvtest bestått",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0027",
+      "maskin_id": "KP-MASK-REN-02",
+      "tidspunkt": "2026-09-23T05:50",
+      "alvorlighet": "varsel",
+      "kode": "BORSTE_SLITT",
+      "beskrivelse": "Børste slitt",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0028",
+      "maskin_id": "KP-MASK-VAK-02",
+      "tidspunkt": "2026-09-24T11:15",
+      "alvorlighet": "info",
+      "kode": "RUNDE_FULLFORT",
+      "beskrivelse": "Nattrunde fullført",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0029",
+      "maskin_id": "KP-MASK-HEI-01",
+      "tidspunkt": "2026-09-25T18:40",
+      "alvorlighet": "varsel",
+      "kode": "DORSENSOR",
+      "beskrivelse": "Dørsensor ustabil",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0030",
+      "maskin_id": "KP-MASK-SRV-06",
+      "tidspunkt": "2026-09-26T06:17",
+      "alvorlighet": "info",
+      "kode": "FW_OPPDATERT",
+      "beskrivelse": "Brannmurregler oppdatert",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0031",
+      "maskin_id": "KP-MASK-SRV-05",
+      "tidspunkt": "2026-09-26T22:50",
+      "alvorlighet": "info",
+      "kode": "BACKUP_OK",
+      "beskrivelse": "Nattlig sikkerhetskopi fullført",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0032",
+      "maskin_id": "KP-MASK-VAK-02",
+      "tidspunkt": "2026-09-28T00:35",
+      "alvorlighet": "info",
+      "kode": "RUNDE_FULLFORT",
+      "beskrivelse": "Nattrunde fullført",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0033",
+      "maskin_id": "KP-MASK-SIK-05",
+      "tidspunkt": "2026-09-28T22:20",
+      "alvorlighet": "info",
+      "kode": "SELVTEST_OK",
+      "beskrivelse": "Selvtest bestått",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0034",
+      "maskin_id": "KP-MASK-REN-04",
+      "tidspunkt": "2026-09-29T02:56",
+      "alvorlighet": "info",
+      "kode": "BATTERI_LAVT",
+      "beskrivelse": "Batteri under 15 %, kjørte til lading",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0035",
+      "maskin_id": "KP-MASK-ANL-04",
+      "tidspunkt": "2026-09-29T22:56",
+      "alvorlighet": "varsel",
+      "kode": "RF_AVVIK",
+      "beskrivelse": "Relativ fuktighet utenfor sonen",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0036",
+      "maskin_id": "KP-MASK-LAD-01",
+      "tidspunkt": "2026-09-30T00:14",
+      "alvorlighet": "varsel",
+      "kode": "LADER_FEIL",
+      "beskrivelse": "Ladeplass 4 svarer ikke",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0037",
+      "maskin_id": "KP-MASK-ANL-09",
+      "tidspunkt": "2026-09-30T06:00",
+      "alvorlighet": "info",
+      "kode": "LAMPE_DEFEKT",
+      "beskrivelse": "Spot defekt",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0038",
+      "maskin_id": "KP-MASK-ANL-02",
+      "tidspunkt": "2026-09-30T16:22",
+      "alvorlighet": "varsel",
+      "kode": "VANNKVALITET",
+      "beskrivelse": "Ledningsevne høy i damptank",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0039",
+      "maskin_id": "KP-MASK-SRV-03",
+      "tidspunkt": "2026-10-01T13:36",
+      "alvorlighet": "info",
+      "kode": "NODE_RESTART",
+      "beskrivelse": "Noden startet på nytt etter oppdatering",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0040",
+      "maskin_id": "KP-MASK-SIK-01",
+      "tidspunkt": "2026-10-03T19:55",
+      "alvorlighet": "varsel",
+      "kode": "TRYKK_LAVT",
+      "beskrivelse": "Flasketrykk under 95 %",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0041",
+      "maskin_id": "KP-MASK-ANL-08",
+      "tidspunkt": "2026-10-03T20:08",
+      "alvorlighet": "info",
+      "kode": "LAMPE_DEFEKT",
+      "beskrivelse": "Spot defekt",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0042",
+      "maskin_id": "KP-MASK-ANL-03",
+      "tidspunkt": "2026-10-06T07:01",
+      "alvorlighet": "feil",
+      "kode": "HOYTRYKK",
+      "beskrivelse": "Høytrykksvakt løste ut",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0043",
+      "maskin_id": "KP-MASK-SIK-07",
+      "tidspunkt": "2026-10-07T05:31",
+      "alvorlighet": "info",
+      "kode": "SELVTEST_OK",
+      "beskrivelse": "Selvtest bestått",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0044",
+      "maskin_id": "KP-MASK-ANL-09",
+      "tidspunkt": "2026-10-07T15:35",
+      "alvorlighet": "info",
+      "kode": "LAMPE_DEFEKT",
+      "beskrivelse": "Spot defekt",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0045",
+      "maskin_id": "KP-MASK-VAK-01",
+      "tidspunkt": "2026-10-07T22:16",
+      "alvorlighet": "varsel",
+      "kode": "NAVIGASJON_TAPT",
+      "beskrivelse": "Mistet posisjon, stoppet",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0046",
+      "maskin_id": "KP-MASK-HEI-02",
+      "tidspunkt": "2026-10-08T03:08",
+      "alvorlighet": "info",
+      "kode": "SERVICE_VARSEL",
+      "beskrivelse": "Service nærmer seg",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0047",
+      "maskin_id": "KP-MASK-SRV-08",
+      "tidspunkt": "2026-10-10T14:08",
+      "alvorlighet": "varsel",
+      "kode": "TEMP_AVVIK",
+      "beskrivelse": "Tilluft over 25 °C",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0048",
+      "maskin_id": "KP-MASK-ANL-01",
+      "tidspunkt": "2026-10-12T13:15",
+      "alvorlighet": "varsel",
+      "kode": "FILTER_SKITTENT",
+      "beskrivelse": "Trykkfall over filter",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0049",
+      "maskin_id": "KP-MASK-TRA-02",
+      "tidspunkt": "2026-10-12T19:20",
+      "alvorlighet": "varsel",
+      "kode": "LAST_SENSOR",
+      "beskrivelse": "Avvik på lastsensor",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0050",
+      "maskin_id": "KP-MASK-REN-02",
+      "tidspunkt": "2026-10-14T05:19",
+      "alvorlighet": "varsel",
+      "kode": "BORSTE_SLITT",
+      "beskrivelse": "Børste slitt",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0051",
+      "maskin_id": "KP-MASK-SRV-08",
+      "tidspunkt": "2026-10-14T07:14",
+      "alvorlighet": "varsel",
+      "kode": "TEMP_AVVIK",
+      "beskrivelse": "Tilluft over 25 °C",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0052",
+      "maskin_id": "KP-MASK-ANL-06",
+      "tidspunkt": "2026-10-17T07:39",
+      "alvorlighet": "varsel",
+      "kode": "TEMP_AVVIK",
+      "beskrivelse": "Temperatur utenfor sonen",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0053",
+      "maskin_id": "KP-MASK-SRV-02",
+      "tidspunkt": "2026-10-18T16:59",
+      "alvorlighet": "varsel",
+      "kode": "GPU_TEMP_HOY",
+      "beskrivelse": "GPU-temperatur over 83 °C",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0054",
+      "maskin_id": "KP-MASK-SIK-03",
+      "tidspunkt": "2026-10-19T18:31",
+      "alvorlighet": "varsel",
+      "kode": "TRYKK_LAVT",
+      "beskrivelse": "Flasketrykk under 95 %",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0055",
+      "maskin_id": "KP-MASK-ANL-07",
+      "tidspunkt": "2026-10-20T17:21",
+      "alvorlighet": "info",
+      "kode": "LAMPE_DEFEKT",
+      "beskrivelse": "Spot defekt",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0056",
+      "maskin_id": "KP-MASK-SRV-08",
+      "tidspunkt": "2026-10-21T20:22",
+      "alvorlighet": "varsel",
+      "kode": "TEMP_AVVIK",
+      "beskrivelse": "Tilluft over 25 °C",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0057",
+      "maskin_id": "KP-MASK-SIK-03",
+      "tidspunkt": "2026-10-22T08:46",
+      "alvorlighet": "varsel",
+      "kode": "TRYKK_LAVT",
+      "beskrivelse": "Flasketrykk under 95 %",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0058",
+      "maskin_id": "KP-MASK-HEI-01",
+      "tidspunkt": "2026-10-22T19:42",
+      "alvorlighet": "varsel",
+      "kode": "DORSENSOR",
+      "beskrivelse": "Dørsensor ustabil",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0059",
+      "maskin_id": "KP-MASK-HEI-02",
+      "tidspunkt": "2026-10-22T21:28",
+      "alvorlighet": "info",
+      "kode": "SERVICE_VARSEL",
+      "beskrivelse": "Service nærmer seg",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0060",
+      "maskin_id": "KP-MASK-ANL-02",
+      "tidspunkt": "2026-10-23T19:11",
+      "alvorlighet": "varsel",
+      "kode": "VANNKVALITET",
+      "beskrivelse": "Ledningsevne høy i damptank",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0061",
+      "maskin_id": "KP-MASK-VAK-02",
+      "tidspunkt": "2026-10-24T10:42",
+      "alvorlighet": "varsel",
+      "kode": "NAVIGASJON_TAPT",
+      "beskrivelse": "Mistet posisjon, stoppet",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0062",
+      "maskin_id": "KP-MASK-HEI-02",
+      "tidspunkt": "2026-10-25T00:56",
+      "alvorlighet": "info",
+      "kode": "SERVICE_VARSEL",
+      "beskrivelse": "Service nærmer seg",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0063",
+      "maskin_id": "KP-MASK-ANL-05",
+      "tidspunkt": "2026-10-25T03:45",
+      "alvorlighet": "varsel",
+      "kode": "TEMP_AVVIK",
+      "beskrivelse": "Temperatur utenfor sonen",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0064",
+      "maskin_id": "KP-MASK-SIK-01",
+      "tidspunkt": "2026-10-25T15:43",
+      "alvorlighet": "info",
+      "kode": "SELVTEST_OK",
+      "beskrivelse": "Ukentlig selvtest bestått",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0065",
+      "maskin_id": "KP-MASK-SRV-05",
+      "tidspunkt": "2026-10-26T07:14",
+      "alvorlighet": "varsel",
+      "kode": "DISK_SMART",
+      "beskrivelse": "SMART-varsel på disk",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0066",
+      "maskin_id": "KP-MASK-ANL-09",
+      "tidspunkt": "2026-10-27T07:53",
+      "alvorlighet": "info",
+      "kode": "LAMPE_DEFEKT",
+      "beskrivelse": "Spot defekt",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0067",
+      "maskin_id": "KP-MASK-SIK-04",
+      "tidspunkt": "2026-10-27T12:07",
+      "alvorlighet": "info",
+      "kode": "SELVTEST_OK",
+      "beskrivelse": "Ukentlig selvtest bestått",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0068",
+      "maskin_id": "KP-MASK-SIK-07",
+      "tidspunkt": "2026-10-27T16:18",
+      "alvorlighet": "info",
+      "kode": "SELVTEST_OK",
+      "beskrivelse": "Selvtest bestått",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0069",
+      "maskin_id": "KP-MASK-SIK-01",
+      "tidspunkt": "2026-10-29T06:20",
+      "alvorlighet": "varsel",
+      "kode": "TRYKK_LAVT",
+      "beskrivelse": "Flasketrykk under 95 %",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0070",
+      "maskin_id": "KP-MASK-SRV-04",
+      "tidspunkt": "2026-10-29T12:35",
+      "alvorlighet": "info",
+      "kode": "NODE_RESTART",
+      "beskrivelse": "Noden startet på nytt etter oppdatering",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0071",
+      "maskin_id": "KP-MASK-ANL-01",
+      "tidspunkt": "2026-10-29T15:34",
+      "alvorlighet": "varsel",
+      "kode": "FILTER_SKITTENT",
+      "beskrivelse": "Trykkfall over filter",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0072",
+      "maskin_id": "KP-MASK-SRV-03",
+      "tidspunkt": "2026-10-29T16:05",
+      "alvorlighet": "info",
+      "kode": "NODE_RESTART",
+      "beskrivelse": "Noden startet på nytt etter oppdatering",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0073",
+      "maskin_id": "KP-MASK-HEI-02",
+      "tidspunkt": "2026-10-30T05:14",
+      "alvorlighet": "info",
+      "kode": "SERVICE_VARSEL",
+      "beskrivelse": "Service nærmer seg",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0074",
+      "maskin_id": "KP-MASK-SIK-06",
+      "tidspunkt": "2026-10-31T14:08",
+      "alvorlighet": "varsel",
+      "kode": "KAMERA_UTFALL",
+      "beskrivelse": "Kamera mistet bilde i 2 min",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0075",
+      "maskin_id": "KP-MASK-TRA-01",
+      "tidspunkt": "2026-10-31T18:37",
+      "alvorlighet": "varsel",
+      "kode": "LAST_SENSOR",
+      "beskrivelse": "Avvik på lastsensor",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0076",
+      "maskin_id": "KP-MASK-SIK-02",
+      "tidspunkt": "2026-11-01T10:16",
+      "alvorlighet": "varsel",
+      "kode": "TRYKK_LAVT",
+      "beskrivelse": "Flasketrykk under 95 %",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0077",
+      "maskin_id": "KP-MASK-ANL-10",
+      "tidspunkt": "2026-11-01T22:33",
+      "alvorlighet": "info",
+      "kode": "LAMPE_DEFEKT",
+      "beskrivelse": "Spot defekt",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0078",
+      "maskin_id": "KP-MASK-SRV-06",
+      "tidspunkt": "2026-11-02T10:08",
+      "alvorlighet": "varsel",
+      "kode": "LINK_FLAP",
+      "beskrivelse": "Port gikk ned og opp",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0079",
+      "maskin_id": "KP-MASK-ANL-07",
+      "tidspunkt": "2026-11-03T19:39",
+      "alvorlighet": "info",
+      "kode": "LAMPE_DEFEKT",
+      "beskrivelse": "Spot defekt",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0080",
+      "maskin_id": "KP-MASK-ANL-10",
+      "tidspunkt": "2026-11-04T10:22",
+      "alvorlighet": "varsel",
+      "kode": "DALI_FEIL",
+      "beskrivelse": "DALI-buss svarer ikke",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0081",
+      "maskin_id": "KP-MASK-SRV-07",
+      "tidspunkt": "2026-11-05T07:26",
+      "alvorlighet": "info",
+      "kode": "BATTERI_TEST_OK",
+      "beskrivelse": "Batteritest bestått",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0082",
+      "maskin_id": "KP-MASK-ANL-07",
+      "tidspunkt": "2026-11-07T05:11",
+      "alvorlighet": "info",
+      "kode": "LAMPE_DEFEKT",
+      "beskrivelse": "Spot defekt",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0083",
+      "maskin_id": "KP-MASK-VAK-01",
+      "tidspunkt": "2026-11-07T15:46",
+      "alvorlighet": "varsel",
+      "kode": "NAVIGASJON_TAPT",
+      "beskrivelse": "Mistet posisjon, stoppet",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0084",
+      "maskin_id": "KP-MASK-SRV-04",
+      "tidspunkt": "2026-11-08T07:39",
+      "alvorlighet": "info",
+      "kode": "NODE_RESTART",
+      "beskrivelse": "Noden startet på nytt etter oppdatering",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0085",
+      "maskin_id": "KP-MASK-TRA-02",
+      "tidspunkt": "2026-11-08T22:29",
+      "alvorlighet": "varsel",
+      "kode": "LAST_SENSOR",
+      "beskrivelse": "Avvik på lastsensor",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0086",
+      "maskin_id": "KP-MASK-ANL-03",
+      "tidspunkt": "2026-11-09T00:06",
+      "alvorlighet": "feil",
+      "kode": "HOYTRYKK",
+      "beskrivelse": "Høytrykksvakt løste ut",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0087",
+      "maskin_id": "KP-MASK-ANL-05",
+      "tidspunkt": "2026-11-10T17:15",
+      "alvorlighet": "varsel",
+      "kode": "TEMP_AVVIK",
+      "beskrivelse": "Temperatur utenfor sonen",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0088",
+      "maskin_id": "KP-MASK-SIK-05",
+      "tidspunkt": "2026-11-11T02:25",
+      "alvorlighet": "info",
+      "kode": "SELVTEST_OK",
+      "beskrivelse": "Selvtest bestått",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0089",
+      "maskin_id": "KP-MASK-ANL-05",
+      "tidspunkt": "2026-11-11T13:40",
+      "alvorlighet": "varsel",
+      "kode": "TEMP_AVVIK",
+      "beskrivelse": "Temperatur utenfor sonen",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0090",
+      "maskin_id": "KP-MASK-VAK-02",
+      "tidspunkt": "2026-11-11T14:29",
+      "alvorlighet": "varsel",
+      "kode": "NAVIGASJON_TAPT",
+      "beskrivelse": "Mistet posisjon, stoppet",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0091",
+      "maskin_id": "KP-MASK-ANL-01",
+      "tidspunkt": "2026-11-13T00:10",
+      "alvorlighet": "varsel",
+      "kode": "FILTER_SKITTENT",
+      "beskrivelse": "Trykkfall over filter",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0092",
+      "maskin_id": "KP-MASK-REN-01",
+      "tidspunkt": "2026-11-13T04:08",
+      "alvorlighet": "feil",
+      "kode": "HJUL_BLOKKERT",
+      "beskrivelse": "Hjul blokkert",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0093",
+      "maskin_id": "KP-MASK-VAK-02",
+      "tidspunkt": "2026-11-14T01:53",
+      "alvorlighet": "info",
+      "kode": "RUNDE_FULLFORT",
+      "beskrivelse": "Nattrunde fullført",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0094",
+      "maskin_id": "KP-MASK-REN-03",
+      "tidspunkt": "2026-11-16T21:06",
+      "alvorlighet": "info",
+      "kode": "BATTERI_LAVT",
+      "beskrivelse": "Batteri under 15 %, kjørte til lading",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0095",
+      "maskin_id": "KP-MASK-ANL-04",
+      "tidspunkt": "2026-11-17T10:49",
+      "alvorlighet": "varsel",
+      "kode": "TEMP_AVVIK",
+      "beskrivelse": "Temperatur utenfor sonen",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0096",
+      "maskin_id": "KP-MASK-SRV-01",
+      "tidspunkt": "2026-11-17T21:03",
+      "alvorlighet": "info",
+      "kode": "NODE_RESTART",
+      "beskrivelse": "Noden startet på nytt etter oppdatering",
+      "lukket": true
+    },
+    {
+      "hendelse_id": "KP-HEN-0097",
+      "maskin_id": "KP-MASK-SIK-01",
+      "tidspunkt": "2026-11-20T09:00",
+      "alvorlighet": "varsel",
+      "kode": "TRYKK_LAVT",
+      "beskrivelse": "Inergen Magasin 1: flasketrykk 94 %",
+      "lukket": false
+    },
+    {
+      "hendelse_id": "KP-HEN-0098",
+      "maskin_id": "KP-MASK-ANL-04",
+      "tidspunkt": "2026-11-21T03:40",
+      "alvorlighet": "varsel",
+      "kode": "RF_AVVIK",
+      "beskrivelse": "Magasin 1: RF 57 % (sone K1 er 50 % ± 5)",
+      "lukket": false
+    },
+    {
+      "hendelse_id": "KP-HEN-0099",
+      "maskin_id": "KP-MASK-REN-03",
+      "tidspunkt": "2026-11-22T05:55",
+      "alvorlighet": "feil",
+      "kode": "HJUL_BLOKKERT",
+      "beskrivelse": "Renholdsrobot 3 står fast i gangen i 2. etasje",
+      "lukket": false
+    },
+    {
+      "hendelse_id": "KP-HEN-0100",
+      "maskin_id": "KP-MASK-SRV-02",
+      "tidspunkt": "2026-11-22T06:12",
+      "alvorlighet": "feil",
+      "kode": "GPU_TEMP_HOY",
+      "beskrivelse": "GPU-node 2 strupet ved 91 °C, inferens flyttet til node 1",
+      "lukket": false
+    }
+  ],
+  "vedlikehold": [
+    {
+      "arbeidsordre_id": "KP-AO-0001",
+      "maskin_id": "KP-MASK-SRV-07",
+      "type": "forebyggende",
+      "planlagt": "2025-01-01",
+      "utfort": "2025-01-01",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0002",
+      "maskin_id": "KP-MASK-REN-02",
+      "type": "forebyggende",
+      "planlagt": "2025-01-03",
+      "utfort": "2025-01-03",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0003",
+      "maskin_id": "KP-MASK-SRV-05",
+      "type": "forebyggende",
+      "planlagt": "2025-01-05",
+      "utfort": "2025-01-05",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0004",
+      "maskin_id": "KP-MASK-VAK-02",
+      "type": "forebyggende",
+      "planlagt": "2025-01-05",
+      "utfort": "2025-01-05",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0005",
+      "maskin_id": "KP-MASK-SRV-04",
+      "type": "forebyggende",
+      "planlagt": "2025-01-13",
+      "utfort": "2025-01-13",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0006",
+      "maskin_id": "KP-MASK-SRV-08",
+      "type": "forebyggende",
+      "planlagt": "2025-01-15",
+      "utfort": "2025-01-15",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0007",
+      "maskin_id": "KP-MASK-ANL-05",
+      "type": "forebyggende",
+      "planlagt": "2025-01-20",
+      "utfort": "2025-01-20",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0008",
+      "maskin_id": "KP-MASK-ANL-01",
+      "type": "forebyggende",
+      "planlagt": "2025-01-22",
+      "utfort": "2025-01-22",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0009",
+      "maskin_id": "KP-MASK-TRA-02",
+      "type": "forebyggende",
+      "planlagt": "2025-01-26",
+      "utfort": "2025-01-26",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0010",
+      "maskin_id": "KP-MASK-SRV-06",
+      "type": "forebyggende",
+      "planlagt": "2025-01-29",
+      "utfort": "2025-01-29",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0011",
+      "maskin_id": "KP-MASK-REN-01",
+      "type": "forebyggende",
+      "planlagt": "2025-02-02",
+      "utfort": "2025-02-02",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0012",
+      "maskin_id": "KP-MASK-VAK-01",
+      "type": "forebyggende",
+      "planlagt": "2025-02-06",
+      "utfort": "2025-02-06",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0013",
+      "maskin_id": "KP-MASK-ANL-06",
+      "type": "forebyggende",
+      "planlagt": "2025-02-10",
+      "utfort": "2025-02-10",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0014",
+      "maskin_id": "KP-MASK-TRA-01",
+      "type": "forebyggende",
+      "planlagt": "2025-02-12",
+      "utfort": "2025-02-12",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0015",
+      "maskin_id": "KP-MASK-SRV-02",
+      "type": "forebyggende",
+      "planlagt": "2025-02-13",
+      "utfort": "2025-02-13",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0016",
+      "maskin_id": "KP-MASK-REN-03",
+      "type": "forebyggende",
+      "planlagt": "2025-02-14",
+      "utfort": "2025-02-14",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0017",
+      "maskin_id": "KP-MASK-ANL-03",
+      "type": "forebyggende",
+      "planlagt": "2025-02-16",
+      "utfort": "2025-02-16",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0018",
+      "maskin_id": "KP-MASK-ANL-02",
+      "type": "forebyggende",
+      "planlagt": "2025-02-18",
+      "utfort": "2025-02-18",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0019",
+      "maskin_id": "KP-MASK-ANL-04",
+      "type": "forebyggende",
+      "planlagt": "2025-02-20",
+      "utfort": "2025-02-20",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0020",
+      "maskin_id": "KP-MASK-REN-04",
+      "type": "forebyggende",
+      "planlagt": "2025-02-20",
+      "utfort": "2025-02-20",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0021",
+      "maskin_id": "KP-MASK-HEI-02",
+      "type": "forebyggende",
+      "planlagt": "2025-02-24",
+      "utfort": "2025-02-24",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 9500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0022",
+      "maskin_id": "KP-MASK-REN-02",
+      "type": "forebyggende",
+      "planlagt": "2025-03-04",
+      "utfort": "2025-03-04",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0023",
+      "maskin_id": "KP-MASK-VAK-02",
+      "type": "forebyggende",
+      "planlagt": "2025-03-06",
+      "utfort": "2025-03-06",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0024",
+      "maskin_id": "KP-MASK-SIK-06",
+      "type": "forebyggende",
+      "planlagt": "2025-03-12",
+      "utfort": "2025-03-12",
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0025",
+      "maskin_id": "KP-MASK-TRA-02",
+      "type": "forebyggende",
+      "planlagt": "2025-03-12",
+      "utfort": "2025-03-12",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0026",
+      "maskin_id": "KP-MASK-HEI-01",
+      "type": "forebyggende",
+      "planlagt": "2025-03-18",
+      "utfort": "2025-03-18",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 9500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0027",
+      "maskin_id": "KP-MASK-SRV-01",
+      "type": "forebyggende",
+      "planlagt": "2025-03-23",
+      "utfort": "2025-03-23",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0028",
+      "maskin_id": "KP-MASK-SRV-03",
+      "type": "forebyggende",
+      "planlagt": "2025-03-24",
+      "utfort": "2025-03-24",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0029",
+      "maskin_id": "KP-MASK-TRA-01",
+      "type": "forebyggende",
+      "planlagt": "2025-03-29",
+      "utfort": "2025-03-29",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0030",
+      "maskin_id": "KP-MASK-REN-01",
+      "type": "forebyggende",
+      "planlagt": "2025-04-03",
+      "utfort": "2025-04-03",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0031",
+      "maskin_id": "KP-MASK-VAK-01",
+      "type": "forebyggende",
+      "planlagt": "2025-04-07",
+      "utfort": "2025-04-07",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0032",
+      "maskin_id": "KP-MASK-SRV-04",
+      "type": "forebyggende",
+      "planlagt": "2025-04-13",
+      "utfort": "2025-04-13",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0033",
+      "maskin_id": "KP-MASK-REN-03",
+      "type": "forebyggende",
+      "planlagt": "2025-04-15",
+      "utfort": "2025-04-15",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0034",
+      "maskin_id": "KP-MASK-SRV-08",
+      "type": "forebyggende",
+      "planlagt": "2025-04-15",
+      "utfort": "2025-04-15",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0035",
+      "maskin_id": "KP-MASK-ANL-10",
+      "type": "forebyggende",
+      "planlagt": "2025-04-16",
+      "utfort": "2025-04-16",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0036",
+      "maskin_id": "KP-MASK-ANL-05",
+      "type": "forebyggende",
+      "planlagt": "2025-04-20",
+      "utfort": "2025-04-20",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0037",
+      "maskin_id": "KP-MASK-REN-04",
+      "type": "forebyggende",
+      "planlagt": "2025-04-21",
+      "utfort": "2025-04-21",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0038",
+      "maskin_id": "KP-MASK-ANL-01",
+      "type": "forebyggende",
+      "planlagt": "2025-04-22",
+      "utfort": "2025-04-22",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0039",
+      "maskin_id": "KP-MASK-TRA-02",
+      "type": "forebyggende",
+      "planlagt": "2025-04-26",
+      "utfort": "2025-04-26",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0040",
+      "maskin_id": "KP-MASK-LAD-01",
+      "type": "forebyggende",
+      "planlagt": "2025-05-02",
+      "utfort": "2025-05-02",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0041",
+      "maskin_id": "KP-MASK-REN-02",
+      "type": "forebyggende",
+      "planlagt": "2025-05-03",
+      "utfort": "2025-05-03",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0042",
+      "maskin_id": "KP-MASK-VAK-02",
+      "type": "forebyggende",
+      "planlagt": "2025-05-05",
+      "utfort": "2025-05-05",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0043",
+      "maskin_id": "KP-MASK-ANL-06",
+      "type": "forebyggende",
+      "planlagt": "2025-05-11",
+      "utfort": "2025-05-11",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0044",
+      "maskin_id": "KP-MASK-TRA-01",
+      "type": "forebyggende",
+      "planlagt": "2025-05-13",
+      "utfort": "2025-05-13",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0045",
+      "maskin_id": "KP-MASK-SRV-02",
+      "type": "forebyggende",
+      "planlagt": "2025-05-14",
+      "utfort": "2025-05-14",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0046",
+      "maskin_id": "KP-MASK-ANL-03",
+      "type": "forebyggende",
+      "planlagt": "2025-05-17",
+      "utfort": "2025-05-17",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0047",
+      "maskin_id": "KP-MASK-ANL-02",
+      "type": "forebyggende",
+      "planlagt": "2025-05-19",
+      "utfort": "2025-05-19",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0048",
+      "maskin_id": "KP-MASK-ANL-04",
+      "type": "forebyggende",
+      "planlagt": "2025-05-21",
+      "utfort": "2025-05-21",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0049",
+      "maskin_id": "KP-MASK-HEI-02",
+      "type": "forebyggende",
+      "planlagt": "2025-05-25",
+      "utfort": "2025-05-25",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 9500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0050",
+      "maskin_id": "KP-MASK-REN-01",
+      "type": "forebyggende",
+      "planlagt": "2025-06-02",
+      "utfort": "2025-06-02",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0051",
+      "maskin_id": "KP-MASK-VAK-01",
+      "type": "forebyggende",
+      "planlagt": "2025-06-06",
+      "utfort": "2025-06-06",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0052",
+      "maskin_id": "KP-MASK-TRA-02",
+      "type": "forebyggende",
+      "planlagt": "2025-06-10",
+      "utfort": "2025-06-10",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0053",
+      "maskin_id": "KP-MASK-REN-03",
+      "type": "forebyggende",
+      "planlagt": "2025-06-14",
+      "utfort": "2025-06-14",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0054",
+      "maskin_id": "KP-MASK-HEI-01",
+      "type": "forebyggende",
+      "planlagt": "2025-06-16",
+      "utfort": "2025-06-16",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 9500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0055",
+      "maskin_id": "KP-MASK-REN-04",
+      "type": "forebyggende",
+      "planlagt": "2025-06-20",
+      "utfort": "2025-06-20",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0056",
+      "maskin_id": "KP-MASK-SIK-05",
+      "type": "forebyggende",
+      "planlagt": "2025-06-20",
+      "utfort": "2025-06-20",
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0057",
+      "maskin_id": "KP-MASK-SRV-01",
+      "type": "forebyggende",
+      "planlagt": "2025-06-21",
+      "utfort": "2025-06-21",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0058",
+      "maskin_id": "KP-MASK-SRV-03",
+      "type": "forebyggende",
+      "planlagt": "2025-06-22",
+      "utfort": "2025-06-22",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0059",
+      "maskin_id": "KP-MASK-TRA-01",
+      "type": "forebyggende",
+      "planlagt": "2025-06-27",
+      "utfort": "2025-06-27",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0060",
+      "maskin_id": "KP-MASK-SIK-04",
+      "type": "forebyggende",
+      "planlagt": "2025-06-28",
+      "utfort": "2025-06-28",
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0061",
+      "maskin_id": "KP-MASK-ANL-11",
+      "type": "forebyggende",
+      "planlagt": "2025-06-30",
+      "utfort": "2025-06-30",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0062",
+      "maskin_id": "KP-MASK-SRV-07",
+      "type": "forebyggende",
+      "planlagt": "2025-06-30",
+      "utfort": "2025-06-30",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0063",
+      "maskin_id": "KP-MASK-REN-02",
+      "type": "forebyggende",
+      "planlagt": "2025-07-02",
+      "utfort": "2025-07-02",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0064",
+      "maskin_id": "KP-MASK-SRV-05",
+      "type": "forebyggende",
+      "planlagt": "2025-07-04",
+      "utfort": "2025-07-04",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0065",
+      "maskin_id": "KP-MASK-VAK-02",
+      "type": "forebyggende",
+      "planlagt": "2025-07-04",
+      "utfort": "2025-07-04",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0066",
+      "maskin_id": "KP-MASK-ANL-09",
+      "type": "forebyggende",
+      "planlagt": "2025-07-06",
+      "utfort": "2025-07-06",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0067",
+      "maskin_id": "KP-MASK-SRV-04",
+      "type": "forebyggende",
+      "planlagt": "2025-07-12",
+      "utfort": "2025-07-12",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0068",
+      "maskin_id": "KP-MASK-SRV-08",
+      "type": "forebyggende",
+      "planlagt": "2025-07-14",
+      "utfort": "2025-07-14",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0069",
+      "maskin_id": "KP-MASK-ANL-05",
+      "type": "forebyggende",
+      "planlagt": "2025-07-19",
+      "utfort": "2025-07-19",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0070",
+      "maskin_id": "KP-MASK-ANL-01",
+      "type": "forebyggende",
+      "planlagt": "2025-07-21",
+      "utfort": "2025-07-21",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0071",
+      "maskin_id": "KP-MASK-ANL-07",
+      "type": "forebyggende",
+      "planlagt": "2025-07-21",
+      "utfort": "2025-07-21",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0072",
+      "maskin_id": "KP-MASK-TRA-02",
+      "type": "forebyggende",
+      "planlagt": "2025-07-25",
+      "utfort": "2025-07-25",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0073",
+      "maskin_id": "KP-MASK-SRV-06",
+      "type": "forebyggende",
+      "planlagt": "2025-07-28",
+      "utfort": "2025-07-28",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0074",
+      "maskin_id": "KP-MASK-REN-01",
+      "type": "forebyggende",
+      "planlagt": "2025-08-01",
+      "utfort": "2025-08-01",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0075",
+      "maskin_id": "KP-MASK-VAK-01",
+      "type": "forebyggende",
+      "planlagt": "2025-08-05",
+      "utfort": "2025-08-05",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0076",
+      "maskin_id": "KP-MASK-ANL-06",
+      "type": "forebyggende",
+      "planlagt": "2025-08-09",
+      "utfort": "2025-08-09",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0077",
+      "maskin_id": "KP-MASK-TRA-01",
+      "type": "forebyggende",
+      "planlagt": "2025-08-11",
+      "utfort": "2025-08-11",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0078",
+      "maskin_id": "KP-MASK-SRV-02",
+      "type": "forebyggende",
+      "planlagt": "2025-08-12",
+      "utfort": "2025-08-12",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0079",
+      "maskin_id": "KP-MASK-REN-03",
+      "type": "forebyggende",
+      "planlagt": "2025-08-13",
+      "utfort": "2025-08-13",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0080",
+      "maskin_id": "KP-MASK-ANL-03",
+      "type": "forebyggende",
+      "planlagt": "2025-08-15",
+      "utfort": "2025-08-15",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0081",
+      "maskin_id": "KP-MASK-ANL-02",
+      "type": "forebyggende",
+      "planlagt": "2025-08-17",
+      "utfort": "2025-08-17",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0082",
+      "maskin_id": "KP-MASK-ANL-04",
+      "type": "forebyggende",
+      "planlagt": "2025-08-19",
+      "utfort": "2025-08-19",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0083",
+      "maskin_id": "KP-MASK-REN-04",
+      "type": "forebyggende",
+      "planlagt": "2025-08-19",
+      "utfort": "2025-08-19",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0084",
+      "maskin_id": "KP-MASK-HEI-02",
+      "type": "forebyggende",
+      "planlagt": "2025-08-23",
+      "utfort": "2025-08-23",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 9500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0085",
+      "maskin_id": "KP-MASK-REN-02",
+      "type": "forebyggende",
+      "planlagt": "2025-08-31",
+      "utfort": "2025-08-31",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0086",
+      "maskin_id": "KP-MASK-VAK-02",
+      "type": "forebyggende",
+      "planlagt": "2025-09-02",
+      "utfort": "2025-09-02",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0087",
+      "maskin_id": "KP-MASK-SIK-06",
+      "type": "forebyggende",
+      "planlagt": "2025-09-08",
+      "utfort": "2025-09-08",
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0088",
+      "maskin_id": "KP-MASK-TRA-02",
+      "type": "forebyggende",
+      "planlagt": "2025-09-08",
+      "utfort": "2025-09-08",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0089",
+      "maskin_id": "KP-MASK-HEI-01",
+      "type": "forebyggende",
+      "planlagt": "2025-09-14",
+      "utfort": "2025-09-14",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 9500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0090",
+      "maskin_id": "KP-MASK-SIK-01",
+      "type": "forebyggende",
+      "planlagt": "2025-09-15",
+      "utfort": "2025-09-15",
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0091",
+      "maskin_id": "KP-MASK-ANL-08",
+      "type": "forebyggende",
+      "planlagt": "2025-09-19",
+      "utfort": "2025-09-19",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0092",
+      "maskin_id": "KP-MASK-SRV-01",
+      "type": "forebyggende",
+      "planlagt": "2025-09-19",
+      "utfort": "2025-09-19",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0093",
+      "maskin_id": "KP-MASK-SRV-03",
+      "type": "forebyggende",
+      "planlagt": "2025-09-20",
+      "utfort": "2025-09-20",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0094",
+      "maskin_id": "KP-MASK-TRA-01",
+      "type": "forebyggende",
+      "planlagt": "2025-09-25",
+      "utfort": "2025-09-25",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0095",
+      "maskin_id": "KP-MASK-REN-01",
+      "type": "forebyggende",
+      "planlagt": "2025-09-30",
+      "utfort": "2025-09-30",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0096",
+      "maskin_id": "KP-MASK-VAK-01",
+      "type": "forebyggende",
+      "planlagt": "2025-10-04",
+      "utfort": "2025-10-04",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0097",
+      "maskin_id": "KP-MASK-SRV-04",
+      "type": "forebyggende",
+      "planlagt": "2025-10-10",
+      "utfort": "2025-10-10",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0098",
+      "maskin_id": "KP-MASK-REN-03",
+      "type": "forebyggende",
+      "planlagt": "2025-10-12",
+      "utfort": "2025-10-12",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0099",
+      "maskin_id": "KP-MASK-SRV-08",
+      "type": "forebyggende",
+      "planlagt": "2025-10-12",
+      "utfort": "2025-10-12",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0100",
+      "maskin_id": "KP-MASK-ANL-05",
+      "type": "forebyggende",
+      "planlagt": "2025-10-17",
+      "utfort": "2025-10-17",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0101",
+      "maskin_id": "KP-MASK-REN-04",
+      "type": "forebyggende",
+      "planlagt": "2025-10-18",
+      "utfort": "2025-10-18",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0102",
+      "maskin_id": "KP-MASK-ANL-01",
+      "type": "forebyggende",
+      "planlagt": "2025-10-19",
+      "utfort": "2025-10-19",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0103",
+      "maskin_id": "KP-MASK-TRA-02",
+      "type": "forebyggende",
+      "planlagt": "2025-10-23",
+      "utfort": "2025-10-23",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0104",
+      "maskin_id": "KP-MASK-LAD-01",
+      "type": "forebyggende",
+      "planlagt": "2025-10-29",
+      "utfort": "2025-10-29",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0105",
+      "maskin_id": "KP-MASK-REN-02",
+      "type": "forebyggende",
+      "planlagt": "2025-10-30",
+      "utfort": "2025-10-30",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0106",
+      "maskin_id": "KP-MASK-VAK-02",
+      "type": "forebyggende",
+      "planlagt": "2025-11-01",
+      "utfort": "2025-11-01",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0107",
+      "maskin_id": "KP-MASK-SIK-03",
+      "type": "forebyggende",
+      "planlagt": "2025-11-03",
+      "utfort": "2025-11-03",
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0108",
+      "maskin_id": "KP-MASK-ANL-06",
+      "type": "forebyggende",
+      "planlagt": "2025-11-07",
+      "utfort": "2025-11-07",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0109",
+      "maskin_id": "KP-MASK-TRA-01",
+      "type": "forebyggende",
+      "planlagt": "2025-11-09",
+      "utfort": "2025-11-09",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0110",
+      "maskin_id": "KP-MASK-SRV-02",
+      "type": "forebyggende",
+      "planlagt": "2025-11-10",
+      "utfort": "2025-11-10",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0111",
+      "maskin_id": "KP-MASK-ANL-03",
+      "type": "forebyggende",
+      "planlagt": "2025-11-13",
+      "utfort": "2025-11-13",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0112",
+      "maskin_id": "KP-MASK-ANL-02",
+      "type": "forebyggende",
+      "planlagt": "2025-11-15",
+      "utfort": "2025-11-15",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0113",
+      "maskin_id": "KP-MASK-SIK-02",
+      "type": "forebyggende",
+      "planlagt": "2025-11-16",
+      "utfort": "2025-11-16",
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0114",
+      "maskin_id": "KP-MASK-ANL-04",
+      "type": "forebyggende",
+      "planlagt": "2025-11-17",
+      "utfort": "2025-11-17",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0115",
+      "maskin_id": "KP-MASK-HEI-02",
+      "type": "forebyggende",
+      "planlagt": "2025-11-21",
+      "utfort": "2025-11-21",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 9500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0116",
+      "maskin_id": "KP-MASK-REN-01",
+      "type": "forebyggende",
+      "planlagt": "2025-11-29",
+      "utfort": "2025-11-29",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0117",
+      "maskin_id": "KP-MASK-VAK-01",
+      "type": "forebyggende",
+      "planlagt": "2025-12-03",
+      "utfort": "2025-12-03",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0118",
+      "maskin_id": "KP-MASK-TRA-02",
+      "type": "forebyggende",
+      "planlagt": "2025-12-07",
+      "utfort": "2025-12-07",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0119",
+      "maskin_id": "KP-MASK-REN-03",
+      "type": "forebyggende",
+      "planlagt": "2025-12-11",
+      "utfort": "2025-12-11",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0120",
+      "maskin_id": "KP-MASK-HEI-01",
+      "type": "forebyggende",
+      "planlagt": "2025-12-13",
+      "utfort": "2025-12-13",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 9500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0121",
+      "maskin_id": "KP-MASK-SIK-07",
+      "type": "forebyggende",
+      "planlagt": "2025-12-14",
+      "utfort": "2025-12-14",
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0122",
+      "maskin_id": "KP-MASK-REN-04",
+      "type": "forebyggende",
+      "planlagt": "2025-12-17",
+      "utfort": "2025-12-17",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0123",
+      "maskin_id": "KP-MASK-SIK-05",
+      "type": "forebyggende",
+      "planlagt": "2025-12-17",
+      "utfort": "2025-12-17",
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0124",
+      "maskin_id": "KP-MASK-SRV-01",
+      "type": "forebyggende",
+      "planlagt": "2025-12-18",
+      "utfort": "2025-12-18",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0125",
+      "maskin_id": "KP-MASK-SRV-03",
+      "type": "forebyggende",
+      "planlagt": "2025-12-19",
+      "utfort": "2025-12-19",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0126",
+      "maskin_id": "KP-MASK-TRA-01",
+      "type": "forebyggende",
+      "planlagt": "2025-12-24",
+      "utfort": "2025-12-24",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0127",
+      "maskin_id": "KP-MASK-SRV-07",
+      "type": "forebyggende",
+      "planlagt": "2025-12-27",
+      "utfort": "2025-12-27",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0128",
+      "maskin_id": "KP-MASK-REN-02",
+      "type": "forebyggende",
+      "planlagt": "2025-12-29",
+      "utfort": "2025-12-29",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0129",
+      "maskin_id": "KP-MASK-SRV-05",
+      "type": "forebyggende",
+      "planlagt": "2025-12-31",
+      "utfort": "2025-12-31",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0130",
+      "maskin_id": "KP-MASK-VAK-02",
+      "type": "forebyggende",
+      "planlagt": "2025-12-31",
+      "utfort": "2025-12-31",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0131",
+      "maskin_id": "KP-MASK-SRV-04",
+      "type": "forebyggende",
+      "planlagt": "2026-01-08",
+      "utfort": "2026-01-08",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0132",
+      "maskin_id": "KP-MASK-SRV-08",
+      "type": "forebyggende",
+      "planlagt": "2026-01-10",
+      "utfort": "2026-01-10",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0133",
+      "maskin_id": "KP-MASK-ANL-05",
+      "type": "forebyggende",
+      "planlagt": "2026-01-15",
+      "utfort": "2026-01-15",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0134",
+      "maskin_id": "KP-MASK-ANL-01",
+      "type": "forebyggende",
+      "planlagt": "2026-01-17",
+      "utfort": "2026-01-17",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0135",
+      "maskin_id": "KP-MASK-TRA-02",
+      "type": "forebyggende",
+      "planlagt": "2026-01-21",
+      "utfort": "2026-01-21",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0136",
+      "maskin_id": "KP-MASK-SRV-06",
+      "type": "forebyggende",
+      "planlagt": "2026-01-24",
+      "utfort": "2026-01-24",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0137",
+      "maskin_id": "KP-MASK-REN-01",
+      "type": "forebyggende",
+      "planlagt": "2026-01-28",
+      "utfort": "2026-01-28",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0138",
+      "maskin_id": "KP-MASK-VAK-01",
+      "type": "forebyggende",
+      "planlagt": "2026-02-01",
+      "utfort": "2026-02-01",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0139",
+      "maskin_id": "KP-MASK-ANL-06",
+      "type": "forebyggende",
+      "planlagt": "2026-02-05",
+      "utfort": "2026-02-05",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0140",
+      "maskin_id": "KP-MASK-TRA-01",
+      "type": "forebyggende",
+      "planlagt": "2026-02-07",
+      "utfort": "2026-02-07",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0141",
+      "maskin_id": "KP-MASK-SRV-02",
+      "type": "forebyggende",
+      "planlagt": "2026-02-08",
+      "utfort": "2026-02-08",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0142",
+      "maskin_id": "KP-MASK-REN-03",
+      "type": "forebyggende",
+      "planlagt": "2026-02-09",
+      "utfort": "2026-02-09",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0143",
+      "maskin_id": "KP-MASK-ANL-03",
+      "type": "forebyggende",
+      "planlagt": "2026-02-11",
+      "utfort": "2026-02-11",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0144",
+      "maskin_id": "KP-MASK-ANL-02",
+      "type": "forebyggende",
+      "planlagt": "2026-02-13",
+      "utfort": "2026-02-13",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0145",
+      "maskin_id": "KP-MASK-ANL-04",
+      "type": "forebyggende",
+      "planlagt": "2026-02-15",
+      "utfort": "2026-02-15",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0146",
+      "maskin_id": "KP-MASK-REN-04",
+      "type": "forebyggende",
+      "planlagt": "2026-02-15",
+      "utfort": "2026-02-15",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0147",
+      "maskin_id": "KP-MASK-HEI-02",
+      "type": "forebyggende",
+      "planlagt": "2026-02-19",
+      "utfort": "2026-02-19",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 9500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0148",
+      "maskin_id": "KP-MASK-REN-02",
+      "type": "forebyggende",
+      "planlagt": "2026-02-27",
+      "utfort": "2026-02-27",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0149",
+      "maskin_id": "KP-MASK-VAK-02",
+      "type": "forebyggende",
+      "planlagt": "2026-03-01",
+      "utfort": "2026-03-01",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0150",
+      "maskin_id": "KP-MASK-SIK-06",
+      "type": "forebyggende",
+      "planlagt": "2026-03-07",
+      "utfort": "2026-03-07",
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0151",
+      "maskin_id": "KP-MASK-TRA-02",
+      "type": "forebyggende",
+      "planlagt": "2026-03-07",
+      "utfort": "2026-03-07",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0152",
+      "maskin_id": "KP-MASK-HEI-01",
+      "type": "forebyggende",
+      "planlagt": "2026-03-13",
+      "utfort": "2026-03-13",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 9500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0153",
+      "maskin_id": "KP-MASK-SRV-01",
+      "type": "forebyggende",
+      "planlagt": "2026-03-18",
+      "utfort": "2026-03-18",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0154",
+      "maskin_id": "KP-MASK-SRV-03",
+      "type": "forebyggende",
+      "planlagt": "2026-03-19",
+      "utfort": "2026-03-19",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0155",
+      "maskin_id": "KP-MASK-TRA-01",
+      "type": "forebyggende",
+      "planlagt": "2026-03-24",
+      "utfort": "2026-03-24",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0156",
+      "maskin_id": "KP-MASK-REN-01",
+      "type": "forebyggende",
+      "planlagt": "2026-03-29",
+      "utfort": "2026-03-29",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0157",
+      "maskin_id": "KP-MASK-VAK-01",
+      "type": "forebyggende",
+      "planlagt": "2026-04-02",
+      "utfort": "2026-04-02",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0158",
+      "maskin_id": "KP-MASK-SRV-04",
+      "type": "forebyggende",
+      "planlagt": "2026-04-08",
+      "utfort": "2026-04-08",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0159",
+      "maskin_id": "KP-MASK-REN-03",
+      "type": "forebyggende",
+      "planlagt": "2026-04-10",
+      "utfort": "2026-04-10",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0160",
+      "maskin_id": "KP-MASK-SRV-08",
+      "type": "forebyggende",
+      "planlagt": "2026-04-10",
+      "utfort": "2026-04-10",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0161",
+      "maskin_id": "KP-MASK-ANL-05",
+      "type": "forebyggende",
+      "planlagt": "2026-04-15",
+      "utfort": "2026-04-15",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0162",
+      "maskin_id": "KP-MASK-ANL-10",
+      "type": "forebyggende",
+      "planlagt": "2026-04-16",
+      "utfort": "2026-04-16",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0163",
+      "maskin_id": "KP-MASK-REN-04",
+      "type": "forebyggende",
+      "planlagt": "2026-04-16",
+      "utfort": "2026-04-16",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0164",
+      "maskin_id": "KP-MASK-ANL-01",
+      "type": "forebyggende",
+      "planlagt": "2026-04-17",
+      "utfort": "2026-04-17",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0165",
+      "maskin_id": "KP-MASK-TRA-02",
+      "type": "forebyggende",
+      "planlagt": "2026-04-21",
+      "utfort": "2026-04-21",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0166",
+      "maskin_id": "KP-MASK-LAD-01",
+      "type": "forebyggende",
+      "planlagt": "2026-04-27",
+      "utfort": "2026-04-27",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0167",
+      "maskin_id": "KP-MASK-REN-02",
+      "type": "forebyggende",
+      "planlagt": "2026-04-28",
+      "utfort": "2026-04-28",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0168",
+      "maskin_id": "KP-MASK-VAK-02",
+      "type": "forebyggende",
+      "planlagt": "2026-04-30",
+      "utfort": "2026-04-30",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0169",
+      "maskin_id": "KP-MASK-ANL-06",
+      "type": "forebyggende",
+      "planlagt": "2026-05-06",
+      "utfort": "2026-05-06",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0170",
+      "maskin_id": "KP-MASK-TRA-01",
+      "type": "forebyggende",
+      "planlagt": "2026-05-08",
+      "utfort": "2026-05-08",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0171",
+      "maskin_id": "KP-MASK-SRV-02",
+      "type": "forebyggende",
+      "planlagt": "2026-05-09",
+      "utfort": "2026-05-09",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0172",
+      "maskin_id": "KP-MASK-ANL-03",
+      "type": "forebyggende",
+      "planlagt": "2026-05-12",
+      "utfort": "2026-05-12",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0173",
+      "maskin_id": "KP-MASK-ANL-02",
+      "type": "forebyggende",
+      "planlagt": "2026-05-14",
+      "utfort": "2026-05-14",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0174",
+      "maskin_id": "KP-MASK-ANL-04",
+      "type": "forebyggende",
+      "planlagt": "2026-05-16",
+      "utfort": "2026-05-16",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0175",
+      "maskin_id": "KP-MASK-HEI-02",
+      "type": "forebyggende",
+      "planlagt": "2026-05-20",
+      "utfort": "2026-05-20",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 9500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0176",
+      "maskin_id": "KP-MASK-REN-01",
+      "type": "forebyggende",
+      "planlagt": "2026-05-28",
+      "utfort": "2026-05-28",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0177",
+      "maskin_id": "KP-MASK-VAK-01",
+      "type": "forebyggende",
+      "planlagt": "2026-06-01",
+      "utfort": "2026-06-01",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0178",
+      "maskin_id": "KP-MASK-TRA-02",
+      "type": "forebyggende",
+      "planlagt": "2026-06-05",
+      "utfort": "2026-06-05",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0179",
+      "maskin_id": "KP-MASK-REN-03",
+      "type": "forebyggende",
+      "planlagt": "2026-06-09",
+      "utfort": "2026-06-09",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0180",
+      "maskin_id": "KP-MASK-HEI-01",
+      "type": "forebyggende",
+      "planlagt": "2026-06-11",
+      "utfort": "2026-06-11",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 9500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0181",
+      "maskin_id": "KP-MASK-REN-04",
+      "type": "forebyggende",
+      "planlagt": "2026-06-15",
+      "utfort": "2026-06-15",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0182",
+      "maskin_id": "KP-MASK-SIK-05",
+      "type": "forebyggende",
+      "planlagt": "2026-06-15",
+      "utfort": "2026-06-15",
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0183",
+      "maskin_id": "KP-MASK-SRV-01",
+      "type": "forebyggende",
+      "planlagt": "2026-06-16",
+      "utfort": "2026-06-16",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0184",
+      "maskin_id": "KP-MASK-SRV-03",
+      "type": "forebyggende",
+      "planlagt": "2026-06-17",
+      "utfort": "2026-06-17",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0185",
+      "maskin_id": "KP-MASK-TRA-01",
+      "type": "forebyggende",
+      "planlagt": "2026-06-22",
+      "utfort": "2026-06-22",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0186",
+      "maskin_id": "KP-MASK-SRV-07",
+      "type": "forebyggende",
+      "planlagt": "2026-06-25",
+      "utfort": "2026-06-25",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0187",
+      "maskin_id": "KP-MASK-REN-02",
+      "type": "forebyggende",
+      "planlagt": "2026-06-27",
+      "utfort": "2026-06-27",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0188",
+      "maskin_id": "KP-MASK-SIK-04",
+      "type": "forebyggende",
+      "planlagt": "2026-06-28",
+      "utfort": "2026-06-28",
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0189",
+      "maskin_id": "KP-MASK-SRV-05",
+      "type": "forebyggende",
+      "planlagt": "2026-06-29",
+      "utfort": "2026-06-29",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0190",
+      "maskin_id": "KP-MASK-VAK-02",
+      "type": "forebyggende",
+      "planlagt": "2026-06-29",
+      "utfort": "2026-06-29",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0191",
+      "maskin_id": "KP-MASK-ANL-11",
+      "type": "forebyggende",
+      "planlagt": "2026-06-30",
+      "utfort": "2026-06-30",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0192",
+      "maskin_id": "KP-MASK-ANL-09",
+      "type": "forebyggende",
+      "planlagt": "2026-07-06",
+      "utfort": "2026-07-06",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0193",
+      "maskin_id": "KP-MASK-SRV-04",
+      "type": "forebyggende",
+      "planlagt": "2026-07-07",
+      "utfort": "2026-07-07",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0194",
+      "maskin_id": "KP-MASK-SRV-08",
+      "type": "forebyggende",
+      "planlagt": "2026-07-09",
+      "utfort": "2026-07-09",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0195",
+      "maskin_id": "KP-MASK-ANL-05",
+      "type": "forebyggende",
+      "planlagt": "2026-07-14",
+      "utfort": "2026-07-14",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0196",
+      "maskin_id": "KP-MASK-ANL-01",
+      "type": "forebyggende",
+      "planlagt": "2026-07-16",
+      "utfort": "2026-07-16",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0197",
+      "maskin_id": "KP-MASK-TRA-02",
+      "type": "forebyggende",
+      "planlagt": "2026-07-20",
+      "utfort": "2026-07-20",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0198",
+      "maskin_id": "KP-MASK-ANL-07",
+      "type": "forebyggende",
+      "planlagt": "2026-07-21",
+      "utfort": "2026-07-21",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0199",
+      "maskin_id": "KP-MASK-SRV-06",
+      "type": "forebyggende",
+      "planlagt": "2026-07-23",
+      "utfort": "2026-07-23",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0200",
+      "maskin_id": "KP-MASK-REN-01",
+      "type": "forebyggende",
+      "planlagt": "2026-07-27",
+      "utfort": "2026-07-27",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0201",
+      "maskin_id": "KP-MASK-VAK-01",
+      "type": "forebyggende",
+      "planlagt": "2026-07-31",
+      "utfort": "2026-07-31",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0202",
+      "maskin_id": "KP-MASK-ANL-06",
+      "type": "forebyggende",
+      "planlagt": "2026-08-04",
+      "utfort": "2026-08-04",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0203",
+      "maskin_id": "KP-MASK-TRA-01",
+      "type": "forebyggende",
+      "planlagt": "2026-08-06",
+      "utfort": "2026-08-06",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0204",
+      "maskin_id": "KP-MASK-SRV-02",
+      "type": "forebyggende",
+      "planlagt": "2026-08-07",
+      "utfort": "2026-08-07",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0205",
+      "maskin_id": "KP-MASK-REN-03",
+      "type": "forebyggende",
+      "planlagt": "2026-08-08",
+      "utfort": "2026-08-08",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0206",
+      "maskin_id": "KP-MASK-ANL-03",
+      "type": "forebyggende",
+      "planlagt": "2026-08-10",
+      "utfort": "2026-08-10",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0207",
+      "maskin_id": "KP-MASK-ANL-02",
+      "type": "forebyggende",
+      "planlagt": "2026-08-12",
+      "utfort": "2026-08-12",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0208",
+      "maskin_id": "KP-MASK-ANL-04",
+      "type": "forebyggende",
+      "planlagt": "2026-08-14",
+      "utfort": "2026-08-14",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0209",
+      "maskin_id": "KP-MASK-REN-04",
+      "type": "forebyggende",
+      "planlagt": "2026-08-14",
+      "utfort": "2026-08-14",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0210",
+      "maskin_id": "KP-MASK-HEI-02",
+      "type": "forebyggende",
+      "planlagt": "2026-08-18",
+      "utfort": "2026-08-18",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 9500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0211",
+      "maskin_id": "KP-MASK-REN-02",
+      "type": "forebyggende",
+      "planlagt": "2026-08-26",
+      "utfort": "2026-08-26",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0212",
+      "maskin_id": "KP-MASK-VAK-02",
+      "type": "forebyggende",
+      "planlagt": "2026-08-28",
+      "utfort": "2026-08-28",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0213",
+      "maskin_id": "KP-MASK-SIK-06",
+      "type": "forebyggende",
+      "planlagt": "2026-09-03",
+      "utfort": "2026-09-03",
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0214",
+      "maskin_id": "KP-MASK-TRA-02",
+      "type": "forebyggende",
+      "planlagt": "2026-09-03",
+      "utfort": "2026-09-03",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0215",
+      "maskin_id": "KP-MASK-HEI-01",
+      "type": "forebyggende",
+      "planlagt": "2026-09-09",
+      "utfort": "2026-09-09",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 9500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0216",
+      "maskin_id": "KP-MASK-SRV-01",
+      "type": "forebyggende",
+      "planlagt": "2026-09-14",
+      "utfort": "2026-09-14",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0217",
+      "maskin_id": "KP-MASK-SIK-01",
+      "type": "forebyggende",
+      "planlagt": "2026-09-15",
+      "utfort": "2026-09-15",
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0218",
+      "maskin_id": "KP-MASK-SRV-03",
+      "type": "forebyggende",
+      "planlagt": "2026-09-15",
+      "utfort": "2026-09-15",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0219",
+      "maskin_id": "KP-MASK-ANL-08",
+      "type": "forebyggende",
+      "planlagt": "2026-09-19",
+      "utfort": "2026-09-19",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0220",
+      "maskin_id": "KP-MASK-REN-02",
+      "type": "korrektiv",
+      "planlagt": "2026-09-19",
+      "utfort": "2026-09-19",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 1600,
+      "beskrivelse": "Rettet: Hjul blokkert"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0221",
+      "maskin_id": "KP-MASK-TRA-01",
+      "type": "forebyggende",
+      "planlagt": "2026-09-20",
+      "utfort": "2026-09-20",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0222",
+      "maskin_id": "KP-MASK-REN-01",
+      "type": "forebyggende",
+      "planlagt": "2026-09-25",
+      "utfort": "2026-09-25",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0223",
+      "maskin_id": "KP-MASK-VAK-01",
+      "type": "forebyggende",
+      "planlagt": "2026-09-29",
+      "utfort": "2026-09-29",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0224",
+      "maskin_id": "KP-MASK-SRV-04",
+      "type": "forebyggende",
+      "planlagt": "2026-10-05",
+      "utfort": "2026-10-05",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0225",
+      "maskin_id": "KP-MASK-ANL-03",
+      "type": "korrektiv",
+      "planlagt": "2026-10-06",
+      "utfort": "2026-10-06",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 4450,
+      "beskrivelse": "Rettet: Høytrykksvakt løste ut"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0226",
+      "maskin_id": "KP-MASK-REN-03",
+      "type": "forebyggende",
+      "planlagt": "2026-10-07",
+      "utfort": "2026-10-07",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0227",
+      "maskin_id": "KP-MASK-SRV-08",
+      "type": "forebyggende",
+      "planlagt": "2026-10-07",
+      "utfort": "2026-10-07",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0228",
+      "maskin_id": "KP-MASK-ANL-05",
+      "type": "forebyggende",
+      "planlagt": "2026-10-12",
+      "utfort": "2026-10-12",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0229",
+      "maskin_id": "KP-MASK-REN-04",
+      "type": "forebyggende",
+      "planlagt": "2026-10-13",
+      "utfort": "2026-10-13",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0230",
+      "maskin_id": "KP-MASK-ANL-01",
+      "type": "forebyggende",
+      "planlagt": "2026-10-14",
+      "utfort": "2026-10-14",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0231",
+      "maskin_id": "KP-MASK-TRA-02",
+      "type": "forebyggende",
+      "planlagt": "2026-10-18",
+      "utfort": "2026-10-18",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (45 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0232",
+      "maskin_id": "KP-MASK-LAD-01",
+      "type": "forebyggende",
+      "planlagt": "2026-10-24",
+      "utfort": "2026-10-24",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (180 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0233",
+      "maskin_id": "KP-MASK-REN-02",
+      "type": "forebyggende",
+      "planlagt": "2026-10-25",
+      "utfort": "2026-10-25",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0234",
+      "maskin_id": "KP-MASK-VAK-02",
+      "type": "forebyggende",
+      "planlagt": "2026-10-27",
+      "utfort": "2026-10-27",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (60 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0235",
+      "maskin_id": "KP-MASK-ANL-06",
+      "type": "forebyggende",
+      "planlagt": "2026-11-02",
+      "utfort": "2026-11-02",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0236",
+      "maskin_id": "KP-MASK-ANL-03",
+      "type": "korrektiv",
+      "planlagt": "2026-11-09",
+      "utfort": "2026-11-09",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 4450,
+      "beskrivelse": "Rettet: Høytrykksvakt løste ut"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0237",
+      "maskin_id": "KP-MASK-ANL-02",
+      "type": "forebyggende",
+      "planlagt": "2026-11-10",
+      "utfort": "2026-11-10",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0238",
+      "maskin_id": "KP-MASK-ANL-04",
+      "type": "forebyggende",
+      "planlagt": "2026-11-12",
+      "utfort": "2026-11-12",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0239",
+      "maskin_id": "KP-MASK-REN-01",
+      "type": "korrektiv",
+      "planlagt": "2026-11-13",
+      "utfort": "2026-11-13",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 1600,
+      "beskrivelse": "Rettet: Hjul blokkert"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0240",
+      "maskin_id": "KP-MASK-HEI-02",
+      "type": "forebyggende",
+      "planlagt": "2026-11-16",
+      "utfort": "2026-11-16",
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 9500,
+      "beskrivelse": "Planlagt service (90 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0241",
+      "maskin_id": "KP-MASK-SIK-02",
+      "type": "forebyggende",
+      "planlagt": "2026-11-16",
+      "utfort": "2026-11-16",
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service (365 dagers intervall)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0242",
+      "maskin_id": "KP-MASK-ANL-03",
+      "type": "forebyggende",
+      "planlagt": "2026-11-22",
+      "utfort": null,
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 8900,
+      "beskrivelse": "Planlagt service (forfalt)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0243",
+      "maskin_id": "KP-MASK-REN-03",
+      "type": "korrektiv",
+      "planlagt": "2026-11-22",
+      "utfort": null,
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 1600,
+      "beskrivelse": "Frigjøre hjul og kalibrere"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0244",
+      "maskin_id": "KP-MASK-SIK-03",
+      "type": "forebyggende",
+      "planlagt": "2026-11-22",
+      "utfort": null,
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service (forfalt)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0245",
+      "maskin_id": "KP-MASK-SRV-02",
+      "type": "forebyggende",
+      "planlagt": "2026-11-22",
+      "utfort": null,
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service (forfalt)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0246",
+      "maskin_id": "KP-MASK-TRA-01",
+      "type": "forebyggende",
+      "planlagt": "2026-11-22",
+      "utfort": null,
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service (forfalt)"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0247",
+      "maskin_id": "KP-MASK-REN-01",
+      "type": "forebyggende",
+      "planlagt": "2026-11-24",
+      "utfort": null,
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0248",
+      "maskin_id": "KP-MASK-VAK-01",
+      "type": "forebyggende",
+      "planlagt": "2026-11-28",
+      "utfort": null,
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0249",
+      "maskin_id": "KP-MASK-TRA-02",
+      "type": "forebyggende",
+      "planlagt": "2026-12-02",
+      "utfort": null,
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0250",
+      "maskin_id": "KP-MASK-REN-03",
+      "type": "forebyggende",
+      "planlagt": "2026-12-06",
+      "utfort": null,
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0251",
+      "maskin_id": "KP-MASK-HEI-01",
+      "type": "forebyggende",
+      "planlagt": "2026-12-08",
+      "utfort": null,
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 9500,
+      "beskrivelse": "Planlagt service"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0252",
+      "maskin_id": "KP-MASK-REN-04",
+      "type": "forebyggende",
+      "planlagt": "2026-12-12",
+      "utfort": null,
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 3200,
+      "beskrivelse": "Planlagt service"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0253",
+      "maskin_id": "KP-MASK-SIK-05",
+      "type": "forebyggende",
+      "planlagt": "2026-12-12",
+      "utfort": null,
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0254",
+      "maskin_id": "KP-MASK-SRV-01",
+      "type": "forebyggende",
+      "planlagt": "2026-12-13",
+      "utfort": null,
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0255",
+      "maskin_id": "KP-MASK-SIK-07",
+      "type": "forebyggende",
+      "planlagt": "2026-12-14",
+      "utfort": null,
+      "utfort_av_rolle": "sikkerhetsansvarlig",
+      "kostnad_nok": 12000,
+      "beskrivelse": "Planlagt service"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0256",
+      "maskin_id": "KP-MASK-SRV-03",
+      "type": "forebyggende",
+      "planlagt": "2026-12-14",
+      "utfort": null,
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service"
+    },
+    {
+      "arbeidsordre_id": "KP-AO-0257",
+      "maskin_id": "KP-MASK-SRV-07",
+      "type": "forebyggende",
+      "planlagt": "2026-12-22",
+      "utfort": null,
+      "utfort_av_rolle": "driftsansvarlig",
+      "kostnad_nok": 6500,
+      "beskrivelse": "Planlagt service"
+    }
+  ],
+  "kommandologg": [
+    {
+      "kommando_id": "KP-KOM-0001",
+      "maskin_id": "KP-MASK-ANL-04",
+      "kommando": "sett_klima",
+      "parametre": {
+        "temperatur_c": 18.0,
+        "rf_prosent": 50
+      },
+      "foreslatt_av": "KI-agent (maskinpark)",
+      "begrunnelse": "Rette RF-avvik i Magasin 1",
+      "status": "godkjent",
+      "besluttet_av_rolle": "driftsansvarlig",
+      "tidspunkt": "2026-11-21T06:10"
+    },
+    {
+      "kommando_id": "KP-KOM-0002",
+      "maskin_id": "KP-MASK-SRV-02",
+      "kommando": "flytt_last",
+      "parametre": {},
+      "foreslatt_av": "KI-agent (maskinpark)",
+      "begrunnelse": "GPU-node 2 går varm, flytt inferens til node 1",
+      "status": "utfort",
+      "besluttet_av_rolle": "driftsansvarlig",
+      "tidspunkt": "2026-11-22T06:20"
+    },
+    {
+      "kommando_id": "KP-KOM-0003",
+      "maskin_id": "KP-MASK-REN-03",
+      "kommando": "retur_til_lading",
+      "parametre": {},
+      "foreslatt_av": "KI-agent (maskinpark)",
+      "begrunnelse": "Robot står fast, hent den hjem",
+      "status": "avvist",
+      "besluttet_av_rolle": "driftsansvarlig",
+      "tidspunkt": "2026-11-22T06:05"
+    },
+    {
+      "kommando_id": "KP-KOM-0004",
+      "maskin_id": "KP-MASK-TRA-01",
+      "kommando": "flytt_verk",
+      "parametre": {
+        "fra_rom": "MAG-1",
+        "til_rom": "SAL-E"
+      },
+      "foreslatt_av": "KI-agent (maskinpark)",
+      "begrunnelse": "Montering av høstutstillingen",
+      "status": "utfort",
+      "besluttet_av_rolle": "driftsansvarlig",
+      "tidspunkt": "2026-10-02T21:30"
+    },
+    {
+      "kommando_id": "KP-KOM-0005",
+      "maskin_id": "KP-MASK-VAK-01",
+      "kommando": "start_runde",
+      "parametre": {},
+      "foreslatt_av": "KI-agent (maskinpark)",
+      "begrunnelse": "Ekstra nattrunde etter alarm i Sal B",
+      "status": "utfort",
+      "besluttet_av_rolle": "sikkerhetsansvarlig",
+      "tidspunkt": "2026-11-14T02:15"
+    },
+    {
+      "kommando_id": "KP-KOM-0006",
+      "maskin_id": "KP-MASK-ANL-10",
+      "kommando": "sett_lysniva",
+      "parametre": {
+        "luks": 50
+      },
+      "foreslatt_av": "KI-agent (maskinpark)",
+      "begrunnelse": "Papirverk i Sal D, maks 50 luks",
+      "status": "godkjent",
+      "besluttet_av_rolle": "driftsansvarlig",
+      "tidspunkt": "2026-10-30T09:00"
+    },
+    {
+      "kommando_id": "KP-KOM-0007",
+      "maskin_id": "KP-MASK-ANL-01",
+      "kommando": "sett_luftmengde",
+      "parametre": {
+        "prosent": 100
+      },
+      "foreslatt_av": "KI-agent (maskinpark)",
+      "begrunnelse": "Mange besøkende under familiedag",
+      "status": "avvist",
+      "besluttet_av_rolle": "driftsansvarlig",
+      "tidspunkt": "2026-11-08T11:00"
+    },
+    {
+      "kommando_id": "KP-KOM-0008",
+      "maskin_id": "KP-MASK-SIK-01",
+      "kommando": "kjor_selvtest",
+      "parametre": {},
+      "foreslatt_av": "KI-agent (maskinpark)",
+      "begrunnelse": "Sjekk etter lavt flasketrykk",
+      "status": "utfort",
+      "besluttet_av_rolle": "sikkerhetsansvarlig",
+      "tidspunkt": "2026-11-20T10:00"
+    }
+  ]
+}
