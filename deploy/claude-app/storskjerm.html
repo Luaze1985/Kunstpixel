@@ -7,18 +7,21 @@
 </style>
 <style>
 /* Storskjerm: én skjerm 16:9, lesbar fra tre meter. Arbeidsflyt-tokens (én lys palett, med vilje),
-   status som ord, én blå for handling. Rader: topp, fire nøkkeltall, to rader med to felt (2:1). */
+   status som ord, én blå for handling. Oppsett C «Én ting om gangen» (DECISIONS SC1–SC6): topp, fire
+   nøkkeltall som står fast, og én stor flate som bytter mellom Besøk, Frister, Utstillinger og Vet ikke.
+   «Vis underlaget» åpner radene bak flaten. */
 :root { --ss-bg: #f3f6f8; --ss-ink: #172b3b; color-scheme: light; }
 html { height: 100%; font-size: clamp(14px, min(1.15vw, 2.05vh), 30px); }  /* følger bredde og høyde, så alt får plass også i et lavt vindu */
 body { height: 100%; margin: 0; background: var(--ss-bg); color: var(--ss-ink);
   font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
 .ss { box-sizing: border-box; height: 100%; display: grid; gap: 0.8rem;
-  grid-template-columns: 1.75fr 1.25fr; grid-template-rows: auto auto minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr);
   padding-block: 0.8rem; padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px)); background: var(--canvas); color: var(--ink); }
 .ss *, .ss *::before, .ss *::after { box-sizing: border-box; }
+.ss [hidden] { display: none !important; }  /* ellers vinner display: flex over hidden, og alle flatene vises samtidig */
 
-.ss-topp { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.4rem;
+.ss-topp { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.4rem;
   background: var(--topbar); color: var(--topbar-ink); border-radius: var(--radius-card); padding: 0.7rem 1.1rem; }
 .ss-navn { font-size: 1.35rem; font-weight: 700; margin: 0; }
 .ss-dag { font-size: 1.1rem; font-weight: 600; }
@@ -29,63 +32,94 @@ body { height: 100%; margin: 0; background: var(--ss-bg); color: var(--ss-ink);
 .ss-knapp { font: inherit; font-size: 0.95rem; font-weight: 600; color: var(--topbar); background: var(--topbar-ink);
   border: 0; border-radius: var(--radius-field); padding: 0.35rem 0.9rem; cursor: pointer; }
 .ss-knapp:hover { background: var(--blue-soft); }
-.ss-knapp:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.ss :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 
-.ss-flater { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.8rem; }
-.ss-flate, .ss-felt { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card);
-  padding: 0.65rem 0.9rem; min-width: 0; }
-.ss-flate { display: grid; gap: 0.25rem; align-content: start; }
+/* De fire nøkkeltallene står fast. Et trykk på ett av dem hopper til flaten det hører til. */
+.ss-flater, .ss-scene { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-card); min-width: 0; }
+.ss-flater { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: hidden; }
+.ss-flate { display: grid; gap: 0.2rem; align-content: start; padding: 0.6rem 1rem; min-width: 0; cursor: pointer; }
+.ss-flate + .ss-flate { border-left: 1px solid var(--line); }
+.ss-flate:hover { background: var(--blue-soft); }
 .ss-etikett { font-size: 0.95rem; font-weight: 600; color: var(--muted); margin: 0; }
 .ss-tall { font-size: 2.1rem; font-weight: 700; line-height: 1.05; font-variant-numeric: tabular-nums; }
 .ss-enhet { font-size: 1rem; font-weight: 600; color: var(--muted); margin-left: 0.3rem; }
 .ss-linje { font-size: 0.92rem; color: var(--ink); }
 .ss-kilde { font-size: 0.92rem; color: var(--muted); }
-.ss-rad { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.6rem; }
+.ss-rad { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.7rem; }
 .ss-status { font-size: 0.92rem; font-weight: 700; border-radius: var(--radius-pill); padding: 0.1rem 0.7rem; }
 .ss-status[data-s="Normal"] { background: var(--green-soft); color: var(--green-ink); }
 .ss-status[data-s="Følg med"] { background: var(--gold-soft); color: var(--gold); }
 .ss-status[data-s="Over terskel"] { background: var(--danger-soft); color: var(--danger); }
 .ss-status[data-s="Ukjent"], .ss-status[data-s="Stengt"] { background: var(--neutral-soft); color: var(--neutral-ink); }
 
-.ss-felt { display: flex; flex-direction: column; gap: 0.4rem; min-height: 0; }
-.ss-felt h2 { font-size: 1.05rem; font-weight: 700; margin: 0; }
+/* Den store flaten: faner øverst, så én flate. Hver flate har en oversikt og et underlag. */
+.ss-scene { display: flex; flex-direction: column; gap: 0.7rem; min-height: 0; padding: 0.9rem 1.4rem 1.1rem; }
+.ss-faner { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.ss-fane { font: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; border: 1px solid var(--button-border);
+  background: var(--paper); color: var(--neutral-ink); border-radius: var(--radius-pill); padding: 0.25rem 1rem; }
+.ss-fane[aria-pressed="true"] { background: var(--topbar); border-color: var(--topbar); color: var(--topbar-ink); }
+.ss-dypere { margin-left: auto; border-color: var(--blue); background: var(--blue); color: #fff; }
+.ss-dypere[aria-pressed="true"] { background: var(--paper); color: var(--blue); }
+.ss-pause { border-style: dashed; }
+.ss-felt, .ss-visning { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.ss-felt h2 { font-size: 1.6rem; font-weight: 700; letter-spacing: -.01em; margin: 0; }
+.ss-fhode { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.1rem 1.2rem; }
 .ss-tegning { flex: 1; min-height: 0; position: relative; }
 .ss-tegning svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.ss-tegning text { font-family: inherit; font-size: 0.92rem; fill: var(--muted); }
+.ss-tegning text { font-family: inherit; font-size: 1rem; fill: var(--muted); }
 .ss-tegning .ss-verdi { fill: var(--ink); font-weight: 700; }
 
-.ss-tre { display: flex; flex-wrap: wrap; gap: 0.2rem 1.2rem; font-size: 0.92rem; color: var(--muted); }
-.ss-tre b { font-size: 1.2rem; color: var(--ink); font-variant-numeric: tabular-nums; }
-.ss-tre span:first-child b { color: var(--danger); }
-.ss-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; }
+.ss-hode { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.9rem; }
+.ss-stort { font-size: 4.2rem; font-weight: 700; line-height: 0.95; font-variant-numeric: tabular-nums; color: var(--green-ink); }
+#frister[data-forfalt] .ss-stort { color: var(--danger); }
+.ss-over { font-weight: 700; color: var(--danger); }
+.ss-tre { display: flex; flex-wrap: wrap; gap: 0.2rem 1.4rem; font-size: 1rem; color: var(--muted); }
+.ss-tre b { font-size: 1.3rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+.ss-liste { list-style: none; margin: 0; padding: 0; display: grid; }
+.ss-liste li { font-size: 1.25rem; line-height: 1.3; padding: 0.45rem 0; border-top: 1px solid var(--line); }
+#frister .ss-liste li { font-weight: 600; }
+.ss-liste small { display: block; font-size: 1rem; font-weight: 400; color: var(--muted); }
 .ss-tabeller { color: var(--muted); }
-.ss-liste li { font-size: 0.92rem; line-height: 1.3; }
-.ss-liste small { display: block; font-size: 0.92rem; color: var(--muted); }
 
-.ss-stolper { flex: 1; min-height: 0; display: grid; align-content: start; gap: 0.15rem; }
-.ss-stolpe { display: grid; grid-template-columns: minmax(0, 19rem) minmax(0, 1fr) auto; align-items: center; gap: 0.7rem;
-  font-size: 0.92rem; }
+.ss-stolper { flex: 1; min-height: 0; display: grid; align-content: start; gap: 0.55rem; }
+.ss-stolpe { display: grid; grid-template-columns: minmax(0, 24rem) minmax(0, 1fr) auto; align-items: center; gap: 1rem;
+  font-size: 1.15rem; }
 .ss-stolpe span:first-child { overflow-wrap: anywhere; }
-.ss-spor { height: 0.8rem; background: var(--track); border-radius: 3px; overflow: hidden; }
+.ss-spor { height: 1rem; background: var(--track); border-radius: 3px; overflow: hidden; }
 .ss-spor i { display: block; height: 100%; background: var(--blue); }
 .ss-stolpe b { font-variant-numeric: tabular-nums; text-align: right; }
 
-.ss-feil { grid-column: 1 / -1; background: var(--danger-soft); color: var(--danger); border-radius: var(--radius-card);
+/* Underlaget: radene bak flaten. Ruller inne i feltet hvis det er mange rader. */
+.ss-rull { flex: 1; min-height: 0; overflow: auto; }
+.ss-tab { width: 100%; border-collapse: collapse; font-size: 1.1rem; }
+.ss-tab th { text-align: left; font-size: 0.92rem; font-weight: 600; color: var(--muted); white-space: nowrap;
+  padding: 0.35rem 1rem 0.35rem 0; border-bottom: 2px solid var(--line); position: sticky; top: 0; background: var(--paper); }
+.ss-tab td { padding: 0.45rem 1rem 0.45rem 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.ss-tab .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.ss-feil { background: var(--danger-soft); color: var(--danger); border-radius: var(--radius-card);
   padding: 1.2rem; font-size: 1.2rem; font-weight: 600; }
 
 @media (max-width: 900px) {
   html { font-size: 16px; }
   body, .ss { height: auto; }
-  .ss { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .ss { grid-template-rows: none; }
   .ss-flater { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .ss-tegning { min-height: 14rem; }
-  .ss-obs { margin-left: 0; }
+  .ss-flate:nth-child(3) { border-left: 0; }
+  .ss-flate:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .ss-tegning { flex: none; height: 14rem; }
+  .ss-obs, .ss-dypere { margin-left: 0; }
+  .ss-scene { padding-inline: 0.9rem; }
 }
-@media (max-width: 480px) { .ss-flater { grid-template-columns: minmax(0, 1fr); } .ss-stolpe { grid-template-columns: minmax(0, 1fr) auto; } .ss-spor { grid-column: 1 / -1; grid-row: 2; } }
+@media (max-width: 480px) {
+  .ss-flater { grid-template-columns: minmax(0, 1fr); }
+  .ss-flate + .ss-flate { border-left: 0; border-top: 1px solid var(--line); }
+  .ss-stolpe { grid-template-columns: minmax(0, 1fr) auto; } .ss-spor { grid-column: 1 / -1; grid-row: 2; }
+}
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
-<main class="af ss" aria-live="polite"></main>
+<main class="af ss"></main>
 
 <script>
 (function () {
@@ -93,7 +127,9 @@ body { height: 100%; margin: 0; background: var(--ss-bg); color: var(--ss-ink);
   var main = document.querySelector("main");
   var NB = new Intl.NumberFormat("nb-NO", { maximumFractionDigits: 2 });
   var SVG = "http://www.w3.org/2000/svg";
-  var VIS_FRISTER = 2;  // flere får ikke plass på storskjerm; resten telles
+  var VIS_FRISTER = 4;  // flere får ikke plass på storskjerm; resten telles og står i underlaget
+  var BYTT_MS = 12000;   // så lenge står hver flate før neste vises
+  var TIL_FLATE = { besok: "besok-uker", besok_uke: "besok-uker", saker: "frister", tilfredshet: "hull" };
 
   function el(tag, cls, tekst) {
     var e = document.createElement(tag);
@@ -105,11 +141,33 @@ body { height: 100%; margin: 0; background: var(--ss-bg); color: var(--ss-ink);
   function dm(iso) { var d = String(iso || "").split("-"); return d.length === 3 ? d[2] + "." + d[1] : String(iso || ""); }
   function periode(t) { return String(t || "").split("–").map(dm).join("–"); }
   function kilde(t) { return el("div", "ss-kilde", "Kilde: " + t); }
-  function felt(id, tittel, kildeTekst) {
-    var s = el("section", "ss-felt"); s.id = id;
-    s.appendChild(el("h2", null, tittel));
-    s._kilde = kilde(kildeTekst);
+  function dagerMellom(fra, til) { return Math.round((new Date(til) - new Date(fra)) / 864e5); }
+  function tabell(hoder, rader, tallKol) {
+    var t = el("table", "ss-tab"), thead = el("thead"), hr = el("tr"), tb = el("tbody");
+    hoder.forEach(function (x, i) { hr.appendChild(el("th", tallKol.indexOf(i) >= 0 ? "num" : null, x)); });
+    thead.appendChild(hr); t.appendChild(thead);
+    rader.forEach(function (r) {
+      var tr = el("tr");
+      r.forEach(function (c, i) { tr.appendChild(el("td", tallKol.indexOf(i) >= 0 ? "num" : null, c)); });
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    var rull = el("div", "ss-rull"); rull.tabIndex = 0; rull.appendChild(t);
+    return rull;
+  }
+  // Hver flate er en seksjon med to visninger: oversikten (o) og underlaget (u). Bare én vises om gangen.
+  function felt(id, fane) {
+    var s = el("section", "ss-felt"); s.id = id; s.hidden = true;
+    s._fane = fane;
+    s.o = el("div", "ss-visning"); s.u = el("div", "ss-visning"); s.u.hidden = true;
+    s.appendChild(s.o); s.appendChild(s.u);
     return s;
+  }
+  function hode(tittel, kildeTekst) {
+    var h = el("div", "ss-fhode");
+    h.appendChild(el("h2", null, tittel));
+    h.appendChild(kilde(kildeTekst));
+    return h;
   }
 
   function topp(d) {
@@ -138,13 +196,12 @@ body { height: 100%; margin: 0; background: var(--ss-bg); color: var(--ss-ink);
 
   function flate(f) {
     var s = el("section", "ss-flate"); s.id = "flate-" + f.id;
-    s.appendChild(el("h2", "ss-etikett", f.navn));
+    s.appendChild(el("h2", "ss-etikett", f.navn + " · " + (String(f.gjelder).indexOf("–") > 0 ? "" : "gjelder ") + periode(f.gjelder)));
+    var rad = el("div", "ss-rad");
     var t = el("div", "ss-tall", tall(f.verdi));
     if (f.verdi !== null && f.verdi !== undefined) t.appendChild(el("span", "ss-enhet", f.enhet));
-    s.appendChild(t);
-    var rad = el("div", "ss-rad");
+    rad.appendChild(t);
     if (f.status) { var st = el("span", "ss-status", f.status); st.setAttribute("data-s", f.status); rad.appendChild(st); }
-    rad.appendChild(el("span", "ss-linje", (String(f.gjelder).indexOf("–") > 0 ? "" : "gjelder ") + periode(f.gjelder)));
     s.appendChild(rad);
     s.appendChild(el("div", "ss-linje", f.sammenligning));
     s.appendChild(kilde(f.kilde));
@@ -157,7 +214,7 @@ body { height: 100%; margin: 0; background: var(--ss-bg); color: var(--ss-ink);
       var w = boks.clientWidth, h = boks.clientHeight;
       if (w < 50 || h < 50) return;
       var rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
-      var v = { l: 3.4 * rem, r: 4.6 * rem, t: 0.8 * rem, b: 1.8 * rem };
+      var v = { l: 3.8 * rem, r: 7 * rem, t: 1.2 * rem, b: 2 * rem };
       var maks = 0;
       uker.forEach(function (u) { maks = Math.max(maks, u.i_aar || 0, u.i_fjor || 0); });
       var steg = Math.pow(10, Math.floor(Math.log10(maks || 1)));
@@ -178,11 +235,11 @@ body { height: 100%; margin: 0; background: var(--ss-bg); color: var(--ss-ink);
         ny("text", { x: v.l - 0.4 * rem, y: y(n) + 0.3 * rem, "text-anchor": "end" }, tall(n));
       });
       // Smal skjerm: vis bare hver n-te uke, så navnene ikke overlapper. Siste uke vises alltid.
-      var hvert = Math.max(1, Math.ceil(4.2 * rem / Math.max(x(1) - x(0), 1)));
+      var hvert = Math.max(1, Math.ceil(4.6 * rem / Math.max(x(1) - x(0), 1)));
       uker.forEach(function (u, i) {
         var siste = i === uker.length - 1;
         if (!siste && ((uker.length - 1 - i) % hvert !== 0)) return;
-        ny("text", { x: x(i), y: h - 0.3 * rem, "text-anchor": "middle" }, "uke " + u.uke);
+        ny("text", { x: x(i), y: h - 0.4 * rem, "text-anchor": "middle" }, "uke " + u.uke);
       });
       [["i_fjor", "var(--muted)", "I fjor"], ["i_aar", "var(--blue)", "I år"]].forEach(function (s) {
         var pkt = uker.map(function (u, i) { return u[s[0]] === null ? null : [x(i), y(u[s[0]])]; }).filter(Boolean);
@@ -200,48 +257,81 @@ body { height: 100%; margin: 0; background: var(--ss-bg); color: var(--ss-ink);
       boks.appendChild(svg);
     }
     tegn();
-    if (window.ResizeObserver) new ResizeObserver(tegn).observe(boks);
+    if (window.ResizeObserver) new ResizeObserver(tegn).observe(boks);  // tegner også når flaten blir synlig igjen
   }
 
   function besokUker(d) {
-    var s = felt("besok-uker", "Besøk siste 8 uker", "dagsbesok");
+    var s = felt("besok-uker", "Besøk");
+    s.o.appendChild(hode("Besøk siste 8 uker", "dagsbesok. Hele uker, uten uka som pågår."));
     var b = el("div", "ss-tegning");
-    s.appendChild(b);
-    s.appendChild(el("div", "ss-kilde", "Hele uker. Uka som pågår står i «Besøk denne uka». Heltrukket: i år. Stiplet: samme uke i fjor. Kilde: dagsbesok"));
-    return [s, function () { linjediagram(b, d.besok_uker); }];
+    s.o.appendChild(b);
+    s.u.appendChild(hode("Underlag: besøk per uke", "dagsbesok"));
+    s.u.appendChild(tabell(["Uke", "Dager", "I år", "Samme uke i fjor", "Endring"], d.besok_uker.map(function (u) {
+      var e = "–";
+      if (u.i_aar !== null && u.i_fjor) {
+        var p = (u.i_aar - u.i_fjor) / u.i_fjor * 100;
+        e = (p > 0 ? "+" : p < 0 ? "−" : "") + NB.format(Math.abs(Math.round(p * 10) / 10)) + " %";
+      }
+      return ["uke " + u.uke, dm(u.fra) + "–" + dm(u.til), tall(u.i_aar), tall(u.i_fjor), e];
+    }), [2, 3, 4]));
+    s._tegn = function () { linjediagram(b, d.besok_uker); };
+    return s;
   }
 
   function fristFelt(d) {
     var f = d.frister;
     var kilder = [];
     f.rader.forEach(function (r) { if (r.kilde && kilder.indexOf(r.kilde) < 0) kilder.push(r.kilde); });
-    var s = felt("frister", "Frister", kilder.length ? kilder.join(", ") : "driftsmeldinger, avvik_hms_drift, h5_rapporteringskalender");
+    var kildeTekst = kilder.length ? kilder.join(", ") : "driftsmeldinger, avvik_hms_drift, h5_rapporteringskalender";
+    var s = felt("frister", "Frister");
+    // Det som haster står størst: antall forfalte som stort tall, og hver frist med hvor lenge den har ligget.
+    var forfalt = f.antall.Forfalt || 0;
+    if (forfalt) s.setAttribute("data-forfalt", "");
+    var h = el("div", "ss-hode");
+    h.appendChild(el("span", "ss-stort", forfalt ? forfalt : "Ingen"));
+    h.appendChild(el("h2", null, forfalt === 1 ? "frist er forfalt" : "frister er forfalt"));
+    s.o.appendChild(h);
     var tre = el("div", "ss-tre");
-    ["Forfalt", "I dag", "Denne uka"].forEach(function (g) {
+    ["I dag", "Denne uka"].forEach(function (g) {
       var b = el("span"); b.appendChild(el("b", null, f.antall[g] ? f.antall[g] : "Ingen"));
       b.appendChild(document.createTextNode(" " + g.toLowerCase())); tre.appendChild(b);
     });
-    s.appendChild(tre);
+    s.o.appendChild(tre);
     var naa = f.rader.filter(function (r) { return r.gruppe !== "Senere"; });
     var ul = el("ul", "ss-liste");
     naa.slice(0, VIS_FRISTER).forEach(function (r) {
-      var li = el("li", null, r.tittel);
-      li.appendChild(el("small", null, "frist " + dm(r.frist_dato) + " · " + r.ref));
+      var li = el("li", null, r.tittel), sm = el("small");
+      var over = dagerMellom(r.frist_dato, d.dato);
+      if (r.gruppe === "Forfalt" && over > 0) {
+        sm.appendChild(el("span", "ss-over", over + (over === 1 ? " dag over" : " dager over")));
+        sm.appendChild(document.createTextNode(" · "));
+      }
+      sm.appendChild(document.createTextNode("frist " + dm(r.frist_dato) + " · " + r.ref));
+      li.appendChild(sm);
       ul.appendChild(li);
     });
     if (!naa.length) ul.appendChild(el("li", null, "Ingen frister forfalt, i dag eller denne uka."));
-    s.appendChild(ul);
+    s.o.appendChild(ul);
     var mer = [];
     if (naa.length > VIS_FRISTER) mer.push((naa.length - VIS_FRISTER) + " til");
     if (f.antall.Senere) mer.push(f.antall.Senere + " senere");
     if (f.skjult) mer.push(f.skjult + " innlån skjult");
-    if (mer.length) s.appendChild(el("div", "ss-kilde", mer.join(" · ")));
-    s.appendChild(s._kilde);
+    s.o.appendChild(el("div", "ss-kilde", (mer.length ? mer.join(" · ") + " · " : "") + "Kilde: " + kildeTekst));
+
+    s.u.appendChild(hode("Underlag: alle frister", kildeTekst));
+    s.u.appendChild(tabell(["Frist", "Status", "Sak", "Referanse"], f.rader.map(function (r) {
+      var om = dagerMellom(d.dato, r.frist_dato);
+      var st = om < 0 ? (-om) + (om === -1 ? " dag over" : " dager over") : om === 0 ? "i dag" : "om " + om + (om === 1 ? " dag" : " dager");
+      return [dm(r.frist_dato), st, r.tittel, r.ref];
+    }), []));
+    if (!f.rader.length) s.u.appendChild(el("div", "ss-linje", "Ingen frister."));
     return s;
   }
 
   function utstillinger(d) {
-    var s = felt("utstillinger", "Utstillingene i år: netto resultat", "utstillinger_historikk og utstilling_okonomi");
+    var kildeTekst = "utstillinger_historikk og utstilling_okonomi";
+    var s = felt("utstillinger", "Utstillinger");
+    s.o.appendChild(hode("Utstillingene i år: netto resultat", kildeTekst));
     var maks = 0;
     d.utstillinger.forEach(function (u) { maks = Math.max(maks, Math.abs(u.netto_resultat_nok || 0)); });
     var boks = el("div", "ss-stolper");
@@ -257,14 +347,18 @@ body { height: 100%; margin: 0; background: var(--ss-bg); color: var(--ss-ink);
       boks.appendChild(r);
     });
     if (!d.utstillinger.length) boks.appendChild(el("div", "ss-linje", "Ingen utstillinger med økonomi i år."));
-    s.appendChild(boks);
-    s.appendChild(s._kilde);
+    s.o.appendChild(boks);
+    s.u.appendChild(hode("Underlag: utstillingene i år", kildeTekst));
+    s.u.appendChild(tabell(["ID", "Utstilling", "Sesong", "Netto resultat"], d.utstillinger.map(function (u) {
+      return [u.utstilling_id, u.tittel, u.sesong, tall(u.netto_resultat_nok) + " kr"];
+    }), [3]));
     return s;
   }
 
   function hull(d) {
-    var s = felt("hull", "Dette vet vi ikke", "tabellene som er nevnt");
-    s.appendChild(el("div", "ss-linje", "Tall etter sluttdatoen er Ukjent, ikke 0."));
+    var s = felt("hull", "Vet ikke");
+    s.o.appendChild(hode("Dette vet vi ikke", "tabellene som er nevnt"));
+    s.o.appendChild(el("div", "ss-linje", "Tall etter sluttdatoen er Ukjent, ikke 0."));
     var ul = el("ul", "ss-liste");
     var perDato = {}, datoer = [];
     d.hull.forEach(function (h) {
@@ -279,22 +373,68 @@ body { height: 100%; margin: 0; background: var(--ss-bg); color: var(--ss-ink);
     });
     d.hull.forEach(function (h) { if (h.type !== "slutter") ul.appendChild(el("li", null, h.tekst)); });
     if (!d.hull.length) ul.appendChild(el("li", null, "Ingen kjente hull i dag."));
-    s.appendChild(ul);
-    s.appendChild(s._kilde);
+    s.o.appendChild(ul);
+
+    s.u.appendChild(hode("Underlag: tabeller som slutter før i dag", "tabellene som er nevnt"));
+    var slutter = d.hull.filter(function (h) { return h.type === "slutter"; });
+    s.u.appendChild(tabell(["Tabell", "Siste dato", "Dager uten tall"], slutter.map(function (h) {
+      return [h.tabell, dm(h.slutter), dagerMellom(h.slutter, d.dato)];
+    }), [2]));
+    d.hull.forEach(function (h) { if (h.type !== "slutter") s.u.appendChild(el("div", "ss-linje", h.tekst)); });
     return s;
   }
 
   function vis(d) {
+    window.kpDato = d.dato;  // Drift og HR regner «i år» til denne datoen, som tallene og KI-chatten
     main.appendChild(topp(d));
     var flater = el("div", "ss-flater");
-    d.flater.forEach(function (f) { flater.appendChild(flate(f)); });
     main.appendChild(flater);
-    var bu = besokUker(d);
-    main.appendChild(bu[0]);
-    main.appendChild(fristFelt(d));
-    main.appendChild(utstillinger(d));
-    main.appendChild(hull(d));
-    bu[1]();
+    var scene = el("section", "ss-scene"), faner = el("div", "ss-faner");
+    var felter = [besokUker(d), fristFelt(d), utstillinger(d), hull(d)];
+    var naa = 0, apen = false;
+    var gaar = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function knapp(cls, tekst, id) { var k = el("button", "ss-fane " + cls, tekst); k.type = "button"; k.id = id; return k; }
+    var knapper = felter.map(function (s, i) {
+      var k = knapp("", s._fane, "fane-" + s.id);
+      k.addEventListener("click", function () { vel(i); });
+      faner.appendChild(k); return k;
+    });
+    var under = knapp("ss-dypere", "Vis underlaget", "underlag");
+    under.addEventListener("click", function () { apen = !apen; vel(naa); });
+    var pause = knapp("ss-pause", "", "bytting");
+    pause.addEventListener("click", function () { gaar = !gaar; vel(naa); });
+    faner.appendChild(under); faner.appendChild(pause);
+
+    function vel(i) {
+      naa = i;
+      felter.forEach(function (s, j) { s.hidden = j !== i; s.o.hidden = apen; s.u.hidden = !apen; });
+      knapper.forEach(function (k, j) { k.setAttribute("aria-pressed", j === i ? "true" : "false"); });
+      under.textContent = apen ? "Tilbake til oversikten" : "Vis underlaget";
+      under.setAttribute("aria-pressed", apen ? "true" : "false");
+      pause.textContent = gaar ? "Stopp bytting" : "Start bytting";
+      pause.hidden = apen;  // åpent underlag står stille til det lukkes
+    }
+
+    d.flater.forEach(function (f) {
+      var s = flate(f), til = -1;
+      felter.forEach(function (x, i) { if (x.id === TIL_FLATE[f.id]) til = i; });
+      if (til >= 0) {
+        s.setAttribute("role", "button"); s.tabIndex = 0;
+        s.addEventListener("click", function () { apen = false; vel(til); });
+        s.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); apen = false; vel(til); }
+        });
+      }
+      flater.appendChild(s);
+    });
+
+    scene.appendChild(faner);
+    felter.forEach(function (s) { scene.appendChild(s); });
+    main.appendChild(scene);
+    vel(0);
+    felter[0]._tegn();
+    setInterval(function () { if (gaar && !apen) vel((naa + 1) % felter.length); }, BYTT_MS);
   }
 
   function feil(tekst) {
@@ -308,5 +448,456 @@ body { height: 100%; margin: 0; background: var(--ss-bg); color: var(--ss-ink);
       feil("Fant ikke tallene (data.json). Kjør scripts/lag_storskjerm.py og publiser på nytt.");
     })
     .then(function () { main.setAttribute("data-klar", ""); });
+})();
+</script>
+
+<!-- KI-chat og Drift og HR (spec docs/specs/2026-11-19-storskjerm-chat.md, DECISIONS SC8–SC12).
+     KI-chat står fast til høyre for dashbordet (SC13), Drift og HR er en skuff fra høyre. Begge bruker samme
+     database i minnet (sql.js), som lastes første gang den trengs. Chatten vises bare når siden kan spørre
+     Claude med verktøy (sample-kapabiliteten i claude.ai). -->
+<style>
+#kichat-knapp, #drift-hr-knapp { background: var(--blue); color: #fff; }
+#kichat-knapp:hover, #drift-hr-knapp:hover { background: var(--blue-soft); color: var(--topbar); }
+.sk-skuff { position: fixed; top: 0; right: 0; bottom: 0; width: min(40vw, 46rem); z-index: 20; display: flex; flex-direction: column;
+  background: var(--paper); border-left: 1px solid var(--line); box-shadow: -12px 0 32px rgba(23,43,59,.18);
+  transform: translateX(100%); transition: transform .22s ease; visibility: hidden;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); padding-right: env(safe-area-inset-right, 0px); }
+.sk-skuff[data-apen] { transform: none; visibility: visible; }
+.sk-hode { display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; background: var(--topbar); color: var(--topbar-ink); }
+.sk-hode h2 { margin: 0; font-size: 1.15rem; }
+.sk-hode small { color: var(--topbar-muted); font-size: 0.85rem; }
+.sk-lukk { margin-left: auto; }
+.sk-forslag { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.8rem 1rem; border-bottom: 1px solid var(--line); }
+.sk-chip { font: inherit; font-size: 0.9rem; border: 1px solid var(--blue); color: var(--blue); background: var(--paper);
+  border-radius: var(--radius-pill); padding: 0.3rem 0.8rem; cursor: pointer; }
+.sk-chip:hover { background: var(--blue-soft); }
+.sk-chip:disabled { opacity: .5; cursor: default; }
+.sk-skuff :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.sk-logg { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+.sk-status { color: var(--muted); font-size: 0.95rem; }
+.sk-du { align-self: flex-end; max-width: 85%; background: var(--blue); color: #fff; border-radius: 12px 12px 2px 12px; padding: 0.5rem 0.8rem; font-size: 0.95rem; white-space: pre-wrap; }
+.sk-claude { align-self: flex-start; max-width: 92%; background: var(--canvas); border: 1px solid var(--line); border-radius: 12px 12px 12px 2px;
+  padding: 0.6rem 0.8rem; font-size: 0.95rem; display: grid; gap: 0.5rem; }
+.sk-tekst { white-space: pre-wrap; overflow-wrap: anywhere; }
+.sk-tenker { color: var(--muted); font-style: italic; }
+.sk-feil { color: var(--danger); }
+.sk-valg { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.sk-handling { display: flex; flex-wrap: wrap; gap: 0.4rem; border-top: 1px dashed var(--line); padding-top: 0.4rem; }
+.sk-handling button { font: inherit; font-size: 0.82rem; color: var(--muted); background: none; border: 0; padding: 0.15rem 0.3rem; cursor: pointer; text-decoration: underline; }
+.sk-sql { font-family: ui-monospace, Consolas, monospace; font-size: 0.8rem; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--paper);
+  border: 1px solid var(--line); border-radius: 6px; padding: 0.4rem 0.6rem; margin: 0; }
+.sk-diagram { display: grid; gap: 0.2rem; }
+.sk-diagram .ss-stolpe { grid-template-columns: minmax(0, 11rem) minmax(0, 1fr) auto; font-size: 0.9rem; gap: 0.6rem; }
+.sk-diagram .ss-spor { height: 0.8rem; }
+.sk-skriv { display: flex; gap: 0.5rem; padding: 0.8rem 1rem; border-top: 1px solid var(--line); }
+.sk-skriv input { flex: 1; min-width: 0; font: inherit; font-size: 0.95rem; padding: 0.5rem 0.7rem; border: 1px solid var(--input-border); border-radius: var(--radius-field); }
+.sk-send { font: inherit; font-weight: 600; background: var(--blue); color: #fff; border: 0; border-radius: var(--radius-field); padding: 0.5rem 1rem; cursor: pointer; }
+.sk-send:disabled { opacity: .6; cursor: default; }
+.rp-faner { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.8rem 1rem; border-bottom: 1px solid var(--line); }
+.rp-fane[aria-pressed="true"] { background: var(--blue); color: #fff; }
+.rp-innhold { flex: 1; overflow-y: auto; padding: 1rem; display: grid; gap: 0.8rem; align-content: start; }
+.rp-innhold h3 { margin: 0; font-size: 1.05rem; }
+.rp-ingress { margin: 0; font-size: 0.95rem; }
+.rp-tabell { width: 100%; border-collapse: collapse; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+.rp-tabell th, .rp-tabell td { padding: 0.35rem 0.4rem; border-bottom: 1px solid var(--line); text-align: right; }
+.rp-tabell th:first-child, .rp-tabell td:first-child { text-align: left; }
+.rp-tabell th { color: var(--muted); font-weight: 600; font-size: 0.82rem; }
+.rp-tabell td.rp-merk { color: var(--danger); font-weight: 700; }
+.rp-bunn { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; padding: 0.8rem 1rem; border-top: 1px solid var(--line); }
+@media (max-width: 900px) { .sk-skuff { width: 100vw; } }
+
+/* SC13: i claude.ai står KI-chat fast til høyre for dashbordet hele tiden. Uten Claude får dashbordet hele skjermen. */
+body.med-chat { display: grid; grid-template-columns: minmax(0, 1fr) minmax(20rem, 30vw); grid-template-rows: minmax(0, 100%); }
+body.med-chat .ss { min-width: 0; }
+#skuff.sk-kolonne { position: static; transform: none; visibility: visible; transition: none; width: auto; height: 100%;
+  min-height: 0; z-index: auto; box-shadow: none; }
+#skuff.sk-kolonne .sk-lukk { display: none; }
+#skuff.sk-kolonne .sk-hode { padding-block: 0.7rem; }
+@media (max-width: 900px) {
+  body.med-chat { display: block; }
+  #skuff.sk-kolonne { height: 85vh; border-left: 0; border-top: 1px solid var(--line); }
+}
+</style>
+
+<aside class="af sk-skuff" id="skuff" aria-label="KI-chat">
+  <div class="sk-hode"><h2>KI-chat</h2><small>Svar hentes med SQL fra museum.db</small>
+    <button class="ss-knapp sk-lukk" id="lukk" type="button">Lukk</button></div>
+  <div class="sk-forslag" id="forslag"></div>
+  <div class="sk-logg" id="logg" aria-live="polite"><div class="sk-status" id="status">Hva lurer du på i dag? Trykk et forslag eller skriv selv.</div></div>
+  <form class="sk-skriv" id="skjema"><input id="felt" autocomplete="off" placeholder="Spør i vanlig språk …" aria-label="Spørsmål til KI-chat">
+    <button class="sk-send" id="send" type="submit">Send</button></form>
+</aside>
+
+<aside class="af sk-skuff" id="rapportskuff" aria-label="Drift og HR">
+  <div class="sk-hode"><h2>Drift og HR</h2><small>Rapporter for i år til og med dagens tall. Ingen navn.</small>
+    <button class="ss-knapp sk-lukk" id="rp-lukk" type="button">Lukk</button></div>
+  <div class="rp-faner" id="rp-faner"></div>
+  <div class="rp-innhold" id="rp-innhold"><div class="sk-status">Laster databasen …</div></div>
+  <div class="rp-bunn"><button class="sk-send" id="rp-spor" type="button" hidden>Spør KI-chat om dette</button></div>
+</aside>
+
+<script>
+/* Felles: databasen i minnet og knappene i toppen. Knappene settes inn når storskjermen har tegnet toppen. */
+(function () {
+  "use strict";
+  var CDN = "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.12.0/";
+  var laster = null;
+  window.kp = { db: null, instruks: null, steg: "", feil: null, start: 0, slutt: 0, lyttere: [] };
+  function melde() { window.kp.lyttere.forEach(function (f) { try { f(); } catch (e) {} }); }
+  function steg(t) { window.kp.steg = t; melde(); }
+  function lastSkript(src) {
+    return new Promise(function (ja, nei) {
+      var s = document.createElement("script"); s.src = src; s.onload = ja;
+      s.onerror = function () { nei(new Error("kunne ikke laste " + src)); }; document.head.appendChild(s);
+    });
+  }
+  function frist(p, ms, hva) {
+    return Promise.race([p, new Promise(function (_, nei) {
+      setTimeout(function () { nei(new Error(hva + " tok over " + ms / 1000 + " s")); }, ms); })]);
+  }
+  // Lastes første gang en skuff åpnes, ikke når siden åpnes: ca. 4 MB og en SQL-motor fra cdnjs.
+  window.kp.last = function () {
+    if (laster) return laster;
+    window.kp.start = performance.now();
+    var tikk = setInterval(melde, 1000);
+    laster = (async function () {
+      var SQL, motor = "rask";
+      var dbTekst = fetch("museum.db.gz.txt").then(function (r) { if (!r.ok) throw new Error("databasen: HTTP " + r.status); return r.text(); });
+      var instTekst = fetch("chat-instruks.txt").then(function (r) { if (!r.ok) throw new Error("instruksen: HTTP " + r.status); return r.text(); });
+      dbTekst.catch(function () {}); instTekst.catch(function () {});
+      steg("1/4 Laster SQL-motoren");
+      try {
+        await frist(lastSkript(CDN + "sql-wasm.min.js"), 10000, "SQL-motoren");
+        SQL = await frist(initSqlJs({ locateFile: function (f) { return CDN + f; } }), 10000, "SQL-motoren");
+      } catch (e) {
+        // claude.ai kan stoppe WebAssembly. Da brukes den rene JavaScript-utgaven: tregere, samme SQL.
+        motor = "reserve"; steg("1/4 Laster reserve-motoren"); window.initSqlJs = undefined;
+        await frist(lastSkript(CDN + "sql-asm-memory-growth.min.js"), 30000, "Reserve-motoren"); SQL = await initSqlJs();
+      }
+      steg("2/4 Henter databasen (motor: " + motor + ")");
+      var b64 = (await frist(dbTekst, 60000, "Henting av databasen")).trim();
+      steg("3/4 Pakker ut databasen");
+      var bin = atob(b64), u = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+      var ut = new Blob([u]).stream().pipeThrough(new DecompressionStream("gzip"));
+      var raa = new Uint8Array(await new Response(ut).arrayBuffer());
+      steg("4/4 Åpner databasen");
+      var db = new SQL.Database(raa);
+      db.exec("PRAGMA query_only = ON");
+      window.kp.instruks = await frist(instTekst, 30000, "Henting av instruksen");
+      window.kp.db = db;
+      steg("Klar, motor: " + motor);
+    })();
+    laster.catch(function (e) { window.kp.feil = (e && e.message) || String(e); })
+      .then(function () { window.kp.slutt = performance.now(); clearInterval(tikk); melde(); });
+    return laster;
+  };
+
+  // Knappene i toppen: «Drift og HR» alltid, «KI-chat» bare når siden kan spørre Claude med verktøy.
+  window.kp.knapp = function (id, tekst, klikk) {
+    var h = document.querySelector("header.ss-topp");
+    if (!h || document.getElementById(id)) return;
+    var b = document.createElement("button");
+    b.className = "ss-knapp"; b.type = "button"; b.id = id; b.textContent = tekst; b.onclick = klikk;
+    var fs = document.getElementById("fullskjerm");
+    if (fs) h.insertBefore(b, fs); else h.appendChild(b);
+  };
+  window.kp.naarToppen = function (f) {
+    if (document.querySelector("header.ss-topp")) return f();
+    var obs = new MutationObserver(function () {
+      if (document.querySelector("header.ss-topp")) { obs.disconnect(); f(); }
+    });
+    obs.observe(document.querySelector("main"), { childList: true });
+  };
+  window.kp.lukkAlle = function () {
+    document.querySelectorAll(".sk-skuff[data-apen]").forEach(function (s) { s.removeAttribute("data-apen"); });
+  };
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") window.kp.lukkAlle(); });
+})();
+</script>
+
+<script>
+/* KI-chat. Hvert spørsmål sendes med instruksen og samtalen så langt. Claude henter tall med verktøyet sql,
+   som kjører i siden mot databasen i minnet. All tekst tegnes med textContent (ingen markdown, ingen HTML). */
+(function () {
+  "use strict";
+  var NB = new Intl.NumberFormat("nb-NO", { maximumFractionDigits: 2 });
+  var skuff = document.getElementById("skuff"), logg = document.getElementById("logg"), felt = document.getElementById("felt");
+  var sendKnapp = document.getElementById("send");
+  var sample = null, turer = [], opptatt = false;
+  var FORSLAG = ["Hva krever oppmerksomhet i dag?", "Hvordan går utstillingene i år?",
+    "Hvordan var besøket forrige uke?", "Hvordan gikk Fokusrommet i år?"];
+
+  function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = String(x); return e; }
+  function rull() { logg.scrollTop = logg.scrollHeight; }
+  // Kolonnen står alltid. Databasen lastes først når noen begynner å skrive eller trykker et forslag.
+  function klargjor() { window.kp.last(); visSteg(); }
+  felt.addEventListener("focus", klargjor);
+
+  function visSteg() {
+    var s = document.getElementById("status"); if (!s || !window.kp.start) return;
+    var sek = Math.round(((window.kp.slutt || performance.now()) - window.kp.start) / 1000);
+    if (window.kp.feil) { s.className = "sk-status sk-feil"; s.textContent = "Fikk ikke lastet databasen. Steg: " + window.kp.steg + ". Feil: " + window.kp.feil; }
+    else if (window.kp.db) s.textContent = "Klar. Trykk et forslag eller skriv selv. (" + window.kp.steg + ", " + sek + " s)";
+    else s.textContent = "Laster … " + window.kp.steg + " (" + sek + " s)";
+  }
+  window.kp.lyttere.push(visSteg);
+
+  // Samme regel som sql.py: én SELECT eller WITH, maks 200 rader, svar på maks ca. 30 KB.
+  function kjorSql(q, sqlLogg) {
+    q = String(q || "").trim().replace(/;\s*$/, "");
+    if (!/^(select|with)\b/i.test(q) || q.indexOf(";") >= 0) throw new Error("Bare én SELECT eller WITH er lov.");
+    sqlLogg.push(q);
+    var r = window.kp.db.exec(q)[0] || { columns: [], values: [] };
+    var ut = { kolonner: r.columns, antall: r.values.length, rader: r.values.slice(0, 200), avkortet: r.values.length > 200 };
+    while (JSON.stringify(ut).length > 30000 && ut.rader.length > 5) { ut.rader = ut.rader.slice(0, Math.floor(ut.rader.length / 2)); ut.avkortet = true; }
+    return ut;
+  }
+
+  // Linjene DIAGRAM: og VALG: tas ut av teksten og tegnes for seg. En ugyldig linje vises ikke og gir ingen feil.
+  function del(tekst) {
+    var rest = [], diagram = null, valg = null;
+    String(tekst || "").split("\n").forEach(function (l) {
+      var t = l.trim();
+      if (/^DIAGRAM:/.test(t)) { try { diagram = JSON.parse(t.slice(8)); } catch (e) {} return; }
+      if (/^VALG:/.test(t)) { try { valg = JSON.parse(t.slice(5)); } catch (e) {} return; }
+      rest.push(l);
+    });
+    return { tekst: rest.join("\n").replace(/\*\*/g, "").trim(), diagram: diagram, valg: valg };
+  }
+
+  function stolper(d) {
+    if (!d || !Array.isArray(d.etiketter) || !Array.isArray(d.verdier)) return null;
+    var n = Math.min(d.etiketter.length, d.verdier.length, 12); if (!n) return null;
+    var v = d.verdier.slice(0, n).map(Number), maks = Math.max.apply(null, v.map(function (x) { return Math.abs(x) || 0; })) || 1;
+    var boks = el("div", "sk-diagram");
+    if (d.tittel) boks.appendChild(el("div", "ss-etikett", d.tittel));
+    for (var i = 0; i < n; i++) {
+      var rad = el("div", "ss-stolpe"); rad.appendChild(el("span", null, d.etiketter[i]));
+      var spor = el("div", "ss-spor"), fyll = el("i"); fyll.style.width = (Math.max(0, v[i] || 0) / maks * 100) + "%";
+      if (v[i] < 0) fyll.style.background = "var(--danger)";
+      spor.appendChild(fyll); rad.appendChild(spor);
+      rad.appendChild(el("b", null, (isFinite(v[i]) ? NB.format(v[i]) : "–") + (d.enhet ? " " + d.enhet : ""))); boks.appendChild(rad);
+    }
+    return boks;
+  }
+
+  var FEIL = { not_granted: "Siden fikk ikke lov til å bruke Claude. Last siden på nytt og trykk Tillat.",
+    rate_limited: "For mange spørsmål akkurat nå. Vent litt og prøv igjen.",
+    tools_unavailable: "KI-chat kan ikke kjøre SQL her. Åpne siden i claude.ai i nettleseren.",
+    session_expired: "Du må logge inn på nytt i claude.ai.",
+    prompt_too_large: "Samtalen ble for lang. Last siden på nytt for å starte en ny.",
+    refused: "Claude ville ikke svare på dette. Spør på en annen måte.",
+    sampling_disabled: "Claude er ikke tilgjengelig for denne kontoen." };
+
+  async function spor(q) {
+    if (opptatt || !q) return;
+    var st = document.getElementById("status"); if (st) st.remove();
+    logg.appendChild(el("div", "sk-du", q));
+    var b = el("div", "sk-claude"), tekstEl = el("div", "sk-tekst sk-tenker", "Tenker … henter tall med SQL");
+    var stopp = el("button", "sk-chip", "Stopp"); stopp.type = "button";
+    b.appendChild(tekstEl); b.appendChild(stopp); logg.appendChild(b); rull();
+    opptatt = true; sendKnapp.disabled = true;
+    var sqlLogg = [], ctl = new AbortController();
+    stopp.onclick = function () { ctl.abort(); };
+    try {
+      await window.kp.last();
+      if (!window.kp.db) throw { code: "ingen_db" };
+      turer.push({ role: "user", content: q });
+      var meldinger = [{ role: "user", content: window.kp.instruks }].concat(turer.slice(-20));
+      var svar = await sample(meldinger, { signal: ctl.signal,
+        onText: function (u) { tekstEl.className = "sk-tekst"; tekstEl.textContent = del(u.text).tekst; rull(); },
+        tools: [{ name: "sql",
+          description: "Kjører én lesende SQLite-spørring (SELECT eller WITH) mot hele museum.db. Returnerer kolonner, antall, rader (maks 200) og om svaret ble kuttet.",
+          inputSchema: { type: "object", properties: { sporring: { type: "string", description: "Én SELECT- eller WITH-spørring" } }, required: ["sporring"] },
+          execute: function (inp) { tekstEl.textContent = "Henter tall med SQL (" + (sqlLogg.length + 1) + ") …"; return kjorSql(inp && inp.sporring, sqlLogg); } }] });
+      turer.push({ role: "assistant", content: svar.text });
+      vis(b, tekstEl, stopp, svar.text, sqlLogg, svar.truncated);
+    } catch (e) {
+      stopp.remove();
+      var kode = e && e.code;
+      if (kode === "cancelled") { tekstEl.className = "sk-tekst"; tekstEl.textContent = (e.text ? del(e.text).tekst + "\n" : "") + "Stoppet."; }
+      else if (kode === "ingen_db") { tekstEl.className = "sk-tekst sk-feil"; tekstEl.textContent = "Fikk ikke lastet databasen: " + window.kp.feil; }
+      else {
+        tekstEl.className = "sk-tekst sk-feil";
+        tekstEl.textContent = (e && e.text ? del(e.text).tekst + "\n\n" : "") + (FEIL[kode] || ("Noe gikk galt (" + (kode || (e && e.message) || "ukjent") + "). Prøv igjen."));
+        if (kode === "not_granted" || kode === "sampling_disabled") skjulChat();
+      }
+      if (turer.length && turer[turer.length - 1].role === "user") turer.pop();
+    } finally { opptatt = false; sendKnapp.disabled = false; rull(); }
+  }
+
+  function vis(b, tekstEl, stopp, tekst, sqlLogg, avkortet) {
+    stopp.remove();
+    var d = del(tekst);
+    tekstEl.className = "sk-tekst"; tekstEl.textContent = d.tekst + (avkortet ? "\n(Svaret ble kuttet. Spør om mindre om gangen.)" : "");
+    var diag = stolper(d.diagram); if (diag) b.appendChild(diag);
+    if (Array.isArray(d.valg) && d.valg.length) {
+      var v = el("div", "sk-valg");
+      d.valg.slice(0, 5).forEach(function (x) { var k = el("button", "sk-chip", x); k.type = "button"; k.onclick = function () { spor(String(x)); }; v.appendChild(k); });
+      b.appendChild(v);
+    }
+    var h = el("div", "sk-handling");
+    var sjekk = el("button", null, "Sjekk svaret"); sjekk.type = "button"; sjekk.onclick = function () { spor("sjekk"); }; h.appendChild(sjekk);
+    if (sqlLogg.length) {
+      var vs = el("button", null, "Vis SQL (" + sqlLogg.length + ")"), pre = null; vs.type = "button";
+      vs.onclick = function () { if (pre) { pre.remove(); pre = null; return; } pre = el("pre", "sk-sql", sqlLogg.join("\n\n")); b.appendChild(pre); rull(); };
+      h.appendChild(vs);
+    }
+    var kp = el("button", null, "Kopier"); kp.type = "button";
+    kp.onclick = function () {
+      try { navigator.clipboard.writeText(d.tekst).then(function () { kp.textContent = "Kopiert"; }, function () { kp.textContent = "Kunne ikke kopiere"; }); }
+      catch (e) { kp.textContent = "Kunne ikke kopiere"; }
+    };
+    h.appendChild(kp);
+    b.appendChild(h);
+  }
+
+  // Sier Lars nei til at siden bruker Claude, tas kolonnen bort og dashbordet får hele skjermen igjen.
+  function skjulChat() {
+    document.body.classList.remove("med-chat"); skuff.classList.remove("sk-kolonne");
+    window.kp.spor = null;
+    window.dispatchEvent(new Event("resize"));
+  }
+
+  var f = document.getElementById("forslag");
+  FORSLAG.forEach(function (q) { var k = el("button", "sk-chip", q); k.type = "button"; k.onclick = function () { spor(q); }; f.appendChild(k); });
+  document.getElementById("skjema").onsubmit = function (e) {
+    e.preventDefault(); var v = felt.value.trim(); if (v && !opptatt) { felt.value = ""; spor(v); }
+  };
+
+  (async function () {
+    try {
+      sample = window.claude && window.claude.use ? await window.claude.use("sample") : null;
+      if (sample) { var lim = await sample.limits().catch(function () { return null; }); if (!lim || !lim.tools) sample = null; }
+    } catch (e) { sample = null; }
+    if (!sample) return;  // utenfor claude.ai, eller uten verktøy: ingen chat, dashbordet får hele skjermen
+    window.kp.spor = function (q) { window.kp.lukkAlle(); spor(q); };
+    skuff.classList.add("sk-kolonne");
+    document.body.classList.add("med-chat");
+    window.kp.lyttere.forEach(function (l) { l(); });
+  })();
+})();
+</script>
+
+<script>
+/* Drift og HR: tre faste rapporter regnet med SQL i siden. «I år» går til datoen tallene gjelder (data.json). */
+(function () {
+  "use strict";
+  var RAPPORT_SQL = {
+    prestasjon: "WITH n AS (SELECT avdeling, count(*) AS ansatte FROM hr_ansatte WHERE status <> 'Sluttet' GROUP BY avdeling),\n" +
+      "s AS (SELECT a.avdeling, m.ansatt_id, m.samlet_vurdering AS v FROM hr_medarbeidersamtaler m JOIN hr_ansatte a USING (ansatt_id)\n" +
+      "      WHERE a.status <> 'Sluttet' AND m.dato BETWEEN '{AARSTART}' AND '{IDAG}')\n" +
+      "SELECT n.avdeling AS Avdeling, n.ansatte AS Ansatte,\n" +
+      "  (SELECT count(*) FROM s WHERE s.avdeling = n.avdeling AND v = 'Overgår') AS \"Overgår\",\n" +
+      "  (SELECT count(*) FROM s WHERE s.avdeling = n.avdeling AND v = 'Innfrir') AS Innfrir,\n" +
+      "  (SELECT count(*) FROM s WHERE s.avdeling = n.avdeling AND v = 'Delvis') AS Delvis,\n" +
+      "  (SELECT count(*) FROM s WHERE s.avdeling = n.avdeling AND v = 'Under') AS Under,\n" +
+      "  n.ansatte - (SELECT count(DISTINCT ansatt_id) FROM s WHERE s.avdeling = n.avdeling) AS \"Uten samtale\"\n" +
+      "FROM n ORDER BY Under DESC, Delvis DESC",
+    belastning: "WITH n AS (SELECT avdeling, count(*) AS ansatte FROM hr_ansatte WHERE status <> 'Sluttet' GROUP BY avdeling),\n" +
+      "f AS (SELECT a.avdeling, sum(julianday(min(f.til, '{IDAG}')) - julianday(max(f.fra, '{AARSTART}')) + 1) AS dager\n" +
+      "      FROM hr_fravaer f JOIN hr_ansatte a USING (ansatt_id)\n" +
+      "      WHERE a.status <> 'Sluttet' AND f.type IN ('egenmelding', 'sykemelding') AND f.fra <= '{IDAG}' AND f.til >= '{AARSTART}' GROUP BY a.avdeling),\n" +
+      "v AS (SELECT avdeling, sum(timer > 9) AS lange, count(*) AS vakter FROM hr_vakter WHERE dato BETWEEN '{AARSTART}' AND '{IDAG}' GROUP BY avdeling)\n" +
+      "SELECT n.avdeling AS Avdeling, n.ansatte AS Ansatte, round(coalesce(f.dager, 0)) AS \"Fraværsdager\",\n" +
+      "  round(coalesce(f.dager, 0) * 1.0 / n.ansatte, 1) AS \"Dager per ansatt\", coalesce(v.lange, 0) AS \"Vakter over 9 t\", coalesce(v.vakter, 0) AS Vakter\n" +
+      "FROM n LEFT JOIN f USING (avdeling) LEFT JOIN v USING (avdeling) ORDER BY \"Dager per ansatt\" DESC",
+    innleie: "SELECT kategori AS Kategori, count(*) AS Oppdrag, round(sum(fakturerte_timer)) AS Timer, round(sum(totalbelop_nok)) AS \"Kostnad kr\"\n" +
+      "FROM hr_innleie WHERE periode_fra BETWEEN '{AARSTART}' AND '{IDAG}' GROUP BY kategori ORDER BY \"Kostnad kr\" DESC",
+    vakttimer: "SELECT avdeling AS Avdeling, round(sum(timer)) AS Vakttimer, count(*) AS Vakter FROM hr_vakter\n" +
+      "WHERE dato BETWEEN '{AARSTART}' AND '{IDAG}' GROUP BY avdeling ORDER BY Vakttimer DESC"
+  };
+  var RAPPORTER = [
+    { id: "prestasjon", navn: "Prestasjon", tittel: "Prestasjon per avdeling",
+      ingress: "Samlet vurdering fra årets medarbeidersamtaler, nåværende ansatte.", kilde: "hr_medarbeidersamtaler, hr_ansatte",
+      deler: [{ sql: "prestasjon", merk: ["Under", "Uten samtale"] }],
+      sporsmal: "Se på rapporten «Prestasjon per avdeling» (medarbeidersamtaler i år). Hvilke avdelinger bør jeg som direktør følge opp, og hvorfor?" },
+    { id: "belastning", navn: "Fravær og belastning", tittel: "Fravær og belastning per avdeling",
+      ingress: "Fraværsdager (egenmelding og sykemelding) i år per ansatt, ved siden av vakter over 9 timer. Ingen fraværsårsaker.", kilde: "hr_fravaer, hr_vakter, hr_ansatte",
+      deler: [{ sql: "belastning", merk: ["Dager per ansatt", "Vakter over 9 t"], stolpe: "Dager per ansatt" }],
+      sporsmal: "Se på rapporten «Fravær og belastning per avdeling» i år. Henger fravær og lange vakter sammen? Hva bør jeg se nærmere på?" },
+    { id: "innleie", navn: "Innleie og bemanning", tittel: "Innleie og egen bemanning",
+      ingress: "Innleid hjelp med oppstart i år per kategori, og egne vakttimer per avdeling.", kilde: "hr_innleie, hr_vakter",
+      deler: [{ sql: "innleie", stolpe: "Kostnad kr" }, { sql: "vakttimer", stolpe: "Vakttimer" }],
+      sporsmal: "Se på rapporten «Innleie og egen bemanning» i år. Hvor bruker vi mest på innleie, og er det rimelig sett mot egne vakttimer?" }
+  ];
+  var NB = new Intl.NumberFormat("nb-NO", { maximumFractionDigits: 1 });
+  var skuff = document.getElementById("rapportskuff"), innhold = document.getElementById("rp-innhold"), faner = document.getElementById("rp-faner");
+  var sporKnapp = document.getElementById("rp-spor");
+  var valgt = RAPPORTER[0];
+
+  function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = String(x); return e; }
+  function sql(id) {
+    var idag = window.kpDato || new Date().toISOString().slice(0, 10);
+    return RAPPORT_SQL[id].split("{IDAG}").join(idag).split("{AARSTART}").join(idag.slice(0, 4) + "-01-01");
+  }
+
+  function tabell(sqlId, merk, stolpe) {
+    var r = window.kp.db.exec(sql(sqlId))[0] || { columns: [], values: [] };
+    var t = el("table", "rp-tabell"), hode = el("tr"), thead = el("thead"), tb = el("tbody");
+    r.columns.forEach(function (k) { hode.appendChild(el("th", null, k)); });
+    thead.appendChild(hode); t.appendChild(thead);
+    var si = r.columns.indexOf(stolpe), maks = 0;
+    if (si >= 0) r.values.forEach(function (v) { maks = Math.max(maks, Number(v[si]) || 0); });
+    var merkIdx = (merk || []).map(function (m) { return r.columns.indexOf(m); });
+    var topp = merkIdx.map(function (i) { return i < 0 ? null : Math.max.apply(null, r.values.map(function (v) { return Number(v[i]) || 0; })); });
+    r.values.forEach(function (v) {
+      var tr = el("tr");
+      v.forEach(function (c, i) {
+        var td = el("td", null, typeof c === "number" ? NB.format(c) : c);
+        var mi = merkIdx.indexOf(i); if (mi >= 0 && topp[mi] > 0 && Number(c) === topp[mi]) td.className = "rp-merk";
+        tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    var boks = el("div"); boks.style.overflowX = "auto"; boks.appendChild(t);
+    if (si < 0 || !maks) return boks;
+    var d = el("div", "sk-diagram");
+    r.values.forEach(function (v) {
+      var rad = el("div", "ss-stolpe"); rad.appendChild(el("span", null, v[0]));
+      var spor = el("div", "ss-spor"), i = el("i"); i.style.width = (Number(v[si]) / maks * 100) + "%"; spor.appendChild(i); rad.appendChild(spor);
+      rad.appendChild(el("b", null, NB.format(v[si]))); d.appendChild(rad);
+    });
+    var w = el("div"); w.style.display = "grid"; w.style.gap = "0.6rem";
+    w.appendChild(el("div", "ss-etikett", stolpe)); w.appendChild(d); w.appendChild(boks);
+    return w;
+  }
+
+  function vis() {
+    [].forEach.call(faner.children, function (b) { b.setAttribute("aria-pressed", String(b.dataset.id === valgt.id)); });
+    sporKnapp.hidden = !window.kp.spor;
+    innhold.textContent = "";
+    if (window.kp.feil) { innhold.appendChild(el("div", "sk-status sk-feil", "Fikk ikke lastet databasen: " + window.kp.feil)); return; }
+    if (!window.kp.db) { innhold.appendChild(el("div", "sk-status", "Laster databasen … " + window.kp.steg)); return; }
+    innhold.appendChild(el("h3", null, valgt.tittel));
+    innhold.appendChild(el("p", "rp-ingress", valgt.ingress));
+    var sqlTekst = [];
+    try {
+      valgt.deler.forEach(function (d) { innhold.appendChild(tabell(d.sql, d.merk, d.stolpe)); sqlTekst.push(sql(d.sql)); });
+    } catch (e) { innhold.appendChild(el("div", "sk-feil", "Rapporten feilet: " + (e && e.message || e))); }
+    innhold.appendChild(el("div", "ss-kilde", "Kilde: " + valgt.kilde + ". Rødt er høyest i kolonnen."));
+    var h = el("div", "sk-handling"), vs = el("button", null, "Vis SQL"), pre = null; vs.type = "button";
+    vs.onclick = function () { if (pre) { pre.remove(); pre = null; return; } pre = el("pre", "sk-sql", sqlTekst.join("\n\n")); innhold.appendChild(pre); };
+    h.appendChild(vs); innhold.appendChild(h);
+  }
+
+  RAPPORTER.forEach(function (r) {
+    var b = el("button", "sk-chip rp-fane", r.navn); b.type = "button"; b.dataset.id = r.id;
+    b.onclick = function () { valgt = r; vis(); }; faner.appendChild(b);
+  });
+  var vistKlar = false;
+  window.kp.lyttere.push(function () {
+    // Tegn på nytt når databasen blir klar eller feiler, ikke hvert sekund mens den laster.
+    if (!skuff.hasAttribute("data-apen")) return;
+    var klar = !!(window.kp.db || window.kp.feil);
+    if (klar && vistKlar) { sporKnapp.hidden = !window.kp.spor; return; }
+    vistKlar = klar; vis();
+  });
+  function apne() { window.kp.lukkAlle(); skuff.setAttribute("data-apen", ""); vis(); window.kp.last(); }
+  document.getElementById("rp-lukk").onclick = function () { skuff.removeAttribute("data-apen"); };
+  sporKnapp.onclick = function () { if (window.kp.spor) window.kp.spor(valgt.sporsmal); };
+  window.kp.naarToppen(function () { window.kp.knapp("drift-hr-knapp", "Drift og HR", apne); });
 })();
 </script>

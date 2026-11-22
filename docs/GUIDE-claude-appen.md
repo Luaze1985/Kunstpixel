@@ -102,12 +102,18 @@ Kilder: [Use skills in Claude](https://support.claude.com/en/articles/12512180-u
 
 ## Storskjerm: «Kunstpixel i dag»
 
-Dashbordet for storskjerm ligger her: <https://claude.ai/artifact/SYi68yGa61mepG7aCyfpiY>
+Dashbordet for storskjerm ligger her: <https://claude.ai/artifact/PHo2wkd94Pmgo1qr1PzKXw>
 Det er privat. Andre kan ikke åpne lenken før du deler den (menyen **Del** på siden).
 
 **Vise det**
-1. Trykk **Kunstpixel i dag** under **Festet** i menyen til venstre i claude.ai.
+1. Åpne lenken over, eller trykk **Kunstpixel i dag** under **Festet** i menyen til venstre i claude.ai hvis du har festet den.
 2. Trykk **Fullskjerm** øverst til høyre på siden.
+3. Flaten under de fire tallene bytter selv hvert 12. sekund. **Stopp bytting** holder den fast. **Vis underlaget** viser radene bak flaten. Et trykk på et av de fire tallene hopper til flaten det hører til.
+
+**Spørre**
+- **KI-chat** står fast til høyre for dashbordet når siden er åpnet i claude.ai. Første gang du spør, spør claude.ai om siden får bruke Claude. Svar på Tillat. Hvert spørsmål bruker din egen Claude-kvote og tar ofte 30–90 sekunder. Sier du nei, forsvinner chatten og dashbordet får hele skjermen.
+- **Drift og HR** åpner tre faste rapporter (prestasjon, fravær og belastning, innleie). Ingen navn.
+- Første gang en av dem åpnes, lastes databasen inn i siden. Det tar noen sekunder.
 
 **Oppdatere tallene**
 Si «oppdater dashbordet» til Claude Code i Kunstpixel-mappa. Claude kjører
@@ -116,12 +122,12 @@ Si «oppdater dashbordet» til Claude Code i Kunstpixel-mappa. Claude kjører
 py -3.13 scripts/lag_storskjerm.py
 ```
 
-og publiserer `storskjerm.html` og `data.json` fra `.scratch\claude-app\` til samme lenke. «I dag» er dagen skriptet kjøres.
+og publiserer de fire filene fra `.scratch\claude-app\` til samme lenke: `storskjerm.html`, `data.json`, `museum.db.gz.txt` og `chat-instruks.txt`, med kapabiliteten `sample`. «I dag» er dagen skriptet kjøres, og chatten bruker samme dag.
 
 **I prosjektet Kunstpixel** kan du lime inn denne linjen under **Instruksjoner**:
 
 ```
-Dashbordet «Kunstpixel i dag» for storskjerm: https://claude.ai/artifact/SYi68yGa61mepG7aCyfpiY
+Dashbordet «Kunstpixel i dag» for storskjerm: https://claude.ai/artifact/PHo2wkd94Pmgo1qr1PzKXw
 ```
 
-Design: `docs/specs/2026-11-19-storskjerm-dashbord.md`. Beslutninger: DECISIONS D1–D8.
+Design: `docs/specs/2026-11-19-storskjerm-dashbord.md` og `docs/specs/2026-11-19-storskjerm-chat.md`. Beslutninger: DECISIONS D1–D8 og SC1–SC13.
