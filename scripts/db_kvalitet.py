@@ -59,9 +59,10 @@ FORKLARING: dict[str, tuple[str, str]] = {
         "Et fravær har sluttdato før startdato.",
         "Rett datoene i 05_data/arkiv_hr_fravaer.csv og bygg på nytt.",
     ),
-    "vakter over døgnmaks (overtid eller feil?)": (
-        "Vakter lengre enn 9 timer. Loven tillater det som overtid, men dataene merker dem ikke som overtid.",
-        "Du må avgjøre: er de overtid (merk dem), eller en datafeil (rett dem)? Maskinen kan ikke velge.",
+    "vakter over døgnmaks uten riktig overtid": (
+        "Vakter over døgnmaks (9 timer) er overtid (Lars 2026-11-22), men overtid_timer stemmer ikke med "
+        "timer minus døgnmaks. Da blir overtidstillegget i lønnskostnaden feil.",
+        "Bygg databasen på nytt. Hjelper det ikke, sjekk overtid_timer i bygg_hr_vakter i build_museum_db.py.",
     ),
 }
 
@@ -81,7 +82,7 @@ FIL_FOR_FUNN: dict[str, str] = {
     "for kort hviletid mellom vakter": "05_data/arkiv_hr_vakt_klokkeslett.csv",
     "kurs som utløper før det er tatt": "05_data/mock_ansatt_kompetanser.csv",
     "fravær som slutter før det begynner": "05_data/arkiv_hr_fravaer.csv",
-    "vakter over døgnmaks (overtid eller feil?)": "05_data/arkiv_hr_vakt_klokkeslett.csv",
+    "vakter over døgnmaks uten riktig overtid": BYGGESKRIPT,
 }
 
 

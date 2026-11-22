@@ -140,7 +140,7 @@ I tillegg til de relasjonelle driftstabellene har `museum.db` tabellen `handbok_
 
 ## 6. Komplett tabellkatalog (`61` brukertabeller i `05_data/museum.db`)
 
-Oversikt over samtlige **61 brukertabeller** (+ intern `sqlite_sequence` = 62 tabeller totalt, `92 505` brukerrader, `PRAGMA user_version = 8`, `sha256 = fd4262df266d5fe74d6184998b6cfabc8bd2e3d226c3312586eb81fcb053aaf4`). Se også [KUNNSKAPSKART.md](../KUNNSKAPSKART.md) for system- og MCP-arkitektur.
+Oversikt over samtlige **60 brukertabeller** (+ intern `sqlite_sequence` = 61 tabeller totalt, `93 553` brukerrader, `PRAGMA user_version = 9`, sjekksum i `museum.db.sha256`). Se også [KUNNSKAPSKART.md](../KUNNSKAPSKART.md) for system- og MCP-arkitektur.
 
 | Tabell | Rader | Nøkkel / Relasjon | Primær tilgang (`db.py` / MCP) |
 |---|---:|---|---|
@@ -156,7 +156,6 @@ Oversikt over samtlige **61 brukertabeller** (+ intern `sqlite_sequence` = 62 ta
 | `hr_people` | 12 | `id`, FK `ansatt_id` | `db.py`, `core/bemanning.py` |
 | `hr_availability` | 11 | FK `person_id` -> `hr_people` | `db.py`, `core/bemanning.py` |
 | `hr_person_skill` | 30 | FK `person_id`, `skill_code` | `db.py`, `core/bemanning.py` |
-| `hr_skills` | 7 | `code` | `db.py`, `core/bemanning.py` |
 | `hr_rules` | 8 | `id`, `domain`, `topic` | `db.py`, `core/bemanning.py` |
 | `org_ferdigheter` | 14 | `skill_code` | `db.py` |
 | `org_ansatt_kompetanse` | 596 | FK `ansatt_id`, `skill_code` | `db.py` |
@@ -180,11 +179,11 @@ Oversikt over samtlige **61 brukertabeller** (+ intern `sqlite_sequence` = 62 ta
 | `hms_avvik_tekst` | 40 | `avvik_id`, `dato`, `avdeling`, `stasjon` | `query_hms_avvik_tekst`, `search_hms_incident_narratives` |
 | `hms_ergonomi_rotasjon` | 9 | `stasjon_id`, `anbefalt_rotasjon_stasjon_id` | `db.py` |
 | `dagsbesok` | 6 209 | `dato` | `db.py`, `query_dagsbesok`, `get_daily_visitors` |
-| `besok_tilfredshet` | 885 | `dato`, daglige scoringer | `query_besok_og_anmeldelser`, `search_visitor_reviews_and_satisfaction` |
-| `anmeldelser` | 2 040 | `anmeldelse_id`, FK `utstilling_id`, `produkt_id` | `query_besok_og_anmeldelser`, `search_visitor_reviews_and_satisfaction` |
+| `besok_tilfredshet` | 939 | `dato`, daglige scoringer | `query_besok_og_anmeldelser`, `search_visitor_reviews_and_satisfaction` |
+| `anmeldelser` | 2 169 | `anmeldelse_id`, FK `utstilling_id`, `produkt_id` | `query_besok_og_anmeldelser`, `search_visitor_reviews_and_satisfaction` |
 | `publikum_faq` | 12 | `id` | `db.py` |
 | `kafe_meny` | 16 | `produkt_id` (`KAFE-xxx`) | `query_kafe_meny_og_salg`, `get_cafe_menu_and_sales` |
-| `kafe_varesalg` | 14 160 | `dato`, FK `produkt_id` | `query_kafe_meny_og_salg`, `get_cafe_menu_and_sales` |
+| `kafe_varesalg` | 15 024 | `dato`, FK `produkt_id` | `query_kafe_meny_og_salg`, `get_cafe_menu_and_sales` |
 | `saler` | 6 | `id` (`SAL-x`) | `db.py`, `query_building_map_data` |
 | `kunstnere` | 12 | `id` | `db.py` |
 | `verk` | 16 | `id`, FK `kunstner_id`, `sal_id` | `db.py` |
@@ -202,7 +201,8 @@ Oversikt over samtlige **61 brukertabeller** (+ intern `sqlite_sequence` = 62 ta
 | `h5_rapporteringskalender` | 12 | `id`, `rapport`, `eier` | `query_rapporteringskalender` |
 | `h5_rapportmaler` | 21 | `id`, `mal_navn` | `query_rapportmaler` |
 | `h5_arbeidsoppgaver_tidsbruk` | 19 | `id`, `rapport_id`, `rolle` | `query_arbeidsoppgaver_tidsbruk` |
-| `h5_historikk_2010_2026` | 17 | `ar`, årsoversikt 2010–2026 | `query_historikk_2010_2026` |
+| `h5_historikk_2010_2026` | 17 | `ar`, årsoversikt 2010–2026. Besøk, billett, kafé, inntekter, kostnader, resultat og årsverk regnes i bygget fra `driftsregnskap`, `dagsbesok` og `hr_vakter` (Lars 2026-11-22) | `query_historikk_2010_2026` |
+| `driftsregnskap` | 2 609 | PK (`maaned`, `konto`), 13 kontoer etter NS 4102, 2010-01–2026-12, fra `driftsregnskap.csv` (`regnskap_builder.py`) | `query_driftsregnskap` / `get_operating_accounts` |
 | `driftsmeldinger_epost` | 3 889 | `melding_id`, `ansatt_id` -> `hr_ansatte`, `sal_id` -> `saler`, `utstilling_id` -> `utstillinger_historikk`; daglig drifts-, kunde- og arrangementsinnboks 2010–2026 (82,0 % i 2020–2026) | `query_daglig_driftsinnboks` / `get_daily_ops_inbox` |
 | `driftsmeldinger_tiltak` | 3 889 | `tiltak_id`, `melding_id` -> `driftsmeldinger_epost`, `handbok_punkt_id` -> `handbok_oppslag`; triage, lovhjemmel og svarutkast | `query_daglig_driftsinnboks` / `get_daily_ops_inbox` |
 

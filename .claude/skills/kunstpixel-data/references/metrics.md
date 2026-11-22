@@ -5,12 +5,14 @@ Alle tall gjelder «i år» = til og med i dag, med mindre Lars ber om noe annet
 ## Lønnskostnad per avdeling
 
 - **Definisjon:** hva vaktene kostet i lønn etter Virke-tariffen, per avdeling og måned.
-- **Kilde:** `hr_vakter` × `hr_ansatte.lonnstrinn_virke` → `virke_tariff.lonnstrinn`, `norske_helligdager`, `arbeidstid_grenser.kveldstillegg_fra` (17,0).
+- **Kilde:** `hr_vakter` × `hr_ansatte.lonnstrinn_virke` → `virke_tariff.lonnstrinn`, `norske_helligdager`, `arbeidstid_grenser.kveldstillegg_fra` (17,0), `hr_vakter.overtid_timer`.
 - **Regel per vakt (første som slår til):**
   1. Helligdag (`norske_helligdager.dato`): `timer × timesats_helligdag`
   2. Lørdag/søndag (`strftime('%w')` 6 eller 0): `timer × timesats_helg`
   3. Ellers: kveldstimer (etter 17:00) × `timesats_kveld` + resten × `timesats_ordinar`
-- **Avrunding:** rund hver vakt til 2 desimaler før summering. Ellers blir summen opptil 5 øre ulik fasit (G11).
+- **Overtid (alltid i tillegg, alle dagtyper):** `0,4 × timesats_ordinar × overtid_timer` (AML § 10-6). `overtid_timer` = timer over døgnmaks (`arbeidstid_grenser.dognmaks_timer`, 9 t). Alle vakter over 9 t er overtid (Lars 2026-11-22).
+- **Avrunding:** rund hver vakt til 2 desimaler før summering, og overtidstillegget for seg. Ellers blir summen opptil 5 øre ulik fasit (G11).
+- **Svarfelt:** `overtid_timer` og `overtidstillegg_nok` per avdeling, `overtid_timer_totalt` og `overtidstillegg_nok_totalt` for måneden. `kostnad_nok` er med tillegget.
 - **Fasit:** `get_shift_cost_for_period(maaned)`. Statusporten P4d sjekker at SQL og verktøy er like.
 
 ```sql
@@ -26,7 +28,10 @@ SELECT v.avdeling,
                      (CAST(substr(v.slutt,1,2) AS REAL) + CAST(substr(v.slutt,4,2) AS REAL)/60)
                      - max(CAST(substr(v.start,1,2) AS REAL) + CAST(substr(v.start,4,2) AS REAL)/60, 17.0)))
                      * t.timesats_kveld
-         END, 2)), 2) AS kostnad_nok
+         END, 2)
+         + round(0.4 * t.timesats_ordinar * v.overtid_timer, 2)), 2) AS kostnad_nok,
+       sum(v.overtid_timer) AS overtid_timer,
+       round(sum(round(0.4 * t.timesats_ordinar * v.overtid_timer, 2)), 2) AS overtidstillegg_nok
 FROM hr_vakter v
 JOIN hr_ansatte a USING (ansatt_id)
 JOIN virke_tariff t ON t.lonnstrinn = a.lonnstrinn_virke

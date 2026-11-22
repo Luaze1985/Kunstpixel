@@ -153,7 +153,7 @@ def get_result_trend(fra_aar: int = 2010, til_aar: int = 2026) -> dict[str, Any]
     return {
         "fra_aar": fra_aar, "til_aar": til_aar, "aar": aar,
         "svakeste_aar": min(aar, key=lambda x: x["resultat_tkr"])["aar"] if aar else None,
-        "merknad": "Bare økonomiske nøkkeltall. HMS, tidsbruk og personal er ikke med. Tallene kommer fra "
-                   "H5-historikken og er ikke samkjørt med arkivets besøkstall (se K1).",
+        "merknad": "Bare økonomiske nøkkeltall. HMS, tidsbruk og personal er ikke med. Besøk, billett, kafé, "
+                   "kostnader og resultat er regnet fra driftsregnskapet, dagsbesøket og vaktene (Lars 2026-11-22).",
         "datakilde": "h5_historikk_2010_2026",
     }

@@ -93,7 +93,14 @@ def test_kjente_hull_er_regnet_fra_databasen(utpakket: Path) -> None:
     # Tidsdekning per tabell, regnet ved bygging (ikke skrevet for hånd).
     for tabell in ["dagsbesok", "besok_tilfredshet", "kafe_varesalg", "hr_vakter"]:
         assert tabell in tekst
-    assert "2026-10-29" in tekst  # tilfredshet, anmeldelser og kafé slutter her
+    # Sluttdatoen leses fra databasen (2026-10-29 før R5-bygget, 2026-12-31 etter), ikke skrevet inn for hånd.
+    import sqlite3
+    con = sqlite3.connect(f"file:{DB.as_posix()}?mode=ro", uri=True)
+    try:
+        slutt = con.execute("SELECT max(dato) FROM besok_tilfredshet").fetchone()[0]
+    finally:
+        con.close()
+    assert slutt in tekst
     assert "1 287" in tekst or "1287" in tekst  # vakter over døgnmaks
 
 

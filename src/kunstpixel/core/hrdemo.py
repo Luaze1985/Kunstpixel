@@ -27,11 +27,8 @@ CREATE TABLE hr_people (
  employment TEXT NOT NULL CHECK(employment IN ('fast','deltid','innleie')),
  ansatt_id TEXT NOT NULL REFERENCES hr_ansatte(ansatt_id)
 );
-CREATE TABLE hr_skills (
- code TEXT PRIMARY KEY, name TEXT NOT NULL, expires INTEGER NOT NULL CHECK(expires IN (0,1))
-);
 CREATE TABLE hr_person_skill (
- person_id TEXT NOT NULL REFERENCES hr_people(id), skill_code TEXT NOT NULL REFERENCES hr_skills(code),
+ person_id TEXT NOT NULL REFERENCES hr_people(id), skill_code TEXT NOT NULL REFERENCES org_ferdigheter(skill_code),
  verified INTEGER NOT NULL CHECK(verified IN (0,1)), evidence TEXT,
  acquired TEXT, valid_to TEXT,
  PRIMARY KEY(person_id, skill_code),
@@ -55,13 +52,37 @@ CREATE TABLE hr_rules (
  status TEXT NOT NULL CHECK(status IN ('active','draft','superseded')),
  PRIMARY KEY(id,version), CHECK(valid_to IS NULL OR valid_to>=valid_from)
 );
-CREATE INDEX hr_skills_idx ON hr_person_skill(skill_code,verified,valid_to);
+CREATE INDEX hr_person_skill_idx ON hr_person_skill(skill_code,verified,valid_to);
 CREATE INDEX hr_rules_idx ON hr_rules(domain,topic,status,valid_from);
 '''
 
 # Navnet lagres bare i hr_ansatte (revisjonsfunn 1). Alle oppslag på personer går gjennom denne koblingen.
 PERSON_SQL = '''SELECT p.id, a.navn AS name, p.role, p.active, p.employment, p.ansatt_id
     FROM hr_people p JOIN hr_ansatte a ON a.ansatt_id=p.ansatt_id'''
+
+
+# Kompetansekatalogen er org_ferdigheter (R2, hr_skills er fjernet). Svarfeltene heter som før:
+# code, name og expires. name er HR-demoens kortnavn der det finnes, ellers det fulle navnet.
+def _skill_name_sql(con: sqlite3.Connection, alias: str = 'f') -> str:
+    kolonner = {r[1] for r in con.execute("PRAGMA table_info('org_ferdigheter')")}
+    return f'COALESCE({alias}.kortnavn,{alias}.navn)' if 'kortnavn' in kolonner else f'{alias}.navn'
+
+
+def _check_skills_against_catalog(con: sqlite3.Connection, skills: list[dict[str, Any]]) -> None:
+    """Seedens kompetanser må finnes i org_ferdigheter med samme utløpsregel og kortnavn."""
+    if not con.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='org_ferdigheter'").fetchone():
+        raise ValueError('org_ferdigheter mangler: HR-demoen trenger kompetansekatalogen')
+    kolonner = {r[1] for r in con.execute("PRAGMA table_info('org_ferdigheter')")}
+    if 'kortnavn' not in kolonner:
+        raise ValueError('org_ferdigheter mangler kolonnen kortnavn')
+    katalog = {r[0]: (r[1], r[2]) for r in con.execute('SELECT skill_code, kortnavn, utloper FROM org_ferdigheter')}
+    for s in skills:
+        if s['code'] not in katalog:
+            raise ValueError(f'Kompetansen {s["code"]} finnes ikke i org_ferdigheter')
+        kortnavn, utloper = katalog[s['code']]
+        if (kortnavn, utloper) != (s['name'], s['expires']):
+            raise ValueError(f'Kompetansen {s["code"]} er ulik i seed og org_ferdigheter: '
+                             f'{(s["name"], s["expires"])} != {(kortnavn, utloper)}')
 
 
 def _date(value: str) -> str:
@@ -175,12 +196,11 @@ def validate_seed(seed: dict[str, Any]) -> None:
 def load_seed(con: sqlite3.Connection, seed: dict[str, Any]) -> None:
     """Create HR demo tables and load a validated seed. Shared by init_demo and build_museum_db."""
     validate_seed(seed)
+    _check_skills_against_catalog(con, seed['skills'])
     with con:
         con.executescript(SCHEMA)
         con.executemany('INSERT INTO hr_people VALUES (?,?,?,?,?)', [
             (p['id'],p['role'],p['active'],p['employment'],p['ansatt_id']) for p in seed['people']])
-        con.executemany('INSERT INTO hr_skills VALUES (?,?,?)', [
-            (s['code'],s['name'],s['expires']) for s in seed['skills']])
         con.executemany('INSERT INTO hr_person_skill VALUES (?,?,?,?,?,?)', [
             (x['person_id'],x['skill_code'],x['verified'],x.get('evidence'),x.get('acquired'),x.get('valid_to'))
             for x in seed['person_skills']])
@@ -238,7 +258,7 @@ def count_skill(code: str, as_of: str, db_path: Path | str | None = None) -> dic
     """Exact count of active people with VERIFIED and CURRENT competence."""
     as_of = _date(as_of)
     with _open(db_path) as con:
-        skill = con.execute('SELECT * FROM hr_skills WHERE code=?',(code,)).fetchone()
+        skill = con.execute('SELECT skill_code FROM org_ferdigheter WHERE skill_code=?',(code,)).fetchone()
         if skill is None:
             return {'code': code, 'as_of': as_of, 'count': 0, 'people': [], 'error': 'UNKNOWN_SKILL'}
         rows = con.execute('''SELECT p.id,a.navn AS name FROM hr_people p
@@ -263,8 +283,8 @@ def candidates(work_date: str, start: str = '10:00', end: str = '16:00',
         raise ValueError('Ugyldig tidsrom eller bemanningsbehov')
     with _open(db_path) as con:
         persons = [dict(r) for r in con.execute(PERSON_SQL + ' ORDER BY p.id')]
-        skills = [dict(r) for r in con.execute('''SELECT ps.*,s.expires FROM hr_person_skill ps
-                   JOIN hr_skills s ON s.code=ps.skill_code''')]
+        skills = [dict(r) for r in con.execute('''SELECT ps.*,f.utloper AS expires FROM hr_person_skill ps
+                   JOIN org_ferdigheter f ON f.skill_code=ps.skill_code''')]
         avs = [dict(r) for r in con.execute('SELECT * FROM hr_availability WHERE work_date=?',(work_date,))]
     result = []
     for person in persons:
@@ -326,7 +346,8 @@ def find_rules(domain: str | None = None, topic: str | None = None, as_of: str =
 def list_skills(db_path: Path | str | None = None) -> list[dict]:
     """Return complete competence catalog with expiration requirements."""
     with _open(db_path) as con:
-        rows = con.execute('SELECT code, name, expires FROM hr_skills ORDER BY code').fetchall()
+        rows = con.execute(f'''SELECT f.skill_code AS code, {_skill_name_sql(con)} AS name, f.utloper AS expires
+                               FROM org_ferdigheter f ORDER BY f.skill_code''').fetchall()
         return [dict(r) for r in rows]
 
 
@@ -346,10 +367,10 @@ def get_person(person_id: str, as_of: str = '2026-11-07', db_path: Path | str | 
         if not p:
             return None
         person = dict(p)
-        skills = con.execute('''SELECT ps.skill_code, s.name as skill_name, s.expires,
+        skills = con.execute(f'''SELECT ps.skill_code, {_skill_name_sql(con)} as skill_name, f.utloper as expires,
                                        ps.verified, ps.evidence, ps.acquired, ps.valid_to
                                 FROM hr_person_skill ps
-                                JOIN hr_skills s ON s.code = ps.skill_code
+                                JOIN org_ferdigheter f ON f.skill_code = ps.skill_code
                                 WHERE ps.person_id=?
                                 ORDER BY ps.skill_code''', (person_id,)).fetchall()
         enriched_skills = []

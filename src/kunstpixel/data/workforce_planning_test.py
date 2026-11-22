@@ -8,7 +8,6 @@ Verifies referential consistency, capacity math, make-or-buy economics,
 and regulatory compliance for a Kunstsilo-sized museum.
 """
 
-import json
 import sqlite3
 from pathlib import Path
 
@@ -246,9 +245,10 @@ def run_scenario_suite():
 
     # 17. Konserverings- og materialkompetanse i personas
     q17 = """
-    SELECT navn, stilling, icor_rolle
-    FROM personas
-    WHERE stilling LIKE '%konservator%' OR stilling LIKE '%Registrar%'
+    SELECT a.navn, a.stilling, p.icor_rolle
+    FROM personas p JOIN hr_ansatte a ON a.ansatt_id = p.id
+    WHERE a.stilling LIKE '%konservator%' OR a.stilling LIKE '%Registrar%'
+    ORDER BY p.rowid
     """
     res17 = c_hist.execute(q17).fetchall()
     record(17, "4. Kompetanse & Suksesjon", "Fagkonservatorer i personas-registeret", q17,
@@ -277,8 +277,8 @@ def run_scenario_suite():
     # 20. Forskere og kuratorer med publikasjonsmeritter
     q20 = """
     SELECT count(*)
-    FROM personas
-    WHERE cv_json LIKE '%publikasjoner%' AND avdeling = 'Kuratering'
+    FROM personas p JOIN hr_ansatte a ON a.ansatt_id = p.id
+    WHERE p.cv_json LIKE '%publikasjoner%' AND a.avdeling = 'Kuratering'
     """
     cnt20 = c_hist.execute(q20).fetchone()[0]
     record(20, "4. Kompetanse & Suksesjon", "Kuratorer med forsknings- og publiseringsmeritter", q20,

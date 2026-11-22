@@ -642,16 +642,12 @@ def test_mer_i_menyen_huskes_mellom_sider(leder_side) -> None:
     assert page.get_by_role("navigation", name="Innhold").get_by_role("button", name="Vaktrom", exact=True).is_visible()
 
 
-def test_innlansfrister_er_skjult_til_regelen_er_bekreftet(leder_side) -> None:
+def test_innlansfrister_skjules_ikke_lenger(leder_side) -> None:
+    # Lars 2026-11-22: regelen for retur av innlån er godkjent (U6 opphevet). Siden sier ikke lenger at noe er skjult.
     page, base = leder_side
-    page.goto(base, wait_until="networkidle")
-    page.get_by_role("region", name="Mine frister").get_by_text("Forfalt", exact=False).first.wait_for()
-    assert "Retur av innlån" not in page.locator("main").inner_text()
     page.goto(_adr(base, "frister"), wait_until="networkidle")
     page.get_by_role("region", name=re.compile("^Forfalt")).wait_for()
-    tekst = page.locator("main").inner_text()
-    assert "Retur av innlån" not in tekst
-    assert "innlånsfrister er skjult" in tekst
+    assert "er skjult til regelen" not in page.locator("main").inner_text()
 
 
 def test_i_dag_kort_uten_tom_plass_til_venstre(leder_side) -> None:

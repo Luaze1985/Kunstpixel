@@ -8,7 +8,7 @@ Daglige besøkstall og billettinntekter, tilfredshet, anmeldelser og kafésalg.
 |---|---|---|---|
 | `dagsbesok` | `dato` | `er_aapent`, `antall_voksne`, `antall_student`, `antall_barn`, `besok_totalt`, `gratis_dag`, `inntekt_nok` | 979 stengte dager, 201 gratisdager |
 | `besok_tilfredshet` | `dato` | `antall_svar`, `score_utstilling`, `score_kafe`, `score_service`, `score_totalt` | Ikke hver dag |
-| `anmeldelser` | `anmeldelse_id` | `dato`, `kanal`, `stjerner`, `utstilling_id`, `produkt_id`, `tekst` | `kanal`: google, egen_undersokelse, tripadvisor. 1 204 uten utstilling. |
+| `anmeldelser` | `anmeldelse_id` | `dato`, `kanal`, `stjerner`, `utstilling_id`, `produkt_id`, `tekst` | `kanal`: google, egen_undersokelse, tripadvisor. 1 286 uten utstilling. |
 | `kafe_meny` | `produkt_id` | navn, pris, allergener | |
 | `kafe_varesalg` | `dato`, `produkt_id` | `antall`, `omsetning_nok` | |
 

@@ -121,7 +121,7 @@ caser:
       steg:
         - verktoy: get_shift_cost_for_period
           args: {maaned: "2026-06"}
-          forventet: ["776898.74", "Formidling", "Drift"]
+          forventet: ["778083.81", "Formidling", "Drift"]
     datagrunnlag: [hr_vakter, virke_tariff]
     gdpr: >
       Kostnaden er summert per avdeling. Lønn per person vises aldri. Vaktdataene mangler merket
@@ -132,24 +132,25 @@ caser:
 
   - id: K1
     omrade: okonomi
-    tittel: To kilder, to svar
+    tittel: To kilder, ett svar
     oppdrag: >
       Hvor mange besøkte museet i 2025, og hvor mye tok vi inn i billetter? Finn svaret i to kilder og
-      avgjør hvilken du stoler på.
+      sjekk at de sier det samme.
     kjoring:
       type: lesecase
     gdpr: >
-      Ingen persondata. Dette er et datakvalitetsproblem, ikke et personvernproblem. En KI som får begge
-      kildene, kan selvsikkert gi ett av to svar, og begge er «riktige» ut fra hver sin kilde.
+      Ingen persondata. Dette er et datakvalitetsproblem, ikke et personvernproblem. Før var kildene uenige,
+      og en KI kunne selvsikkert gi ett av to svar.
     gevinst:
       tekst: >
-        Tallet bestemmer budsjett, bemanning og søknader. Å oppdage uenigheten før en KI summerer opp,
-        er mer verdt enn noe svar den gir.
+        Tallet bestemmer budsjett, bemanning og søknader. Når én kilde er fasit og den andre regnes fra den,
+        får alle det samme svaret.
     se_etter: >
       Arkivet (dagsbesok, utstillinger og utstillingsøkonomi) sier 135 906 besøkende og 10 938 680 kr i
-      billetter for 2025. Årsstatistikken (h5_historikk_2010_2026) sier 39 800 besøkende og 2 273 000 kr.
-      Arkivet henger sammen internt (tre tabeller), mens årsstatistikken står alene. Begge er syntetiske,
-      og uenigheten er ikke rettet ennå. Beslutning 2026-10-30: la begge stå og bruk den som case.
+      billetter for 2025. Årsstatistikken (h5_historikk_2010_2026) sier det samme: 135 906 besøkende og
+      10 939 000 kr (avrundet til tusen kroner). Lars 2026-11-22: vaktene og dagsdataene er fasit, og
+      bygget regner h5-tallene fra dem. Før omregningen sa h5 39 800 besøkende og 2 273 000 kr. Den interne
+      assistenten leser fortsatt de gamle tallene fra `05_data/governance/historikk_tall.yaml` (låst med sjekksum).
 
   - id: P2
     omrade: publikum
@@ -346,7 +347,7 @@ caser:
       steg:
         - verktoy: get_period_result
           args: {maaned: "2026-06"}
-          forventet: ["1057720", "776898.74", "280821.26", "i_pluss"]
+          forventet: ["1057720", "778083.81", "279636.19", "i_pluss"]
     datagrunnlag: [dagsbesok, hr_vakter, virke_tariff]
     gdpr: >
       Ingen persondata, bare summer. Vaktkostnaden er regnet ut fra Virke-tariffen uten å vise lønn per
@@ -411,7 +412,7 @@ caser:
       steg:
         - verktoy: get_result_trend
           args: {fra_aar: 2010, til_aar: 2026}
-          forventet: ["-420", "svakeste_aar", "2020"]
+          forventet: ["-5162", "svakeste_aar", "2020"]
     datagrunnlag: [h5_historikk_2010_2026]
     gdpr: >
       Ingen persondata. Verktøyet gir bare økonomiske nøkkeltall. HMS-, tidsbruk- og personaltall i samme
@@ -421,5 +422,6 @@ caser:
         Et langt tidsbilde uten at noen setter sammen 17 årsrapporter. Hva som skjedde i et dårlig år,
         står i H5-historikken som tekst.
     se_etter: >
-      2020 er svakeste år. Tallene bygger på H5 og er ikke samkjørt med arkivets besøkstall (K1), så
-      sammenlign aldri de to kildene uten å si fra.
+      2020 er svakeste år (−5 162 tkr). Besøk, billett, kafé, kostnader og resultat i H5 er regnet fra
+      driftsregnskapet, dagsbesøket og vaktene (Lars 2026-11-22), så de stemmer med arkivet (K1).
+      Resultatet er negativt alle år før 2019 og i 2020–2021, fordi lønnen fra vaktene er høy.

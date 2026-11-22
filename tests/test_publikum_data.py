@@ -7,8 +7,11 @@ og at persondata bare finnes som tydelig falske øvingsdata.
 from __future__ import annotations
 
 import csv
+import hashlib
+import io
 import re
 import sqlite3
+import subprocess
 from collections import defaultdict
 from pathlib import Path
 
@@ -38,17 +41,102 @@ def test_alle_rader_er_merket_syntetisk(navn: str) -> None:
 
 
 def test_kafeomsetning_stemmer_med_aarstallene() -> None:
-    _, maal, _ = pb.les_grunnlag()
+    """Første leveranse (til og med ORIGINAL_SLUTT) treffer årstallene. Forlengelsen er ikke med her."""
+    _, maal, _ = pb.les_grunnlag(pb.ORIGINAL_SLUTT)
     sum_aar: dict[int, float] = defaultdict(float)
     for r in _les("kafe_varesalg.csv"):
-        sum_aar[int(r["dato"][:4])] += float(r["omsetning_nok"])
+        if r["dato"] <= pb.ORIGINAL_SLUTT:
+            sum_aar[int(r["dato"][:4])] += float(r["omsetning_nok"])
     for aar, m in maal.items():
         assert abs(sum_aar[aar] - m) / m < 0.01, (aar, sum_aar[aar], m)
+
+
+def test_kafe_i_forlengelsen_har_samme_kroner_per_besok() -> None:
+    """November–desember 2026 skal ha samme kafékroner per besøk som januar–oktober (±10 %),
+    og hele 2026 skal ligge nær kafeinntekter_tkr i h5-kilden (innen 5 %). I bygget regnes kafeinntekter_tkr
+    fra kafésalget (Lars 2026-11-22), så målet leses fra kilden, ikke fra museum.db."""
+    con = sqlite3.connect(f"file:{pb.DB.as_posix()}?mode=ro", uri=True)
+    try:
+        besok = dict(con.execute("SELECT dato, besok_totalt FROM dagsbesok WHERE aar = 2026 AND er_aapent = 1"))
+    finally:
+        con.close()
+    aarstall = pb.kafe_maal_per_aar()[2026]
+    salg: dict[str, float] = defaultdict(float)
+    for r in _les("kafe_varesalg.csv"):
+        if r["dato"].startswith("2026"):
+            salg[r["dato"]] += float(r["omsetning_nok"])
+
+    def kr_per_besok(dager: list[str]) -> float:
+        return sum(salg[d] for d in dager) / sum(besok[d] for d in dager)
+
+    for_ = kr_per_besok([d for d in salg if d <= pb.ORIGINAL_SLUTT])
+    etter = kr_per_besok([d for d in salg if d > pb.ORIGINAL_SLUTT])
+    assert abs(etter / for_ - 1) < 0.10, (for_, etter)
+    assert abs(sum(salg.values()) / aarstall - 1) < 0.05, (sum(salg.values()), aarstall)
 
 
 def test_ingen_data_etter_sluttdatoen() -> None:
     for navn in ("kafe_varesalg.csv", "besok_tilfredshet.csv", "anmeldelser.csv"):
         assert max(r["dato"] for r in _les(navn)) <= pb.SISTE_DATO
+
+
+SERIER = ["kafe_varesalg.csv", "besok_tilfredshet.csv", "anmeldelser.csv"]
+
+
+@pytest.mark.parametrize("navn", SERIER)
+def test_seriene_gaar_til_31_desember(navn: str) -> None:
+    """Samme sluttdato som dagsbesok, hr_vakter og hr_fravaer (R5)."""
+    assert max(r["dato"] for r in _les(navn)) == "2026-12-31"
+
+
+@pytest.mark.parametrize("navn", FILER)
+def test_radene_til_og_med_29_oktober_er_uendret(navn: str) -> None:
+    """Forlengelsen legges etter de gamle radene. Fasit er filen slik den var i commit fc9452d."""
+    gammel = subprocess.run(["git", "show", f"fc9452d:05_data/{navn}"], cwd=pb.PROJECT_ROOT,
+                            capture_output=True, check=True).stdout
+    ny = (DATA / navn).read_bytes()
+    assert ny[: len(gammel)] == gammel, f"{navn}: gamle rader er endret"
+    if navn != "kafe_meny.csv":
+        assert all(r["dato"] > pb.ORIGINAL_SLUTT for r in csv.DictReader(io.StringIO(ny[len(gammel):].decode("utf-8"),
+                   newline=""), fieldnames=list(_les(navn)[0])))
+
+
+@pytest.mark.parametrize("navn", SERIER)
+def test_ingen_rader_paa_stengte_dager(navn: str) -> None:
+    con = sqlite3.connect(f"file:{pb.DB.as_posix()}?mode=ro", uri=True)
+    try:
+        aapne = {d for (d,) in con.execute("SELECT dato FROM dagsbesok WHERE er_aapent = 1")}
+    finally:
+        con.close()
+    stengt = sorted({r["dato"] for r in _les(navn)} - aapne)
+    assert not stengt, stengt[:10]
+
+
+def test_anmeldelser_peker_paa_utstilling_som_pagaar() -> None:
+    con = sqlite3.connect(f"file:{pb.DB.as_posix()}?mode=ro", uri=True)
+    try:
+        periode = {i: (s, e) for i, s, e in con.execute(
+            "SELECT utstilling_id, periode_start, periode_slutt FROM utstillinger_historikk")}
+    finally:
+        con.close()
+    feil = [(r["anmeldelse_id"], r["dato"], r["utstilling_id"]) for r in _les("anmeldelser.csv")
+            if r["utstilling_id"] and not (periode[r["utstilling_id"]][0] <= r["dato"] <= periode[r["utstilling_id"]][1])]
+    assert not feil, feil[:10]
+
+
+def test_anmeldelse_id_er_unike_og_fortlopende() -> None:
+    ider = [r["anmeldelse_id"] for r in _les("anmeldelser.csv")]
+    assert ider == [f"ANM-{n:05d}" for n in range(1, len(ider) + 1)]
+
+
+def test_to_kjoringer_gir_like_filer(tmp_path: Path) -> None:
+    a, b = tmp_path / "a", tmp_path / "b"
+    a.mkdir()
+    b.mkdir()
+    pb.bygg(a)
+    pb.bygg(b)
+    for navn in FILER:
+        assert hashlib.sha256((a / navn).read_bytes()).digest() == hashlib.sha256((b / navn).read_bytes()).digest(), navn
 
 
 def test_persondata_er_bare_falske_ovingsdata() -> None:

@@ -2,7 +2,7 @@
 
 Bare lesing. Setter sammen Datafinners egne beregninger («I dag», «Driften denne uka», «Mine frister» for
 Museumsdirektør), så dashbordet og Datafinner viser de samme tallene. Ingen navn, fraværsårsak eller
-e-postutkast går ut, fordi skjermen vises for andre. Innlånsfrister skjules (U6).
+e-postutkast går ut, fordi skjermen vises for andre. Innlånsfrister vises (U6 opphevet 2026-11-22).
 """
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ from src.kunstpixel.core import db, driftsoversikt, frister
 
 ROLLE = "Museumsdirektør"
 GRUPPER = ("Forfalt", "I dag", "Denne uka", "Senere")
-SKJULTE_FRISTER = {"innlan"}  # U6: regelen for retur av innlån er ikke bekreftet
+SKJULTE_FRISTER: set[str] = set()  # Tom: Lars godkjente regelen for retur av innlån 2026-11-22 (U6 opphevet)
 FELT_I_FRIST = ("type", "ref", "tittel", "frist_dato", "gruppe", "kilde")
 UKER = 8
 

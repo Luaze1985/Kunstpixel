@@ -129,7 +129,8 @@ def test_arena_er_fjernet_fra_skallet(server: str) -> None:
 
 
 def test_k1_tallene_stemmer_med_databasen() -> None:
-    """K1 påstår at to kilder er uenige. Da må tallene i casen være de som står i databasen i dag."""
+    """K1: h5 regnes fra dagsdataene i bygget (Lars 2026-11-22), så kildene skal være enige,
+    og tallene i casen skal være de som står i databasen i dag."""
     from src.kunstpixel.core import db
 
     with db.get_db_connection() as con:
@@ -138,6 +139,7 @@ def test_k1_tallene_stemmer_med_databasen() -> None:
         utst_besok = con.execute("SELECT SUM(besokstall_total) FROM utstillinger_historikk WHERE aar = 2025").fetchone()[0]
         h5_besok, h5_tkr = con.execute("SELECT besok_totalt, billettinntekter_tkr FROM h5_historikk_2010_2026 WHERE ar = 2025").fetchone()
     assert arkiv_besok == utst_besok, "arkivet skal henge sammen internt"
+    assert h5_besok == arkiv_besok and h5_tkr == (arkiv_inntekt + 500) // 1000, "h5 skal være regnet fra dagsbesok"
 
     def tall(n: int) -> str:
         return f"{n:,}".replace(",", " ")

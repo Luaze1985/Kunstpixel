@@ -1021,6 +1021,52 @@ def generate_virke_tariff_tillegg(ut_csv: Path = DATA_DIR / "virke_tariff_tilleg
     return len(rader)
 
 
+# Lange sykemeldinger (R6): (dag den skal pågå, dager fra første fraværsdag til den dagen, min uker, maks uker).
+# 2026-09-14 er testenes «i dag» (tests/conftest.py), 2026-11-22 er dagen rettingen ble laget.
+# Ett fravær ligger tilbake i tid, så historikken også har lange sykemeldinger.
+# Høyst én per kvartal, så kvartalet holder seg innenfor ±1,5 prosentpoeng av SSB.
+LANGE_SYKEMELDINGER = [
+    (date(2024, 3, 15), 30, 5, 7),
+    (date(2026, 9, 14), 42, 8, 8),    # 2026-08-03 til 2026-09-27, slutter i 3. kvartal
+    (date(2026, 11, 22), 50, 8, 10),  # starter 2026-10-02, uke 7 er nådd 2026-11-20
+]
+
+
+def _lange_sykemeldinger(kandidater: list[tuple[str, str]], shift_days: set[tuple[str, str]],
+                         records: list[list[str]]) -> list[tuple[str, date, date]]:
+    """Velg 5–10 uker lange sykemeldinger på ansatte uten vakt eller annet fravær i perioden.
+
+    Egen Random, så resten av fraværet ikke påvirkes. Hver ansatt får høyst én.
+    """
+    from datetime import timedelta
+
+    rng = random.Random("kunstpixel-lange-sykemeldinger-r6-v1")
+    brukt: set[str] = set()
+    ut = []
+    for pagar_dag, dager_inn, uker_min, uker_maks in LANGE_SYKEMELDINGER:
+        fra = pagar_dag - timedelta(days=dager_inn)
+        while fra.weekday() >= 5:  # første fraværsdag på en hverdag
+            fra -= timedelta(days=1)
+        uker = rng.randint(uker_min, uker_maks)
+        til = fra + timedelta(days=uker * 7 - 1)
+        mulige = []
+        for emp_id, ansatt_fra in kandidater:
+            if emp_id in brukt or not ansatt_fra or ansatt_fra > fra.isoformat():
+                continue
+            if any(r[1] == emp_id and not (r[3] < fra.isoformat() or r[2] > til.isoformat()) for r in records):
+                continue
+            dager = (fra + timedelta(days=i) for i in range((til - fra).days + 1))
+            if any((emp_id, d.isoformat()) in shift_days for d in dager):
+                continue
+            mulige.append(emp_id)
+        if not mulige:
+            raise ValueError(f"Fant ingen ansatt til lang sykemelding rundt {pagar_dag}")
+        emp_id = rng.choice(mulige)
+        brukt.add(emp_id)
+        ut.append((emp_id, fra, til))
+    return ut
+
+
 def generate_absence_records(ut_csv: Path = DATA_DIR / "arkiv_hr_fravaer.csv") -> int:
     """Generer syntetisk sykefravær og permisjon (2010-2026).
 
@@ -1157,6 +1203,21 @@ def generate_absence_records(ut_csv: Path = DATA_DIR / "arkiv_hr_fravaer.csv") -
                     fravaer_idx += 1
                     absence_records.append([fid, emp_id, start_cand.isoformat(), slutt_cand.isoformat(), "permisjon", SYNTETISK])
 
+    # Lange sykemeldinger (DECISIONS F1): legges til etter kvartalsløkka, så radene over er uendret.
+    con = sqlite3.connect(f"file:{base_db_path.resolve().as_posix()}?mode=ro", uri=True)
+    try:
+        kandidater = con.execute(
+            "SELECT ansatt_id, ansatt_fra FROM hr_ansatte a WHERE status <> 'Sluttet' "
+            "AND NOT EXISTS (SELECT 1 FROM hr_vakter v WHERE v.ansatt_id = a.ansatt_id) "
+            "AND ansatt_id <> 'KP-ANS-001' ORDER BY ansatt_id"
+        ).fetchall()
+    finally:
+        con.close()
+    for emp_id, fra, til in _lange_sykemeldinger(kandidater, shift_days, absence_records):
+        absence_records.append([f"FRAV-{fravaer_idx:06d}", emp_id, fra.isoformat(), til.isoformat(),
+                                "sykemelding", SYNTETISK])
+        fravaer_idx += 1
+
     with open(ut_csv, "w", encoding="utf-8", newline="") as f:
         w = csv.writer(f, lineterminator="\n")
         w.writerow(["fravaer_id", "ansatt_id", "fra", "til", "type", "datakilde"])
@@ -1165,7 +1226,16 @@ def generate_absence_records(ut_csv: Path = DATA_DIR / "arkiv_hr_fravaer.csv") -
     return len(absence_records)
 
 
-def generate_shift_adjustments(ut_csv: Path = DATA_DIR / "arkiv_hr_vakt_justering.csv") -> int:
+def _timer_etter_klemt_slutt(start: str, timer: float) -> float:
+    """Timer slik vakten faktisk blir: slutt regnes som i build_museum_db.bygg_hr_vakter (klemt på 23:xx)."""
+    start_m = int(start[:2]) * 60 + int(start[3:])
+    slutt_m = start_m + round(timer * 60) + round(LUNSJ_TIMER * 60)
+    klemt_m = min(23, slutt_m // 60) * 60 + min(59, slutt_m % 60)
+    return (klemt_m - start_m) / 60 - LUNSJ_TIMER
+
+
+def generate_shift_adjustments(ut_csv: Path = DATA_DIR / "arkiv_hr_vakt_justering.csv",
+                               klokke_csv: Path = KLOKKESLETT_CSV) -> int:
     """Generer justeringer for 2-4 % av vaktene som forlenges til 9-11 timer.
 
     Knyttet til datoer for utstillingsaapninger (vernissasjer), kveldsarrangementer og fredag/loerdag.
@@ -1210,10 +1280,17 @@ def generate_shift_adjustments(ut_csv: Path = DATA_DIR / "arkiv_hr_vakt_justerin
 
     chosen = sorted(selected_cands + selected_others, key=lambda x: x[0])
 
+    with open(klokke_csv, encoding="utf-8", newline="") as f:
+        starttid = {r["vakt_id"]: r["start"] for r in csv.DictReader(f)}
+
     rader = []
     for vakt_id, dato in chosen:
         # Forleng til 9.0, 9.5, 10.0, 10.5 eller 11.0 timer
         nye_timer = rng.choice([9.0, 9.5, 10.0, 10.5, 11.0])
+        # S5: byggeskriptet klemmer slutt på time 23. Vakter som da ikke er over døgnmaks
+        # får timer = slutt − start − lunsj. Lengre vakter står urørt (overtid eller feil er Lars' valg).
+        if nye_timer <= 9.0:
+            nye_timer = _timer_etter_klemt_slutt(starttid[vakt_id], nye_timer)
         rader.append([vakt_id, nye_timer, SYNTETISK])
 
     with open(ut_csv, "w", encoding="utf-8", newline="") as f:

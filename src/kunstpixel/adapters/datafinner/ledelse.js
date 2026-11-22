@@ -201,8 +201,8 @@
       return k;
     });
   }
-  // Innlånsfristen (retur når utstillingen slutter) er et forslag Lars ikke har bekreftet. Skjult i Datafinner til da.
-  var SKJULTE_FRISTER = { innlan: 1 };
+  // Fristtyper som skjules i Datafinner. Tom: Lars godkjente regelen for retur av innlån 2026-11-22 (U6 opphevet).
+  var SKJULTE_FRISTER = {};
   function skjulFrister(frister) {
     var alle = frister || [], synlige = alle.filter(function (f) { return !SKJULTE_FRISTER[f.type]; });
     return { frister: synlige, skjult: alle.length - synlige.length };

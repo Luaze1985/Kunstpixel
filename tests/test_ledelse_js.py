@@ -282,11 +282,12 @@ def test_uke_rader_lar_andre_lister_vaere() -> None:
     assert js(f"L.ukeRader({json.dumps(rader)})") == rader
 
 
-def test_skjul_innlansfrister() -> None:
+def test_innlansfrister_vises() -> None:
+    # Lars 2026-11-22: regelen «retur når utstillingen slutter» er godkjent. U6 er opphevet, ingen frister skjules.
     frister = [{"type": "innlan", "id": "a"}, {"type": "driftsmelding", "id": "b"}, {"type": "rapport", "id": "c"}]
     ut = js(f"L.skjulFrister({json.dumps(frister)})")
-    assert [f["id"] for f in ut["frister"]] == ["b", "c"]
-    assert ut["skjult"] == 1
+    assert [f["id"] for f in ut["frister"]] == ["a", "b", "c"]
+    assert ut["skjult"] == 0
     assert js("L.skjulFrister(null)") == {"frister": [], "skjult": 0}
 
 

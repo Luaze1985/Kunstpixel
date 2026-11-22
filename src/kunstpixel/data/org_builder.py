@@ -31,13 +31,13 @@ START_DATE = date(2026, 1, 5)
 
 # Standard ferdighetskatalog for et kunstmuseum
 SKILLS_CATALOG = [
-    {"code": "kasse", "name": "Kassasystem og oppgjør", "expires": 0, "kategori": "drift"},
-    {"code": "kundeservice", "name": "Kundebehandling og publikumsdialog", "expires": 0, "kategori": "vert"},
-    {"code": "allergen", "name": "Allergenopplæring", "expires": 1, "kategori": "kafe"},
-    {"code": "mattrygghet", "name": "Internkontroll mat og IK-Mat", "expires": 1, "kategori": "kafe"},
-    {"code": "hms", "name": "Generell HMS-opplæring", "expires": 0, "kategori": "felles"},
-    {"code": "kran", "name": "Kranførerbevis G4/G8", "expires": 0, "kategori": "drift"},
-    {"code": "formidling", "name": "Kunstformidling og omvisning", "expires": 0, "kategori": "fag"},
+    {"code": "kasse", "name": "Kassasystem og oppgjør", "expires": 0, "kortnavn": "Kassasystem", "kategori": "drift"},
+    {"code": "kundeservice", "name": "Kundebehandling og publikumsdialog", "expires": 0, "kortnavn": "Kundebehandling", "kategori": "vert"},
+    {"code": "allergen", "name": "Allergenopplæring", "expires": 1, "kortnavn": "Allergenopplæring", "kategori": "kafe"},
+    {"code": "mattrygghet", "name": "Internkontroll mat og IK-Mat", "expires": 1, "kortnavn": "Internkontroll mat", "kategori": "kafe"},
+    {"code": "hms", "name": "Generell HMS-opplæring", "expires": 0, "kortnavn": "Generell HMS-opplæring", "kategori": "felles"},
+    {"code": "kran", "name": "Kranførerbevis G4/G8", "expires": 0, "kortnavn": "Kranførerbevis", "kategori": "drift"},
+    {"code": "formidling", "name": "Kunstformidling og omvisning", "expires": 0, "kortnavn": "Kunstformidling", "kategori": "fag"},
     {"code": "forstehjelp", "name": "Akutt førstehjelp og hjertestarter", "expires": 1, "kategori": "sikkerhet"},
     {"code": "brannvern", "name": "Brannvernleder og evakueringsansvar", "expires": 1, "kategori": "sikkerhet"},
     {"code": "vekter", "name": "Vekterkurs og adgangskontroll FG", "expires": 0, "kategori": "sikkerhet"},
@@ -471,6 +471,8 @@ def generate_skills_matrix(
             "name": s["name"],
             "expires": s["expires"],
             "kategori": s["kategori"],
+            # Kortnavnet fra HR-demoen (seed.json). Tomt for koder demoen ikke bruker.
+            "kortnavn": s.get("kortnavn", ""),
             "datakilde": "syntetisk (colab_org_bygger)",
         })
 

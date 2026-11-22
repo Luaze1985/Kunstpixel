@@ -6,9 +6,9 @@ import json
 from datetime import date
 
 import pytest
-from src.kunstpixel.core.storskjerm import lag_storskjerm
 
 from src.kunstpixel.core import db, driftsoversikt, frister, storskjerm
+from src.kunstpixel.core.storskjerm import lag_storskjerm
 
 IDAG = date(2026, 11, 19)  # torsdag
 MANDAG = date(2026, 11, 16)
@@ -55,7 +55,19 @@ def test_besok_sier_hvilken_dag(idag: dict) -> None:
 
 def test_tilfredshet_er_ukjent_naar_kilden_slutter(idag: dict) -> None:
     f = _flate(idag, "tilfredshet")
-    assert f["status"] == "Ukjent" and f["verdi"] is None
+    mangler = _tilfredshet_slutter() < "2026-11-18"
+    assert (f["status"] == "Ukjent" and f["verdi"] is None) == mangler
+
+
+def test_tilfredshet_uten_tall_blir_ukjent_aldri_tall() -> None:
+    """Fast vern (I3/D5) med kunstige data: en kilde som ikke dekker perioden vises som Ukjent, ikke som tall."""
+    tom = {"verdi": None, "normalt": None, "status": None, "dato": "2026-11-18", "kilde": "x"}
+    i_dag = {"besok": tom, "dato": "2026-11-19", "driftsmeldinger": {"verdi": 0}, "hms_avvik": {"verdi": 0},
+             "driftsmeldinger_eldre": {"verdi": 0}}
+    uke = {"besok": tom, "viser_forrige_uke": False, "fra": "2026-11-16", "til": "2026-11-19",
+           "tilfredshet": {"verdi": None, "kilde": "besok_tilfredshet"}}
+    f = next(x for x in storskjerm._flater(i_dag, uke, "2026-11-18") if x["id"] == "tilfredshet")
+    assert f["status"] == "Ukjent" and f["verdi"] is None and "dekker ikke" in f["sammenligning"]
 
 
 def test_mandag_viser_forrige_uke(idag_mandag: dict) -> None:
@@ -68,8 +80,23 @@ def test_ingen_navn_i_data(idag: dict) -> None:
     assert navn and not [n for n in navn if n in tekst]
 
 
-def test_ingen_innlan_eller_epost(idag: dict) -> None:
-    assert all(r["type"] != "innlan" and "epost" not in r for r in idag["frister"]["rader"])
+def test_ingen_epost(idag: dict) -> None:
+    assert all("epost" not in r for r in idag["frister"]["rader"])
+
+
+def test_innlansfrister_vises(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Lars 2026-11-22: regelen for retur av innlån er godkjent, så innlånsfristene skjules ikke lenger (U6 opphevet)."""
+    falsk = [
+        {"type": "innlan", "ref": "LAN-1", "tittel": "Retur av innlån: X (Y)", "frist_dato": "2026-03-01",
+         "gruppe": "Forfalt", "kilde": "utstillingsinnlan", "epost": {"overskrift": "o"}},
+        {"type": "rapport", "ref": "RP-1", "tittel": "Rapport", "frist_dato": "2026-11-30",
+         "gruppe": "Senere", "kilde": "h5_rapporteringskalender", "epost": {"overskrift": "o"}},
+    ]
+    monkeypatch.setattr(frister, "get_my_deadlines", lambda rolle, dato: {"frister": falsk})
+    ut = storskjerm._frister("2026-11-19")
+    assert [r["ref"] for r in ut["rader"]] == ["LAN-1", "RP-1"]
+    assert ut["skjult"] == 0 and ut["antall"]["Forfalt"] == 1
+    assert all("epost" not in r for r in ut["rader"])
 
 
 def test_besok_uker_er_8_og_lik_sql(idag: dict) -> None:
@@ -89,9 +116,15 @@ def test_utstillinger_i_aar(idag: dict) -> None:
     assert idag["utstillinger"][0]["utstilling_id"] == "KP-EXH-2026-067"  # størst resultat først
 
 
+def _tilfredshet_slutter() -> str:
+    """Siste dato i besok_tilfredshet i museum.db. R5 forlenget serien, så testene følger dataene."""
+    return db.execute_read_query("SELECT max(dato) AS m FROM besok_tilfredshet")[0]["m"]
+
+
 def test_hull_finner_tilfredshet_og_utstillingstabeller(idag: dict) -> None:
     tekst = " ".join(h["tekst"] for h in idag["hull"])
-    assert "2026-10-29" in tekst
+    slutt = _tilfredshet_slutter()
+    assert (slutt in tekst) == (slutt < "2026-11-18")  # hull bare når serien slutter før i går
     assert "utstillinger" in tekst
     assert all(h["kilde"] for h in idag["hull"])
 
@@ -147,5 +180,6 @@ def test_siden_henter_ingen_eksterne_filer(tmp_path, idag: dict) -> None:
 
 def test_hull_har_tabell_og_sluttdato(idag: dict) -> None:
     slutter = [h for h in idag["hull"] if h["type"] == "slutter"]
-    assert {h["tabell"]: h["slutter"] for h in slutter}["besok_tilfredshet"] == "2026-10-29"
+    slutt = _tilfredshet_slutter()
+    assert {h["tabell"]: h["slutter"] for h in slutter}.get("besok_tilfredshet") == (slutt if slutt < "2026-11-18" else None)
     assert [h for h in idag["hull"] if h["type"] == "uenige"]

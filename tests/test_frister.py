@@ -86,14 +86,83 @@ def idag(monkeypatch: pytest.MonkeyPatch) -> date:
     return IDAG
 
 
-def test_samlingsforvalter_ser_forfalte_innlan(idag: date) -> None:
+# Innlån (Lars 2026-11-22): regelen «retur når utstillingen slutter» er godkjent, og de 3 innlånene som sto
+# som «Aktiv i utstilling» etter at utstillingen sluttet 2026-03-01, er «Returnert» i bygget. Fristregelen
+# testes derfor på en kopi av bygget der ett innlån er satt tilbake til aktivt.
+INNLAN_RETTET = {"LAN-2026-016", "LAN-2026-033", "LAN-2026-050"}
+
+
+@pytest.fixture(scope="module")
+def bygget_db(tmp_path_factory: pytest.TempPathFactory):
+    from src.kunstpixel.data.build_museum_db import bygg
+
+    sti = tmp_path_factory.mktemp("frister") / "museum.db"
+    bygg(sti)
+    return sti
+
+
+@pytest.fixture()
+def med_aktivt_innlan(bygget_db, tmp_path, monkeypatch: pytest.MonkeyPatch, idag: date):
+    import shutil
+    import sqlite3
+
+    kopi = tmp_path / "museum.db"
+    shutil.copyfile(bygget_db, kopi)
+    con = sqlite3.connect(kopi)
+    con.execute("UPDATE utstillingsinnlan SET status = 'Aktiv i utstilling' WHERE innlan_id = 'LAN-2026-016'")
+    con.commit()
+    con.close()
+    monkeypatch.setenv("KUNSTPIXEL_DB_PATH", str(kopi))
+    return kopi
+
+
+def test_bygget_har_returnert_innlanene_etter_utstillingens_slutt(bygget_db, monkeypatch: pytest.MonkeyPatch,
+                                                                  idag: date) -> None:
+    import sqlite3
+
+    con = sqlite3.connect(bygget_db.resolve().as_uri() + "?mode=ro", uri=True)
+    try:
+        status = dict(con.execute("SELECT innlan_id, status FROM utstillingsinnlan WHERE innlan_id IN (?,?,?)",
+                                  sorted(INNLAN_RETTET)).fetchall())
+        apne_etter_slutt = con.execute(
+            "SELECT count(*) FROM utstillingsinnlan i JOIN utstillinger_historikk h USING (utstilling_id) "
+            "WHERE i.status NOT LIKE 'Returnert%' AND h.periode_slutt < '2026-11-22'").fetchone()[0]
+    finally:
+        con.close()
+    assert status == {i: "Returnert" for i in INNLAN_RETTET}
+    assert apne_etter_slutt == 0
+    monkeypatch.setenv("KUNSTPIXEL_DB_PATH", str(bygget_db))
+    d = frister.get_my_deadlines("Samlingsforvalter", "2026-11-16")
+    assert not [f for f in d["frister"] if f["type"] == "innlan"]
+
+
+def test_innlansrettingen_stopper_bygget_naar_iden_mangler(bygget_db, tmp_path) -> None:
+    import shutil
+    import sqlite3
+
+    from src.kunstpixel.data import build_museum_db as bygger
+
+    kopi = tmp_path / "museum.db"
+    shutil.copyfile(bygget_db, kopi)
+    con = sqlite3.connect(kopi)
+    try:
+        con.execute("UPDATE utstillingsinnlan SET status = 'Aktiv i utstilling' WHERE innlan_id IN (?,?,?)",
+                    sorted(INNLAN_RETTET))
+        con.execute("DELETE FROM utstillingsinnlan WHERE innlan_id = 'LAN-2026-033'")
+        with pytest.raises(ValueError, match="LAN-2026-033"):
+            bygger.returner_innlan_etter_utstilling(con)
+    finally:
+        con.close()
+
+
+def test_samlingsforvalter_ser_forfalte_innlan(med_aktivt_innlan) -> None:
     d = frister.get_my_deadlines("Samlingsforvalter", "2026-11-16")
     innlan = [f for f in d["frister"] if f["type"] == "innlan"]
-    assert {f["ref"] for f in innlan} == {"LAN-2026-016", "LAN-2026-033", "LAN-2026-050"}
+    assert {f["ref"] for f in innlan} == {"LAN-2026-016"}
     assert all(f["gruppe"] == "Forfalt" and f["frist_dato"] == "2026-03-01" for f in innlan)
 
 
-def test_direktor_ser_innlan_men_ikke_tilstandskontroll(idag: date) -> None:
+def test_direktor_ser_innlan_men_ikke_tilstandskontroll(med_aktivt_innlan) -> None:
     typer = {f["type"] for f in frister.get_my_deadlines("Museumsdirektør", "2026-11-16")["frister"]}
     assert "innlan" in typer and "tilstandskontroll" not in typer
 

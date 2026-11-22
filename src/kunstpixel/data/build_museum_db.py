@@ -6,11 +6,14 @@ Godkjent av Lars 2026-10-19 som det eneste sanksjonerte stedet der museum.db skr
 Grunnlaget `05_data/kilde/museum_base.db` er den kuraterte kjernen og endres aldri av
 dette skriptet. Hvert bygg starter fra grunnlaget og gjør de samme stegene:
 
-1. HR-demotabellene (hr_people, hr_skills, hr_person_skill, hr_availability, hr_rules)
+1. HR-demotabellene (hr_people, hr_person_skill, hr_availability, hr_rules)
    lastes fra `05_data/hr_demo/seed.json`, så alt ligger i én database.
    hr_people peker på hr_ansatte (ansatt_id, satt i seed.json). Navnet lagres bare i hr_ansatte (G10).
+   hr_person_skill.skill_code peker på org_ferdigheter (R2). Den egne kodelista hr_skills er fjernet.
+   Seedens kompetanser må finnes i org_ferdigheter med samme utløpsregel og kortnavn, ellers stopper bygget.
 2. hr_vakter bygges om med fremmednøkkel til hr_ansatte, start/slutt fra
    `05_data/arkiv_hr_vakt_klokkeslett.csv`, og overtidstimer fra `05_data/arkiv_hr_vakt_justering.csv`.
+   overtid_timer = max(0, timer − dognmaks_timer) fra `05_data/arbeidstid_grenser.csv` (Lars 2026-11-22).
 3. Tabellen arbeidstid_grenser lastes fra `05_data/arbeidstid_grenser.csv`.
 4. virke_tariff berikes med trinn 66-86 fra `05_data/virke_tariff_tillegg.csv`.
 5. hr_fravaer lastes fra `05_data/arkiv_hr_fravaer.csv`.
@@ -18,22 +21,31 @@ dette skriptet. Hvert bygg starter fra grunnlaget og gjør de samme stegene:
 7. rapport_regler lastes fra `05_data/rapport_regler.csv`.
 8. hendelser berikes med syntetiske omvisninger ut 2026 fra `05_data/hendelser_tillegg_2026.csv`.
 9. Fremmednøkler legges til på hr_innleie, avvik_hms_drift, utstillingsinnlan, hendelser, hms_ergonomi_rotasjon.
+   Innlånene i INNLAN_RETURNERT får status «Returnert», fordi utstillingen deres er slutt (Lars 2026-11-22).
 10. Intern organisasjon (colab_org_bygger) lastes fra fire CSV-er, normalisert mot hr_ansatte:
     org_ferdigheter (`mock_interne_ferdigheter.csv`), org_ansatt_kompetanse (`mock_ansatt_kompetanser.csv`),
     interne_henvendelser (`mock_interne_henvendelser.csv`) og hms_avvik_tekst (`mock_avvik_hms_tekst.csv`).
     Navn og avdeling hentes ved oppslag fra hr_ansatte, de lagres ikke på nytt.
-    NB: org_ferdigheter overlapper de 7 første kodene i hr_skills (HR-demoen) med litt andre navn.
-    Dette er to kilder for samme ferdigheter, og må samkjøres av Lars før de brukes sammen.
+    org_ferdigheter er eneste kodeliste for kompetanser. Kolonnen kortnavn har HR-demoens korte navn
+    for de 7 kodene demoen bruker (tom for resten).
 11. Publikumsdata (publikum_builder, syntetisk) lastes fra fire CSV-er: kafe_meny, kafe_varesalg,
     besok_tilfredshet og anmeldelser. CSV-ene lages av `src/kunstpixel/data/publikum_builder.py`.
 12. stasjon_krav (kurs som kreves per stasjon, syntetisk) lastes fra `05_data/stasjon_krav.csv`,
     med fremmednøkkel til org_ferdigheter. Brukes av core/bemanning.py.
-13. Indekser for vaktoppslag og interne tabeller.
-14. PRAGMA user_version = SKJEMAVERSJON, VACUUM, integrity_check og foreign_key_check.
+13. personas lagrer ikke navn, avdeling og stilling (R3). De hentes fra hr_ansatte med JOIN på id.
+    rolle_kode (fremmednøkkel til roller) legges på driftsmeldinger_epost, driftsmeldinger_tiltak,
+    anmeldelser og hendelser (R4), via `05_data/rolle_kode_oppslag.csv`. De gamle rollekolonnene er urørt.
+    Ukjent rolle stopper bygget.
+13b. driftsregnskap (per måned, NS 4102) lastes fra `05_data/driftsregnskap.csv`, laget av
+    `src/kunstpixel/data/regnskap_builder.py`. Deretter regnes sju kolonner i h5_historikk_2010_2026 på nytt
+    fra regnskapet, dagsbesok og hr_vakter (regn_h5_fra_fasit). Lars 2026-11-22: vaktene og dagsdataene er fasit.
+14. Indekser for vaktoppslag og interne tabeller.
+15. PRAGMA user_version = SKJEMAVERSJON, VACUUM, integrity_check og foreign_key_check.
 
 Kjøres med:
     py -3.13 src/kunstpixel/data/build_museum_db.py          # bygg og erstatt
     py -3.13 src/kunstpixel/data/build_museum_db.py --check  # bygg til temp, sammenlign hash
+    py -3.13 src/kunstpixel/data/build_museum_db.py --lag-rolle-kode-oppslag  # bare oppslags-CSV-en (R4)
 """
 
 from __future__ import annotations
@@ -59,7 +71,7 @@ DATA_DIR = PROJECT_ROOT / "05_data"
 BASE_DB = DATA_DIR / "kilde" / "museum_base.db"
 OUT_DB = DATA_DIR / "museum.db"
 SHA_FILE = DATA_DIR / "museum.db.sha256"
-SKJEMAVERSJON = 8
+SKJEMAVERSJON = 9
 
 KLOKKESLETT_CSV = DATA_DIR / "arkiv_hr_vakt_klokkeslett.csv"
 GRENSER_CSV = DATA_DIR / "arbeidstid_grenser.csv"
@@ -67,6 +79,7 @@ TARIFF_TILLEGG_CSV = DATA_DIR / "virke_tariff_tillegg.csv"
 FRAVAER_CSV = DATA_DIR / "arkiv_hr_fravaer.csv"
 ROLLER_CSV = DATA_DIR / "roller.csv"
 ROLLE_SPORSMAL_CSV = DATA_DIR / "rolle_sporsmal.csv"
+ROLLE_KODE_OPPSLAG_CSV = DATA_DIR / "rolle_kode_oppslag.csv"
 RAPPORT_REGLER_CSV = DATA_DIR / "rapport_regler.csv"
 VAKT_JUSTERING_CSV = DATA_DIR / "arkiv_hr_vakt_justering.csv"
 HENDELSER_TILLEGG_CSV = DATA_DIR / "hendelser_tillegg_2026.csv"
@@ -99,7 +112,10 @@ ARBEIDSROLLE_MALGRUPPE_CSV = DATA_DIR / "arbeidsrolle_malgruppe.csv"
 ARBEIDSROLLE_OPPLAERING_CSV = DATA_DIR / "arbeidsrolle_opplaering.csv"
 DRIFTSMELDINGER_EPOST_CSV = DATA_DIR / "arkiv_driftsmeldinger_2010_2026.csv"
 DRIFTSMELDINGER_TILTAK_CSV = DATA_DIR / "arkiv_driftsmeldinger_tiltak.csv"
+DRIFTSREGNSKAP_CSV = DATA_DIR / "driftsregnskap.csv"
 
+# hr_skills er fjernet (R2): kompetansekoden peker på org_ferdigheter. Den står fortsatt her, slik at
+# en grunnbase eller eldre database som har tabellen, blir ryddet.
 HR_DEMO_TABLES = ["hr_rules", "hr_availability", "hr_person_skill", "hr_skills", "hr_people"]
 
 HR_VAKTER_SQL = """
@@ -117,6 +133,7 @@ CREATE TABLE hr_vakter_ny (
     timer REAL NOT NULL CHECK(timer > 0),
     utstilling_id TEXT REFERENCES utstillinger_historikk(utstilling_id),
     klokkeslett_datakilde TEXT NOT NULL,
+    overtid_timer REAL NOT NULL CHECK(overtid_timer >= 0),
     CHECK(start < slutt)
 )
 """
@@ -184,7 +201,8 @@ CREATE TABLE org_ferdigheter (
     navn TEXT NOT NULL,
     utloper INTEGER NOT NULL CHECK(utloper IN (0, 1)),
     kategori TEXT NOT NULL,
-    datakilde TEXT NOT NULL
+    datakilde TEXT NOT NULL,
+    kortnavn TEXT
 )
 """
 
@@ -273,10 +291,7 @@ CREATE TABLE h5_tilsynsbesok_rutine (
 
 PERSONAS_SQL = """
 CREATE TABLE personas (
-    id TEXT PRIMARY KEY,
-    navn TEXT NOT NULL,
-    avdeling TEXT,
-    stilling TEXT,
+    id TEXT PRIMARY KEY REFERENCES hr_ansatte(ansatt_id),
     icor_rolle TEXT,
     cv_json TEXT,
     datakilde TEXT NOT NULL
@@ -440,6 +455,19 @@ CREATE TABLE h5_historikk_2010_2026 (
 )
 """
 
+DRIFTSREGNSKAP_KONTOER = ("3000", "3100", "3400", "3900", "4000", "5000", "5400",
+                          "6300", "6340", "6600", "6700", "6800", "7500")
+DRIFTSREGNSKAP_SQL = f"""
+CREATE TABLE driftsregnskap (
+    maaned TEXT NOT NULL CHECK(maaned GLOB '[0-9][0-9][0-9][0-9]-[0-1][0-9]'),
+    konto TEXT NOT NULL CHECK(konto IN ({", ".join(f"'{k}'" for k in DRIFTSREGNSKAP_KONTOER)})),
+    kontonavn TEXT NOT NULL,
+    belop_nok INTEGER NOT NULL CHECK(belop_nok > 0),
+    datakilde TEXT NOT NULL,
+    PRIMARY KEY (maaned, konto)
+)
+"""
+
 HR_OPPLAERING_SQL = """
 CREATE TABLE hr_opplaering_onboarding (
     opplaering_id TEXT PRIMARY KEY,
@@ -504,7 +532,8 @@ CREATE TABLE anmeldelser (
     svartid_dager INTEGER,
     svartekst TEXT,
     tiltak TEXT,
-    datakilde TEXT NOT NULL
+    datakilde TEXT NOT NULL,
+    rolle_kode TEXT NOT NULL REFERENCES roller(kode)
 )""",
 ]
 
@@ -540,6 +569,11 @@ def les_csv(path: Path) -> list[dict]:
 def bygg_hr_vakter(con: sqlite3.Connection) -> int:
     klokke = {r["vakt_id"]: r for r in les_csv(KLOKKESLETT_CSV)}
     justeringer = {r["vakt_id"]: float(r["nye_timer"]) for r in les_csv(VAKT_JUSTERING_CSV)} if VAKT_JUSTERING_CSV.is_file() else {}
+    # Lars 2026-11-22: timer over døgnmaks er overtid. Grensen leses fra samme fil som arbeidstid_grenser,
+    # fordi den tabellen bygges etter hr_vakter.
+    dognmaks = next((float(r["verdi"]) for r in les_csv(GRENSER_CSV) if r["navn"] == "dognmaks_timer"), None)
+    if dognmaks is None:
+        raise ValueError(f"Mangler dognmaks_timer i {GRENSER_CSV.name}, så overtid kan ikke regnes ut")
 
     con.execute("DROP TABLE IF EXISTS hr_vakter_ny")
     con.execute(HR_VAKTER_SQL)
@@ -562,8 +596,9 @@ def bygg_hr_vakter(con: sqlite3.Connection) -> int:
             slutt = f"{min(23, slutt_m // 60):02d}:{min(59, slutt_m % 60):02d}"
 
         ut.append((vakt_id, ansatt_id, aar, maaned, dato, start, slutt,
-                   stasjon, avdeling, rolle, vakt_timer, utstilling_id or None, k["datakilde"]))
-    con.executemany("INSERT INTO hr_vakter_ny VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", ut)
+                   stasjon, avdeling, rolle, vakt_timer, utstilling_id or None, k["datakilde"],
+                   round(max(0.0, vakt_timer - dognmaks), 2)))
+    con.executemany("INSERT INTO hr_vakter_ny VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", ut)
     con.execute("DROP TABLE hr_vakter")
     con.execute("ALTER TABLE hr_vakter_ny RENAME TO hr_vakter")
     return len(ut)
@@ -633,6 +668,57 @@ def bygg_roller(con: sqlite3.Connection) -> int:
     return len(roller)
 
 
+def normaliser_rollenavn(navn: str) -> str:
+    """«Museumsdirektør» -> «museumsdirektor»: små bokstaver, æ/ø/å -> ae/o/a, mellomrom -> _."""
+    tekst = navn.strip().lower()
+    for fra, til in (("æ", "ae"), ("ø", "o"), ("å", "a")):
+        tekst = tekst.replace(fra, til)
+    return "_".join(tekst.split())
+
+
+def lag_rolle_kode_oppslag(roller: list[dict]) -> list[dict]:
+    """Oppslagstabellen fra rolletekst (som i rollekolonnene) til roller.kode, i samme rekkefølge som roller."""
+    ut: list[dict] = []
+    sett: dict[str, str] = {}
+    for r in roller:
+        tekst = normaliser_rollenavn(r["navn"])
+        if tekst in sett:
+            raise ValueError(f"Rollene {sett[tekst]} og {r['kode']} gir samme rolletekst «{tekst}»")
+        sett[tekst] = r["kode"]
+        ut.append({"rolle_tekst": tekst, "rolle_kode": r["kode"], "datakilde": "syntetisk (avledet fra roller.csv)"})
+    return ut
+
+
+def skriv_rolle_kode_oppslag() -> Path:
+    """Lag rolle_kode_oppslag.csv på nytt fra roller.csv. Kjøres med --lag-rolle-kode-oppslag (ikke i bygget)."""
+    import csv
+
+    rader = lag_rolle_kode_oppslag(les_csv(ROLLER_CSV))
+    with open(ROLLE_KODE_OPPSLAG_CSV, "w", encoding="utf-8", newline="") as f:
+        skriver = csv.DictWriter(f, fieldnames=list(rader[0]), lineterminator="\n")
+        skriver.writeheader()
+        skriver.writerows(rader)
+    return ROLLE_KODE_OPPSLAG_CSV
+
+
+def les_rolle_kode_oppslag(con: sqlite3.Connection) -> dict[str, str]:
+    """Les rolle_kode_oppslag.csv og stopp hvis den ikke lenger stemmer med tabellen roller."""
+    roller = [{"kode": k, "navn": n} for k, n in con.execute("SELECT kode, navn FROM roller ORDER BY rowid")]
+    lagret = les_csv(ROLLE_KODE_OPPSLAG_CSV)
+    if lagret != lag_rolle_kode_oppslag(roller):
+        raise ValueError(
+            f"{ROLLE_KODE_OPPSLAG_CSV.name} stemmer ikke med roller. Lag den på nytt med "
+            "py -3.13 src/kunstpixel/data/build_museum_db.py --lag-rolle-kode-oppslag"
+        )
+    return {r["rolle_tekst"]: r["rolle_kode"] for r in lagret}
+
+
+def rolle_kode_for(verdi: str, oppslag: dict[str, str], tabell: str) -> str:
+    if verdi not in oppslag:
+        raise ValueError(f"{tabell}: rollen «{verdi}» kan ikke kobles til roller (se {ROLLE_KODE_OPPSLAG_CSV.name})")
+    return oppslag[verdi]
+
+
 def bygg_rapport_regler(con: sqlite3.Connection) -> int:
     rader = les_csv(RAPPORT_REGLER_CSV)
     con.execute("DROP TABLE IF EXISTS rapport_regler")
@@ -690,8 +776,11 @@ def bygg_org_ferdigheter(con: sqlite3.Connection) -> int:
     con.execute("DROP TABLE IF EXISTS org_ferdigheter")
     con.execute(ORG_FERDIGHETER_SQL)
     con.executemany(
-        "INSERT INTO org_ferdigheter VALUES (?,?,?,?,?)",
-        [(r["skill_code"], r["name"], int(r["expires"]), r["kategori"], r["datakilde"]) for r in rader],
+        "INSERT INTO org_ferdigheter VALUES (?,?,?,?,?,?)",
+        [
+            (r["skill_code"], r["name"], int(r["expires"]), r["kategori"], r["datakilde"], r["kortnavn"] or None)
+            for r in rader
+        ],
     )
     return len(rader)
 
@@ -878,6 +967,64 @@ def bygg_h5_historikk(con: sqlite3.Connection) -> int:
     return len(rader)
 
 
+def bygg_driftsregnskap(con: sqlite3.Connection) -> int:
+    """Driftsregnskap per måned (regnskap_builder). Stopper hvis CSV-en mangler eller har ukjente verdier."""
+    if not DRIFTSREGNSKAP_CSV.is_file():
+        raise FileNotFoundError(
+            f"Mangler datafil: {DRIFTSREGNSKAP_CSV} (lag den med py -3.13 src/kunstpixel/data/regnskap_builder.py)")
+    rader = les_csv(DRIFTSREGNSKAP_CSV)
+    feil = [r for r in rader if not r["datakilde"].startswith("syntetisk")]
+    if feil:
+        raise ValueError(f"driftsregnskap.csv har {len(feil)} rader uten syntetisk datakilde")
+    con.execute("DROP TABLE IF EXISTS driftsregnskap")
+    con.execute(DRIFTSREGNSKAP_SQL)
+    con.executemany(
+        "INSERT INTO driftsregnskap VALUES (?,?,?,?,?)",
+        [(r["maaned"], r["konto"], r["kontonavn"], int(r["belop_nok"]), r["datakilde"]) for r in rader],
+    )
+    return len(rader)
+
+
+def regn_h5_fra_fasit(con: sqlite3.Connection) -> int:
+    """Lars 2026-11-22: vaktene og dagsdataene er fasit. Disse kolonnene i h5_historikk_2010_2026 regnes på nytt
+    i bygget (h5-kilden og leveransene med sjekksum røres ikke, jf. R21):
+      billettinntekter_tkr = konto 3000 / 1000          kafeinntekter_tkr = konto 3100 / 1000
+      kostnader_tkr        = konto 4000–7999 / 1000     besok_totalt      = sum dagsbesok.besok_totalt
+      inntekter_totalt_tkr = billett + tilskudd + kafé + andre (avrundede tall)
+      resultat_tkr         = inntekter_totalt_tkr − kostnader_tkr
+      ansatte_arsverk      = sum hr_vakter.timer / 1700, én desimal
+    Alle tkr er avrundet til hele tusen (halv opp). Resten av kolonnene er som i h5-kilden."""
+    def tkr(nok: int) -> int:
+        return (int(nok) + 500) // 1000
+
+    regnskap = {
+        aar: (tkr(billett), tkr(kafe), tkr(kost))
+        for aar, billett, kafe, kost in con.execute(
+            "SELECT CAST(substr(maaned, 1, 4) AS INTEGER), "
+            "SUM(CASE WHEN konto = '3000' THEN belop_nok ELSE 0 END), "
+            "SUM(CASE WHEN konto = '3100' THEN belop_nok ELSE 0 END), "
+            "SUM(CASE WHEN konto >= '4' THEN belop_nok ELSE 0 END) "
+            "FROM driftsregnskap GROUP BY 1")
+    }
+    besok = dict(con.execute("SELECT aar, SUM(besok_totalt) FROM dagsbesok GROUP BY aar"))
+    timer = dict(con.execute("SELECT CAST(substr(dato, 1, 4) AS INTEGER), SUM(timer) FROM hr_vakter GROUP BY 1"))
+    aar_h5 = [r[0] for r in con.execute("SELECT ar FROM h5_historikk_2010_2026 ORDER BY ar")]
+    mangler = [a for a in aar_h5 if a not in regnskap or a not in besok or a not in timer]
+    if mangler:
+        raise ValueError(f"h5 kan ikke regnes fra fasit: mangler regnskap, dagsbesøk eller vakter for {mangler}")
+    for aar in aar_h5:
+        billett, kafe, kost = regnskap[aar]
+        tilskudd, andre = con.execute(
+            "SELECT tilskudd_tkr, andre_inntekter_tkr FROM h5_historikk_2010_2026 WHERE ar = ?", (aar,)).fetchone()
+        inntekter = billett + tilskudd + kafe + andre
+        con.execute(
+            "UPDATE h5_historikk_2010_2026 SET billettinntekter_tkr = ?, kafeinntekter_tkr = ?, kostnader_tkr = ?, "
+            "inntekter_totalt_tkr = ?, resultat_tkr = ?, besok_totalt = ?, ansatte_arsverk = ? WHERE ar = ?",
+            (billett, kafe, kost, inntekter, inntekter - kost, int(besok[aar]), round(timer[aar] / 1700, 1), aar),
+        )
+    return len(aar_h5)
+
+
 def bygg_hr_opplaering_onboarding(con: sqlite3.Connection) -> int:
     rader = les_csv(HR_OPPLAERING_CSV)
     con.execute("DROP TABLE IF EXISTS hr_opplaering_onboarding")
@@ -925,8 +1072,9 @@ def bygg_publikum(con: sqlite3.Connection) -> int:
         ],
     )
     anm = les_csv(ANMELDELSER_CSV)
+    oppslag = les_rolle_kode_oppslag(con)
     con.executemany(
-        "INSERT INTO anmeldelser VALUES (" + ",".join(["?"] * 18) + ")",
+        "INSERT INTO anmeldelser VALUES (" + ",".join(["?"] * 19) + ")",
         [
             (
                 r["anmeldelse_id"], r["dato"], r["kanal"], int(r["stjerner"]), r["tema"],
@@ -934,6 +1082,7 @@ def bygg_publikum(con: sqlite3.Connection) -> int:
                 _tom_til_null(r["allergen_pastand"]), _tom_til_null(r["allergen_stemmer_med_meny"], int),
                 int(r["inneholder_persondata"]), r["ansvarlig_rolle"], r["status"], _tom_til_null(r["besvart_dato"]),
                 _tom_til_null(r["svartid_dager"], int), _tom_til_null(r["svartekst"]), _tom_til_null(r["tiltak"]), r["datakilde"],
+                rolle_kode_for(r["ansvarlig_rolle"], oppslag, "anmeldelser"),
             )
             for r in anm
         ],
@@ -942,18 +1091,25 @@ def bygg_publikum(con: sqlite3.Connection) -> int:
 
 
 def bygg_personas(con: sqlite3.Connection) -> int:
+    """Navn, avdeling og stilling lagres bare i hr_ansatte (R3). Bygget stopper hvis kilden er uenig."""
     con.execute("DROP TABLE IF EXISTS personas")
     con.execute(PERSONAS_SQL)
     with PERSONAS_JSON.open(encoding="utf-8") as f:
         data = json.load(f)
+    register = {
+        r[0]: (r[1], r[2], r[3]) for r in con.execute("SELECT ansatt_id, navn, avdeling, stilling FROM hr_ansatte")
+    }
+    uenige = [
+        p["id"] for p in data
+        if register.get(p["id"]) != (p["navn"], p.get("avdeling"), p.get("stilling"))
+    ]
+    if uenige:
+        raise ValueError(f"personas er uenig med hr_ansatte om navn/avdeling/stilling: {uenige[:5]}")
     con.executemany(
-        "INSERT INTO personas VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO personas VALUES (?, ?, ?, ?)",
         [
             (
                 p["id"],
-                p["navn"],
-                p.get("avdeling"),
-                p.get("stilling"),
                 p.get("icor_rolle"),
                 json.dumps(p, ensure_ascii=False),
                 "syntetisk (arkiv_personas_cv)",
@@ -1122,7 +1278,8 @@ CREATE TABLE driftsmeldinger_epost (
     emne TEXT NOT NULL,
     meldingstekst TEXT NOT NULL,
     inneholder_persondata INTEGER NOT NULL CHECK(inneholder_persondata IN (0, 1)),
-    datakilde TEXT NOT NULL
+    datakilde TEXT NOT NULL,
+    rolle_kode TEXT NOT NULL REFERENCES roller(kode)
 )""",
     """
 CREATE TABLE driftsmeldinger_tiltak (
@@ -1137,7 +1294,8 @@ CREATE TABLE driftsmeldinger_tiltak (
     status TEXT NOT NULL,
     svartid_timer REAL NOT NULL,
     lost_dato TEXT,
-    datakilde TEXT NOT NULL
+    datakilde TEXT NOT NULL,
+    rolle_kode TEXT NOT NULL REFERENCES roller(kode)
 )""",
 ]
 
@@ -1149,9 +1307,10 @@ def bygg_driftsmeldinger_tabeller(con: sqlite3.Connection) -> int:
     for sql in DRIFTSMELDINGER_SQL:
         con.execute(sql)
 
+    oppslag = les_rolle_kode_oppslag(con)
     epost = les_csv(DRIFTSMELDINGER_EPOST_CSV)
     con.executemany(
-        "INSERT INTO driftsmeldinger_epost VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        "INSERT INTO driftsmeldinger_epost VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         [
             (
                 r["melding_id"],
@@ -1169,6 +1328,7 @@ def bygg_driftsmeldinger_tabeller(con: sqlite3.Connection) -> int:
                 r["meldingstekst"],
                 int(r["inneholder_persondata"]),
                 r["datakilde"],
+                rolle_kode_for(r["mottaker_rolle"], oppslag, "driftsmeldinger_epost"),
             )
             for r in epost
         ],
@@ -1176,7 +1336,7 @@ def bygg_driftsmeldinger_tabeller(con: sqlite3.Connection) -> int:
 
     tiltak = les_csv(DRIFTSMELDINGER_TILTAK_CSV)
     con.executemany(
-        "INSERT INTO driftsmeldinger_tiltak VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+        "INSERT INTO driftsmeldinger_tiltak VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
         [
             (
                 r["tiltak_id"],
@@ -1191,6 +1351,7 @@ def bygg_driftsmeldinger_tabeller(con: sqlite3.Connection) -> int:
                 float(r["svartid_timer"]),
                 _tom_til_null(r["lost_dato"]),
                 r["datakilde"],
+                rolle_kode_for(r["ansvarlig_rolle"], oppslag, "driftsmeldinger_tiltak"),
             )
             for r in tiltak
         ],
@@ -1286,6 +1447,8 @@ def oppgrader_fremmednokler(con: sqlite3.Connection) -> None:
     con.executemany("INSERT INTO utstillingsinnlan_ny VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", ny_innlan)
     con.execute("DROP TABLE utstillingsinnlan")
     con.execute("ALTER TABLE utstillingsinnlan_ny RENAME TO utstillingsinnlan")
+    # Etter omkoblingen over: først nå har innlånene en utstilling med periode_slutt.
+    returner_innlan_etter_utstilling(con)
 
     # 4. hendelser
     con.execute("""
@@ -1302,10 +1465,21 @@ def oppgrader_fremmednokler(con: sqlite3.Connection) -> None:
         pris_barn REAL DEFAULT 0,
         beskrivelse TEXT,
         ansvarlig_rolle TEXT,
-        status TEXT CHECK(status IN ('planlagt','bekreftet','avlyst','gjennomfoert')) DEFAULT 'planlagt'
+        status TEXT CHECK(status IN ('planlagt','bekreftet','avlyst','gjennomfoert')) DEFAULT 'planlagt',
+        rolle_kode TEXT NOT NULL REFERENCES roller(kode)
     )
     """)
-    con.execute("INSERT INTO hendelser_ny SELECT * FROM hendelser")
+    # rolle_kode legges på her i bygget. Grunnlaget museum_base.db endres ikke (R4).
+    hendelse_kolonner = (
+        "id, type, tittel, dato, klokkeslett_start, klokkeslett_slutt, sal_id, maks_deltakere, "
+        "pris_voksen, pris_barn, beskrivelse, ansvarlig_rolle, status"
+    )
+    oppslag = les_rolle_kode_oppslag(con)
+    hendelse_rader = con.execute(f"SELECT {hendelse_kolonner} FROM hendelser ORDER BY id").fetchall()
+    con.executemany(
+        f"INSERT INTO hendelser_ny ({hendelse_kolonner}, rolle_kode) VALUES ({','.join(['?'] * 14)})",
+        [(*r, rolle_kode_for(r[11], oppslag, "hendelser")) for r in hendelse_rader],
+    )
     con.execute("DROP TABLE hendelser")
     con.execute("ALTER TABLE hendelser_ny RENAME TO hendelser")
 
@@ -1343,7 +1517,41 @@ def oppgrader_fremmednokler(con: sqlite3.Connection) -> None:
     con.execute("ALTER TABLE tilstandsrapporter_ny RENAME TO tilstandsrapporter")
 
 
-def bygg(til: Path) -> dict:
+# Lars 2026-11-22: regelen «innlån returneres når utstillingen slutter» er godkjent. Disse innlånene står som
+# «Aktiv i utstilling» i grunnlaget museum_base.db, men utstillingen sluttet 2026-03-01. Grunnlaget endres ikke.
+INNLAN_RETURNERT = ("LAN-2026-016", "LAN-2026-033", "LAN-2026-050")
+INNLAN_RETUR_FOR = "2026-11-22"  # fast dato, så bygget blir likt hver gang (P1)
+
+
+def returner_innlan_etter_utstilling(con: sqlite3.Connection) -> int:
+    """Sett status «Returnert» på INNLAN_RETURNERT. Stopper bygget hvis listen ikke stemmer med dataene."""
+    rader = {r[0]: (r[1], r[2]) for r in con.execute(
+        "SELECT i.innlan_id, i.status, h.periode_slutt FROM utstillingsinnlan i "
+        "LEFT JOIN utstillinger_historikk h USING (utstilling_id)")}
+    feil = []
+    for innlan_id in INNLAN_RETURNERT:
+        if innlan_id not in rader:
+            feil.append(f"{innlan_id} finnes ikke")
+            continue
+        status, slutt = rader[innlan_id]
+        if status.startswith("Returnert"):
+            feil.append(f"{innlan_id} er allerede «{status}»")
+        elif not slutt or slutt >= INNLAN_RETUR_FOR:
+            feil.append(f"{innlan_id} har utstilling som slutter {slutt}, ikke før {INNLAN_RETUR_FOR}")
+    andre = sorted(i for i, (status, slutt) in rader.items() if i not in INNLAN_RETURNERT
+                   and not status.startswith("Returnert") and slutt and slutt < INNLAN_RETUR_FOR)
+    if andre:
+        feil.append(f"flere innlån er ikke returnert etter utstillingens slutt: {', '.join(andre)}")
+    if feil:
+        raise ValueError("Innlånsrettingen stemmer ikke med dataene: " + "; ".join(feil))
+    con.executemany("UPDATE utstillingsinnlan SET status = 'Returnert' WHERE innlan_id = ?",
+                    [(i,) for i in INNLAN_RETURNERT])
+    return len(INNLAN_RETURNERT)
+
+
+def bygg(til: Path, med_driftsregnskap: bool = True) -> dict:
+    """Bygg museum.db til `til`. med_driftsregnskap=False hopper over driftsregnskapet og omregningen av h5.
+    Det brukes bare av regnskap_builder, som trenger et bygg for å lage driftsregnskap.csv."""
     if not BASE_DB.is_file():
         raise FileNotFoundError(f"Mangler grunnlag: {BASE_DB}")
     kilde = sqlite3.connect(BASE_DB.resolve().as_uri() + "?mode=ro", uri=True)
@@ -1358,6 +1566,8 @@ def bygg(til: Path) -> dict:
         with con:
             for t in HR_DEMO_TABLES:
                 con.execute(f"DROP TABLE IF EXISTS {t}")
+            # Før load_seed: HR-demoens kompetansekoder kontrolleres mot org_ferdigheter (R2).
+            antall_org_ferdigheter = bygg_org_ferdigheter(con)
         load_seed(con, json.loads(Path(SEED).read_text(encoding="utf-8")))
         with con:
             antall_vakter = bygg_hr_vakter(con)
@@ -1367,7 +1577,6 @@ def bygg(til: Path) -> dict:
             antall_roller = bygg_roller(con)
             antall_regler = bygg_rapport_regler(con)
             antall_nye_hendelser = bygg_hendelser(con)
-            antall_org_ferdigheter = bygg_org_ferdigheter(con)
             antall_org_kompetanse = bygg_org_kompetanse(con)
             antall_stasjon_krav = bygg_stasjon_krav(con)
             antall_henvendelser = bygg_interne_henvendelser(con)
@@ -1389,6 +1598,10 @@ def bygg(til: Path) -> dict:
             antall_arbeidsroller = bygg_arbeidsrolle_tabeller(con)
             antall_driftsmeldinger = bygg_driftsmeldinger_tabeller(con)
             oppgrader_fremmednokler(con)
+            # Etter vakter, publikum og innleie: regnskapet og h5 regnes fra fasit (Lars 2026-11-22).
+            antall_driftsregnskap = bygg_driftsregnskap(con) if med_driftsregnskap else 0
+            if med_driftsregnskap:
+                regn_h5_fra_fasit(con)
             for sql in INDEXES:
                 con.execute(sql)
             con.execute(f"PRAGMA user_version = {SKJEMAVERSJON}")
@@ -1421,6 +1634,7 @@ def bygg(til: Path) -> dict:
             "publikum": antall_publikum,
             "arbeidsroller": antall_arbeidsroller,
             "driftsmeldinger": antall_driftsmeldinger,
+            "driftsregnskap": antall_driftsregnskap,
             "user_version": SKJEMAVERSJON,
         }
     finally:
@@ -1438,7 +1652,14 @@ def sha256(path: Path) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--check", action="store_true", help="Bygg til temp og sammenlign med museum.db uten å erstatte")
+    parser.add_argument(
+        "--lag-rolle-kode-oppslag", action="store_true",
+        help="Skriv bare 05_data/rolle_kode_oppslag.csv på nytt fra roller.csv, uten å bygge",
+    )
     args = parser.parse_args()
+    if args.lag_rolle_kode_oppslag:
+        print(f"Skrevet: {skriv_rolle_kode_oppslag()}")
+        return 0
 
     with tempfile.TemporaryDirectory(prefix="kunstpixel-bygg-") as tmp:
         temp_db = Path(tmp) / "museum.db"

@@ -105,7 +105,7 @@ oppgaver:
     kategori: utregning
     turer: ["Gikk juni 2026 i pluss? Hva var billettinntekt, vaktkostnad og differansen?"]
     fasit: [{verktoy: get_period_result, args: {maaned: "2026-06"}}]
-    forventet: ["1057720", ["776898", "776899"], "280821"]
+    forventet: ["1057720", ["778083", "778084"], "279636"]
     verktoy_krav: [[get_period_result]]
     tallkontroll: ok
     se_etter: Tar modellen med at dette ikke er driftsresultatet (merknaden fra verktøyet)?

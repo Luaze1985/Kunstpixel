@@ -38,6 +38,14 @@ def test_ren_database_gir_ingen_feil(bygget_db: Path) -> None:
     assert {r[0] for r in resultat} >= {"Databasen er hel", "Riktig skjemaversjon", "Alt er merket syntetisk"}
 
 
+def test_dognmaks_sjekken_er_ok_i_bygget(bygget_db: Path) -> None:
+    """Lars 2026-11-22: vakter over døgnmaks er overtid. Sjekken er OK når alle har riktig overtid_timer."""
+    resultat = {r[0]: r for r in kvalitet.kjor(bygget_db, med_bygg=False)}
+    navn, niva, hva, _ = resultat["vakter over døgnmaks uten riktig overtid"]
+    assert niva == kvalitet.OK and hva == "Ingen brudd."
+    assert not [n for n in resultat if "overtid eller feil" in n]
+
+
 def test_ny_feil_i_data_gir_feil_med_forklaring(bygget_db: Path, tmp_path: Path) -> None:
     kopi = tmp_path / "museum.db"
     shutil.copyfile(bygget_db, kopi)
@@ -76,7 +84,9 @@ def test_manglende_database_gir_exit_1(tmp_path: Path, monkeypatch: pytest.Monke
 
 
 def test_alle_funn_peker_pa_en_fil_som_finnes() -> None:
-    from src.kunstpixel.data.build_museum_db import SKJEMAVERSJON  # noqa: F401 (sikrer at bygget importeres)
+    from src.kunstpixel.data.build_museum_db import (
+        SKJEMAVERSJON,  # noqa: F401 (sikrer at bygget importeres)
+    )
 
     manglende = [f"{navn}: {fil}" for navn, fil in kvalitet.FIL_FOR_FUNN.items() if not (ROOT / fil).is_file()]
     assert not manglende, manglende
@@ -112,7 +122,7 @@ def _les_innstillinger() -> dict:
     import re
 
     tekst = (ROOT / ".vscode" / "settings.json").read_text(encoding="utf-8")
-    return json.loads(re.sub(r"^\s*//.*$", "", tekst, flags=re.M))  # settings.json tillater kommentarer
+    return json.loads(re.sub(r"^\s*//.*$", "", tekst, flags=re.MULTILINE))  # settings.json tillater kommentarer
 
 
 def test_run_on_save_treffer_csv_i_05_data_og_ingenting_annet() -> None:

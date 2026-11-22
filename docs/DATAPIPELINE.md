@@ -89,6 +89,7 @@ Notatboken lages av `src/kunstpixel/data/create_colab_notebook.py` og leser fasi
 ## Kjente feller
 
 - **Komma i CSV uten anførselstegn** forskyver eller kutter kolonner stille. Byggeskriptet avviser det ikke. `tests/test_data_csv.py` fanger det.
+- **`driftsregnskap.csv` avhenger av vaktene, dagsbesøket, kafésalget og innleien.** Endres en av dem, kjør `py -3.13 src/kunstpixel/data/regnskap_builder.py` (bygger et midlertidig museum.db selv) før bygget. `tests/test_driftsregnskap.py` feiler ellers.
 - **museum.db er en binærfil og kan ikke flettes.** Får to grener ulik museum.db: flett CSV-ene og tekstfilene, bygg på nytt, og ta den nye filen. Aldri velg en av dem på skjønn.
 - **DuckDB** blokkeres av Windows (Smart App Control). Den importeres bare inne i `export_all`. Ikke flytt importen til toppen av filen.
 - **Google Drive** kan henge `.git/index.lock` og `packed-refs.lock`. Henger `index.lock` i ditt eget arbeidstre og ingen git-prosess kjører, kan den fjernes. Rør aldri låser i en annens mappe.

@@ -13,6 +13,7 @@ from src.kunstpixel.core.db import (
     VALID_ROOM_IDS,
     audit_shift_aml_compliance,
     normalize_room_identifier,
+    overtidstillegg,
     query_absence_report,
     query_active_contractors,
     query_arbeidsflyt_og_testcaser,
@@ -27,6 +28,7 @@ from src.kunstpixel.core.db import (
     query_contractors,
     query_daglig_driftsinnboks,
     query_dagsbesok,
+    query_driftsregnskap,
     query_employee_cv,
     query_employee_skills,
     query_events,
@@ -422,10 +424,13 @@ def calculate_shift_cost(
 
     Returns:
         Strukturert lønnsberegning med ordinær timesats, tillegg og total personalkostnad.
+        Timer over døgnmaks (arbeidstid_grenser) er overtid og gir 40 % av ordinær sats i tillegg
+        (AML § 10-6), vist som overtid_timer og overtidstillegg_nok.
     """
     tariff = query_tariff_pay(lonnstrinn=lonnstrinn)
     if not tariff:
         return {"error": f"Ugyldig Virke-lønnstrinn: {lonnstrinn} (må være mellom 20 og 65)", "code": "INVALID_STEP"}
+    dognmaks = query_working_time_limits().get("dognmaks_timer", {}).get("verdi")
 
     if er_helligdag:
         effective_rate = tariff["timesats_helligdag"]
@@ -440,16 +445,23 @@ def calculate_shift_cost(
         effective_rate = tariff["timesats_ordinar"]
         applied_type = "Ordinær dagtid"
 
-    total_cost = round(effective_rate * timer, 2)
-    return {
+    overtid_timer = round(max(0.0, timer - dognmaks), 2) if dognmaks is not None else 0.0
+    tillegg = overtidstillegg(tariff["timesats_ordinar"], overtid_timer)
+    total_cost = round(effective_rate * timer, 2) + tillegg
+    svar = {
         "lonnstrinn": lonnstrinn,
         "rolle": tariff["tittel_eksempel"],
         "timer": timer,
         "sats_anvendt": effective_rate,
         "tilleggstype": applied_type,
-        "total_kostnad_nok": total_cost,
+        "overtid_timer": overtid_timer,
+        "overtidstillegg_nok": tillegg,
+        "total_kostnad_nok": round(total_cost, 2),
         "tariff_kilde": "Virke Landsoverenskomst for museer",
     }
+    if dognmaks is None:
+        svar["mangler"] = "Døgnmaks finnes ikke i arbeidstid_grenser, så overtid er ikke beregnet."
+    return svar
 
 
 @mcp.tool()
@@ -511,8 +523,27 @@ def get_shift_cost_for_period(maaned: str) -> dict[str, Any]:
 
     Returns:
         Kostnad per avdeling og totalt, og antall vakter uten tariffsats (ikke kostnadsberegnet).
+        Overtid (timer over døgnmaks) gir 40 % tillegg og vises som overtid_timer og overtidstillegg_nok.
     """
     return query_shift_cost(maaned)
+
+
+@mcp.tool()
+def get_operating_accounts(aar: int | None = None, maaned: str | None = None, konto: str | None = None) -> dict[str, Any]:
+    """Driftsregnskapet per måned 2010–2026 (NS 4102), kun lesing. Gir sum inntekter, sum kostnader og resultat.
+
+    Lønn (5000) er vaktlønnen, billettinntekt (3000) er dagsbesøket. Kafésalg (3100) før 2024 er h5-tall
+    fordelt på måneder. Kontoer: 3000, 3100, 3400, 3900, 4000, 5000, 5400, 6300, 6340, 6600, 6700, 6800, 7500.
+
+    Args:
+        aar: År 2010–2026 (valgfritt).
+        maaned: Måned 'YYYY-MM' (valgfritt). Gir også radene per konto.
+        konto: Kontonummer (valgfritt). Gir også radene per måned.
+
+    Returns:
+        sum_inntekter_nok, sum_kostnader_nok, resultat_nok, per_aar, per_konto og datakilde.
+    """
+    return query_driftsregnskap(aar=aar, maaned=maaned, konto=konto)
 
 
 # --- HR, HMS & Kvalitetsverktøy (integrert) ---

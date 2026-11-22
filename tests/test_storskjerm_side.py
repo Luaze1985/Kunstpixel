@@ -43,7 +43,15 @@ def mapper(tmp_path_factory) -> dict[str, Path]:
     uten_data = tmp_path_factory.mktemp("uten_data")
     side, data = _bygg(uten_data)
     data.unlink()
-    return {"vanlig": vanlig, "uten_frister": uten_frister, "uten_data": uten_data}
+    # Kunstig hull (I3/D5): tilfredshet uten tall skal vises som ordet Ukjent, uansett hva dataene har.
+    ukjent = tmp_path_factory.mktemp("ukjent")
+    _, data = _bygg(ukjent)
+    d = json.loads(data.read_text("utf-8"))
+    for f in d["flater"]:
+        if f["id"] == "tilfredshet":
+            f.update(verdi=None, status="Ukjent", sammenligning="kilden dekker ikke perioden")
+    data.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
+    return {"vanlig": vanlig, "uten_frister": uten_frister, "uten_data": uten_data, "ukjent": ukjent}
 
 
 @pytest.fixture(scope="module")
@@ -92,8 +100,23 @@ def test_oppmerksomhet_i_toppen(side, data: dict) -> None:
     assert f"{data['oppmerksomhet']} krever oppmerksomhet" in side.locator("header").inner_text()
 
 
+def _tilfredshet_mangler() -> bool:
+    """R5 forlenget besok_tilfredshet. Testene følger sluttdatoen i museum.db."""
+    from src.kunstpixel.core import db
+    return db.execute_read_query("SELECT max(dato) AS m FROM besok_tilfredshet")[0]["m"] < "2026-11-18"
+
+
 def test_ukjent_star_som_ord(side) -> None:
-    assert "Ukjent" in side.locator("#flate-tilfredshet").inner_text()
+    assert ("Ukjent" in side.locator("#flate-tilfredshet").inner_text()) == _tilfredshet_mangler()
+
+
+def test_ukjent_vises_som_ord_med_kunstig_hull(nettleser, mapper) -> None:
+    s, _, srv = _apne(nettleser, mapper["ukjent"])
+    try:
+        assert "Ukjent" in s.locator("#flate-tilfredshet").inner_text()
+    finally:
+        s.close()
+        srv.shutdown()
 
 
 def test_flaten_sier_hvilken_dag_besok_gjelder(side) -> None:
@@ -103,7 +126,7 @@ def test_flaten_sier_hvilken_dag_besok_gjelder(side) -> None:
 def test_fem_felt_under_flatene(side) -> None:
     for i in ["besok-uker", "frister", "utstillinger", "hull"]:
         assert side.locator(f"#{i}").count() == 1, i
-    assert "29.10" in side.locator("#hull").inner_text()
+    assert "Slutter " in side.locator("#hull").inner_text()
 
 
 def test_tom_fristgruppe_viser_ingen(nettleser, mapper) -> None:
@@ -184,7 +207,8 @@ def test_ingen_felt_flyter_over(nettleser, mapper, bredde: int, hoyde: int) -> N
 
 def test_hull_samlet_per_sluttdato(side) -> None:
     linjer = side.locator("#hull li").all_inner_texts()
-    assert sum("29.10" in li for li in linjer) == 1
+    datoer = [li.split(":")[0] for li in linjer if li.startswith("Slutter ")]
+    assert datoer and len(datoer) == len(set(datoer))  # én linje per sluttdato
     assert any("uenige" in li for li in linjer)
 
 
@@ -200,11 +224,85 @@ def test_ukenavn_overlapper_ikke_paa_mobil(nettleser, mapper) -> None:
         srv.shutdown()
 
 
-def test_fristfeltet_har_luft_nederst(side) -> None:
-    luft = side.evaluate("""() => { const f = document.getElementById('frister');
-        const sist = f.lastElementChild.getBoundingClientRect().bottom;
-        return f.getBoundingClientRect().bottom - sist; }""")
-    assert luft >= 8, luft
+# Oppsett C «Én ting om gangen» (DECISIONS SC1–SC6, 2026-11-22): fire tall står fast, én stor flate vises.
+FELT = ["besok-uker", "frister", "utstillinger", "hull"]
+
+
+def _synlige(s) -> list[str]:
+    return s.evaluate("ids => ids.filter(i => document.getElementById(i).getClientRects().length)", FELT)
+
+
+def test_en_flate_om_gangen(side) -> None:
+    assert _synlige(side) == ["besok-uker"]
+
+
+@pytest.mark.parametrize("fid", FELT)
+def test_fanen_bytter_flate(side, fid: str) -> None:
+    side.click(f"#fane-{fid}")
+    assert _synlige(side) == [fid]
+
+
+def test_forfalte_frister_vises_med_dager_over(side, data: dict) -> None:
+    forfalt = [r for r in data["frister"]["rader"] if r["gruppe"] == "Forfalt"]
+    if not forfalt:
+        pytest.skip("ingen forfalte frister i dataene")
+    side.click("#fane-frister")
+    tekst = side.locator("#frister").inner_text()
+    for r in forfalt[:4]:
+        assert r["ref"] in tekst, r["ref"]
+    assert "dager over" in tekst
+    assert str(len(forfalt)) == side.locator("#frister .ss-stort").inner_text()
+
+
+def test_underlaget_viser_radene_bak(side, data: dict) -> None:
+    antall = {"besok-uker": len(data["besok_uker"]), "frister": len(data["frister"]["rader"]),
+              "utstillinger": len(data["utstillinger"]),
+              "hull": len([h for h in data["hull"] if h["type"] == "slutter"])}
+    side.click("#underlag")
+    for fid in FELT:
+        side.click(f"#fane-{fid}")
+        assert side.locator(f"#{fid} .ss-tab tbody tr").count() == antall[fid], fid
+        assert side.locator(f"#{fid} .ss-tab").is_visible()
+        assert "Kilde:" in side.locator(f"#{fid}").inner_text()
+    side.click("#underlag")
+    assert not side.locator("#hull .ss-tab").is_visible()
+
+
+def test_tallet_hopper_til_flaten(side) -> None:
+    side.click("#flate-saker")
+    assert _synlige(side) == ["frister"]
+    side.click("#flate-tilfredshet")
+    assert _synlige(side) == ["hull"]
+
+
+def test_flaten_bytter_selv(nettleser, mapper) -> None:
+    s, _, srv = _apne(nettleser, mapper["vanlig"])
+    try:
+        s.wait_for_function("document.getElementById('frister').getClientRects().length > 0", timeout=20000)
+        s.click("#bytting")  # Stopp bytting
+        s.wait_for_timeout(13000)
+        assert _synlige(s) == ["frister"]
+    finally:
+        s.close()
+        srv.shutdown()
+
+
+@pytest.mark.parametrize("bredde,hoyde", [(1920, 1080), (1280, 720), (1568, 700)])
+@pytest.mark.parametrize("underlag", [False, True])
+def test_hver_flate_far_plass(nettleser, mapper, bredde: int, hoyde: int, underlag: bool) -> None:
+    s, _, srv = _apne(nettleser, mapper["vanlig"], bredde, hoyde)
+    try:
+        if underlag:
+            s.click("#underlag")
+        for fid in FELT:
+            s.click(f"#fane-{fid}")
+            over = s.evaluate("""() => [...document.querySelectorAll('.ss-scene, .ss-felt, .ss-visning, .ss-flate, .ss-stolper, .ss-liste')]
+                .filter(e => e.getClientRects().length && e.scrollHeight > e.clientHeight + 1).map(e => e.id || e.className)""")
+            assert over == [], (fid, over)
+            assert s.evaluate("document.documentElement.scrollHeight <= window.innerHeight + 1"), fid
+    finally:
+        s.close()
+        srv.shutdown()
 
 
 @pytest.mark.parametrize("bredde,hoyde", [(1920, 1080), (1568, 700)])

@@ -33,6 +33,9 @@ def env(tmp_path):
         folk=json.loads(SEED.read_text(encoding='utf-8'))['people']
         c.executemany('INSERT INTO hr_ansatte VALUES (?,?)',
                       [(p['ansatt_id'],'Jonas Berg' if p['id']=='E101' else f"Navn {p['id']}") for p in folk])
+        # Kompetansekatalogen er org_ferdigheter (R2). hr_skills finnes ikke lenger.
+        from src.kunstpixel.data.build_museum_db import bygg_org_ferdigheter
+        bygg_org_ferdigheter(c)
     target=tmp_path/'combined.db'
     init_demo(target,master,SEED)
     return master,target
@@ -154,9 +157,12 @@ def test_no_db_write_via_query(env):
 def test_list_skills(env):
     from src.kunstpixel.core.hrdemo import list_skills
     skills = list_skills(env[1])
-    assert len(skills) == 7
+    # R2: katalogen er org_ferdigheter med 14 koder (før: hr_skills med 7). Ønsket endring.
+    assert len(skills) == 14
+    assert all(set(s) == {'code', 'name', 'expires'} for s in skills)
     codes = {s['code'] for s in skills}
     assert 'kasse' in codes and 'allergen' in codes and 'kran' in codes
+    assert {s['code']: s['name'] for s in skills}['kasse'] == 'Kassasystem'
 
 def test_list_people(env):
     from src.kunstpixel.core.hrdemo import list_people

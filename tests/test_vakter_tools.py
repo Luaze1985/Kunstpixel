@@ -114,6 +114,39 @@ def test_vaktkostnad_bruker_satser_fra_databasen(mini_db: Path) -> None:
     assert r["vakter_uten_tariff"] == 1  # Ola har trinn 99, som ikke finnes i virke_tariff
 
 
+def test_uten_overtidskolonne_sier_svaret_fra(mini_db: Path) -> None:
+    r = query_shift_cost("2026-05", db_path=mini_db)
+    assert "Overtidstillegg er ikke beregnet" in r["mangler"]
+    assert "overtid_timer_totalt" not in r
+
+
+def test_overtid_gir_40_prosent_av_ordinaer_sats(mini_db: Path) -> None:
+    """Lars 2026-11-22: timer over døgnmaks er overtid, AML § 10-6 gir minst 40 % tillegg."""
+    con = sqlite3.connect(mini_db)
+    con.execute("ALTER TABLE hr_vakter ADD COLUMN overtid_timer REAL NOT NULL DEFAULT 0")
+    con.execute("UPDATE hr_vakter SET overtid_timer = 1.0 WHERE vakt_id = 'V3'")  # 10 t, døgnmaks 9 t
+    con.commit()
+    con.close()
+    r = query_shift_cost("2026-05", db_path=mini_db)
+    assert r["kostnad_nok_totalt"] == 600 + 200 + 2700 + 40  # 0,4 x 100 kr x 1 t
+    assert r["overtid_timer_totalt"] == 1.0 and r["overtidstillegg_nok_totalt"] == 40.0
+    drift = r["avdelinger"][0]
+    assert drift["overtid_timer"] == 1.0 and drift["overtidstillegg_nok"] == 40.0
+    assert "Overtidstillegg" not in r.get("mangler", "")
+
+
+def test_skiftkalkulator_gir_overtid_over_dognmaks() -> None:
+    from src.kunstpixel.core.mcp_server import calculate_shift_cost
+
+    vanlig = calculate_shift_cost(lonnstrinn=30, timer=7.5)
+    assert vanlig["overtid_timer"] == 0 and vanlig["overtidstillegg_nok"] == 0
+    lang = calculate_shift_cost(lonnstrinn=30, timer=10.5)
+    sats = lang["sats_anvendt"]
+    assert lang["overtid_timer"] == 1.5  # døgnmaks 9 t fra arbeidstid_grenser
+    assert lang["overtidstillegg_nok"] == round(0.4 * sats * 1.5, 2)
+    assert lang["total_kostnad_nok"] == round(round(sats * 10.5, 2) + lang["overtidstillegg_nok"], 2)
+
+
 def test_sporringene_er_lesende() -> None:
     validate_read_only_query("SELECT " + VAKT_KOLONNER_SQL + " FROM hr_vakter v JOIN hr_ansatte a USING(ansatt_id)")
 
@@ -246,6 +279,52 @@ def test_bygget_db_overtid_oppstaar(bygget_db: Path) -> None:
     r = query_working_hours("2026-09", db_path=bygget_db)
     assert r["overtid_timer_totalt"] > 0
     assert r["antall_med_overtid"] > 0
+
+
+def _dognmaks(con: sqlite3.Connection) -> float:
+    return con.execute("SELECT verdi FROM arbeidstid_grenser WHERE navn = 'dognmaks_timer'").fetchone()[0]
+
+
+def test_bygget_db_overtid_timer_er_timene_over_dognmaks(bygget_db: Path) -> None:
+    """Lars 2026-11-22: vakter over døgnmaks er overtid. Alle over 9 t har overtid_timer > 0, alle andre 0."""
+    con = sqlite3.connect(bygget_db.resolve().as_uri() + "?mode=ro", uri=True)
+    try:
+        maks = _dognmaks(con)
+        lange_uten = con.execute("SELECT count(*) FROM hr_vakter WHERE timer > ? AND NOT overtid_timer > 0", (maks,)).fetchone()[0]
+        korte_med = con.execute("SELECT count(*) FROM hr_vakter WHERE timer <= ? AND overtid_timer <> 0", (maks,)).fetchone()[0]
+        feil_verdi = con.execute("SELECT count(*) FROM hr_vakter WHERE abs(overtid_timer - max(0, timer - ?)) > 0.005",
+                                 (maks,)).fetchone()[0]
+        lange = con.execute("SELECT count(*) FROM hr_vakter WHERE timer > ?", (maks,)).fetchone()[0]
+    finally:
+        con.close()
+    assert lange > 0
+    assert (lange_uten, korte_med, feil_verdi) == (0, 0, 0)
+
+
+def test_bygget_db_vaktkostnad_okter_med_40_prosent_for_en_kjent_vakt(bygget_db: Path, tmp_path: Path) -> None:
+    """Done 2: kostnaden for 2026-10 øker med nøyaktig 0,4 x timesats_ordinar x overtid_timer for én vakt."""
+    import shutil
+
+    kopi = tmp_path / "kopi.db"
+    shutil.copyfile(bygget_db, kopi)
+    con = sqlite3.connect(kopi)
+    vakt_id, avdeling, overtid, sats = con.execute(
+        "SELECT v.vakt_id, v.avdeling, v.overtid_timer, t.timesats_ordinar FROM hr_vakter v "
+        "JOIN hr_ansatte a USING(ansatt_id) JOIN virke_tariff t ON t.lonnstrinn = a.lonnstrinn_virke "
+        "WHERE substr(v.dato, 1, 7) = '2026-10' AND v.overtid_timer > 0 ORDER BY v.vakt_id LIMIT 1").fetchone()
+    con.execute("UPDATE hr_vakter SET overtid_timer = 0 WHERE vakt_id = ?", (vakt_id,))
+    con.commit()
+    con.close()
+    med = query_shift_cost("2026-10", db_path=bygget_db)
+    uten = query_shift_cost("2026-10", db_path=kopi)
+    tillegg = round(0.4 * sats * overtid, 2)
+    assert tillegg > 0
+    assert round(med["kostnad_nok_totalt"] - uten["kostnad_nok_totalt"], 2) == tillegg
+    assert round(med["overtidstillegg_nok_totalt"] - uten["overtidstillegg_nok_totalt"], 2) == tillegg
+    assert round(med["overtid_timer_totalt"] - uten["overtid_timer_totalt"], 2) == round(overtid, 2)
+    a_med = next(a for a in med["avdelinger"] if a["avdeling"] == avdeling)
+    a_uten = next(a for a in uten["avdelinger"] if a["avdeling"] == avdeling)
+    assert round(a_med["overtidstillegg_nok"] - a_uten["overtidstillegg_nok"], 2) == tillegg
 
 
 def test_bygget_db_felles_sannhet_ansatte_kobling(bygget_db: Path) -> None:

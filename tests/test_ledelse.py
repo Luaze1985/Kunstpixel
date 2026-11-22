@@ -195,7 +195,20 @@ def test_uka_uten_hele_dager_viser_forrige_uke(idag: date) -> None:
 
 
 def test_uka_sier_mangler_data_der_kildene_stopper(idag: date) -> None:
-    d = driftsoversikt.get_week_overview("2026-11-14")  # tilfredshet, anmeldelser og kafé stopper 2026-10-29
+    """Kilder som slutter før uka er over, gir «Mangler data». Følger dataene (R5 forlenget seriene)."""
+    from src.kunstpixel.core import db
+    d = driftsoversikt.get_week_overview("2026-11-14")
+    for felt, tabell in (("tilfredshet", "besok_tilfredshet"), ("lave_anmeldelser", "anmeldelser"), ("kafe_per_besok", "kafe_varesalg")):
+        slutt = db.execute_read_query(f"SELECT max(dato) AS m FROM {tabell}")[0]["m"]
+        assert (d[felt]["verdi"] is None) == (slutt < "2026-11-14"), (felt, slutt)
+    if d["tilfredshet"]["verdi"] is None:
+        assert d["tilfredshet"]["status"] == "Ukjent"
+
+
+def test_uka_mangler_data_med_kunstig_sluttdato(idag: date, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Fast vern (I3) med kunstig hull: kilder som slutter før uka er over, gir Ukjent og ingen tall."""
+    monkeypatch.setattr(driftsoversikt, "_horisont", lambda con, tabell: "2026-10-29" if tabell != "dagsbesok" else "2026-12-31")
+    d = driftsoversikt.get_week_overview("2026-11-14")
     assert d["tilfredshet"]["verdi"] is None and d["tilfredshet"]["status"] == "Ukjent"
     assert d["lave_anmeldelser"]["verdi"] is None
     assert d["kafe_per_besok"]["verdi"] is None

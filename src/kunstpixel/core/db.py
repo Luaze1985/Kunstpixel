@@ -6,9 +6,9 @@ query normalization, and table/column quoting.
 
 from __future__ import annotations
 
-import json
 import csv
 import functools
+import json
 import os
 import re
 import sqlite3
@@ -634,10 +634,14 @@ def query_employee_cv(
         db_path = get_db_path()
 
     ident_clean = ident.strip()
+    # Navn, avdeling og stilling hentes fra hr_ansatte (R3). Kolonnene er prefikset, så spørringen
+    # virker også mot en eldre museum.db der personas fortsatt har egne kopier.
     sql = """
-    SELECT id, navn, avdeling, stilling, icor_rolle, cv_json
-    FROM personas
-    WHERE UPPER(id) = UPPER(:ident) OR LOWER(navn) LIKE LOWER(:ident_like)
+    SELECT p.id, a.navn, a.avdeling, a.stilling, p.icor_rolle, p.cv_json
+    FROM personas p
+    JOIN hr_ansatte a ON a.ansatt_id = p.id
+    WHERE UPPER(p.id) = UPPER(:ident) OR LOWER(a.navn) LIKE LOWER(:ident_like)
+    ORDER BY p.rowid
     LIMIT 1
     """
     params = {
@@ -1509,17 +1513,33 @@ def query_working_hours(maaned: str, db_path: Path | str | None = None) -> dict:
     return svar
 
 
+OVERTIDSTILLEGG = 0.40  # AML § 10-6 (11): minst 40 % av timelønnen (timesats_ordinar) for hver overtidstime
+
+
+def _har_overtidskolonne(db_path: Path | str) -> bool:
+    kolonner = {r["name"] for r in execute_read_query("SELECT name FROM pragma_table_info('hr_vakter')", (), db_path)}
+    return "overtid_timer" in kolonner
+
+
+def overtidstillegg(timesats_ordinar: float, overtid_timer: float) -> float:
+    """Overtidstillegg for én vakt, avrundet til øre: 40 % av ordinær timesats per overtidstime."""
+    return round(OVERTIDSTILLEGG * timesats_ordinar * overtid_timer, 2)
+
+
 def query_shift_cost(maaned: str, db_path: Path | str | None = None) -> dict:
     """Lønnskostnad for vakter i en måned per avdeling: timer x Virke-sats fra virke_tariff.
 
     Helligdag (norske_helligdager) gir helligdagssats, lørdag og søndag helgesats. Timer etter
     grensen kveldstillegg_fra (arbeidstid_grenser) gir kveldssats når vaktene har klokkeslett.
+    Overtid (hr_vakter.overtid_timer, timer over døgnmaks) gir i tillegg 40 % av ordinær sats
+    per overtidstime, uansett dagtype (Lars 2026-11-22).
     """
     mnd, fra, til = _maaned_grenser(maaned)
     db = _db(db_path)
     kveld_fra = query_working_time_limits(db).get("kveldstillegg_fra", {}).get("verdi")
     klokke = _har_klokkeslett(db) and kveld_fra is not None
-    ekstra = ", v.start, v.slutt" if klokke else ""
+    overtid = _har_overtidskolonne(db)
+    ekstra = (", v.start, v.slutt" if klokke else "") + (", v.overtid_timer" if overtid else "")
     sql = f"""
     SELECT v.avdeling, v.timer, a.lonnstrinn_virke AS trinn,
            t.timesats_ordinar, t.timesats_kveld, t.timesats_helg, t.timesats_helligdag,
@@ -1533,9 +1553,12 @@ def query_shift_cost(maaned: str, db_path: Path | str | None = None) -> dict:
     avd: dict[str, dict] = {}
     for r in execute_read_query(sql, {"fra": fra, "til": til}, db):
         a = avd.setdefault(r["avdeling"], {"avdeling": r["avdeling"], "vakter": 0, "timer": 0.0,
-                                           "kveldstimer": 0.0, "vakter_uten_tariff": 0, "kostnad_nok": 0.0})
+                                           "kveldstimer": 0.0, "overtid_timer": 0.0, "overtidstillegg_nok": 0.0,
+                                           "vakter_uten_tariff": 0, "kostnad_nok": 0.0})
         a["vakter"] += 1
         a["timer"] += r["timer"]
+        ot = r["overtid_timer"] if overtid else 0.0
+        a["overtid_timer"] += ot
         if r["timesats_ordinar"] is None:
             a["vakter_uten_tariff"] += 1
             continue
@@ -1549,10 +1572,12 @@ def query_shift_cost(maaned: str, db_path: Path | str | None = None) -> dict:
                 kveld = min(r["timer"], max(0.0, _klokke_timer(r["slutt"]) - max(_klokke_timer(r["start"]), kveld_fra)))
             a["kveldstimer"] += kveld
             vakt_kostnad = round((r["timer"] - kveld) * r["timesats_ordinar"] + kveld * r["timesats_kveld"], 2)
-        a["kostnad_nok"] += vakt_kostnad
+        tillegg = overtidstillegg(r["timesats_ordinar"], ot)
+        a["overtidstillegg_nok"] += tillegg
+        a["kostnad_nok"] += vakt_kostnad + tillegg
     rader = sorted(avd.values(), key=lambda x: -x["kostnad_nok"])
     for a in rader:
-        for k in ("timer", "kveldstimer", "kostnad_nok"):
+        for k in ("timer", "kveldstimer", "overtid_timer", "overtidstillegg_nok", "kostnad_nok"):
             a[k] = round(a[k], 2)
     vakter_uten_tariff = sum(a["vakter_uten_tariff"] for a in rader)
     mangler = []
@@ -1562,6 +1587,10 @@ def query_shift_cost(maaned: str, db_path: Path | str | None = None) -> dict:
         mangler.append("Kveldssats er ikke brukt, fordi vaktene mangler klokkeslett eller grensen mangler.")
         for a in rader:
             del a["kveldstimer"]
+    if not overtid:
+        mangler.append("Overtidstillegg er ikke beregnet, fordi hr_vakter mangler kolonnen overtid_timer.")
+        for a in rader:
+            del a["overtid_timer"], a["overtidstillegg_nok"]
     svar = {
         "maaned": mnd,
         "avdelinger": rader,
@@ -1569,6 +1598,9 @@ def query_shift_cost(maaned: str, db_path: Path | str | None = None) -> dict:
         "vakter_uten_tariff": vakter_uten_tariff,
         "mangler": " ".join(mangler),
     }
+    if overtid:
+        svar["overtid_timer_totalt"] = round(sum(a["overtid_timer"] for a in rader), 2)
+        svar["overtidstillegg_nok_totalt"] = round(sum(a["overtidstillegg_nok"] for a in rader), 2)
     if not svar["mangler"]:
         del svar["mangler"]
     if klokke:
@@ -2148,6 +2180,76 @@ def query_historikk_2010_2026(
         "historikk": rader,
         "datakilde": "syntetisk (h5_governance_builder): h5_historikk_2010_2026",
     }
+
+
+DRIFTSREGNSKAP_KONTOER = frozenset({"3000", "3100", "3400", "3900", "4000", "5000", "5400",
+                                    "6300", "6340", "6600", "6700", "6800", "7500"})
+
+
+def query_driftsregnskap(
+    aar: int | None = None,
+    maaned: str | None = None,
+    konto: str | None = None,
+    db_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Driftsregnskapet per måned (tabellen driftsregnskap, NS 4102), med sum inntekter, kostnader og resultat.
+
+    Konto 3xxx er inntekter, 4xxx–7xxx er kostnader. Et beløp på 0 har ingen rad. `rader` (hver måned og konto)
+    tas med når maaned eller konto er valgt. Ugyldige filtre gir ValueError.
+    """
+    where, params = [], {}
+    if aar is not None:
+        aar = int(aar)
+        if not 2010 <= aar <= 2026:
+            raise ValueError("aar må være mellom 2010 og 2026")
+        where.append("maaned LIKE :aar")
+        params["aar"] = f"{aar:04d}-%"
+    if maaned is not None:
+        mnd, _, _ = _maaned_grenser(maaned)
+        if not "2010-01" <= mnd <= "2026-12":
+            raise ValueError("maaned må være mellom 2010-01 og 2026-12")
+        where.append("maaned = :maaned")
+        params["maaned"] = mnd
+    if konto is not None:
+        konto = str(konto).strip()
+        if konto not in DRIFTSREGNSKAP_KONTOER:
+            raise ValueError(f"Ukjent konto. Gyldige: {', '.join(sorted(DRIFTSREGNSKAP_KONTOER))}")
+        where.append("konto = :konto")
+        params["konto"] = konto
+
+    db = _db(db_path)
+    if not _har_tabell("driftsregnskap", db):
+        return {"mangler": "Tabellen driftsregnskap finnes ikke i databasen. Lars må bygge museum.db på nytt."}
+    filter_sql = ("WHERE " + " AND ".join(where)) if where else ""
+    rader = [dict(r) for r in execute_read_query(
+        f"SELECT maaned, konto, kontonavn, belop_nok FROM driftsregnskap {filter_sql} ORDER BY maaned, konto",
+        params, db)]
+
+    per_konto: dict[str, dict] = {}
+    per_aar: dict[str, dict] = {}
+    for r in rader:
+        inntekt = r["konto"].startswith("3")
+        k = per_konto.setdefault(r["konto"], {"konto": r["konto"], "kontonavn": r["kontonavn"],
+                                              "type": "inntekt" if inntekt else "kostnad", "belop_nok": 0})
+        k["belop_nok"] += r["belop_nok"]
+        a = per_aar.setdefault(r["maaned"][:4], {"aar": int(r["maaned"][:4]), "inntekter_nok": 0, "kostnader_nok": 0})
+        a["inntekter_nok" if inntekt else "kostnader_nok"] += r["belop_nok"]
+    for a in per_aar.values():
+        a["resultat_nok"] = a["inntekter_nok"] - a["kostnader_nok"]
+    inn = sum(k["belop_nok"] for k in per_konto.values() if k["type"] == "inntekt")
+    kost = sum(k["belop_nok"] for k in per_konto.values() if k["type"] == "kostnad")
+    svar: dict[str, Any] = {
+        "filter": {"aar": aar, "maaned": params.get("maaned"), "konto": konto},
+        "sum_inntekter_nok": inn,
+        "sum_kostnader_nok": kost,
+        "resultat_nok": inn - kost,
+        "per_aar": [per_aar[a] for a in sorted(per_aar)],
+        "per_konto": [per_konto[k] for k in sorted(per_konto)],
+        "datakilde": "syntetisk (regnskap_builder): driftsregnskap",
+    }
+    if maaned is not None or konto is not None:
+        svar["rader"] = rader
+    return svar
 
 
 def query_hr_opplaering_onboarding(

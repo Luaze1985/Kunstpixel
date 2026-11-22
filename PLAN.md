@@ -15,6 +15,27 @@
 - Uavhengig sjekk: kontrollfil til Antigravity i `.scratch/handoffs/AGY-REVIEW-2026-11-16-etappe2.md`. Funnene skal skrives til `AGY-FUNN-2026-11-16.md`.
 - Ukjente endringer i `db.py`, `mcp_server.py`, `test_mcp_server.py`, `AGENTS.md` og `05_data/index.md` (ser ut som K2-arbeid fra en annen økt) er ikke rørt og ikke committet.
 
+## Gjort (2026-11-22): regelbaserte rettinger i databasen (DECISIONS R1–R7), ikke committet
+- 17 vakter, `hr_skills`, kopier i `personas`, rollekoder, publikumsserier til 31.12, lange sykemeldinger, ett tall i dokumentasjonen. Skjemaversjon 9.
+- **Gjort:** `museum.db` er bygget (DECISIONS B2), og hele pytest er grønn.
+- **Gjenstår, i denne rekkefølgen:** (1) start Datafinner og åpne Claude-økter på nytt (de har gammel kode som leser `hr_skills`), (2) `py -3.13 scripts/lag_claude_skill.py` og last opp pakken, (3) `py -3.13 scripts/lag_storskjerm.py` og publiser til samme lenke, (4) commit med `museum.db` og `museum.db.sha256`.
+- Også gjort (DECISIONS O1–O3, N1): overtid med 40 % tillegg, og innlån returneres ved utstillingens slutt.
+- **Gjort (Ø2–Ø6):** driftsregnskap per måned (`05_data/driftsregnskap.csv`, `regnskap_builder.py`, tabell `driftsregnskap`, MCP `get_operating_accounts`). h5 regnes fra vaktene og dagsdataene i bygget. Skjemaversjon fortsatt 9. Ikke committet.
+- **Åpent for Lars:** bekreft kafé før 2024 (Ø3: h5-tall fordelt på måneder) og de frie kostnadsnivåene. Resultatet er negativt 2010–2018 og 2020–2021.
+- **Lars:** bygg `museum.db` på nytt. Før det er K1-, D4- og skill-testene røde mot den gamle filen. Hvis vaktene endres: kjør `py -3.13 src/kunstpixel/data/regnskap_builder.py` før bygget.
+- **Neste:** skjønnsrettinger S1–S6 med LLM (hr_people mot hr_ansatte, utstillinger mot historikken, stillingstitler som rolle, regeltekster, håndbokens målgrupper, fritekst).
+
+## Gjort (2026-11-22): bygget, bilder og PDF (DECISIONS B1–B6), ikke committet
+- PDF: `02_deliverables/bygningsdokumentasjon/kunstpixel_bygning.pdf`. Lages på nytt med `py -3.13 02_deliverables/bygningsdokumentasjon/lag_pdf.py`.
+- Det gamle navnet er fjernet fra 8 bilder. Kafeen er flyttet til glassfløyen mot Nidelva og har 45 plasser. Kunnskapsfila om bygget følger nå kartdataene (1912/2016).
+- **Åpent for Lars:** skal tegningene beholde dagens tall og merkes som skjematiske, eller skal fotavtrykket tegnes større og rommene som mangler legges inn? (B5)
+- **Neste:** nye bilder av Sal B, C og E og driftsrommene, og fasade-, snitt-, situasjons- og rømningstegninger.
+
+## Gjort (2026-11-22): storskjermen ryddet, oppsett C «Én ting om gangen» med underlag (DECISIONS SC1–SC6), ikke committet
+- Fire nøkkeltall står fast. Under vises én stor flate om gangen (Besøk, Frister, Utstillinger, Vet ikke), og den bytter selv hvert 12. sekund. «Vis underlaget» åpner radene bak.
+- Endret: `deploy/claude-app/storskjerm.html` og `tests/test_storskjerm_side.py`. Storskjermtestene: 61 bestått. Hele pytest er ikke kjørt.
+- **Neste:** publiser til lenken (etter at `museum.db` er bygget, se punktet over), se den på storskjermen, og legg oppsettet inn i KI-chat-testkopien hvis den skal leve videre. Specen fra 19.11 er ikke skrevet om.
+
 ## Gjort (2026-11-19): Storskjerm-dashbordet «Kunstpixel i dag» (DECISIONS D1–D8), committet
 - Lenke: https://claude.ai/artifact/SYi68yGa61mepG7aCyfpiY (privat, festet i claude.ai). Vis: Festet → Fullskjerm.
 - Oppdater: `py -3.13 scripts/lag_storskjerm.py`, så publiserer Claude Code til samme lenke. Guide: «Storskjerm» i docs/GUIDE-claude-appen.md.

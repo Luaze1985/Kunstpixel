@@ -2,7 +2,7 @@
 
 > **Tilbake til hovedportalen:** [KUNNSKAPSKART.md](../KUNNSKAPSKART.md) · **Agentregler:** [AGENTS.md](../AGENTS.md) · **Begrepsordliste:** [00_felles/ordliste.yaml](../00_felles/ordliste.yaml)
 
-Denne filen gir den komplette oversikten over alle **61 brukertabeller** (`92 505` brukerrader) i `05_data/museum.db`, alle **MCP- og HTTP-endepunkter**, **Tracer Bullets** (`P4a`–`P4d`), **bevisste syntetiske kontrollcaser**, og **de 4 morgensløyfe-agentene** (`ADR 014`).
+Denne filen gir den komplette oversikten over alle **60 brukertabeller** (`93 553` brukerrader, skjemaversjon 9) i `05_data/museum.db`, alle **MCP- og HTTP-endepunkter**, **Tracer Bullets** (`P4a`–`P4d`), **bevisste syntetiske kontrollcaser**, og **de 4 morgensløyfe-agentene** (`ADR 014`).
 
 ---
 
@@ -20,7 +20,7 @@ flowchart TB
     subgraph BYGG["2. Deterministisk Bygg & Kontrollport (ADR 004 / ADR 014)"]
         BUILDER["src/kunstpixel/data/build_museum_db.py\nPRAGMA user_version = 8"]
         GATE["scripts/db_status_gate.py\nP1–P6 + G1–G9 + 4 Tracer Bullets"]
-        DB[("05_data/museum.db\n61 tabeller · 92 505 rader\nsha256: fd4262df266d...")]
+        DB[("05_data/museum.db\n60 tabeller · 93 553 rader\nsha256: se museum.db.sha256")]
     end
 
     subgraph MCP_LAG["3. Read-Only MCP & Tjenestelag (mode=ro)"]
@@ -59,7 +59,7 @@ flowchart TB
 | **`hr_ansatte`** | 168 | `ansatt_id` | 1 | Hovedregister over nåværende og tidligere ansatte (`KP-ANS-001`–`KP-ANS-168`), knyttet til `styrk08_katalog` |
 | **`personas`** | 168 | `ansatt_id` | 0 | Dype CV-profiler med utdanning, erfaring og publikasjoner (`arkiv_cv_personas.json`) |
 | **`hr_personalmapper`** | 167 | `saksnr` | 1 | Fortrolige personalsaker (`gradering = LEDER_FORTROLIG`). **`KP-ANS-155` mangler med vilje** (låst testcase) |
-| **`hr_medarbeidersamtaler`** | 142 | `samtale_id` | 1 | Medarbeidersamtaler (`arkiv_hr_medarbeidersamtaler.csv`). `26` ansatte står uten samtale (mangelcase) |
+| **`hr_medarbeidersamtaler`** | 142 | `samtale_id` | 1 | Medarbeidersamtaler (`arkiv_hr_medarbeidersamtaler.csv`). `2` nåværende ansatte står uten samtale (mangelcase). Ingen av de 94 som har sluttet har samtale |
 | **`virke_tariff`** | 67 | `lonnstrinn` | 0 | Virke Landsoverenskomst lønnstrinn `20–86` med ordinær-, kvelds-, helge- og helligdagssats |
 | **`interne_henvendelser`** | 60 | `henvendelse_id` | 1 | Interne HR/HMS-spørsmål fra ansatte (`mock_interne_henvendelser.csv`) |
 | **`hr_person_skill`** | 30 | `person_id, skill_code` | 2 | Kompetansekobling for HR-demokjernen (`05_data/hr_demo/seed.json`) |
@@ -72,17 +72,16 @@ flowchart TB
 | **`styrk08_katalog`** | 10 | `styrk_kode` | 0 | Offisielle SSB STYRK-08 yrkeskoder og minste lønnstrinn |
 | **`hr_innleide_personer`** | 8 | `innleid_id` | 0 | Navngitte innleide spesialister og vektere (`arkiv_hr_innleide_personer.csv`) |
 | **`hr_rules`** | 8 | `id` | 0 | Strukturerte HR-, HMS- og kvalitetsregler i demokjernen (`seed.json`) |
-| **`hr_skills`** | 7 | `code` | 0 | Ferdighetskatalog i HR-demokjernen (`seed.json`) |
 | **`arbeidstid_grenser`** | 6 | `navn` | 0 | Lovfestede grenser etter AML kap. 10 (`dognmaks = 9t`, `ukemaks = 40t`, `hviletid = 11t`) |
 
 ### 2.2 Domene 2: Publikum, Kafé & Besøk (6 tabeller · 23 322 rader)
 
 | Tabell | Rader | PK / Nøkkel | FK | Kilde / Beskrivelse |
 | :--- | ---: | :--- | ---: | :--- |
-| **`kafe_varesalg`** | 14 160 | `salg_id` | 1 | Daglig varesalg i museumskaféen knyttet til `kafe_meny` (`kafe_varesalg.csv`) |
+| **`kafe_varesalg`** | 15 024 | `salg_id` | 1 | Daglig varesalg i museumskaféen knyttet til `kafe_meny` (`kafe_varesalg.csv`) |
 | **`dagsbesok`** | 6 209 | `dato` | 0 | Daglige besøkstall og billettinntekter `2010-01-01`–`2026-12-31` |
-| **`anmeldelser`** | 2 040 | `anmeldelse_id` | 1 | Publikumsanmeldelser fra Google (`1 314`), egen undersøkelse (`409`) og TripAdvisor (`317`) |
-| **`besok_tilfredshet`** | 885 | `maaling_id` | 0 | Tilfredshetsmålinger og NPS-score (`besok_tilfredshet.csv`) |
+| **`anmeldelser`** | 2 169 | `anmeldelse_id` | 1 | Publikumsanmeldelser fra Google (`1 400`), egen undersøkelse (`435`) og TripAdvisor (`334`) |
+| **`besok_tilfredshet`** | 939 | `maaling_id` | 0 | Tilfredshetsmålinger og NPS-score (`besok_tilfredshet.csv`) |
 | **`kafe_meny`** | 16 | `produkt_id` | 0 | Kafémeny med priser, MVA-sats og lovpålagte allergener (`kafe_meny.csv`) |
 | **`publikum_faq`** | 12 | `id` | 0 | Autoritative svar på åpningstider, billetter, garderobe og tilgjengelighet |
 
@@ -112,7 +111,8 @@ flowchart TB
 | **`rapport_regler`** | 27 | `id` | 0 | Vurderingsregler og terskelverdier for deterministiske rapporter (`rapport_regler.csv`) |
 | **`h5_rapportmaler`** | 21 | `id, felt_rekkefolge` | 0 | Obligatoriske rapportmaler med felter og datakilder (`h5_rapportmaler.csv`) |
 | **`h5_arbeidsoppgaver_tidsbruk`** | 19 | `id` | 1 | Årsverk, timer per år og automatiseringspotensial per oppgave (`h5_arbeidsoppgaver_tidsbruk.csv`) |
-| **`h5_historikk_2010_2026`** | 17 | `ar` | 0 | Komplett 17-års nøkkeltallsserie (`2010–2026`) for besøk, økonomi, HMS, RUH og tilsyn |
+| **`h5_historikk_2010_2026`** | 17 | `ar` | 0 | Komplett 17-års nøkkeltallsserie (`2010–2026`) for besøk, økonomi, HMS, RUH og tilsyn. `besok_totalt`, `billettinntekter_tkr`, `kafeinntekter_tkr`, `inntekter_totalt_tkr`, `kostnader_tkr`, `resultat_tkr` og `ansatte_arsverk` regnes i bygget fra `driftsregnskap`, `dagsbesok` og `hr_vakter` (Lars 2026-11-22: vaktene og dagsdataene er fasit) |
+| **`driftsregnskap`** | 2 609 | `maaned, konto` | 0 | Syntetisk driftsregnskap per måned `2010-01`–`2026-12`, 13 kontoer etter NS 4102. Lønn (5000) = vaktlønn, billett (3000) = `dagsbesok`, kafé (3100) = `kafe_varesalg` fra 2024 og h5 før det (`driftsregnskap.csv`, `regnskap_builder.py`) |
 | **`driftsmeldinger_epost`** | 3 889 | `melding_id` | 3 | Daglige drifts-, kunde- og arrangementsmeldinger/e-post/SMS (2010–2026, 82,0 % i 2020–2026) (`arkiv_driftsmeldinger_2010_2026.csv`) |
 | **`driftsmeldinger_tiltak`** | 3 889 | `tiltak_id` | 2 | Triage, lov-/SOP-treff og forslag til svarutkast koblet til `driftsmeldinger_epost` (`arkiv_driftsmeldinger_tiltak.csv`) |
 | **`roller`** | 15 | `kode` | 0 | Rolledefinisjoner og triggere for Datafinner og Intern Assistent (`roller.csv`) |
@@ -173,7 +173,7 @@ flowchart TB
 15. `count_documented_skill(code, as_of)` — Teller aktive ansatte med gyldig kompetansebevis.
 16. `propose_kiosk_staffing(work_date, start, end, need)` — Rangerer skiftkandidater deterministisk.
 17. `lookup_hr_hms_quality_rules(domain, topic, as_of)` — Slår opp i `hr_rules`.
-18. `get_competence_catalog()` — Returnerer kompetansekatalogen (`hr_skills` / `org_ferdigheter`).
+18. `get_competence_catalog()` — Returnerer kompetansekatalogen (`org_ferdigheter`, 14 koder).
 19. `get_staff_member(person_id, as_of)` — Ansattkort med kompetanser og tilgjengelighet.
 20. `evaluate_kiosk_proposal(suggested_ids, work_date, need)` — Sjekker bemanningsforslag mot KI-feller (`L01–L03`).
 21. `audit_shift_compliance(ansatt_id, dato, start, end)` — Reviderer vakt mot `arbeidstid_grenser` (`AML kap. 10`).
@@ -191,6 +191,7 @@ flowchart TB
 31. `get_report_template(mal_id)` — Oppslag i `h5_rapportmaler`.
 32. `search_work_tasks_and_hours(query, rolle_id, kategori)` — Oppslag i `h5_arbeidsoppgaver_tidsbruk`.
 33. `get_governance_history(query, kategori, periode)` — Oppslag i `h5_historikk_2010_2026`.
+33a. `get_operating_accounts(aar, maaned, konto)` — Driftsregnskapet per måned (`driftsregnskap`) med sum inntekter, sum kostnader og resultat. Kun MCP, ikke i Datafinner.
 34. `get_daily_ops_inbox(dato, fra_dato, til_dato, aar, kategori, hastegrad, status, mottaker_rolle, vurdering_utfall, sok, limit)` — Daglig driftsinnboks (`driftsmeldinger_epost` + `driftsmeldinger_tiltak`).
 
 ### 4.6 Kart & Colab-leveranser (3 verktøy)

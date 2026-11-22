@@ -8,7 +8,9 @@ Lager fire CSV-filer i 05_data/ som byggeskriptet laster inn i museum.db:
   anmeldelser.csv        Google-lignende anmeldelser uten navn, med ledelsens håndtering
 
 Grunnlaget leses fra museum.db (mode=ro): åpne dager og besøk (dagsbesok), vakter per dag
-(hr_vakter), utstillinger (utstillinger_historikk) og kaféinntekt per år (h5_historikk_2010_2026).
+(hr_vakter) og utstillinger (utstillinger_historikk). Kaféinntekten per år (kafeinntekter_tkr) leses fra
+h5-kilden `05_data/h5_historikk_2010_2026.csv`, ikke fra museum.db. Bygget regner nemlig kafeinntekter_tkr
+på nytt fra kafésalget (Lars 2026-11-22), og da ville skriptet lest sitt eget resultat.
 
 Sammenhengene er lagt inn med vilje, slik at arenaen har noe å finne igjen:
   1. Service faller når det er mange besøkende per publikumsvakt samme dag.
@@ -18,10 +20,17 @@ Sammenhengene er lagt inn med vilje, slik at arenaen har noe å finne igjen:
   4. Fra september 2026 blir dårlige anmeldelser liggende ubesvart lenger (et etterslep).
   5. Noen kaféklager gjelder allergener. Halvparten stemmer med menyen, halvparten ikke.
   6. Omtrent 1 % har persondata (bare 000 00 000 og «vakten»), og 0,5 % har en instruksjon til en KI.
-Kaféomsetningen per år stemmer med kafeinntekter_tkr (±1 %). For 2026 gjelder det andelen åpne
-dager fram til SISTE_DATO.
+Kaféomsetningen per år stemmer med kafeinntekter_tkr (±1 %) for 2024 og 2025. For 2026 stemmer januar til
+ORIGINAL_SLUTT med andelen åpne dager (±1 %). November og desember får samme kroner per besøk som resten av
+2026, så hele 2026 havner ca. 3 % under kafeinntekter_tkr i h5-kilden (færre besøk per dag i mørketida, som i
+2024–2025). I museum.db er kafeinntekter_tkr regnet fra dette kafésalget, så der er avviket 0.
 
-Deterministisk: fast frø og fast sluttdato, aldri dagens dato.
+Seriene går til SISTE_DATO (2026-12-31), som dagsbesok og vaktene. De lages i to deler:
+radene til og med ORIGINAL_SLUTT (2026-10-29) er første leveranse og er byte-like med før (frø FRO).
+Forlengelsen har eget frø (FORLENGELSE_FRO) og bruker samme median, travel-terskel og utstillingsnivå.
+Stengte dager (er_aapent = 0 i dagsbesok) får ingen rader.
+
+Deterministisk: faste frø og faste sluttdatoer, aldri dagens dato.
 
 Kjøres med:
     py -3.13 src/kunstpixel/data/publikum_builder.py
@@ -41,10 +50,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = PROJECT_ROOT / "05_data"
 DB = DATA_DIR / "museum.db"
 MENY_JSON = DATA_DIR / "governance" / "kafe_meny_allergener.json"
+H5_KILDE_CSV = DATA_DIR / "h5_historikk_2010_2026.csv"
 
 FRO = 20261030
 FRA_AAR = 2024
-SISTE_DATO = "2026-10-29"  # data «til og med i går» sett fra bestillingsdatoen
+ORIGINAL_SLUTT = "2026-10-29"  # første leveranse: «til og med i går» sett fra bestillingsdatoen. Rører ikke disse radene.
+SISTE_DATO = "2026-12-31"  # samme sluttdato som dagsbesok, hr_vakter og hr_fravaer
+# Eget frø for forlengelsen 2026-10-30–2026-12-31, så de gamle radene blir byte-like.
+FORLENGELSE_FRO = "publikum_builder/forlengelse/2026-10-30..2026-12-31"
 DATAKILDE = "syntetisk (publikum_builder)"
 
 SVAK_UTSTILLING = "KP-EXH-2025-064"
@@ -151,13 +164,20 @@ def lag_meny() -> list[dict]:
     return varer
 
 
-def les_grunnlag() -> tuple[list[dict], dict[int, float], list[dict]]:
+def kafe_maal_per_aar() -> dict[int, int]:
+    """Kaféinntekt i kr per år fra FRA_AAR, fra h5-kilden (CSV-en), ikke fra det omregnede bygget."""
+    with H5_KILDE_CSV.open(encoding="utf-8", newline="") as f:
+        return {int(r["ar"]): int(r["kafeinntekter_tkr"]) * 1000 for r in csv.DictReader(f) if int(r["ar"]) >= FRA_AAR}
+
+
+def les_grunnlag(slutt: str = SISTE_DATO) -> tuple[list[dict], dict[int, float], list[dict]]:
+    """Åpne dager til og med slutt, kafémål per år for de dagene, og utstillingene."""
     with _db() as con:
         dager = [
             {"dato": d, "aar": a, "besok": b}
             for d, a, b in con.execute(
                 "SELECT dato, aar, besok_totalt FROM dagsbesok WHERE er_aapent = 1 AND aar >= ? AND dato <= ? ORDER BY dato",
-                (FRA_AAR, SISTE_DATO),
+                (FRA_AAR, slutt),
             )
         ]
         vakter = {
@@ -168,7 +188,7 @@ def les_grunnlag() -> tuple[list[dict], dict[int, float], list[dict]]:
                 (FRA_AAR,),
             )
         }
-        kafe_aar = {a: k * 1000 for a, k in con.execute("SELECT ar, kafeinntekter_tkr FROM h5_historikk_2010_2026 WHERE ar >= ?", (FRA_AAR,))}
+        kafe_aar = kafe_maal_per_aar()
         apne_per_aar = dict(con.execute("SELECT aar, SUM(er_aapent) FROM dagsbesok WHERE aar >= ? GROUP BY aar", (FRA_AAR,)))
         utstillinger = [
             {"id": i, "tittel": t.split(" (")[0], "start": s, "slutt": e}
@@ -179,7 +199,7 @@ def les_grunnlag() -> tuple[list[dict], dict[int, float], list[dict]]:
         ]
     for d in dager:
         d["publikumsvakter"], d["kafe_vakter"] = vakter.get(d["dato"], (0, 0))
-    # Mål for kafé: hele året, men 2026 bare fram til SISTE_DATO.
+    # Mål for kafé: andelen åpne dager til og med slutt (hele året når slutt er 31.12).
     apne_hittil = defaultdict(int)
     for d in dager:
         apne_hittil[d["aar"]] += 1
@@ -193,14 +213,21 @@ def _hovedutstilling(dato: str, utstillinger: list[dict]) -> dict | None:
     return (hoved or aktive or [None])[0]
 
 
-def lag_tilfredshet(dager: list[dict], utstillinger: list[dict], rng: random.Random) -> None:
-    """Legger score_* og kafepress på hver dag."""
+def lag_tilfredshet(dager: list[dict], utstillinger: list[dict], rng: random.Random,
+                    parametre: dict | None = None) -> dict:
+    """Legger score_* og kafepress på hver dag.
+
+    Uten parametre regnes median, spredning, «travel»-terskel og utstillingsnivå fra dagene (første leveranse).
+    Med parametre (forlengelsen) brukes de samme tallene igjen, så fordelingen blir lik.
+    """
     per_vakt = [d["besok"] / max(d["publikumsvakter"], 1) for d in dager]
-    med, sd = median(per_vakt), pstdev(per_vakt) or 1.0
-    travel = sorted(d["besok"] for d in dager)[int(len(dager) * 0.7)]
-    niva = {u["id"]: rng.gauss(0, 0.15) for u in utstillinger}
-    niva[SVAK_UTSTILLING] = -0.55
-    niva[STERK_UTSTILLING] = 0.35
+    if parametre is None:
+        niva = {u["id"]: rng.gauss(0, 0.15) for u in utstillinger}
+        niva[SVAK_UTSTILLING] = -0.55
+        niva[STERK_UTSTILLING] = 0.35
+        parametre = {"med": median(per_vakt), "sd": pstdev(per_vakt) or 1.0,
+                     "travel": sorted(d["besok"] for d in dager)[int(len(dager) * 0.7)], "niva": niva}
+    med, sd, travel, niva = parametre["med"], parametre["sd"], parametre["travel"], parametre["niva"]
     for d, pv in zip(dager, per_vakt):
         d["kafepress"] = d["kafe_vakter"] <= 1 and d["besok"] > travel
         d["utstilling"] = _hovedutstilling(d["dato"], utstillinger)
@@ -210,17 +237,21 @@ def lag_tilfredshet(dager: list[dict], utstillinger: list[dict], rng: random.Ran
         d["score_utstilling"] = _klem(4.1 + u_niva + rng.gauss(0, 0.15))
         d["score_fasiliteter"] = _klem(4.0 + rng.gauss(0, 0.25))
         d["antall_svar"] = max(1, round(d["besok"] * rng.uniform(0.03, 0.08)))
+    return parametre
 
 
-def lag_varesalg(dager: list[dict], meny: list[dict], maal: dict[int, float], rng: random.Random) -> list[dict]:
+def lag_varesalg(dager: list[dict], meny: list[dict], maal: dict[int, float], rng: random.Random,
+                 skala: dict[int, float] | None = None) -> tuple[list[dict], dict[int, float]]:
+    """Salg per vare per dag. Uten skala regnes skala per år ut fra målet; med skala (forlengelsen) brukes den."""
     vekter = [v["vekt"] for v in meny]
     snitt = sum(v["pris"] * w for v, w in zip(meny, vekter)) / sum(vekter)
     # Rå kundetall per dag, deretter skalert per år slik at omsetningen treffer målet.
     raa = {d["dato"]: d["besok"] * 0.30 * (0.8 if d["kafepress"] else 1.0) * rng.uniform(0.9, 1.1) for d in dager}
-    per_aar = defaultdict(float)
-    for d in dager:
-        per_aar[d["aar"]] += raa[d["dato"]] * snitt
-    skala = {a: maal[a] / per_aar[a] for a in per_aar}
+    if skala is None:
+        per_aar = defaultdict(float)
+        for d in dager:
+            per_aar[d["aar"]] += raa[d["dato"]] * snitt
+        skala = {a: maal[a] / per_aar[a] for a in per_aar}
     andel = [w / sum(vekter) for w in vekter]
     rader = []
     for d in dager:
@@ -230,7 +261,7 @@ def lag_varesalg(dager: list[dict], meny: list[dict], maal: dict[int, float], rn
             if antall:
                 rader.append({"dato": d["dato"], "produkt_id": v["produkt_id"], "antall": antall,
                               "omsetning_nok": antall * v["pris"], "datakilde": DATAKILDE})
-    return rader
+    return rader, skala
 
 
 def _dager_til(dato: str, n: int) -> str:
@@ -239,10 +270,12 @@ def _dager_til(dato: str, n: int) -> str:
     return (date.fromisoformat(dato) + timedelta(days=n)).isoformat()
 
 
-def lag_anmeldelser(dager: list[dict], meny: list[dict], rng: random.Random) -> list[dict]:
+def lag_anmeldelser(dager: list[dict], meny: list[dict], rng: random.Random,
+                    start_nr: int = 0, slutt: str = SISTE_DATO) -> list[dict]:
+    """Svar som ville kommet etter slutt, står som ubesvart. Numrene fortsetter fra start_nr."""
     temaer, tvekt = ["utstilling", "kafe", "service", "fasiliteter"], [0.45, 0.25, 0.2, 0.1]
     vekter = [v["vekt"] for v in meny]
-    rader, nr = [], 0
+    rader, nr = [], start_nr
     for d in dager:
         for _ in range(sum(1 for _ in range(6) if rng.random() < 0.4)):  # 0–6, snitt 2,4 per dag
             nr += 1
@@ -281,7 +314,7 @@ def lag_anmeldelser(dager: list[dict], meny: list[dict], rng: random.Random) -> 
             else:
                 status, svartid = ("besvart" if rng.random() < 0.5 else "ubesvart"), rng.randint(1, 10)
             besvart_dato = _dager_til(d["dato"], svartid) if status != "ubesvart" else ""
-            if besvart_dato and besvart_dato > SISTE_DATO:
+            if besvart_dato and besvart_dato > slutt:
                 status, besvart_dato = "ubesvart", ""
             if status == "ubesvart":
                 svartid = None
@@ -321,12 +354,24 @@ def _skriv(mappe: Path, navn: str, rader: list[dict]) -> None:
 
 def bygg(ut_mappe: Path = DATA_DIR) -> dict[str, int]:
     """Lag de fire CSV-ene i ut_mappe (standard 05_data/). Samme input gir alltid samme filer."""
-    rng = random.Random(FRO)
     meny = lag_meny()
-    dager, maal, utstillinger = les_grunnlag()
-    lag_tilfredshet(dager, utstillinger, rng)
-    salg = lag_varesalg(dager, meny, maal, rng)
-    anmeldelser = lag_anmeldelser(dager, meny, rng)
+    # 1. Første leveranse til og med ORIGINAL_SLUTT, nøyaktig som før (samme frø, samme rekkefølge).
+    rng = random.Random(FRO)
+    dager, maal, utstillinger = les_grunnlag(ORIGINAL_SLUTT)
+    parametre = lag_tilfredshet(dager, utstillinger, rng)
+    salg, skala = lag_varesalg(dager, meny, maal, rng)
+    anmeldelser = lag_anmeldelser(dager, meny, rng, slutt=ORIGINAL_SLUTT)
+
+    # 2. Forlengelsen ORIGINAL_SLUTT+1 til SISTE_DATO med eget frø og de samme parametrene.
+    #    Kaféen bruker samme skala som januar–oktober 2026 (samme kroner per besøk), så sesongmønsteret
+    #    følger besøket slik som i 2024 og 2025. Hele 2026 blir derfor ca. 3 % under kafeinntekter_tkr.
+    rng_ny = random.Random(FORLENGELSE_FRO)
+    alle, _, _ = les_grunnlag(SISTE_DATO)
+    nye = [d for d in alle if d["dato"] > ORIGINAL_SLUTT]
+    lag_tilfredshet(nye, utstillinger, rng_ny, parametre)
+    salg += lag_varesalg(nye, meny, {}, rng_ny, skala)[0]
+    anmeldelser += lag_anmeldelser(nye, meny, rng_ny, start_nr=len(anmeldelser), slutt=SISTE_DATO)
+    dager += nye
 
     _skriv(ut_mappe, "kafe_meny.csv", [
         {"produkt_id": v["produkt_id"], "navn": v["navn"], "kategori": v["kategori"], "pris_nok": v["pris"],

@@ -320,3 +320,80 @@ Lars vil «komme på jobb» som museumsdirektør og vise dagen på storskjerm, �
 - **D8. Arbeidsflyt-utseende** (én lys palett, status som ord, ingen ikoner eller emoji). Storskjerm: minst 20 px tekst ved 1920×1080. Tekststørrelsen følger både bredde og høyde.
 - **Valg tatt under byggingen** (fremdriftslogg `.scratch/handoffs/LEDGER-2026-11-19-storskjerm.md`): kurven viser 8 hele uker; fristfeltet viser 2 frister og «N til»; høyre kolonne er litt bredere; datahull grupperes per sluttdato.
 - **Tester:** `tests/test_storskjerm.py` (20) og `tests/test_storskjerm_side.py` (24), røde først.
+
+## 2026-11-22 — Regelbaserte rettinger i databasen (R1–R7, skjemaversjon 9)
+
+Lars: «Unødvendige feil kan tas vekk», regelrettinger først, skjønn og LLM etterpå. Lars ba agenten velge de beste alternativene selv. Utført av tre underagenter med hver sine filer.
+
+- **R1.** 17 korte Vaktrom-vakter hadde `timer` 9,0, men klokka ga 8,0 (sluttid stoppet på 23:30). Generatoren regner nå timer = slutt − start − 0,5 for forlengelser på høyst 9 t. De 66 lange vaktene er urørt (overtid eller feil er Lars' valg). Etter bygget avviker 66 vakter, ikke 83.
+- **R2.** `hr_skills` er fjernet. `hr_person_skill` peker på `org_ferdigheter`, som har fått `kortnavn`. Kompetansekatalogen går fra 7 til 14 koder (ønsket). Svarfeltene er uendret.
+- **R3.** `personas` har ikke lenger navn, avdeling og stilling. De hentes fra `hr_ansatte` med JOIN. Bygget stopper hvis `arkiv_cv_personas.json` er uenig med `hr_ansatte`.
+- **R4 (tillegg, ikke erstatning).** `driftsmeldinger_epost`, `driftsmeldinger_tiltak`, `anmeldelser` og `hendelser` har fått `rolle_kode` med fremmednøkkel til `roller`. Oppslaget lages fra `roller.navn` (`05_data/rolle_kode_oppslag.csv`). De gamle rollekolonnene er urørt, fordi frister, I dag og storskjerm filtrerer på dem. Ukjent rolle stopper bygget.
+- **R5 (agentens valg).** Kafésalg, tilfredshet og anmeldelser er forlenget fra 2026-10-29 til 2026-12-31, likt med dagsbesøk og vakter. Rader etter i dag er plan (D2). Kafeen har samme omsetning per besøkende som resten av 2026, ikke skalert til årstallet. Da blir hele 2026 −3,3 % mot `h5_historikk` (1 663 tkr mot 1 720 tkr).
+- **R6.** Tre lange sykemeldinger lagt inn på nåværende ansatte uten vakter: KP-ANS-089 (2024, 5 uker), KP-ANS-010 (2026-08-03–09-27) og KP-ANS-025 (2026-10-02–12-03). Høyst én per kvartal, så avviket mot SSB holder seg under 1,5 prosentpoeng. Fristene uke 4 og uke 7 slår nå ut.
+- **R7.** `00_DATA_OG_MCP_OVERSIKT.md` sier 2 nåværende uten medarbeidersamtale, ikke 26.
+- **Ikke gjort:** R8 (navnebytte på rundt 80 filer).
+- **Tester endret med vilje:** storskjerm- og ledelsestester som låste hullet 2026-10-29, følger nå sluttdatoen i databasen. Skilltallene (66 avvikende vakter, 25 umerkede tabeller) og kjente-hull-teksten i `lag_claude_skill.py` er oppdatert til det nye bygget.
+- **Testet:** hele pytest mot et prøvebygg i kladdemappen. Alt grønt unntatt `test_start_gate`, som krever at `museum.db` er bygget på nytt. Statusporten: KLAR (0 feil, 2 varsler).
+- **IKKE TESTET:** mot ekte `museum.db` etter Lars' bygg. Mot den gamle `museum.db` er skill-testene røde til bygget er kjørt.
+
+## 2026-11-22 — Overtid, innlån og driftsregnskap (Lars' svar)
+
+- **O1. Vakter over 9 timer er overtid (Lars).** `hr_vakter.overtid_timer` = max(0, timer − døgnmaks). Kostnaden har 40 % tillegg for de timene (AML § 10-6), som egne felt i `query_shift_cost` og `calculate_shift_cost`. Kvalitetssjekken gir FEIL hvis kolonnen ikke stemmer. Varselet om døgnmaks er borte, og statusporten har 1 varsel (hviletid).
+- **O2 (agentens tolkning, ikke bekreftet).** Tillegget legges oppå helge- og helligdagssatsen. Satsen 0,40 står i `core/db.py`, ikke i `arbeidstid_grenser`.
+- **O3.** Fasit i `caser.yaml` og `chat_eval.yaml` for juni 2026: vaktkostnad 778 083,81 kr og differanse 279 636,19 kr (før 776 898,74 og 280 821,26).
+- **N1. Innlån returneres når utstillingen slutter (Lars).** Erstatter forslaget i F4 og skjulingen i U6 og D7. Fristene vises igjen i Datafinner og på storskjermen. LAN-2026-016, -033 og -050 sto som «Aktiv i utstilling» etter at utstillingen sluttet 2026-03-01, og får «Returnert» i bygget (`returner_innlan_etter_utstilling`). `museum_base.db` er ikke rørt.
+- **Ø1. Driftsregnskap per måned (Lars valgte) er IKKE bygget.** Målingen stoppet det. Lønn regnet fra vaktene er rundt 10,1–10,5 mill. kr hvert år. Det er 174 % av `h5_historikk.kostnader_tkr` i 2010, og fortsatt 79 % i 2026. Vaktene tilsvarer rundt 14 årsverk hvert år, mens h5 sier 6,5–11,5. Billettinntekten i `dagsbesok` er 2,9–8,4 ganger tallet i h5. Lars må velge hvilken kilde som er fasit, før regnskapet kan lages.
+- **B1. «Tall for barn» (Lars: barn som besøkende) finnes:** `dagsbesok.antall_barn` (439 221 i 2010–2026) og `h5_historikk.skoleelever`. Tallene nås via `get_daily_visitors`, men vises ikke på storskjermen eller i Datafinner.
+- **Testet:** hele pytest mot prøvebygget. Alt grønt unntatt `test_start_gate`, som krever at Lars bygger. Statusporten: KLAR (0 feil, 1 varsel).
+- **B2. `museum.db` bygget av Claude 2026-11-22 med Lars' tillatelse for denne ene gangen** (unntak fra AGENTS.md del 7). sha256 `0d6204d0d7b0…`, skjemaversjon 9, `driftsregnskap` 2 609 rader. Hele pytest er grønn mot den, og `db_kvalitet` gir 1 OBS (hviletid, med vilje). Ikke committet.
+
+## 2026-11-22 — Driftsregnskap bygget, h5 regnet fra fasit (Ø1 løst)
+
+- **Ø2. Vaktene og dagsdataene er fasit (Lars).** Ny generator `src/kunstpixel/data/regnskap_builder.py` skriver `05_data/driftsregnskap.csv` (13 kontoer etter NS 4102, 2010-01–2026-12, 2 609 rader). Bygget laster den i tabellen `driftsregnskap` (PK maaned, konto; CHECK på kontoene og beløp > 0) og stopper hvis filen mangler. Beløp 0 får ingen rad.
+- **Ø3 (agentens valg, ikke bekreftet).** `kafe_varesalg` finnes bare for 2024–2026. For 2010–2023 er konto 3100 h5 `kafeinntekter_tkr` fordelt jevnt på 12 måneder, ikke 0. Varekjøp kafé (4000) er 35 % av 3100.
+- **Ø4 (agentens valg, ikke bekreftet).** Frie nivåer (fast frø): husleie, strøm, vedlikehold, kontor/IT og forsikring. Lik sum hver måned i året og 3 % prisvekst. Strøm har sesong (høyest januar) og ganger 2,4 i 2022 og 1,7 i 2023. Innleie (6700) føres i måneden for `periode_fra` (alle oppdrag er innen én måned).
+- **Ø5. h5 regnes i bygget** (`regn_h5_fra_fasit`, R21: h5-kilden og leveransene er urørt): `besok_totalt`, `billettinntekter_tkr`, `kafeinntekter_tkr`, `inntekter_totalt_tkr`, `kostnader_tkr`, `resultat_tkr` og `ansatte_arsverk` (vakttimer/1700). `betalende_besokende` og `snittpris_kr` er ikke regnet om og stemmer ikke lenger med billettinntekten. Resultatet er negativt 2010–2018 og 2020–2021 (2020: −5 162 tkr), fordi lønnen fra vaktene er ca. 10,2 mill. kr hvert år.
+- **Kjent uenighet som står igjen:** h5-kilden (`h5_historikk_2010_2026.csv`, `governance/historikk_tall.yaml`, `leveranse._H`) har de gamle tallene, fordi den er låst med sjekksum (R21). Den interne assistenten (port 8001) leser `historikk_tall.yaml` for ledelsesroller og gir derfor de gamle tallene, og `hr_hms_pakke` bruker de gamle årsverkene (6,5–11,5). Lars må velge om kilden skal regnes om.
+- **Ø6.** `publikum_builder` leser kafémålet fra h5-CSV-en, ikke fra `museum.db`, ellers ville den lest sitt eget resultat etter bygget. Utdataene er uendret.
+- **Tester og fasiter endret med vilje:** K1 i `caser.yaml` (kildene er nå enige) og testen for K1, D4 (svakeste år −5162, var −420), skilltallet 32 syntetiske tabeller, kafétesten i `test_publikum_data.py` (målet fra h5-kilden), merknaden i `get_result_trend`.
+- **Testet:** hele pytest mot et prøvebygg. Alt grønt unntatt `test_start_gate`. Statusporten: KLAR (0 feil, 1 varsel). **IKKE TESTET:** mot ekte `museum.db` etter Lars' bygg.
+
+## 2026-11-22 — Storskjermen ryddet: oppsett A «Haster først» (A1–A4)
+
+Lars syntes storskjermen var rotete. Tre prototyper ble vist (https://claude.ai/artifact/Fps3nRkzx6pNEt7CEzrGzM), og Lars valgte A.
+
+- **A1. Fristene som haster står størst (Lars).** Venstre del av skjermen: antall forfalte som stort tall, og hver frist med hvor mange dager den har ligget. Feltet er rødt bare når noe er forfalt. Under står «Dette vet vi ikke».
+- **A2. Kravene fra D1–D8 står (Lars).** Hvert tall har fortsatt kildelinje, og «Dette vet vi ikke» og utstillingsøkonomien er fortsatt egne felt. Prototypen tok dem ut. Det ble ikke gjort.
+- **A3 (agentens valg).** De fire nøkkeltallene er rader i ett felt, ikke fire fliser. Kilden står på samme linje som tittelen i feltene, og på samme linje som sammenligningen i radene. Fristfeltet viser 3 frister og «N til» (var 2). Endringen gjelder bare `deploy/claude-app/storskjerm.html`. `core/storskjerm.py` og `data.json` er urørt.
+- **A4. Feil som ble rettet samtidig.** Etter N1 (innlånsfrister vises igjen) fløt fristfeltet over i det gamle oppsettet. Fire sidetester var røde før endringen.
+- **Tester:** to nye i `tests/test_storskjerm_side.py`, røde først. `test_storskjerm_side.py` og `test_storskjerm.py`: 49 bestått. Sett på skjermbilde i 1920×1080 og 400 px.
+- **IKKE GJORT:** ikke publisert til lenken, ikke committet. KI-chat-testkopien (https://claude.ai/artifact/4Gp2AweTDj9m54E6ZDxiL9) har ingen kildefil i repoet og har fortsatt det gamle oppsettet. Hele pytest er ikke kjørt.
+- **Erstattet samme dag av SC1–SC6.** Lars valgte A før han hadde sett prototypene. Da han så dem, valgte han C. Oppsett A ble aldri publisert eller committet.
+
+## 2026-11-22 — Storskjermen: oppsett C «Én ting om gangen» med underlag (SC1–SC6)
+
+Erstatter A1–A3. Lars: «Én ting om gangen er mye bedre», og han vil ha et underlag så man kan fordype seg.
+
+- **SC1. Én stor flate om gangen (Lars).** Toppen og de fire nøkkeltallene står fast. Under vises én flate: Besøk, Frister, Utstillinger eller Vet ikke. Dette endrer målet i specen fra 19.11 om at alt vises samtidig på én skjerm. Det er fortsatt ingen rulling på storskjerm.
+- **SC2. Underlag (Lars).** «Vis underlaget» bytter flaten til radene bak: besøk per uke med endring i prosent, alle frister, utstillingene med ID og full tittel, og tabellene som slutter før i dag. Underlaget bruker bare det som alt står i `data.json`. `core/storskjerm.py` er urørt.
+- **SC3 (agentens valg).** Flaten bytter selv hvert 12. sekund. Byttingen kan stoppes med en knapp, står stille mens underlaget er åpent, og er av når maskinen ber om mindre bevegelse.
+- **SC4 (agentens valg).** Et trykk på et nøkkeltall hopper til flaten: Besøk og Besøk denne uka til Besøk, Åpne saker til Frister, Tilfredshet til Vet ikke.
+- **SC5. Kravene fra D1–D8 står ellers.** Kildelinje på hvert tall og hver flate, status som ord, Ukjent i stedet for 0, minst 20 px tekst, ingen navn i fristene. Fristflaten viser 4 frister og «N til», resten står i underlaget.
+- **SC6. Feil som ble rettet samtidig.** Etter N1 (innlånsfrister vises igjen) fløt fristfeltet over i oppsettet fra 19.11. Fire sidetester var røde før endringen.
+- **Tester endret med vilje:** `test_fristfeltet_har_luft_nederst` er erstattet av `test_hver_flate_far_plass`, som sjekker hver flate og hvert underlag i tre skjermstørrelser. Nye tester for faner, underlag, hopp fra tall og automatisk bytting. Testene ble skrevet sammen med malen, ikke røde først. `test_storskjerm_side.py` og `test_storskjerm.py`: 61 bestått. Sett på skjermbilder i 1920×1080.
+- **IKKE GJORT:** ikke publisert til lenken, ikke committet, hele pytest ikke kjørt, ikke sett på den fysiske storskjermen. KI-chat-testkopien (https://claude.ai/artifact/4Gp2AweTDj9m54E6ZDxiL9) har ingen kildefil i repoet og har fortsatt det gamle oppsettet. Specen `docs/specs/2026-11-19-storskjerm-dashbord.md` er ikke skrevet om.
+
+## 2026-11-22 — Bygget: bilder, plantegninger og PDF (B1–B6)
+
+Lars ba om bilder og tegninger av museet samlet i en PDF med beskrivelser, og en vurdering av om det trengs flere. Gjennomgangen fant det gamle museumsnavnet i åtte bilder og to versjoner av bygget. Lars: «Rett opp det som trengs. Navnet skal vekk, og det andre.»
+
+- **B1. Kartdataene er fasit for bygget (agentens valg, etter Lars' «rett opp»).** Gjelder `06_kart/bygning_geometri.json`: hovedfløy fra 1912 og glassfløy fra 2016. Kartet, plantegningene, `get_building_map_data` og tabellen `saler` i `museum.db` bruker allerede denne. `04_knowledge/04_domain/core/bygning_og_etasjeplaner.md` beskrev et bygg fra 1980 med andre arealer (Sal A 95 m², kafé 65 m²), og den er skrevet om etter kartdataene. Personkapasiteten per sal er beholdt fra HMS-håndboka.
+- **B2. Navnet er fjernet fra bildene (Lars, DECISIONS 10).** Det gjelder skilt, disker og fasader i 8 bilder pluss en dublett. `scripts/fjern_navn_i_bilder.py` leser originalene fra commit 1c4d9a4, maler over bokstavene (OpenCV-inpainting) og skriver «KUNSTPIXEL» der det sto et skilt. Kafédisken og logoen på resepsjonsdisken står blanke. Den rotete KI-teksten på de samme skiltene er også rettet («VELAONHEN» → «VELKOMMEN», «ERSISTENS» → «EKSISTENS»). Filnavnene er beholdt. Originalene ligger i git og kan hentes tilbake.
+- **B3. Kafeen ligger i glassfløyen mot Nidelva (agentens valg).** KAF-1 og BUT-1 har byttet plass i plan P1 (kafé i øst, bokhandel i vest), slik at planen stemmer med bildet og teksten «glassvegg mot Nidelva». Kafeen har 45 sitteplasser som i HMS-håndboka og kvalitetssystemet (var 60 i kartet). Kartet og plantegningene er bygget på nytt med `06_kart/build_map.py`.
+- **B4. PDF.** `02_deliverables/bygningsdokumentasjon/kunstpixel_bygning.pdf` (9 sider) lages med `lag_pdf.py` i samme mappe: Edge uten vindu, ingen nye pakker. Den inneholder alle tall fra kartdataene, alle 12 ulike bildene og de 3 plantegningene, og ender med en vurdering av hva som mangler.
+- **B5. Ikke rettet, venter på Lars.** Fotavtrykket på tegningene er 48 × 24 m = 1 152 m², mens BYA og BTA per etasje er 1 450 m². De tegnede rommene dekker 688 av 1 300 m² i U1, 1 009 av 1 310 m² i P1 og 817 av 1 310 m² i P2. Ganger, toaletter, garderober og kontorer er ikke tegnet. Testene i `test_building_map.py` låser 19 rom og arealtallene, så en retting endrer datamodellen.
+- **B6. Andre avvik som står igjen.** Glassfløyen står på ulik side i de to fasadebildene. Skulpturhage-bildet viser et annet teglbygg. HMS-håndboka bruker andre navn på Sal A, B og C enn kartet og databasen. To bilder er dubletter (testen krever alle 14 filene).
+- **Tester:** nye `tests/test_bilder_uten_gammelt_navn.py` (SHA-256 for de 8 gamle bildene) og `tests/test_bygning_konsistens.py` (kafeens side, sitteplasser og kunnskapsfila mot kartdataene). Begge ble kjørt røde først. Kart-, navne-, MCP- og nye tester: grønne. I hele pytest feiler 8 tester (arenacaser, chat-eval U2, to skill-tester og start-gate). De feilet før denne endringen, og de venter på at `museum.db` bygges på nytt (se PLAN).
+- **Sett i nettleseren:** `06_kart/index.html` via ny oppstart «kart» i `.claude/launch.json` (port 8766). P1 i røntgenvisning har kafeen i øst ved Sal E. Alle 9 galleribildene lastes, og konsollen har ingen feil. De 6 grafene i `assets/` har ikke det gamle navnet. Skjermbildene i `02_deliverables/arbeidsflyt/designsjekk-2026-10-20/` er historikk og er ikke sjekket eller endret.
+- **IKKE GJORT:** ikke committet eller pushet. En Datafinner- eller MCP-server som kjører, husker den gamle byggmodellen (`lru_cache`) til den startes på nytt.

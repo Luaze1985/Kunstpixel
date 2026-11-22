@@ -9,7 +9,8 @@ og sjekker:
   P4  Tracer: samme verdi via rå SQL og via verktøyene i db.py (vakt, økonomi, sykefravær, kostnad)
   P5  pytest består 100 %
   P6  Forretningsregler: hver regel teller brudd, fasit 0 (vakt ved fravær, utenfor ansettelse,
-      overlapp, hviletid, kursdatoer, fraværsdatoer). Vakter over døgnmaks er ADVARSEL (overtid eller feil?)
+      overlapp, hviletid, kursdatoer, fraværsdatoer, overtid = timer over døgnmaks). Lars 2026-11-22:
+      vakter over døgnmaks er overtid, så en vakt der overtid_timer ikke stemmer, er FEIL.
   Hull (G2-G9 fra briefen): åpen/lukket, informerer, blokkerer ikke
 
 Nivåer: FEIL blokkerer sammenslåing (exit 1). ADVARSEL rapporteres, blokkerer ikke.
@@ -127,11 +128,14 @@ def sjekk_tracer(con: sqlite3.Connection, dbsti: Path) -> None:
     s_t = "(CAST(substr(v.start,1,2) AS REAL) + CAST(substr(v.start,4,2) AS REAL)/60)"
     e_t = "(CAST(substr(v.slutt,1,2) AS REAL) + CAST(substr(v.slutt,4,2) AS REAL)/60)"
     kveld = f"min(v.timer, max(0, {e_t} - max({s_t}, :kf)))" if har_kveld else "0"
-    # Avrundet per vakt før summering, som query_shift_cost (T7/G11).
+    # Overtid (Lars 2026-11-22): 40 % av ordinær sats per overtidstime, på alle dagtyper (AML § 10-6).
+    har_overtid = "overtid_timer_totalt" in kost
+    overtid = "round(0.4 * t.timesats_ordinar * v.overtid_timer, 2)" if har_overtid else "0"
+    # Avrundet per vakt før summering, som query_shift_cost (T7/G11). Overtidstillegget avrundes for seg.
     rader = con.execute(
         "SELECT v.avdeling, round(sum(round(CASE WHEN h.dato IS NOT NULL THEN v.timer * t.timesats_helligdag "
         "WHEN strftime('%w', v.dato) IN ('0','6') THEN v.timer * t.timesats_helg "
-        f"ELSE (v.timer - {kveld}) * t.timesats_ordinar + {kveld} * t.timesats_kveld END, 2)), 2) "
+        f"ELSE (v.timer - {kveld}) * t.timesats_ordinar + {kveld} * t.timesats_kveld END, 2) + {overtid}), 2) "
         "FROM hr_vakter v JOIN hr_ansatte a USING(ansatt_id) JOIN virke_tariff t ON t.lonnstrinn = a.lonnstrinn_virke "
         "LEFT JOIN norske_helligdager h ON h.dato = v.dato WHERE substr(v.dato, 1, 7) = :mnd GROUP BY v.avdeling",
         {"mnd": mnd, "kf": kveld_fra}).fetchall()
@@ -140,7 +144,8 @@ def sjekk_tracer(con: sqlite3.Connection, dbsti: Path) -> None:
     storst = max((abs(a[1] - a[2]) for a in ulike), default=0)
     niva = OK if not ulike else (ADVARSEL if storst <= 0.05 else FEIL)
     logg("P4d tracer kostnad", niva,
-         f"{mnd}{' med kveldssats' if har_kveld else ''}: {len(ulike)} av {len(avvik)} avdelinger ulike"
+         f"{mnd}{' med kveldssats' if har_kveld else ''}{' og overtidstillegg' if har_overtid else ''}: "
+         f"{len(ulike)} av {len(avvik)} avdelinger ulike"
          + (f", største avvik {storst:.2f} kr (G11 avrunding)" if ulike else ""))
 
 
@@ -163,8 +168,9 @@ REGLER: list[tuple[str, str, str]] = [
      "SELECT ansatt_id || '/' || skill_code FROM org_ansatt_kompetanse WHERE gyldig_til < sertifisert_dato"),
     ("fravær som slutter før det begynner", FEIL,
      "SELECT fravaer_id FROM hr_fravaer WHERE til < fra"),
-    ("vakter over døgnmaks (overtid eller feil?)", ADVARSEL,
-     "SELECT vakt_id FROM hr_vakter WHERE timer > (SELECT verdi FROM arbeidstid_grenser WHERE navn = 'dognmaks_timer')"),
+    ("vakter over døgnmaks uten riktig overtid", FEIL,
+     "SELECT vakt_id FROM hr_vakter WHERE abs(overtid_timer - max(0, timer - "
+     "(SELECT verdi FROM arbeidstid_grenser WHERE navn = 'dognmaks_timer'))) > 0.005"),
 ]
 
 # Kjente brudd som Lars skal ta stilling til. De gir ADVARSEL, mens nye brudd av samme slag gir FEIL.
@@ -182,7 +188,11 @@ def regelbrudd(con: sqlite3.Connection) -> list[tuple[str, str, list[str], list[
     """(regel, nivå, nye brudd, kjente brudd). Brukes av porten og av tests/test_db_status_regler.py."""
     ut = []
     for navn, niva, sql in REGLER:
-        alle = sorted(str(r[0]) for r in con.execute(sql))
+        try:
+            alle = sorted(str(r[0]) for r in con.execute(sql))
+        except sqlite3.OperationalError as exc:  # eldre skjemaversjon mangler en kolonne regelen trenger
+            ut.append((navn, FEIL, [f"kan ikke sjekkes ({exc})"], []))
+            continue
         kjente = KJENTE_BRUDD.get(navn, set())
         ut.append((navn, niva, [b for b in alle if b not in kjente], [b for b in alle if b in kjente]))
     return ut
