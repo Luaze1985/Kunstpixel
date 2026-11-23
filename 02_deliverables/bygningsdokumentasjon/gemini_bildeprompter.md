@@ -143,12 +143,13 @@ Clean, cool, high-tech but realistic, not science fiction.
 ```
 
 ### 10. Robotgarasje og ladestasjon · `20_robotgarasje.jpg`
-Rom 015 i kjelleren ved vareheisen. 8,7 × 10 m, takhøyde 3,8 m. Epoksygulv med ladefelt, renholds-, vakt- og transportroboter.
+Rom 015 i kjelleren ved vareheisen. 8,7 × 10 m, takhøyde 3,8 m. Epoksygulv med ladefelt. Her står sju av de åtte robotene: tre renholdsroboter, to vaktroboter og to transportroboter. Renholdsrobot 3 har fast plass i 2. etasje. Kunstrobotene (hengerobot og to kunstkasser) har også ladeplass her, men er ikke med i dette bildet.
 ```
 Interior of a robot garage and charging room in a museum basement, about 9 by 10 metres, 3.8-metre ceiling.
-Hard-wearing light grey epoxy floor with painted charging bays marked by yellow lines. Docked at six charging
-stations: four compact autonomous floor-cleaning robots, two slim security patrol robots with a camera mast, and
-one low autonomous transport robot with a padded lifting platform for art crates. A workbench with tools and
+Hard-wearing light grey epoxy floor with painted charging bays marked by yellow lines. Docked at seven charging
+stations: three compact autonomous floor-cleaning robots, two slim security patrol robots with a camera mast, and
+two low autonomous transport robots, one with a padded lifting platform for art crates and one with a flat cargo
+deck for packaging and tools. A workbench with tools and
 spare brushes, wheels and batteries on shelves. Painted concrete walls, acoustic ceiling panels. Open double door
 towards a corridor and a steel goods-lift door. Realistic, current-day service robots, not humanoid.
 ```
@@ -187,6 +188,124 @@ brick façade of a 1912 museum wing with a copper mansard roof; on the right the
 wing. A concrete vehicle ramp leads down to a lockable steel roll-up door into the basement art-receiving area.
 A small white climate-controlled art-transport van is parked at the top of the ramp. Bollards, security cameras on
 the walls, a gate to the street. Overcast weather, wet asphalt, realistic and functional.
+```
+
+---
+
+## Detaljer og bygget i bruk
+
+Disse ti bildene viser rommene mellom salene, hvordan kunsten flyttes, og maskinparken i arbeid. To av dem er nærbilder av materialer. Bruk samme felles stil. Der promptene sier *close-up*, kan kameraet være nærmere enn 1,6 m.
+
+### 14. Monumentaltrappen · `22_monumentaltrapp.jpg`
+Rom 108, 1. etasje i hovedfløyen. 2,2 m bred og 12 m lang trapp, takhøyde 6 m. Trinn i hvit Carrara-marmor, håndløper i eik og hvitmalte vegger. Overlyset fra vestibylen faller ned over trappen.
+```
+Interior photograph looking up a long, straight monumental staircase in a 1912 neoclassical museum, the flight
+about 2.2 metres wide and 12 metres long, rising one full storey of 6 metres. Steps of polished white Carrara
+marble with slightly worn front edges, a solid oak handrail on dark bronze brackets along both walls. Walls in
+smooth white plaster (NCS S 0500-N). Soft daylight falls from a glass roof lantern high above the vestibule at the
+top. At the top landing, a glimpse of a light grey terrazzo corridor. One visitor halfway up, seen from behind.
+Calm, elegant, a sense of ascent.
+```
+
+### 15. Gangbroen i 2. etasje med glassheisen · `23_repos_p2_glassheis.jpg`
+Rom 205 og 206, 2. etasje. Øverste trappeavsats og øvre stopp for publikumsheisen. Terrazzo i flukt med gangbroen, rekkverk i glass og børstet stål, åpent opp mot glasstaket.
+```
+Interior photograph of an upper-floor landing in a museum, where the top of a white marble staircase meets a
+gallery bridge. Light grey terrazzo floor running flush onto the landing, which has a solid oak floor section.
+A glass passenger lift with a brushed stainless-steel frame stops at the landing; its doors are closed.
+Frameless structural glass balustrades with a slim oak handrail. Above, an open void up to a glass roof with
+slender steel beams, daylight pouring down. Ceiling height 4.8 metres around the void. White plaster walls with a
+recessed oak handrail. A visitor with a stroller waiting for the lift, seen from behind.
+```
+
+### 16. Vare- og kunstheisen med transportrobot · `24_kunstheis_transportrobot.jpg`
+Rom 004, sjakten går gjennom alle etasjer. Godsheis på 3,5 tonn med innvendige mål 3,2 × 2,2 m. Gulv i riflet aluminium og rustfrie sparkeplater. Transportrobot 1 løfter opptil 400 kg.
+```
+Photograph from outside an open, large goods lift for artworks in a museum basement. The lift car is 3.2 by
+2.2 metres, with a non-slip ribbed aluminium floor and brushed stainless-steel kick plates on the lower walls,
+plus padded grey protective blankets hung on the upper walls. Wide steel doors are fully open. Inside, a low
+autonomous transport robot with a padded lifting platform carries a closed wooden art crate (labelled only with
+a number), strapped down. A museum technician in a dark work jacket stands beside it holding a tablet, seen from
+the side, face not visible. A key switch panel by the door. Bright, even, practical lighting.
+```
+
+### 17. Kjøreslusa · `25_kjoresluse.jpg`
+Rom 011 i kjelleren, sikringssone S4. 3,7 × 12 m, takhøyde 3,8 m. Betong og en port i hver ende. Rampen kommer ned fra bakgården i nord. Kunsttransporten kjører helt inn til kunstmottaket.
+```
+Interior photograph of a narrow, lockable vehicle airlock in a museum basement, about 3.7 metres wide and
+12 metres long, 3.8-metre ceiling. Dust-sealed concrete floor with painted yellow wheel guides, painted concrete
+walls, open concrete ceiling with ducts and bright LED strip lights. A small white climate-controlled art-transport
+van has just driven in; the outer steel roll-up door behind it is closing, with grey daylight from the ramp
+visible under it. At the near end, a second steel roll-up door leads into the art-receiving room and is still
+closed. A camera in each corner, a red-and-green traffic light by each door, a card reader on the wall.
+Controlled, secure, functional.
+```
+
+### 18. Monteringsverkstedet · `26_monteringsverksted.jpg`
+Rom 009 i kjelleren under hovedfløyen. 8 × 10 m, takhøyde 3,8 m. Her lages rammer og sokler til utstillingene.
+```
+Interior photograph of a museum workshop for frames and display plinths in a basement, 8 by 10 metres,
+3.8-metre ceiling. Dust-sealed concrete floor with light sawdust near the machines. Painted concrete walls with a
+pegboard full of hand tools. A table saw with a dust-extraction hose, a large mitre saw for picture frames, a
+spray area behind a clear curtain. Freshly built white plinths of different heights stand in a row, one being
+painted. Stacks of oak and pine boards on a wall rack, empty frame profiles hanging on hooks. Bright work lights
+under an open concrete ceiling with ducts. One carpenter in ear defenders working at the bench, seen from behind.
+```
+
+### 19. Kunstslusa ved Sal E · `27_kunstsluse_sal_e.jpg`
+Rom 113, 1. etasje i glassfløyen. 4,7 × 12 m, takhøyde 4,5 m. Mellom vareheisen og Sal E. Kunsten pakkes ut og venner seg til klimaet her før den henges opp.
+```
+Interior photograph of a narrow art lock and storage room between a goods lift and a temporary-exhibition hall,
+4.7 by 12 metres, 4.5-metre ceiling. Dust-sealed concrete floor, painted concrete walls, open ceiling with
+ducts. Several opened wooden crates with foam inserts; two large unframed invented textile artworks lie flat on a
+padded table wrapped in acid-free tissue. A climate logger on a stand and a wall display glowing green. A wide
+double door on one side leads to a white exhibition hall, glimpsed through a gap. Two technicians in cotton gloves
+checking a condition report on a tablet. Calm, careful, controlled.
+```
+
+### 20. Kontorlandskap for kurator og formidling · `28_kontor_kurator.jpg`
+Rom 213, 2. etasje i glassfløyen. 16 × 9,4 m, takhøyde 3,2 m. Linoleum, hvite vegger, akustikkplater og et møterom med glassvegg.
+```
+Interior photograph of an open-plan museum office for curators and educators, 16 by 9.4 metres, 3.2-metre
+ceiling. Warm grey linoleum floor, white walls, acoustic ceiling panels with soft LED lighting. Height-adjustable
+desks in light oak, each with a monitor. A large pinboard wall with printed exhibition layouts, small invented
+artwork reproductions and colour swatches pinned up. A glass-walled meeting room at the far end with a long table
+and a wall screen showing a simple, blurred floor plan with coloured rooms (no readable text). Tall windows with
+daylight. Two staff members discussing at a desk, seen from behind. Practical, creative, calm.
+```
+
+### 21. Vaktroboten på nattrunde i Sal A · `29_vaktrobot_sal_a_natt.jpg`
+Rom 101, 1. etasje i hovedfløyen. 18 × 12 m, takhøyde 6 m. Koksgrå teglvegger, eikeparkett i fiskebein og lanternetak med UV-filter. Vaktrobot 1 går nattrunden i 1. etasje. Vaktrobotene kjører aldri inn i magasinene (S4).
+```
+Interior photograph of a large, dark gallery hall at night, 18 by 12 metres with a 6-metre ceiling, in a 1912
+museum. Walls in rendered brick painted deep charcoal grey (NCS S 8000-N), white-oiled oak herringbone parquet.
+The roof lantern overhead is dark blue with night sky. Only dim night lighting: low guide lights near the floor
+and faint spotlights on a few invented Nordic romantic landscape paintings – a misty forest, a mountain lake under
+a pale summer night, a troll-like rock formation. In the middle of the room, a slim, current-day autonomous
+security patrol robot about 1.4 metres tall with a camera mast and a soft blue status light glides across the
+parquet, its light reflected in the floor. No people. Quiet, slightly mysterious, realistic, not science fiction.
+```
+
+### 22. Renholdsroboten i gangen før åpning · `30_renholdsrobot_gang_glassfloy.jpg`
+Rom 114, 1. etasje i glassfløyen. 23,7 × 2,4 m, takhøyde 4,5 m. Lys grå terrazzo og hvite vegger. Gangen går fra hovedfløyen til Sal E, kafeen og toalettene. Nødutgangen i øst går ut mot elvepromenaden.
+```
+Interior photograph looking down a long, narrow museum corridor in a modern glass wing, about 24 metres long,
+2.4 metres wide, 4.5-metre ceiling, early morning before opening. Light grey terrazzo floor with a fresh wet sheen
+in a strip behind a small, low autonomous floor-cleaning robot that is working its way down the corridor. White
+plaster walls (NCS S 0500-N), acoustic ceiling panels with recessed lights, a green emergency-exit pictogram (no
+text) above a glass door at the far end, with soft daylight and a glimpse of a river promenade outside. A side
+opening shows part of a café with chairs still on the tables. No people. Fresh, quiet, orderly.
+```
+
+### 23. Nærbilde der teglfløyen møter glassfløyen · `31_detalj_fasadeskjot.jpg`
+Utvendig nærbilde mot sør. Rød håndbanket tegl, sokkel i Iddefjord-granitt og gesims i sandstein møter strukturelt glass med eikelameller og slipt betong. Gesimsen ligger i samme høyde på begge fløyene.
+```
+Exterior architectural detail photograph, close-up, of the exact junction where a 1912 museum building meets a
+2016 extension. On the left: hand-made red brick with lime mortar joints on a base of grey Iddefjord granite, a
+carved sandstone cornice at the top of the frame. On the right: a full-height structural glass façade with slim
+vertical light-oak sun-shading fins, standing on a base of pale polished concrete. Between them, a narrow recessed
+shadow joint in dark bronze metal; the glass wing's roof edge lines up exactly with the sandstone cornice. The
+glass reflects the brick and an overcast Nordic sky. No signs, no text. Crisp, precise detail.
 ```
 
 ---

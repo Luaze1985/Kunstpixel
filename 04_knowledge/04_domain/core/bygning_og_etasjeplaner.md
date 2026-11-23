@@ -110,7 +110,7 @@
    - I salene flyttes den utenom åpningstid.
 6. **Maskinpark (013 og 015):**
    - **KI-serverrom (013, 90 m²)** og **robotgarasje med ladestasjoner (015, 87 m²)** ligger inntil klimasentralen og vareheisen.
-   - Hele maskinparken har 37 maskiner: KI-servere, renholds-, vakt- og transportroboter, klima, lys, ventilasjon, Inergen, adgang, CCTV og heiser.
+   - Hele maskinparken har 40 maskiner: KI-servere, renholds-, vakt-, transport- og kunstroboter, klima, lys, ventilasjon, Inergen, adgang, CCTV og heiser.
    - Fasit: `06_kart/maskinpark.json`. Regler og arbeidsmåte: skillen `maskinpark` (`.claude/skills/maskinpark/SKILL.md`).
    - KI-en leser og foreslår. Et menneske godkjenner, og ingenting utføres av verktøyene.
 7. **Universell utforming:** Publikumsheisen ligger ved vestibylen. Toaletter og HC-toalett finnes i begge publikumsetasjer.

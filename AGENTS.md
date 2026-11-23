@@ -151,7 +151,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -Mode man
 
 ### Maskinpark – KI i drift (4 verktøy i `src/mcp_server.py`, bare lesing og forslag):
 36a. `get_machine_park(kategori, status, etasje, rom_id)`
-    - 37 maskiner (KI-servere, roboter, klima, lys, sikkerhet, heiser) med status og neste service.
+    - 40 maskiner (KI-servere, roboter og kunstroboter, klima, lys, sikkerhet, heiser) med status og neste service.
 36b. `get_machine_health(maskin_id)`
     - Helsekort: åpne hendelser, vedlikehold, neste service og kommandologg.
 36c. `get_maintenance_plan(dager, dato)`

@@ -31,6 +31,7 @@
 - **Nye tegninger (G1–G8):** bygget er tegnet som 58 × 25 m med 45 rom. BRA er 4 174,2 m², og tegningene, kartet og PDF-en er laget fra samme data. Ikke committet.
 - **Maskinpark (MP1–MP8):** 37 maskiner, 4 MCP-verktøy (bare lesing og forslag) og skillen `maskinpark`. Serverrom og robotgarasje i U1. Ikke committet.
 - **Gjort (MP9–MP12):** maskinlag i kartet, 6 øvingsscenarier med fasit (`get_drill_scenarios`), fasade sør/øst og snitt A–A/B–B. Committet 2026-11-22.
+- **Gjort (MP13–MP14):** kunstroboter (hengerobot og to selvkjørende kunstkasser, nå 40 maskiner) og generert produktark per maskintype i `04_knowledge/04_domain/operations/maskinpark/`. Ikke committet.
 - **Neste:** nye bilder av Sal B, C og E og driftsrommene (krever ja til ekstern bildetjeneste), fasade nord/vest, situasjonsplan, rømningsplan, robotenes kjøreveier, eventuelt hvitelisting i Datafinner.
 - **Neste:** nye bilder av Sal B, C og E og driftsrommene, og fasade-, snitt-, situasjons- og rømningstegninger.
 

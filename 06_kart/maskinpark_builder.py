@@ -43,7 +43,7 @@ MASKINER = [
      {"flytt_verk": {"fra_rom": "rom", "til_rom": "rom"}, "retur_til_lading": {}}, "foresla"),
     ("TRA-02", "Transportrobot 2 (emballasje og utstyr)", "robot", "transportrobot", "ROB-1", "ROB-1", "B", 45, "Varsom Logistikk AS",
      {"flytt_verk": {"fra_rom": "rom", "til_rom": "rom"}, "retur_til_lading": {}}, "foresla"),
-    ("LAD-01", "Ladestasjoner (6 plasser)", "anlegg", "lading", "ROB-1", "ROB-1", "C", 180, "Ryddig Robotikk AS", {"test_lading": {}}, "foresla"),
+    ("LAD-01", "Ladestasjoner (10 plasser)", "anlegg", "lading", "ROB-1", "ROB-1", "C", 180, "Ryddig Robotikk AS", {"test_lading": {}}, "foresla"),
     ("ANL-01", "Ventilasjonsaggregat med varmegjenvinner", "anlegg", "ventilasjon", "TEK-1", "TEK-1", "A", 90, "Trøndelag Luft AS", {"sett_luftmengde": {"prosent": [40, 100]}}, "foresla"),
     ("ANL-02", "Dampbefukter", "anlegg", "befukter", "TEK-1", "TEK-1", "A", 90, "Trøndelag Luft AS", {"sett_ytelse": {"prosent": [0, 100]}}, "foresla"),
     ("ANL-03", "Kjølemaskin", "anlegg", "kjolemaskin", "TEK-1", "TEK-1", "A", 90, "Trøndelag Luft AS", {"sett_turtemperatur": {"temperatur_c": [6, 14]}}, "foresla"),
@@ -66,6 +66,14 @@ MASKINER = [
      {"kall_til_etasje": {"etasje": [0, 2]}, "sett_kunstmodus": {}}, "foresla"),
     ("HEI-02", "Publikumsheis", "heis", "publikumsheis", "HEIS-P1", "HEIS-P1", "B", 90, "Løft Trondheim AS",
      {"kall_til_etasje": {"etasje": [1, 2]}}, "foresla"),
+    # Kunstroboter (lagt til 2026-11-23, MP13). Står sist så de eldre maskinenes tilfeldige data ikke endres.
+    ("HNG-01", "Hengerobot 1 (bildebytte, maks 120 kg)", "robot", "hengerobot", "ROB-1", "ROB-1", "A", 45, "Varsom Logistikk AS",
+     {"ta_ned_verk": {"rom_id": "sal"}, "heng_opp_verk": {"rom_id": "sal"}, "pakk_verk": {"kasse_id": "kasse"},
+      "retur_til_lading": {}}, "foresla"),
+    ("KAS-01", "Kunstkasse 1 (selvkjørende, klimastyrt)", "robot", "kunstkasse", "ROB-1", "ROB-1", "A", 60, "Varsom Logistikk AS",
+     {"kjor_kasse_til_magasin": {"fra_rom": "rom", "til_rom": ["MAG-1", "MAG-2"]}, "retur_til_lading": {}}, "foresla"),
+    ("KAS-02", "Kunstkasse 2 (selvkjørende, klimastyrt)", "robot", "kunstkasse", "ROB-1", "ROB-1", "A", 60, "Varsom Logistikk AS",
+     {"kjor_kasse_til_magasin": {"fra_rom": "rom", "til_rom": ["MAG-1", "MAG-2"]}, "retur_til_lading": {}}, "foresla"),
 ]
 
 # Hendelseskoder per type: (kode, alvorlighet, tekst)
@@ -90,6 +98,10 @@ KODER = {
     "brannsentral": [("SELVTEST_OK", "info", "Selvtest bestått")],
     "vareheis": [("DORSENSOR", "varsel", "Dørsensor ustabil"), ("KUNSTMODUS", "info", "Kunstmodus brukt")],
     "publikumsheis": [("SERVICE_VARSEL", "info", "Service nærmer seg")],
+    "hengerobot": [("GRIPER_KALIBRERT", "info", "Griperen kalibrert mot testramme"),
+                   ("KRAFT_AVVIK", "varsel", "Gripekraft over grensen, armen stoppet")],
+    "kunstkasse": [("KLIMA_I_KASSE", "varsel", "RF i kassen utenfor K2 under transport"),
+                   ("OPPDRAG_FULLFORT", "info", "Kasse levert i magasinet")],
 }
 
 # Faste scenarier som demoen og øvingsdagene bygger på (åpne hendelser nær i dag).
@@ -145,6 +157,19 @@ OVINGSSCENARIER = [
      _f("ANL-10", "sett_lysniva", {"luks": 50}),
      _f("ANL-10", "sett_lysniva", {"luks": 180}, forventet="avvist"),
      "Sal D er K1: maks 50 luks for papir og tegninger."),
+    ("KP-OV-07", "Bildebytte i Sal B", "HNG-01", "GRIPER_KALIBRERT",
+     "Et maleri i Sal B skal byttes. Planlegg nedtaking med hengeroboten.",
+     ["get_machine_park", "get_machine_health", "propose_machine_command"],
+     _f("HNG-01", "ta_ned_verk", {"rom_id": "SAL-B"}, tidspunkt="2026-11-23T21:00"),
+     _f("HNG-01", "ta_ned_verk", {"rom_id": "SAL-B"}, tidspunkt="2026-11-23T14:00", forventet="avvist"),
+     "Hengeroboten jobber bare etter stengetid, og en konservator må være til stede."),
+    ("KP-OV-08", "Kunstkasse til magasinet", "KAS-01", "OPPDRAG_FULLFORT",
+     "Maleriet er pakket i kunstkasse 1. Send kassen til riktig lagringssted.",
+     ["get_machine_park", "propose_machine_command"],
+     _f("KAS-01", "kjor_kasse_til_magasin", {"fra_rom": "SAL-B", "til_rom": "MAG-1"}, tidspunkt="2026-11-23T21:30"),
+     _f("KAS-01", "kjor_kasse_til_magasin", {"fra_rom": "SAL-B", "til_rom": "SAL-A"}, tidspunkt="2026-11-23T21:30",
+        forventet="avvist"),
+     "Kunstkassen kjører bare til et magasin, via vareheisen, med to personer ved S4."),
 ]
 
 
@@ -233,6 +258,10 @@ def bygg() -> dict:
         ("ANL-10", "sett_lysniva", {"luks": 50}, "Papirverk i Sal D, maks 50 luks", "godkjent", "driftsansvarlig", "2026-10-30T09:00"),
         ("ANL-01", "sett_luftmengde", {"prosent": 100}, "Mange besøkende under familiedag", "avvist", "driftsansvarlig", "2026-11-08T11:00"),
         ("SIK-01", "kjor_selvtest", {}, "Sjekk etter lavt flasketrykk", "utfort", "sikkerhetsansvarlig", "2026-11-20T10:00"),
+        ("HNG-01", "ta_ned_verk", {"rom_id": "SAL-B"}, "Bildebytte i Sal B etter stengetid", "utfort", "driftsansvarlig", "2026-11-18T19:30"),
+        ("HNG-01", "pakk_verk", {"kasse_id": "KP-MASK-KAS-01"}, "Pakke maleriet for magasinet", "utfort", "driftsansvarlig", "2026-11-18T19:45"),
+        ("KAS-01", "kjor_kasse_til_magasin", {"fra_rom": "SAL-B", "til_rom": "MAG-1"}, "Maleriet til Magasin 1",
+         "utfort", "driftsansvarlig", "2026-11-18T20:00"),
     ]
     logg = [{"kommando_id": f"KP-KOM-{n:04d}", "maskin_id": f"KP-MASK-{k}", "kommando": c, "parametre": p,
              "foreslatt_av": "KI-agent (maskinpark)", "begrunnelse": b, "status": s, "besluttet_av_rolle": r, "tidspunkt": t}
@@ -267,3 +296,5 @@ if __name__ == "__main__":
     d = json.loads(p.read_text(encoding="utf-8"))
     print(f"Skrev {p}: {len(d['maskiner'])} maskiner, {len(d['hendelser'])} hendelser, "
           f"{len(d['vedlikehold'])} arbeidsordrer, {len(d['kommandologg'])} kommandoer")
+    import produktark_builder  # samme mappe; arkene lages fra den nye json-fila
+    print(f"Skrev {len(produktark_builder.skriv_alle())} produktark")

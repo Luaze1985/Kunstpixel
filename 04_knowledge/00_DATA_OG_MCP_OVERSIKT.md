@@ -203,7 +203,7 @@ flowchart TB
 37. `get_machine_park(kategori, status, etasje, rom_id)` — Maskinene i `06_kart/maskinpark.json` med status, antall og åpne hendelser.
 38. `get_machine_health(maskin_id)` — Helsekort for én maskin.
 39. `get_maintenance_plan(dager, dato)` — Forfalt og kommende service og åpne arbeidsordrer.
-40. `propose_machine_command(maskin_id, kommando, parametre, tidspunkt, requester_role)` — Regelsjekk av et KI-forslag. Utfører aldri noe. Regler: `.claude/skills/maskinpark/SKILL.md`.
+40. `propose_machine_command(maskin_id, kommando, parametre, tidspunkt, requester_role)` — Regelsjekk av et KI-forslag. Utfører aldri noe. Regler: `.claude/skills/maskinpark/SKILL.md`. Produktark per maskintype (datastrøm, hvordan følge og styre): `04_knowledge/04_domain/operations/maskinpark/README.md`.
 
 *(I tillegg eksponerer `src/kunstpixel/adapters/datafinner.py` totalt **45 hvitelistede verktøy** inkl. `discover_hr_cases`, `investigate_hr_case`, `propose_shift_swap`, `lookup_onboarding`, `query_cafe_sales` og `query_reviews`.)*
 

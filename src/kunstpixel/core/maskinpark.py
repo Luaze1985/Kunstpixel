@@ -18,6 +18,8 @@ GEOMETRI = KART / "bygning_geometri.json"
 KATEGORIER = {"server", "robot", "anlegg", "sikkerhet", "heis"}
 STATUSER = {"i_drift", "varsel", "feil", "vedlikehold"}
 MOBILE_UTEN_S4 = {"renholdsrobot", "vaktrobot"}
+# Kommandoer som flytter eller håndterer kunst: bare utenom åpningstid (SEC-M4).
+KUNSTKOMMANDOER = {"flytt_verk", "ta_ned_verk", "heng_opp_verk", "pakk_verk", "kjor_kasse_til_magasin"}
 UTFORES_ALDRI = "Verktøyet utfører ingenting. Forslaget må godkjennes og utføres av et menneske (SEC-M1)."
 
 
@@ -162,6 +164,12 @@ def foresla_kommando(maskin_id: str, kommando: str, parametre: dict | None = Non
             if regel == "rom":
                 if verdi not in rom:
                     grunner.append(f"rommet «{verdi}» finnes ikke i bygget")
+            elif regel == "sal":
+                if verdi not in rom or rom[verdi].get("type") != "sal":
+                    grunner.append(f"«{verdi}» er ikke en utstillingssal; hengeroboten jobber bare i saler")
+            elif regel == "kasse":
+                if not any(x["maskin_id"] == verdi and x["type"] == "kunstkasse" for x in _data()["maskiner"]):
+                    grunner.append(f"«{verdi}» er ikke en kunstkasse i maskinparken")
             elif regel == "sone":
                 sone = rom[m["rom_id"]]["klimasone"]
                 felt = {"temperatur_c": "temp", "rf_prosent": "rf", "luks": "luks"}[navn]
@@ -176,15 +184,17 @@ def foresla_kommando(maskin_id: str, kommando: str, parametre: dict | None = Non
                     grunner.append(f"{navn}={verdi} er utenfor {regel[0]}–{regel[1]}")
 
     if not grunner and m["kategori"] == "robot":
-        if m["type"] == "transportrobot" and kommando == "flytt_verk":
-            fra, til = rom[parametre["fra_rom"]], rom[parametre["til_rom"]]
+        if kommando in KUNSTKOMMANDOER:
             klokke = datetime.fromisoformat(tidspunkt).strftime("%H:%M")
             if _data()["apningstid"]["fra"] <= klokke < _data()["apningstid"]["til"]:
                 grunner.append(f"kunsttransport kl. {klokke} er innenfor åpningstid (SEC-M4)")
-            if "S4" in (fra["sikkerhetssone"], til["sikkerhetssone"]):
+            berort = [rom[parametre[k]] for k in ("fra_rom", "til_rom", "rom_id") if k in parametre]
+            if "S4" in {r["sikkerhetssone"] for r in berort}:
                 krav.append("to personer til stede ved S4 (SEC-M4)")
-            if fra["etasje_nr"] != til["etasje_nr"]:
+            if len({r["etasje_nr"] for r in berort}) > 1:
                 krav.append("via vareheis KP-MASK-HEI-01 i kunstmodus")
+            if m["type"] == "hengerobot":
+                krav.append("konservator til stede og godkjenner hvert grep (SEC-M4)")
         if kommando == "send_til_rom":
             mal = rom[parametre["rom_id"]]
             if m["type"] in MOBILE_UTEN_S4 and mal["sikkerhetssone"] == "S4":

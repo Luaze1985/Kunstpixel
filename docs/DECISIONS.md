@@ -495,3 +495,11 @@ Lars: «ja gjør dette» om punktene i PLAN (maskinlag, øvingsdager, nye bilder
 - **MP12. Nye bilder av Sal B, C og E og driftsrommene er ikke laget.** De krever en ekstern bildetjeneste, og det må Lars si ja til først.
 - **Tester:** nye `tests/test_fasader_snitt.py` (13). `test_maskinpark.py` er utvidet med maskinlag og scenarier. Alle ble kjørt røde først.
 
+## 2026-11-23 — Kunstroboter og produktark (MP13–MP14)
+
+Lars valgte begge anbefalingene: produktark generert fra dataene, og kunstrobotene lagt inn i maskinparken.
+
+- **MP13. Kunstroboter.** Tre nye maskiner står sist i `MASKINER`, så de eldre maskinenes data er uendret: `KP-MASK-HNG-01` (hengerobot, type `hengerobot`) og `KP-MASK-KAS-01/02` (selvkjørende kunstkasser, type `kunstkasse`). Nye kommandoer er `ta_ned_verk`, `heng_opp_verk`, `pakk_verk` og `kjor_kasse_til_magasin`. SEC-M4 gjelder nå all kunsthåndtering, og hengeroboten krever konservator til stede. Hengeroboten jobber bare i saler, og kassen kjører bare til MAG-1 eller MAG-2. Nye øvingsscenarier: KP-OV-07 og KP-OV-08. Ladestasjonen har nå 10 plasser. Maskinparken har 40 maskiner.
+- **MP14. Produktark (Lars' valg: generert).** `06_kart/produktark_builder.py` skriver ett ark per maskintype pluss `README.md` med dataflyt (Mermaid) til `04_knowledge/04_domain/operations/maskinpark/`. Hvert ark viser enhetene, datastrømmen (signaler og hendelseskoder), MCP-kallene for å følge maskinen, og kommandoene med et eksempel. Telemetrisignalene er oppdiktet produkttekst; det som er lagret, er hendelsene. `maskinpark_builder.py` kjører generatoren. Testen sjekker at arkene stemmer med dataene, og at eksemplet i hvert ark godtas av regelsjekken.
+- **Tester:** ny `tests/test_kunstroboter_og_produktark.py`, kjørt rød først.
+

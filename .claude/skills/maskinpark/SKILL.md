@@ -15,7 +15,8 @@ Kunstpixel er et testanlegg for KI i drift og for øvingsdager. Maskinparken er 
 | Rom, soner og etasjer maskinene står i | `06_kart/bygning_geometri.json` (rom-ID, `sikkerhetssone`, `klimasone`) |
 | Spørringer og regelsjekk | `src/kunstpixel/core/maskinpark.py` |
 | MCP-verktøy | `src/kunstpixel/core/mcp_server.py` (søk «Maskinpark») |
-| Tester (fasit) | `tests/test_maskinpark.py` |
+| Tester (fasit) | `tests/test_maskinpark.py`, `tests/test_kunstroboter_og_produktark.py` |
+| Produktark per maskintype (datastrøm, følge, styre) | `04_knowledge/04_domain/operations/maskinpark/README.md` (laget av `06_kart/produktark_builder.py`) |
 | Klimagrenser per sone | `bygning_geometri.json` → `soner_definisjon.klima` (K1 18 °C ± 1, 50 % RF ± 5) |
 
 ## Datamodell (maskinpark.json, versjon 1)
@@ -50,6 +51,8 @@ Kunstpixel er et testanlegg for KI i drift og for øvingsdager. Maskinparken er 
 - **SEC-M4:**
   - Kunsttransport (transportrobot) bare utenom åpningstid, 17:00–10:00.
   - Til eller fra S4 kreves to personer, og det står i `krav`.
+  - Gjelder all kunsthåndtering: `flytt_verk`, `ta_ned_verk`, `heng_opp_verk`, `pakk_verk` og `kjor_kasse_til_magasin`.
+  - Hengeroboten jobber bare i utstillingssaler og krever konservator til stede. Kunstkassen kjører bare til MAG-1 eller MAG-2.
 - **SEC-M5:** Renholds- og vaktroboter kjører ikke inn i S4. Robot til annen etasje går via vareheisen.
 - **SEC-M6:** Ingen nettverkskall, ingen nøkler og ingen ekte leverandører eller personer. Alt er syntetisk (`datakilde: syntetisk`).
 - **SEC-M7:** MCP-serveren skal fortsatt være skrivebeskyttet (`tests/test_mcp_server.py::TestMcpReadOnlyCompliance`).
@@ -57,7 +60,8 @@ Kunstpixel er et testanlegg for KI i drift og for øvingsdager. Maskinparken er 
 ## Slik legger du til en maskin
 1. Legg maskinen inn i `MASKINER` i `maskinpark_builder.py`, med et `rom_id` som finnes i `bygning_geometri.json`.
 2. Gi den `kommandoer` med grenser. Sikkerhetsutstyr får bare `les` eller `test`-kommandoer.
-3. Kjør den indre sløyfen. Testen sjekker at alle rom-ID-er finnes og at ingen maskin har `utfor`.
+3. Ny type: legg inn produkttekst i `PRODUKT` i `06_kart/produktark_builder.py`. Byggeren skriver arkene på nytt.
+4. Kjør den indre sløyfen. Testen sjekker at alle rom-ID-er finnes og at ingen maskin har `utfor`.
 
 ## Ferdig når (PASS/FAIL)
 1. `maskinpark.json` blir lik ved to kjøringer av byggeren (samme SHA-256).
